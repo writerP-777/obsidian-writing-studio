@@ -4180,7 +4180,7 @@ var LauncherView = class extends import_obsidian9.ItemView {
     settingsBtn.onclick = () => {
       var _a, _b;
       (_a = this.app.setting) == null ? void 0 : _a.open();
-      (_b = this.app.setting) == null ? void 0 : _b.openTabById("obsidian-writing-studio");
+      (_b = this.app.setting) == null ? void 0 : _b.openTabById("writing-studio");
     };
   }
   // ── Project Card ─────────────────────────────────────────────────
