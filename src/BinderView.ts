@@ -1,0 +1,564 @@
+import { ItemView, WorkspaceLeaf, TFile, Menu, Notice, setIcon } from 'obsidian';
+import type WritingStudioPlugin from '../main';
+import { BinderItem, STATUS_COLORS, STATUS_LABELS, DocumentStatus } from '../models/BinderItem';
+import { WritingProject } from '../models/Project';
+import { ProjectModal } from '../modals/ProjectModal';
+import { TargetsDashboardModal } from '../modals/TargetsDashboardModal';
+import { PublishModal } from '../modals/PublishModal';
+
+export const BINDER_VIEW_TYPE = 'writing-studio-binder';
+
+export class BinderView extends ItemView {
+  private plugin: WritingStudioPlugin;
+  private activeProject: WritingProject | null = null;
+  private binderItems: BinderItem[] = [];
+  private dragSource: string | null = null;
+  private dropZone: 'before' | 'into' | 'after' | null = null;
+  private dragOverEl: HTMLElement | null = null;
+  // Maps filePath → live DOM element so word counts can be patched without re-render.
+  private wcElements = new Map<string, { el: HTMLElement; item: BinderItem }>();
+
+  constructor(leaf: WorkspaceLeaf, plugin: WritingStudioPlugin) {
+    super(leaf);
+    this.plugin = plugin;
+  }
+
+  getViewType(): string {
+    return BINDER_VIEW_TYPE;
+  }
+
+  getDisplayText(): string {
+    return 'Writing Binder';
+  }
+
+  getIcon(): string {
+    return 'book-open';
+  }
+
+  async onOpen(): Promise<void> {
+    await this.refresh();
+  }
+
+  async refresh(): Promise<void> {
+    this.activeProject = this.plugin.projectManager.getActiveProject();
+    if (this.activeProject) {
+      const binder = await this.plugin.projectManager.loadBinder(this.activeProject);
+      this.binderItems = binder.items;
+    } else {
+      this.binderItems = [];
+    }
+    this.render();
+  }
+
+  private render(): void {
+    const container = this.containerEl.children[1] as HTMLElement;
+    container.empty();
+    this.wcElements.clear();
+    container.addClass('ws-binder-container');
+
+    // Header
+    const header = container.createDiv('ws-binder-header');
+
+    // Project selector
+    const projectRow = header.createDiv('ws-binder-project-row');
+    const projectSel = projectRow.createEl('select', { cls: 'ws-binder-project-sel' });
+    const projects = this.plugin.projectManager.getProjects();
+
+    const noOpt = projectSel.createEl('option', { text: '— Select Project —' });
+    noOpt.value = '';
+
+    for (const p of projects) {
+      const opt = projectSel.createEl('option', { text: p.title });
+      opt.value = p.id;
+      if (this.activeProject?.id === p.id) opt.selected = true;
+    }
+
+    projectSel.onchange = async () => {
+      await this.plugin.projectManager.setActiveProject(projectSel.value || null);
+      await this.refresh();
+    };
+
+    const newProjectBtn = projectRow.createEl('button', { cls: 'ws-binder-btn', title: 'New Project' });
+    setIcon(newProjectBtn, 'plus');
+    newProjectBtn.onclick = () => {
+      new ProjectModal(this.app, this.plugin, () => this.refresh()).open();
+    };
+
+    // Toolbar
+    const toolbar = header.createDiv('ws-binder-toolbar');
+    const newDocBtn = toolbar.createEl('button', {
+      cls: 'ws-binder-btn',
+      text: '+ Document',
+    });
+    newDocBtn.onclick = async () => {
+      if (!this.activeProject) {
+        new Notice('Select a project first.');
+        return;
+      }
+      await this.createNewDocument();
+    };
+
+    const dashBtn = toolbar.createEl('button', { cls: 'ws-binder-btn', title: 'Targets Dashboard' });
+    setIcon(dashBtn, 'target');
+    dashBtn.onclick = () => {
+      new TargetsDashboardModal(this.app, this.plugin).open();
+    };
+
+    // Search
+    const searchInput = header.createEl('input', {
+      cls: 'ws-binder-search',
+      type: 'text',
+      placeholder: 'Search documents…',
+    });
+    searchInput.oninput = () => this.filterItems(searchInput.value, container);
+
+    // Document list
+    const listEl = container.createDiv('ws-binder-list');
+
+    if (!this.activeProject) {
+      const empty = listEl.createDiv('ws-binder-empty');
+      empty.textContent = 'No project selected. Create or select a Writing Project to get started.';
+      return;
+    }
+
+    if (this.binderItems.length === 0) {
+      const empty = listEl.createDiv('ws-binder-empty');
+      empty.textContent = 'No documents yet. Click "+ Document" to add one.';
+      return;
+    }
+
+    this.renderItems(listEl, this.binderItems, 0);
+
+    // Root append zone — visible during drag to promote/append at root level
+    const rootZone = listEl.createDiv('ws-binder-root-append-zone');
+    rootZone.textContent = '↓ Drop here to promote to root';
+    rootZone.ondragover = (e) => { e.preventDefault(); rootZone.classList.add('ws-binder-root-append-active'); };
+    rootZone.ondragleave = (e) => {
+      if (!rootZone.contains(e.relatedTarget as Node)) rootZone.classList.remove('ws-binder-root-append-active');
+    };
+    rootZone.ondrop = async (e) => {
+      e.preventDefault();
+      rootZone.classList.remove('ws-binder-root-append-active');
+      if (!this.dragSource) return;
+      await this.moveItemToRoot(this.dragSource);
+    };
+  }
+
+  private renderItems(container: HTMLElement, items: BinderItem[], depth: number): void {
+    for (const item of items) {
+      const row = container.createDiv({ cls: `ws-binder-item ws-binder-depth-${depth}` });
+      row.setAttribute('data-item-id', item.id);
+      row.setAttribute('draggable', 'true');
+
+      // Indent
+      if (depth > 0) {
+        row.style.paddingLeft = `${depth * 16 + 8}px`;
+      }
+
+      // Collapse toggle for groups
+      if (item.children?.length) {
+        const toggle = row.createSpan('ws-binder-toggle');
+        toggle.textContent = item.collapsed ? '▶' : '▼';
+        toggle.onclick = (e) => {
+          e.stopPropagation();
+          item.collapsed = !item.collapsed;
+          this.saveBinder();
+          this.render();
+        };
+      } else {
+        row.createSpan('ws-binder-toggle ws-binder-toggle-leaf');
+      }
+
+      // Type icon
+      const icon = row.createSpan('ws-binder-icon');
+      icon.textContent = this.getTypeIcon(item.type);
+
+      // Status dot
+      const dot = row.createSpan('ws-binder-status-dot');
+      dot.style.backgroundColor = STATUS_COLORS[item.status];
+      dot.title = STATUS_LABELS[item.status];
+
+      // Title
+      const titleEl = row.createSpan('ws-binder-title');
+      titleEl.textContent = item.title;
+      titleEl.contentEditable = 'false';
+
+      // Word count
+      const wcEl = row.createSpan('ws-binder-wc');
+      this.wcElements.set(item.filePath, { el: wcEl, item });
+      this.loadWordCount(item, wcEl);
+
+      // Click to open
+      row.onclick = () => this.openDocument(item);
+
+      // Double click to rename
+      titleEl.ondblclick = (e) => {
+        e.stopPropagation();
+        this.startRename(titleEl, item);
+      };
+
+      // Context menu
+      row.oncontextmenu = (e) => {
+        e.preventDefault();
+        this.showContextMenu(e, item);
+      };
+
+      // Drag and drop
+      row.ondragstart = (e) => {
+        this.dragSource = item.id;
+        row.addClass('ws-binder-dragging');
+        e.dataTransfer?.setData('text/plain', item.id);
+      };
+      row.ondragend = () => {
+        row.classList.remove('ws-binder-dragging');
+        this.dragSource = null;
+        this.dropZone = null;
+        const container = this.containerEl.children[1] as HTMLElement;
+        container.querySelectorAll('.ws-binder-drop-before,.ws-binder-drop-after,.ws-binder-drop-into,.ws-binder-root-append-active')
+          .forEach(el => el.classList.remove('ws-binder-drop-before', 'ws-binder-drop-after', 'ws-binder-drop-into', 'ws-binder-root-append-active'));
+        this.dragOverEl = null;
+      };
+      row.ondragover = (e) => {
+        e.preventDefault();
+        if (!this.dragSource || this.dragSource === item.id) return;
+        if (this.dragOverEl && this.dragOverEl !== row) this.clearDropIndicators(this.dragOverEl);
+        this.dragOverEl = row;
+
+        const rect = row.getBoundingClientRect();
+        const ratio = (e.clientY - rect.top) / rect.height;
+        this.clearDropIndicators(row);
+        if (ratio < 0.30) {
+          row.classList.add('ws-binder-drop-before');
+          this.dropZone = 'before';
+        } else if (ratio > 0.70) {
+          row.classList.add('ws-binder-drop-after');
+          this.dropZone = 'after';
+        } else {
+          row.classList.add('ws-binder-drop-into');
+          this.dropZone = 'into';
+        }
+      };
+      row.ondragleave = (e) => {
+        if (!row.contains(e.relatedTarget as Node)) {
+          this.clearDropIndicators(row);
+          if (this.dragOverEl === row) this.dragOverEl = null;
+        }
+      };
+      row.ondrop = async (e) => {
+        e.preventDefault();
+        const zone = this.dropZone;
+        this.dropZone = null;
+        this.clearDropIndicators(row);
+        if (this.dragOverEl === row) this.dragOverEl = null;
+        if (!this.dragSource || this.dragSource === item.id) return;
+        if (zone === 'before') await this.moveItemBefore(this.dragSource, item.id);
+        else if (zone === 'after') await this.moveItemAfter(this.dragSource, item.id);
+        else await this.moveItemInto(this.dragSource, item.id);
+      };
+
+      // Render children
+      if (item.children?.length && !item.collapsed) {
+        this.renderItems(container, item.children, depth + 1);
+      }
+    }
+  }
+
+  private async loadWordCount(item: BinderItem, el: HTMLElement): Promise<void> {
+    const file = this.app.vault.getAbstractFileByPath(item.filePath);
+    if (!(file instanceof TFile)) {
+      el.textContent = '0w';
+      return;
+    }
+    const content = await this.app.vault.read(file);
+    const wc = this.plugin.fmManager.countWords(content);
+    const goal = item.wordCountGoal;
+
+    if (goal) {
+      const pct = Math.min(100, Math.round((wc / goal) * 100));
+      el.textContent = `${wc}/${goal}`;
+      el.title = `${pct}% complete`;
+    } else {
+      el.textContent = `${wc}w`;
+    }
+  }
+
+  // Called by the plugin's debounced word-count updater on every file change.
+  // Patches only the relevant DOM span — no binder re-render needed.
+  updateWordCount(filePath: string, wc: number): void {
+    const entry = this.wcElements.get(filePath);
+    if (!entry) return;
+    const { el, item } = entry;
+    const goal = item.wordCountGoal;
+    if (goal && goal > 0) {
+      const pct = Math.min(100, Math.round((wc / goal) * 100));
+      el.textContent = `${wc}/${goal}`;
+      el.title = `${pct}% complete`;
+    } else {
+      el.textContent = `${wc}w`;
+    }
+  }
+
+  private getTypeIcon(type: BinderItem['type']): string {
+    const icons: Record<string, string> = {
+      chapter: '📄',
+      section: '§',
+      article: '📰',
+      note: '📝',
+      group: '📁',
+      part: '📚',
+    };
+    return icons[type] || '📄';
+  }
+
+  private async openDocument(item: BinderItem): Promise<void> {
+    const file = this.app.vault.getAbstractFileByPath(item.filePath);
+    if (file instanceof TFile) {
+      const leaf = this.app.workspace.getLeaf(false);
+      await leaf.openFile(file);
+    }
+  }
+
+  private startRename(el: HTMLElement, item: BinderItem): void {
+    el.contentEditable = 'true';
+    el.focus();
+
+    const range = document.createRange();
+    range.selectNodeContents(el);
+    const sel = window.getSelection();
+    sel?.removeAllRanges();
+    sel?.addRange(range);
+
+    const commit = async () => {
+      el.contentEditable = 'false';
+      const newTitle = el.textContent?.trim() || item.title;
+      if (newTitle !== item.title) {
+        item.title = newTitle;
+        await this.saveBinder();
+      }
+    };
+
+    el.onblur = commit;
+    el.onkeydown = (e) => {
+      if (e.key === 'Enter') { e.preventDefault(); el.blur(); }
+      if (e.key === 'Escape') { el.textContent = item.title; el.blur(); }
+    };
+  }
+
+  private showContextMenu(e: MouseEvent, item: BinderItem): void {
+    const menu = new Menu();
+
+    menu.addItem(i => i.setTitle('Open Document').setIcon('file-text').onClick(() => this.openDocument(item)));
+    menu.addItem(i => i.setTitle('New Child Document').setIcon('plus').onClick(() => this.createNewDocument(item.id)));
+    menu.addSeparator();
+    menu.addItem(i => i.setTitle('Set Status: Draft').onClick(() => this.setItemStatus(item, 'draft')));
+    menu.addItem(i => i.setTitle('Set Status: In Progress').onClick(() => this.setItemStatus(item, 'in-progress')));
+    menu.addItem(i => i.setTitle('Set Status: Complete').onClick(() => this.setItemStatus(item, 'complete')));
+    menu.addItem(i => i.setTitle('Set Status: Published').onClick(() => this.setItemStatus(item, 'published')));
+    menu.addSeparator();
+    menu.addItem(i => i.setTitle('Duplicate').setIcon('copy').onClick(() => this.duplicateItem(item)));
+    menu.addItem(i => i.setTitle('Move to Research').setIcon('folder').onClick(() => this.moveToResearch(item)));
+    menu.addSeparator();
+    menu.addItem(i => i.setTitle('Publish to WordPress').setIcon('globe').onClick(() => {
+      new PublishModal(this.app, this.plugin, item.filePath).open();
+    }));
+    menu.addSeparator();
+    menu.addItem(i => i.setTitle('Delete').setIcon('trash').onClick(() => this.deleteItem(item)));
+
+    menu.showAtMouseEvent(e);
+  }
+
+  private async createNewDocument(parentId?: string): Promise<void> {
+    if (!this.activeProject) return;
+    const title = `Untitled ${new Date().toLocaleTimeString()}`;
+    await this.plugin.projectManager.addDocumentToBinder(
+      this.activeProject,
+      title,
+      'chapter',
+      parentId
+    );
+    await this.refresh();
+  }
+
+  private async setItemStatus(item: BinderItem, status: DocumentStatus): Promise<void> {
+    if (!this.activeProject) return;
+    await this.plugin.projectManager.updateItemStatus(this.activeProject, item.id, status);
+    await this.refresh();
+  }
+
+  private async duplicateItem(item: BinderItem): Promise<void> {
+    if (!this.activeProject) return;
+    const newTitle = `${item.title} (Copy)`;
+    const newItem = await this.plugin.projectManager.addDocumentToBinder(
+      this.activeProject,
+      newTitle,
+      item.type as any
+    );
+
+    // Copy content
+    const srcFile = this.app.vault.getAbstractFileByPath(item.filePath);
+    const dstFile = this.app.vault.getAbstractFileByPath(newItem.filePath);
+    if (srcFile instanceof TFile && dstFile instanceof TFile) {
+      const content = await this.app.vault.read(srcFile);
+      await this.app.vault.modify(dstFile, content);
+    }
+
+    await this.refresh();
+  }
+
+  private async moveToResearch(item: BinderItem): Promise<void> {
+    if (!this.activeProject) return;
+    const researchDir = `${this.activeProject.folderPath}/Research`;
+    const fileName = item.filePath.split('/').pop() || 'note.md';
+    const newPath = `${researchDir}/${fileName}`;
+    const file = this.app.vault.getAbstractFileByPath(item.filePath);
+    if (file instanceof TFile) {
+      await this.app.vault.rename(file, newPath);
+    }
+    item.filePath = newPath;
+    item.type = 'note';
+    await this.saveBinder();
+    await this.refresh();
+  }
+
+  private async deleteItem(item: BinderItem): Promise<void> {
+    if (!this.activeProject) return;
+    const file = this.app.vault.getAbstractFileByPath(item.filePath);
+    if (file instanceof TFile) {
+      await this.app.vault.trash(file, true);
+    }
+    await this.plugin.projectManager.removeItemFromBinder(this.activeProject, item.id);
+    await this.refresh();
+  }
+
+  private clearDropIndicators(el: HTMLElement): void {
+    el.classList.remove('ws-binder-drop-before', 'ws-binder-drop-after', 'ws-binder-drop-into');
+  }
+
+  private findItem(items: BinderItem[], id: string): BinderItem | null {
+    for (const item of items) {
+      if (item.id === id) return item;
+      if (item.children) { const f = this.findItem(item.children, id); if (f) return f; }
+    }
+    return null;
+  }
+
+  private containsItem(items: BinderItem[], id: string): boolean {
+    for (const item of items) {
+      if (item.id === id) return true;
+      if (item.children && this.containsItem(item.children, id)) return true;
+    }
+    return false;
+  }
+
+  private removeFromTree(items: BinderItem[], id: string): BinderItem | null {
+    for (let i = 0; i < items.length; i++) {
+      if (items[i].id === id) return items.splice(i, 1)[0];
+      if (items[i].children) { const f = this.removeFromTree(items[i].children!, id); if (f) return f; }
+    }
+    return null;
+  }
+
+  private async moveItemBefore(sourceId: string, targetId: string): Promise<void> {
+    if (!this.activeProject) return;
+    const binder = await this.plugin.projectManager.loadBinder(this.activeProject);
+    const moving = this.removeFromTree(binder.items, sourceId);
+    if (!moving) return;
+    const insert = (items: BinderItem[]): boolean => {
+      for (let i = 0; i < items.length; i++) {
+        if (items[i].id === targetId) { items.splice(i, 0, moving); return true; }
+        if (items[i].children && insert(items[i].children!)) return true;
+      }
+      return false;
+    };
+    if (!insert(binder.items)) binder.items.unshift(moving);
+    this.reorderItems(binder.items, 1);
+    await this.plugin.projectManager.saveBinder(binder);
+    await this.refresh();
+  }
+
+  private async moveItemAfter(sourceId: string, targetId: string): Promise<void> {
+    if (!this.activeProject) return;
+    const binder = await this.plugin.projectManager.loadBinder(this.activeProject);
+    const moving = this.removeFromTree(binder.items, sourceId);
+    if (!moving) return;
+    const insert = (items: BinderItem[]): boolean => {
+      for (let i = 0; i < items.length; i++) {
+        if (items[i].id === targetId) { items.splice(i + 1, 0, moving); return true; }
+        if (items[i].children && insert(items[i].children!)) return true;
+      }
+      return false;
+    };
+    if (!insert(binder.items)) binder.items.push(moving);
+    this.reorderItems(binder.items, 1);
+    await this.plugin.projectManager.saveBinder(binder);
+    await this.refresh();
+  }
+
+  private async moveItemInto(sourceId: string, targetId: string): Promise<void> {
+    if (!this.activeProject) return;
+    const binder = await this.plugin.projectManager.loadBinder(this.activeProject);
+    // Prevent nesting a parent into its own descendant
+    const sourceItem = this.findItem(binder.items, sourceId);
+    if (sourceItem && this.containsItem(sourceItem.children || [], targetId)) return;
+    const moving = this.removeFromTree(binder.items, sourceId);
+    if (!moving) return;
+    const addTo = (items: BinderItem[]): boolean => {
+      for (const item of items) {
+        if (item.id === targetId) {
+          if (!item.children) item.children = [];
+          item.children.push(moving);
+          item.collapsed = false;
+          return true;
+        }
+        if (item.children && addTo(item.children)) return true;
+      }
+      return false;
+    };
+    if (!addTo(binder.items)) binder.items.push(moving);
+    this.reorderItems(binder.items, 1);
+    await this.plugin.projectManager.saveBinder(binder);
+    await this.refresh();
+  }
+
+  private async moveItemToRoot(sourceId: string): Promise<void> {
+    if (!this.activeProject) return;
+    const binder = await this.plugin.projectManager.loadBinder(this.activeProject);
+    const moving = this.removeFromTree(binder.items, sourceId);
+    if (!moving) return;
+    binder.items.push(moving);
+    this.reorderItems(binder.items, 1);
+    await this.plugin.projectManager.saveBinder(binder);
+    await this.refresh();
+  }
+
+  private reorderItems(items: BinderItem[], start: number): number {
+    let order = start;
+    for (const item of items) {
+      item.order = order++;
+      if (item.children) {
+        order = this.reorderItems(item.children, 1);
+      }
+    }
+    return order;
+  }
+
+  private filterItems(query: string, container: HTMLElement): void {
+    const q = query.toLowerCase();
+    const rows = container.querySelectorAll('.ws-binder-item');
+    rows.forEach((row) => {
+      const title = row.querySelector('.ws-binder-title')?.textContent?.toLowerCase() || '';
+      (row as HTMLElement).style.display = (!q || title.includes(q)) ? '' : 'none';
+    });
+  }
+
+  private async saveBinder(): Promise<void> {
+    if (!this.activeProject) return;
+    const binder = await this.plugin.projectManager.loadBinder(this.activeProject);
+    binder.items = this.binderItems;
+    await this.plugin.projectManager.saveBinder(binder);
+  }
+
+  async onClose(): Promise<void> {
+    // cleanup
+  }
+}

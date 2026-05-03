@@ -1,0 +1,121 @@
+import { App, Modal, Setting, Notice } from 'obsidian';
+import type WritingStudioPlugin from '../main';
+import { ExportFormat, ExportScope } from '../src/ExportEngine';
+
+export class ExportModal extends Modal {
+  private plugin: WritingStudioPlugin;
+  private format: ExportFormat;
+  private exportScope: ExportScope = 'current';
+  private includeFrontmatter = false;
+  private includeResearch = false;
+  private includeTitlesAsHeadings = true;
+  private addTitlePage = true;
+  private coverImagePath = '';
+
+  constructor(app: App, plugin: WritingStudioPlugin) {
+    super(app);
+    this.plugin = plugin;
+    this.format = plugin.settings.defaultExportFormat;
+  }
+
+  onOpen(): void {
+    const { contentEl } = this;
+    contentEl.empty();
+    contentEl.addClass('ws-export-modal');
+    contentEl.createEl('h2', { text: 'Export Document' });
+
+    let coverSetting: Setting;
+
+    new Setting(contentEl)
+      .setName('Format')
+      .addDropdown(d => d
+        .addOption('md', 'Markdown (.md)')
+        .addOption('html', 'HTML')
+        .addOption('epub', 'EPUB (.epub)')
+        .addOption('pdf', 'PDF (requires pandoc)')
+        .addOption('docx', 'Word (.docx) (requires pandoc)')
+        .addOption('rtf', 'RTF (requires pandoc)')
+        .setValue(this.format)
+        .onChange(v => {
+          this.format = v as ExportFormat;
+          coverSetting.settingEl.style.display = v === 'epub' ? '' : 'none';
+        }));
+
+    coverSetting = new Setting(contentEl)
+      .setName('Cover image path')
+      .setDesc('Vault path to a JPG or PNG cover image. Leave empty for a generated text cover.')
+      .addText(t => t
+        .setValue(this.coverImagePath)
+        .setPlaceholder('e.g. Assets/cover.jpg')
+        .onChange(v => { this.coverImagePath = v.trim(); }));
+    coverSetting.settingEl.style.display = this.format === 'epub' ? '' : 'none';
+
+    new Setting(contentEl)
+      .setName('Scope')
+      .addDropdown(d => d
+        .addOption('current', 'Current document')
+        .addOption('project', 'Entire project (in Binder order)')
+        .setValue(this.exportScope)
+        .onChange(v => { this.exportScope = v as ExportScope; }));
+
+    new Setting(contentEl)
+      .setName('Include frontmatter')
+      .addToggle(t => t.setValue(this.includeFrontmatter).onChange(v => { this.includeFrontmatter = v; }));
+
+    new Setting(contentEl)
+      .setName('Include research notes')
+      .addToggle(t => t.setValue(this.includeResearch).onChange(v => { this.includeResearch = v; }));
+
+    new Setting(contentEl)
+      .setName('Include document titles as headings')
+      .addToggle(t => t.setValue(this.includeTitlesAsHeadings).onChange(v => { this.includeTitlesAsHeadings = v; }));
+
+    new Setting(contentEl)
+      .setName('Add title page')
+      .setDesc('Prepend a title page with project title, author, and date.')
+      .addToggle(t => t.setValue(this.addTitlePage).onChange(v => { this.addTitlePage = v; }));
+
+    const previewBtn = contentEl.createEl('button', {
+      cls: 'ws-export-preview-btn',
+      text: 'Preview Compiled Manuscript',
+    });
+    previewBtn.onclick = async () => {
+      this.close();
+      await this.plugin.openCompilePreview();
+    };
+
+    const btnRow = contentEl.createDiv('ws-modal-btn-row');
+
+    const exportBtn = btnRow.createEl('button', { cls: 'mod-cta', text: 'Export' });
+    exportBtn.onclick = async () => {
+      exportBtn.disabled = true;
+      exportBtn.textContent = 'Exporting…';
+      try {
+        await this.plugin.exportEngine.export({
+          format: this.format,
+          scope: this.exportScope,
+          includeFrontmatter: this.includeFrontmatter,
+          includeResearch: this.includeResearch,
+          includeTitlesAsHeadings: this.includeTitlesAsHeadings,
+          paperSize: this.plugin.settings.defaultPaperSize,
+          font: this.plugin.settings.defaultExportFont,
+          fontSize: this.plugin.settings.defaultExportFontSize,
+          addTitlePage: this.addTitlePage,
+          coverImagePath: this.coverImagePath || undefined,
+        });
+        this.close();
+      } catch (e) {
+        new Notice(`Export failed: ${e instanceof Error ? e.message : String(e)}`);
+        exportBtn.disabled = false;
+        exportBtn.textContent = 'Export';
+      }
+    };
+
+    const cancelBtn = btnRow.createEl('button', { text: 'Cancel' });
+    cancelBtn.onclick = () => this.close();
+  }
+
+  onClose(): void {
+    this.contentEl.empty();
+  }
+}
