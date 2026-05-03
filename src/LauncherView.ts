@@ -73,7 +73,7 @@ export class LauncherView extends ItemView {
     setIcon(settingsBtn, 'settings');
     settingsBtn.onclick = () => {
       (this.app as any).setting?.open();
-      (this.app as any).setting?.openTabById('obsidian-writing-studio');
+      (this.app as any).setting?.openTabById('writing-studio');
     };
   }
 
