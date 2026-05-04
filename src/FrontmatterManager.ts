@@ -58,7 +58,7 @@ export class FrontmatterManager {
       // Record write time AFTER processFrontMatter so the timestamp-based guard
       // in scheduleUpdate blocks the modify event that processFrontMatter fires.
       this.lastPluginWrite.set(file.path, Date.now());
-    } catch (e) {
+    } catch {
       // File may have been deleted or locked
     } finally {
       // Keep the file in writingFiles briefly so any synchronously-delivered
@@ -112,7 +112,7 @@ export class FrontmatterManager {
         const needsQuotes = value.includes(':') || value.includes('#') || value.includes('"');
         lines.push(`${key}: ${needsQuotes ? `"${value.replace(/"/g, '\\"')}"` : value}`);
       } else {
-        lines.push(`${key}: ${value}`);
+        lines.push(`${key}: ${String(value)}`);
       }
     }
     lines.push('---');

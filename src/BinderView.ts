@@ -152,7 +152,8 @@ export class BinderView extends ItemView {
 
       // Indent
       if (depth > 0) {
-        row.style.paddingLeft = `${depth * 16 + 8}px`;
+        row.setCssProps({ '--ws-binder-depth': `${depth * 16 + 8}px` });
+        row.style.paddingLeft = 'var(--ws-binder-depth)';
       }
 
       // Collapse toggle for groups
@@ -162,7 +163,7 @@ export class BinderView extends ItemView {
         toggle.onclick = (e) => {
           e.stopPropagation();
           item.collapsed = !item.collapsed;
-          this.saveBinder();
+          void this.saveBinder();
           this.render();
         };
       } else {
@@ -175,7 +176,7 @@ export class BinderView extends ItemView {
 
       // Status dot
       const dot = row.createSpan('ws-binder-status-dot');
-      dot.style.backgroundColor = STATUS_COLORS[item.status];
+      dot.setCssProps({ '--ws-status-color': STATUS_COLORS[item.status] });
       dot.title = STATUS_LABELS[item.status];
 
       // Title
@@ -347,22 +348,22 @@ export class BinderView extends ItemView {
   private showContextMenu(e: MouseEvent, item: BinderItem): void {
     const menu = new Menu();
 
-    menu.addItem(i => i.setTitle('Open Document').setIcon('file-text').onClick(() => this.openDocument(item)));
-    menu.addItem(i => i.setTitle('New Child Document').setIcon('plus').onClick(() => this.createNewDocument(item.id)));
+    menu.addItem(i => i.setTitle('Open document').setIcon('file-text').onClick(() => { void this.openDocument(item); }));
+    menu.addItem(i => i.setTitle('New child document').setIcon('plus').onClick(() => { void this.createNewDocument(item.id); }));
     menu.addSeparator();
-    menu.addItem(i => i.setTitle('Set Status: Draft').onClick(() => this.setItemStatus(item, 'draft')));
-    menu.addItem(i => i.setTitle('Set Status: In Progress').onClick(() => this.setItemStatus(item, 'in-progress')));
-    menu.addItem(i => i.setTitle('Set Status: Complete').onClick(() => this.setItemStatus(item, 'complete')));
-    menu.addItem(i => i.setTitle('Set Status: Published').onClick(() => this.setItemStatus(item, 'published')));
+    menu.addItem(i => i.setTitle('Set status: draft').onClick(() => { void this.setItemStatus(item, 'draft'); }));
+    menu.addItem(i => i.setTitle('Set status: in progress').onClick(() => { void this.setItemStatus(item, 'in-progress'); }));
+    menu.addItem(i => i.setTitle('Set status: complete').onClick(() => { void this.setItemStatus(item, 'complete'); }));
+    menu.addItem(i => i.setTitle('Set status: published').onClick(() => { void this.setItemStatus(item, 'published'); }));
     menu.addSeparator();
-    menu.addItem(i => i.setTitle('Duplicate').setIcon('copy').onClick(() => this.duplicateItem(item)));
-    menu.addItem(i => i.setTitle('Move to Research').setIcon('folder').onClick(() => this.moveToResearch(item)));
+    menu.addItem(i => i.setTitle('Duplicate').setIcon('copy').onClick(() => { void this.duplicateItem(item); }));
+    menu.addItem(i => i.setTitle('Move to research').setIcon('folder').onClick(() => { void this.moveToResearch(item); }));
     menu.addSeparator();
     menu.addItem(i => i.setTitle('Publish to WordPress').setIcon('globe').onClick(() => {
       new PublishModal(this.app, this.plugin, item.filePath).open();
     }));
     menu.addSeparator();
-    menu.addItem(i => i.setTitle('Delete').setIcon('trash').onClick(() => this.deleteItem(item)));
+    menu.addItem(i => i.setTitle('Delete').setIcon('trash').onClick(() => { void this.deleteItem(item); }));
 
     menu.showAtMouseEvent(e);
   }
@@ -387,11 +388,12 @@ export class BinderView extends ItemView {
 
   private async duplicateItem(item: BinderItem): Promise<void> {
     if (!this.activeProject) return;
+    if (item.type === 'group' || item.type === 'part') return;
     const newTitle = `${item.title} (Copy)`;
     const newItem = await this.plugin.projectManager.addDocumentToBinder(
       this.activeProject,
       newTitle,
-      item.type as any
+      item.type
     );
 
     // Copy content
@@ -424,7 +426,7 @@ export class BinderView extends ItemView {
     if (!this.activeProject) return;
     const file = this.app.vault.getAbstractFileByPath(item.filePath);
     if (file instanceof TFile) {
-      await this.app.vault.trash(file, true);
+      await this.app.fileManager.trashFile(file);
     }
     await this.plugin.projectManager.removeItemFromBinder(this.activeProject, item.id);
     await this.refresh();
@@ -544,10 +546,10 @@ export class BinderView extends ItemView {
 
   private filterItems(query: string, container: HTMLElement): void {
     const q = query.toLowerCase();
-    const rows = container.querySelectorAll('.ws-binder-item');
+    const rows = container.querySelectorAll<HTMLElement>('.ws-binder-item');
     rows.forEach((row) => {
       const title = row.querySelector('.ws-binder-title')?.textContent?.toLowerCase() || '';
-      (row as HTMLElement).style.display = (!q || title.includes(q)) ? '' : 'none';
+      row.toggleClass('ws-hidden', !(!q || title.includes(q)));
     });
   }
 

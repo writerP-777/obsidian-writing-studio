@@ -18,7 +18,7 @@ export class SprintModal extends Modal {
     const { contentEl } = this;
     contentEl.empty();
     contentEl.addClass('ws-sprint-modal');
-    contentEl.createEl('h2', { text: 'Start Writing Sprint' });
+    contentEl.createEl('h2', { text: 'Start writing sprint' });
 
     new Setting(contentEl)
       .setName('Duration (minutes)')
@@ -56,7 +56,7 @@ export class SprintModal extends Modal {
 
     const startBtn = btnRow.createEl('button', {
       cls: 'mod-cta',
-      text: 'Start Sprint',
+      text: 'Start sprint',
     });
     startBtn.onclick = () => {
       if (!this.duration || this.duration <= 0) {

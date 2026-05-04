@@ -1,4 +1,4 @@
-import { ItemView, WorkspaceLeaf, MarkdownRenderer, TFile, setIcon } from 'obsidian';
+import { ItemView, WorkspaceLeaf, MarkdownRenderer } from 'obsidian';
 import type WritingStudioPlugin from '../main';
 import { ExportOptions } from './ExportEngine';
 import { ExportModal } from '../modals/ExportModal';
@@ -125,7 +125,6 @@ export class CompilePreviewView extends ItemView {
     }
   }
 
-  async onClose(): Promise<void> {
-    // cleanup
-  }
+  async onClose(): Promise<void> {}
+
 }

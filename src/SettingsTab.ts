@@ -1,4 +1,4 @@
-import { App, PluginSettingTab, Setting, Notice, setIcon } from 'obsidian';
+import { App, PluginSettingTab, Setting } from 'obsidian';
 import type WritingStudioPlugin from '../main';
 import { WordPressSite } from '../models/WordPressSite';
 
@@ -60,7 +60,7 @@ export class WritingStudioSettingsTab extends PluginSettingTab {
   }
 
   private renderGeneral(el: HTMLElement): void {
-    el.createEl('h3', { text: 'General' });
+    new Setting(el).setName('General').setHeading();
 
     new Setting(el)
       .setName('Default project folder')
@@ -100,7 +100,7 @@ export class WritingStudioSettingsTab extends PluginSettingTab {
   }
 
   private renderFocusMode(el: HTMLElement): void {
-    el.createEl('h3', { text: 'Focus Mode' });
+    new Setting(el).setName('Focus mode').setHeading();
 
     new Setting(el)
       .setName('Focus unit')
@@ -152,7 +152,7 @@ export class WritingStudioSettingsTab extends PluginSettingTab {
   }
 
   private renderTypography(el: HTMLElement): void {
-    el.createEl('h3', { text: 'Typography Mode' });
+    new Setting(el).setName('Typography mode').setHeading();
 
     new Setting(el)
       .setName('Font family')
@@ -255,7 +255,7 @@ export class WritingStudioSettingsTab extends PluginSettingTab {
   }
 
   private renderSprint(el: HTMLElement): void {
-    el.createEl('h3', { text: 'Sprint & Goals' });
+    new Setting(el).setName('Sprint & goals').setHeading();
 
     new Setting(el)
       .setName('Default sprint duration (minutes)')
@@ -300,7 +300,7 @@ export class WritingStudioSettingsTab extends PluginSettingTab {
   }
 
   private renderExport(el: HTMLElement): void {
-    el.createEl('h3', { text: 'Export' });
+    new Setting(el).setName('Export').setHeading();
 
     new Setting(el)
       .setName('Default export format')
@@ -345,7 +345,7 @@ export class WritingStudioSettingsTab extends PluginSettingTab {
         .setValue(this.plugin.settings.pandocPath)
         .onChange(async v => { this.plugin.settings.pandocPath = v; await this.plugin.saveSettings(); }));
 
-    el.createEl('h4', { text: 'EPUB' });
+    new Setting(el).setName('EPUB').setHeading();
 
     new Setting(el)
       .setName('EPUB language')
@@ -364,7 +364,7 @@ export class WritingStudioSettingsTab extends PluginSettingTab {
   }
 
   private renderLog(el: HTMLElement): void {
-    el.createEl('h3', { text: 'Daily Writing Log' });
+    new Setting(el).setName('Daily writing log').setHeading();
 
     new Setting(el)
       .setName('Append to Daily Note')
@@ -375,7 +375,7 @@ export class WritingStudioSettingsTab extends PluginSettingTab {
   }
 
   private renderWordPress(el: HTMLElement): void {
-    el.createEl('h3', { text: 'WordPress Sites' });
+    new Setting(el).setName('WordPress sites').setHeading();
 
     const sites = this.plugin.settings.wordPressSites;
 
@@ -386,7 +386,7 @@ export class WritingStudioSettingsTab extends PluginSettingTab {
 
     new Setting(el)
       .addButton(b => b
-        .setButtonText('+ Add WordPress Site')
+        .setButtonText('+ Add WordPress site')
         .onClick(async () => {
           this.plugin.settings.wordPressSites.push({
             id: `site-${Date.now()}`,
@@ -401,7 +401,7 @@ export class WritingStudioSettingsTab extends PluginSettingTab {
           this.display();
         }));
 
-    el.createEl('h4', { text: 'Global Settings' });
+    new Setting(el).setName('Global settings').setHeading();
 
     new Setting(el)
       .setName('Default wikilink handling')
@@ -414,7 +414,7 @@ export class WritingStudioSettingsTab extends PluginSettingTab {
 
   private renderSiteConfig(container: HTMLElement, site: WordPressSite, index: number): void {
     const siteEl = container.createDiv('ws-wp-site-config');
-    siteEl.createEl('h4', { text: `Site: ${site.nickname || 'Unnamed'}` });
+    new Setting(siteEl).setName(`Site: ${site.nickname || 'Unnamed'}`).setHeading();
 
     new Setting(siteEl)
       .setName('Nickname')
@@ -468,7 +468,7 @@ export class WritingStudioSettingsTab extends PluginSettingTab {
     const statusEl = siteEl.createDiv('ws-wp-test-status');
 
     testRow.addButton(b => b
-      .setButtonText('Test Connection')
+      .setButtonText('Test connection')
       .onClick(async () => {
         statusEl.textContent = 'Testing…';
         statusEl.className = 'ws-wp-test-status ws-wp-test-pending';
@@ -479,7 +479,7 @@ export class WritingStudioSettingsTab extends PluginSettingTab {
 
     new Setting(siteEl)
       .addButton(b => b
-        .setButtonText('Remove Site')
+        .setButtonText('Remove site')
         .setWarning()
         .onClick(async () => {
           this.plugin.settings.wordPressSites.splice(index, 1);

@@ -1,6 +1,6 @@
 # Obsidian Writing Studio
 
-**Version 2.1.1** · Desktop only
+**Version 2.1.2** · Desktop only
 
 Transform Obsidian into a professional writing environment. Writing Studio bundles a project binder, writing sprints, focus and typography modes, manuscript export, WordPress publishing, and a folder sidebar explorer into a single plugin.
 
@@ -23,7 +23,7 @@ Transform Obsidian into a professional writing environment. Writing Studio bundl
 
 The Launcher is a left-sidebar dashboard that opens automatically when Obsidian loads. It shows your active project, recent files, and quick-action buttons for the most common Writing Studio tasks.
 
-**To open:** Click the feather ribbon icon, or use `Ctrl/Cmd + Shift + 0`.
+**To open:** Click the feather ribbon icon, or assign a hotkey to **Open Writing Studio** in Settings → Hotkeys.
 
 ---
 
@@ -31,7 +31,7 @@ The Launcher is a left-sidebar dashboard that opens automatically when Obsidian 
 
 The Binder is a left-sidebar project panel that lists all documents in your active writing project. Each document shows its title, type (Chapter, Section, Article, Note), status (Draft, In Progress, Complete), and live word count. Documents can be reordered and toggled in or out of export.
 
-**To open:** Click the book ribbon icon, or use `Ctrl/Cmd + Shift + B`.
+**To open:** Click the book ribbon icon, or assign a hotkey to **Open Binder** in Settings → Hotkeys.
 
 **Adding a file to a project:**
 - Right-click any Markdown file in the file explorer and choose **Add to Writing Project**.
@@ -52,8 +52,8 @@ Three modes shape how the editor behaves. The current mode is shown in the statu
 
 **To switch modes:**
 - Click the layout-dashboard ribbon icon for a dropdown menu.
-- Use `Ctrl/Cmd + Shift + 1 / 2 / 3` for Draft / Edit / Review.
 - Right-click inside the editor and choose **Switch Writing Mode →**.
+- Assign hotkeys to **Switch to Draft Mode / Edit Mode / Review Mode** in Settings → Hotkeys.
 
 The active mode persists across Obsidian restarts.
 
@@ -63,7 +63,7 @@ The active mode persists across Obsidian restarts.
 
 Focus Mode dims everything in the editor except the paragraph or sentence you are currently writing, reducing visual noise and keeping attention on the active thought.
 
-**To toggle:** Click the eye ribbon icon, use `Ctrl/Cmd + Shift + F`, or press `Escape` to exit.
+**To toggle:** Click the eye ribbon icon, or assign a hotkey to **Toggle Focus Mode** in Settings → Hotkeys. Press `Escape` to exit.
 
 **Settings (Settings → Focus Mode):**
 
@@ -81,7 +81,7 @@ Focus Mode dims everything in the editor except the paragraph or sentence you ar
 
 Typography Mode applies a consistent, reader-friendly text treatment to the editor: a curated font, constrained line length, controlled line height, and optional letter spacing.
 
-**To toggle:** Use `Ctrl/Cmd + Shift + Y`.
+**To toggle:** Assign a hotkey to **Toggle Typography Mode** in Settings → Hotkeys.
 
 **Settings (Settings → Typography):**
 
@@ -101,7 +101,7 @@ Typography Mode applies a consistent, reader-friendly text treatment to the edit
 
 The Sprint Timer runs a timed writing session. A countdown appears in the status bar. When the sprint ends, a summary modal shows words written, duration, and words-per-minute. The session is logged to sprint history and optionally appended to your Daily Note.
 
-**To start a sprint:** Click the timer ribbon icon, or use `Ctrl/Cmd + Shift + T`.
+**To start a sprint:** Click the timer ribbon icon, or assign a hotkey to **Start Writing Sprint** in Settings → Hotkeys.
 
 The sprint modal lets you set:
 - Duration (default from settings)
@@ -135,7 +135,7 @@ When a goal is set and **Inline goal banner** is enabled, a progress bar appears
 
 The Writing Dashboard shows your word count history, sprint log, daily progress toward your goal, and per-project statistics.
 
-**To open:** Click the bar-chart ribbon icon, or use the command **Open Writing Dashboard**.
+**To open:** Click the bar-chart ribbon icon, or use the command **Open Writing Dashboard** from the command palette.
 
 ---
 
@@ -143,7 +143,7 @@ The Writing Dashboard shows your word count history, sprint log, daily progress 
 
 The Targets Dashboard lets you assign word count goals to individual documents in the active project's binder and track progress across the whole project at a glance.
 
-**To open:** Use `Ctrl/Cmd + Shift + G`, or use the command **Open Targets Dashboard**.
+**To open:** Use the command **Open Targets Dashboard**, or assign a hotkey in Settings → Hotkeys.
 
 ---
 
@@ -176,7 +176,7 @@ The Export Engine uses [Pandoc](https://pandoc.org) to convert the current docum
 
 **Supported formats:** PDF · Word (.docx) · RTF · HTML · Markdown · EPUB
 
-**To export:** Use `Ctrl/Cmd + Shift + E`, or right-click inside the editor and choose **Export This Document**.
+**To export:** Right-click inside the editor and choose **Export This Document**, or assign a hotkey to **Export document** in Settings → Hotkeys.
 
 **Settings (Settings → Export):**
 
@@ -198,16 +198,16 @@ The Export Engine uses [Pandoc](https://pandoc.org) to convert the current docum
 
 Publish the current Markdown file directly to one or more WordPress sites using the WordPress REST API.
 
-**To publish:** Click the globe ribbon icon, use `Ctrl/Cmd + Shift + P`, or right-click inside the editor and choose **Publish to WordPress**.
+**To publish:** Click the globe ribbon icon, right-click inside the editor and choose **Publish to WordPress**, or assign a hotkey to **Publish to WordPress** in Settings → Hotkeys.
 
 The publish modal lets you choose the target site, set the post title, and select the post status (Draft, Pending, Published).
 
 **Setting up a site (Settings → WordPress):**
 
-1. Click **+ Add WordPress Site**.
+1. Click **+ Add WordPress site**.
 2. Enter a nickname, the site URL (e.g. `https://yourblog.com`), and your WordPress username.
 3. Generate an Application Password in WordPress under **Users → Profile → Application Passwords** and paste it into the **Application Password** field.
-4. Click **Test Connection** to verify.
+4. Click **Test connection** to verify.
 
 **Per-site options:**
 
@@ -259,27 +259,27 @@ When **Append to Daily Note** is enabled (Settings → Writing Log), a summary o
 
 ## Commands Reference
 
-| Command | Default Hotkey | Description |
-|---------|---------------|-------------|
-| Open Writing Studio | `Ctrl/Cmd + Shift + 0` | Open the Launcher sidebar panel |
-| Open Binder | `Ctrl/Cmd + Shift + B` | Open the Writing Binder sidebar panel |
-| Toggle Focus Mode | `Ctrl/Cmd + Shift + F` | Enable or disable Focus Mode |
-| Toggle Typography Mode | `Ctrl/Cmd + Shift + Y` | Enable or disable Typography Mode |
-| Switch to Draft Mode | `Ctrl/Cmd + Shift + 1` | Activate Draft writing mode |
-| Switch to Edit Mode | `Ctrl/Cmd + Shift + 2` | Activate Edit writing mode |
-| Switch to Review Mode | `Ctrl/Cmd + Shift + 3` | Activate Review writing mode |
-| Start Writing Sprint | `Ctrl/Cmd + Shift + T` | Open the sprint timer modal |
-| Export Document | `Ctrl/Cmd + Shift + E` | Export the current document via Pandoc |
-| Publish to WordPress | `Ctrl/Cmd + Shift + P` | Publish the current document to WordPress |
-| Open Targets Dashboard | `Ctrl/Cmd + Shift + G` | Open the word count targets panel |
-| Set Word Count Goal | *(none)* | Set a per-document word count goal |
-| Export Project | *(none)* | Export the full project via Pandoc |
-| Preview Compiled Manuscript | *(none)* | Open the compile preview pane |
-| New Writing Project | *(none)* | Create a new writing project |
-| Open Writing Dashboard | *(none)* | Open the statistics dashboard |
-| Open folder in Sidebar Explorer | *(none)* | Fuzzy-search and open a vault folder in the sidebar |
+No default hotkeys are assigned. All commands can be given a hotkey in **Settings → Hotkeys**.
 
-All hotkeys can be reassigned in **Settings → Hotkeys**.
+| Command | Description |
+|---------|-------------|
+| Open Writing Studio | Open the Launcher sidebar panel |
+| Open Binder | Open the Writing Binder sidebar panel |
+| Toggle Focus Mode | Enable or disable Focus Mode |
+| Toggle Typography Mode | Enable or disable Typography Mode |
+| Switch to Draft Mode | Activate Draft writing mode |
+| Switch to Edit Mode | Activate Edit writing mode |
+| Switch to Review Mode | Activate Review writing mode |
+| Start Writing Sprint | Open the sprint timer modal |
+| Export document | Export the current document via Pandoc |
+| Publish to WordPress | Publish the current document to WordPress |
+| Open Targets Dashboard | Open the word count targets panel |
+| Set word count goal | Set a per-document word count goal |
+| Export project | Export the full project via Pandoc |
+| Preview compiled manuscript | Open the compile preview pane |
+| New writing project | Create a new writing project |
+| Open Writing Dashboard | Open the statistics dashboard |
+| Open folder in Sidebar Explorer | Fuzzy-search and open a vault folder in the sidebar |
 
 ---
 

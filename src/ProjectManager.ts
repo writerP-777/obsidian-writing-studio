@@ -1,4 +1,4 @@
-import { App, TFolder, TFile, Notice, normalizePath } from 'obsidian';
+import { App, TFolder, TFile, normalizePath } from 'obsidian';
 import type WritingStudioPlugin from '../main';
 import { WritingProject, ProjectType } from '../models/Project';
 import { BinderData, BinderItem } from '../models/BinderItem';

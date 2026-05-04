@@ -82,8 +82,7 @@ export class PublishModal extends Modal {
 
     // Category selector
     if (this.categories.length > 0) {
-      const catSetting = new Setting(contentEl)
-        .setName('Category');
+      new Setting(contentEl).setName('Category');
 
       const catList = contentEl.createDiv('ws-publish-categories');
       for (const cat of this.categories) {
@@ -131,11 +130,11 @@ export class PublishModal extends Modal {
       noticeEl.createEl('span', { text: `⚠ This document was previously published (Post ID: ${this.existingPostId}).` });
 
       const choiceRow = noticeEl.createDiv('ws-publish-choice');
-      const updateBtn = choiceRow.createEl('button', { text: 'Update Existing Post', cls: 'mod-cta' });
-      updateBtn.onclick = () => this.doPublish(true);
+      const updateBtn = choiceRow.createEl('button', { text: 'Update existing post', cls: 'mod-cta' });
+      updateBtn.onclick = () => { void this.doPublish(true); };
 
-      const newBtn = choiceRow.createEl('button', { text: 'Create New Post' });
-      newBtn.onclick = () => this.doPublish(false);
+      const newBtn = choiceRow.createEl('button', { text: 'Create new post' });
+      newBtn.onclick = () => { void this.doPublish(false); };
     }
 
     // Buttons
@@ -145,7 +144,7 @@ export class PublishModal extends Modal {
         cls: 'mod-cta',
         text: this.scheduledDate ? 'Schedule' : 'Publish',
       });
-      publishBtn.onclick = () => this.doPublish(false);
+      publishBtn.onclick = () => { void this.doPublish(false); };
     }
 
     const cancelBtn = btnRow.createEl('button', { text: 'Cancel' });
@@ -153,7 +152,7 @@ export class PublishModal extends Modal {
   }
 
   private render(): void {
-    this.onOpen();
+    void this.onOpen();
   }
 
   private async loadExistingMeta(): Promise<void> {

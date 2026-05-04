@@ -1,9 +1,12 @@
-import { App, TFile, normalizePath, Notice } from 'obsidian';
+import { App, MarkdownView, TFile, normalizePath, Notice } from 'obsidian';
 import { exec } from 'child_process';
 import { promisify } from 'util';
 import type WritingStudioPlugin from '../main';
-import { BinderItem } from '../models/BinderItem';
 import { EpubEngine, EpubChapter } from './EpubEngine';
+
+interface FileSystemAdapter {
+  getFullPath?(vaultPath: string): string;
+}
 
 const execAsync = promisify(exec);
 
@@ -65,7 +68,7 @@ export class ExportEngine {
       case 'pdf':
         return this.exportPdf(compiled, `${baseFile}.pdf`, opts);
       default:
-        throw new Error(`Unsupported format: ${opts.format}`);
+        throw new Error(`Unsupported format: ${opts.format as string}`);
     }
   }
 
@@ -82,7 +85,8 @@ export class ExportEngine {
 
     if (opts.scope === 'current') {
       const leaf = this.app.workspace.getMostRecentLeaf();
-      const file = (leaf?.view as any)?.file;
+      const view = leaf?.view;
+      const file = view instanceof MarkdownView ? view.file : null;
       if (file instanceof TFile) {
         let content = await this.app.vault.read(file);
         if (!opts.includeFrontmatter) {
@@ -157,7 +161,8 @@ export class ExportEngine {
 
     if (opts.scope === 'current') {
       const leaf = this.app.workspace.getMostRecentLeaf();
-      const file = (leaf?.view as any)?.file;
+      const view = leaf?.view;
+      const file = view instanceof MarkdownView ? view.file : null;
       if (file instanceof TFile) {
         parts.push(await this.processFile(file, opts));
       }
@@ -284,7 +289,7 @@ ${this.markdownToHtml(content)}
       throw new Error(`Pandoc export failed: ${e instanceof Error ? e.message : String(e)}\nEnsure pandoc is installed.`);
     } finally {
       const tmpFile = this.app.vault.getAbstractFileByPath(tempMdPath);
-      if (tmpFile) await this.app.vault.delete(tmpFile);
+      if (tmpFile instanceof TFile) await this.app.fileManager.trashFile(tmpFile);
     }
   }
 
@@ -307,7 +312,7 @@ ${this.markdownToHtml(content)}
   }
 
   private async getAbsPath(vaultPath: string): Promise<string> {
-    const adapter = this.app.vault.adapter as any;
+    const adapter = this.app.vault.adapter as unknown as FileSystemAdapter;
     return adapter.getFullPath ? adapter.getFullPath(vaultPath) : vaultPath;
   }
 

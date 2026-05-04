@@ -1,4 +1,4 @@
-import { App, Modal, TFile, Notice } from 'obsidian';
+import { App, Modal, TFile } from 'obsidian';
 import type WritingStudioPlugin from '../main';
 import { BinderItem, STATUS_COLORS, STATUS_LABELS } from '../models/BinderItem';
 
@@ -24,7 +24,7 @@ export class TargetsDashboardModal extends Modal {
     const { contentEl } = this;
     contentEl.empty();
     contentEl.addClass('ws-dashboard-modal');
-    contentEl.createEl('h2', { text: 'Chapter Targets Dashboard' });
+    contentEl.createEl('h2', { text: 'Chapter targets dashboard' });
 
     const project = this.plugin.projectManager.getActiveProject();
     if (!project) {
@@ -103,7 +103,7 @@ export class TargetsDashboardModal extends Modal {
     for (const col of cols) {
       const th = hr.createEl('th', { text: col.label });
       if (col.key !== 'progress') {
-        th.style.cursor = 'pointer';
+        th.addClass('ws-sortable');
         th.onclick = () => {
           if (this.sortCol === col.key) this.sortAsc = !this.sortAsc;
           else { this.sortCol = col.key; this.sortAsc = true; }
@@ -160,7 +160,7 @@ export class TargetsDashboardModal extends Modal {
       const statusTd = tr.createEl('td');
       const badge = statusTd.createSpan('ws-status-badge');
       badge.textContent = STATUS_LABELS[stat.item.status];
-      badge.style.backgroundColor = STATUS_COLORS[stat.item.status];
+      badge.setCssProps({ '--ws-status-color': STATUS_COLORS[stat.item.status] });
 
       tr.createEl('td', { text: String(stat.wordCount) });
 
@@ -191,7 +191,7 @@ export class TargetsDashboardModal extends Modal {
         const pct = Math.min(100, Math.round((stat.wordCount / goal) * 100));
         const barWrap = progressTd.createDiv('ws-progress-wrap');
         const bar = barWrap.createDiv('ws-progress-bar');
-        bar.style.width = `${pct}%`;
+        bar.setCssProps({ '--ws-bar-width': `${pct}%` });
         progressTd.createSpan({ text: `${pct}%`, cls: 'ws-progress-pct' });
       } else {
         progressTd.textContent = '—';
@@ -207,7 +207,7 @@ export class TargetsDashboardModal extends Modal {
     const totalGoal = filtered.reduce((s, d) => s + (d.item.wordCountGoal || 0), 0);
     const overallPct = totalGoal > 0 ? Math.round((totalWords / totalGoal) * 100) : 0;
 
-    sumRow.createEl('td', { text: 'TOTAL' });
+    sumRow.createEl('td', { text: 'Total' });
     sumRow.createEl('td');
     sumRow.createEl('td');
     sumRow.createEl('td', { text: String(totalWords) });
@@ -217,7 +217,7 @@ export class TargetsDashboardModal extends Modal {
     if (totalGoal > 0) {
       const barWrap = sumProgressTd.createDiv('ws-progress-wrap');
       const bar = barWrap.createDiv('ws-progress-bar');
-      bar.style.width = `${overallPct}%`;
+      bar.setCssProps({ '--ws-bar-width': `${overallPct}%` });
       sumProgressTd.createSpan({ text: `${overallPct}%`, cls: 'ws-progress-pct' });
     }
 

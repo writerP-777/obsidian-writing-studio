@@ -84,8 +84,6 @@ export class StatsTracker {
     // Try to get daily notes folder from Obsidian daily notes config
     const dailyNotesPlugin = (this.app as any).internalPlugins?.plugins?.['daily-notes'];
     const folder = dailyNotesPlugin?.instance?.options?.folder || '';
-    const format = dailyNotesPlugin?.instance?.options?.format || 'YYYY-MM-DD';
-
     // Use the date as-is (ISO format) since we can't easily format with moment here
     const fileName = date;
     if (folder) {

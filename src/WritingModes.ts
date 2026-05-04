@@ -62,7 +62,7 @@ export class WritingModes {
     await this.plugin.saveSettings();
 
     const modeLabel = mode === 'none' ? 'Normal' : mode.charAt(0).toUpperCase() + mode.slice(1);
-    new Notice(`Writing Studio: ${modeLabel} Mode`);
+    new Notice(`Writing Studio: ${modeLabel} mode`);
   }
 
   private collapseSidebars(): void {
@@ -95,19 +95,19 @@ export class WritingModes {
       none: '',
     };
     this.statusBarEl.textContent = labels[this.currentMode] || '';
-    this.statusBarEl.style.display = this.currentMode === 'none' ? 'none' : '';
+    this.statusBarEl.toggleClass('ws-hidden', this.currentMode === 'none');
   }
 
   restore(): void {
-    const saved = this.plugin.settings.currentWritingMode as WritingModeType;
+    const saved = this.plugin.settings.currentWritingMode;
     if (saved && saved !== 'none') {
-      this.switchMode(saved);
+      void this.switchMode(saved);
     }
   }
 
   destroy(): void {
     if (this.currentMode !== 'none') {
-      this.switchMode('none');
+      void this.switchMode('none');
     }
   }
 }

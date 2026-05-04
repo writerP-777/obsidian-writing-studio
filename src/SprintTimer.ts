@@ -1,4 +1,4 @@
-import { App, Notice } from 'obsidian';
+import { App, MarkdownView, Notice } from 'obsidian';
 import type WritingStudioPlugin from '../main';
 import { SprintSession, SprintState } from '../models/SprintSession';
 
@@ -9,7 +9,7 @@ export class SprintTimer {
   private intervalId: number | null = null;
   private floatingEl: HTMLElement | null = null;
   private statusBarEl: HTMLElement | null = null;
-  private onComplete: ((session: SprintSession) => void) | null = null;
+  private onComplete: ((session: SprintSession) => void | Promise<void>) | null = null;
 
   constructor(plugin: WritingStudioPlugin) {
     this.plugin = plugin;
@@ -18,10 +18,10 @@ export class SprintTimer {
 
   setStatusBar(el: HTMLElement): void {
     this.statusBarEl = el;
-    el.style.display = 'none';
+    el.addClass('ws-hidden');
   }
 
-  setOnComplete(cb: (session: SprintSession) => void): void {
+  setOnComplete(cb: (session: SprintSession) => void | Promise<void>): void {
     this.onComplete = cb;
   }
 
@@ -71,7 +71,7 @@ export class SprintTimer {
     const session = this.buildSession();
     this.state = null;
     this.hideFloating();
-    if (this.statusBarEl) this.statusBarEl.style.display = 'none';
+    if (this.statusBarEl) this.statusBarEl.addClass('ws-hidden');
     if (this.onComplete) this.onComplete(session);
   }
 
@@ -140,7 +140,7 @@ export class SprintTimer {
     const session = this.buildSession();
     this.state = null;
     this.hideFloating();
-    if (this.statusBarEl) this.statusBarEl.style.display = 'none';
+    if (this.statusBarEl) this.statusBarEl.addClass('ws-hidden');
     if (this.onComplete) this.onComplete(session);
   }
 
@@ -177,7 +177,7 @@ export class SprintTimer {
 
     if (this.statusBarEl) {
       this.statusBarEl.textContent = label;
-      this.statusBarEl.style.display = '';
+      this.statusBarEl.removeClass('ws-hidden');
     }
 
     // Update focus toolbar
@@ -186,25 +186,19 @@ export class SprintTimer {
 
   private showFloating(): void {
     this.hideFloating();
-    const el = document.createElement('div');
-    el.className = 'ws-sprint-floating';
-    el.innerHTML = `
-      <div class="ws-sprint-header">Writing Sprint</div>
-      <div class="ws-sprint-time">00:00</div>
-      <div class="ws-sprint-wc">+0 words</div>
-      <div class="ws-sprint-controls">
-        <button class="ws-sprint-pause" title="Pause/Resume">⏸</button>
-        <button class="ws-sprint-stop" title="Stop Sprint">■</button>
-      </div>
-    `;
+    const el = createEl('div', { cls: 'ws-sprint-floating' });
+    el.createEl('div', { cls: 'ws-sprint-header', text: 'Writing sprint' });
+    el.createEl('div', { cls: 'ws-sprint-time', text: '00:00' });
+    el.createEl('div', { cls: 'ws-sprint-wc', text: '+0 words' });
+    const controls = el.createEl('div', { cls: 'ws-sprint-controls' });
+    const pauseBtn = controls.createEl('button', { cls: 'ws-sprint-pause', title: 'Pause/Resume', text: '⏸' });
+    const stopBtn = controls.createEl('button', { cls: 'ws-sprint-stop', title: 'Stop sprint', text: '■' });
 
-    const pauseBtn = el.querySelector('.ws-sprint-pause') as HTMLButtonElement;
     pauseBtn.onclick = () => {
       if (this.state?.paused) this.resume();
       else this.pause();
     };
 
-    const stopBtn = el.querySelector('.ws-sprint-stop') as HTMLButtonElement;
     stopBtn.onclick = () => this.stop();
 
     document.body.appendChild(el);
@@ -223,8 +217,8 @@ export class SprintTimer {
     const leaf = this.app.workspace.getMostRecentLeaf();
     if (!leaf) return 0;
     const view = leaf.view;
-    if ('editor' in view) {
-      const content = (view as any).editor?.getValue() || '';
+    if (view instanceof MarkdownView) {
+      const content = view.editor?.getValue() || '';
       return this.plugin.fmManager.countWords(content);
     }
     return 0;
@@ -233,7 +227,8 @@ export class SprintTimer {
   private getCurrentDocuments(): string[] {
     const leaf = this.app.workspace.getMostRecentLeaf();
     if (!leaf) return [];
-    const file = (leaf.view as any).file;
+    const view = leaf.view;
+    const file = view instanceof MarkdownView ? view.file : null;
     return file ? [file.path] : [];
   }
 

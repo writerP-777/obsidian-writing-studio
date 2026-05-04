@@ -115,10 +115,7 @@ export class FolderSidebarView extends ItemView {
 
     const container = this.containerEl.children[1] as HTMLElement;
     container.empty();
-    container.setAttribute(
-      'style',
-      'background:var(--background-secondary);height:100%;display:flex;flex-direction:column;overflow:hidden;',
-    );
+    container.addClass('ws-folder-container');
 
     const current = this.currentFolder;
     const root = this.rootFolder;
@@ -127,25 +124,16 @@ export class FolderSidebarView extends ItemView {
     const canGoBack = this.currentFile !== null || this.historyStack.length > 0;
 
     // ── Header ──────────────────────────────────────────────────────────────
-    const header = container.createEl('div');
-    header.setAttribute(
-      'style',
-      'font-weight:bold;font-size:1.1em;padding:12px 12px 2px 12px;color:var(--text-normal);flex-shrink:0;',
-    );
+    const header = container.createEl('div', { cls: 'ws-folder-header' });
     header.setText(this.currentFile ? this.currentFile.name : (current.name || '/'));
 
     // ── Breadcrumb ──────────────────────────────────────────────────────────
-    const breadcrumb = container.createEl('div');
-    breadcrumb.setAttribute(
-      'style',
-      'padding:4px 12px 6px 12px;font-size:var(--font-ui-small);color:var(--text-muted);display:flex;flex-wrap:wrap;align-items:center;flex-shrink:0;',
-    );
+    const breadcrumb = container.createEl('div', { cls: 'ws-folder-breadcrumb' });
 
     const pathFromRoot = this.getPathFromRoot();
     pathFromRoot.forEach((folder, index) => {
       if (index > 0) {
-        const sep = breadcrumb.createEl('span', { text: ' › ' });
-        sep.style.color = 'var(--text-muted)';
+        breadcrumb.createEl('span', { text: ' › ', cls: 'ws-breadcrumb-sep' });
       }
 
       // The folder segment is the "current" (rightmost, non-clickable) only when
@@ -154,45 +142,37 @@ export class FolderSidebarView extends ItemView {
       const seg = breadcrumb.createEl('span', { text: folder.name || '/' });
 
       if (isLast) {
-        seg.style.color = 'var(--text-normal)';
+        seg.addClass('ws-breadcrumb-current');
       } else {
-        seg.setAttribute('style', 'color:var(--text-muted);cursor:pointer;');
+        seg.addClass('ws-breadcrumb-link');
         seg.addEventListener('click', () => {
           this.currentFolder = folder;
           this.currentFile = null;
           this.historyStack = pathFromRoot.slice(0, index).map((f) => f.path);
           this.render();
         });
-        seg.addEventListener('mouseenter', () => { seg.style.textDecoration = 'underline'; });
-        seg.addEventListener('mouseleave', () => { seg.style.textDecoration = 'none'; });
       }
     });
 
     // When viewing a file, append its name as the final (non-clickable) breadcrumb segment
     if (this.currentFile) {
-      breadcrumb.createEl('span', { text: ' › ' }).style.color = 'var(--text-muted)';
-      breadcrumb.createEl('span', { text: this.currentFile.name }).style.color = 'var(--text-normal)';
+      breadcrumb.createEl('span', { text: ' › ', cls: 'ws-breadcrumb-sep' });
+      breadcrumb.createEl('span', { text: this.currentFile.name, cls: 'ws-breadcrumb-current' });
     }
 
     // ── Navigation buttons ───────────────────────────────────────────────────
-    const navRow = container.createEl('div');
-    navRow.setAttribute('style', 'padding:0 12px 8px 12px;display:flex;gap:8px;flex-shrink:0;');
+    const navRow = container.createEl('div', { cls: 'ws-folder-nav-row' });
 
     if (canGoBack) {
-      const backBtn = navRow.createEl('button', { text: '← Back' });
-      backBtn.setAttribute('style', 'font-size:var(--font-ui-small);padding:2px 8px;cursor:pointer;');
+      const backBtn = navRow.createEl('button', { text: '← Back', cls: 'ws-folder-nav-btn' });
       backBtn.addEventListener('click', () => this.navigateBack());
     }
 
-    const rootBtn = navRow.createEl('button', { text: '⌂ Root' });
-    rootBtn.setAttribute('style', 'font-size:var(--font-ui-small);padding:2px 8px;cursor:pointer;');
+    const rootBtn = navRow.createEl('button', { text: '⌂ Root', cls: 'ws-folder-nav-btn' });
     rootBtn.addEventListener('click', () => this.navigateToRoot());
 
     // ── Separator ────────────────────────────────────────────────────────────
-    container.createEl('div').setAttribute(
-      'style',
-      'border-top:1px solid var(--divider-color);flex-shrink:0;',
-    );
+    container.createEl('div', { cls: 'ws-folder-separator' });
 
     // ── Content area — file preview or folder list ───────────────────────────
     if (this.currentFile) {
@@ -205,36 +185,28 @@ export class FolderSidebarView extends ItemView {
   // ── File preview ──────────────────────────────────────────────────────────
 
   private renderFileContent(container: HTMLElement, file: TFile): void {
-    const content = container.createEl('div');
-    content.setAttribute('style', 'flex:1;overflow-y:auto;padding:12px;');
+    const content = container.createEl('div', { cls: 'ws-folder-content' });
 
     const ext = file.extension.toLowerCase();
 
     if (ext === 'md') {
-      this.app.vault.read(file).then((text) => {
+      void this.app.vault.read(file).then((text) => {
         MarkdownRenderer.render(this.app, text, content, file.path, this);
       });
     } else if (['png', 'jpg', 'jpeg', 'webp', 'gif', 'svg'].includes(ext)) {
-      const img = content.createEl('img');
+      const img = content.createEl('img', { cls: 'ws-folder-img' });
       img.setAttribute('src', this.app.vault.getResourcePath(file));
-      img.setAttribute('style', 'max-width:100%;height:auto;border-radius:4px;');
     } else if (['mp3', 'wav', 'm4a', 'ogg', 'flac'].includes(ext)) {
-      const audio = content.createEl('audio');
+      const audio = content.createEl('audio', { cls: 'ws-folder-audio' });
       audio.setAttribute('controls', '');
       audio.setAttribute('src', this.app.vault.getResourcePath(file));
-      audio.setAttribute('style', 'width:100%;margin-top:8px;');
     } else {
       // Unsupported type — offer to open in the main editor
-      const msg = content.createEl('div');
-      msg.setAttribute(
-        'style',
-        'color:var(--text-muted);text-align:center;padding:24px 0;font-size:var(--font-ui-small);',
-      );
+      const msg = content.createEl('div', { cls: 'ws-folder-unsupported' });
       msg.setText(`No preview available for .${file.extension} files`);
-      const openBtn = content.createEl('button', { text: 'Open in editor' });
-      openBtn.setAttribute('style', 'display:block;margin:8px auto 0;cursor:pointer;');
+      const openBtn = content.createEl('button', { cls: 'ws-folder-open-btn', text: 'Open in editor' });
       openBtn.addEventListener('click', () => {
-        this.app.workspace.getLeaf('tab').openFile(file);
+        void this.app.workspace.getLeaf('tab').openFile(file);
       });
     }
   }
@@ -242,19 +214,13 @@ export class FolderSidebarView extends ItemView {
   // ── Folder list ───────────────────────────────────────────────────────────
 
   private renderFolderContents(container: HTMLElement, current: TFolder): void {
-    const list = container.createEl('div');
+    const list = container.createEl('div', { cls: 'ws-folder-list' });
     list.setAttribute('tabindex', '0');
-    list.setAttribute('style', 'outline:none;padding:4px 0;flex:1;overflow-y:auto;');
 
     const children = current.children;
 
     if (!children || children.length === 0) {
-      const empty = list.createEl('div');
-      empty.setAttribute(
-        'style',
-        'text-align:center;color:var(--text-muted);padding:24px 0;font-size:var(--font-ui-small);',
-      );
-      empty.setText('This folder is empty');
+      list.createEl('div', { cls: 'ws-folder-empty', text: 'This folder is empty' });
       return;
     }
 
@@ -270,14 +236,9 @@ export class FolderSidebarView extends ItemView {
     const items: HTMLElement[] = [];
 
     for (const child of sorted) {
-      const item = list.createEl('div');
-      item.setAttribute(
-        'style',
-        'display:flex;align-items:center;gap:8px;padding:4px 12px;cursor:pointer;color:var(--text-normal);',
-      );
+      const item = list.createEl('div', { cls: 'ws-folder-item' });
 
-      const iconEl = item.createEl('span');
-      iconEl.setAttribute('style', 'display:flex;align-items:center;flex-shrink:0;');
+      const iconEl = item.createEl('span', { cls: 'ws-folder-item-icon' });
 
       if (child instanceof TFolder) {
         setIcon(iconEl, 'folder');
@@ -295,13 +256,6 @@ export class FolderSidebarView extends ItemView {
       }
 
       item.createEl('span', { text: child.name });
-
-      item.addEventListener('mouseenter', () => {
-        if (items.indexOf(item) !== focusedIndex) item.style.background = 'var(--interactive-hover)';
-      });
-      item.addEventListener('mouseleave', () => {
-        if (items.indexOf(item) !== focusedIndex) item.style.background = '';
-      });
 
       item.addEventListener('click', () => {
         if (child instanceof TFolder) {
@@ -342,16 +296,8 @@ export class FolderSidebarView extends ItemView {
 
 export function applyFocus(items: HTMLElement[], index: number): void {
   items.forEach((item, i) => {
-    if (i === index) {
-      item.style.background = 'var(--interactive-hover)';
-      item.style.outline = '2px solid var(--interactive-accent)';
-      item.style.outlineOffset = '-2px';
-      item.scrollIntoView({ block: 'nearest' });
-    } else {
-      item.style.background = '';
-      item.style.outline = '';
-      item.style.outlineOffset = '';
-    }
+    item.toggleClass('is-keyboard-focused', i === index);
+    if (i === index) item.scrollIntoView({ block: 'nearest' });
   });
 }
 

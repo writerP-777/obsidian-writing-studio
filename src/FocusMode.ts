@@ -1,4 +1,4 @@
-import { App, WorkspaceLeaf } from 'obsidian';
+import { App, MarkdownView } from 'obsidian';
 import { Extension } from '@codemirror/state';
 import { Decoration, DecorationSet, EditorView, ViewPlugin, ViewUpdate } from '@codemirror/view';
 import { RangeSetBuilder } from '@codemirror/state';
@@ -88,15 +88,10 @@ export class FocusMode {
 
   private showToolbar(): void {
     this.hideToolbar();
-    const toolbar = document.createElement('div');
-    toolbar.className = 'ws-focus-toolbar';
-    toolbar.innerHTML = `
-      <span class="ws-focus-wordcount">0 words</span>
-      <span class="ws-focus-sprint-time" style="display:none"></span>
-      <button class="ws-focus-exit" title="Exit Focus Mode (Esc)">✕ Exit</button>
-    `;
-
-    const exitBtn = toolbar.querySelector('.ws-focus-exit') as HTMLButtonElement;
+    const toolbar = createEl('div', { cls: 'ws-focus-toolbar' });
+    toolbar.createEl('span', { cls: 'ws-focus-wordcount', text: '0 words' });
+    toolbar.createEl('span', { cls: 'ws-focus-sprint-time ws-hidden' });
+    const exitBtn = toolbar.createEl('button', { cls: 'ws-focus-exit', title: 'Exit focus mode (Esc)', text: '✕ Exit' });
     exitBtn.onclick = () => this.disable();
 
     document.body.appendChild(toolbar);
@@ -122,14 +117,10 @@ export class FocusMode {
 
   updateToolbarSprintTime(timeStr: string | null): void {
     if (!this.toolbar) return;
-    const el = this.toolbar.querySelector('.ws-focus-sprint-time') as HTMLElement;
+    const el = this.toolbar.querySelector<HTMLElement>('.ws-focus-sprint-time');
     if (el) {
-      if (timeStr) {
-        el.style.display = '';
-        el.textContent = timeStr;
-      } else {
-        el.style.display = 'none';
-      }
+      el.toggleClass('ws-hidden', !timeStr);
+      if (timeStr) el.textContent = timeStr;
     }
   }
 
@@ -137,12 +128,9 @@ export class FocusMode {
     const leaf = this.app.workspace.getMostRecentLeaf();
     if (!leaf) return 0;
     const view = leaf.view;
-    if ('editor' in view) {
-      const editor = (view as any).editor;
-      if (editor) {
-        const content = editor.getValue();
-        return this.plugin.fmManager.countWords(content);
-      }
+    if (view instanceof MarkdownView) {
+      const content = view.editor?.getValue() || '';
+      return this.plugin.fmManager.countWords(content);
     }
     return 0;
   }

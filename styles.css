@@ -1,0 +1,1466 @@
+/* ═══════════════════════════════════════════════════════════════
+   Obsidian Writing Studio — styles.css
+   ═══════════════════════════════════════════════════════════════ */
+
+/* ── Bundled Fonts ──────────────────────────────────────────────── */
+
+/* Cormorant Garamond — Serif */
+@font-face { font-family: 'Cormorant Garamond'; font-weight: 400; font-style: normal; src: url('fonts/Cormorant_Garamond/static/CormorantGaramond-Regular.ttf') format('truetype'); }
+@font-face { font-family: 'Cormorant Garamond'; font-weight: 700; font-style: normal; src: url('fonts/Cormorant_Garamond/static/CormorantGaramond-Bold.ttf') format('truetype'); }
+@font-face { font-family: 'Cormorant Garamond'; font-weight: 400; font-style: italic; src: url('fonts/Cormorant_Garamond/static/CormorantGaramond-Italic.ttf') format('truetype'); }
+@font-face { font-family: 'Cormorant Garamond'; font-weight: 700; font-style: italic; src: url('fonts/Cormorant_Garamond/static/CormorantGaramond-BoldItalic.ttf') format('truetype'); }
+
+/* Crimson Text — Serif */
+@font-face { font-family: 'Crimson Text'; font-weight: 400; font-style: normal; src: url('fonts/Crimson_Text/CrimsonText-Regular.ttf') format('truetype'); }
+@font-face { font-family: 'Crimson Text'; font-weight: 700; font-style: normal; src: url('fonts/Crimson_Text/CrimsonText-Bold.ttf') format('truetype'); }
+@font-face { font-family: 'Crimson Text'; font-weight: 400; font-style: italic; src: url('fonts/Crimson_Text/CrimsonText-Italic.ttf') format('truetype'); }
+@font-face { font-family: 'Crimson Text'; font-weight: 700; font-style: italic; src: url('fonts/Crimson_Text/CrimsonText-BoldItalic.ttf') format('truetype'); }
+
+/* EB Garamond — Serif */
+@font-face { font-family: 'EB Garamond'; font-weight: 400; font-style: normal; src: url('fonts/EB_Garamond/static/EBGaramond-Regular.ttf') format('truetype'); }
+@font-face { font-family: 'EB Garamond'; font-weight: 700; font-style: normal; src: url('fonts/EB_Garamond/static/EBGaramond-Bold.ttf') format('truetype'); }
+@font-face { font-family: 'EB Garamond'; font-weight: 400; font-style: italic; src: url('fonts/EB_Garamond/static/EBGaramond-Italic.ttf') format('truetype'); }
+@font-face { font-family: 'EB Garamond'; font-weight: 700; font-style: italic; src: url('fonts/EB_Garamond/static/EBGaramond-BoldItalic.ttf') format('truetype'); }
+
+/* Libre Baskerville — Serif */
+@font-face { font-family: 'Libre Baskerville'; font-weight: 400; font-style: normal; src: url('fonts/Libre_Baskerville/static/LibreBaskerville-Regular.ttf') format('truetype'); }
+@font-face { font-family: 'Libre Baskerville'; font-weight: 700; font-style: normal; src: url('fonts/Libre_Baskerville/static/LibreBaskerville-Bold.ttf') format('truetype'); }
+@font-face { font-family: 'Libre Baskerville'; font-weight: 400; font-style: italic; src: url('fonts/Libre_Baskerville/static/LibreBaskerville-Italic.ttf') format('truetype'); }
+@font-face { font-family: 'Libre Baskerville'; font-weight: 700; font-style: italic; src: url('fonts/Libre_Baskerville/static/LibreBaskerville-BoldItalic.ttf') format('truetype'); }
+
+/* Libre Caslon Text — Serif */
+@font-face { font-family: 'Libre Caslon Text'; font-weight: 400; font-style: normal; src: url('fonts/Libre_Caslon_Text/LibreCaslonText-Regular.ttf') format('truetype'); }
+@font-face { font-family: 'Libre Caslon Text'; font-weight: 700; font-style: normal; src: url('fonts/Libre_Caslon_Text/LibreCaslonText-Bold.ttf') format('truetype'); }
+@font-face { font-family: 'Libre Caslon Text'; font-weight: 400; font-style: italic; src: url('fonts/Libre_Caslon_Text/LibreCaslonText-Italic.ttf') format('truetype'); }
+
+/* Literata — Serif */
+@font-face { font-family: 'Literata'; font-weight: 400; font-style: normal; src: url('fonts/Literata/static/Literata-Regular.ttf') format('truetype'); }
+@font-face { font-family: 'Literata'; font-weight: 700; font-style: normal; src: url('fonts/Literata/static/Literata-Bold.ttf') format('truetype'); }
+@font-face { font-family: 'Literata'; font-weight: 400; font-style: italic; src: url('fonts/Literata/static/Literata-Italic.ttf') format('truetype'); }
+@font-face { font-family: 'Literata'; font-weight: 700; font-style: italic; src: url('fonts/Literata/static/Literata-BoldItalic.ttf') format('truetype'); }
+
+/* Lora — Serif */
+@font-face { font-family: 'Lora'; font-weight: 400; font-style: normal; src: url('fonts/Lora/static/Lora-Regular.ttf') format('truetype'); }
+@font-face { font-family: 'Lora'; font-weight: 700; font-style: normal; src: url('fonts/Lora/static/Lora-Bold.ttf') format('truetype'); }
+@font-face { font-family: 'Lora'; font-weight: 400; font-style: italic; src: url('fonts/Lora/static/Lora-Italic.ttf') format('truetype'); }
+@font-face { font-family: 'Lora'; font-weight: 700; font-style: italic; src: url('fonts/Lora/static/Lora-BoldItalic.ttf') format('truetype'); }
+
+/* Inter — Sans-serif */
+@font-face { font-family: 'Inter'; font-weight: 400; font-style: normal; src: url('fonts/Inter/static/Inter_18pt-Regular.ttf') format('truetype'); }
+@font-face { font-family: 'Inter'; font-weight: 700; font-style: normal; src: url('fonts/Inter/static/Inter_18pt-Bold.ttf') format('truetype'); }
+@font-face { font-family: 'Inter'; font-weight: 400; font-style: italic; src: url('fonts/Inter/static/Inter_18pt-Italic.ttf') format('truetype'); }
+@font-face { font-family: 'Inter'; font-weight: 700; font-style: italic; src: url('fonts/Inter/static/Inter_18pt-BoldItalic.ttf') format('truetype'); }
+
+/* Lato — Sans-serif */
+@font-face { font-family: 'Lato'; font-weight: 400; font-style: normal; src: url('fonts/Lato/Lato-Regular.ttf') format('truetype'); }
+@font-face { font-family: 'Lato'; font-weight: 700; font-style: normal; src: url('fonts/Lato/Lato-Bold.ttf') format('truetype'); }
+@font-face { font-family: 'Lato'; font-weight: 400; font-style: italic; src: url('fonts/Lato/Lato-Italic.ttf') format('truetype'); }
+@font-face { font-family: 'Lato'; font-weight: 700; font-style: italic; src: url('fonts/Lato/Lato-BoldItalic.ttf') format('truetype'); }
+
+/* Source Sans 3 — Sans-serif */
+@font-face { font-family: 'Source Sans 3'; font-weight: 400; font-style: normal; src: url('fonts/Source_Sans_3/static/SourceSans3-Regular.ttf') format('truetype'); }
+@font-face { font-family: 'Source Sans 3'; font-weight: 700; font-style: normal; src: url('fonts/Source_Sans_3/static/SourceSans3-Bold.ttf') format('truetype'); }
+@font-face { font-family: 'Source Sans 3'; font-weight: 400; font-style: italic; src: url('fonts/Source_Sans_3/static/SourceSans3-Italic.ttf') format('truetype'); }
+@font-face { font-family: 'Source Sans 3'; font-weight: 700; font-style: italic; src: url('fonts/Source_Sans_3/static/SourceSans3-BoldItalic.ttf') format('truetype'); }
+
+/* ── CSS Custom Properties ─────────────────────────────────────── */
+:root {
+  --ws-focus-dim-opacity: 0.2;
+  --ws-focus-transition: opacity 0.15s ease;
+  --ws-sprint-bg: var(--background-primary);
+  --ws-sprint-border: var(--background-modifier-border);
+  --ws-accent: var(--interactive-accent);
+  --ws-toolbar-bg: rgba(var(--background-primary-rgb, 30, 30, 30), 0.92);
+}
+
+/* ── Focus Mode ─────────────────────────────────────────────────── */
+.writing-studio-focus-mode .cm-line {
+  opacity: var(--ws-focus-dim-opacity);
+  transition: var(--ws-focus-transition);
+}
+
+.writing-studio-focus-mode .cm-line.cm-ws-focus-para {
+  opacity: 1 !important;
+}
+
+.writing-studio-focus-mode .cm-line.cm-activeLine {
+  opacity: 1 !important;
+}
+
+/* Focus floating toolbar */
+.ws-focus-toolbar {
+  position: fixed;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 20px;
+  background: var(--ws-toolbar-bg);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid var(--ws-sprint-border);
+  border-radius: 32px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+.ws-focus-toolbar .ws-focus-wordcount {
+  font-variant-numeric: tabular-nums;
+}
+
+.ws-focus-toolbar .ws-focus-sprint-time {
+  font-variant-numeric: tabular-nums;
+  color: var(--ws-accent);
+  font-weight: 600;
+}
+
+.ws-focus-toolbar .ws-focus-exit {
+  background: none;
+  border: 1px solid var(--ws-sprint-border);
+  border-radius: 16px;
+  padding: 3px 12px;
+  font-size: 12px;
+  cursor: pointer;
+  color: var(--text-muted);
+  transition: all 0.1s;
+}
+
+.ws-focus-toolbar .ws-focus-exit:hover {
+  background: var(--background-modifier-hover);
+  color: var(--text-normal);
+}
+
+/* ── Hidden utility ─────────────────────────────────────────────── */
+.ws-hidden { display: none !important; }
+
+/* ── Typography Mode ────────────────────────────────────────────── */
+.writing-studio-typography .cm-editor,
+.writing-studio-typography .cm-content {
+  font-family: var(--ws-typo-font) !important;
+  font-size: var(--ws-typo-size) !important;
+  line-height: var(--ws-typo-lh) !important;
+  letter-spacing: var(--ws-typo-ls) !important;
+}
+
+.writing-studio-typography .markdown-source-view .cm-scroller {
+  padding-left:  var(--ws-typo-pad-left)  !important;
+  padding-right: var(--ws-typo-pad-right) !important;
+  box-sizing: border-box !important;
+}
+
+.writing-studio-typography .markdown-reading-view .markdown-preview-section {
+  font-family: var(--ws-typo-font) !important;
+  font-size: var(--ws-typo-size) !important;
+  line-height: var(--ws-typo-lh) !important;
+  letter-spacing: var(--ws-typo-ls) !important;
+  max-width: var(--ws-typo-max-width) !important;
+  margin: 0 auto !important;
+  padding: 2rem 1rem !important;
+  box-sizing: border-box !important;
+}
+
+/* ── Writing Binder ─────────────────────────────────────────────── */
+.ws-binder-container {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  padding: 0;
+  overflow: hidden;
+}
+
+.ws-binder-header {
+  flex-shrink: 0;
+  padding: 10px 12px 6px;
+  border-bottom: 1px solid var(--background-modifier-border);
+}
+
+.ws-binder-project-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 8px;
+}
+
+.ws-binder-project-sel {
+  flex: 1;
+  min-width: 0;
+  font-size: 12px;
+  padding: 3px 6px;
+  background: var(--background-secondary);
+  border: 1px solid var(--background-modifier-border);
+  border-radius: 4px;
+  color: var(--text-normal);
+}
+
+.ws-binder-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 8px;
+}
+
+.ws-binder-btn {
+  background: none;
+  border: 1px solid var(--background-modifier-border);
+  border-radius: 4px;
+  padding: 3px 8px;
+  font-size: 12px;
+  cursor: pointer;
+  color: var(--text-normal);
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  transition: background 0.1s;
+}
+
+.ws-binder-btn:hover {
+  background: var(--background-modifier-hover);
+}
+
+.ws-binder-search {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 5px 8px;
+  font-size: 12px;
+  background: var(--background-secondary);
+  border: 1px solid var(--background-modifier-border);
+  border-radius: 4px;
+  color: var(--text-normal);
+}
+
+.ws-binder-list {
+  flex: 1;
+  overflow-y: auto;
+  padding: 6px 0;
+}
+
+.ws-binder-empty {
+  padding: 20px 16px;
+  font-size: 12px;
+  color: var(--text-muted);
+  text-align: center;
+  line-height: 1.6;
+}
+
+.ws-binder-item {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 12px 4px 8px;
+  cursor: pointer;
+  border-radius: 4px;
+  margin: 1px 4px;
+  font-size: 13px;
+  user-select: none;
+  transition: background 0.1s;
+}
+
+.ws-binder-item:hover {
+  background: var(--background-modifier-hover);
+}
+
+.ws-binder-item.ws-binder-dragging {
+  opacity: 0.4;
+}
+
+.ws-binder-item.ws-binder-drop-into {
+  background: var(--background-modifier-hover);
+  box-shadow: inset 0 0 0 2px var(--ws-accent);
+}
+
+.ws-binder-item.ws-binder-drop-before {
+  box-shadow: 0 -2px 0 0 var(--ws-accent);
+}
+
+.ws-binder-item.ws-binder-drop-after {
+  box-shadow: 0 2px 0 0 var(--ws-accent);
+}
+
+.ws-binder-root-append-zone {
+  margin: 6px 8px 4px;
+  padding: 5px 12px;
+  border: 1px dashed var(--background-modifier-border);
+  border-radius: 4px;
+  font-size: 11px;
+  color: var(--text-faint);
+  text-align: center;
+  cursor: default;
+  transition: all 0.1s;
+}
+
+.ws-binder-root-append-zone.ws-binder-root-append-active {
+  border-color: var(--ws-accent);
+  color: var(--ws-accent);
+  background: var(--background-modifier-hover);
+}
+
+.ws-binder-toggle {
+  width: 14px;
+  font-size: 10px;
+  color: var(--text-muted);
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.ws-binder-toggle-leaf {
+  visibility: hidden;
+}
+
+.ws-binder-icon {
+  width: 18px;
+  font-size: 13px;
+  flex-shrink: 0;
+}
+
+.ws-binder-status-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  margin-right: 2px;
+  background-color: var(--ws-status-color, var(--text-muted));
+}
+
+/* Sortable table header */
+.ws-sortable { cursor: pointer; }
+
+.ws-binder-title {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.ws-binder-title[contenteditable="true"] {
+  outline: 1px solid var(--ws-accent);
+  border-radius: 2px;
+  padding: 0 2px;
+}
+
+.ws-binder-wc {
+  font-size: 11px;
+  color: var(--text-faint);
+  flex-shrink: 0;
+  margin-left: auto;
+}
+
+/* ── Sprint Floating Element ────────────────────────────────────── */
+.ws-sprint-floating {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  z-index: 1000;
+  background: var(--background-primary);
+  border: 1px solid var(--background-modifier-border);
+  border-radius: 10px;
+  padding: 14px 18px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
+  min-width: 140px;
+  text-align: center;
+}
+
+.ws-sprint-header {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-muted);
+  margin-bottom: 6px;
+}
+
+.ws-sprint-time {
+  font-size: 28px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  color: var(--text-normal);
+  line-height: 1;
+  margin-bottom: 4px;
+}
+
+.ws-sprint-wc {
+  font-size: 12px;
+  color: var(--ws-accent);
+  margin-bottom: 10px;
+}
+
+.ws-sprint-controls {
+  display: flex;
+  gap: 6px;
+  justify-content: center;
+}
+
+.ws-sprint-pause,
+.ws-sprint-stop {
+  background: var(--background-secondary);
+  border: 1px solid var(--background-modifier-border);
+  border-radius: 5px;
+  padding: 4px 10px;
+  cursor: pointer;
+  font-size: 14px;
+  color: var(--text-normal);
+  transition: background 0.1s;
+}
+
+.ws-sprint-pause:hover,
+.ws-sprint-stop:hover {
+  background: var(--background-modifier-hover);
+}
+
+/* ── Inline Goal Banner ─────────────────────────────────────────── */
+.ws-inline-goal-banner {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 6px 16px;
+  background: var(--background-secondary);
+  border-bottom: 1px solid var(--background-modifier-border);
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+.ws-goal-text {
+  flex-shrink: 0;
+}
+
+.ws-goal-bar-wrap {
+  flex: 1;
+  height: 4px;
+  background: var(--background-modifier-border);
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.ws-goal-bar {
+  height: 100%;
+  background: var(--ws-accent);
+  border-radius: 2px;
+  transition: width 0.3s ease;
+  width: var(--ws-bar-width, 0%);
+}
+
+.ws-goal-dismiss {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--text-faint);
+  padding: 0 2px;
+  font-size: 11px;
+}
+
+.ws-goal-dismiss:hover {
+  color: var(--text-muted);
+}
+
+/* ── Compile Preview ────────────────────────────────────────────── */
+.ws-compile-preview-container {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.ws-compile-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 16px;
+  border-bottom: 1px solid var(--background-modifier-border);
+  flex-shrink: 0;
+}
+
+.ws-compile-jump {
+  flex: 1;
+  max-width: 280px;
+  padding: 4px 8px;
+  font-size: 13px;
+  background: var(--background-secondary);
+  border: 1px solid var(--background-modifier-border);
+  border-radius: 4px;
+  color: var(--text-normal);
+}
+
+.ws-compile-export-btn {
+  padding: 6px 14px;
+  font-size: 13px;
+}
+
+.ws-compile-close-btn {
+  padding: 6px 14px;
+  font-size: 13px;
+  background: none;
+  border: 1px solid var(--background-modifier-border);
+  border-radius: 4px;
+  cursor: pointer;
+  color: var(--text-muted);
+}
+
+.ws-compile-close-btn:hover {
+  background: var(--background-modifier-hover);
+}
+
+.ws-compile-content {
+  flex: 1;
+  overflow-y: auto;
+  padding: 2rem;
+  max-width: 720px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.ws-compile-section {
+  margin-bottom: 3rem;
+}
+
+
+/* ── Progress Bars (shared) ─────────────────────────────────────── */
+.ws-progress-wrap {
+  width: 100%;
+  height: 6px;
+  background: var(--background-modifier-border);
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.ws-progress-bar {
+  height: 100%;
+  background: var(--ws-accent);
+  border-radius: 3px;
+  transition: width 0.3s ease;
+  min-width: 2px;
+  width: var(--ws-bar-width, 0%);
+}
+
+.ws-progress-pct {
+  font-size: 11px;
+  color: var(--text-muted);
+  margin-left: 6px;
+}
+
+/* ── Status Badge ───────────────────────────────────────────────── */
+.ws-status-badge {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 10px;
+  font-size: 11px;
+  font-weight: 600;
+  color: white;
+  text-shadow: 0 1px 1px rgba(0,0,0,0.3);
+  background-color: var(--ws-status-color, var(--text-muted));
+}
+
+/* ── Modal Shared ───────────────────────────────────────────────── */
+.ws-modal-btn-row {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-top: 24px;
+  padding-top: 16px;
+  border-top: 1px solid var(--background-modifier-border);
+}
+
+.ws-empty-state {
+  color: var(--text-muted);
+  font-style: italic;
+  text-align: center;
+  padding: 20px;
+}
+
+/* ── Targets Dashboard Modal ────────────────────────────────────── */
+.ws-dashboard-modal {
+  min-width: 750px;
+}
+
+.ws-dashboard-filters {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 16px;
+  font-size: 13px;
+}
+
+.ws-dashboard-refresh {
+  background: none;
+  border: 1px solid var(--background-modifier-border);
+  border-radius: 4px;
+  padding: 4px 10px;
+  cursor: pointer;
+  font-size: 12px;
+}
+
+.ws-dashboard-table-wrap {
+  overflow-x: auto;
+}
+
+.ws-dashboard-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+
+.ws-dashboard-table th,
+.ws-dashboard-table td {
+  padding: 8px 10px;
+  text-align: left;
+  border-bottom: 1px solid var(--background-modifier-border);
+}
+
+.ws-dashboard-table th {
+  font-weight: 600;
+  color: var(--text-muted);
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  background: var(--background-secondary);
+}
+
+.ws-dashboard-table tbody tr:hover {
+  background: var(--background-modifier-hover);
+}
+
+.ws-dashboard-table tfoot .ws-dash-summary {
+  font-weight: 700;
+  background: var(--background-secondary);
+}
+
+.ws-dash-title a {
+  color: var(--text-normal);
+  text-decoration: none;
+}
+
+.ws-dash-title a:hover {
+  color: var(--ws-accent);
+  text-decoration: underline;
+}
+
+.ws-dash-goal-input {
+  width: 70px;
+  padding: 2px 4px;
+  font-size: 12px;
+  background: var(--background-secondary);
+  border: 1px solid var(--background-modifier-border);
+  border-radius: 3px;
+  color: var(--text-normal);
+}
+
+/* ── Writing Dashboard Modal ────────────────────────────────────── */
+.ws-writing-dashboard {
+  min-width: 600px;
+}
+
+.ws-dash-section {
+  margin-bottom: 24px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid var(--background-modifier-border);
+}
+
+.ws-dash-section:last-of-type {
+  border-bottom: none;
+}
+
+.ws-dash-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  gap: 12px;
+  margin-top: 12px;
+}
+
+.ws-dash-stat {
+  background: var(--background-secondary);
+  border: 1px solid var(--background-modifier-border);
+  border-radius: 8px;
+  padding: 12px;
+  text-align: center;
+}
+
+.ws-dash-stat-value {
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--text-normal);
+  margin-bottom: 4px;
+}
+
+.ws-dash-stat-label {
+  font-size: 11px;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.ws-dash-progress {
+  margin-top: 12px;
+  height: 10px;
+}
+
+.ws-dash-progress-label {
+  font-size: 12px;
+  color: var(--text-muted);
+  margin-top: 4px;
+}
+
+.ws-sprint-history-table,
+.ws-doc-wc-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 12px;
+  margin-top: 10px;
+}
+
+.ws-sprint-history-table th,
+.ws-doc-wc-table th {
+  font-weight: 600;
+  color: var(--text-muted);
+  text-align: left;
+  padding: 6px 8px;
+  border-bottom: 1px solid var(--background-modifier-border);
+}
+
+.ws-sprint-history-table td,
+.ws-doc-wc-table td {
+  padding: 6px 8px;
+  border-bottom: 1px solid var(--background-modifier-border);
+}
+
+.ws-doc-wc-table a {
+  color: var(--text-normal);
+  text-decoration: none;
+}
+
+.ws-doc-wc-table a:hover {
+  color: var(--ws-accent);
+}
+
+.ws-dash-close {
+  display: block;
+  margin: 16px auto 0;
+}
+
+/* ── Sprint Summary Modal ───────────────────────────────────────── */
+.ws-sprint-summary-modal .ws-dash-grid {
+  margin-bottom: 24px;
+}
+
+/* ── WordPress Settings ─────────────────────────────────────────── */
+.ws-wp-site-config {
+  padding: 16px;
+  margin-bottom: 16px;
+  background: var(--background-secondary);
+  border: 1px solid var(--background-modifier-border);
+  border-radius: 8px;
+}
+
+.ws-wp-test-status {
+  padding: 6px 10px;
+  border-radius: 4px;
+  font-size: 12px;
+  margin-top: 6px;
+}
+
+.ws-wp-test-pending {
+  color: var(--text-muted);
+}
+
+.ws-wp-test-ok {
+  background: rgba(16, 185, 129, 0.1);
+  color: #10b981;
+  border: 1px solid #10b981;
+}
+
+.ws-wp-test-err {
+  background: rgba(239, 68, 68, 0.1);
+  color: #ef4444;
+  border: 1px solid #ef4444;
+}
+
+/* ── Settings Tab Bar ───────────────────────────────────────────── */
+.ws-settings {
+  padding-bottom: 40px;
+}
+
+.ws-settings-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin-bottom: 20px;
+  border-bottom: 1px solid var(--background-modifier-border);
+  padding-bottom: 10px;
+}
+
+.ws-settings-tab {
+  background: none;
+  border: 1px solid var(--background-modifier-border);
+  border-radius: 4px;
+  padding: 5px 14px;
+  font-size: 13px;
+  cursor: pointer;
+  color: var(--text-muted);
+  transition: all 0.1s;
+}
+
+.ws-settings-tab:hover {
+  background: var(--background-modifier-hover);
+  color: var(--text-normal);
+}
+
+.ws-settings-tab.is-active {
+  background: var(--ws-accent);
+  color: white;
+  border-color: var(--ws-accent);
+}
+
+/* ── Project Modal ──────────────────────────────────────────────── */
+.ws-template-preview {
+  background: var(--background-secondary);
+  border: 1px solid var(--background-modifier-border);
+  border-radius: 6px;
+  padding: 12px 16px;
+  margin: 12px 0;
+}
+
+.ws-template-desc {
+  font-size: 13px;
+  color: var(--text-muted);
+  margin: 0;
+}
+
+/* ── Publish Modal ──────────────────────────────────────────────── */
+.ws-publish-categories {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  padding: 8px 0;
+  max-height: 120px;
+  overflow-y: auto;
+}
+
+.ws-publish-cat-label {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.ws-publish-existing-notice {
+  background: rgba(245, 158, 11, 0.1);
+  border: 1px solid rgba(245, 158, 11, 0.4);
+  border-radius: 6px;
+  padding: 12px 16px;
+  margin: 12px 0;
+}
+
+.ws-publish-choice {
+  display: flex;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+/* ── Status Bar ─────────────────────────────────────────────────── */
+.ws-status-mode {
+  font-weight: 600;
+  color: var(--ws-accent);
+}
+
+.ws-status-wordcount {
+  color: var(--text-muted);
+}
+
+.ws-status-sprint {
+  color: var(--ws-accent);
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ── Launcher Panel ─────────────────────────────────────────────── */
+.ws-launcher {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  padding: 0 0 24px 0;
+  overflow-y: auto;
+  height: 100%;
+  font-size: 13px;
+}
+
+.ws-launcher-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 14px 10px;
+  border-bottom: 1px solid var(--background-modifier-border);
+  position: sticky;
+  top: 0;
+  background: var(--background-primary);
+  z-index: 10;
+}
+
+.ws-launcher-title {
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  color: var(--text-normal);
+}
+
+.ws-launcher-icon-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--text-muted);
+  padding: 4px;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+}
+
+.ws-launcher-icon-btn:hover {
+  background: var(--background-modifier-hover);
+  color: var(--text-normal);
+}
+
+/* Cards */
+.ws-launcher-card {
+  padding: 12px 14px;
+  border-bottom: 1px solid var(--background-modifier-border);
+}
+
+.ws-launcher-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+
+.ws-launcher-card-label {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-faint);
+  display: block;
+  margin-bottom: 8px;
+}
+
+.ws-launcher-text-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--ws-accent);
+  font-size: 12px;
+  padding: 0;
+}
+
+.ws-launcher-text-btn:hover {
+  text-decoration: underline;
+}
+
+/* Project card */
+.ws-launcher-empty {
+  color: var(--text-muted);
+  font-size: 12px;
+  margin-bottom: 8px;
+}
+
+.ws-launcher-project-sel,
+.ws-launcher-project-mini-sel {
+  font-size: 12px;
+  padding: 3px 6px;
+  background: var(--background-secondary);
+  border: 1px solid var(--background-modifier-border);
+  border-radius: 4px;
+  color: var(--text-normal);
+  max-width: 100%;
+}
+
+.ws-launcher-project-name-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 6px;
+  flex-wrap: wrap;
+}
+
+.ws-launcher-project-name {
+  font-size: 14px;
+  color: var(--text-normal);
+}
+
+.ws-launcher-project-mini-sel {
+  font-size: 11px;
+  padding: 2px 4px;
+  opacity: 0.7;
+}
+
+.ws-launcher-wc-row {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+  margin-bottom: 6px;
+}
+
+.ws-launcher-wc-num {
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--text-normal);
+  font-variant-numeric: tabular-nums;
+}
+
+.ws-launcher-wc-goal {
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+.ws-launcher-progress {
+  margin: 6px 0 4px;
+  height: 5px;
+}
+
+.ws-launcher-pct {
+  font-size: 11px;
+  color: var(--text-faint);
+}
+
+/* Mode selector */
+.ws-launcher-mode-btns {
+  display: flex;
+  gap: 5px;
+  margin-bottom: 4px;
+}
+
+.ws-launcher-mode-btn {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  padding: 8px 4px;
+  background: var(--background-secondary);
+  border: 1px solid var(--background-modifier-border);
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.1s;
+}
+
+.ws-launcher-mode-btn:hover {
+  background: var(--background-modifier-hover);
+}
+
+.ws-launcher-mode-btn.is-active {
+  background: var(--ws-accent);
+  border-color: var(--ws-accent);
+  color: white;
+}
+
+.ws-mode-icon {
+  font-size: 16px;
+}
+
+.ws-mode-label {
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.ws-launcher-clear-mode {
+  font-size: 11px;
+  color: var(--text-faint);
+  margin-top: 4px;
+}
+
+/* Focus toggles */
+.ws-launcher-toggle-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 4px 0;
+}
+
+.ws-launcher-toggle-label {
+  color: var(--text-normal);
+}
+
+.ws-launcher-toggle {
+  padding: 3px 10px;
+  border-radius: 12px;
+  font-size: 11px;
+  font-weight: 700;
+  cursor: pointer;
+  border: 1px solid transparent;
+  transition: all 0.1s;
+}
+
+.ws-launcher-toggle.is-on {
+  background: var(--ws-accent);
+  color: white;
+  border-color: var(--ws-accent);
+}
+
+.ws-launcher-toggle.is-off {
+  background: var(--background-secondary);
+  color: var(--text-muted);
+  border-color: var(--background-modifier-border);
+}
+
+/* Quick actions grid */
+.ws-launcher-actions-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px;
+}
+
+.ws-launcher-action-grid-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+  padding: 10px 6px;
+  background: var(--background-secondary);
+  border: 1px solid var(--background-modifier-border);
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.1s;
+  text-align: center;
+}
+
+.ws-launcher-action-grid-btn:hover {
+  background: var(--background-modifier-hover);
+}
+
+.ws-launcher-grid-icon {
+  width: 20px;
+  height: 20px;
+  color: var(--ws-accent);
+}
+
+.ws-launcher-grid-label {
+  font-size: 11px;
+  color: var(--text-normal);
+  line-height: 1.3;
+}
+
+/* Action button (full width) */
+.ws-launcher-action-btn {
+  width: 100%;
+  padding: 8px 12px;
+  background: var(--background-secondary);
+  border: 1px solid var(--background-modifier-border);
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 13px;
+  color: var(--text-normal);
+  text-align: left;
+  transition: background 0.1s;
+  margin-top: 8px;
+}
+
+.ws-launcher-action-btn:hover {
+  background: var(--background-modifier-hover);
+}
+
+.ws-launcher-action-btn.mod-cta {
+  background: var(--ws-accent);
+  color: white;
+  border-color: var(--ws-accent);
+  text-align: center;
+}
+
+.ws-launcher-action-btn.mod-cta:hover {
+  opacity: 0.9;
+}
+
+.ws-launcher-stop-btn {
+  background: rgba(239, 68, 68, 0.1);
+  border-color: rgba(239, 68, 68, 0.4);
+  color: #ef4444;
+}
+
+/* Sprint card */
+.ws-launcher-sprint-time {
+  font-size: 36px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  color: var(--ws-accent);
+  text-align: center;
+  margin: 6px 0;
+}
+
+.ws-launcher-sprint-ctrls {
+  display: flex;
+  gap: 6px;
+}
+
+.ws-launcher-sprint-ctrls .ws-launcher-action-btn {
+  text-align: center;
+  flex: 1;
+  margin-top: 0;
+}
+
+.ws-launcher-sprint-presets {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  margin-top: 8px;
+}
+
+.ws-launcher-preset-label {
+  font-size: 11px;
+  color: var(--text-faint);
+}
+
+.ws-launcher-preset-btn {
+  padding: 3px 10px;
+  font-size: 12px;
+  background: var(--background-secondary);
+  border: 1px solid var(--background-modifier-border);
+  border-radius: 12px;
+  cursor: pointer;
+  color: var(--text-muted);
+}
+
+.ws-launcher-preset-btn:hover {
+  background: var(--background-modifier-hover);
+  color: var(--text-normal);
+}
+
+/* Today card */
+.ws-launcher-today-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 6px;
+  margin-bottom: 8px;
+}
+
+.ws-launcher-today-stat {
+  background: var(--background-secondary);
+  border-radius: 5px;
+  padding: 7px 4px;
+  text-align: center;
+}
+
+.ws-launcher-today-val {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--text-normal);
+  font-variant-numeric: tabular-nums;
+}
+
+.ws-launcher-today-label {
+  font-size: 10px;
+  color: var(--text-faint);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  margin-top: 2px;
+}
+
+/* ── Launcher: Button overflow protection (community theme guard) ── */
+/*
+ * Community themes can set a fixed height on `button`, which clips content
+ * when overflow:hidden is on the container. The fix: only apply overflow
+ * clipping to the text label elements themselves, not the button wrappers.
+ * height:auto overrides any theme-imposed fixed height on our buttons.
+ */
+
+/* box-sizing + height:auto on every interactive element — prevents theme
+   fixed-height rules from vertically clipping icon+label stacked buttons */
+.ws-launcher button,
+.ws-launcher select {
+  box-sizing: border-box !important;
+  max-width: 100% !important;
+  height: auto !important;
+}
+
+/* Grid action buttons — min-width:0 lets 1fr cells shrink below content size */
+.ws-launcher .ws-launcher-action-grid-btn {
+  min-width: 0 !important;
+}
+
+/* Grid label — align-self:stretch gets the full cell width inside a
+   flex-column with align-items:center; then ellipsis can truncate */
+.ws-launcher .ws-launcher-grid-label {
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  white-space: nowrap !important;
+  width: 100% !important;
+  align-self: stretch !important;
+  text-align: center !important;
+}
+
+/* Mode buttons — flex:1 children need min-width:0 to shrink */
+.ws-launcher .ws-launcher-mode-btn {
+  min-width: 0 !important;
+}
+
+/* Mode label — it's a <span> (inline), so display:block is required for
+   text-overflow:ellipsis to fire; align-self:stretch gives it full width */
+.ws-launcher .ws-mode-label {
+  display: block !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  white-space: nowrap !important;
+  width: 100% !important;
+  align-self: stretch !important;
+  text-align: center !important;
+}
+
+/* Full-width action buttons: Open Binder, Start Sprint, Pause, Stop */
+.ws-launcher .ws-launcher-action-btn {
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  white-space: nowrap !important;
+  box-sizing: border-box !important;
+  max-width: 100% !important;
+}
+
+/* Quick-start preset pills */
+.ws-launcher .ws-launcher-preset-btn {
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  white-space: nowrap !important;
+  box-sizing: border-box !important;
+  max-width: 100% !important;
+}
+
+/* ── Export Preview Button ──────────────────────────────────────── */
+.ws-export-preview-btn {
+  width: 100%;
+  margin: 12px 0;
+  padding: 8px;
+  background: var(--background-secondary);
+  border: 1px solid var(--background-modifier-border);
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 13px;
+  color: var(--text-muted);
+  transition: all 0.1s;
+}
+
+.ws-export-preview-btn:hover {
+  background: var(--background-modifier-hover);
+  color: var(--text-normal);
+}
+
+/* ── Folder Sidebar Explorer ────────────────────────────────────── */
+.ws-folder-container {
+  background: var(--background-secondary);
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.ws-folder-header {
+  font-weight: bold;
+  font-size: 1.1em;
+  padding: 12px 12px 2px 12px;
+  color: var(--text-normal);
+  flex-shrink: 0;
+}
+
+.ws-folder-breadcrumb {
+  padding: 4px 12px 6px 12px;
+  font-size: var(--font-ui-small);
+  color: var(--text-muted);
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.ws-folder-nav-row {
+  padding: 0 12px 8px 12px;
+  display: flex;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.ws-folder-separator {
+  border-top: 1px solid var(--divider-color);
+  flex-shrink: 0;
+}
+
+.ws-folder-content {
+  flex: 1;
+  overflow-y: auto;
+  padding: 12px;
+}
+
+.ws-folder-list {
+  outline: none;
+  padding: 4px 0;
+  flex: 1;
+  overflow-y: auto;
+}
+
+.ws-folder-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 12px;
+  cursor: pointer;
+  color: var(--text-normal);
+}
+
+.ws-folder-item:hover {
+  background: var(--interactive-hover);
+}
+
+.ws-folder-item.is-keyboard-focused {
+  background: var(--interactive-hover);
+  outline: 2px solid var(--interactive-accent);
+  outline-offset: -2px;
+}
+
+.ws-folder-item-icon {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.ws-folder-empty {
+  text-align: center;
+  color: var(--text-muted);
+  padding: 24px 0;
+  font-size: var(--font-ui-small);
+}
+
+.ws-folder-unsupported {
+  color: var(--text-muted);
+  text-align: center;
+  padding: 24px 0;
+  font-size: var(--font-ui-small);
+}
+
+.ws-folder-open-btn {
+  display: block;
+  margin: 8px auto 0;
+  cursor: pointer;
+}
+
+.ws-folder-img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 4px;
+}
+
+.ws-folder-audio {
+  width: 100%;
+  margin-top: 8px;
+}
+
+.ws-folder-nav-btn {
+  font-size: var(--font-ui-small);
+  padding: 2px 8px;
+  cursor: pointer;
+}
+
+.ws-breadcrumb-current { color: var(--text-normal); }
+
+.ws-breadcrumb-link {
+  color: var(--text-muted);
+  cursor: pointer;
+}
+
+.ws-breadcrumb-link:hover { text-decoration: underline; }
+
+.ws-breadcrumb-sep { color: var(--text-muted); }

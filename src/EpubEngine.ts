@@ -1,4 +1,8 @@
 import { App, TFile } from 'obsidian';
+
+interface FileSystemAdapter {
+  getFullPath?(vaultPath: string): string;
+}
 import JSZip from 'jszip';
 import { promises as fsp } from 'fs';
 import type WritingStudioPlugin from '../main';
@@ -83,14 +87,14 @@ export class EpubEngine {
     const ab = new ArrayBuffer(uint8.byteLength);
     new Uint8Array(ab).set(uint8);
 
-    const absPath = await this.absPath(outputVaultPath);
+    const absPath = this.absPath(outputVaultPath);
     await fsp.writeFile(absPath, Buffer.from(ab));
   }
 
   // ── Helpers ────────────────────────────────────────────────────────────────
 
-  private async absPath(vaultPath: string): Promise<string> {
-    const adapter = this.app.vault.adapter as any;
+  private absPath(vaultPath: string): string {
+    const adapter = this.app.vault.adapter as unknown as FileSystemAdapter;
     return adapter.getFullPath ? adapter.getFullPath(vaultPath) : vaultPath;
   }
 

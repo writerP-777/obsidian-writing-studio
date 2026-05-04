@@ -1,7 +1,6 @@
-import { ItemView, WorkspaceLeaf, TFile, Notice, setIcon } from 'obsidian';
+import { ItemView, MarkdownView, WorkspaceLeaf, TFile, Notice, setIcon } from 'obsidian';
 import type WritingStudioPlugin from '../main';
 import { WritingModeType } from '../models/WritingMode';
-import { STATUS_COLORS } from '../models/BinderItem';
 import { ProjectModal } from '../modals/ProjectModal';
 import { TargetsDashboardModal } from '../modals/TargetsDashboardModal';
 import { WritingDashboardModal } from '../modals/WritingDashboardModal';
@@ -35,7 +34,7 @@ export class LauncherView extends ItemView {
   async onOpen(): Promise<void> {
     await this.render();
     // Refresh every 10 seconds to update word counts / sprint timer
-    this.refreshTimer = window.setInterval(() => this.render(), 10000);
+    this.refreshTimer = window.setInterval(() => { void this.render(); }, 10000);
   }
 
   async onClose(): Promise<void> {
@@ -59,7 +58,7 @@ export class LauncherView extends ItemView {
     this.renderModeSelector(root);
     this.renderFocusToggles(root);
     this.renderQuickActions(root);
-    await this.renderSprintCard(root);
+    this.renderSprintCard(root);
     await this.renderTodayCard(root);
   }
 
@@ -100,7 +99,7 @@ export class LauncherView extends ItemView {
         const sel = card.createEl('select', { cls: 'ws-launcher-project-sel' });
         sel.createEl('option', { text: '— Choose project —', value: '' });
         for (const p of projects) {
-          const opt = sel.createEl('option', { text: p.title, value: p.id });
+          sel.createEl('option', { text: p.title, value: p.id });
         }
         sel.onchange = async () => {
           if (sel.value) {
@@ -141,22 +140,22 @@ export class LauncherView extends ItemView {
         wcRow.createEl('span', { text: `/ ${goal.toLocaleString()} goal`, cls: 'ws-launcher-wc-goal' });
         const barWrap = card.createDiv('ws-progress-wrap ws-launcher-progress');
         const bar = barWrap.createDiv('ws-progress-bar');
-        bar.style.width = `${pct}%`;
+        bar.setCssProps({ '--ws-bar-width': `${pct}%` });
         card.createEl('span', { text: `${pct}% complete`, cls: 'ws-launcher-pct' });
       } else {
         wcRow.createEl('span', { text: this.plugin.statsTracker.calculateReadingTime(totalWords), cls: 'ws-launcher-wc-goal' });
       }
     } catch { /* skip if project has no files yet */ }
 
-    const binderBtn = card.createEl('button', { cls: 'ws-launcher-action-btn', text: '📖  Open Binder' });
-    binderBtn.onclick = () => this.plugin.openBinder();
+    const binderBtn = card.createEl('button', { cls: 'ws-launcher-action-btn', text: '📖 Open binder' });
+    binderBtn.onclick = () => { void this.plugin.openBinder(); };
   }
 
   // ── Writing Mode Selector ────────────────────────────────────────
 
   private renderModeSelector(root: HTMLElement): void {
     const card = root.createDiv('ws-launcher-card');
-    card.createEl('div', { text: 'Writing Mode', cls: 'ws-launcher-card-label' });
+    card.createEl('div', { text: 'Writing mode', cls: 'ws-launcher-card-label' });
 
     const modes: Array<{ id: WritingModeType; label: string; icon: string; desc: string }> = [
       { id: 'draft',  label: 'Draft',  icon: '✍',  desc: 'Focus + typography on, sidebars hidden' },
@@ -197,7 +196,7 @@ export class LauncherView extends ItemView {
 
   private renderFocusToggles(root: HTMLElement): void {
     const card = root.createDiv('ws-launcher-card');
-    card.createEl('div', { text: 'Focus & Typography', cls: 'ws-launcher-card-label' });
+    card.createEl('div', { text: 'Focus & typography', cls: 'ws-launcher-card-label' });
 
     const toggles: Array<{ label: string; isOn: () => boolean; toggle: () => void }> = [
       {
@@ -228,7 +227,7 @@ export class LauncherView extends ItemView {
 
   private renderQuickActions(root: HTMLElement): void {
     const card = root.createDiv('ws-launcher-card');
-    card.createEl('div', { text: 'Quick Actions', cls: 'ws-launcher-card-label' });
+    card.createEl('div', { text: 'Quick actions', cls: 'ws-launcher-card-label' });
 
     const actions: Array<{ icon: string; label: string; action: () => void }> = [
       {
@@ -262,7 +261,8 @@ export class LauncherView extends ItemView {
         label: 'Publish to WordPress',
         action: () => {
           const leaf = this.app.workspace.getMostRecentLeaf();
-          const file = (leaf?.view as any)?.file;
+          const view = leaf?.view;
+          const file = view instanceof MarkdownView ? view.file : null;
           if (file instanceof TFile) {
             new PublishModal(this.app, this.plugin, file.path).open();
           } else {
@@ -284,9 +284,9 @@ export class LauncherView extends ItemView {
 
   // ── Sprint Card ──────────────────────────────────────────────────
 
-  private async renderSprintCard(root: HTMLElement): Promise<void> {
+  private renderSprintCard(root: HTMLElement): void {
     const card = root.createDiv('ws-launcher-card');
-    card.createEl('div', { text: 'Sprint Timer', cls: 'ws-launcher-card-label' });
+    card.createEl('div', { text: 'Sprint timer', cls: 'ws-launcher-card-label' });
 
     if (this.plugin.sprintTimer.isActive()) {
       const timeEl = card.createDiv('ws-launcher-sprint-time');
@@ -294,13 +294,13 @@ export class LauncherView extends ItemView {
 
       const ctrlRow = card.createDiv('ws-launcher-sprint-ctrls');
 
-      const pauseBtn = ctrlRow.createEl('button', { cls: 'ws-launcher-action-btn', text: '⏸  Pause' });
-      pauseBtn.onclick = () => { this.plugin.sprintTimer.pause(); this.render(); };
+      const pauseBtn = ctrlRow.createEl('button', { cls: 'ws-launcher-action-btn', text: '⏸ Pause' });
+      pauseBtn.onclick = () => { this.plugin.sprintTimer.pause(); void this.render(); };
 
-      const stopBtn = ctrlRow.createEl('button', { cls: 'ws-launcher-action-btn ws-launcher-stop-btn', text: '■  Stop' });
-      stopBtn.onclick = () => { this.plugin.sprintTimer.stop(); this.render(); };
+      const stopBtn = ctrlRow.createEl('button', { cls: 'ws-launcher-action-btn ws-launcher-stop-btn', text: '■ Stop' });
+      stopBtn.onclick = () => { this.plugin.sprintTimer.stop(); void this.render(); };
     } else {
-      const startBtn = card.createEl('button', { cls: 'ws-launcher-action-btn mod-cta', text: '⏱  Start Sprint' });
+      const startBtn = card.createEl('button', { cls: 'ws-launcher-action-btn mod-cta', text: '⏱ Start sprint' });
       startBtn.onclick = () => {
         new SprintModal(this.app, this.plugin).open();
       };
@@ -312,7 +312,7 @@ export class LauncherView extends ItemView {
         const btn = presets.createEl('button', { cls: 'ws-launcher-preset-btn', text: `${mins}m` });
         btn.onclick = () => {
           this.plugin.sprintTimer.start(mins);
-          this.render();
+          void this.render();
         };
       }
     }
@@ -347,7 +347,7 @@ export class LauncherView extends ItemView {
       const pct = Math.min(100, Math.round((stats.wordsWritten / goal) * 100));
       const barWrap = card.createDiv('ws-progress-wrap ws-launcher-progress');
       const bar = barWrap.createDiv('ws-progress-bar');
-      bar.style.width = `${pct}%`;
+      bar.setCssProps({ '--ws-bar-width': `${pct}%` });
       card.createEl('span', {
         text: `Daily goal: ${stats.wordsWritten} / ${goal} words`,
         cls: 'ws-launcher-pct',

@@ -38,7 +38,7 @@ export class ExportModal extends Modal {
         .setValue(this.format)
         .onChange(v => {
           this.format = v as ExportFormat;
-          coverSetting.settingEl.style.display = v === 'epub' ? '' : 'none';
+          coverSetting.settingEl.toggleClass('ws-hidden', v !== 'epub');
         }));
 
     coverSetting = new Setting(contentEl)
@@ -48,7 +48,7 @@ export class ExportModal extends Modal {
         .setValue(this.coverImagePath)
         .setPlaceholder('e.g. Assets/cover.jpg')
         .onChange(v => { this.coverImagePath = v.trim(); }));
-    coverSetting.settingEl.style.display = this.format === 'epub' ? '' : 'none';
+    coverSetting.settingEl.toggleClass('ws-hidden', this.format !== 'epub');
 
     new Setting(contentEl)
       .setName('Scope')
