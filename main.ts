@@ -189,14 +189,14 @@ export default class WritingStudioPlugin extends Plugin {
 
     // Ribbon icons
     this.addRibbonIcon('feather', 'Open Writing Studio', () => this.openLauncher());
-    this.addRibbonIcon('book-open', 'Open Writing Binder', () => this.openBinder());
-    this.addRibbonIcon('timer', 'Start Writing Sprint', () => new SprintModal(this.app, this).open());
-    this.addRibbonIcon('eye', 'Toggle Focus Mode', () => this.focusMode.toggle());
-    this.addRibbonIcon('layout-dashboard', 'Switch Writing Mode', (e) => this.showModeSwitcher(e));
+    this.addRibbonIcon('book-open', 'Open writing binder', () => this.openBinder());
+    this.addRibbonIcon('timer', 'Start writing sprint', () => new SprintModal(this.app, this).open());
+    this.addRibbonIcon('eye', 'Toggle focus mode', () => this.focusMode.toggle());
+    this.addRibbonIcon('layout-dashboard', 'Switch writing mode', (e) => this.showModeSwitcher(e));
     this.addRibbonIcon('globe', 'Publish to WordPress', () => this.publishCurrentFile());
-    this.addRibbonIcon('bar-chart-2', 'Writing Dashboard', () => new WritingDashboardModal(this.app, this).open());
-    this.addRibbonIcon('folder', 'Open Folder in Sidebar Explorer', () => {
-      new FolderPickerModal(this.app, (folder) => this.openFolder(folder)).open();
+    this.addRibbonIcon('bar-chart-2', 'Writing dashboard', () => new WritingDashboardModal(this.app, this).open());
+    this.addRibbonIcon('folder', 'Open folder in sidebar explorer', () => {
+      new FolderPickerModal(this.app, (folder) => { void this.openFolder(folder); }).open();
     });
 
     // Commands
@@ -404,13 +404,13 @@ export default class WritingStudioPlugin extends Plugin {
   async openLauncher(): Promise<void> {
     const existing = this.app.workspace.getLeavesOfType(LAUNCHER_VIEW_TYPE);
     if (existing.length > 0) {
-      this.app.workspace.revealLeaf(existing[0]);
+      void this.app.workspace.revealLeaf(existing[0]);
       return;
     }
     const leaf = this.app.workspace.getLeftLeaf(false);
     if (leaf) {
       await leaf.setViewState({ type: LAUNCHER_VIEW_TYPE, active: true });
-      this.app.workspace.revealLeaf(leaf);
+      void this.app.workspace.revealLeaf(leaf);
     }
   }
 
@@ -425,14 +425,14 @@ export default class WritingStudioPlugin extends Plugin {
   async openBinder(): Promise<void> {
     const existing = this.app.workspace.getLeavesOfType(BINDER_VIEW_TYPE);
     if (existing.length > 0) {
-      this.app.workspace.revealLeaf(existing[0]);
+      void this.app.workspace.revealLeaf(existing[0]);
       return;
     }
 
     const leaf = this.app.workspace.getLeftLeaf(false);
     if (leaf) {
       await leaf.setViewState({ type: BINDER_VIEW_TYPE, active: true });
-      this.app.workspace.revealLeaf(leaf);
+      void this.app.workspace.revealLeaf(leaf);
     }
   }
 
@@ -456,7 +456,7 @@ export default class WritingStudioPlugin extends Plugin {
       await leaf.setViewState({ type: COMPILE_PREVIEW_VIEW_TYPE, active: true });
     }
 
-    this.app.workspace.revealLeaf(leaf);
+    void this.app.workspace.revealLeaf(leaf);
 
     if (leaf.view instanceof CompilePreviewView) {
       await leaf.view.loadContent();
@@ -470,11 +470,11 @@ export default class WritingStudioPlugin extends Plugin {
       const leaf = leaves[0];
       const view = leaf.view as unknown as FolderSidebarView;
       if (view.rootFolder?.path === folder.path) {
-        this.app.workspace.revealLeaf(leaf);
+        void this.app.workspace.revealLeaf(leaf);
         return;
       }
       view.setRootFolder(folder);
-      this.app.workspace.revealLeaf(leaf);
+      void this.app.workspace.revealLeaf(leaf);
       return;
     }
 
@@ -483,7 +483,7 @@ export default class WritingStudioPlugin extends Plugin {
 
     await leaf.setViewState({ type: FOLDER_SIDEBAR_VIEW_TYPE, active: true });
     (leaf.view as unknown as FolderSidebarView).setRootFolder(folder);
-    this.app.workspace.revealLeaf(leaf);
+    void this.app.workspace.revealLeaf(leaf);
   }
 
   private publishCurrentFile(): void {
@@ -504,9 +504,9 @@ export default class WritingStudioPlugin extends Plugin {
 
   private showModeSwitcher(e: MouseEvent): void {
     const menu = new Menu();
-    menu.addItem(i => i.setTitle('✍ Draft Mode').setIcon('pencil').onClick(() => this.writingModes.switchMode('draft')));
-    menu.addItem(i => i.setTitle('✎ Edit Mode').setIcon('edit-3').onClick(() => this.writingModes.switchMode('edit')));
-    menu.addItem(i => i.setTitle('👁 Review Mode').setIcon('eye').onClick(() => this.writingModes.switchMode('review')));
+    menu.addItem(i => i.setTitle('✍ Draft mode').setIcon('pencil').onClick(() => this.writingModes.switchMode('draft')));
+    menu.addItem(i => i.setTitle('✎ Edit mode').setIcon('edit-3').onClick(() => this.writingModes.switchMode('edit')));
+    menu.addItem(i => i.setTitle('👁 Review mode').setIcon('eye').onClick(() => this.writingModes.switchMode('review')));
     menu.addSeparator();
     menu.addItem(i => i.setTitle('Normal (no mode)').onClick(() => this.writingModes.switchMode('none')));
     menu.showAtMouseEvent(e);

@@ -260,8 +260,8 @@ ${this.markdownToHtml(content)}
     try {
       await this.writeFile(tempMdPath, content);
 
-      const absOutput = await this.getAbsPath(outputPath);
-      const absInput = await this.getAbsPath(tempMdPath);
+      const absOutput = this.getAbsPath(outputPath);
+      const absInput = this.getAbsPath(tempMdPath);
 
       const isPdf = outputPath.endsWith('.pdf');
 
@@ -297,7 +297,7 @@ ${this.markdownToHtml(content)}
     try {
       return await this.exportPandoc(content, outputPath, opts);
     } catch (e) {
-      new Notice('PDF export requires pandoc. Install pandoc and set path in Settings.');
+      new Notice('PDF export requires pandoc. Install pandoc and set path in settings.');
       throw e; // preserve the original pandoc error for the Export modal to display
     }
   }
@@ -311,7 +311,7 @@ ${this.markdownToHtml(content)}
     }
   }
 
-  private async getAbsPath(vaultPath: string): Promise<string> {
+  private getAbsPath(vaultPath: string): string {
     const adapter = this.app.vault.adapter as unknown as FileSystemAdapter;
     return adapter.getFullPath ? adapter.getFullPath(vaultPath) : vaultPath;
   }

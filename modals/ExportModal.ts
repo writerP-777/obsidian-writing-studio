@@ -22,7 +22,7 @@ export class ExportModal extends Modal {
     const { contentEl } = this;
     contentEl.empty();
     contentEl.addClass('ws-export-modal');
-    contentEl.createEl('h2', { text: 'Export Document' });
+    contentEl.createEl('h2', { text: 'Export document' });
 
     let coverSetting: Setting;
 
@@ -54,7 +54,7 @@ export class ExportModal extends Modal {
       .setName('Scope')
       .addDropdown(d => d
         .addOption('current', 'Current document')
-        .addOption('project', 'Entire project (in Binder order)')
+        .addOption('project', 'Entire project (in binder order)')
         .setValue(this.exportScope)
         .onChange(v => { this.exportScope = v as ExportScope; }));
 
@@ -77,7 +77,7 @@ export class ExportModal extends Modal {
 
     const previewBtn = contentEl.createEl('button', {
       cls: 'ws-export-preview-btn',
-      text: 'Preview Compiled Manuscript',
+      text: 'Preview compiled manuscript',
     });
     previewBtn.onclick = async () => {
       this.close();

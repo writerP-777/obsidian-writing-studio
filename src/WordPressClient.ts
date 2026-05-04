@@ -80,7 +80,7 @@ export class WordPressClient {
         throw: false,
       });
       if (resp.status < 200 || resp.status >= 300) throw new Error(`HTTP ${resp.status}`);
-      return resp.json.map((c: any) => ({
+      return resp.json.map((c: { id: number; name: string; slug: string; count: number }) => ({
         id: c.id,
         name: c.name,
         slug: c.slug,
@@ -146,7 +146,7 @@ export class WordPressClient {
           throw: false,
         });
         if (searchResp.status === 200) {
-          const match = searchResp.json.find((t: any) => t.name.toLowerCase() === name.toLowerCase());
+          const match = searchResp.json.find((t: { name: string; id: number }) => t.name.toLowerCase() === name.toLowerCase());
           if (match) { ids.push(match.id); continue; }
         }
 

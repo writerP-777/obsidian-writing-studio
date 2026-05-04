@@ -19,7 +19,7 @@ export class ProjectModal extends Modal {
     const { contentEl } = this;
     contentEl.empty();
     contentEl.addClass('ws-project-modal');
-    contentEl.createEl('h2', { text: 'New Writing Project' });
+    contentEl.createEl('h2', { text: 'New writing project' });
 
     // Declared early so the dropdown onChange closure can reference it; assigned below.
     let previewEl!: HTMLElement;
@@ -35,11 +35,11 @@ export class ProjectModal extends Modal {
       .setDesc('Choose a pre-configured project structure.')
       .addDropdown(d => d
         .addOption('blank', 'Blank (custom structure)')
-        .addOption('book', 'Book (Parts → Chapters → Scenes)')
-        .addOption('series', 'Article Series (Series → Articles)')
-        .addOption('blog', 'Blog Collection (Posts by date/category)')
-        .addOption('journal-article', 'Journal Article — Academic or professional journal submission')
-        .addOption('magazine-article', 'Magazine Article — Feature, long-form, or narrative nonfiction')
+        .addOption('book', 'Book (parts → chapters → scenes)')
+        .addOption('series', 'Article series (series → articles)')
+        .addOption('blog', 'Blog collection (posts by date/category)')
+        .addOption('journal-article', 'Journal article — academic or professional journal submission')
+        .addOption('magazine-article', 'Magazine article — feature, long-form, or narrative nonfiction')
         .setValue(this.type)
         .onChange(v => {
           this.type = v as ProjectType;
@@ -57,7 +57,7 @@ export class ProjectModal extends Modal {
 
     const btnRow = contentEl.createDiv('ws-modal-btn-row');
 
-    const createBtn = btnRow.createEl('button', { cls: 'mod-cta', text: 'Create Project' });
+    const createBtn = btnRow.createEl('button', { cls: 'mod-cta', text: 'Create project' });
     createBtn.onclick = async () => {
       if (!this.title.trim()) {
         new Notice('Please enter a project title.');
@@ -79,7 +79,7 @@ export class ProjectModal extends Modal {
       } catch (e) {
         new Notice(`Failed to create project: ${e instanceof Error ? e.message : String(e)}`);
         createBtn.disabled = false;
-        createBtn.textContent = 'Create Project';
+        createBtn.textContent = 'Create project';
       }
     };
 

@@ -28,7 +28,7 @@ export class BinderView extends ItemView {
   }
 
   getDisplayText(): string {
-    return 'Writing Binder';
+    return 'Writing binder';
   }
 
   getIcon(): string {
@@ -64,7 +64,7 @@ export class BinderView extends ItemView {
     const projectSel = projectRow.createEl('select', { cls: 'ws-binder-project-sel' });
     const projects = this.plugin.projectManager.getProjects();
 
-    const noOpt = projectSel.createEl('option', { text: '— Select Project —' });
+    const noOpt = projectSel.createEl('option', { text: '— Select project —' });
     noOpt.value = '';
 
     for (const p of projects) {
@@ -78,17 +78,17 @@ export class BinderView extends ItemView {
       await this.refresh();
     };
 
-    const newProjectBtn = projectRow.createEl('button', { cls: 'ws-binder-btn', title: 'New Project' });
+    const newProjectBtn = projectRow.createEl('button', { cls: 'ws-binder-btn', title: 'New project' });
     setIcon(newProjectBtn, 'plus');
     newProjectBtn.onclick = () => {
-      new ProjectModal(this.app, this.plugin, () => this.refresh()).open();
+      new ProjectModal(this.app, this.plugin, () => { void this.refresh(); }).open();
     };
 
     // Toolbar
     const toolbar = header.createDiv('ws-binder-toolbar');
     const newDocBtn = toolbar.createEl('button', {
       cls: 'ws-binder-btn',
-      text: '+ Document',
+      text: '+ document',
     });
     newDocBtn.onclick = async () => {
       if (!this.activeProject) {
@@ -98,7 +98,7 @@ export class BinderView extends ItemView {
       await this.createNewDocument();
     };
 
-    const dashBtn = toolbar.createEl('button', { cls: 'ws-binder-btn', title: 'Targets Dashboard' });
+    const dashBtn = toolbar.createEl('button', { cls: 'ws-binder-btn', title: 'Targets dashboard' });
     setIcon(dashBtn, 'target');
     dashBtn.onclick = () => {
       new TargetsDashboardModal(this.app, this.plugin).open();
@@ -117,13 +117,13 @@ export class BinderView extends ItemView {
 
     if (!this.activeProject) {
       const empty = listEl.createDiv('ws-binder-empty');
-      empty.textContent = 'No project selected. Create or select a Writing Project to get started.';
+      empty.textContent = 'No project selected. Create or select a writing project to get started.';
       return;
     }
 
     if (this.binderItems.length === 0) {
       const empty = listEl.createDiv('ws-binder-empty');
-      empty.textContent = 'No documents yet. Click "+ Document" to add one.';
+      empty.textContent = 'No documents yet. Click "+ document" to add one.';
       return;
     }
 
@@ -150,10 +150,9 @@ export class BinderView extends ItemView {
       row.setAttribute('data-item-id', item.id);
       row.setAttribute('draggable', 'true');
 
-      // Indent
+      // Indent — padding-left comes from .ws-binder-item { padding-left: var(--ws-binder-depth, 0px) } in CSS
       if (depth > 0) {
         row.setCssProps({ '--ws-binder-depth': `${depth * 16 + 8}px` });
-        row.style.paddingLeft = 'var(--ws-binder-depth)';
       }
 
       // Collapse toggle for groups
@@ -187,7 +186,7 @@ export class BinderView extends ItemView {
       // Word count
       const wcEl = row.createSpan('ws-binder-wc');
       this.wcElements.set(item.filePath, { el: wcEl, item });
-      this.loadWordCount(item, wcEl);
+      void this.loadWordCount(item, wcEl);
 
       // Click to open
       row.onclick = () => this.openDocument(item);

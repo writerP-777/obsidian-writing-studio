@@ -82,7 +82,7 @@ export class WritingModes {
   private forceReadingView(): void {
     const leaf = this.app.workspace.getMostRecentLeaf();
     if (leaf && leaf.view.getViewType() === 'markdown') {
-      (leaf.view as any).setState({ mode: 'preview' }, { history: false });
+      (leaf.view as unknown as { setState(s: { mode: string }, o: { history: boolean }): void }).setState({ mode: 'preview' }, { history: false });
     }
   }
 

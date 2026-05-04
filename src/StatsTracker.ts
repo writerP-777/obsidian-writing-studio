@@ -43,7 +43,7 @@ export class StatsTracker {
     }
 
     if (this.plugin.settings.appendToDailyNote) {
-      this.appendToDailyNote(session);
+      void this.appendToDailyNote(session);
     }
   }
 
@@ -82,7 +82,8 @@ export class StatsTracker {
 
   private getDailyNotePath(date: string): string {
     // Try to get daily notes folder from Obsidian daily notes config
-    const dailyNotesPlugin = (this.app as any).internalPlugins?.plugins?.['daily-notes'];
+    type AppInternal = App & { internalPlugins?: { plugins?: Record<string, { instance?: { options?: { folder?: string } } }> } };
+    const dailyNotesPlugin = (this.app as AppInternal).internalPlugins?.plugins?.['daily-notes'];
     const folder = dailyNotesPlugin?.instance?.options?.folder || '';
     // Use the date as-is (ISO format) since we can't easily format with moment here
     const fileName = date;

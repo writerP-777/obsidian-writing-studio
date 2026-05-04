@@ -1,6 +1,6 @@
 import { App, Modal, TFile } from 'obsidian';
 import type WritingStudioPlugin from '../main';
-import { BinderItem, STATUS_COLORS, STATUS_LABELS } from '../models/BinderItem';
+import { BinderItem, STATUS_COLORS, STATUS_LABELS, DocumentStatus } from '../models/BinderItem';
 
 interface DocStats {
   item: BinderItem;
@@ -40,7 +40,7 @@ export class TargetsDashboardModal extends Modal {
     filterRow.createEl('label', { text: 'Filter: ' });
     const statusSel = filterRow.createEl('select');
     ['all', 'draft', 'in-progress', 'complete', 'published'].forEach(s => {
-      const opt = statusSel.createEl('option', { text: s === 'all' ? 'All Statuses' : STATUS_LABELS[s as any] || s });
+      const opt = statusSel.createEl('option', { text: s === 'all' ? 'All statuses' : STATUS_LABELS[s as DocumentStatus] || s });
       opt.value = s;
     });
     statusSel.value = this.statusFilter;

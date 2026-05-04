@@ -1,6 +1,6 @@
 import { App, PluginSettingTab, Setting } from 'obsidian';
 import type WritingStudioPlugin from '../main';
-import { WordPressSite } from '../models/WordPressSite';
+import { WordPressSite, WPPostStatus } from '../models/WordPressSite';
 
 export class WritingStudioSettingsTab extends PluginSettingTab {
   plugin: WritingStudioPlugin;
@@ -60,11 +60,10 @@ export class WritingStudioSettingsTab extends PluginSettingTab {
   }
 
   private renderGeneral(el: HTMLElement): void {
-    new Setting(el).setName('General').setHeading();
 
     new Setting(el)
       .setName('Default project folder')
-      .setDesc('Vault path where Writing Projects are stored.')
+      .setDesc('Vault path where writing projects are stored.')
       .addText(t => t
         .setPlaceholder('Writing Projects')
         .setValue(this.plugin.settings.defaultProjectFolder)
@@ -87,7 +86,7 @@ export class WritingStudioSettingsTab extends PluginSettingTab {
         .addOption('note', 'Note')
         .setValue(this.plugin.settings.defaultDocumentType)
         .onChange(async v => {
-          this.plugin.settings.defaultDocumentType = v as any;
+          this.plugin.settings.defaultDocumentType = v as 'chapter' | 'section' | 'article' | 'note';
           await this.plugin.saveSettings();
         }));
 
@@ -110,7 +109,7 @@ export class WritingStudioSettingsTab extends PluginSettingTab {
         .addOption('sentence', 'Sentence (line)')
         .setValue(this.plugin.settings.focusUnit)
         .onChange(async v => {
-          this.plugin.settings.focusUnit = v as any;
+          this.plugin.settings.focusUnit = v as 'paragraph' | 'sentence';
           await this.plugin.saveSettings();
         }));
 
@@ -311,7 +310,7 @@ export class WritingStudioSettingsTab extends PluginSettingTab {
         .addOption('docx', 'Word (.docx)')
         .addOption('rtf', 'RTF')
         .setValue(this.plugin.settings.defaultExportFormat)
-        .onChange(async v => { this.plugin.settings.defaultExportFormat = v as any; await this.plugin.saveSettings(); }));
+        .onChange(async v => { this.plugin.settings.defaultExportFormat = v as 'pdf' | 'docx' | 'rtf' | 'md' | 'html'; await this.plugin.saveSettings(); }));
 
     new Setting(el)
       .setName('Default paper size')
@@ -319,7 +318,7 @@ export class WritingStudioSettingsTab extends PluginSettingTab {
         .addOption('letter', 'Letter (US)')
         .addOption('a4', 'A4')
         .setValue(this.plugin.settings.defaultPaperSize)
-        .onChange(async v => { this.plugin.settings.defaultPaperSize = v as any; await this.plugin.saveSettings(); }));
+        .onChange(async v => { this.plugin.settings.defaultPaperSize = v as 'letter' | 'a4'; await this.plugin.saveSettings(); }));
 
     new Setting(el)
       .setName('Export font')
@@ -367,7 +366,7 @@ export class WritingStudioSettingsTab extends PluginSettingTab {
     new Setting(el).setName('Daily writing log').setHeading();
 
     new Setting(el)
-      .setName('Append to Daily Note')
+      .setName('Append to daily note')
       .setDesc('Add a writing activity summary to today\'s Daily Note after each sprint.')
       .addToggle(t => t
         .setValue(this.plugin.settings.appendToDailyNote)
@@ -401,7 +400,7 @@ export class WritingStudioSettingsTab extends PluginSettingTab {
           this.display();
         }));
 
-    new Setting(el).setName('Global settings').setHeading();
+    new Setting(el).setName('Wikilink defaults').setHeading();
 
     new Setting(el)
       .setName('Default wikilink handling')
@@ -409,7 +408,7 @@ export class WritingStudioSettingsTab extends PluginSettingTab {
         .addOption('strip', 'Strip (convert to plain text)')
         .addOption('convert', 'Convert to URL')
         .setValue(this.plugin.settings.wikilinkHandling)
-        .onChange(async v => { this.plugin.settings.wikilinkHandling = v as any; await this.plugin.saveSettings(); }));
+        .onChange(async v => { this.plugin.settings.wikilinkHandling = v as 'strip' | 'convert'; await this.plugin.saveSettings(); }));
   }
 
   private renderSiteConfig(container: HTMLElement, site: WordPressSite, index: number): void {
@@ -436,8 +435,8 @@ export class WritingStudioSettingsTab extends PluginSettingTab {
         .onChange(async v => { site.username = v; await this.plugin.saveSettings(); }));
 
     new Setting(siteEl)
-      .setName('Application Password')
-      .setDesc('Generated in WordPress under Users → Profile → Application Passwords.')
+      .setName('Application password')
+      .setDesc('Generated in WordPress under Users → Profile → Application passwords.')
       .addText(t => {
         t.inputEl.type = 'password';
         t.setValue(site.appPassword)
@@ -451,7 +450,7 @@ export class WritingStudioSettingsTab extends PluginSettingTab {
         .addOption('pending', 'Pending Review')
         .addOption('publish', 'Published')
         .setValue(site.defaultStatus)
-        .onChange(async v => { site.defaultStatus = v as any; await this.plugin.saveSettings(); }));
+        .onChange(async v => { site.defaultStatus = v as WPPostStatus; await this.plugin.saveSettings(); }));
 
     new Setting(siteEl)
       .setName('Wikilink handling')
@@ -459,7 +458,7 @@ export class WritingStudioSettingsTab extends PluginSettingTab {
         .addOption('strip', 'Strip')
         .addOption('convert', 'Convert to URL')
         .setValue(site.wikilinkHandling)
-        .onChange(async v => { site.wikilinkHandling = v as any; await this.plugin.saveSettings(); }));
+        .onChange(async v => { site.wikilinkHandling = v as 'strip' | 'convert'; await this.plugin.saveSettings(); }));
 
     const testRow = new Setting(siteEl)
       .setName('Test connection')

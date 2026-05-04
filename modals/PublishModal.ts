@@ -50,10 +50,9 @@ export class PublishModal extends Modal {
           this.selectedSiteId = sites[0].id;
           d.setValue(this.selectedSiteId);
         }
-        d.onChange(async v => {
+        d.onChange(v => {
           this.selectedSiteId = v;
-          await this.loadCategories();
-          this.render();
+          void this.loadCategories().then(() => this.render());
         });
       });
 
@@ -69,7 +68,7 @@ export class PublishModal extends Modal {
       .setName('Post status')
       .addDropdown(d => d
         .addOption('draft', 'Draft')
-        .addOption('pending', 'Pending Review')
+        .addOption('pending', 'Pending review')
         .addOption('publish', 'Published')
         .setValue(this.postStatus)
         .onChange(v => { this.postStatus = v as WPPostStatus; }));

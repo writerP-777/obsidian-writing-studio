@@ -50,7 +50,7 @@ export class SprintModal extends Modal {
         .addOption('file', 'Current file')
         .addOption('project', 'Entire project')
         .setValue(this.sprintScope)
-        .onChange(v => { this.sprintScope = v as any; }));
+        .onChange(v => { this.sprintScope = v as 'file' | 'project'; }));
 
     const btnRow = contentEl.createDiv('ws-modal-btn-row');
 

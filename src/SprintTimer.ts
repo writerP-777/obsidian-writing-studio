@@ -72,7 +72,7 @@ export class SprintTimer {
     this.state = null;
     this.hideFloating();
     if (this.statusBarEl) this.statusBarEl.addClass('ws-hidden');
-    if (this.onComplete) this.onComplete(session);
+    if (this.onComplete) void this.onComplete(session);
   }
 
   private buildSession(): SprintSession {
@@ -141,7 +141,7 @@ export class SprintTimer {
     this.state = null;
     this.hideFloating();
     if (this.statusBarEl) this.statusBarEl.addClass('ws-hidden');
-    if (this.onComplete) this.onComplete(session);
+    if (this.onComplete) void this.onComplete(session);
   }
 
   private playBell(): void {
@@ -191,7 +191,7 @@ export class SprintTimer {
     el.createEl('div', { cls: 'ws-sprint-time', text: '00:00' });
     el.createEl('div', { cls: 'ws-sprint-wc', text: '+0 words' });
     const controls = el.createEl('div', { cls: 'ws-sprint-controls' });
-    const pauseBtn = controls.createEl('button', { cls: 'ws-sprint-pause', title: 'Pause/Resume', text: '⏸' });
+    const pauseBtn = controls.createEl('button', { cls: 'ws-sprint-pause', title: 'Pause/resume', text: '⏸' });
     const stopBtn = controls.createEl('button', { cls: 'ws-sprint-stop', title: 'Stop sprint', text: '■' });
 
     pauseBtn.onclick = () => {

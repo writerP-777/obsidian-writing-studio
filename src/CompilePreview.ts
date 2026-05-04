@@ -20,7 +20,7 @@ export class CompilePreviewView extends ItemView {
   }
 
   getDisplayText(): string {
-    return 'Compiled Manuscript';
+    return 'Compiled manuscript';
   }
 
   getIcon(): string {
@@ -86,7 +86,7 @@ export class CompilePreviewView extends ItemView {
 
     const exportBtn = toolbar.createEl('button', {
       cls: 'ws-compile-export-btn mod-cta',
-      text: 'Proceed to Export',
+      text: 'Proceed to export',
     });
     exportBtn.onclick = () => {
       new ExportModal(this.app, this.plugin).open();
@@ -94,7 +94,7 @@ export class CompilePreviewView extends ItemView {
 
     const closeBtn = toolbar.createEl('button', {
       cls: 'ws-compile-close-btn',
-      text: 'Close Preview',
+      text: 'Close preview',
     });
     closeBtn.onclick = () => {
       this.leaf.detach();
@@ -105,7 +105,7 @@ export class CompilePreviewView extends ItemView {
 
     if (!this.content) {
       contentDiv.createEl('p', {
-        text: 'No content to preview. Open a Writing Project first.',
+        text: 'No content to preview. Open a writing project first.',
         cls: 'ws-empty-state',
       });
       return;
@@ -121,7 +121,7 @@ export class CompilePreviewView extends ItemView {
         sectionDiv.setAttribute('data-section-id', id);
       }
 
-      MarkdownRenderer.render(this.app, section, sectionDiv, '', this);
+      void MarkdownRenderer.render(this.app, section, sectionDiv, '', this);
     }
   }
 
