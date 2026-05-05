@@ -3613,9 +3613,9 @@ var BinderView = class extends import_obsidian4.ItemView {
   async moveToResearch(item) {
     if (!this.activeProject)
       return;
-    const researchDir = `${this.activeProject.folderPath}/Research`;
+    const researchDir = (0, import_obsidian4.normalizePath)(`${this.activeProject.folderPath}/Research`);
     const fileName = item.filePath.split("/").pop() || "note.md";
-    const newPath = `${researchDir}/${fileName}`;
+    const newPath = (0, import_obsidian4.normalizePath)(`${researchDir}/${fileName}`);
     const file = this.app.vault.getAbstractFileByPath(item.filePath);
     if (file instanceof import_obsidian4.TFile) {
       await this.app.vault.rename(file, newPath);

@@ -1,4 +1,4 @@
-import { ItemView, WorkspaceLeaf, TFile, Menu, Notice, setIcon } from 'obsidian';
+import { ItemView, WorkspaceLeaf, TFile, Menu, Notice, setIcon, normalizePath } from 'obsidian';
 import type WritingStudioPlugin from '../main';
 import { BinderItem, STATUS_COLORS, STATUS_LABELS, DocumentStatus } from '../models/BinderItem';
 import { WritingProject } from '../models/Project';
@@ -408,9 +408,9 @@ export class BinderView extends ItemView {
 
   private async moveToResearch(item: BinderItem): Promise<void> {
     if (!this.activeProject) return;
-    const researchDir = `${this.activeProject.folderPath}/Research`;
+    const researchDir = normalizePath(`${this.activeProject.folderPath}/Research`);
     const fileName = item.filePath.split('/').pop() || 'note.md';
-    const newPath = `${researchDir}/${fileName}`;
+    const newPath = normalizePath(`${researchDir}/${fileName}`);
     const file = this.app.vault.getAbstractFileByPath(item.filePath);
     if (file instanceof TFile) {
       await this.app.vault.rename(file, newPath);
