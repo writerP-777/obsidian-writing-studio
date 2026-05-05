@@ -1,8 +1,8 @@
 {
   "id": "writing-studio",
   "name": "Writing Studio",
-  "version": "2.1.3",
-  "minAppVersion": "1.4.0",
+  "version": "2.1.4",
+  "minAppVersion": "1.7.2",
   "description": "A professional writing environment with Focus Mode, Writing Binder, Sprint Timer, WordPress publishing, Folder Sidebar Explorer, and more.",
   "author": "Don Pucik",
   "authorUrl": "",

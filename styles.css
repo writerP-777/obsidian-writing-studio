@@ -2,66 +2,10 @@
    Obsidian Writing Studio — styles.css
    ═══════════════════════════════════════════════════════════════ */
 
-/* ── Bundled Fonts ──────────────────────────────────────────────── */
-
-/* Cormorant Garamond — Serif */
-@font-face { font-family: 'Cormorant Garamond'; font-weight: 400; font-style: normal; src: url('fonts/Cormorant_Garamond/static/CormorantGaramond-Regular.ttf') format('truetype'); }
-@font-face { font-family: 'Cormorant Garamond'; font-weight: 700; font-style: normal; src: url('fonts/Cormorant_Garamond/static/CormorantGaramond-Bold.ttf') format('truetype'); }
-@font-face { font-family: 'Cormorant Garamond'; font-weight: 400; font-style: italic; src: url('fonts/Cormorant_Garamond/static/CormorantGaramond-Italic.ttf') format('truetype'); }
-@font-face { font-family: 'Cormorant Garamond'; font-weight: 700; font-style: italic; src: url('fonts/Cormorant_Garamond/static/CormorantGaramond-BoldItalic.ttf') format('truetype'); }
-
-/* Crimson Text — Serif */
-@font-face { font-family: 'Crimson Text'; font-weight: 400; font-style: normal; src: url('fonts/Crimson_Text/CrimsonText-Regular.ttf') format('truetype'); }
-@font-face { font-family: 'Crimson Text'; font-weight: 700; font-style: normal; src: url('fonts/Crimson_Text/CrimsonText-Bold.ttf') format('truetype'); }
-@font-face { font-family: 'Crimson Text'; font-weight: 400; font-style: italic; src: url('fonts/Crimson_Text/CrimsonText-Italic.ttf') format('truetype'); }
-@font-face { font-family: 'Crimson Text'; font-weight: 700; font-style: italic; src: url('fonts/Crimson_Text/CrimsonText-BoldItalic.ttf') format('truetype'); }
-
-/* EB Garamond — Serif */
-@font-face { font-family: 'EB Garamond'; font-weight: 400; font-style: normal; src: url('fonts/EB_Garamond/static/EBGaramond-Regular.ttf') format('truetype'); }
-@font-face { font-family: 'EB Garamond'; font-weight: 700; font-style: normal; src: url('fonts/EB_Garamond/static/EBGaramond-Bold.ttf') format('truetype'); }
-@font-face { font-family: 'EB Garamond'; font-weight: 400; font-style: italic; src: url('fonts/EB_Garamond/static/EBGaramond-Italic.ttf') format('truetype'); }
-@font-face { font-family: 'EB Garamond'; font-weight: 700; font-style: italic; src: url('fonts/EB_Garamond/static/EBGaramond-BoldItalic.ttf') format('truetype'); }
-
-/* Libre Baskerville — Serif */
-@font-face { font-family: 'Libre Baskerville'; font-weight: 400; font-style: normal; src: url('fonts/Libre_Baskerville/static/LibreBaskerville-Regular.ttf') format('truetype'); }
-@font-face { font-family: 'Libre Baskerville'; font-weight: 700; font-style: normal; src: url('fonts/Libre_Baskerville/static/LibreBaskerville-Bold.ttf') format('truetype'); }
-@font-face { font-family: 'Libre Baskerville'; font-weight: 400; font-style: italic; src: url('fonts/Libre_Baskerville/static/LibreBaskerville-Italic.ttf') format('truetype'); }
-@font-face { font-family: 'Libre Baskerville'; font-weight: 700; font-style: italic; src: url('fonts/Libre_Baskerville/static/LibreBaskerville-BoldItalic.ttf') format('truetype'); }
-
-/* Libre Caslon Text — Serif */
-@font-face { font-family: 'Libre Caslon Text'; font-weight: 400; font-style: normal; src: url('fonts/Libre_Caslon_Text/LibreCaslonText-Regular.ttf') format('truetype'); }
-@font-face { font-family: 'Libre Caslon Text'; font-weight: 700; font-style: normal; src: url('fonts/Libre_Caslon_Text/LibreCaslonText-Bold.ttf') format('truetype'); }
-@font-face { font-family: 'Libre Caslon Text'; font-weight: 400; font-style: italic; src: url('fonts/Libre_Caslon_Text/LibreCaslonText-Italic.ttf') format('truetype'); }
-
-/* Literata — Serif */
-@font-face { font-family: 'Literata'; font-weight: 400; font-style: normal; src: url('fonts/Literata/static/Literata-Regular.ttf') format('truetype'); }
-@font-face { font-family: 'Literata'; font-weight: 700; font-style: normal; src: url('fonts/Literata/static/Literata-Bold.ttf') format('truetype'); }
-@font-face { font-family: 'Literata'; font-weight: 400; font-style: italic; src: url('fonts/Literata/static/Literata-Italic.ttf') format('truetype'); }
-@font-face { font-family: 'Literata'; font-weight: 700; font-style: italic; src: url('fonts/Literata/static/Literata-BoldItalic.ttf') format('truetype'); }
-
-/* Lora — Serif */
-@font-face { font-family: 'Lora'; font-weight: 400; font-style: normal; src: url('fonts/Lora/static/Lora-Regular.ttf') format('truetype'); }
-@font-face { font-family: 'Lora'; font-weight: 700; font-style: normal; src: url('fonts/Lora/static/Lora-Bold.ttf') format('truetype'); }
-@font-face { font-family: 'Lora'; font-weight: 400; font-style: italic; src: url('fonts/Lora/static/Lora-Italic.ttf') format('truetype'); }
-@font-face { font-family: 'Lora'; font-weight: 700; font-style: italic; src: url('fonts/Lora/static/Lora-BoldItalic.ttf') format('truetype'); }
-
-/* Inter — Sans-serif */
-@font-face { font-family: 'Inter'; font-weight: 400; font-style: normal; src: url('fonts/Inter/static/Inter_18pt-Regular.ttf') format('truetype'); }
-@font-face { font-family: 'Inter'; font-weight: 700; font-style: normal; src: url('fonts/Inter/static/Inter_18pt-Bold.ttf') format('truetype'); }
-@font-face { font-family: 'Inter'; font-weight: 400; font-style: italic; src: url('fonts/Inter/static/Inter_18pt-Italic.ttf') format('truetype'); }
-@font-face { font-family: 'Inter'; font-weight: 700; font-style: italic; src: url('fonts/Inter/static/Inter_18pt-BoldItalic.ttf') format('truetype'); }
-
-/* Lato — Sans-serif */
-@font-face { font-family: 'Lato'; font-weight: 400; font-style: normal; src: url('fonts/Lato/Lato-Regular.ttf') format('truetype'); }
-@font-face { font-family: 'Lato'; font-weight: 700; font-style: normal; src: url('fonts/Lato/Lato-Bold.ttf') format('truetype'); }
-@font-face { font-family: 'Lato'; font-weight: 400; font-style: italic; src: url('fonts/Lato/Lato-Italic.ttf') format('truetype'); }
-@font-face { font-family: 'Lato'; font-weight: 700; font-style: italic; src: url('fonts/Lato/Lato-BoldItalic.ttf') format('truetype'); }
-
-/* Source Sans 3 — Sans-serif */
-@font-face { font-family: 'Source Sans 3'; font-weight: 400; font-style: normal; src: url('fonts/Source_Sans_3/static/SourceSans3-Regular.ttf') format('truetype'); }
-@font-face { font-family: 'Source Sans 3'; font-weight: 700; font-style: normal; src: url('fonts/Source_Sans_3/static/SourceSans3-Bold.ttf') format('truetype'); }
-@font-face { font-family: 'Source Sans 3'; font-weight: 400; font-style: italic; src: url('fonts/Source_Sans_3/static/SourceSans3-Italic.ttf') format('truetype'); }
-@font-face { font-family: 'Source Sans 3'; font-weight: 700; font-style: italic; src: url('fonts/Source_Sans_3/static/SourceSans3-BoldItalic.ttf') format('truetype'); }
+/* ── Typography Fonts (Google Fonts) ────────────────────────────── */
+/* Loaded at runtime — requires an internet connection on first use.  */
+/* Fonts are cached by the OS/browser after that and work offline.    */
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,700;1,400;1,700&family=Crimson+Text:ital,wght@0,400;0,600;1,400&family=EB+Garamond:ital,wght@0,400;0,700;1,400;1,700&family=Inter:wght@400;700&family=Lato:ital,wght@0,400;0,700;1,400;1,700&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Libre+Caslon+Text:ital,wght@0,400;0,700;1,400&family=Literata:ital,opsz,wght@0,7..72,400;0,7..72,700;1,7..72,400;1,7..72,700&family=Lora:ital,wght@0,400;0,700;1,400;1,700&family=Source+Sans+3:ital,wght@0,400;0,700;1,400;1,700&display=swap');
 
 /* ── CSS Custom Properties ─────────────────────────────────────── */
 :root {
@@ -1320,6 +1264,27 @@
   box-sizing: border-box !important;
   max-width: 100% !important;
 }
+
+/* ── Help Tab ───────────────────────────────────────────────────── */
+.ws-help-content {
+  max-width: 680px;
+  padding: 8px 4px 40px;
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.ws-help-content h1 { font-size: 1.4em; margin: 0 0 4px; }
+.ws-help-content h2 { font-size: 1.1em; margin: 24px 0 8px; border-bottom: 1px solid var(--background-modifier-border); padding-bottom: 4px; }
+.ws-help-content h3 { font-size: 1em; margin: 16px 0 6px; }
+.ws-help-content p  { margin: 0 0 10px; }
+.ws-help-content ul, .ws-help-content ol { margin: 0 0 10px; padding-left: 1.4em; }
+.ws-help-content li { margin-bottom: 3px; }
+.ws-help-content table { border-collapse: collapse; width: 100%; margin-bottom: 12px; font-size: 13px; }
+.ws-help-content th, .ws-help-content td { padding: 5px 10px; border: 1px solid var(--background-modifier-border); text-align: left; }
+.ws-help-content th { background: var(--background-secondary); font-weight: 600; }
+.ws-help-content blockquote { border-left: 3px solid var(--ws-accent); margin: 0 0 10px; padding: 6px 12px; background: var(--background-secondary); border-radius: 0 4px 4px 0; }
+.ws-help-content code { background: var(--background-secondary); padding: 1px 5px; border-radius: 3px; font-size: 0.9em; }
+.ws-help-content hr { border: none; border-top: 1px solid var(--background-modifier-border); margin: 20px 0; }
 
 /* ── Export Preview Button ──────────────────────────────────────── */
 .ws-export-preview-btn {

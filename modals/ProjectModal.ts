@@ -27,7 +27,7 @@ export class ProjectModal extends Modal {
     new Setting(contentEl)
       .setName('Project title')
       .addText(t => t
-        .setPlaceholder('My Novel')
+        .setPlaceholder('My novel')
         .onChange(v => { this.title = v; }));
 
     new Setting(contentEl)

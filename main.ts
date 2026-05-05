@@ -26,6 +26,7 @@ import { FrontmatterManager } from './src/FrontmatterManager';
 import { WritingStudioSettingsTab } from './src/SettingsTab';
 import { FolderSidebarView, FolderPickerModal, FOLDER_SIDEBAR_VIEW_TYPE } from './src/FolderSidebarView';
 
+import { AddToProjectModal } from './modals/AddToProjectModal';
 import { SprintModal } from './modals/SprintModal';
 import { ExportModal } from './modals/ExportModal';
 import { PublishModal } from './modals/PublishModal';
@@ -36,8 +37,25 @@ import { WritingDashboardModal } from './modals/WritingDashboardModal';
 import { WordPressSite } from './models/WordPressSite';
 import { WritingModeType } from './models/WritingMode';
 
+const TYPOGRAPHY_FONT_OPTIONS: { key: string; label: string }[] = [
+  { key: 'mono',               label: 'Monospaced (ia writer mono)' },
+  { key: 'serif',              label: 'Serif (ia writer duo serif)' },
+  { key: 'sans',               label: 'Sans-serif (ia writer quattro)' },
+  { key: 'cormorant-garamond', label: 'Cormorant garamond' },
+  { key: 'crimson-text',       label: 'Crimson text' },
+  { key: 'eb-garamond',        label: 'Eb garamond' },
+  { key: 'libre-baskerville',  label: 'Libre baskerville' },
+  { key: 'libre-caslon-text',  label: 'Libre caslon text' },
+  { key: 'literata',           label: 'Literata' },
+  { key: 'lora',               label: 'Lora' },
+  { key: 'inter',              label: 'Inter' },
+  { key: 'lato',               label: 'Lato' },
+  { key: 'source-sans-3',      label: 'Source sans 3' },
+];
+
 export interface WritingStudioSettings {
   // General
+  openOnStartup: boolean;
   defaultProjectFolder: string;
   authorName: string;
   defaultDocumentType: 'chapter' | 'section' | 'article' | 'note';
@@ -82,6 +100,7 @@ export interface WritingStudioSettings {
 }
 
 const DEFAULT_SETTINGS: WritingStudioSettings = {
+  openOnStartup: true,
   defaultProjectFolder: 'Writing Projects',
   authorName: '',
   defaultDocumentType: 'chapter',
@@ -187,17 +206,8 @@ export default class WritingStudioPlugin extends Plugin {
       new SprintSummaryModal(this.app, session).open();
     });
 
-    // Ribbon icons
-    this.addRibbonIcon('feather', 'Open Writing Studio', () => this.openLauncher());
-    this.addRibbonIcon('book-open', 'Open writing binder', () => this.openBinder());
-    this.addRibbonIcon('timer', 'Start writing sprint', () => new SprintModal(this.app, this).open());
-    this.addRibbonIcon('eye', 'Toggle focus mode', () => this.focusMode.toggle());
-    this.addRibbonIcon('layout-dashboard', 'Switch writing mode', (e) => this.showModeSwitcher(e));
-    this.addRibbonIcon('globe', 'Publish to WordPress', () => this.publishCurrentFile());
-    this.addRibbonIcon('bar-chart-2', 'Writing dashboard', () => new WritingDashboardModal(this.app, this).open());
-    this.addRibbonIcon('folder', 'Open folder in sidebar explorer', () => {
-      new FolderPickerModal(this.app, (folder) => { void this.openFolder(folder); }).open();
-    });
+    // Ribbon icons — launcher only; all other features are accessible via the launcher panel, commands, or context menu
+    this.addRibbonIcon('feather', 'Open writing studio', () => this.openLauncher());
 
     // Commands
     this.addCommand({
@@ -268,7 +278,7 @@ export default class WritingStudioPlugin extends Plugin {
 
     this.addCommand({
       id: 'publish-wordpress',
-      name: 'Publish to WordPress',
+      name: 'Publish to wordpress',
       callback: () => this.publishCurrentFile(),
     });
 
@@ -293,7 +303,7 @@ export default class WritingStudioPlugin extends Plugin {
     this.addCommand({
       id: 'set-word-count-goal',
       name: 'Set word count goal',
-      editorCallback: (editor, view) => this.setWordCountGoal(view.file),
+      editorCallback: (_editor, view) => this.setWordCountGoal(view.file),
     });
 
     this.addCommand({
@@ -305,7 +315,7 @@ export default class WritingStudioPlugin extends Plugin {
     });
 
     // Keyboard: Escape to exit focus mode
-    this.registerDomEvent(document, 'keydown', (e: KeyboardEvent) => {
+    this.registerDomEvent(activeDocument, 'keydown', (e: KeyboardEvent) => {
       if (e.key === 'Escape' && this.focusMode.isActive()) {
         this.focusMode.disable();
       }
@@ -313,11 +323,15 @@ export default class WritingStudioPlugin extends Plugin {
 
     // Editor context menu
     this.registerEvent(
-      this.app.workspace.on('editor-menu', (menu, editor, view) => {
-        menu.addItem(i => i.setTitle('Export this document').setIcon('download').onClick(() => new ExportModal(this.app, this).open()));
-        menu.addItem(i => i.setTitle('Publish to WordPress').setIcon('globe').onClick(() => this.publishCurrentFile()));
-        menu.addItem(i => i.setTitle('Set word count goal').setIcon('target').onClick(() => this.setWordCountGoal(view.file)));
-        menu.addItem(i => i.setTitle('Switch writing mode →').setIcon('layout-dashboard').onClick((e: MouseEvent) => this.showModeSwitcher(e)));
+      this.app.workspace.on('editor-menu', (menu, _editor, view) => {
+        menu.addItem(i => i.setTitle('Writing studio options').setSection('writing-studio').setDisabled(true));
+        menu.addItem(i => i.setTitle('Export this document').setIcon('download').setSection('writing-studio').onClick(() => new ExportModal(this.app, this).open()));
+        menu.addItem(i => i.setTitle('Publish to wordpress').setIcon('globe').setSection('writing-studio').onClick(() => this.publishCurrentFile()));
+        menu.addItem(i => i.setTitle('Set word count goal').setIcon('target').setSection('writing-studio').onClick(() => this.setWordCountGoal(view.file)));
+        menu.addItem(i => i.setTitle('Switch writing mode →').setIcon('layout-dashboard').setSection('writing-studio').onClick((e: MouseEvent) => this.showModeSwitcher(e)));
+        if (this.typographyMode.isActive()) {
+          menu.addItem(i => i.setTitle('Typography font →').setIcon('type').setSection('writing-studio').onClick((e: MouseEvent) => this.showFontPicker(e)));
+        }
       })
     );
 
@@ -325,17 +339,20 @@ export default class WritingStudioPlugin extends Plugin {
     this.registerEvent(
       this.app.workspace.on('file-menu', (menu, file) => {
         if (file instanceof TFile && file.extension === 'md') {
+          menu.addItem(i => i.setTitle('Writing studio options').setSection('writing-studio').setDisabled(true));
           menu.addItem(i =>
             i.setTitle('Add to writing project')
               .setIcon('book-open')
+              .setSection('writing-studio')
               .onClick(() => { void this.addFileToProject(file); })
           );
         }
         if (file instanceof TFolder) {
-          menu.addItem(item =>
-            item
-              .setTitle('Open in sidebar explorer')
+          menu.addItem(i => i.setTitle('Writing studio options').setSection('writing-studio').setDisabled(true));
+          menu.addItem(i =>
+            i.setTitle('Open in sidebar explorer')
               .setIcon('folder')
+              .setSection('writing-studio')
               .onClick(() => { void this.openFolder(file); })
           );
         }
@@ -367,13 +384,12 @@ export default class WritingStudioPlugin extends Plugin {
     // Initialize project manager and open launcher once vault is fully indexed
     this.app.workspace.onLayoutReady(async () => {
       await this.projectManager.initialize();
-      await this.openLauncher();
+      if (this.settings.openOnStartup) await this.openLauncher();
       if (this.settings.currentWritingMode && this.settings.currentWritingMode !== 'none') {
         this.writingModes.restore();
       }
     });
 
-    console.debug('Obsidian Writing Studio loaded');
   }
 
   onunload(): void {
@@ -384,17 +400,17 @@ export default class WritingStudioPlugin extends Plugin {
     this.fmManager.destroy();
 
     if (this.wordCountUpdateTimer) {
-      clearTimeout(this.wordCountUpdateTimer);
+      activeWindow.clearTimeout(this.wordCountUpdateTimer);
     }
 
     // Remove inline goal banners
-    document.querySelectorAll('.ws-inline-goal-banner').forEach(el => el.remove());
+    activeDocument.querySelectorAll('.ws-inline-goal-banner').forEach(el => el.remove());
 
-    console.debug('Obsidian Writing Studio unloaded');
   }
 
   async loadSettings(): Promise<void> {
-    this.settings = Object.assign({}, DEFAULT_SETTINGS, await this.loadData());
+    const saved = (await this.loadData()) as Partial<WritingStudioSettings>;
+    this.settings = { ...DEFAULT_SETTINGS, ...saved };
   }
 
   async saveSettings(): Promise<void> {
@@ -491,7 +507,7 @@ export default class WritingStudioPlugin extends Plugin {
     const view = leaf?.view;
     const file = view instanceof MarkdownView ? view.file : null;
     if (!(file instanceof TFile)) {
-      new Notice('No markdown file is currently open.');
+      new Notice('No Markdown file is currently open.');
       return;
     }
     new PublishModal(this.app, this, file.path).open();
@@ -505,39 +521,59 @@ export default class WritingStudioPlugin extends Plugin {
   private showModeSwitcher(e: MouseEvent): void {
     const menu = new Menu();
     menu.addItem(i => i.setTitle('✍ Draft mode').setIcon('pencil').onClick(() => this.writingModes.switchMode('draft')));
-    menu.addItem(i => i.setTitle('✎ Edit mode').setIcon('edit-3').onClick(() => this.writingModes.switchMode('edit')));
+    menu.addItem(i => i.setTitle('✎ edit mode').setIcon('edit-3').onClick(() => this.writingModes.switchMode('edit')));
     menu.addItem(i => i.setTitle('👁 Review mode').setIcon('eye').onClick(() => this.writingModes.switchMode('review')));
     menu.addSeparator();
     menu.addItem(i => i.setTitle('Normal (no mode)').onClick(() => this.writingModes.switchMode('none')));
     menu.showAtMouseEvent(e);
   }
 
-  private async addFileToProject(file: TFile): Promise<void> {
-    const project = this.projectManager.getActiveProject();
-    if (!project) {
-      new Notice('No active project. Create or select a project first.');
+  private showFontPicker(e: MouseEvent): void {
+    const menu = new Menu();
+    TYPOGRAPHY_FONT_OPTIONS.forEach(({ key, label }) => {
+      menu.addItem(i => {
+        i.setTitle(label).onClick(() => {
+          this.settings.typographyFont = key;
+          void this.saveSettings();
+          this.typographyMode.refreshStyles();
+        });
+        if (this.settings.typographyFont === key) { i.setIcon('check'); }
+      });
+    });
+    menu.showAtMouseEvent(e);
+  }
+
+  private addFileToProject(file: TFile): void {
+    const projects = this.projectManager.getProjects();
+    if (projects.length === 0) {
+      new Notice('No writing projects found. Create a project first.');
       return;
     }
 
-    const binder = await this.projectManager.loadBinder(project);
-    const item = {
-      id: `item-${Date.now()}`,
-      title: file.basename,
-      filePath: file.path,
-      type: this.settings.defaultDocumentType,
-      order: binder.items.length + 1,
-      status: 'draft' as const,
-      includeInExport: true,
-    };
+    new AddToProjectModal(this.app, this, file, async (projectId) => {
+      const project = projects.find(p => p.id === projectId);
+      if (!project) return;
 
-    binder.items.push(item);
-    await this.projectManager.saveBinder(binder);
-    await this.refreshBinder();
-    new Notice(`Added "${file.basename}" to ${project.title}`);
+      const binder = await this.projectManager.loadBinder(project);
+      const item = {
+        id: `item-${Date.now()}`,
+        title: file.basename,
+        filePath: file.path,
+        type: this.settings.defaultDocumentType,
+        order: binder.items.length + 1,
+        status: 'draft' as const,
+        includeInExport: true,
+      };
+
+      binder.items.push(item);
+      await this.projectManager.saveBinder(binder);
+      await this.refreshBinder();
+      new Notice(`Added "${file.basename}" to ${project.title}`);
+    }).open();
   }
 
   private scheduleWordCountUpdate(): void {
-    if (this.wordCountUpdateTimer) clearTimeout(this.wordCountUpdateTimer);
+    if (this.wordCountUpdateTimer) activeWindow.clearTimeout(this.wordCountUpdateTimer);
     this.wordCountUpdateTimer = window.setTimeout(() => {
       this.updateWordCount();
     }, 1000);
@@ -582,7 +618,7 @@ export default class WritingStudioPlugin extends Plugin {
 
   private updateBannerWordCount(wc: number): void {
     if (this.currentBannerGoal <= 0) return;
-    const banner = document.querySelector('.ws-inline-goal-banner');
+    const banner = activeDocument.querySelector('.ws-inline-goal-banner');
     if (!banner) return;
     const pct = Math.min(100, Math.round((wc / this.currentBannerGoal) * 100));
     const textEl = banner.querySelector('.ws-goal-text');
@@ -595,7 +631,7 @@ export default class WritingStudioPlugin extends Plugin {
     // Increment generation so any stale in-flight call abandons its result.
     const gen = ++this.bannerGeneration;
 
-    document.querySelectorAll('.ws-inline-goal-banner').forEach(el => el.remove());
+    activeDocument.querySelectorAll('.ws-inline-goal-banner').forEach(el => el.remove());
 
     if (!this.settings.inlineGoalBanner) return;
 
@@ -647,10 +683,10 @@ export default class WritingStudioPlugin extends Plugin {
     // Final duplicate guard after all async work is done.
     leaf.view.containerEl.querySelectorAll('.ws-inline-goal-banner').forEach(el => el.remove());
 
-    const banner = createEl('div', { cls: 'ws-inline-goal-banner' });
-    banner.createEl('span', { cls: 'ws-goal-text', text: `${wc} / ${goal} words — ${pct}%` });
-    const barWrap = banner.createEl('div', { cls: 'ws-goal-bar-wrap' });
-    const barEl = barWrap.createEl('div', { cls: 'ws-goal-bar' });
+    const banner = createDiv({ cls: 'ws-inline-goal-banner' });
+    banner.createSpan({ cls: 'ws-goal-text', text: `${wc} / ${goal} words — ${pct}%` });
+    const barWrap = banner.createDiv({ cls: 'ws-goal-bar-wrap' });
+    const barEl = barWrap.createDiv({ cls: 'ws-goal-bar' });
     barEl.setCssProps({ '--ws-bar-width': `${pct}%` });
     const dismissBtn = banner.createEl('button', { cls: 'ws-goal-dismiss', title: 'Dismiss', text: '✕' });
     dismissBtn.addEventListener('click', () => banner.remove());
@@ -695,8 +731,8 @@ class SprintSummaryModal extends Modal {
 
   private addStat(container: HTMLElement, label: string, value: string): void {
     const stat = container.createDiv('ws-dash-stat');
-    stat.createEl('div', { text: value, cls: 'ws-dash-stat-value' });
-    stat.createEl('div', { text: label, cls: 'ws-dash-stat-label' });
+    stat.createDiv({ text: value, cls: 'ws-dash-stat-value' });
+    stat.createDiv({ text: label, cls: 'ws-dash-stat-label' });
   }
 
   onClose(): void {
@@ -732,7 +768,7 @@ class WordCountGoalModal extends Modal {
       .setDesc('Target word count for this document. Set to 0 to remove.')
       .addText(t => t
         .setValue(String(this.goal || ''))
-        .setPlaceholder('e.g. 1500')
+        .setPlaceholder('E.g. 1500')
         .onChange(v => { this.goal = parseInt(v) || 0; }));
 
     const btnRow = contentEl.createDiv('ws-modal-btn-row');

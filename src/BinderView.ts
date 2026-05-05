@@ -64,7 +64,7 @@ export class BinderView extends ItemView {
     const projectSel = projectRow.createEl('select', { cls: 'ws-binder-project-sel' });
     const projects = this.plugin.projectManager.getProjects();
 
-    const noOpt = projectSel.createEl('option', { text: '— Select project —' });
+    const noOpt = projectSel.createEl('option', { text: '— select project —' });
     noOpt.value = '';
 
     for (const p of projects) {
@@ -131,7 +131,7 @@ export class BinderView extends ItemView {
 
     // Root append zone — visible during drag to promote/append at root level
     const rootZone = listEl.createDiv('ws-binder-root-append-zone');
-    rootZone.textContent = '↓ Drop here to promote to root';
+    rootZone.textContent = '↓ drop here to promote to root';
     rootZone.ondragover = (e) => { e.preventDefault(); rootZone.classList.add('ws-binder-root-append-active'); };
     rootZone.ondragleave = (e) => {
       if (!rootZone.contains(e.relatedTarget as Node)) rootZone.classList.remove('ws-binder-root-append-active');
@@ -266,7 +266,7 @@ export class BinderView extends ItemView {
   private async loadWordCount(item: BinderItem, el: HTMLElement): Promise<void> {
     const file = this.app.vault.getAbstractFileByPath(item.filePath);
     if (!(file instanceof TFile)) {
-      el.textContent = '0w';
+      el.textContent = '0W';
       return;
     }
     const content = await this.app.vault.read(file);
@@ -322,7 +322,7 @@ export class BinderView extends ItemView {
     el.contentEditable = 'true';
     el.focus();
 
-    const range = document.createRange();
+    const range = activeDocument.createRange();
     range.selectNodeContents(el);
     const sel = window.getSelection();
     sel?.removeAllRanges();
@@ -358,7 +358,7 @@ export class BinderView extends ItemView {
     menu.addItem(i => i.setTitle('Duplicate').setIcon('copy').onClick(() => { void this.duplicateItem(item); }));
     menu.addItem(i => i.setTitle('Move to research').setIcon('folder').onClick(() => { void this.moveToResearch(item); }));
     menu.addSeparator();
-    menu.addItem(i => i.setTitle('Publish to WordPress').setIcon('globe').onClick(() => {
+    menu.addItem(i => i.setTitle('Publish to wordpress').setIcon('globe').onClick(() => {
       new PublishModal(this.app, this.plugin, item.filePath).open();
     }));
     menu.addSeparator();

@@ -27,8 +27,9 @@ export class CompilePreviewView extends ItemView {
     return 'layers';
   }
 
-  async onOpen(): Promise<void> {
+  onOpen(): Promise<void> {
     this.render();
+    return Promise.resolve();
   }
 
   async loadContent(opts: Partial<ExportOptions> = {}): Promise<void> {

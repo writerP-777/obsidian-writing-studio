@@ -150,7 +150,7 @@ export class ExportEngine {
       .replace(/<img([^>]*)(?<!\/)>/g, '<img$1/>');
   }
 
-  async compileContent(opts: ExportOptions, projectFolderPath?: string): Promise<string> {
+  async compileContent(opts: ExportOptions, _projectFolderPath?: string): Promise<string> {
     const parts: string[] = [];
     const project = this.plugin.projectManager.getActiveProject();
 

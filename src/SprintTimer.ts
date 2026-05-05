@@ -118,7 +118,7 @@ export class SprintTimer {
 
   private stopInterval(): void {
     if (this.intervalId !== null) {
-      clearInterval(this.intervalId);
+      activeWindow.clearInterval(this.intervalId);
       this.intervalId = null;
     }
   }
@@ -186,11 +186,11 @@ export class SprintTimer {
 
   private showFloating(): void {
     this.hideFloating();
-    const el = createEl('div', { cls: 'ws-sprint-floating' });
-    el.createEl('div', { cls: 'ws-sprint-header', text: 'Writing sprint' });
-    el.createEl('div', { cls: 'ws-sprint-time', text: '00:00' });
-    el.createEl('div', { cls: 'ws-sprint-wc', text: '+0 words' });
-    const controls = el.createEl('div', { cls: 'ws-sprint-controls' });
+    const el = createDiv({ cls: 'ws-sprint-floating' });
+    el.createDiv({ cls: 'ws-sprint-header', text: 'Writing sprint' });
+    el.createDiv({ cls: 'ws-sprint-time', text: '00:00' });
+    el.createDiv({ cls: 'ws-sprint-wc', text: '+0 words' });
+    const controls = el.createDiv({ cls: 'ws-sprint-controls' });
     const pauseBtn = controls.createEl('button', { cls: 'ws-sprint-pause', title: 'Pause/resume', text: '⏸' });
     const stopBtn = controls.createEl('button', { cls: 'ws-sprint-stop', title: 'Stop sprint', text: '■' });
 
@@ -201,7 +201,7 @@ export class SprintTimer {
 
     stopBtn.onclick = () => this.stop();
 
-    document.body.appendChild(el);
+    activeDocument.body.appendChild(el);
     this.floatingEl = el;
     this.updateDisplay();
   }

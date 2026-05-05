@@ -24,7 +24,7 @@ export class SprintModal extends Modal {
       .setName('Duration (minutes)')
       .setDesc('Preset: 10, 15, 25, 30, 45, 60')
       .addDropdown(d => {
-        [10, 15, 25, 30, 45, 60].forEach(m => d.addOption(String(m), `${m} min`));
+        [10, 15, 25, 30, 45, 60].forEach(m => { d.addOption(String(m), `${m} min`); });
         d.addOption('custom', 'Custom…');
         d.setValue(String(this.duration));
         d.onChange(v => {

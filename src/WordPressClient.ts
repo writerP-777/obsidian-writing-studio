@@ -1,6 +1,13 @@
 import { Notice, requestUrl } from 'obsidian';
 import { WordPressSite, WPCategory, WPPublishResult, WPPostStatus } from '../models/WordPressSite';
 
+interface WPApiUser { name: string }
+interface WPApiSite { name?: string }
+interface WPApiError { message?: string }
+interface WPApiPost { id: number; link: string; status: string }
+interface WPApiCategory { id: number; name: string; slug: string; count: number }
+interface WPApiTag { name: string; id: number }
+
 export interface PublishOptions {
   title: string;
   content: string;
@@ -45,7 +52,7 @@ export class WordPressClient {
         return { success: false, message: `HTTP ${resp.status}` };
       }
 
-      const data = resp.json;
+      const data = resp.json as WPApiUser;
 
       let siteName = site.url;
       try {
@@ -55,7 +62,7 @@ export class WordPressClient {
           headers: this.authHeaders(site),
           throw: false,
         });
-        if (siteResp.status === 200) siteName = siteResp.json?.name || site.url;
+        if (siteResp.status === 200) siteName = (siteResp.json as WPApiSite).name ?? site.url;
       } catch { /* non-critical */ }
 
       return {
@@ -80,7 +87,7 @@ export class WordPressClient {
         throw: false,
       });
       if (resp.status < 200 || resp.status >= 300) throw new Error(`HTTP ${resp.status}`);
-      return resp.json.map((c: { id: number; name: string; slug: string; count: number }) => ({
+      return (resp.json as WPApiCategory[]).map(c => ({
         id: c.id,
         name: c.name,
         slug: c.slug,
@@ -121,11 +128,11 @@ export class WordPressClient {
     });
 
     if (resp.status < 200 || resp.status >= 300) {
-      const errData = resp.json || {};
-      throw new Error(errData.message || `HTTP ${resp.status}`);
+      const errData = resp.json as WPApiError | null;
+      throw new Error(errData?.message ?? `HTTP ${resp.status}`);
     }
 
-    const data = resp.json;
+    const data = resp.json as WPApiPost;
     return {
       postId: data.id,
       url: data.link,
@@ -146,7 +153,8 @@ export class WordPressClient {
           throw: false,
         });
         if (searchResp.status === 200) {
-          const match = searchResp.json.find((t: { name: string; id: number }) => t.name.toLowerCase() === name.toLowerCase());
+          const tags = searchResp.json as WPApiTag[];
+          const match = tags.find(t => t.name.toLowerCase() === name.toLowerCase());
           if (match) { ids.push(match.id); continue; }
         }
 
@@ -158,7 +166,7 @@ export class WordPressClient {
           throw: false,
         });
         if (createResp.status >= 200 && createResp.status < 300) {
-          ids.push(createResp.json.id);
+          ids.push((createResp.json as WPApiTag).id);
         }
       } catch { /* skip this tag */ }
     }
@@ -174,9 +182,9 @@ export class WordPressClient {
 
     // Handle wikilinks
     if (site.wikilinkHandling === 'strip') {
-      html = html.replace(/\[\[([^\]|]+)(\|[^\]]+)?\]\]/g, (_, link, alias) => alias ? alias.slice(1) : link);
+      html = html.replace(/\[\[([^\]|]+)(\|[^\]]+)?\]\]/g, (_: string, link: string, alias: string | undefined) => alias ? alias.slice(1) : link);
     } else {
-      html = html.replace(/\[\[([^\]|]+)(\|[^\]]+)?\]\]/g, (_, link, alias) => {
+      html = html.replace(/\[\[([^\]|]+)(\|[^\]]+)?\]\]/g, (_: string, link: string, alias: string | undefined) => {
         const text = alias ? alias.slice(1) : link;
         const slug = link.toLowerCase().replace(/\s+/g, '-');
         return `<a href="${slug}">${text}</a>`;

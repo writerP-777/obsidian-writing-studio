@@ -25,12 +25,12 @@ export class PublishModal extends Modal {
     const { contentEl } = this;
     contentEl.empty();
     contentEl.addClass('ws-publish-modal');
-    contentEl.createEl('h2', { text: 'Publish to WordPress' });
+    contentEl.createEl('h2', { text: 'Publish to wordpress' });
 
     const sites = this.plugin.settings.wordPressSites;
     if (sites.length === 0) {
       contentEl.createEl('p', {
-        text: 'No WordPress sites configured. Add a site in Settings → WordPress.',
+        text: 'No wordpress sites configured. Add a site in settings → wordpress.',
         cls: 'ws-empty-state',
       });
       contentEl.createEl('button', { text: 'Close' }).onclick = () => this.close();
@@ -42,9 +42,9 @@ export class PublishModal extends Modal {
 
     // Site selector
     new Setting(contentEl)
-      .setName('WordPress site')
+      .setName('Wordpress site')
       .addDropdown(d => {
-        sites.forEach(s => d.addOption(s.id, s.nickname || s.url));
+        sites.forEach(s => { d.addOption(s.id, s.nickname || s.url); });
         if (this.selectedSiteId) d.setValue(this.selectedSiteId);
         else {
           this.selectedSiteId = sites[0].id;
@@ -119,14 +119,14 @@ export class PublishModal extends Modal {
       .setName('Schedule publication (optional)')
       .setDesc('Leave empty to publish immediately.')
       .addText(t => t
-        .setPlaceholder('YYYY-MM-DDTHH:MM:SS')
+        .setPlaceholder('Yyyy-mm-ddthh:mm:ss')
         .setValue(this.scheduledDate)
         .onChange(v => { this.scheduledDate = v; }));
 
     // Existing post notice
     if (this.existingPostId) {
       const noticeEl = contentEl.createDiv('ws-publish-existing-notice');
-      noticeEl.createEl('span', { text: `⚠ This document was previously published (Post ID: ${this.existingPostId}).` });
+      noticeEl.createSpan({ text: `⚠ This document was previously published (Post ID: ${this.existingPostId}).` });
 
       const choiceRow = noticeEl.createDiv('ws-publish-choice');
       const updateBtn = choiceRow.createEl('button', { text: 'Update existing post', cls: 'mod-cta' });

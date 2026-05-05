@@ -42,7 +42,7 @@ export class TypographyMode {
   enable(): void {
     this.active = true;
     this.applyCustomProperties();
-    document.body.classList.add('writing-studio-typography');
+    activeDocument.body.classList.add('writing-studio-typography');
     if (this.plugin.settings.persistTypography) {
       this.plugin.settings.typographyModeActive = true;
       void this.plugin.saveSettings();
@@ -52,7 +52,7 @@ export class TypographyMode {
   disable(): void {
     this.active = false;
     this.removeCustomProperties();
-    document.body.classList.remove('writing-studio-typography');
+    activeDocument.body.classList.remove('writing-studio-typography');
     if (this.plugin.settings.persistTypography) {
       this.plugin.settings.typographyModeActive = false;
       void this.plugin.saveSettings();
@@ -71,7 +71,7 @@ export class TypographyMode {
     const letterSpacing = settings.letterSpacing || 'normal';
     const halfWidthCh = `${maxChars / 2}ch`;
 
-    const root = document.documentElement;
+    const root = activeDocument.documentElement;
     root.style.setProperty('--ws-typo-font', fontStack);
     root.style.setProperty('--ws-typo-size', `${fontSize}px`);
     root.style.setProperty('--ws-typo-lh', String(lineHeight));
@@ -82,7 +82,7 @@ export class TypographyMode {
   }
 
   private removeCustomProperties(): void {
-    const root = document.documentElement;
+    const root = activeDocument.documentElement;
     root.style.removeProperty('--ws-typo-font');
     root.style.removeProperty('--ws-typo-size');
     root.style.removeProperty('--ws-typo-lh');

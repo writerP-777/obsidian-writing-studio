@@ -38,7 +38,7 @@ export class WritingDashboardModal extends Modal {
       const totalGoal = project.goals?.totalWordCount || 0;
 
       const projGrid = projectSection.createDiv('ws-dash-grid');
-      this.addStat(projGrid, 'Total Words', String(totalWords));
+      this.addStat(projGrid, 'Total words', String(totalWords));
       if (totalGoal > 0) {
         const pct = Math.min(100, Math.round((totalWords / totalGoal) * 100));
         this.addStat(projGrid, 'Goal', `${totalGoal}`);
@@ -97,7 +97,7 @@ export class WritingDashboardModal extends Modal {
       const table = docsSection.createEl('table', { cls: 'ws-doc-wc-table' });
       const thead = table.createEl('thead');
       const hr = thead.createEl('tr');
-      ['Document', 'Words', 'Reading Time'].forEach(h => hr.createEl('th', { text: h }));
+      ['Document', 'Words', 'Reading time'].forEach(h => hr.createEl('th', { text: h }));
 
       const tbody = table.createEl('tbody');
       for (const item of items) {
@@ -131,8 +131,8 @@ export class WritingDashboardModal extends Modal {
 
   private addStat(container: HTMLElement, label: string, value: string): void {
     const stat = container.createDiv('ws-dash-stat');
-    stat.createEl('div', { text: value, cls: 'ws-dash-stat-value' });
-    stat.createEl('div', { text: label, cls: 'ws-dash-stat-label' });
+    stat.createDiv({ text: value, cls: 'ws-dash-stat-value' });
+    stat.createDiv({ text: label, cls: 'ws-dash-stat-label' });
   }
 
   onClose(): void {

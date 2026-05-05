@@ -5,7 +5,7 @@ import type WritingStudioPlugin from '../main';
 export class FrontmatterManager {
   private plugin: WritingStudioPlugin;
   private app: App;
-  private pendingUpdates = new Map<string, ReturnType<typeof setTimeout>>();
+  private pendingUpdates = new Map<string, number>();
   private writingFiles = new Set<string>();
   private lastPluginWrite = new Map<string, number>();
 
@@ -26,11 +26,11 @@ export class FrontmatterManager {
     if (Date.now() - lastWrite < 2000) return;
 
     const existing = this.pendingUpdates.get(file.path);
-    if (existing) clearTimeout(existing);
+    if (existing) activeWindow.clearTimeout(existing);
 
-    const timer = setTimeout(() => {
+    const timer = activeWindow.setTimeout(() => {
       this.pendingUpdates.delete(file.path);
-      this.updateFrontmatter(file);
+      void this.updateFrontmatter(file);
     }, 5000);
 
     this.pendingUpdates.set(file.path, timer);
@@ -50,7 +50,7 @@ export class FrontmatterManager {
       const wordCount = this.countWords(content);
       const now = new Date().toISOString().split('T')[0];
 
-      await this.app.fileManager.processFrontMatter(file, (fm) => {
+      await this.app.fileManager.processFrontMatter(file, (fm: Record<string, unknown>) => {
         fm['word-count'] = wordCount;
         fm['modified'] = now;
       });
@@ -186,7 +186,7 @@ export class FrontmatterManager {
 
   destroy(): void {
     for (const timer of this.pendingUpdates.values()) {
-      clearTimeout(timer);
+      activeWindow.clearTimeout(timer);
     }
     this.pendingUpdates.clear();
   }

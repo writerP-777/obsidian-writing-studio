@@ -49,7 +49,7 @@ export class TargetsDashboardModal extends Modal {
       this.renderTable(contentEl);
     };
 
-    const refreshBtn = filterRow.createEl('button', { text: '↻ Refresh', cls: 'ws-dashboard-refresh' });
+    const refreshBtn = filterRow.createEl('button', { text: '↻ refresh', cls: 'ws-dashboard-refresh' });
     refreshBtn.onclick = async () => {
       await this.loadStats(project);
       this.renderTable(contentEl);
@@ -97,7 +97,7 @@ export class TargetsDashboardModal extends Modal {
       { key: 'wordCount', label: 'Words' },
       { key: 'goal', label: 'Goal' },
       { key: 'progress', label: 'Progress' },
-      { key: 'readingTime', label: 'Reading Time' },
+      { key: 'readingTime', label: 'Reading time' },
     ];
 
     for (const col of cols) {

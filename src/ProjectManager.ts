@@ -49,7 +49,7 @@ export class ProjectManager {
 
     try {
       const content = await this.app.vault.read(file);
-      const project: WritingProject = JSON.parse(content);
+      const project = JSON.parse(content) as WritingProject;
       this.projects.set(project.id, project);
       return project;
     } catch {
@@ -140,7 +140,7 @@ export class ProjectManager {
     }
     try {
       const content = await this.app.vault.read(file);
-      return JSON.parse(content);
+      return JSON.parse(content) as BinderData;
     } catch {
       return { version: '2.0', projectId: project.id, items: [] };
     }
@@ -258,7 +258,7 @@ tags: [writing-studio]
     if (file instanceof TFile) {
       try {
         const content = await this.app.vault.read(file);
-        log = JSON.parse(content);
+        log = JSON.parse(content) as SprintSession[];
       } catch { /* start fresh */ }
     }
 
@@ -279,7 +279,7 @@ tags: [writing-studio]
     if (!(file instanceof TFile)) return [];
     try {
       const content = await this.app.vault.read(file);
-      return JSON.parse(content);
+      return JSON.parse(content) as SprintSession[];
     } catch {
       return [];
     }

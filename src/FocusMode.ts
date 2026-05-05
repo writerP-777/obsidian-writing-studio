@@ -35,7 +35,7 @@ export class FocusMode {
 
   enable(): void {
     this.active = true;
-    document.body.classList.add(FOCUS_CLASS);
+    activeDocument.body.classList.add(FOCUS_CLASS);
     this.applyDimOpacity();
 
     if (this.plugin.settings.focusAutoHideSidebars) {
@@ -47,7 +47,7 @@ export class FocusMode {
 
   disable(): void {
     this.active = false;
-    document.body.classList.remove(FOCUS_CLASS);
+    activeDocument.body.classList.remove(FOCUS_CLASS);
 
     if (this.plugin.settings.focusAutoHideSidebars) {
       this.restoreSidebars();
@@ -58,7 +58,7 @@ export class FocusMode {
 
   private applyDimOpacity(): void {
     const opacity = (this.plugin.settings.dimOpacity || 20) / 100;
-    document.documentElement.style.setProperty('--ws-focus-dim-opacity', String(opacity));
+    activeDocument.documentElement.style.setProperty('--ws-focus-dim-opacity', String(opacity));
   }
 
   private hideSidebars(): void {
@@ -88,13 +88,13 @@ export class FocusMode {
 
   private showToolbar(): void {
     this.hideToolbar();
-    const toolbar = createEl('div', { cls: 'ws-focus-toolbar' });
-    toolbar.createEl('span', { cls: 'ws-focus-wordcount', text: '0 words' });
-    toolbar.createEl('span', { cls: 'ws-focus-sprint-time ws-hidden' });
-    const exitBtn = toolbar.createEl('button', { cls: 'ws-focus-exit', title: 'Exit focus mode (Esc)', text: '✕ Exit' });
+    const toolbar = createDiv({ cls: 'ws-focus-toolbar' });
+    toolbar.createSpan({ cls: 'ws-focus-wordcount', text: '0 words' });
+    toolbar.createSpan({ cls: 'ws-focus-sprint-time ws-hidden' });
+    const exitBtn = toolbar.createEl('button', { cls: 'ws-focus-exit', title: 'Exit focus mode (esc)', text: '✕ exit' });
     exitBtn.onclick = () => this.disable();
 
-    document.body.appendChild(toolbar);
+    activeDocument.body.appendChild(toolbar);
     this.toolbar = toolbar;
     this.updateToolbarWordCount();
   }

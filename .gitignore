@@ -1,0 +1,15 @@
+# Dependencies
+node_modules
+
+# Local font files (fonts are loaded via Google Fonts at runtime)
+fonts/
+
+# Local development reference docs
+docs/obsidian-dev-docs/
+
+# Build artifacts
+*.js.map
+
+# OS files
+.DS_Store
+Thumbs.db
