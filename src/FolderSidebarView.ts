@@ -56,8 +56,9 @@ export class FolderSidebarView extends ItemView {
     return Promise.resolve();
   }
 
-  async onClose(): Promise<void> {
+  onClose(): Promise<void> {
     this.hideTooltip();
+    return Promise.resolve();
   }
 
   // ── Public API ────────────────────────────────────────────────────────────
@@ -213,7 +214,7 @@ export class FolderSidebarView extends ItemView {
           const snippet = this.extractSnippet(body, idx, q.length);
           results.push({ item: file, matchType: 'content', snippet });
         }
-      } catch (_err) {
+      } catch {
         // skip unreadable files
       }
     }
@@ -286,7 +287,7 @@ export class FolderSidebarView extends ItemView {
             const val = wordRow.querySelector('.ws-tooltip-value');
             if (val) val.textContent = words.toLocaleString();
           }
-        } catch (_err) { /* leave as … */ }
+        } catch { /* leave as … */ }
       }
     } else {
       // Folder — show item counts
@@ -517,7 +518,7 @@ export class FolderSidebarView extends ItemView {
     // "Insert selection" button — only in file preview mode
     if (this.currentFile) {
       const insertBtn = navRow.createEl('button', {
-        text: '↩ Insert selection',
+        text: '↩ insert selection',
         cls: 'ws-folder-nav-btn ws-folder-insert-btn',
       });
 

@@ -149,7 +149,7 @@ export class LauncherView extends ItemView {
       }
     } catch { /* skip if project has no files yet */ }
 
-    const binderBtn = card.createEl('button', { cls: 'ws-launcher-action-btn', text: '📖 Open binder' });
+    const binderBtn = card.createEl('button', { cls: 'ws-launcher-action-btn', text: '📖 open binder' });
     binderBtn.onclick = () => { void this.plugin.openBinder(); };
   }
 
@@ -296,13 +296,13 @@ export class LauncherView extends ItemView {
 
       const ctrlRow = card.createDiv('ws-launcher-sprint-ctrls');
 
-      const pauseBtn = ctrlRow.createEl('button', { cls: 'ws-launcher-action-btn', text: '⏸ Pause' });
+      const pauseBtn = ctrlRow.createEl('button', { cls: 'ws-launcher-action-btn', text: '⏸ pause' });
       pauseBtn.onclick = () => { this.plugin.sprintTimer.pause(); void this.render(); };
 
       const stopBtn = ctrlRow.createEl('button', { cls: 'ws-launcher-action-btn ws-launcher-stop-btn', text: '■ stop' });
       stopBtn.onclick = () => { this.plugin.sprintTimer.stop(); void this.render(); };
     } else {
-      const startBtn = card.createEl('button', { cls: 'ws-launcher-action-btn mod-cta', text: '⏱ Start sprint' });
+      const startBtn = card.createEl('button', { cls: 'ws-launcher-action-btn mod-cta', text: '⏱ start sprint' });
       startBtn.onclick = () => {
         new SprintModal(this.app, this.plugin).open();
       };
