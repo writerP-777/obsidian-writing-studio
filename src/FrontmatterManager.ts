@@ -109,8 +109,8 @@ export class FrontmatterManager {
       if (Array.isArray(value)) {
         lines.push(`${key}: [${value.map(v => `${v}`).join(', ')}]`);
       } else if (typeof value === 'string') {
-        const needsQuotes = value.includes(':') || value.includes('#') || value.includes('"');
-        lines.push(`${key}: ${needsQuotes ? `"${value.replace(/"/g, '\\"')}"` : value}`);
+        const needsQuotes = value.includes(':') || value.includes('#') || value.includes('"') || value.includes('\\');
+        lines.push(`${key}: ${needsQuotes ? `"${value.replace(/\\/g, '\\\\').replace(/"/g, '\\"')}"` : value}`);
       } else {
         lines.push(`${key}: ${String(value)}`);
       }

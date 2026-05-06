@@ -13,6 +13,22 @@ Always update to the latest release before reporting a security issue.
 
 ---
 
+## Automated Security Scanning
+
+Every push and pull request is scanned automatically by three tools:
+
+| Tool | What it checks |
+|------|----------------|
+| **CodeQL** | Static analysis for security vulnerabilities (XSS, injection, unsafe patterns) in TypeScript/JavaScript source |
+| **OpenSSF Scorecard** | Supply-chain security posture: dependency hygiene, branch protection, signed releases, and more |
+| **ESLint** (`eslint-plugin-obsidianmd`) | Obsidian plugin guideline compliance — fails on any warning or error |
+
+Results are published to the **Security** tab of this repository (GitHub code scanning).
+
+Locally, a pre-commit hook runs ESLint (blocking) and a pre-push hook runs a full CodeQL scan that blocks the push if any HIGH or CRITICAL findings are present.
+
+---
+
 ## Scope
 
 Obsidian Writing Studio is a desktop-only Obsidian plugin. Security concerns relevant to this project include:

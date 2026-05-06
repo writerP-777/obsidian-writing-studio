@@ -69,6 +69,13 @@ Feature requests are evaluated against the project's scope and roadmap. Not ever
 | Node.js | 18.x or later |
 | npm | 9.x or later |
 | Obsidian | 1.7.2 or later (desktop) |
+| CodeQL CLI | latest (optional — enables local security scanning) |
+
+Install the CodeQL CLI on Windows with:
+```bash
+winget install GitHub.CodeQL
+```
+Or download from the [CodeQL CLI releases page](https://github.com/github/codeql-cli-binaries/releases).
 
 ### Steps
 
@@ -95,6 +102,15 @@ npm run dev
 ```
 
 Enable the plugin in Obsidian under **Settings → Community Plugins**, then reload Obsidian after each build (`Ctrl+R` / `Cmd+R`).
+
+### Git hooks
+
+Two hooks run automatically after cloning:
+
+- **Pre-commit** — runs `npm run lint` (ESLint). The commit is **blocked** if any warning or error is found. Fix all lint issues before committing.
+- **Pre-push** — runs a full CodeQL scan. The push is **blocked** if any HIGH or CRITICAL severity finding is present. Results are written to `.codeql-results.sarif`. If the CodeQL CLI is not installed, the scan is skipped with a warning.
+
+Run `npm run lint` manually at any time to check for issues before committing.
 
 ---
 

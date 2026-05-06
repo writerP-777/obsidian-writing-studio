@@ -1,6 +1,10 @@
 # Dependencies
 node_modules
 
+# CodeQL local scan artifacts
+.codeql-db/
+.codeql-results.sarif
+
 # Local font files (fonts are loaded via Google Fonts at runtime)
 fonts/
 

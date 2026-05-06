@@ -474,6 +474,26 @@ Open via **Settings → Writing Studio**.
 
 ---
 
+## Security
+
+[![CodeQL](https://github.com/writerP-777/obsidian-writing-studio/actions/workflows/codeql.yml/badge.svg)](https://github.com/writerP-777/obsidian-writing-studio/actions/workflows/codeql.yml)
+[![OpenSSF Scorecard](https://api.securityscorecards.dev/projects/github.com/writerP-777/obsidian-writing-studio/badge)](https://securityscorecards.dev/viewer/?uri=github.com/writerP-777/obsidian-writing-studio)
+[![ESLint](https://github.com/writerP-777/obsidian-writing-studio/actions/workflows/eslint.yml/badge.svg)](https://github.com/writerP-777/obsidian-writing-studio/actions/workflows/eslint.yml)
+
+Every push and pull request is scanned automatically:
+
+| Tool | What it checks |
+|------|----------------|
+| **CodeQL** | Static analysis for security vulnerabilities (XSS, injection, unsafe patterns) in TypeScript/JavaScript source |
+| **OpenSSF Scorecard** | Supply-chain security posture: dependency hygiene, branch protection, signed releases, and more |
+| **ESLint** (`eslint-plugin-obsidianmd`) | Obsidian plugin guideline compliance — fails on any warning or error |
+
+Results are published to the **Security** tab of this repository (GitHub code scanning).
+
+For local development, a pre-commit hook runs ESLint (blocking) and a pre-push hook runs a full CodeQL scan (blocks the push if any HIGH or CRITICAL findings are present). Install the [CodeQL CLI](https://github.com/github/codeql-cli-binaries/releases) to enable local scanning (`winget install GitHub.CodeQL` on Windows).
+
+---
+
 ## Requirements
 
 | Requirement | When needed |
