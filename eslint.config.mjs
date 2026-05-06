@@ -12,10 +12,8 @@ export default [
       },
     },
     rules: {
-      // Skip sentence-case check on symbol/emoji-prefixed strings; bot uses an older rule version that flags them.
       "obsidianmd/ui/sentence-case": ["error", {
-        enforceCamelCaseLower: true,
-        ignoreRegex: ["^[^A-Za-z(']"]
+        enforceCamelCaseLower: true
       }]
     }
   },

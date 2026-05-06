@@ -4290,7 +4290,7 @@ var LauncherView = class extends import_obsidian9.ItemView {
       }
     } catch (e) {
     }
-    const binderBtn = card.createEl("button", { cls: "ws-launcher-action-btn", text: "\u{1F4D6} open binder" });
+    const binderBtn = card.createEl("button", { cls: "ws-launcher-action-btn", text: "\u{1F4D6} Open binder" });
     binderBtn.onclick = () => {
       void this.plugin.openBinder();
     };
@@ -4434,7 +4434,7 @@ var LauncherView = class extends import_obsidian9.ItemView {
       const timeEl = card.createDiv("ws-launcher-sprint-time");
       timeEl.textContent = this.plugin.sprintTimer.getFormattedRemaining();
       const ctrlRow = card.createDiv("ws-launcher-sprint-ctrls");
-      const pauseBtn = ctrlRow.createEl("button", { cls: "ws-launcher-action-btn", text: "\u23F8 pause" });
+      const pauseBtn = ctrlRow.createEl("button", { cls: "ws-launcher-action-btn", text: "\u23F8 Pause" });
       pauseBtn.onclick = () => {
         this.plugin.sprintTimer.pause();
         void this.render();
@@ -4445,7 +4445,7 @@ var LauncherView = class extends import_obsidian9.ItemView {
         void this.render();
       };
     } else {
-      const startBtn = card.createEl("button", { cls: "ws-launcher-action-btn mod-cta", text: "\u23F1 start sprint" });
+      const startBtn = card.createEl("button", { cls: "ws-launcher-action-btn mod-cta", text: "\u23F1 Start sprint" });
       startBtn.onclick = () => {
         new SprintModal(this.app, this.plugin).open();
       };
@@ -7994,7 +7994,7 @@ var FolderSidebarView = class extends import_obsidian24.ItemView {
     rootBtn.addEventListener("click", () => this.navigateToRoot());
     if (this.currentFile) {
       const insertBtn = navRow.createEl("button", {
-        text: "\u21A9 insert selection",
+        text: "\u21A9 Insert selection",
         cls: "ws-folder-nav-btn ws-folder-insert-btn"
       });
       let capturedText = "";
@@ -8867,9 +8867,9 @@ var WritingStudioPlugin = class extends import_obsidian27.Plugin {
   }
   showModeSwitcher(e) {
     const menu = new import_obsidian27.Menu();
-    menu.addItem((i) => i.setTitle("\u270D draft mode").setIcon("pencil").onClick(() => this.writingModes.switchMode("draft")));
+    menu.addItem((i) => i.setTitle("\u270D Draft mode").setIcon("pencil").onClick(() => this.writingModes.switchMode("draft")));
     menu.addItem((i) => i.setTitle("\u270E edit mode").setIcon("edit-3").onClick(() => this.writingModes.switchMode("edit")));
-    menu.addItem((i) => i.setTitle("\u{1F441} review mode").setIcon("eye").onClick(() => this.writingModes.switchMode("review")));
+    menu.addItem((i) => i.setTitle("\u{1F441} Review mode").setIcon("eye").onClick(() => this.writingModes.switchMode("review")));
     menu.addSeparator();
     menu.addItem((i) => i.setTitle("Normal (no mode)").onClick(() => this.writingModes.switchMode("none")));
     menu.showAtMouseEvent(e);
