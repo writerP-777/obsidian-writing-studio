@@ -10,10 +10,19 @@ interface DailyStats {
   documents: string[];
 }
 
+export interface DailyLogEntry {
+  date: string;
+  wordsWritten: number;
+  sprintsCompleted: number;
+  totalMinutes: number;
+}
+
 export class StatsTracker {
   private plugin: WritingStudioPlugin;
   private app: App;
   private sessionStats: DailyStats;
+  private sessionBaselines = new Map<string, number>();
+  private sessionCurrents  = new Map<string, number>();
 
   constructor(plugin: WritingStudioPlugin) {
     this.plugin = plugin;
@@ -93,6 +102,28 @@ export class StatsTracker {
     return normalizePath(`${fileName}.md`);
   }
 
+  updateFileWordCount(path: string, wordCount: number): void {
+    if (!this.sessionBaselines.has(path)) {
+      this.sessionBaselines.set(path, wordCount);
+    }
+    this.sessionCurrents.set(path, wordCount);
+  }
+
+  getSessionDelta(path: string): number {
+    const baseline = this.sessionBaselines.get(path) ?? 0;
+    const current  = this.sessionCurrents.get(path)  ?? baseline;
+    return Math.max(0, current - baseline);
+  }
+
+  getTotalSessionWords(): number {
+    let total = 0;
+    for (const [path, current] of this.sessionCurrents) {
+      const baseline = this.sessionBaselines.get(path) ?? current;
+      total += Math.max(0, current - baseline);
+    }
+    return total;
+  }
+
   getSessionStats(): DailyStats {
     return { ...this.sessionStats };
   }
@@ -123,6 +154,46 @@ export class StatsTracker {
     const hours = Math.floor(minutes / 60);
     const mins = minutes % 60;
     return mins > 0 ? `${hours}h ${mins}m` : `${hours}h`;
+  }
+
+  async getWritingHistory(days: number): Promise<DailyLogEntry[]> {
+    const project = this.plugin.projectManager.getActiveProject();
+    const byDate = new Map<string, DailyLogEntry>();
+
+    if (project) {
+      const log = await this.plugin.projectManager.getWritingLog(project);
+      for (const session of log) {
+        const date = session.date.split('T')[0];
+        const existing = byDate.get(date);
+        if (existing) {
+          existing.wordsWritten += session.wordsWritten;
+          existing.sprintsCompleted++;
+          existing.totalMinutes += session.duration;
+        } else {
+          byDate.set(date, {
+            date,
+            wordsWritten: session.wordsWritten,
+            sprintsCompleted: 1,
+            totalMinutes: session.duration,
+          });
+        }
+      }
+    }
+
+    const result: DailyLogEntry[] = [];
+    const today = new Date();
+    for (let i = days - 1; i >= 0; i--) {
+      const d = new Date(today);
+      d.setDate(d.getDate() - i);
+      const dateStr = d.toISOString().split('T')[0];
+      result.push(byDate.get(dateStr) ?? {
+        date: dateStr,
+        wordsWritten: 0,
+        sprintsCompleted: 0,
+        totalMinutes: 0,
+      });
+    }
+    return result;
   }
 
   async getStreak(): Promise<number> {

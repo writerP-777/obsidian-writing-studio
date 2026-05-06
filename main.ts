@@ -25,6 +25,7 @@ import { StatsTracker } from './src/StatsTracker';
 import { FrontmatterManager } from './src/FrontmatterManager';
 import { WritingStudioSettingsTab } from './src/SettingsTab';
 import { FolderSidebarView, FolderPickerModal, FOLDER_SIDEBAR_VIEW_TYPE } from './src/FolderSidebarView';
+import { WritingLogView, WRITING_LOG_VIEW_TYPE } from './src/WritingLogView';
 
 import { AddToProjectModal } from './modals/AddToProjectModal';
 import { SprintModal } from './modals/SprintModal';
@@ -153,7 +154,9 @@ export default class WritingStudioPlugin extends Plugin {
   private statusBarMode!: HTMLElement;
   private statusBarWordCount!: HTMLElement;
   private statusBarSprint!: HTMLElement;
+  private statusBarProjectGoal!: HTMLElement;
   private wordCountUpdateTimer: number | null = null;
+  private projectGoalUpdateTimer: number | null = null;
   private bannerGeneration = 0;
   private currentBannerGoal = 0;
 
@@ -182,12 +185,13 @@ export default class WritingStudioPlugin extends Plugin {
     this.registerView(BINDER_VIEW_TYPE, (leaf) => new BinderView(leaf, this));
     this.registerView(COMPILE_PREVIEW_VIEW_TYPE, (leaf) => new CompilePreviewView(leaf, this));
     this.registerView(FOLDER_SIDEBAR_VIEW_TYPE, (leaf) => new FolderSidebarView(leaf));
+    this.registerView(WRITING_LOG_VIEW_TYPE, (leaf) => new WritingLogView(leaf, this));
 
     // Status bar items
     this.statusBarMode = this.addStatusBarItem();
     this.statusBarMode.addClass('ws-status-mode');
-    this.statusBarMode.addClass('ws-hidden');
     this.writingModes.setStatusBar(this.statusBarMode);
+    this.statusBarMode.addEventListener('click', (e) => this.showModeSwitcher(e));
 
     this.statusBarWordCount = this.addStatusBarItem();
     this.statusBarWordCount.addClass('ws-status-wordcount');
@@ -195,6 +199,9 @@ export default class WritingStudioPlugin extends Plugin {
     this.statusBarSprint = this.addStatusBarItem();
     this.statusBarSprint.addClass('ws-status-sprint');
     this.sprintTimer.setStatusBar(this.statusBarSprint);
+
+    this.statusBarProjectGoal = this.addStatusBarItem();
+    this.statusBarProjectGoal.addClass('ws-status-project-goal', 'ws-hidden');
 
     // Register sprint complete handler
     this.sprintTimer.setOnComplete(async (session) => {
@@ -307,6 +314,12 @@ export default class WritingStudioPlugin extends Plugin {
     });
 
     this.addCommand({
+      id: 'open-writing-log',
+      name: 'Open writing log',
+      callback: () => { void this.openWritingLog(); },
+    });
+
+    this.addCommand({
       id: 'open-folder-sidebar',
       name: 'Open folder in sidebar explorer',
       callback: () => {
@@ -365,6 +378,7 @@ export default class WritingStudioPlugin extends Plugin {
         if (file instanceof TFile) {
           this.fmManager.scheduleUpdate(file);
           this.scheduleWordCountUpdate();
+          this.scheduleProjectGoalUpdate();
         }
       })
     );
@@ -375,6 +389,7 @@ export default class WritingStudioPlugin extends Plugin {
         this.updateWordCount();
         void this.showInlineGoalBanner();
         void this.refreshLauncher();
+        void this.updateProjectGoalBar();
       })
     );
 
@@ -401,6 +416,10 @@ export default class WritingStudioPlugin extends Plugin {
 
     if (this.wordCountUpdateTimer) {
       activeWindow.clearTimeout(this.wordCountUpdateTimer);
+    }
+
+    if (this.projectGoalUpdateTimer) {
+      activeWindow.clearTimeout(this.projectGoalUpdateTimer);
     }
 
     // Remove inline goal banners
@@ -502,6 +521,38 @@ export default class WritingStudioPlugin extends Plugin {
     void this.app.workspace.revealLeaf(leaf);
   }
 
+  async openWritingLog(): Promise<void> {
+    const existing = this.app.workspace.getLeavesOfType(WRITING_LOG_VIEW_TYPE);
+    if (existing.length > 0) {
+      void this.app.workspace.revealLeaf(existing[0]);
+      return;
+    }
+    const leaf = this.app.workspace.getLeftLeaf(false);
+    if (leaf) {
+      await leaf.setViewState({ type: WRITING_LOG_VIEW_TYPE, active: true });
+      void this.app.workspace.revealLeaf(leaf);
+    }
+  }
+
+  private async updateProjectGoalBar(): Promise<void> {
+    const project = this.projectManager.getActiveProject();
+    const goal = project?.goals?.totalWordCount ?? 0;
+    if (!project || goal <= 0) {
+      this.statusBarProjectGoal.addClass('ws-hidden');
+      return;
+    }
+    const total = await this.statsTracker.getTotalWordCount();
+    this.statusBarProjectGoal.setText(`${total.toLocaleString()} / ${goal.toLocaleString()} project words`);
+    this.statusBarProjectGoal.removeClass('ws-hidden');
+  }
+
+  private scheduleProjectGoalUpdate(): void {
+    if (this.projectGoalUpdateTimer) activeWindow.clearTimeout(this.projectGoalUpdateTimer);
+    this.projectGoalUpdateTimer = window.setTimeout(() => {
+      void this.updateProjectGoalBar();
+    }, 5000);
+  }
+
   private publishCurrentFile(): void {
     const leaf = this.app.workspace.getMostRecentLeaf();
     const view = leaf?.view;
@@ -591,20 +642,28 @@ export default class WritingStudioPlugin extends Plugin {
 
     const content = editor.getValue();
     const wc = this.fmManager.countWords(content);
+    const file = view.file;
+
+    // Session word count tracking
+    let sessionDelta = 0;
+    if (file) {
+      this.statsTracker.updateFileWordCount(file.path, wc);
+      sessionDelta = this.statsTracker.getSessionDelta(file.path);
+    }
 
     // Status bar: read goal from frontmatter (acceptable for status bar only)
     const fm = this.fmManager.parseFrontmatter(content);
     const fmGoal = fm?.['word-count-goal'] as number | undefined;
+    const deltaStr = sessionDelta > 0 ? ` (+${sessionDelta})` : '';
     if (fmGoal && fmGoal > 0) {
-      this.statusBarWordCount.textContent = `${wc} / ${fmGoal} words`;
+      this.statusBarWordCount.textContent = `${wc} / ${fmGoal} words${deltaStr}`;
     } else {
-      this.statusBarWordCount.textContent = `${wc} words`;
+      this.statusBarWordCount.textContent = `${wc} words${deltaStr}`;
     }
 
     this.focusMode.updateToolbarWordCount(wc);
 
     // Push the fresh count to the binder panel (O(1) map lookup, no re-render).
-    const file = view.file;
     if (file) {
       for (const bl of this.app.workspace.getLeavesOfType(BINDER_VIEW_TYPE)) {
         if (bl.view instanceof BinderView) {

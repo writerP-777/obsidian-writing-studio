@@ -1,8 +1,8 @@
 # Obsidian Writing Studio
 
-**Version 2.1.6** · Desktop only
+**Version 2.1.7** · Desktop only
 
-Transform Obsidian into a professional writing environment. Writing Studio bundles a project binder, writing sprints, focus and typography modes, manuscript export, WordPress publishing, and a folder sidebar explorer into a single plugin.
+Transform Obsidian into a professional writing environment. Writing Studio bundles a project binder, writing sprints, focus and typography modes, session word count tracking, manuscript export, WordPress publishing, a daily writing log, and a folder sidebar explorer into a single plugin.
 
 ---
 
@@ -21,22 +21,19 @@ Transform Obsidian into a professional writing environment. Writing Studio bundl
 
 ### Writing Studio Launcher
 
-The Launcher is a left-sidebar dashboard that shows your active project, word count and goal progress, writing mode controls, sprint timer, and quick-action buttons for the most common Writing Studio tasks.
+The Launcher is a left-sidebar dashboard that shows your active project, word count and goal progress, writing mode controls, sprint timer, today's writing stats, and quick-action buttons for the most common Writing Studio tasks.
 
 By default it opens automatically when Obsidian loads. To disable this, turn off **Open on startup** in **Settings → General**.
 
 **To open manually:** Click the feather ribbon icon, or assign a hotkey to **Open launcher** in Settings → Hotkeys.
 
-**The Launcher includes quick-action buttons for:**
-- Opening the binder
-- Starting a writing sprint
-- Switching writing modes
-- Toggling Focus Mode and Typography Mode
-- Opening the Writing Dashboard and Targets Dashboard
-- Exporting the manuscript
-- Publishing to WordPress
-
-All features are accessible from the Launcher, making it the primary entry point for the plugin.
+**The Launcher includes:**
+- Active project name, total word count, and progress toward your project word count goal
+- Writing mode selector (Draft / Edit / Review)
+- Focus Mode and Typography Mode toggles
+- Sprint timer with quick-start presets (10 m, 15 m, 25 m)
+- Today card showing words written, sprints completed, session word count, and streak
+- Quick-action buttons: Targets Dashboard, Writing Dashboard, Preview manuscript, Export, Writing Log, Publish to WordPress
 
 ---
 
@@ -55,7 +52,7 @@ The Binder is a left-sidebar project panel that lists all documents in your acti
 
 ### Writing Modes
 
-Three modes shape how the editor behaves. The current mode is shown in the status bar.
+Three modes shape how the editor behaves. The current mode is always shown in the status bar. Click the mode pill in the status bar to switch modes.
 
 | Mode | Purpose |
 |------|---------|
@@ -65,6 +62,7 @@ Three modes shape how the editor behaves. The current mode is shown in the statu
 | **None** | Normal Obsidian behavior |
 
 **To switch modes:**
+- Click the mode indicator in the status bar.
 - Right-click inside the editor, then choose **Switch writing mode →** under **Writing studio options**.
 - Assign hotkeys to **Switch to draft mode / Edit mode / Review mode** in Settings → Hotkeys.
 - Use the Writing Studio Launcher panel.
@@ -169,6 +167,18 @@ When a goal is set and **Inline goal banner** is enabled, a progress bar appears
 
 ---
 
+### Session Word Count
+
+The status bar shows a `(+N)` delta next to the current file's word count, indicating how many words you have added since opening that file this session. The Launcher's **Today** card also shows a cumulative session total across all files opened during the current Obsidian session. Both counts reset when Obsidian restarts.
+
+---
+
+### Project Word Count Goal
+
+When an active project has a total word count goal set, a dedicated status bar item shows `{current} / {goal} project words`. This updates automatically as you write. Set a project goal in the Project modal when creating or editing a project.
+
+---
+
 ### Writing Dashboard
 
 The Writing Dashboard shows session statistics (words written, sprints completed, time), sprint history, daily progress toward your goal, and per-project word counts with reading time.
@@ -185,6 +195,21 @@ The Targets Dashboard lets you assign word count goals to individual documents i
 
 ---
 
+### Daily Writing Log
+
+The Writing Log is a sidebar panel that shows your writing history at a glance.
+
+**To open:** Use the command **Open writing log** from the command palette, or click the **Writing log** button in the Launcher panel.
+
+**The Writing Log shows:**
+- Current streak (days in a row with at least one sprint)
+- This session: total session words, sprint words, sprints completed, and minutes written
+- Last 30 days: a bar chart with one row per day showing word count, sprints completed, and a visual bar proportional to the day's output
+
+When **Append to daily note** is enabled (Settings → Writing log), a summary of each completed sprint is also appended to today's Daily Note.
+
+---
+
 ### Project Manager
 
 Projects group a set of documents (binder items) and act as the scope for export, statistics, and the word count goal banner.
@@ -197,6 +222,7 @@ Each project stores:
 - Title, type, author, and description
 - Ordered binder with chapters, sections, articles, and notes
 - Per-item word count goals, statuses, and export flags
+- Optional total word count goal (shown in the Launcher and status bar)
 
 **Project templates available at creation:**
 
@@ -223,13 +249,23 @@ The Compile Preview opens a split pane showing all binder documents for the acti
 
 The Export Engine converts the current document or the active project's compiled manuscript to a finished file.
 
-**Supported formats:** PDF · Word (.docx) · RTF · HTML · Markdown · EPUB
+**Supported formats:** Manuscript (HTML) · PDF · Word (.docx) · RTF · HTML · Markdown · EPUB
 
 **To export:**
 - Right-click inside the editor and choose **Export this document** under **Writing studio options**.
 - Use the command **Export document** from the command palette.
 - Click the **Export** button in the Launcher panel.
 - Assign a hotkey to **Export document** in Settings → Hotkeys.
+
+**Manuscript format**
+
+The Manuscript format produces a self-contained HTML file formatted to industry-standard manuscript conventions:
+- Courier New 12 pt, double-spaced, 1-inch margins
+- Title page with project title, author name, approximate word count, and optional contact information
+- Chapter headings in uppercase, page-break before each
+- Scene breaks rendered as `· · ·`
+
+No external tools are required for manuscript export.
 
 **Settings (Settings → Export):**
 
@@ -243,7 +279,7 @@ The Export Engine converts the current document or the active project's compiled
 | EPUB language | BCP 47 language tag (e.g. `en`, `fr`, `de`) |
 | EPUB include cover | Generate a text cover page when no cover image is provided |
 
-> **Requirement:** Pandoc must be installed for PDF, DOCX, RTF, HTML, and EPUB export. Download from [pandoc.org](https://pandoc.org/installing.html). For PDF export, a LaTeX distribution (e.g. TeX Live or MiKTeX) is also required.
+> **Requirement:** Pandoc must be installed for PDF, DOCX, RTF, HTML, and EPUB export. Download from [pandoc.org](https://pandoc.org/installing.html). For PDF export, a LaTeX distribution (e.g. TeX Live or MiKTeX) is also required. Manuscript (HTML) export does not require Pandoc.
 
 ---
 
@@ -252,14 +288,14 @@ The Export Engine converts the current document or the active project's compiled
 Publish the current Markdown file directly to one or more WordPress sites using the WordPress REST API. The modal lets you choose the target site, set the post title, status, categories, tags, excerpt, and an optional scheduled publication date.
 
 **To publish:**
-- Right-click inside the editor and choose **Publish to wordpress** under **Writing studio options**.
-- Use the command **Publish to wordpress** from the command palette.
+- Right-click inside the editor and choose **Publish to WordPress** under **Writing studio options**.
+- Use the command **Publish to WordPress** from the command palette.
 - Click the **Publish to WordPress** button in the Launcher panel.
-- Assign a hotkey to **Publish to wordpress** in Settings → Hotkeys.
+- Assign a hotkey to **Publish to WordPress** in Settings → Hotkeys.
 
 **Setting up a site (Settings → WordPress):**
 
-1. Click **+ add wordpress site**.
+1. Click **+ add WordPress site**.
 2. Enter a nickname, the site URL (e.g. `https://yourblog.com`), and your WordPress username.
 3. Generate an application password in WordPress under **Users → Profile → Application passwords** and paste it into the **Application password** field.
 4. Click **Test connection** to verify.
@@ -325,7 +361,7 @@ A sort dropdown sits next to the search bar. Options:
 When a Markdown file is open in preview mode, its text is selectable. To insert a passage into the active editor:
 
 1. Select the text you want in the preview pane.
-2. Click the **↩ Insert selection** button in the nav bar.
+2. Click the **↩ insert selection** button in the nav bar.
 3. The selected text is inserted at the cursor position in the active editor.
 
 The preview is read-only — you cannot edit the file from the sidebar.
@@ -355,12 +391,6 @@ The `word-count-goal` frontmatter field is read by the inline goal banner and th
 
 ---
 
-### Daily Writing Log
-
-When **Append to daily note** is enabled (Settings → Writing log), a summary of each completed sprint is appended to the Daily Note for today. This requires the Obsidian Daily Notes core plugin to be active.
-
----
-
 ## Context Menus
 
 Writing Studio adds items to Obsidian's right-click context menus. All Writing Studio items are grouped together under the heading **Writing studio options** to distinguish them from other plugins and Obsidian's built-in options.
@@ -370,7 +400,7 @@ Writing Studio adds items to Obsidian's right-click context menus. All Writing S
 | Option | Action |
 |--------|--------|
 | Export this document | Open the export modal for the current file |
-| Publish to wordpress | Open the WordPress publish modal for the current file |
+| Publish to WordPress | Open the WordPress publish modal for the current file |
 | Set word count goal | Set a word count target for the current document |
 | Switch writing mode → | Open a mode-switcher menu (Draft / Edit / Review / None) |
 | Typography font → | Open a font picker menu to change the typography font (visible only when Typography Mode is active) |
@@ -397,6 +427,7 @@ No default hotkeys are assigned. All commands can be given a hotkey in **Setting
 |---------|-------------|
 | Open launcher | Open the launcher sidebar panel |
 | Open binder | Open the writing binder sidebar panel |
+| Open writing log | Open the daily writing log panel |
 | Toggle focus mode | Enable or disable focus mode |
 | Toggle typography mode | Enable or disable typography mode |
 | Switch to draft mode | Activate draft writing mode |
@@ -406,7 +437,7 @@ No default hotkeys are assigned. All commands can be given a hotkey in **Setting
 | Export document | Export the current document |
 | Export project | Export the full project |
 | Preview compiled manuscript | Open the compile preview pane |
-| Publish to wordpress | Publish the current document to WordPress |
+| Publish to WordPress | Publish the current document to WordPress |
 | New writing project | Create a new writing project |
 | Open writing dashboard | Open the statistics dashboard |
 | Open targets dashboard | Open the word count targets panel |
@@ -429,7 +460,7 @@ All other features are accessible from the Launcher panel, the command palette, 
 
 ## Settings Overview
 
-Open via **Settings → Obsidian Writing Studio**.
+Open via **Settings → Writing Studio**.
 
 | Tab | What it controls |
 |-----|-----------------|

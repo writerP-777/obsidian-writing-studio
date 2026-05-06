@@ -2,6 +2,7 @@ import {
   FuzzySuggestModal,
   ItemView,
   MarkdownRenderer,
+  MarkdownView,
   TFolder,
   TFile,
   WorkspaceLeaf,
@@ -73,11 +74,26 @@ export class FolderSidebarView extends ItemView {
     this.render();
   }
 
+  // ── Helpers ───────────────────────────────────────────────────────────────
+
+  private getMainEditor() {
+    // activeEditor is null when the sidebar (an ItemView) is focused — fall back
+    // to scanning all open MarkdownView leaves so insertion still works.
+    const active = this.app.workspace.activeEditor?.editor;
+    if (active) return active;
+    for (const leaf of this.app.workspace.getLeavesOfType('markdown')) {
+      const view = leaf.view;
+      if (view instanceof MarkdownView) return view.editor;
+    }
+    return null;
+  }
+
   // ── Navigation ────────────────────────────────────────────────────────────
 
   private navigateTo(folder: TFolder): void {
     const current = this.currentFolder;
     if (!current) return;
+    this.hideTooltip();
     this.historyStack.push(current.path);
     this.currentFolder = folder;
     this.currentFile = null;
@@ -87,6 +103,7 @@ export class FolderSidebarView extends ItemView {
   }
 
   private openFile(file: TFile): void {
+    this.hideTooltip();
     this.currentFile = file;
     this.render();
   }
@@ -530,8 +547,9 @@ export class FolderSidebarView extends ItemView {
       });
       insertBtn.addEventListener('click', () => {
         if (!capturedText) return;
-        const editor = this.app.workspace.activeEditor?.editor;
+        const editor = this.getMainEditor();
         if (editor) {
+          editor.focus();
           editor.replaceSelection(capturedText);
           capturedText = '';
         }

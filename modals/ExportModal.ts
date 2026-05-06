@@ -11,6 +11,7 @@ export class ExportModal extends Modal {
   private includeTitlesAsHeadings = true;
   private addTitlePage = true;
   private coverImagePath = '';
+  private authorContact = '';
 
   constructor(app: App, plugin: WritingStudioPlugin) {
     super(app);
@@ -25,12 +26,14 @@ export class ExportModal extends Modal {
     contentEl.createEl('h2', { text: 'Export document' });
 
     let coverSetting: Setting;
+    let contactSetting: Setting;
 
     new Setting(contentEl)
       .setName('Format')
       .addDropdown(d => d
         .addOption('md', 'Markdown (.md)')
         .addOption('html', 'HTML')
+        .addOption('manuscript', 'Manuscript (.HTML)')
         .addOption('epub', 'Epub (.epub)')
         .addOption('pdf', 'PDF (requires pandoc)')
         .addOption('docx', 'Word (.docx) (requires pandoc)')
@@ -39,6 +42,7 @@ export class ExportModal extends Modal {
         .onChange(v => {
           this.format = v as ExportFormat;
           coverSetting.settingEl.toggleClass('ws-hidden', v !== 'epub');
+          contactSetting.settingEl.toggleClass('ws-hidden', v !== 'manuscript');
         }));
 
     coverSetting = new Setting(contentEl)
@@ -49,6 +53,15 @@ export class ExportModal extends Modal {
         .setPlaceholder('e.g. Assets/cover.jpg')
         .onChange(v => { this.coverImagePath = v.trim(); }));
     coverSetting.settingEl.toggleClass('ws-hidden', this.format !== 'epub');
+
+    contactSetting = new Setting(contentEl)
+      .setName('Contact info (optional)')
+      .setDesc('Appears on the title page — name, email, or mailing address.')
+      .addTextArea(t => t
+        .setValue(this.authorContact)
+        .setPlaceholder('name@example.com')
+        .onChange(v => { this.authorContact = v; }));
+    contactSetting.settingEl.toggleClass('ws-hidden', this.format !== 'manuscript');
 
     new Setting(contentEl)
       .setName('Scope')
@@ -102,6 +115,7 @@ export class ExportModal extends Modal {
           fontSize: this.plugin.settings.defaultExportFontSize,
           addTitlePage: this.addTitlePage,
           coverImagePath: this.coverImagePath || undefined,
+          authorContact: this.authorContact || undefined,
         });
         this.close();
       } catch (e) {

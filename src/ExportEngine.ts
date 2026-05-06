@@ -10,7 +10,7 @@ interface FileSystemAdapter {
 
 const execAsync = promisify(exec);
 
-export type ExportFormat = 'pdf' | 'docx' | 'rtf' | 'md' | 'html' | 'epub';
+export type ExportFormat = 'pdf' | 'docx' | 'rtf' | 'md' | 'html' | 'epub' | 'manuscript';
 export type ExportScope = 'current' | 'selected' | 'project';
 
 export interface ExportOptions {
@@ -26,7 +26,93 @@ export interface ExportOptions {
   outputPath?: string;
   addTitlePage: boolean;
   coverImagePath?: string;
+  authorContact?: string;
 }
+
+const MANUSCRIPT_CSS = `
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: "Courier New", Courier, monospace;
+    font-size: 12pt;
+    line-height: 2;
+    color: #000;
+    background: #fff;
+  }
+  .ws-ms-title-page {
+    page-break-after: always;
+    min-height: 10in;
+    padding: 1in;
+    display: flex;
+    flex-direction: column;
+  }
+  .ws-ms-title-info-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    font-size: 12pt;
+    line-height: 1.5;
+  }
+  .ws-ms-author-info p { margin: 0; line-height: 1.5; }
+  .ws-ms-wc { text-align: right; }
+  .ws-ms-title-center {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    gap: 0;
+    line-height: 2;
+  }
+  .ws-ms-doc-title { font-weight: bold; letter-spacing: 0.05em; }
+  .ws-ms-byline, .ws-ms-author-byline { font-size: 12pt; }
+  .ws-ms-body {
+    max-width: 6.5in;
+    margin: 0 auto;
+    padding: 1in;
+  }
+  .ws-ms-body p {
+    text-indent: 0.5in;
+    margin: 0;
+    line-height: 2;
+  }
+  .ws-ms-body h1, .ws-ms-body h2 {
+    font-family: "Courier New", Courier, monospace;
+    font-size: 12pt;
+    font-weight: bold;
+    text-align: center;
+    page-break-before: always;
+    padding-top: 2in;
+    margin-bottom: 2em;
+    line-height: 2;
+  }
+  .ws-ms-body h3, .ws-ms-body h4, .ws-ms-body h5, .ws-ms-body h6 {
+    font-family: "Courier New", Courier, monospace;
+    font-size: 12pt;
+    font-weight: normal;
+    text-align: center;
+    line-height: 2;
+  }
+  .ws-ms-scene {
+    text-indent: 0 !important;
+    text-align: center;
+    line-height: 2;
+    margin: 0;
+  }
+  .ws-ms-body hr { display: none; }
+  .ws-ms-body ul, .ws-ms-body ol { padding-left: 1in; line-height: 2; }
+  .ws-ms-body blockquote {
+    margin-left: 0.5in;
+    padding: 0;
+    border: none;
+    line-height: 2;
+  }
+  @media print {
+    @page { margin: 1in; size: letter; }
+    .ws-ms-title-page { page-break-after: always; min-height: auto; }
+    .ws-ms-body h1, .ws-ms-body h2 { page-break-before: always; }
+  }
+`;
 
 export class ExportEngine {
   private plugin: WritingStudioPlugin;
@@ -52,6 +138,10 @@ export class ExportEngine {
 
     if (opts.format === 'epub') {
       return this.exportEpub(opts, baseFile);
+    }
+
+    if (opts.format === 'manuscript') {
+      return this.exportManuscript(opts, `${baseFile}.html`);
     }
 
     const compiled = await this.compileContent(opts, project?.folderPath);
@@ -214,6 +304,84 @@ export class ExportEngine {
       content = content.replace(/^---\n[\s\S]*?\n---\n?/, '');
     }
     return content.trim();
+  }
+
+  private async exportManuscript(opts: ExportOptions, outputPath: string): Promise<string> {
+    const project = this.plugin.projectManager.getActiveProject();
+    const author = project?.author || this.plugin.settings.authorName || 'Author';
+    const title  = project?.title || 'Untitled';
+
+    // Compile without auto title page — we build a proper manuscript title page instead
+    const compiled = await this.compileContent({ ...opts, addTitlePage: false });
+
+    // Split on section separators (added by compileContent between documents)
+    const sections = compiled.split(/\n\n---\n\n/);
+
+    const htmlSections: string[] = [];
+    for (const section of sections) {
+      let md = section.trim();
+
+      // Convert standalone scene break markers to a unique placeholder before HTML conversion
+      md = md
+        .replace(/^\*\s*\*\s*\*\s*$/gm, '\n__SCENE_BREAK__\n')
+        .replace(/^#{1,3}\s*$/gm,        '\n__SCENE_BREAK__\n');
+
+      md = this.preprocessObsidianMarkdown(md);
+
+      let html = this.markdownToHtml(md);
+
+      // Restore scene breaks and uppercase chapter headings
+      html = html.replace(/<p>__SCENE_BREAK__<\/p>/g, '<p class="ws-ms-scene">#</p>');
+      html = html.replace(/<h([12])>(.*?)<\/h\1>/g, (_m, lvl, text) =>
+        `<h${lvl}>${(text as string).toUpperCase()}</h${lvl}>`
+      );
+
+      htmlSections.push(html);
+    }
+
+    const bodyHtml = htmlSections.join('\n');
+
+    const wordCount = this.plugin.fmManager.countWords(compiled);
+    const roundedWc = Math.round(wordCount / 100) * 100;
+    const contactLines = (opts.authorContact || '').trim();
+    const contactHtml = contactLines
+      ? contactLines.split('\n').map(l => `<p>${this.escapeHtml(l)}</p>`).join('')
+      : '';
+
+    const titlePageHtml = `<div class="ws-ms-title-page">
+  <div class="ws-ms-title-info-row">
+    <div class="ws-ms-author-info">
+      <p>${this.escapeHtml(author)}</p>
+      ${contactHtml}
+    </div>
+    <div class="ws-ms-wc">Approx. ${roundedWc.toLocaleString()} words</div>
+  </div>
+  <div class="ws-ms-title-center">
+    <p class="ws-ms-doc-title">${this.escapeHtml(title).toUpperCase()}</p>
+    <p class="ws-ms-byline">by</p>
+    <p class="ws-ms-author-byline">${this.escapeHtml(author)}</p>
+  </div>
+</div>`;
+
+    const fullHtml = `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>${this.escapeHtml(title)}</title>
+  <style>${MANUSCRIPT_CSS}</style>
+</head>
+<body>
+${titlePageHtml}
+<div class="ws-ms-body">
+${bodyHtml}
+</div>
+</body>
+</html>`;
+
+    await this.writeFile(outputPath, fullHtml);
+    new Notice(`Manuscript exported to ${outputPath}`);
+    return outputPath;
   }
 
   private async exportMarkdown(content: string, outputPath: string): Promise<string> {

@@ -259,6 +259,11 @@ export class LauncherView extends ItemView {
         },
       },
       {
+        icon: 'calendar-days',
+        label: 'Writing log',
+        action: () => { void this.plugin.openWritingLog(); },
+      },
+      {
         icon: 'globe',
         label: 'Publish to WordPress',
         action: () => {
@@ -328,6 +333,7 @@ export class LauncherView extends ItemView {
 
     const stats = this.plugin.statsTracker.getSessionStats();
     const streak = await this.plugin.statsTracker.getStreak();
+    const sessionWords = this.plugin.statsTracker.getTotalSessionWords();
 
     const grid = card.createDiv('ws-launcher-today-grid');
 
@@ -342,6 +348,13 @@ export class LauncherView extends ItemView {
       const stat = grid.createDiv('ws-launcher-today-stat');
       stat.createDiv({ text: value, cls: 'ws-launcher-today-val' });
       stat.createDiv({ text: label, cls: 'ws-launcher-today-label' });
+    }
+
+    if (sessionWords > 0) {
+      card.createDiv({
+        text: `Session: +${sessionWords.toLocaleString()} words typed`,
+        cls: 'ws-launcher-session-words',
+      });
     }
 
     const goal = this.plugin.settings.defaultDailyWordGoal;

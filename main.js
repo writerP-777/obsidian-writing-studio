@@ -2736,7 +2736,7 @@ __export(main_exports, {
   default: () => WritingStudioPlugin
 });
 module.exports = __toCommonJS(main_exports);
-var import_obsidian26 = require("obsidian");
+var import_obsidian27 = require("obsidian");
 
 // src/BinderView.ts
 var import_obsidian4 = require("obsidian");
@@ -3805,6 +3805,7 @@ var ExportModal = class extends import_obsidian5.Modal {
     this.includeTitlesAsHeadings = true;
     this.addTitlePage = true;
     this.coverImagePath = "";
+    this.authorContact = "";
     this.plugin = plugin;
     this.format = plugin.settings.defaultExportFormat;
   }
@@ -3814,14 +3815,20 @@ var ExportModal = class extends import_obsidian5.Modal {
     contentEl.addClass("ws-export-modal");
     contentEl.createEl("h2", { text: "Export document" });
     let coverSetting;
-    new import_obsidian5.Setting(contentEl).setName("Format").addDropdown((d) => d.addOption("md", "Markdown (.md)").addOption("html", "HTML").addOption("epub", "Epub (.epub)").addOption("pdf", "PDF (requires pandoc)").addOption("docx", "Word (.docx) (requires pandoc)").addOption("rtf", "Rtf (requires pandoc)").setValue(this.format).onChange((v) => {
+    let contactSetting;
+    new import_obsidian5.Setting(contentEl).setName("Format").addDropdown((d) => d.addOption("md", "Markdown (.md)").addOption("html", "HTML").addOption("manuscript", "Manuscript (.HTML)").addOption("epub", "Epub (.epub)").addOption("pdf", "PDF (requires pandoc)").addOption("docx", "Word (.docx) (requires pandoc)").addOption("rtf", "Rtf (requires pandoc)").setValue(this.format).onChange((v) => {
       this.format = v;
       coverSetting.settingEl.toggleClass("ws-hidden", v !== "epub");
+      contactSetting.settingEl.toggleClass("ws-hidden", v !== "manuscript");
     }));
     coverSetting = new import_obsidian5.Setting(contentEl).setName("Cover image path").setDesc("Vault path to a JPG or PNG cover image. Leave empty for a generated text cover.").addText((t) => t.setValue(this.coverImagePath).setPlaceholder("e.g. Assets/cover.jpg").onChange((v) => {
       this.coverImagePath = v.trim();
     }));
     coverSetting.settingEl.toggleClass("ws-hidden", this.format !== "epub");
+    contactSetting = new import_obsidian5.Setting(contentEl).setName("Contact info (optional)").setDesc("Appears on the title page \u2014 name, email, or mailing address.").addTextArea((t) => t.setValue(this.authorContact).setPlaceholder("name@example.com").onChange((v) => {
+      this.authorContact = v;
+    }));
+    contactSetting.settingEl.toggleClass("ws-hidden", this.format !== "manuscript");
     new import_obsidian5.Setting(contentEl).setName("Scope").addDropdown((d) => d.addOption("current", "Current document").addOption("project", "Entire project (in binder order)").setValue(this.exportScope).onChange((v) => {
       this.exportScope = v;
     }));
@@ -3861,7 +3868,8 @@ var ExportModal = class extends import_obsidian5.Modal {
           font: this.plugin.settings.defaultExportFont,
           fontSize: this.plugin.settings.defaultExportFontSize,
           addTitlePage: this.addTitlePage,
-          coverImagePath: this.coverImagePath || void 0
+          coverImagePath: this.coverImagePath || void 0,
+          authorContact: this.authorContact || void 0
         });
         this.close();
       } catch (e) {
@@ -4388,6 +4396,13 @@ var LauncherView = class extends import_obsidian9.ItemView {
         }
       },
       {
+        icon: "calendar-days",
+        label: "Writing log",
+        action: () => {
+          void this.plugin.openWritingLog();
+        }
+      },
+      {
         icon: "globe",
         label: "Publish to WordPress",
         action: () => {
@@ -4451,6 +4466,7 @@ var LauncherView = class extends import_obsidian9.ItemView {
     card.createDiv({ text: "Today", cls: "ws-launcher-card-label" });
     const stats = this.plugin.statsTracker.getSessionStats();
     const streak = await this.plugin.statsTracker.getStreak();
+    const sessionWords = this.plugin.statsTracker.getTotalSessionWords();
     const grid = card.createDiv("ws-launcher-today-grid");
     const items = [
       ["Words", stats.wordsWritten.toLocaleString()],
@@ -4462,6 +4478,12 @@ var LauncherView = class extends import_obsidian9.ItemView {
       const stat = grid.createDiv("ws-launcher-today-stat");
       stat.createDiv({ text: value, cls: "ws-launcher-today-val" });
       stat.createDiv({ text: label, cls: "ws-launcher-today-label" });
+    }
+    if (sessionWords > 0) {
+      card.createDiv({
+        text: `Session: +${sessionWords.toLocaleString()} words typed`,
+        cls: "ws-launcher-session-words"
+      });
     }
     const goal = this.plugin.settings.defaultDailyWordGoal;
     if (goal > 0) {
@@ -4803,6 +4825,7 @@ var WritingModes = class {
   }
   setStatusBar(el) {
     this.statusBarEl = el;
+    this.updateStatusBar();
   }
   getCurrentMode() {
     return this.currentMode;
@@ -4865,13 +4888,13 @@ var WritingModes = class {
     if (!this.statusBarEl)
       return;
     const labels = {
-      draft: "\u270D Draft",
-      edit: "\u270E Edit",
-      review: "\u{1F441} Review",
-      none: ""
+      draft: "\u270D draft",
+      edit: "\u270E edit",
+      review: "\u{1F441} review",
+      none: "\u2014 mode"
     };
-    this.statusBarEl.textContent = labels[this.currentMode] || "";
-    this.statusBarEl.toggleClass("ws-hidden", this.currentMode === "none");
+    this.statusBarEl.textContent = labels[this.currentMode];
+    this.statusBarEl.toggleClass("ws-status-mode--active", this.currentMode !== "none");
   }
   restore() {
     const saved = this.plugin.settings.currentWritingMode;
@@ -5401,6 +5424,90 @@ em { font-style: italic; }
 
 // src/ExportEngine.ts
 var execAsync = (0, import_util.promisify)(import_child_process.exec);
+var MANUSCRIPT_CSS = `
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: "Courier New", Courier, monospace;
+    font-size: 12pt;
+    line-height: 2;
+    color: #000;
+    background: #fff;
+  }
+  .ws-ms-title-page {
+    page-break-after: always;
+    min-height: 10in;
+    padding: 1in;
+    display: flex;
+    flex-direction: column;
+  }
+  .ws-ms-title-info-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    font-size: 12pt;
+    line-height: 1.5;
+  }
+  .ws-ms-author-info p { margin: 0; line-height: 1.5; }
+  .ws-ms-wc { text-align: right; }
+  .ws-ms-title-center {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    gap: 0;
+    line-height: 2;
+  }
+  .ws-ms-doc-title { font-weight: bold; letter-spacing: 0.05em; }
+  .ws-ms-byline, .ws-ms-author-byline { font-size: 12pt; }
+  .ws-ms-body {
+    max-width: 6.5in;
+    margin: 0 auto;
+    padding: 1in;
+  }
+  .ws-ms-body p {
+    text-indent: 0.5in;
+    margin: 0;
+    line-height: 2;
+  }
+  .ws-ms-body h1, .ws-ms-body h2 {
+    font-family: "Courier New", Courier, monospace;
+    font-size: 12pt;
+    font-weight: bold;
+    text-align: center;
+    page-break-before: always;
+    padding-top: 2in;
+    margin-bottom: 2em;
+    line-height: 2;
+  }
+  .ws-ms-body h3, .ws-ms-body h4, .ws-ms-body h5, .ws-ms-body h6 {
+    font-family: "Courier New", Courier, monospace;
+    font-size: 12pt;
+    font-weight: normal;
+    text-align: center;
+    line-height: 2;
+  }
+  .ws-ms-scene {
+    text-indent: 0 !important;
+    text-align: center;
+    line-height: 2;
+    margin: 0;
+  }
+  .ws-ms-body hr { display: none; }
+  .ws-ms-body ul, .ws-ms-body ol { padding-left: 1in; line-height: 2; }
+  .ws-ms-body blockquote {
+    margin-left: 0.5in;
+    padding: 0;
+    border: none;
+    line-height: 2;
+  }
+  @media print {
+    @page { margin: 1in; size: letter; }
+    .ws-ms-title-page { page-break-after: always; min-height: auto; }
+    .ws-ms-body h1, .ws-ms-body h2 { page-break-before: always; }
+  }
+`;
 var ExportEngine = class {
   constructor(plugin) {
     this.plugin = plugin;
@@ -5415,6 +5522,9 @@ var ExportEngine = class {
     const baseFile = (0, import_obsidian14.normalizePath)(`${outputDir}/${projectTitle}-${timestamp}`);
     if (opts.format === "epub") {
       return this.exportEpub(opts, baseFile);
+    }
+    if (opts.format === "manuscript") {
+      return this.exportManuscript(opts, `${baseFile}.html`);
     }
     const compiled = await this.compileContent(opts, project == null ? void 0 : project.folderPath);
     switch (opts.format) {
@@ -5561,6 +5671,63 @@ ${body}`);
       content = content.replace(/^---\n[\s\S]*?\n---\n?/, "");
     }
     return content.trim();
+  }
+  async exportManuscript(opts, outputPath) {
+    const project = this.plugin.projectManager.getActiveProject();
+    const author = (project == null ? void 0 : project.author) || this.plugin.settings.authorName || "Author";
+    const title = (project == null ? void 0 : project.title) || "Untitled";
+    const compiled = await this.compileContent({ ...opts, addTitlePage: false });
+    const sections = compiled.split(/\n\n---\n\n/);
+    const htmlSections = [];
+    for (const section of sections) {
+      let md = section.trim();
+      md = md.replace(/^\*\s*\*\s*\*\s*$/gm, "\n__SCENE_BREAK__\n").replace(/^#{1,3}\s*$/gm, "\n__SCENE_BREAK__\n");
+      md = this.preprocessObsidianMarkdown(md);
+      let html = this.markdownToHtml(md);
+      html = html.replace(/<p>__SCENE_BREAK__<\/p>/g, '<p class="ws-ms-scene">#</p>');
+      html = html.replace(
+        /<h([12])>(.*?)<\/h\1>/g,
+        (_m, lvl, text) => `<h${lvl}>${text.toUpperCase()}</h${lvl}>`
+      );
+      htmlSections.push(html);
+    }
+    const bodyHtml = htmlSections.join("\n");
+    const wordCount = this.plugin.fmManager.countWords(compiled);
+    const roundedWc = Math.round(wordCount / 100) * 100;
+    const contactLines = (opts.authorContact || "").trim();
+    const contactHtml = contactLines ? contactLines.split("\n").map((l) => `<p>${this.escapeHtml(l)}</p>`).join("") : "";
+    const titlePageHtml = `<div class="ws-ms-title-page">
+  <div class="ws-ms-title-info-row">
+    <div class="ws-ms-author-info">
+      <p>${this.escapeHtml(author)}</p>
+      ${contactHtml}
+    </div>
+    <div class="ws-ms-wc">Approx. ${roundedWc.toLocaleString()} words</div>
+  </div>
+  <div class="ws-ms-title-center">
+    <p class="ws-ms-doc-title">${this.escapeHtml(title).toUpperCase()}</p>
+    <p class="ws-ms-byline">by</p>
+    <p class="ws-ms-author-byline">${this.escapeHtml(author)}</p>
+  </div>
+</div>`;
+    const fullHtml = `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>${this.escapeHtml(title)}</title>
+  <style>${MANUSCRIPT_CSS}</style>
+</head>
+<body>
+${titlePageHtml}
+<div class="ws-ms-body">
+${bodyHtml}
+</div>
+</body>
+</html>`;
+    await this.writeFile(outputPath, fullHtml);
+    new import_obsidian14.Notice(`Manuscript exported to ${outputPath}`);
+    return outputPath;
   }
   async exportMarkdown(content, outputPath) {
     await this.writeFile(outputPath, content);
@@ -6692,6 +6859,8 @@ tags: [writing-studio]
 var import_obsidian22 = require("obsidian");
 var StatsTracker = class {
   constructor(plugin) {
+    this.sessionBaselines = /* @__PURE__ */ new Map();
+    this.sessionCurrents = /* @__PURE__ */ new Map();
     this.plugin = plugin;
     this.app = plugin.app;
     this.sessionStats = this.newDailyStats();
@@ -6758,6 +6927,27 @@ var StatsTracker = class {
     }
     return (0, import_obsidian22.normalizePath)(`${fileName}.md`);
   }
+  updateFileWordCount(path, wordCount) {
+    if (!this.sessionBaselines.has(path)) {
+      this.sessionBaselines.set(path, wordCount);
+    }
+    this.sessionCurrents.set(path, wordCount);
+  }
+  getSessionDelta(path) {
+    var _a, _b;
+    const baseline = (_a = this.sessionBaselines.get(path)) != null ? _a : 0;
+    const current = (_b = this.sessionCurrents.get(path)) != null ? _b : baseline;
+    return Math.max(0, current - baseline);
+  }
+  getTotalSessionWords() {
+    var _a;
+    let total = 0;
+    for (const [path, current] of this.sessionCurrents) {
+      const baseline = (_a = this.sessionBaselines.get(path)) != null ? _a : current;
+      total += Math.max(0, current - baseline);
+    }
+    return total;
+  }
   getSessionStats() {
     return { ...this.sessionStats };
   }
@@ -6785,6 +6975,44 @@ var StatsTracker = class {
     const hours = Math.floor(minutes / 60);
     const mins = minutes % 60;
     return mins > 0 ? `${hours}h ${mins}m` : `${hours}h`;
+  }
+  async getWritingHistory(days) {
+    var _a;
+    const project = this.plugin.projectManager.getActiveProject();
+    const byDate = /* @__PURE__ */ new Map();
+    if (project) {
+      const log = await this.plugin.projectManager.getWritingLog(project);
+      for (const session of log) {
+        const date = session.date.split("T")[0];
+        const existing = byDate.get(date);
+        if (existing) {
+          existing.wordsWritten += session.wordsWritten;
+          existing.sprintsCompleted++;
+          existing.totalMinutes += session.duration;
+        } else {
+          byDate.set(date, {
+            date,
+            wordsWritten: session.wordsWritten,
+            sprintsCompleted: 1,
+            totalMinutes: session.duration
+          });
+        }
+      }
+    }
+    const result = [];
+    const today = new Date();
+    for (let i = days - 1; i >= 0; i--) {
+      const d = new Date(today);
+      d.setDate(d.getDate() - i);
+      const dateStr = d.toISOString().split("T")[0];
+      result.push((_a = byDate.get(dateStr)) != null ? _a : {
+        date: dateStr,
+        wordsWritten: 0,
+        sprintsCompleted: 0,
+        totalMinutes: 0
+      });
+    }
+    return result;
   }
   async getStreak() {
     const project = this.plugin.projectManager.getActiveProject();
@@ -6979,7 +7207,7 @@ ${fm}
 var import_obsidian23 = require("obsidian");
 
 // README.md
-var README_default = "# Obsidian Writing Studio\n\n**Version 2.1.6** \xB7 Desktop only\n\nTransform Obsidian into a professional writing environment. Writing Studio bundles a project binder, writing sprints, focus and typography modes, manuscript export, WordPress publishing, and a folder sidebar explorer into a single plugin.\n\n---\n\n## Installation\n\n1. Download `main.js`, `manifest.json`, and `styles.css` from the latest [GitHub release](../../releases/latest).\n2. Create the folder `<vault>/.obsidian/plugins/obsidian-writing-studio/` if it does not exist.\n3. Copy the three files into that folder.\n4. In Obsidian, go to **Settings \u2192 Community Plugins**, find **Writing Studio**, and enable it.\n\n> **Building from source:** Clone the repository, run `npm install`, then `npm run build`. Copy the three output files as above.\n\n---\n\n## Features\n\n### Writing Studio Launcher\n\nThe Launcher is a left-sidebar dashboard that shows your active project, word count and goal progress, writing mode controls, sprint timer, and quick-action buttons for the most common Writing Studio tasks.\n\nBy default it opens automatically when Obsidian loads. To disable this, turn off **Open on startup** in **Settings \u2192 General**.\n\n**To open manually:** Click the feather ribbon icon, or assign a hotkey to **Open launcher** in Settings \u2192 Hotkeys.\n\n**The Launcher includes quick-action buttons for:**\n- Opening the binder\n- Starting a writing sprint\n- Switching writing modes\n- Toggling Focus Mode and Typography Mode\n- Opening the Writing Dashboard and Targets Dashboard\n- Exporting the manuscript\n- Publishing to WordPress\n\nAll features are accessible from the Launcher, making it the primary entry point for the plugin.\n\n---\n\n### Writing Binder\n\nThe Binder is a left-sidebar project panel that lists all documents in your active writing project. Each document shows its title, type (Chapter, Section, Article, Note), status (Draft, In Progress, Complete), and live word count. Documents can be reordered by drag-and-drop and toggled in or out of export.\n\n**To open:** Use the command **Open binder** from the command palette, or assign a hotkey in Settings \u2192 Hotkeys.\n\n**Adding a file to a project:**\n1. Right-click any Markdown file in the file explorer and choose **Add to writing project** under **Writing studio options**.\n2. A modal appears with a dropdown listing all your writing projects.\n3. Select the target project and click **Add to project**.\n\n---\n\n### Writing Modes\n\nThree modes shape how the editor behaves. The current mode is shown in the status bar.\n\n| Mode | Purpose |\n|------|---------|\n| **Draft** | Distraction-free drafting; spell-check and formatting hints suppressed |\n| **Edit** | Revision pass; full editor tooling active |\n| **Review** | Read-only style; ideal for a final proofread |\n| **None** | Normal Obsidian behavior |\n\n**To switch modes:**\n- Right-click inside the editor, then choose **Switch writing mode \u2192** under **Writing studio options**.\n- Assign hotkeys to **Switch to draft mode / Edit mode / Review mode** in Settings \u2192 Hotkeys.\n- Use the Writing Studio Launcher panel.\n\nThe active mode persists across Obsidian restarts.\n\n---\n\n### Focus Mode\n\nFocus Mode dims everything in the editor except the paragraph or sentence you are currently writing, reducing visual noise and keeping attention on the active thought.\n\n**To toggle:** Assign a hotkey to **Toggle focus mode** in Settings \u2192 Hotkeys, or use the toggle in the Launcher panel. Press `Escape` to exit.\n\n**Settings (Settings \u2192 Focus mode):**\n\n| Setting | Description |\n|---------|-------------|\n| Focus unit | Highlight at the **paragraph** or **sentence (line)** level |\n| Dim opacity | How opaque the dimmed text appears (10\u201350%) |\n| Font size override | Override the editor font size while focused; 0 = use theme default |\n| Auto-hide sidebars | Collapse left and right sidebars when Focus Mode activates |\n| Typewriter scroll | Keep the active line vertically centered as you type |\n\n---\n\n### Typography Mode\n\nTypography Mode applies a consistent, reader-friendly text treatment to the editor: a curated font, constrained line length, controlled line height, and optional letter spacing.\n\n**To toggle:** Assign a hotkey to **Toggle typography mode** in Settings \u2192 Hotkeys, or use the toggle in the Launcher panel.\n\n**To change the font while Typography Mode is active:** Right-click inside the editor and choose **Typography font \u2192** under **Writing studio options**. A font picker menu appears with all available fonts; the active font is shown with a checkmark. Selecting a font applies it immediately and saves the setting.\n\n> **Note on fonts:** Typography fonts are loaded from Google Fonts and require an internet connection the first time each font is used. After the initial load they are cached and work offline.\n\n**Settings (Settings \u2192 Typography):**\n\n| Setting | Description |\n|---------|-------------|\n| Font family | Choose from the curated font list or enter a custom font name |\n| Custom font name | Used when **Custom font name\u2026** is selected above |\n| Max line length | Characters per line (55\u201380); constrains the editor column width |\n| Font size | Editor font size in pixels |\n| Line height | Multiplier; default 1.7 |\n| Letter spacing | CSS `letter-spacing` value (e.g. `normal`, `0.02em`) |\n| Persist across sessions | Keep Typography Mode active when Obsidian reopens |\n\n**Available fonts:**\n\n| Option | Font |\n|--------|------|\n| Monospaced | iA Writer Mono (falls back to Roboto Mono / Courier New) |\n| Serif | iA Writer Duo Serif (falls back to Georgia) |\n| Sans-serif | iA Writer Quattro (falls back to system sans-serif) |\n| Cormorant Garamond | Elegant display serif |\n| Crimson Text | Classic book serif |\n| EB Garamond | Traditional Garamond revival |\n| Libre Baskerville | Readable web serif |\n| Libre Caslon Text | Clean slab serif |\n| Literata | Designed for long-form reading |\n| Lora | Contemporary calligraphic serif |\n| Inter | Modern humanist sans-serif |\n| Lato | Friendly rounded sans-serif |\n| Source Sans 3 | Clean UI sans-serif |\n| Custom font name\u2026 | Use any font installed on your system |\n\n---\n\n### Writing Sprint Timer\n\nThe Sprint Timer runs a timed writing session. A countdown appears in the status bar and in a floating overlay. When the sprint ends, a summary modal shows words written, duration, and words-per-minute. The session is logged to sprint history and optionally appended to your Daily Note.\n\n**To start a sprint:** Use the command **Start writing sprint** from the command palette, assign a hotkey in Settings \u2192 Hotkeys, or use the sprint quick-start buttons in the Launcher panel.\n\nThe sprint modal lets you set:\n- Duration (preset or custom, in minutes)\n- Word count goal for the session\n- Scope (current file or entire project)\n\n**Settings (Settings \u2192 Sprint & goals):**\n\n| Setting | Description |\n|---------|-------------|\n| Default sprint duration | Starting value in the sprint modal (minutes) |\n| Default daily word goal | Target used in the Writing Dashboard and Launcher |\n| Sound notifications | Play a tone when the sprint ends |\n| Sprint history retention | Days to keep sprint records before purging |\n| Inline goal banner | Show a progress bar below the editor toolbar when a document has a word count goal set |\n\n---\n\n### Word Count Goal\n\nA per-document word count goal can be set and tracked inline.\n\n**To set a goal:**\n- Use the command **Set word count goal** from the command palette.\n- Right-click inside the editor and choose **Set word count goal** under **Writing studio options**.\n\nWhen a goal is set and **Inline goal banner** is enabled, a progress bar appears below the editor toolbar showing current words, goal, and percentage. It updates in real time as you type.\n\n---\n\n### Writing Dashboard\n\nThe Writing Dashboard shows session statistics (words written, sprints completed, time), sprint history, daily progress toward your goal, and per-project word counts with reading time.\n\n**To open:** Use the command **Open writing dashboard** from the command palette, or click the **Writing dashboard** button in the Launcher panel.\n\n---\n\n### Targets Dashboard\n\nThe Targets Dashboard lets you assign word count goals to individual documents in the active project's binder and track progress across the whole project at a glance. Goals can be edited inline in the table. Rows are sortable and filterable by status.\n\n**To open:** Use the command **Open targets dashboard**, click the **Targets dashboard** button in the Launcher panel, or assign a hotkey in Settings \u2192 Hotkeys.\n\n---\n\n### Project Manager\n\nProjects group a set of documents (binder items) and act as the scope for export, statistics, and the word count goal banner.\n\n**To create a project:** Use the command **New writing project** from the command palette, or click **+ New** in the Launcher panel.\n\n**To switch projects:** Use the Launcher panel or the project selector at the top of the Binder panel.\n\nEach project stores:\n- Title, type, author, and description\n- Ordered binder with chapters, sections, articles, and notes\n- Per-item word count goals, statuses, and export flags\n\n**Project templates available at creation:**\n\n| Template | Structure created |\n|----------|------------------|\n| Blank | Empty \u2014 build your own structure |\n| Book | Front Matter, Part 1 / Chapter 1, Back Matter |\n| Article series | Series folder, Article 1 placeholder, series metadata |\n| Blog collection | Date-organized folder, first post placeholder |\n| Journal article | Title Page, Abstract, Keywords, Introduction, Literature Review, Methodology, Findings / Analysis, Discussion, Conclusion, References, Appendices |\n| Magazine article | Pitch / Query Notes, Headline & Deck, Lede, Nut Graf, Body, Quotes & Sources, Kicker, Fact-Check Notes, Author Bio |\n\n---\n\n### Compile Preview\n\nThe Compile Preview opens a split pane showing all binder documents for the active project concatenated in order, rendered as a finished manuscript.\n\n**To open:** Use the command **Preview compiled manuscript** from the command palette, or click the **Preview manuscript** button in the Launcher panel.\n\n---\n\n### Export Engine\n\nThe Export Engine converts the current document or the active project's compiled manuscript to a finished file.\n\n**Supported formats:** PDF \xB7 Word (.docx) \xB7 RTF \xB7 HTML \xB7 Markdown \xB7 EPUB\n\n**To export:**\n- Right-click inside the editor and choose **Export this document** under **Writing studio options**.\n- Use the command **Export document** from the command palette.\n- Click the **Export** button in the Launcher panel.\n- Assign a hotkey to **Export document** in Settings \u2192 Hotkeys.\n\n**Settings (Settings \u2192 Export):**\n\n| Setting | Description |\n|---------|-------------|\n| Default export format | Pre-selected format in the export modal |\n| Default paper size | Letter (US) or A4 |\n| Export font | Font name used in PDF/DOCX output (e.g. `Georgia`) |\n| Export font size | Point size for PDF/DOCX output |\n| Pandoc path | Full path to the `pandoc` binary if it is not on your system PATH |\n| EPUB language | BCP 47 language tag (e.g. `en`, `fr`, `de`) |\n| EPUB include cover | Generate a text cover page when no cover image is provided |\n\n> **Requirement:** Pandoc must be installed for PDF, DOCX, RTF, HTML, and EPUB export. Download from [pandoc.org](https://pandoc.org/installing.html). For PDF export, a LaTeX distribution (e.g. TeX Live or MiKTeX) is also required.\n\n---\n\n### WordPress Publishing\n\nPublish the current Markdown file directly to one or more WordPress sites using the WordPress REST API. The modal lets you choose the target site, set the post title, status, categories, tags, excerpt, and an optional scheduled publication date.\n\n**To publish:**\n- Right-click inside the editor and choose **Publish to wordpress** under **Writing studio options**.\n- Use the command **Publish to wordpress** from the command palette.\n- Click the **Publish to WordPress** button in the Launcher panel.\n- Assign a hotkey to **Publish to wordpress** in Settings \u2192 Hotkeys.\n\n**Setting up a site (Settings \u2192 WordPress):**\n\n1. Click **+ add wordpress site**.\n2. Enter a nickname, the site URL (e.g. `https://yourblog.com`), and your WordPress username.\n3. Generate an application password in WordPress under **Users \u2192 Profile \u2192 Application passwords** and paste it into the **Application password** field.\n4. Click **Test connection** to verify.\n\n**Per-site options:**\n\n| Setting | Description |\n|---------|-------------|\n| Default post status | Draft \xB7 Pending Review \xB7 Published |\n| Wikilink handling | **Strip** removes `[[...]]` syntax, leaving plain text \xB7 **Convert** turns wikilinks into URLs |\n\n---\n\n### Folder Sidebar Explorer\n\nThe Folder Sidebar Explorer opens a navigable folder tree in a sidebar panel. You can browse subfolders, search by name or file content, sort the listing, preview files inline, and insert copied text directly into the active editor.\n\n**To open:**\n- Use the command **Open folder in sidebar explorer** from the command palette.\n- Right-click any folder in the file explorer and choose **Open in sidebar explorer** under **Writing studio options**.\n- Assign a hotkey in Settings \u2192 Hotkeys.\n\n**Browsing and navigation:**\n\n| Feature | How to use |\n|---------|-----------|\n| Browse into a subfolder | Click the folder |\n| Preview a Markdown file | Click the file \u2014 renders inline |\n| Preview an image | Click the file \u2014 displayed inline |\n| Preview audio | Click the file \u2014 player appears inline |\n| Other file types | Click the file \u2014 an **Open in editor** button appears |\n| Go back | Click **\u2190 back**, or press `Backspace` when the list has keyboard focus |\n| Return to root folder | Click **\u2302 root** |\n| Keyboard navigation | Tab to focus the list, then `\u2191` / `\u2193` to move, `Enter` to open, `Backspace` to go back |\n| Breadcrumb navigation | Click any segment in the breadcrumb trail to jump directly to that folder |\n\n**Search:**\n\nA search bar appears at the top of the folder list. Type your query and press **Enter** to run the search.\n\n- Searches **both folder/file names and file contents** (`.md` and `.txt` files).\n- Frontmatter is excluded from content search to avoid false positives from YAML fields.\n- Name matches show the matched term highlighted in the result title.\n- Content matches show a text snippet around the match with the term highlighted, plus a **CONTENT** badge to distinguish them from name matches.\n- Results always search from the root folder you set, regardless of which subfolder you are currently browsing.\n- Click **\xD7** to clear the search and return to the normal folder view.\n\n**Sort:**\n\nA sort dropdown sits next to the search bar. Options:\n\n| Option | Description |\n|--------|-------------|\n| Folders \u2191 A-Z | Folders first, then files, both alphabetical (default) |\n| Folders \u2191 Z-A | Folders first, then files, both reverse-alphabetical |\n| Name A-Z | All items alphabetical, folders and files mixed |\n| Name Z-A | All items reverse-alphabetical, mixed |\n| Newest first | Sort by last-modified date, newest at top |\n| Oldest first | Sort by last-modified date, oldest at top |\n\n**Copy content to the editor:**\n\nWhen a Markdown file is open in preview mode, its text is selectable. To insert a passage into the active editor:\n\n1. Select the text you want in the preview pane.\n2. Click the **\u21A9 Insert selection** button in the nav bar.\n3. The selected text is inserted at the cursor position in the active editor.\n\nThe preview is read-only \u2014 you cannot edit the file from the sidebar.\n\n**Hover tooltips:**\n\nHover over any file or folder in the list to see an information card:\n\n| Item type | Information shown |\n|-----------|------------------|\n| Markdown / text file | Last modified date and time \xB7 File size \xB7 Word count (frontmatter excluded) |\n| Image / audio / other file | Last modified date and time \xB7 File size |\n| Folder | Total file count \xB7 Subfolder count |\n\nThe word count updates asynchronously from Obsidian's file cache and appears within a moment of hover.\n\n---\n\n### Frontmatter Manager\n\nWriting Studio automatically manages YAML frontmatter in your documents when **Frontmatter auto-update** is enabled. On every save it updates:\n\n- `word-count` \u2014 current word count\n- `modified` \u2014 last-modified date\n\nThe `word-count-goal` frontmatter field is read by the inline goal banner and the Word Count Goal modal.\n\n---\n\n### Daily Writing Log\n\nWhen **Append to daily note** is enabled (Settings \u2192 Writing log), a summary of each completed sprint is appended to the Daily Note for today. This requires the Obsidian Daily Notes core plugin to be active.\n\n---\n\n## Context Menus\n\nWriting Studio adds items to Obsidian's right-click context menus. All Writing Studio items are grouped together under the heading **Writing studio options** to distinguish them from other plugins and Obsidian's built-in options.\n\n### Right-click inside an open document (editor menu)\n\n| Option | Action |\n|--------|--------|\n| Export this document | Open the export modal for the current file |\n| Publish to wordpress | Open the WordPress publish modal for the current file |\n| Set word count goal | Set a word count target for the current document |\n| Switch writing mode \u2192 | Open a mode-switcher menu (Draft / Edit / Review / None) |\n| Typography font \u2192 | Open a font picker menu to change the typography font (visible only when Typography Mode is active) |\n\n### Right-click a Markdown file in the file explorer\n\n| Option | Action |\n|--------|--------|\n| Add to writing project | Open a project picker and add the file to the selected project |\n\n### Right-click a folder in the file explorer\n\n| Option | Action |\n|--------|--------|\n| Open in sidebar explorer | Open the folder in the Folder Sidebar Explorer panel |\n\n---\n\n## Commands Reference\n\nNo default hotkeys are assigned. All commands can be given a hotkey in **Settings \u2192 Hotkeys**.\n\n| Command | Description |\n|---------|-------------|\n| Open launcher | Open the launcher sidebar panel |\n| Open binder | Open the writing binder sidebar panel |\n| Toggle focus mode | Enable or disable focus mode |\n| Toggle typography mode | Enable or disable typography mode |\n| Switch to draft mode | Activate draft writing mode |\n| Switch to edit mode | Activate edit writing mode |\n| Switch to review mode | Activate review writing mode |\n| Start writing sprint | Open the sprint timer modal |\n| Export document | Export the current document |\n| Export project | Export the full project |\n| Preview compiled manuscript | Open the compile preview pane |\n| Publish to wordpress | Publish the current document to WordPress |\n| New writing project | Create a new writing project |\n| Open writing dashboard | Open the statistics dashboard |\n| Open targets dashboard | Open the word count targets panel |\n| Set word count goal | Set a per-document word count goal |\n| Open folder in sidebar explorer | Search and open a vault folder in the sidebar |\n\n---\n\n## Ribbon Icon\n\nWriting Studio adds a single icon to the Obsidian ribbon.\n\n| Icon | Action |\n|------|--------|\n| Feather | Open the Writing Studio Launcher panel |\n\nAll other features are accessible from the Launcher panel, the command palette, context menus, or assigned hotkeys.\n\n---\n\n## Settings Overview\n\nOpen via **Settings \u2192 Obsidian Writing Studio**.\n\n| Tab | What it controls |\n|-----|-----------------|\n| General | Open on startup, default project folder, author name, document type, frontmatter auto-update |\n| Focus mode | Focus unit, dim opacity, font override, sidebar behavior, typewriter scroll |\n| Typography | Font family, custom font name, line length, font size, line height, letter spacing, persistence |\n| Sprint & goals | Sprint duration, daily goal, sound notifications, history retention, inline banner |\n| Export | Format, paper size, font, font size, Pandoc path, EPUB language, EPUB cover |\n| Writing log | Append sprint summaries to Daily Note |\n| WordPress | Site credentials, default post status, wikilink handling |\n\n---\n\n## Requirements\n\n| Requirement | When needed |\n|-------------|-------------|\n| Obsidian 1.7.2 or later | Always |\n| Desktop (Windows, macOS, Linux) | Always \u2014 this plugin does not run on mobile |\n| Internet connection | First use of each Typography Mode font (cached after that) |\n| [Pandoc](https://pandoc.org/installing.html) | Export to PDF, DOCX, RTF, HTML, EPUB |\n| LaTeX (TeX Live / MiKTeX) | Export to PDF only |\n| WordPress 5.6+ with REST API enabled | WordPress publishing |\n| WordPress Application Password | WordPress publishing |\n";
+var README_default = "# Obsidian Writing Studio\n\n**Version 2.1.7** \xB7 Desktop only\n\nTransform Obsidian into a professional writing environment. Writing Studio bundles a project binder, writing sprints, focus and typography modes, session word count tracking, manuscript export, WordPress publishing, a daily writing log, and a folder sidebar explorer into a single plugin.\n\n---\n\n## Installation\n\n1. Download `main.js`, `manifest.json`, and `styles.css` from the latest [GitHub release](../../releases/latest).\n2. Create the folder `<vault>/.obsidian/plugins/obsidian-writing-studio/` if it does not exist.\n3. Copy the three files into that folder.\n4. In Obsidian, go to **Settings \u2192 Community Plugins**, find **Writing Studio**, and enable it.\n\n> **Building from source:** Clone the repository, run `npm install`, then `npm run build`. Copy the three output files as above.\n\n---\n\n## Features\n\n### Writing Studio Launcher\n\nThe Launcher is a left-sidebar dashboard that shows your active project, word count and goal progress, writing mode controls, sprint timer, today's writing stats, and quick-action buttons for the most common Writing Studio tasks.\n\nBy default it opens automatically when Obsidian loads. To disable this, turn off **Open on startup** in **Settings \u2192 General**.\n\n**To open manually:** Click the feather ribbon icon, or assign a hotkey to **Open launcher** in Settings \u2192 Hotkeys.\n\n**The Launcher includes:**\n- Active project name, total word count, and progress toward your project word count goal\n- Writing mode selector (Draft / Edit / Review)\n- Focus Mode and Typography Mode toggles\n- Sprint timer with quick-start presets (10 m, 15 m, 25 m)\n- Today card showing words written, sprints completed, session word count, and streak\n- Quick-action buttons: Targets Dashboard, Writing Dashboard, Preview manuscript, Export, Writing Log, Publish to WordPress\n\n---\n\n### Writing Binder\n\nThe Binder is a left-sidebar project panel that lists all documents in your active writing project. Each document shows its title, type (Chapter, Section, Article, Note), status (Draft, In Progress, Complete), and live word count. Documents can be reordered by drag-and-drop and toggled in or out of export.\n\n**To open:** Use the command **Open binder** from the command palette, or assign a hotkey in Settings \u2192 Hotkeys.\n\n**Adding a file to a project:**\n1. Right-click any Markdown file in the file explorer and choose **Add to writing project** under **Writing studio options**.\n2. A modal appears with a dropdown listing all your writing projects.\n3. Select the target project and click **Add to project**.\n\n---\n\n### Writing Modes\n\nThree modes shape how the editor behaves. The current mode is always shown in the status bar. Click the mode pill in the status bar to switch modes.\n\n| Mode | Purpose |\n|------|---------|\n| **Draft** | Distraction-free drafting; spell-check and formatting hints suppressed |\n| **Edit** | Revision pass; full editor tooling active |\n| **Review** | Read-only style; ideal for a final proofread |\n| **None** | Normal Obsidian behavior |\n\n**To switch modes:**\n- Click the mode indicator in the status bar.\n- Right-click inside the editor, then choose **Switch writing mode \u2192** under **Writing studio options**.\n- Assign hotkeys to **Switch to draft mode / Edit mode / Review mode** in Settings \u2192 Hotkeys.\n- Use the Writing Studio Launcher panel.\n\nThe active mode persists across Obsidian restarts.\n\n---\n\n### Focus Mode\n\nFocus Mode dims everything in the editor except the paragraph or sentence you are currently writing, reducing visual noise and keeping attention on the active thought.\n\n**To toggle:** Assign a hotkey to **Toggle focus mode** in Settings \u2192 Hotkeys, or use the toggle in the Launcher panel. Press `Escape` to exit.\n\n**Settings (Settings \u2192 Focus mode):**\n\n| Setting | Description |\n|---------|-------------|\n| Focus unit | Highlight at the **paragraph** or **sentence (line)** level |\n| Dim opacity | How opaque the dimmed text appears (10\u201350%) |\n| Font size override | Override the editor font size while focused; 0 = use theme default |\n| Auto-hide sidebars | Collapse left and right sidebars when Focus Mode activates |\n| Typewriter scroll | Keep the active line vertically centered as you type |\n\n---\n\n### Typography Mode\n\nTypography Mode applies a consistent, reader-friendly text treatment to the editor: a curated font, constrained line length, controlled line height, and optional letter spacing.\n\n**To toggle:** Assign a hotkey to **Toggle typography mode** in Settings \u2192 Hotkeys, or use the toggle in the Launcher panel.\n\n**To change the font while Typography Mode is active:** Right-click inside the editor and choose **Typography font \u2192** under **Writing studio options**. A font picker menu appears with all available fonts; the active font is shown with a checkmark. Selecting a font applies it immediately and saves the setting.\n\n> **Note on fonts:** Typography fonts are loaded from Google Fonts and require an internet connection the first time each font is used. After the initial load they are cached and work offline.\n\n**Settings (Settings \u2192 Typography):**\n\n| Setting | Description |\n|---------|-------------|\n| Font family | Choose from the curated font list or enter a custom font name |\n| Custom font name | Used when **Custom font name\u2026** is selected above |\n| Max line length | Characters per line (55\u201380); constrains the editor column width |\n| Font size | Editor font size in pixels |\n| Line height | Multiplier; default 1.7 |\n| Letter spacing | CSS `letter-spacing` value (e.g. `normal`, `0.02em`) |\n| Persist across sessions | Keep Typography Mode active when Obsidian reopens |\n\n**Available fonts:**\n\n| Option | Font |\n|--------|------|\n| Monospaced | iA Writer Mono (falls back to Roboto Mono / Courier New) |\n| Serif | iA Writer Duo Serif (falls back to Georgia) |\n| Sans-serif | iA Writer Quattro (falls back to system sans-serif) |\n| Cormorant Garamond | Elegant display serif |\n| Crimson Text | Classic book serif |\n| EB Garamond | Traditional Garamond revival |\n| Libre Baskerville | Readable web serif |\n| Libre Caslon Text | Clean slab serif |\n| Literata | Designed for long-form reading |\n| Lora | Contemporary calligraphic serif |\n| Inter | Modern humanist sans-serif |\n| Lato | Friendly rounded sans-serif |\n| Source Sans 3 | Clean UI sans-serif |\n| Custom font name\u2026 | Use any font installed on your system |\n\n---\n\n### Writing Sprint Timer\n\nThe Sprint Timer runs a timed writing session. A countdown appears in the status bar and in a floating overlay. When the sprint ends, a summary modal shows words written, duration, and words-per-minute. The session is logged to sprint history and optionally appended to your Daily Note.\n\n**To start a sprint:** Use the command **Start writing sprint** from the command palette, assign a hotkey in Settings \u2192 Hotkeys, or use the sprint quick-start buttons in the Launcher panel.\n\nThe sprint modal lets you set:\n- Duration (preset or custom, in minutes)\n- Word count goal for the session\n- Scope (current file or entire project)\n\n**Settings (Settings \u2192 Sprint & goals):**\n\n| Setting | Description |\n|---------|-------------|\n| Default sprint duration | Starting value in the sprint modal (minutes) |\n| Default daily word goal | Target used in the Writing Dashboard and Launcher |\n| Sound notifications | Play a tone when the sprint ends |\n| Sprint history retention | Days to keep sprint records before purging |\n| Inline goal banner | Show a progress bar below the editor toolbar when a document has a word count goal set |\n\n---\n\n### Word Count Goal\n\nA per-document word count goal can be set and tracked inline.\n\n**To set a goal:**\n- Use the command **Set word count goal** from the command palette.\n- Right-click inside the editor and choose **Set word count goal** under **Writing studio options**.\n\nWhen a goal is set and **Inline goal banner** is enabled, a progress bar appears below the editor toolbar showing current words, goal, and percentage. It updates in real time as you type.\n\n---\n\n### Session Word Count\n\nThe status bar shows a `(+N)` delta next to the current file's word count, indicating how many words you have added since opening that file this session. The Launcher's **Today** card also shows a cumulative session total across all files opened during the current Obsidian session. Both counts reset when Obsidian restarts.\n\n---\n\n### Project Word Count Goal\n\nWhen an active project has a total word count goal set, a dedicated status bar item shows `{current} / {goal} project words`. This updates automatically as you write. Set a project goal in the Project modal when creating or editing a project.\n\n---\n\n### Writing Dashboard\n\nThe Writing Dashboard shows session statistics (words written, sprints completed, time), sprint history, daily progress toward your goal, and per-project word counts with reading time.\n\n**To open:** Use the command **Open writing dashboard** from the command palette, or click the **Writing dashboard** button in the Launcher panel.\n\n---\n\n### Targets Dashboard\n\nThe Targets Dashboard lets you assign word count goals to individual documents in the active project's binder and track progress across the whole project at a glance. Goals can be edited inline in the table. Rows are sortable and filterable by status.\n\n**To open:** Use the command **Open targets dashboard**, click the **Targets dashboard** button in the Launcher panel, or assign a hotkey in Settings \u2192 Hotkeys.\n\n---\n\n### Daily Writing Log\n\nThe Writing Log is a sidebar panel that shows your writing history at a glance.\n\n**To open:** Use the command **Open writing log** from the command palette, or click the **Writing log** button in the Launcher panel.\n\n**The Writing Log shows:**\n- Current streak (days in a row with at least one sprint)\n- This session: total session words, sprint words, sprints completed, and minutes written\n- Last 30 days: a bar chart with one row per day showing word count, sprints completed, and a visual bar proportional to the day's output\n\nWhen **Append to daily note** is enabled (Settings \u2192 Writing log), a summary of each completed sprint is also appended to today's Daily Note.\n\n---\n\n### Project Manager\n\nProjects group a set of documents (binder items) and act as the scope for export, statistics, and the word count goal banner.\n\n**To create a project:** Use the command **New writing project** from the command palette, or click **+ New** in the Launcher panel.\n\n**To switch projects:** Use the Launcher panel or the project selector at the top of the Binder panel.\n\nEach project stores:\n- Title, type, author, and description\n- Ordered binder with chapters, sections, articles, and notes\n- Per-item word count goals, statuses, and export flags\n- Optional total word count goal (shown in the Launcher and status bar)\n\n**Project templates available at creation:**\n\n| Template | Structure created |\n|----------|------------------|\n| Blank | Empty \u2014 build your own structure |\n| Book | Front Matter, Part 1 / Chapter 1, Back Matter |\n| Article series | Series folder, Article 1 placeholder, series metadata |\n| Blog collection | Date-organized folder, first post placeholder |\n| Journal article | Title Page, Abstract, Keywords, Introduction, Literature Review, Methodology, Findings / Analysis, Discussion, Conclusion, References, Appendices |\n| Magazine article | Pitch / Query Notes, Headline & Deck, Lede, Nut Graf, Body, Quotes & Sources, Kicker, Fact-Check Notes, Author Bio |\n\n---\n\n### Compile Preview\n\nThe Compile Preview opens a split pane showing all binder documents for the active project concatenated in order, rendered as a finished manuscript.\n\n**To open:** Use the command **Preview compiled manuscript** from the command palette, or click the **Preview manuscript** button in the Launcher panel.\n\n---\n\n### Export Engine\n\nThe Export Engine converts the current document or the active project's compiled manuscript to a finished file.\n\n**Supported formats:** Manuscript (HTML) \xB7 PDF \xB7 Word (.docx) \xB7 RTF \xB7 HTML \xB7 Markdown \xB7 EPUB\n\n**To export:**\n- Right-click inside the editor and choose **Export this document** under **Writing studio options**.\n- Use the command **Export document** from the command palette.\n- Click the **Export** button in the Launcher panel.\n- Assign a hotkey to **Export document** in Settings \u2192 Hotkeys.\n\n**Manuscript format**\n\nThe Manuscript format produces a self-contained HTML file formatted to industry-standard manuscript conventions:\n- Courier New 12 pt, double-spaced, 1-inch margins\n- Title page with project title, author name, approximate word count, and optional contact information\n- Chapter headings in uppercase, page-break before each\n- Scene breaks rendered as `\xB7 \xB7 \xB7`\n\nNo external tools are required for manuscript export.\n\n**Settings (Settings \u2192 Export):**\n\n| Setting | Description |\n|---------|-------------|\n| Default export format | Pre-selected format in the export modal |\n| Default paper size | Letter (US) or A4 |\n| Export font | Font name used in PDF/DOCX output (e.g. `Georgia`) |\n| Export font size | Point size for PDF/DOCX output |\n| Pandoc path | Full path to the `pandoc` binary if it is not on your system PATH |\n| EPUB language | BCP 47 language tag (e.g. `en`, `fr`, `de`) |\n| EPUB include cover | Generate a text cover page when no cover image is provided |\n\n> **Requirement:** Pandoc must be installed for PDF, DOCX, RTF, HTML, and EPUB export. Download from [pandoc.org](https://pandoc.org/installing.html). For PDF export, a LaTeX distribution (e.g. TeX Live or MiKTeX) is also required. Manuscript (HTML) export does not require Pandoc.\n\n---\n\n### WordPress Publishing\n\nPublish the current Markdown file directly to one or more WordPress sites using the WordPress REST API. The modal lets you choose the target site, set the post title, status, categories, tags, excerpt, and an optional scheduled publication date.\n\n**To publish:**\n- Right-click inside the editor and choose **Publish to WordPress** under **Writing studio options**.\n- Use the command **Publish to WordPress** from the command palette.\n- Click the **Publish to WordPress** button in the Launcher panel.\n- Assign a hotkey to **Publish to WordPress** in Settings \u2192 Hotkeys.\n\n**Setting up a site (Settings \u2192 WordPress):**\n\n1. Click **+ add WordPress site**.\n2. Enter a nickname, the site URL (e.g. `https://yourblog.com`), and your WordPress username.\n3. Generate an application password in WordPress under **Users \u2192 Profile \u2192 Application passwords** and paste it into the **Application password** field.\n4. Click **Test connection** to verify.\n\n**Per-site options:**\n\n| Setting | Description |\n|---------|-------------|\n| Default post status | Draft \xB7 Pending Review \xB7 Published |\n| Wikilink handling | **Strip** removes `[[...]]` syntax, leaving plain text \xB7 **Convert** turns wikilinks into URLs |\n\n---\n\n### Folder Sidebar Explorer\n\nThe Folder Sidebar Explorer opens a navigable folder tree in a sidebar panel. You can browse subfolders, search by name or file content, sort the listing, preview files inline, and insert copied text directly into the active editor.\n\n**To open:**\n- Use the command **Open folder in sidebar explorer** from the command palette.\n- Right-click any folder in the file explorer and choose **Open in sidebar explorer** under **Writing studio options**.\n- Assign a hotkey in Settings \u2192 Hotkeys.\n\n**Browsing and navigation:**\n\n| Feature | How to use |\n|---------|-----------|\n| Browse into a subfolder | Click the folder |\n| Preview a Markdown file | Click the file \u2014 renders inline |\n| Preview an image | Click the file \u2014 displayed inline |\n| Preview audio | Click the file \u2014 player appears inline |\n| Other file types | Click the file \u2014 an **Open in editor** button appears |\n| Go back | Click **\u2190 back**, or press `Backspace` when the list has keyboard focus |\n| Return to root folder | Click **\u2302 root** |\n| Keyboard navigation | Tab to focus the list, then `\u2191` / `\u2193` to move, `Enter` to open, `Backspace` to go back |\n| Breadcrumb navigation | Click any segment in the breadcrumb trail to jump directly to that folder |\n\n**Search:**\n\nA search bar appears at the top of the folder list. Type your query and press **Enter** to run the search.\n\n- Searches **both folder/file names and file contents** (`.md` and `.txt` files).\n- Frontmatter is excluded from content search to avoid false positives from YAML fields.\n- Name matches show the matched term highlighted in the result title.\n- Content matches show a text snippet around the match with the term highlighted, plus a **CONTENT** badge to distinguish them from name matches.\n- Results always search from the root folder you set, regardless of which subfolder you are currently browsing.\n- Click **\xD7** to clear the search and return to the normal folder view.\n\n**Sort:**\n\nA sort dropdown sits next to the search bar. Options:\n\n| Option | Description |\n|--------|-------------|\n| Folders \u2191 A-Z | Folders first, then files, both alphabetical (default) |\n| Folders \u2191 Z-A | Folders first, then files, both reverse-alphabetical |\n| Name A-Z | All items alphabetical, folders and files mixed |\n| Name Z-A | All items reverse-alphabetical, mixed |\n| Newest first | Sort by last-modified date, newest at top |\n| Oldest first | Sort by last-modified date, oldest at top |\n\n**Copy content to the editor:**\n\nWhen a Markdown file is open in preview mode, its text is selectable. To insert a passage into the active editor:\n\n1. Select the text you want in the preview pane.\n2. Click the **\u21A9 insert selection** button in the nav bar.\n3. The selected text is inserted at the cursor position in the active editor.\n\nThe preview is read-only \u2014 you cannot edit the file from the sidebar.\n\n**Hover tooltips:**\n\nHover over any file or folder in the list to see an information card:\n\n| Item type | Information shown |\n|-----------|------------------|\n| Markdown / text file | Last modified date and time \xB7 File size \xB7 Word count (frontmatter excluded) |\n| Image / audio / other file | Last modified date and time \xB7 File size |\n| Folder | Total file count \xB7 Subfolder count |\n\nThe word count updates asynchronously from Obsidian's file cache and appears within a moment of hover.\n\n---\n\n### Frontmatter Manager\n\nWriting Studio automatically manages YAML frontmatter in your documents when **Frontmatter auto-update** is enabled. On every save it updates:\n\n- `word-count` \u2014 current word count\n- `modified` \u2014 last-modified date\n\nThe `word-count-goal` frontmatter field is read by the inline goal banner and the Word Count Goal modal.\n\n---\n\n## Context Menus\n\nWriting Studio adds items to Obsidian's right-click context menus. All Writing Studio items are grouped together under the heading **Writing studio options** to distinguish them from other plugins and Obsidian's built-in options.\n\n### Right-click inside an open document (editor menu)\n\n| Option | Action |\n|--------|--------|\n| Export this document | Open the export modal for the current file |\n| Publish to WordPress | Open the WordPress publish modal for the current file |\n| Set word count goal | Set a word count target for the current document |\n| Switch writing mode \u2192 | Open a mode-switcher menu (Draft / Edit / Review / None) |\n| Typography font \u2192 | Open a font picker menu to change the typography font (visible only when Typography Mode is active) |\n\n### Right-click a Markdown file in the file explorer\n\n| Option | Action |\n|--------|--------|\n| Add to writing project | Open a project picker and add the file to the selected project |\n\n### Right-click a folder in the file explorer\n\n| Option | Action |\n|--------|--------|\n| Open in sidebar explorer | Open the folder in the Folder Sidebar Explorer panel |\n\n---\n\n## Commands Reference\n\nNo default hotkeys are assigned. All commands can be given a hotkey in **Settings \u2192 Hotkeys**.\n\n| Command | Description |\n|---------|-------------|\n| Open launcher | Open the launcher sidebar panel |\n| Open binder | Open the writing binder sidebar panel |\n| Open writing log | Open the daily writing log panel |\n| Toggle focus mode | Enable or disable focus mode |\n| Toggle typography mode | Enable or disable typography mode |\n| Switch to draft mode | Activate draft writing mode |\n| Switch to edit mode | Activate edit writing mode |\n| Switch to review mode | Activate review writing mode |\n| Start writing sprint | Open the sprint timer modal |\n| Export document | Export the current document |\n| Export project | Export the full project |\n| Preview compiled manuscript | Open the compile preview pane |\n| Publish to WordPress | Publish the current document to WordPress |\n| New writing project | Create a new writing project |\n| Open writing dashboard | Open the statistics dashboard |\n| Open targets dashboard | Open the word count targets panel |\n| Set word count goal | Set a per-document word count goal |\n| Open folder in sidebar explorer | Search and open a vault folder in the sidebar |\n\n---\n\n## Ribbon Icon\n\nWriting Studio adds a single icon to the Obsidian ribbon.\n\n| Icon | Action |\n|------|--------|\n| Feather | Open the Writing Studio Launcher panel |\n\nAll other features are accessible from the Launcher panel, the command palette, context menus, or assigned hotkeys.\n\n---\n\n## Settings Overview\n\nOpen via **Settings \u2192 Writing Studio**.\n\n| Tab | What it controls |\n|-----|-----------------|\n| General | Open on startup, default project folder, author name, document type, frontmatter auto-update |\n| Focus mode | Focus unit, dim opacity, font override, sidebar behavior, typewriter scroll |\n| Typography | Font family, custom font name, line length, font size, line height, letter spacing, persistence |\n| Sprint & goals | Sprint duration, daily goal, sound notifications, history retention, inline banner |\n| Export | Format, paper size, font, font size, Pandoc path, EPUB language, EPUB cover |\n| Writing log | Append sprint summaries to Daily Note |\n| WordPress | Site credentials, default post status, wikilink handling |\n\n---\n\n## Requirements\n\n| Requirement | When needed |\n|-------------|-------------|\n| Obsidian 1.7.2 or later | Always |\n| Desktop (Windows, macOS, Linux) | Always \u2014 this plugin does not run on mobile |\n| Internet connection | First use of each Typography Mode font (cached after that) |\n| [Pandoc](https://pandoc.org/installing.html) | Export to PDF, DOCX, RTF, HTML, EPUB |\n| LaTeX (TeX Live / MiKTeX) | Export to PDF only |\n| WordPress 5.6+ with REST API enabled | WordPress publishing |\n| WordPress Application Password | WordPress publishing |\n";
 
 // src/HelpContent.ts
 var featuresIndex = README_default.indexOf("\n## Features");
@@ -7344,11 +7572,25 @@ var FolderSidebarView = class extends import_obsidian24.ItemView {
     this.searchResults = null;
     this.render();
   }
+  // ── Helpers ───────────────────────────────────────────────────────────────
+  getMainEditor() {
+    var _a;
+    const active = (_a = this.app.workspace.activeEditor) == null ? void 0 : _a.editor;
+    if (active)
+      return active;
+    for (const leaf of this.app.workspace.getLeavesOfType("markdown")) {
+      const view = leaf.view;
+      if (view instanceof import_obsidian24.MarkdownView)
+        return view.editor;
+    }
+    return null;
+  }
   // ── Navigation ────────────────────────────────────────────────────────────
   navigateTo(folder) {
     const current = this.currentFolder;
     if (!current)
       return;
+    this.hideTooltip();
     this.historyStack.push(current.path);
     this.currentFolder = folder;
     this.currentFile = null;
@@ -7357,6 +7599,7 @@ var FolderSidebarView = class extends import_obsidian24.ItemView {
     this.render();
   }
   openFile(file) {
+    this.hideTooltip();
     this.currentFile = file;
     this.render();
   }
@@ -7761,11 +8004,11 @@ var FolderSidebarView = class extends import_obsidian24.ItemView {
         capturedText = (_b = (_a = window.getSelection()) == null ? void 0 : _a.toString()) != null ? _b : "";
       });
       insertBtn.addEventListener("click", () => {
-        var _a;
         if (!capturedText)
           return;
-        const editor = (_a = this.app.workspace.activeEditor) == null ? void 0 : _a.editor;
+        const editor = this.getMainEditor();
         if (editor) {
+          editor.focus();
           editor.replaceSelection(capturedText);
           capturedText = "";
         }
@@ -8057,9 +8300,113 @@ var FolderPickerModal = class extends import_obsidian24.FuzzySuggestModal {
   }
 };
 
-// modals/AddToProjectModal.ts
+// src/WritingLogView.ts
 var import_obsidian25 = require("obsidian");
-var AddToProjectModal = class extends import_obsidian25.Modal {
+var WRITING_LOG_VIEW_TYPE = "writing-studio-writing-log";
+var WritingLogView = class extends import_obsidian25.ItemView {
+  constructor(leaf, plugin) {
+    super(leaf);
+    this.plugin = plugin;
+  }
+  getViewType() {
+    return WRITING_LOG_VIEW_TYPE;
+  }
+  getDisplayText() {
+    return "Writing log";
+  }
+  getIcon() {
+    return "calendar-days";
+  }
+  async onOpen() {
+    await this.render();
+  }
+  onClose() {
+    return Promise.resolve();
+  }
+  async refresh() {
+    await this.render();
+  }
+  async render() {
+    const root = this.containerEl.children[1];
+    root.empty();
+    root.addClass("ws-log-root");
+    const header = root.createDiv("ws-log-header");
+    header.createDiv({ text: "Writing log", cls: "ws-log-title" });
+    header.createDiv({
+      text: new Date().toLocaleDateString("en-US", {
+        weekday: "long",
+        year: "numeric",
+        month: "long",
+        day: "numeric"
+      }),
+      cls: "ws-log-date"
+    });
+    const project = this.plugin.projectManager.getActiveProject();
+    if (!project) {
+      root.createDiv({
+        text: "No project selected. Open the launcher and select a project to see your writing history.",
+        cls: "ws-log-empty-msg"
+      });
+      return;
+    }
+    const streak = await this.plugin.statsTracker.getStreak();
+    const streakEl = root.createDiv("ws-log-streak");
+    if (streak > 0) {
+      streakEl.textContent = `\u{1F525} ${streak}-day streak`;
+    } else {
+      streakEl.textContent = "Write today to start a streak";
+      streakEl.addClass("ws-log-streak--zero");
+    }
+    const sessionSection = root.createDiv("ws-log-section");
+    sessionSection.createDiv({ text: "This session", cls: "ws-log-section-label" });
+    const stats = this.plugin.statsTracker.getSessionStats();
+    const sessionWords = this.plugin.statsTracker.getTotalSessionWords();
+    const sessionGrid = sessionSection.createDiv("ws-log-today-grid");
+    const sessionItems = [
+      ["Session", sessionWords.toLocaleString()],
+      ["Sprint words", stats.wordsWritten.toLocaleString()],
+      ["Sprints", String(stats.sprintsCompleted)],
+      ["Minutes", String(stats.totalMinutes)]
+    ];
+    for (const [label, value] of sessionItems) {
+      const cell = sessionGrid.createDiv("ws-log-today-stat");
+      cell.createDiv({ text: value, cls: "ws-log-today-val" });
+      cell.createDiv({ text: label, cls: "ws-log-today-label" });
+    }
+    const histSection = root.createDiv("ws-log-section");
+    histSection.createDiv({ text: "Last 30 days", cls: "ws-log-section-label" });
+    const history = await this.plugin.statsTracker.getWritingHistory(30);
+    const maxWords = Math.max(...history.map((d) => d.wordsWritten), 1);
+    const todayStr = new Date().toISOString().split("T")[0];
+    const list = histSection.createDiv("ws-log-day-list");
+    for (const entry of [...history].reverse()) {
+      const row = list.createDiv("ws-log-day-row");
+      if (entry.wordsWritten === 0)
+        row.addClass("ws-log-day-row--empty");
+      const dateEl = row.createDiv("ws-log-day-date");
+      dateEl.textContent = entry.date === todayStr ? "Today" : new Date(`${entry.date}T12:00:00`).toLocaleDateString("en-US", { month: "short", day: "numeric" });
+      const barWrap = row.createDiv("ws-log-day-bar-wrap");
+      const bar = barWrap.createDiv("ws-log-day-bar");
+      bar.setCssProps({ "--ws-log-bar-width": `${Math.round(entry.wordsWritten / maxWords * 100)}%` });
+      const wordsEl = row.createDiv("ws-log-day-words");
+      if (entry.wordsWritten > 0) {
+        wordsEl.createSpan({ text: entry.wordsWritten.toLocaleString() });
+        if (entry.sprintsCompleted > 0) {
+          wordsEl.createSpan({
+            text: ` \xB7 ${entry.sprintsCompleted} sprint${entry.sprintsCompleted !== 1 ? "s" : ""}`,
+            cls: "ws-log-day-meta"
+          });
+        }
+      } else {
+        wordsEl.createSpan({ text: "\u2014" });
+      }
+    }
+  }
+};
+
+// modals/AddToProjectModal.ts
+var import_obsidian26 = require("obsidian");
+var AddToProjectModal = class extends import_obsidian26.Modal {
   constructor(app, plugin, file, onConfirm) {
     super(app);
     this.selectedProjectId = "";
@@ -8081,7 +8428,7 @@ var AddToProjectModal = class extends import_obsidian25.Modal {
     }
     this.selectedProjectId = projects[0].id;
     contentEl.createEl("p", { text: `File: ${this.file.path}`, cls: "ws-add-to-project-path" });
-    new import_obsidian25.Setting(contentEl).setName("Writing project").setDesc("What writing project do you wish to add this file to?").addDropdown((d) => {
+    new import_obsidian26.Setting(contentEl).setName("Writing project").setDesc("What writing project do you wish to add this file to?").addDropdown((d) => {
       projects.forEach((p) => {
         d.addOption(p.id, p.title);
       });
@@ -8157,10 +8504,11 @@ var DEFAULT_SETTINGS = {
   activeProjectId: null,
   currentWritingMode: "none"
 };
-var WritingStudioPlugin = class extends import_obsidian26.Plugin {
+var WritingStudioPlugin = class extends import_obsidian27.Plugin {
   constructor() {
     super(...arguments);
     this.wordCountUpdateTimer = null;
+    this.projectGoalUpdateTimer = null;
     this.bannerGeneration = 0;
     this.currentBannerGoal = 0;
   }
@@ -8181,15 +8529,18 @@ var WritingStudioPlugin = class extends import_obsidian26.Plugin {
     this.registerView(BINDER_VIEW_TYPE, (leaf) => new BinderView(leaf, this));
     this.registerView(COMPILE_PREVIEW_VIEW_TYPE, (leaf) => new CompilePreviewView(leaf, this));
     this.registerView(FOLDER_SIDEBAR_VIEW_TYPE, (leaf) => new FolderSidebarView(leaf));
+    this.registerView(WRITING_LOG_VIEW_TYPE, (leaf) => new WritingLogView(leaf, this));
     this.statusBarMode = this.addStatusBarItem();
     this.statusBarMode.addClass("ws-status-mode");
-    this.statusBarMode.addClass("ws-hidden");
     this.writingModes.setStatusBar(this.statusBarMode);
+    this.statusBarMode.addEventListener("click", (e) => this.showModeSwitcher(e));
     this.statusBarWordCount = this.addStatusBarItem();
     this.statusBarWordCount.addClass("ws-status-wordcount");
     this.statusBarSprint = this.addStatusBarItem();
     this.statusBarSprint.addClass("ws-status-sprint");
     this.sprintTimer.setStatusBar(this.statusBarSprint);
+    this.statusBarProjectGoal = this.addStatusBarItem();
+    this.statusBarProjectGoal.addClass("ws-status-project-goal", "ws-hidden");
     this.sprintTimer.setOnComplete(async (session) => {
       this.statsTracker.recordSprint(session);
       const project = this.projectManager.getActiveProject();
@@ -8294,6 +8645,13 @@ var WritingStudioPlugin = class extends import_obsidian26.Plugin {
       editorCallback: (_editor, view) => this.setWordCountGoal(view.file)
     });
     this.addCommand({
+      id: "open-writing-log",
+      name: "Open writing log",
+      callback: () => {
+        void this.openWritingLog();
+      }
+    });
+    this.addCommand({
       id: "open-folder-sidebar",
       name: "Open folder in sidebar explorer",
       callback: () => {
@@ -8321,7 +8679,7 @@ var WritingStudioPlugin = class extends import_obsidian26.Plugin {
     );
     this.registerEvent(
       this.app.workspace.on("file-menu", (menu, file) => {
-        if (file instanceof import_obsidian26.TFile && file.extension === "md") {
+        if (file instanceof import_obsidian27.TFile && file.extension === "md") {
           menu.addItem((i) => i.setTitle("Writing studio options").setSection("writing-studio").setDisabled(true));
           menu.addItem(
             (i) => i.setTitle("Add to writing project").setIcon("book-open").setSection("writing-studio").onClick(() => {
@@ -8329,7 +8687,7 @@ var WritingStudioPlugin = class extends import_obsidian26.Plugin {
             })
           );
         }
-        if (file instanceof import_obsidian26.TFolder) {
+        if (file instanceof import_obsidian27.TFolder) {
           menu.addItem((i) => i.setTitle("Writing studio options").setSection("writing-studio").setDisabled(true));
           menu.addItem(
             (i) => i.setTitle("Open in sidebar explorer").setIcon("folder").setSection("writing-studio").onClick(() => {
@@ -8341,9 +8699,10 @@ var WritingStudioPlugin = class extends import_obsidian26.Plugin {
     );
     this.registerEvent(
       this.app.vault.on("modify", (file) => {
-        if (file instanceof import_obsidian26.TFile) {
+        if (file instanceof import_obsidian27.TFile) {
           this.fmManager.scheduleUpdate(file);
           this.scheduleWordCountUpdate();
+          this.scheduleProjectGoalUpdate();
         }
       })
     );
@@ -8352,6 +8711,7 @@ var WritingStudioPlugin = class extends import_obsidian26.Plugin {
         this.updateWordCount();
         void this.showInlineGoalBanner();
         void this.refreshLauncher();
+        void this.updateProjectGoalBar();
       })
     );
     this.addSettingTab(new WritingStudioSettingsTab(this.app, this));
@@ -8372,6 +8732,9 @@ var WritingStudioPlugin = class extends import_obsidian26.Plugin {
     this.fmManager.destroy();
     if (this.wordCountUpdateTimer) {
       activeWindow.clearTimeout(this.wordCountUpdateTimer);
+    }
+    if (this.projectGoalUpdateTimer) {
+      activeWindow.clearTimeout(this.projectGoalUpdateTimer);
     }
     activeDocument.querySelectorAll(".ws-inline-goal-banner").forEach((el) => el.remove());
   }
@@ -8456,12 +8819,43 @@ var WritingStudioPlugin = class extends import_obsidian26.Plugin {
     leaf.view.setRootFolder(folder);
     void this.app.workspace.revealLeaf(leaf);
   }
+  async openWritingLog() {
+    const existing = this.app.workspace.getLeavesOfType(WRITING_LOG_VIEW_TYPE);
+    if (existing.length > 0) {
+      void this.app.workspace.revealLeaf(existing[0]);
+      return;
+    }
+    const leaf = this.app.workspace.getLeftLeaf(false);
+    if (leaf) {
+      await leaf.setViewState({ type: WRITING_LOG_VIEW_TYPE, active: true });
+      void this.app.workspace.revealLeaf(leaf);
+    }
+  }
+  async updateProjectGoalBar() {
+    var _a, _b;
+    const project = this.projectManager.getActiveProject();
+    const goal = (_b = (_a = project == null ? void 0 : project.goals) == null ? void 0 : _a.totalWordCount) != null ? _b : 0;
+    if (!project || goal <= 0) {
+      this.statusBarProjectGoal.addClass("ws-hidden");
+      return;
+    }
+    const total = await this.statsTracker.getTotalWordCount();
+    this.statusBarProjectGoal.setText(`${total.toLocaleString()} / ${goal.toLocaleString()} project words`);
+    this.statusBarProjectGoal.removeClass("ws-hidden");
+  }
+  scheduleProjectGoalUpdate() {
+    if (this.projectGoalUpdateTimer)
+      activeWindow.clearTimeout(this.projectGoalUpdateTimer);
+    this.projectGoalUpdateTimer = window.setTimeout(() => {
+      void this.updateProjectGoalBar();
+    }, 5e3);
+  }
   publishCurrentFile() {
     const leaf = this.app.workspace.getMostRecentLeaf();
     const view = leaf == null ? void 0 : leaf.view;
-    const file = view instanceof import_obsidian26.MarkdownView ? view.file : null;
-    if (!(file instanceof import_obsidian26.TFile)) {
-      new import_obsidian26.Notice("No Markdown file is currently open.");
+    const file = view instanceof import_obsidian27.MarkdownView ? view.file : null;
+    if (!(file instanceof import_obsidian27.TFile)) {
+      new import_obsidian27.Notice("No Markdown file is currently open.");
       return;
     }
     new PublishModal(this.app, this, file.path).open();
@@ -8472,7 +8866,7 @@ var WritingStudioPlugin = class extends import_obsidian26.Plugin {
     new WordCountGoalModal(this.app, this, file).open();
   }
   showModeSwitcher(e) {
-    const menu = new import_obsidian26.Menu();
+    const menu = new import_obsidian27.Menu();
     menu.addItem((i) => i.setTitle("\u270D draft mode").setIcon("pencil").onClick(() => this.writingModes.switchMode("draft")));
     menu.addItem((i) => i.setTitle("\u270E edit mode").setIcon("edit-3").onClick(() => this.writingModes.switchMode("edit")));
     menu.addItem((i) => i.setTitle("\u{1F441} review mode").setIcon("eye").onClick(() => this.writingModes.switchMode("review")));
@@ -8481,7 +8875,7 @@ var WritingStudioPlugin = class extends import_obsidian26.Plugin {
     menu.showAtMouseEvent(e);
   }
   showFontPicker(e) {
-    const menu = new import_obsidian26.Menu();
+    const menu = new import_obsidian27.Menu();
     TYPOGRAPHY_FONT_OPTIONS.forEach(({ key, label }) => {
       menu.addItem((i) => {
         i.setTitle(label).onClick(() => {
@@ -8499,7 +8893,7 @@ var WritingStudioPlugin = class extends import_obsidian26.Plugin {
   addFileToProject(file) {
     const projects = this.projectManager.getProjects();
     if (projects.length === 0) {
-      new import_obsidian26.Notice("No writing projects found. Create a project first.");
+      new import_obsidian27.Notice("No writing projects found. Create a project first.");
       return;
     }
     new AddToProjectModal(this.app, this, file, async (projectId) => {
@@ -8519,7 +8913,7 @@ var WritingStudioPlugin = class extends import_obsidian26.Plugin {
       binder.items.push(item);
       await this.projectManager.saveBinder(binder);
       await this.refreshBinder();
-      new import_obsidian26.Notice(`Added "${file.basename}" to ${project.title}`);
+      new import_obsidian27.Notice(`Added "${file.basename}" to ${project.title}`);
     }).open();
   }
   scheduleWordCountUpdate() {
@@ -8536,7 +8930,7 @@ var WritingStudioPlugin = class extends import_obsidian26.Plugin {
       return;
     }
     const view = leaf.view;
-    if (!(view instanceof import_obsidian26.MarkdownView)) {
+    if (!(view instanceof import_obsidian27.MarkdownView)) {
       this.statusBarWordCount.textContent = "";
       return;
     }
@@ -8547,15 +8941,21 @@ var WritingStudioPlugin = class extends import_obsidian26.Plugin {
     }
     const content = editor.getValue();
     const wc = this.fmManager.countWords(content);
+    const file = view.file;
+    let sessionDelta = 0;
+    if (file) {
+      this.statsTracker.updateFileWordCount(file.path, wc);
+      sessionDelta = this.statsTracker.getSessionDelta(file.path);
+    }
     const fm = this.fmManager.parseFrontmatter(content);
     const fmGoal = fm == null ? void 0 : fm["word-count-goal"];
+    const deltaStr = sessionDelta > 0 ? ` (+${sessionDelta})` : "";
     if (fmGoal && fmGoal > 0) {
-      this.statusBarWordCount.textContent = `${wc} / ${fmGoal} words`;
+      this.statusBarWordCount.textContent = `${wc} / ${fmGoal} words${deltaStr}`;
     } else {
-      this.statusBarWordCount.textContent = `${wc} words`;
+      this.statusBarWordCount.textContent = `${wc} words${deltaStr}`;
     }
     this.focusMode.updateToolbarWordCount(wc);
-    const file = view.file;
     if (file) {
       for (const bl of this.app.workspace.getLeavesOfType(BINDER_VIEW_TYPE)) {
         if (bl.view instanceof BinderView) {
@@ -8589,7 +8989,7 @@ var WritingStudioPlugin = class extends import_obsidian26.Plugin {
     if (!leaf)
       return;
     const view = leaf.view;
-    if (!(view instanceof import_obsidian26.MarkdownView))
+    if (!(view instanceof import_obsidian27.MarkdownView))
       return;
     const file = view.file;
     if (!file)
@@ -8632,7 +9032,7 @@ var WritingStudioPlugin = class extends import_obsidian26.Plugin {
   registerIcons() {
   }
 };
-var SprintSummaryModal = class extends import_obsidian26.Modal {
+var SprintSummaryModal = class extends import_obsidian27.Modal {
   constructor(app, session) {
     super(app);
     this.session = session;
@@ -8663,7 +9063,7 @@ var SprintSummaryModal = class extends import_obsidian26.Modal {
     this.contentEl.empty();
   }
 };
-var WordCountGoalModal = class extends import_obsidian26.Modal {
+var WordCountGoalModal = class extends import_obsidian27.Modal {
   constructor(app, plugin, file) {
     super(app);
     this.goal = 0;
@@ -8678,7 +9078,7 @@ var WordCountGoalModal = class extends import_obsidian26.Modal {
     const content = await this.app.vault.read(this.file);
     const fm = this.plugin.fmManager.parseFrontmatter(content);
     this.goal = (fm == null ? void 0 : fm["word-count-goal"]) || 0;
-    new import_obsidian26.Setting(contentEl).setName("Word count goal").setDesc("Target word count for this document. Set to 0 to remove.").addText((t) => t.setValue(String(this.goal || "")).setPlaceholder("E.g. 1500").onChange((v) => {
+    new import_obsidian27.Setting(contentEl).setName("Word count goal").setDesc("Target word count for this document. Set to 0 to remove.").addText((t) => t.setValue(String(this.goal || "")).setPlaceholder("E.g. 1500").onChange((v) => {
       this.goal = parseInt(v) || 0;
     }));
     const btnRow = contentEl.createDiv("ws-modal-btn-row");

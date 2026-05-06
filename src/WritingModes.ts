@@ -15,6 +15,7 @@ export class WritingModes {
 
   setStatusBar(el: HTMLElement): void {
     this.statusBarEl = el;
+    this.updateStatusBar();
   }
 
   getCurrentMode(): WritingModeType {
@@ -89,13 +90,13 @@ export class WritingModes {
   private updateStatusBar(): void {
     if (!this.statusBarEl) return;
     const labels: Record<WritingModeType, string> = {
-      draft: '✍ Draft',
-      edit: '✎ Edit',
-      review: '👁 Review',
-      none: '',
+      draft: '✍ draft',
+      edit: '✎ edit',
+      review: '👁 review',
+      none: '— mode',
     };
-    this.statusBarEl.textContent = labels[this.currentMode] || '';
-    this.statusBarEl.toggleClass('ws-hidden', this.currentMode === 'none');
+    this.statusBarEl.textContent = labels[this.currentMode];
+    this.statusBarEl.toggleClass('ws-status-mode--active', this.currentMode !== 'none');
   }
 
   restore(): void {
