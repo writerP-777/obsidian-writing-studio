@@ -1429,3 +1429,171 @@
 .ws-breadcrumb-link:hover { text-decoration: underline; }
 
 .ws-breadcrumb-sep { color: var(--text-muted); }
+
+/* ── Search + sort toolbar ───────────────────────────────────────── */
+.ws-folder-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  flex-shrink: 0;
+}
+
+.ws-folder-search-wrap {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  background: var(--background-modifier-form-field);
+  border: 1px solid var(--background-modifier-border);
+  border-radius: 4px;
+  padding: 2px 6px;
+  min-width: 0;
+}
+
+.ws-folder-search-icon {
+  display: flex;
+  align-items: center;
+  color: var(--text-muted);
+  flex-shrink: 0;
+}
+
+.ws-folder-search-icon svg {
+  width: 12px;
+  height: 12px;
+}
+
+.ws-folder-search-input {
+  flex: 1;
+  border: none;
+  background: transparent;
+  outline: none;
+  font-size: var(--font-ui-small);
+  color: var(--text-normal);
+  padding: 0;
+  min-width: 0;
+}
+
+.ws-folder-search-clear {
+  color: var(--text-muted);
+  cursor: pointer;
+  font-size: 14px;
+  line-height: 1;
+  flex-shrink: 0;
+}
+
+.ws-folder-search-clear:hover { color: var(--text-normal); }
+
+.ws-folder-sort-select {
+  font-size: var(--font-ui-small);
+  background: var(--background-modifier-form-field);
+  border: 1px solid var(--background-modifier-border);
+  border-radius: 4px;
+  color: var(--text-normal);
+  padding: 2px 4px;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+/* ── File preview — selectable content ──────────────────────────── */
+.ws-folder-content-selectable {
+  user-select: text;
+  cursor: text;
+}
+
+/* ── Insert selection button ─────────────────────────────────────── */
+.ws-folder-insert-btn { margin-left: auto; }
+
+/* ── Hover info tooltip ──────────────────────────────────────────── */
+.ws-info-tooltip {
+  position: fixed;
+  z-index: 9999;
+  max-width: 280px;
+  background: var(--background-primary);
+  border: 1px solid var(--background-modifier-border);
+  border-radius: 6px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+  padding: 10px 12px;
+  pointer-events: none;
+}
+
+.ws-tooltip-name {
+  font-weight: 600;
+  font-size: var(--font-ui-small);
+  color: var(--text-normal);
+  margin-bottom: 6px;
+  word-break: break-word;
+}
+
+.ws-tooltip-divider {
+  border-top: 1px solid var(--background-modifier-border);
+  margin-bottom: 6px;
+}
+
+.ws-tooltip-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  font-size: var(--font-ui-smaller);
+  line-height: 1.6;
+}
+
+.ws-tooltip-label {
+  color: var(--text-muted);
+  flex-shrink: 0;
+}
+
+.ws-tooltip-value {
+  color: var(--text-normal);
+  text-align: right;
+}
+
+/* ── Search match highlight ──────────────────────────────────────── */
+.ws-search-highlight {
+  background: var(--text-highlight-bg);
+  color: var(--text-normal);
+  border-radius: 2px;
+  padding: 0 1px;
+}
+
+/* ── Search result item layout ───────────────────────────────────── */
+.ws-folder-item--column {
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2px;
+  padding: 6px 12px;
+}
+
+.ws-folder-item-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+}
+
+.ws-folder-item-label {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.ws-folder-match-badge {
+  font-size: 10px;
+  padding: 1px 5px;
+  border-radius: 3px;
+  background: var(--background-modifier-border);
+  color: var(--text-muted);
+  flex-shrink: 0;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.ws-folder-item-snippet {
+  font-size: var(--font-ui-smaller);
+  color: var(--text-muted);
+  padding-left: 22px;
+  line-height: 1.4;
+  word-break: break-word;
+}

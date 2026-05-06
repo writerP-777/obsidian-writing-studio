@@ -275,26 +275,72 @@ Publish the current Markdown file directly to one or more WordPress sites using 
 
 ### Folder Sidebar Explorer
 
-The Folder Sidebar Explorer opens a navigable folder tree in the right sidebar. You can browse into subfolders, preview files without opening them in a new tab, and navigate back through your history.
+The Folder Sidebar Explorer opens a navigable folder tree in a sidebar panel. You can browse subfolders, search by name or file content, sort the listing, preview files inline, and insert copied text directly into the active editor.
 
 **To open:**
 - Use the command **Open folder in sidebar explorer** from the command palette.
 - Right-click any folder in the file explorer and choose **Open in sidebar explorer** under **Writing studio options**.
 - Assign a hotkey in Settings → Hotkeys.
 
-**Panel features:**
+**Browsing and navigation:**
 
 | Feature | How to use |
 |---------|-----------|
 | Browse into a subfolder | Click the folder |
-| Preview a Markdown file | Click the file — it renders inline |
+| Preview a Markdown file | Click the file — renders inline |
 | Preview an image | Click the file — displayed inline |
 | Preview audio | Click the file — player appears inline |
 | Other file types | Click the file — an **Open in editor** button appears |
-| Go back | Click **← back**, or press `Backspace` when the list is focused |
+| Go back | Click **← back**, or press `Backspace` when the list has keyboard focus |
 | Return to root folder | Click **⌂ root** |
 | Keyboard navigation | Tab to focus the list, then `↑` / `↓` to move, `Enter` to open, `Backspace` to go back |
-| Breadcrumb navigation | Click any segment in the breadcrumb trail to jump to that folder |
+| Breadcrumb navigation | Click any segment in the breadcrumb trail to jump directly to that folder |
+
+**Search:**
+
+A search bar appears at the top of the folder list. Type your query and press **Enter** to run the search.
+
+- Searches **both folder/file names and file contents** (`.md` and `.txt` files).
+- Frontmatter is excluded from content search to avoid false positives from YAML fields.
+- Name matches show the matched term highlighted in the result title.
+- Content matches show a text snippet around the match with the term highlighted, plus a **CONTENT** badge to distinguish them from name matches.
+- Results always search from the root folder you set, regardless of which subfolder you are currently browsing.
+- Click **×** to clear the search and return to the normal folder view.
+
+**Sort:**
+
+A sort dropdown sits next to the search bar. Options:
+
+| Option | Description |
+|--------|-------------|
+| Folders ↑ A-Z | Folders first, then files, both alphabetical (default) |
+| Folders ↑ Z-A | Folders first, then files, both reverse-alphabetical |
+| Name A-Z | All items alphabetical, folders and files mixed |
+| Name Z-A | All items reverse-alphabetical, mixed |
+| Newest first | Sort by last-modified date, newest at top |
+| Oldest first | Sort by last-modified date, oldest at top |
+
+**Copy content to the editor:**
+
+When a Markdown file is open in preview mode, its text is selectable. To insert a passage into the active editor:
+
+1. Select the text you want in the preview pane.
+2. Click the **↩ Insert selection** button in the nav bar.
+3. The selected text is inserted at the cursor position in the active editor.
+
+The preview is read-only — you cannot edit the file from the sidebar.
+
+**Hover tooltips:**
+
+Hover over any file or folder in the list to see an information card:
+
+| Item type | Information shown |
+|-----------|------------------|
+| Markdown / text file | Last modified date and time · File size · Word count (frontmatter excluded) |
+| Image / audio / other file | Last modified date and time · File size |
+| Folder | Total file count · Subfolder count |
+
+The word count updates asynchronously from Obsidian's file cache and appears within a moment of hover.
 
 ---
 
