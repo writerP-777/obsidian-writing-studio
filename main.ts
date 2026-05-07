@@ -285,8 +285,7 @@ export default class WritingStudioPlugin extends Plugin {
 
     this.addCommand({
       id: 'publish-wordpress',
-      // eslint-disable-next-line obsidianmd/ui/sentence-case
-      name: 'Publish to WordPress',
+      name: 'Publish to wordpress',
       callback: () => this.publishCurrentFile(),
     });
 

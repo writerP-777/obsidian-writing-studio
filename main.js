@@ -3825,7 +3825,7 @@ var ExportModal = class extends import_obsidian5.Modal {
       this.coverImagePath = v.trim();
     }));
     coverSetting.settingEl.toggleClass("ws-hidden", this.format !== "epub");
-    contactSetting = new import_obsidian5.Setting(contentEl).setName("Contact info (optional)").setDesc("Appears on the title page \u2014 name, email, or mailing address.").addTextArea((t) => t.setValue(this.authorContact).setPlaceholder("name@example.com").onChange((v) => {
+    contactSetting = new import_obsidian5.Setting(contentEl).setName("Contact info (optional)").setDesc("Appears on the title page \u2014 name, email, or mailing address.").addTextArea((t) => t.setValue(this.authorContact).setPlaceholder("Name, email, or mailing address").onChange((v) => {
       this.authorContact = v;
     }));
     contactSetting.settingEl.toggleClass("ws-hidden", this.format !== "manuscript");
@@ -8616,8 +8616,7 @@ var WritingStudioPlugin = class extends import_obsidian27.Plugin {
     });
     this.addCommand({
       id: "publish-wordpress",
-      // eslint-disable-next-line obsidianmd/ui/sentence-case
-      name: "Publish to WordPress",
+      name: "Publish to wordpress",
       callback: () => this.publishCurrentFile()
     });
     this.addCommand({
