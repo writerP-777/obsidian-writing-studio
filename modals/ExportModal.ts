@@ -59,7 +59,7 @@ export class ExportModal extends Modal {
       .setDesc('Appears on the title page — name, email, or mailing address.')
       .addTextArea(t => t
         .setValue(this.authorContact)
-        .setPlaceholder('name@example.com')
+        .setPlaceholder('Name, email, or mailing address')
         .onChange(v => { this.authorContact = v; }));
     contactSetting.settingEl.toggleClass('ws-hidden', this.format !== 'manuscript');
 
