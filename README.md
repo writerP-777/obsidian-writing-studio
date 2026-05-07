@@ -1,6 +1,6 @@
 # Obsidian Writing Studio
 
-**Version 2.1.7** · Desktop only
+**Version 2.1.9** · Desktop only
 
 Transform Obsidian into a professional writing environment. Writing Studio bundles a project binder, writing sprints, focus and typography modes, session word count tracking, manuscript export, WordPress publishing, a daily writing log, and a folder sidebar explorer into a single plugin.
 
@@ -14,6 +14,26 @@ Transform Obsidian into a professional writing environment. Writing Studio bundl
 4. In Obsidian, go to **Settings → Community Plugins**, find **Writing Studio**, and enable it.
 
 > **Building from source:** Clone the repository, run `npm install`, then `npm run build`. Copy the three output files as above.
+
+---
+
+## Security
+
+[![CodeQL](https://github.com/writerP-777/obsidian-writing-studio/actions/workflows/codeql.yml/badge.svg)](https://github.com/writerP-777/obsidian-writing-studio/actions/workflows/codeql.yml)
+[![OpenSSF Scorecard](https://api.securityscorecards.dev/projects/github.com/writerP-777/obsidian-writing-studio/badge)](https://securityscorecards.dev/viewer/?uri=github.com/writerP-777/obsidian-writing-studio)
+[![ESLint](https://github.com/writerP-777/obsidian-writing-studio/actions/workflows/eslint.yml/badge.svg)](https://github.com/writerP-777/obsidian-writing-studio/actions/workflows/eslint.yml)
+
+Every push and pull request is scanned automatically:
+
+| Tool | What it checks |
+|------|----------------|
+| **CodeQL** | Static analysis for security vulnerabilities (XSS, injection, unsafe patterns) in TypeScript/JavaScript source |
+| **OpenSSF Scorecard** | Supply-chain security posture: dependency hygiene, branch protection, signed releases, and more |
+| **ESLint** (`eslint-plugin-obsidianmd`) | Obsidian plugin guideline compliance — fails on any warning or error |
+
+Results are published to the **Security** tab of this repository (GitHub code scanning).
+
+For local development, a pre-commit hook runs ESLint (blocking) and a pre-push hook runs a full CodeQL scan (blocks the push if any HIGH or CRITICAL findings are present). Install the [CodeQL CLI](https://github.com/github/codeql-cli-binaries/releases) to enable local scanning (`winget install GitHub.CodeQL` on Windows).
 
 ---
 
@@ -289,9 +309,9 @@ Publish the current Markdown file directly to one or more WordPress sites using 
 
 **To publish:**
 - Right-click inside the editor and choose **Publish to WordPress** under **Writing studio options**.
-- Use the command **Publish to WordPress** from the command palette.
+- Use the command **Publish to wordpress** from the command palette.
 - Click the **Publish to WordPress** button in the Launcher panel.
-- Assign a hotkey to **Publish to WordPress** in Settings → Hotkeys.
+- Assign a hotkey to **Publish to wordpress** in Settings → Hotkeys.
 
 **Setting up a site (Settings → WordPress):**
 
@@ -437,7 +457,7 @@ No default hotkeys are assigned. All commands can be given a hotkey in **Setting
 | Export document | Export the current document |
 | Export project | Export the full project |
 | Preview compiled manuscript | Open the compile preview pane |
-| Publish to WordPress | Publish the current document to WordPress |
+| Publish to wordpress | Publish the current document to WordPress |
 | New writing project | Create a new writing project |
 | Open writing dashboard | Open the statistics dashboard |
 | Open targets dashboard | Open the word count targets panel |
@@ -471,26 +491,6 @@ Open via **Settings → Writing Studio**.
 | Export | Format, paper size, font, font size, Pandoc path, EPUB language, EPUB cover |
 | Writing log | Append sprint summaries to Daily Note |
 | WordPress | Site credentials, default post status, wikilink handling |
-
----
-
-## Security
-
-[![CodeQL](https://github.com/writerP-777/obsidian-writing-studio/actions/workflows/codeql.yml/badge.svg)](https://github.com/writerP-777/obsidian-writing-studio/actions/workflows/codeql.yml)
-[![OpenSSF Scorecard](https://api.securityscorecards.dev/projects/github.com/writerP-777/obsidian-writing-studio/badge)](https://securityscorecards.dev/viewer/?uri=github.com/writerP-777/obsidian-writing-studio)
-[![ESLint](https://github.com/writerP-777/obsidian-writing-studio/actions/workflows/eslint.yml/badge.svg)](https://github.com/writerP-777/obsidian-writing-studio/actions/workflows/eslint.yml)
-
-Every push and pull request is scanned automatically:
-
-| Tool | What it checks |
-|------|----------------|
-| **CodeQL** | Static analysis for security vulnerabilities (XSS, injection, unsafe patterns) in TypeScript/JavaScript source |
-| **OpenSSF Scorecard** | Supply-chain security posture: dependency hygiene, branch protection, signed releases, and more |
-| **ESLint** (`eslint-plugin-obsidianmd`) | Obsidian plugin guideline compliance — fails on any warning or error |
-
-Results are published to the **Security** tab of this repository (GitHub code scanning).
-
-For local development, a pre-commit hook runs ESLint (blocking) and a pre-push hook runs a full CodeQL scan (blocks the push if any HIGH or CRITICAL findings are present). Install the [CodeQL CLI](https://github.com/github/codeql-cli-binaries/releases) to enable local scanning (`winget install GitHub.CodeQL` on Windows).
 
 ---
 
