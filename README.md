@@ -1,6 +1,6 @@
 # Obsidian Writing Studio
 
-**Version 2.1.8** · Desktop only
+**Version 2.1.9** · Desktop only
 
 Transform Obsidian into a professional writing environment. Writing Studio bundles a project binder, writing sprints, focus and typography modes, session word count tracking, manuscript export, WordPress publishing, a daily writing log, and a folder sidebar explorer into a single plugin.
 

@@ -571,9 +571,9 @@ export default class WritingStudioPlugin extends Plugin {
 
   private showModeSwitcher(e: MouseEvent): void {
     const menu = new Menu();
-    menu.addItem(i => i.setTitle('✍ Draft mode').setIcon('pencil').onClick(() => this.writingModes.switchMode('draft')));
+    menu.addItem(i => i.setTitle('✍ draft mode').setIcon('pencil').onClick(() => this.writingModes.switchMode('draft')));
     menu.addItem(i => i.setTitle('✎ edit mode').setIcon('edit-3').onClick(() => this.writingModes.switchMode('edit')));
-    menu.addItem(i => i.setTitle('👁 Review mode').setIcon('eye').onClick(() => this.writingModes.switchMode('review')));
+    menu.addItem(i => i.setTitle('👁 review mode').setIcon('eye').onClick(() => this.writingModes.switchMode('review')));
     menu.addSeparator();
     menu.addItem(i => i.setTitle('Normal (no mode)').onClick(() => this.writingModes.switchMode('none')));
     menu.showAtMouseEvent(e);

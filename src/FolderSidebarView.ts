@@ -535,7 +535,7 @@ export class FolderSidebarView extends ItemView {
     // "Insert selection" button — only in file preview mode
     if (this.currentFile) {
       const insertBtn = navRow.createEl('button', {
-        text: '↩ Insert selection',
+        text: '↩ insert selection',
         cls: 'ws-folder-nav-btn ws-folder-insert-btn',
       });
 
