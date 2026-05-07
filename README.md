@@ -1,6 +1,6 @@
 # Obsidian Writing Studio
 
-**Version 2.1.7** · Desktop only
+**Version 2.1.8** · Desktop only
 
 Transform Obsidian into a professional writing environment. Writing Studio bundles a project binder, writing sprints, focus and typography modes, session word count tracking, manuscript export, WordPress publishing, a daily writing log, and a folder sidebar explorer into a single plugin.
 
@@ -309,9 +309,9 @@ Publish the current Markdown file directly to one or more WordPress sites using 
 
 **To publish:**
 - Right-click inside the editor and choose **Publish to WordPress** under **Writing studio options**.
-- Use the command **Publish to WordPress** from the command palette.
+- Use the command **Publish to wordpress** from the command palette.
 - Click the **Publish to WordPress** button in the Launcher panel.
-- Assign a hotkey to **Publish to WordPress** in Settings → Hotkeys.
+- Assign a hotkey to **Publish to wordpress** in Settings → Hotkeys.
 
 **Setting up a site (Settings → WordPress):**
 
@@ -457,7 +457,7 @@ No default hotkeys are assigned. All commands can be given a hotkey in **Setting
 | Export document | Export the current document |
 | Export project | Export the full project |
 | Preview compiled manuscript | Open the compile preview pane |
-| Publish to WordPress | Publish the current document to WordPress |
+| Publish to wordpress | Publish the current document to WordPress |
 | New writing project | Create a new writing project |
 | Open writing dashboard | Open the statistics dashboard |
 | Open targets dashboard | Open the word count targets panel |
