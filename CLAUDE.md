@@ -116,3 +116,11 @@ Default label vocabulary (needs-triage, needs-info, ready-for-agent, ready-for-h
 
 Single-context layout — one `CONTEXT.md` + `docs/adr/` at the repo root. See `docs/agents/domain.md`.
 
+## Session notes
+
+At the end of every session, always invoke `/end-session` before stopping.
+
+If the session appears to be wrapping up (user says "done", "that's it", "bye", "stop", "exit", or goes quiet after completing a task), proactively suggest running `/end-session`.
+
+Session notes are saved to: `C:\Users\donpu\Vaults\Pucik Notes\Obsidian Writing Studio\`
+
