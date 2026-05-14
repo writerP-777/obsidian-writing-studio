@@ -79,9 +79,22 @@
 }
 
 /* ── Hidden utility ─────────────────────────────────────────────── */
+/* !important is intentional: this is a programmatic show/hide toggle.
+   It must win regardless of whatever display value the element would
+   otherwise inherit from a theme or Obsidian's own stylesheet. */
 .ws-hidden { display: none !important; }
 
 /* ── Typography Mode ────────────────────────────────────────────── */
+/*
+ * Why !important on every typography override:
+ * Plugin stylesheets are injected before community themes in Obsidian's
+ * <head>. Themes therefore win any cascade tie by source order. Popular
+ * themes (Minimal, AnuPpuccin, etc.) target .cm-editor and
+ * .markdown-preview-section with selectors of equal or greater specificity,
+ * so higher-specificity selectors alone cannot reliably override them.
+ * !important is the only way to honour the user's explicit choice to activate
+ * Typography Mode regardless of which theme is installed.
+ */
 .writing-studio-typography .cm-editor,
 .writing-studio-typography .cm-content {
   font-family: var(--ws-typo-font) !important;
@@ -1224,7 +1237,10 @@
  */
 
 /* box-sizing + height:auto on every interactive element — prevents theme
-   fixed-height rules from vertically clipping icon+label stacked buttons */
+   fixed-height rules from vertically clipping icon+label stacked buttons.
+   !important is required: themes commonly use higher-specificity rules like
+   ".workspace button { height: 2rem; }" that would otherwise win the cascade
+   over our ".ws-launcher button" selector. */
 .ws-launcher button,
 .ws-launcher select {
   box-sizing: border-box !important;
