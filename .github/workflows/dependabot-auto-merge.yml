@@ -1,12 +1,13 @@
 name: Dependabot auto-merge
 on: pull_request
 
-permissions:
-  contents: write
-  pull-requests: write
+permissions: {}
 
 jobs:
   dependabot:
+    permissions:
+      contents: write
+      pull-requests: write
     runs-on: ubuntu-latest
     if: github.actor == 'dependabot[bot]' && (contains(github.event.pull_request.title, 'minor') || contains(github.event.pull_request.title, 'patch'))
     steps:
