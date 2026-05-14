@@ -12,6 +12,7 @@ fonts/
 docs/obsidian-dev-docs/
 
 # Build artifacts
+main.js
 *.js.map
 
 # OS files
