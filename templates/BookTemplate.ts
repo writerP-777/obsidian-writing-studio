@@ -88,7 +88,7 @@ tags: [writing-studio]
 `;
   }
 
-  private static chapter1Doc(projectTitle: string, date: string): string {
+  private static chapter1Doc(_projectTitle: string, date: string): string {
     return `---
 title: "Chapter 1"
 type: chapter
