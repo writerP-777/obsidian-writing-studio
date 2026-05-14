@@ -28,6 +28,6 @@
   "author": "Don Pucik",
   "license": "MIT",
   "dependencies": {
-    "jszip": "^3.10.1"
+    "fflate": "^0.8.2"
   }
 }

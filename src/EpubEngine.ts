@@ -3,7 +3,7 @@ import { App, TFile } from 'obsidian';
 interface FileSystemAdapter {
   getFullPath?(vaultPath: string): string;
 }
-import JSZip from 'jszip';
+import { zipSync, strToU8, type ZipOptions } from 'fflate';
 import { promises as fsp } from 'fs';
 import type WritingStudioPlugin from '../main';
 
@@ -32,17 +32,14 @@ export class EpubEngine {
   }
 
   async build(opts: EpubBuildOptions, outputVaultPath: string): Promise<void> {
-    const zip = new JSZip();
     const uid = `urn:uuid:${this.uuid()}`;
     const modified = new Date().toISOString().replace(/\.\d{3}Z$/, 'Z');
 
-    // mimetype MUST be first entry and stored uncompressed per EPUB spec
-    zip.file('mimetype', 'application/epub+zip', { compression: 'STORE' });
-
-    // META-INF
-    zip.folder('META-INF')!.file('container.xml', this.containerXml());
-
-    const oebps = zip.folder('OEBPS')!;
+    // Entries are written in insertion order — mimetype MUST be first and
+    // stored uncompressed (level 0) per the EPUB OCF spec.
+    const entries: Record<string, [Uint8Array, ZipOptions]> = {};
+    entries['mimetype'] = [strToU8('application/epub+zip'), { level: 0 }];
+    entries['META-INF/container.xml'] = [strToU8(this.containerXml()), { level: 6 }];
 
     // Optional cover image
     let coverImageFile: string | null = null;
@@ -54,41 +51,25 @@ export class EpubEngine {
         const isPng = opts.coverImagePath.toLowerCase().endsWith('.png');
         coverImageMime = isPng ? 'image/png' : 'image/jpeg';
         coverImageFile = isPng ? 'cover.png' : 'cover.jpg';
-        oebps.file(coverImageFile, raw);
+        entries[`OEBPS/${coverImageFile}`] = [new Uint8Array(raw), { level: 6 }];
       }
     }
 
-    // Cover page (image or generated text cover)
-    oebps.file('cover.xhtml', coverImageFile
+    entries['OEBPS/cover.xhtml'] = [strToU8(coverImageFile
       ? this.coverImageXhtml(coverImageFile)
-      : this.coverTextXhtml(opts.title, opts.author));
+      : this.coverTextXhtml(opts.title, opts.author)), { level: 6 }];
+    entries['OEBPS/style.css'] = [strToU8(this.stylesheet()), { level: 6 }];
 
-    // Stylesheet
-    oebps.file('style.css', this.stylesheet());
-
-    // Chapter files
     for (const ch of opts.chapters) {
-      oebps.file(`${ch.id}.xhtml`, this.chapterXhtml(ch.title, ch.htmlContent));
+      entries[`OEBPS/${ch.id}.xhtml`] = [strToU8(this.chapterXhtml(ch.title, ch.htmlContent)), { level: 6 }];
     }
 
-    // Navigation documents
-    oebps.file('nav.xhtml', this.navXhtml(opts.title, opts.chapters));
-    oebps.file('toc.ncx', this.tocNcx(uid, opts.title, opts.author, opts.chapters));
-    oebps.file('content.opf', this.contentOpf(uid, opts, modified, coverImageFile, coverImageMime));
-
-    // Generate ZIP as Uint8Array
-    const uint8 = await zip.generateAsync({
-      type: 'uint8array',
-      compression: 'DEFLATE',
-      compressionOptions: { level: 6 },
-    });
-
-    // Copy into a clean ArrayBuffer to eliminate any byteOffset from typed array views
-    const ab = new ArrayBuffer(uint8.byteLength);
-    new Uint8Array(ab).set(uint8);
+    entries['OEBPS/nav.xhtml'] = [strToU8(this.navXhtml(opts.title, opts.chapters)), { level: 6 }];
+    entries['OEBPS/toc.ncx'] = [strToU8(this.tocNcx(uid, opts.title, opts.author, opts.chapters)), { level: 6 }];
+    entries['OEBPS/content.opf'] = [strToU8(this.contentOpf(uid, opts, modified, coverImageFile, coverImageMime)), { level: 6 }];
 
     const absPath = this.absPath(outputVaultPath);
-    await fsp.writeFile(absPath, Buffer.from(ab));
+    await fsp.writeFile(absPath, zipSync(entries));
   }
 
   // ── Helpers ────────────────────────────────────────────────────────────────
