@@ -24,11 +24,11 @@
 }
 
 .writing-studio-focus-mode .cm-line.cm-ws-focus-para {
-  opacity: 1 !important;
+  opacity: 1;
 }
 
 .writing-studio-focus-mode .cm-line.cm-activeLine {
-  opacity: 1 !important;
+  opacity: 1;
 }
 
 /* Focus floating toolbar */
@@ -1234,53 +1234,53 @@
 
 /* Grid action buttons — min-width:0 lets 1fr cells shrink below content size */
 .ws-launcher .ws-launcher-action-grid-btn {
-  min-width: 0 !important;
+  min-width: 0;
 }
 
 /* Grid label — align-self:stretch gets the full cell width inside a
    flex-column with align-items:center; then ellipsis can truncate */
 .ws-launcher .ws-launcher-grid-label {
-  overflow: hidden !important;
-  text-overflow: ellipsis !important;
-  white-space: nowrap !important;
-  width: 100% !important;
-  align-self: stretch !important;
-  text-align: center !important;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  width: 100%;
+  align-self: stretch;
+  text-align: center;
 }
 
 /* Mode buttons — flex:1 children need min-width:0 to shrink */
 .ws-launcher .ws-launcher-mode-btn {
-  min-width: 0 !important;
+  min-width: 0;
 }
 
 /* Mode label — it's a <span> (inline), so display:block is required for
    text-overflow:ellipsis to fire; align-self:stretch gives it full width */
 .ws-launcher .ws-mode-label {
-  display: block !important;
-  overflow: hidden !important;
-  text-overflow: ellipsis !important;
-  white-space: nowrap !important;
-  width: 100% !important;
-  align-self: stretch !important;
-  text-align: center !important;
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  width: 100%;
+  align-self: stretch;
+  text-align: center;
 }
 
 /* Full-width action buttons: Open Binder, Start Sprint, Pause, Stop */
 .ws-launcher .ws-launcher-action-btn {
-  overflow: hidden !important;
-  text-overflow: ellipsis !important;
-  white-space: nowrap !important;
-  box-sizing: border-box !important;
-  max-width: 100% !important;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  box-sizing: border-box;
+  max-width: 100%;
 }
 
 /* Quick-start preset pills */
 .ws-launcher .ws-launcher-preset-btn {
-  overflow: hidden !important;
-  text-overflow: ellipsis !important;
-  white-space: nowrap !important;
-  box-sizing: border-box !important;
-  max-width: 100% !important;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  box-sizing: border-box;
+  max-width: 100%;
 }
 
 /* ── Help Tab ───────────────────────────────────────────────────── */
