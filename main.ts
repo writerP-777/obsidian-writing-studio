@@ -341,9 +341,9 @@ export default class WritingStudioPlugin extends Plugin {
         menu.addItem(i => i.setTitle('Export this document').setIcon('download').setSection('writing-studio').onClick(() => new ExportModal(this.app, this).open()));
         menu.addItem(i => i.setTitle('Publish to wordpress').setIcon('globe').setSection('writing-studio').onClick(() => this.publishCurrentFile()));
         menu.addItem(i => i.setTitle('Set word count goal').setIcon('target').setSection('writing-studio').onClick(() => this.setWordCountGoal(view.file)));
-        menu.addItem(i => i.setTitle('Switch writing mode →').setIcon('layout-dashboard').setSection('writing-studio').onClick((e: MouseEvent) => this.showModeSwitcher(e)));
+        menu.addItem(i => i.setTitle('Switch writing mode →').setIcon('layout-dashboard').setSection('writing-studio').onClick((e: MouseEvent | KeyboardEvent) => this.showModeSwitcher(e)));
         if (this.typographyMode.isActive()) {
-          menu.addItem(i => i.setTitle('Typography font →').setIcon('type').setSection('writing-studio').onClick((e: MouseEvent) => this.showFontPicker(e)));
+          menu.addItem(i => i.setTitle('Typography font →').setIcon('type').setSection('writing-studio').onClick((e: MouseEvent | KeyboardEvent) => this.showFontPicker(e)));
         }
       })
     );
@@ -569,17 +569,17 @@ export default class WritingStudioPlugin extends Plugin {
     new WordCountGoalModal(this.app, this, file).open();
   }
 
-  private showModeSwitcher(e: MouseEvent): void {
+  private showModeSwitcher(e: MouseEvent | KeyboardEvent): void {
     const menu = new Menu();
     menu.addItem(i => i.setTitle('✍ draft mode').setIcon('pencil').onClick(() => this.writingModes.switchMode('draft')));
     menu.addItem(i => i.setTitle('✎ edit mode').setIcon('edit-3').onClick(() => this.writingModes.switchMode('edit')));
     menu.addItem(i => i.setTitle('👁 review mode').setIcon('eye').onClick(() => this.writingModes.switchMode('review')));
     menu.addSeparator();
     menu.addItem(i => i.setTitle('Normal (no mode)').onClick(() => this.writingModes.switchMode('none')));
-    menu.showAtMouseEvent(e);
+    if (e instanceof MouseEvent) menu.showAtMouseEvent(e);
   }
 
-  private showFontPicker(e: MouseEvent): void {
+  private showFontPicker(e: MouseEvent | KeyboardEvent): void {
     const menu = new Menu();
     TYPOGRAPHY_FONT_OPTIONS.forEach(({ key, label }) => {
       menu.addItem(i => {
@@ -591,7 +591,7 @@ export default class WritingStudioPlugin extends Plugin {
         if (this.settings.typographyFont === key) { i.setIcon('check'); }
       });
     });
-    menu.showAtMouseEvent(e);
+    if (e instanceof MouseEvent) menu.showAtMouseEvent(e);
   }
 
   private addFileToProject(file: TFile): void {

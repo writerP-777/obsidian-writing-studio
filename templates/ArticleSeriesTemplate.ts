@@ -79,7 +79,7 @@ tags: [writing-studio, series-meta]
 `;
   }
 
-  private static article1Doc(seriesTitle: string, date: string): string {
+  private static article1Doc(_seriesTitle: string, date: string): string {
     return `---
 title: "Article 1"
 type: article

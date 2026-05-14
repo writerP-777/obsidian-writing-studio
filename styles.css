@@ -24,11 +24,11 @@
 }
 
 .writing-studio-focus-mode .cm-line.cm-ws-focus-para {
-  opacity: 1 !important;
+  opacity: 1;
 }
 
 .writing-studio-focus-mode .cm-line.cm-activeLine {
-  opacity: 1 !important;
+  opacity: 1;
 }
 
 /* Focus floating toolbar */
@@ -79,9 +79,22 @@
 }
 
 /* ── Hidden utility ─────────────────────────────────────────────── */
+/* !important is intentional: this is a programmatic show/hide toggle.
+   It must win regardless of whatever display value the element would
+   otherwise inherit from a theme or Obsidian's own stylesheet. */
 .ws-hidden { display: none !important; }
 
 /* ── Typography Mode ────────────────────────────────────────────── */
+/*
+ * Why !important on every typography override:
+ * Plugin stylesheets are injected before community themes in Obsidian's
+ * <head>. Themes therefore win any cascade tie by source order. Popular
+ * themes (Minimal, AnuPpuccin, etc.) target .cm-editor and
+ * .markdown-preview-section with selectors of equal or greater specificity,
+ * so higher-specificity selectors alone cannot reliably override them.
+ * !important is the only way to honour the user's explicit choice to activate
+ * Typography Mode regardless of which theme is installed.
+ */
 .writing-studio-typography .cm-editor,
 .writing-studio-typography .cm-content {
   font-family: var(--ws-typo-font) !important;
@@ -834,7 +847,7 @@
   display: flex;
   flex-direction: column;
   gap: 0;
-  padding: 0 0 24px 0;
+  padding: 0 0 24px;
   overflow-y: auto;
   height: 100%;
   font-size: 13px;
@@ -1224,7 +1237,10 @@
  */
 
 /* box-sizing + height:auto on every interactive element — prevents theme
-   fixed-height rules from vertically clipping icon+label stacked buttons */
+   fixed-height rules from vertically clipping icon+label stacked buttons.
+   !important is required: themes commonly use higher-specificity rules like
+   ".workspace button { height: 2rem; }" that would otherwise win the cascade
+   over our ".ws-launcher button" selector. */
 .ws-launcher button,
 .ws-launcher select {
   box-sizing: border-box !important;
@@ -1234,53 +1250,53 @@
 
 /* Grid action buttons — min-width:0 lets 1fr cells shrink below content size */
 .ws-launcher .ws-launcher-action-grid-btn {
-  min-width: 0 !important;
+  min-width: 0;
 }
 
 /* Grid label — align-self:stretch gets the full cell width inside a
    flex-column with align-items:center; then ellipsis can truncate */
 .ws-launcher .ws-launcher-grid-label {
-  overflow: hidden !important;
-  text-overflow: ellipsis !important;
-  white-space: nowrap !important;
-  width: 100% !important;
-  align-self: stretch !important;
-  text-align: center !important;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  width: 100%;
+  align-self: stretch;
+  text-align: center;
 }
 
 /* Mode buttons — flex:1 children need min-width:0 to shrink */
 .ws-launcher .ws-launcher-mode-btn {
-  min-width: 0 !important;
+  min-width: 0;
 }
 
 /* Mode label — it's a <span> (inline), so display:block is required for
    text-overflow:ellipsis to fire; align-self:stretch gives it full width */
 .ws-launcher .ws-mode-label {
-  display: block !important;
-  overflow: hidden !important;
-  text-overflow: ellipsis !important;
-  white-space: nowrap !important;
-  width: 100% !important;
-  align-self: stretch !important;
-  text-align: center !important;
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  width: 100%;
+  align-self: stretch;
+  text-align: center;
 }
 
 /* Full-width action buttons: Open Binder, Start Sprint, Pause, Stop */
 .ws-launcher .ws-launcher-action-btn {
-  overflow: hidden !important;
-  text-overflow: ellipsis !important;
-  white-space: nowrap !important;
-  box-sizing: border-box !important;
-  max-width: 100% !important;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  box-sizing: border-box;
+  max-width: 100%;
 }
 
 /* Quick-start preset pills */
 .ws-launcher .ws-launcher-preset-btn {
-  overflow: hidden !important;
-  text-overflow: ellipsis !important;
-  white-space: nowrap !important;
-  box-sizing: border-box !important;
-  max-width: 100% !important;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  box-sizing: border-box;
+  max-width: 100%;
 }
 
 /* ── Help Tab ───────────────────────────────────────────────────── */
@@ -1335,13 +1351,13 @@
 .ws-folder-header {
   font-weight: bold;
   font-size: 1.1em;
-  padding: 12px 12px 2px 12px;
+  padding: 12px 12px 2px;
   color: var(--text-normal);
   flex-shrink: 0;
 }
 
 .ws-folder-breadcrumb {
-  padding: 4px 12px 6px 12px;
+  padding: 4px 12px 6px;
   font-size: var(--font-ui-small);
   color: var(--text-muted);
   display: flex;
@@ -1351,7 +1367,7 @@
 }
 
 .ws-folder-nav-row {
-  padding: 0 12px 8px 12px;
+  padding: 0 12px 8px;
   display: flex;
   gap: 8px;
   flex-shrink: 0;

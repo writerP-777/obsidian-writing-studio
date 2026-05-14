@@ -1,6 +1,6 @@
 {
   "name": "obsidian-writing-studio",
-  "version": "2.1.9",
+  "version": "2.1.10",
   "description": "Obsidian Writing Studio Plugin",
   "main": "main.js",
   "scripts": {
@@ -13,7 +13,6 @@
     "@codemirror/state": "^6.5.0",
     "@codemirror/view": "^6.38.6",
     "@types/node": "^25.7.0",
-    "builtin-modules": "5.2.0",
     "esbuild": "0.28.0",
     "eslint-plugin-obsidianmd": "^0.2.9",
     "obsidian": "latest",
@@ -29,6 +28,6 @@
   "author": "Don Pucik",
   "license": "MIT",
   "dependencies": {
-    "jszip": "^3.10.1"
+    "fflate": "^0.8.2"
   }
 }

@@ -4,7 +4,22 @@ All notable changes to Writing Studio are documented here.
 
 ---
 
-## [2.1.9] — Unreleased
+## [2.1.10]
+
+### Changed
+- Replaced `jszip` with `fflate` for EPUB export — removes bundled legacy polyfills (IE-era dynamic script creation) that triggered automated security scanner warnings; EPUB output is functionally identical
+- Removed `builtin-modules` dev dependency in favour of Node's native `module.builtinModules`
+
+### Fixed
+- `MenuItem.onClick` handler signatures updated to accept `MouseEvent | KeyboardEvent` per updated Obsidian API (affects "Switch writing mode" and "Typography font" context menu items)
+- TypeScript 6 compiler compatibility: added `ignoreDeprecations: "6.0"`, expanded `lib` to `ES2019`, added explicit `types: ["node"]`
+- Reduced `!important` declarations in `styles.css` from 46 to 19 — retained only where Obsidian theme cascade genuinely requires it, with inline comments explaining each case
+- Four CSS padding shorthands had a redundant trailing value (e.g. `0 0 24px 0` → `0 0 24px`)
+- Two unused template function parameters prefixed with `_` to satisfy ESLint convention
+
+---
+
+## [2.1.9]
 
 ### Fixed
 - Sentence case on six emoji-prefixed UI labels (mode switcher, binder, sprint timer controls, folder sidebar insert button) to satisfy Obsidian plugin store requirements
