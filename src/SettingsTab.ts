@@ -412,7 +412,7 @@ export class WritingStudioSettingsTab extends PluginSettingTab {
     new Setting(siteEl)
       .setName('Site URL')
       .addText(t => t
-        .setPlaceholder('https://yourblog.com')
+        .setPlaceholder('https://example.com')
         .setValue(site.url)
         .onChange(async v => { site.url = v; await this.plugin.saveSettings(); }));
 

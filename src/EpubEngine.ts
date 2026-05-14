@@ -103,6 +103,9 @@ export class EpubEngine {
 </container>`;
   }
 
+  // The xmlns URIs below (idpf.org, purl.org) are XML namespace identifiers
+  // mandated by the EPUB 3 specification. They are static strings embedded in
+  // the generated EPUB file — they are not HTTP endpoints and are never fetched.
   private contentOpf(
     uid: string,
     opts: EpubBuildOptions,
@@ -175,6 +178,8 @@ export class EpubEngine {
 </html>`;
   }
 
+  // daisy.org is an XML namespace identifier for the EPUB NCX format (EPUB 2
+  // back-compat). It is a static string in the generated file — never fetched.
   private tocNcx(uid: string, title: string, author: string, chapters: EpubChapter[]): string {
     let order = 1;
     const coverPoint = `<navPoint id="cover-page" playOrder="${order++}">
