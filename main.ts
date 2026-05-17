@@ -415,11 +415,11 @@ export default class WritingStudioPlugin extends Plugin {
     this.fmManager.destroy();
 
     if (this.wordCountUpdateTimer) {
-      activeWindow.clearTimeout(this.wordCountUpdateTimer);
+      window.clearTimeout(this.wordCountUpdateTimer);
     }
 
     if (this.projectGoalUpdateTimer) {
-      activeWindow.clearTimeout(this.projectGoalUpdateTimer);
+      window.clearTimeout(this.projectGoalUpdateTimer);
     }
 
     // Remove inline goal banners
@@ -547,7 +547,7 @@ export default class WritingStudioPlugin extends Plugin {
   }
 
   private scheduleProjectGoalUpdate(): void {
-    if (this.projectGoalUpdateTimer) activeWindow.clearTimeout(this.projectGoalUpdateTimer);
+    if (this.projectGoalUpdateTimer) window.clearTimeout(this.projectGoalUpdateTimer);
     this.projectGoalUpdateTimer = window.setTimeout(() => {
       void this.updateProjectGoalBar();
     }, 5000);
@@ -624,7 +624,7 @@ export default class WritingStudioPlugin extends Plugin {
   }
 
   private scheduleWordCountUpdate(): void {
-    if (this.wordCountUpdateTimer) activeWindow.clearTimeout(this.wordCountUpdateTimer);
+    if (this.wordCountUpdateTimer) window.clearTimeout(this.wordCountUpdateTimer);
     this.wordCountUpdateTimer = window.setTimeout(() => {
       this.updateWordCount();
     }, 1000);

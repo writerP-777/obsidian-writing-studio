@@ -26,9 +26,9 @@ export class FrontmatterManager {
     if (Date.now() - lastWrite < 2000) return;
 
     const existing = this.pendingUpdates.get(file.path);
-    if (existing) activeWindow.clearTimeout(existing);
+    if (existing) window.clearTimeout(existing);
 
-    const timer = activeWindow.setTimeout(() => {
+    const timer = window.setTimeout(() => {
       this.pendingUpdates.delete(file.path);
       void this.updateFrontmatter(file);
     }, 5000);
@@ -186,7 +186,7 @@ export class FrontmatterManager {
 
   destroy(): void {
     for (const timer of this.pendingUpdates.values()) {
-      activeWindow.clearTimeout(timer);
+      window.clearTimeout(timer);
     }
     this.pendingUpdates.clear();
   }
