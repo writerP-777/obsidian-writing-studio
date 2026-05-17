@@ -4,6 +4,14 @@ All notable changes to Writing Studio are documented here.
 
 ---
 
+## [2.1.11]
+
+### Fixed
+- Replaced `activeWindow.clearTimeout()`, `activeWindow.clearInterval()`, and `activeWindow.setTimeout()` with `window.*` equivalents across `main.ts`, `src/FrontmatterManager.ts`, `src/LauncherView.ts`, and `src/SprintTimer.ts` — eliminates 10 community plugin scorecard warnings
+- Replaced bare `requestAnimationFrame()` with `window.requestAnimationFrame()` in `src/FocusMode.ts`
+
+---
+
 ## [2.1.10]
 
 ### Changed
