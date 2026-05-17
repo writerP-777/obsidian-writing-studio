@@ -206,7 +206,7 @@ export class FocusMode {
 
   scrollToCursor(view: EditorView): void {
     const { head } = view.state.selection.main;
-    requestAnimationFrame(() => {
+    window.requestAnimationFrame(() => {
       const coords = view.coordsAtPos(head);
       if (!coords) return;
       const scrollEl = view.scrollDOM;

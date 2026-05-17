@@ -118,7 +118,7 @@ export class SprintTimer {
 
   private stopInterval(): void {
     if (this.intervalId !== null) {
-      activeWindow.clearInterval(this.intervalId);
+      window.clearInterval(this.intervalId);
       this.intervalId = null;
     }
   }

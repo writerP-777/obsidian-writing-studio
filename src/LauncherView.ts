@@ -39,7 +39,7 @@ export class LauncherView extends ItemView {
 
   onClose(): Promise<void> {
     if (this.refreshTimer !== null) {
-      activeWindow.clearInterval(this.refreshTimer);
+      window.clearInterval(this.refreshTimer);
       this.refreshTimer = null;
     }
     return Promise.resolve();
