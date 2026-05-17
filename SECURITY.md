@@ -49,9 +49,9 @@ Issues that are solely within Obsidian core, the operating system, or third-part
 
 To report a vulnerability privately:
 
-1. Navigate to the **Security** tab of this repository.
-2. Click **Report a vulnerability** to open a private advisory draft.
-3. Provide as much detail as possible, including:
+1. Open a private advisory draft at:
+   **https://github.com/writerP-777/obsidian-writing-studio/security/advisories/new**
+2. Provide as much detail as possible, including:
    - A clear description of the vulnerability
    - Steps to reproduce or a proof-of-concept
    - The potential impact and affected versions
