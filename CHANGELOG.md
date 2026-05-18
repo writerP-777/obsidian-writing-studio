@@ -4,6 +4,18 @@ All notable changes to Writing Studio are documented here.
 
 ---
 
+## [2.1.12]
+
+### Fixed
+- Replaced 18 `!important` declarations in `styles.css` with higher-specificity selectors — eliminates 18 community plugin scorecard CSS warnings
+  - Typography Mode overrides now use `body.writing-studio-typography` prefix (specificity `0,2,1`), beating theme selectors at `0,2,0` without `!important`
+  - Launcher button overrides now use `body .ws-launcher` prefix (specificity `0,1,2`), beating theme `.workspace button` at `0,1,1`
+
+### Changed
+- Added GitHub all-releases download count badge to README
+
+---
+
 ## [2.1.11]
 
 ### Fixed
