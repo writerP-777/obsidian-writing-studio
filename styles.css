@@ -86,38 +86,32 @@
 
 /* ── Typography Mode ────────────────────────────────────────────── */
 /*
- * Why !important on every typography override:
- * Plugin stylesheets are injected before community themes in Obsidian's
- * <head>. Themes therefore win any cascade tie by source order. Popular
- * themes (Minimal, AnuPpuccin, etc.) target .cm-editor and
- * .markdown-preview-section with selectors of equal or greater specificity,
- * so higher-specificity selectors alone cannot reliably override them.
- * !important is the only way to honour the user's explicit choice to activate
- * Typography Mode regardless of which theme is installed.
+ * Prefixing with "body" gives specificity (0,2,1), which beats theme
+ * selectors like ".theme-name .cm-editor" at (0,2,0) without !important.
  */
-.writing-studio-typography .cm-editor,
-.writing-studio-typography .cm-content {
-  font-family: var(--ws-typo-font) !important;
-  font-size: var(--ws-typo-size) !important;
-  line-height: var(--ws-typo-lh) !important;
-  letter-spacing: var(--ws-typo-ls) !important;
+body.writing-studio-typography .cm-editor,
+body.writing-studio-typography .cm-content {
+  font-family: var(--ws-typo-font);
+  font-size: var(--ws-typo-size);
+  line-height: var(--ws-typo-lh);
+  letter-spacing: var(--ws-typo-ls);
 }
 
-.writing-studio-typography .markdown-source-view .cm-scroller {
-  padding-left:  var(--ws-typo-pad-left)  !important;
-  padding-right: var(--ws-typo-pad-right) !important;
-  box-sizing: border-box !important;
+body.writing-studio-typography .markdown-source-view .cm-scroller {
+  padding-left:  var(--ws-typo-pad-left);
+  padding-right: var(--ws-typo-pad-right);
+  box-sizing: border-box;
 }
 
-.writing-studio-typography .markdown-reading-view .markdown-preview-section {
-  font-family: var(--ws-typo-font) !important;
-  font-size: var(--ws-typo-size) !important;
-  line-height: var(--ws-typo-lh) !important;
-  letter-spacing: var(--ws-typo-ls) !important;
-  max-width: var(--ws-typo-max-width) !important;
-  margin: 0 auto !important;
-  padding: 2rem 1rem !important;
-  box-sizing: border-box !important;
+body.writing-studio-typography .markdown-reading-view .markdown-preview-section {
+  font-family: var(--ws-typo-font);
+  font-size: var(--ws-typo-size);
+  line-height: var(--ws-typo-lh);
+  letter-spacing: var(--ws-typo-ls);
+  max-width: var(--ws-typo-max-width);
+  margin: 0 auto;
+  padding: 2rem 1rem;
+  box-sizing: border-box;
 }
 
 /* ── Writing Binder ─────────────────────────────────────────────── */
@@ -1238,14 +1232,13 @@
 
 /* box-sizing + height:auto on every interactive element — prevents theme
    fixed-height rules from vertically clipping icon+label stacked buttons.
-   !important is required: themes commonly use higher-specificity rules like
-   ".workspace button { height: 2rem; }" that would otherwise win the cascade
-   over our ".ws-launcher button" selector. */
-.ws-launcher button,
-.ws-launcher select {
-  box-sizing: border-box !important;
-  max-width: 100% !important;
-  height: auto !important;
+   "body .ws-launcher" gives specificity (0,1,2), beating theme rules like
+   ".workspace button { height: 2rem; }" at (0,1,1). */
+body .ws-launcher button,
+body .ws-launcher select {
+  box-sizing: border-box;
+  max-width: 100%;
+  height: auto;
 }
 
 /* Grid action buttons — min-width:0 lets 1fr cells shrink below content size */

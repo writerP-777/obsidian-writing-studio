@@ -1,6 +1,8 @@
 # Obsidian Writing Studio
 
-**Version 2.1.11** · Desktop only
+**Version 2.1.12** · Desktop only
+
+![GitHub all releases](https://img.shields.io/github/downloads/writerP-777/obsidian-writing-studio/total)
 
 Transform Obsidian into a professional writing environment. Writing Studio bundles a project binder, writing sprints, focus and typography modes, session word count tracking, manuscript export, WordPress publishing, a daily writing log, and a folder sidebar explorer into a single plugin.
 
