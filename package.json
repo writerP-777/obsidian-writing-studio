@@ -9,9 +9,13 @@
     "lint": "node node_modules/eslint-plugin-obsidianmd/node_modules/eslint/bin/eslint.js --max-warnings 0 main.ts src/ modals/",
     "version": "node version-bump.mjs && git add manifest.json versions.json"
   },
+  "overrides": {
+    "@codemirror/state": "6.5.0",
+    "@codemirror/view": "6.38.6"
+  },
   "devDependencies": {
-    "@codemirror/state": "^6.5.0",
-    "@codemirror/view": "^6.38.6",
+    "@codemirror/state": "6.5.0",
+    "@codemirror/view": "6.38.6",
     "@types/node": "^25.7.0",
     "esbuild": "0.28.0",
     "eslint-plugin-obsidianmd": "^0.3.0",
