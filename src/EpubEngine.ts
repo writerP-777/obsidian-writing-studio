@@ -3,7 +3,7 @@ import { App, TFile } from 'obsidian';
 interface FileSystemAdapter {
   getFullPath?(vaultPath: string): string;
 }
-import { zipSync, strToU8, type Zippable } from 'fflate';
+import { zipSync, type ZipOptions } from 'fflate';
 import { promises as fsp } from 'fs';
 import type WritingStudioPlugin from '../main';
 
@@ -37,9 +37,9 @@ export class EpubEngine {
 
     // Entries are written in insertion order — mimetype MUST be first and
     // stored uncompressed (level 0) per the EPUB OCF spec.
-    const entries: Zippable = {};
-    entries['mimetype'] = [strToU8('application/epub+zip'), { level: 0 }];
-    entries['META-INF/container.xml'] = [strToU8(this.containerXml()), { level: 6 }];
+    const entries: Record<string, [Uint8Array, ZipOptions]> = {};
+    entries['mimetype'] = [Buffer.from('application/epub+zip'), { level: 0 }];
+    entries['META-INF/container.xml'] = [Buffer.from(this.containerXml()), { level: 6 }];
 
     // Optional cover image
     let coverImageFile: string | null = null;
@@ -55,21 +55,21 @@ export class EpubEngine {
       }
     }
 
-    entries['OEBPS/cover.xhtml'] = [strToU8(coverImageFile
+    entries['OEBPS/cover.xhtml'] = [Buffer.from(coverImageFile
       ? this.coverImageXhtml(coverImageFile)
       : this.coverTextXhtml(opts.title, opts.author)), { level: 6 }];
-    entries['OEBPS/style.css'] = [strToU8(this.stylesheet()), { level: 6 }];
+    entries['OEBPS/style.css'] = [Buffer.from(this.stylesheet()), { level: 6 }];
 
     for (const ch of opts.chapters) {
-      entries[`OEBPS/${ch.id}.xhtml`] = [strToU8(this.chapterXhtml(ch.title, ch.htmlContent)), { level: 6 }];
+      entries[`OEBPS/${ch.id}.xhtml`] = [Buffer.from(this.chapterXhtml(ch.title, ch.htmlContent)), { level: 6 }];
     }
 
-    entries['OEBPS/nav.xhtml'] = [strToU8(this.navXhtml(opts.title, opts.chapters)), { level: 6 }];
-    entries['OEBPS/toc.ncx'] = [strToU8(this.tocNcx(uid, opts.title, opts.author, opts.chapters)), { level: 6 }];
-    entries['OEBPS/content.opf'] = [strToU8(this.contentOpf(uid, opts, modified, coverImageFile, coverImageMime)), { level: 6 }];
+    entries['OEBPS/nav.xhtml'] = [Buffer.from(this.navXhtml(opts.title, opts.chapters)), { level: 6 }];
+    entries['OEBPS/toc.ncx'] = [Buffer.from(this.tocNcx(uid, opts.title, opts.author, opts.chapters)), { level: 6 }];
+    entries['OEBPS/content.opf'] = [Buffer.from(this.contentOpf(uid, opts, modified, coverImageFile, coverImageMime)), { level: 6 }];
 
     const absPath = this.absPath(outputVaultPath);
-    await fsp.writeFile(absPath, Buffer.from(zipSync(entries)));
+    await fsp.writeFile(absPath, zipSync(entries) as Uint8Array);
   }
 
   // ── Helpers ────────────────────────────────────────────────────────────────
