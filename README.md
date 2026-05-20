@@ -71,6 +71,10 @@ The Binder is a left-sidebar project panel that lists all documents in your acti
 2. A modal appears with a dropdown listing all your writing projects.
 3. Select the target project and click **Add to project**.
 
+**Adding files copied directly to the project folder:**
+
+If you copied or moved files into the project folder outside of Obsidian and they do not appear in the binder, use the **Add files copied to this folder** button in the binder toolbar (immediately to the right of the **+ document** button). The plugin scans the project folder, lists any files not yet in the binder, and lets you select which ones to add before making any changes.
+
 ---
 
 ### Writing Modes
@@ -466,6 +470,7 @@ No default hotkeys are assigned. All commands can be given a hotkey in **Setting
 | Open targets dashboard | Open the word count targets panel |
 | Set word count goal | Set a per-document word count goal |
 | Open folder in sidebar explorer | Search and open a vault folder in the sidebar |
+| Add files copied to project folder | Scan the active project folder for files not in the binder and import selected files |
 
 ---
 

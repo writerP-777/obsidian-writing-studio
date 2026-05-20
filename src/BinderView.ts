@@ -1,10 +1,11 @@
-import { ItemView, WorkspaceLeaf, TFile, Menu, Notice, setIcon, normalizePath } from 'obsidian';
+import { ItemView, WorkspaceLeaf, TFile, Menu, Notice, setIcon, setTooltip, normalizePath } from 'obsidian';
 import type WritingStudioPlugin from '../main';
 import { BinderItem, STATUS_COLORS, STATUS_LABELS, DocumentStatus } from '../models/BinderItem';
 import { WritingProject } from '../models/Project';
 import { ProjectModal } from '../modals/ProjectModal';
 import { TargetsDashboardModal } from '../modals/TargetsDashboardModal';
 import { PublishModal } from '../modals/PublishModal';
+import { ScanFolderModal } from '../modals/ScanFolderModal';
 
 export const BINDER_VIEW_TYPE = 'writing-studio-binder';
 
@@ -96,6 +97,18 @@ export class BinderView extends ItemView {
         return;
       }
       await this.createNewDocument();
+    };
+
+    const scanBtn = toolbar.createEl('button', { cls: 'ws-binder-btn' });
+    scanBtn.ariaLabel = 'Add files copied to this folder';
+    setIcon(scanBtn, 'folder-sync');
+    setTooltip(scanBtn, 'Add files copied to this folder');
+    scanBtn.onclick = async () => {
+      if (!this.activeProject) {
+        new Notice('Select a project first.');
+        return;
+      }
+      await this.scanProjectFolder();
     };
 
     const dashBtn = toolbar.createEl('button', { cls: 'ws-binder-btn', title: 'Targets dashboard' });
@@ -569,6 +582,51 @@ export class BinderView extends ItemView {
       const title = row.querySelector('.ws-binder-title')?.textContent?.toLowerCase() || '';
       row.toggleClass('ws-hidden', !(!q || title.includes(q)));
     });
+  }
+
+  async scanProjectFolder(): Promise<void> {
+    if (!this.activeProject) {
+      new Notice('Select a project first.');
+      return;
+    }
+
+    const projectFolder = normalizePath(this.activeProject.folderPath);
+    const existingPaths = new Set(
+      this.plugin.projectManager.flattenBinder(this.binderItems).map(i => i.filePath)
+    );
+
+    const untracked = this.app.vault.getFiles().filter(f =>
+      f.extension === 'md' &&
+      f.path.startsWith(projectFolder + '/') &&
+      !f.name.startsWith('_') &&
+      !existingPaths.has(f.path)
+    );
+
+    if (untracked.length === 0) {
+      new Notice('No new files found in the project folder.');
+      return;
+    }
+
+    new ScanFolderModal(this.app, untracked, async (selected) => {
+      if (selected.length === 0) return;
+      if (!this.activeProject) return;
+      const binder = await this.plugin.projectManager.loadBinder(this.activeProject);
+      let order = binder.items.length + 1;
+      for (const file of selected) {
+        binder.items.push({
+          id: `item-${Date.now()}-${order}`,
+          title: file.basename,
+          filePath: file.path,
+          type: this.plugin.settings.defaultDocumentType,
+          order: order++,
+          status: 'draft',
+          includeInExport: true,
+          wordCountGoal: 0,
+        });
+      }
+      await this.plugin.projectManager.saveBinder(binder);
+      await this.refresh();
+    }).open();
   }
 
   private async saveBinder(): Promise<void> {

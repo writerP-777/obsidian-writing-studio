@@ -327,6 +327,20 @@ export default class WritingStudioPlugin extends Plugin {
       },
     });
 
+    this.addCommand({
+      id: 'add-files-to-binder',
+      name: 'Add files copied to project folder',
+      callback: async () => {
+        await this.openBinder();
+        for (const leaf of this.app.workspace.getLeavesOfType(BINDER_VIEW_TYPE)) {
+          if (leaf.view instanceof BinderView) {
+            await leaf.view.scanProjectFolder();
+            break;
+          }
+        }
+      },
+    });
+
     // Keyboard: Escape to exit focus mode
     this.registerDomEvent(activeDocument, 'keydown', (e: KeyboardEvent) => {
       if (e.key === 'Escape' && this.focusMode.isActive()) {
