@@ -25,12 +25,12 @@ export class PublishModal extends Modal {
     const { contentEl } = this;
     contentEl.empty();
     contentEl.addClass('ws-publish-modal');
-    contentEl.createEl('h2', { text: 'Publish to wordpress' });
+    contentEl.createEl('h2', { text: 'Publish to WordPress' });
 
     const sites = this.plugin.settings.wordPressSites;
     if (sites.length === 0) {
       contentEl.createEl('p', {
-        text: 'No wordpress sites configured. Add a site in settings → wordpress.',
+        text: 'No WordPress sites configured. Add a site in settings → WordPress.',
         cls: 'ws-empty-state',
       });
       contentEl.createEl('button', { text: 'Close' }).onclick = () => this.close();
@@ -42,7 +42,7 @@ export class PublishModal extends Modal {
 
     // Site selector
     new Setting(contentEl)
-      .setName('Wordpress site')
+      .setName('WordPress site')
       .addDropdown(d => {
         sites.forEach(s => { d.addOption(s.id, s.nickname || s.url); });
         if (this.selectedSiteId) d.setValue(this.selectedSiteId);
@@ -119,7 +119,7 @@ export class PublishModal extends Modal {
       .setName('Schedule publication (optional)')
       .setDesc('Leave empty to publish immediately.')
       .addText(t => t
-        .setPlaceholder('Yyyy-mm-ddthh:mm:ss')
+        .setPlaceholder('yyyy-mm-ddThh:mm:ss')
         .setValue(this.scheduledDate)
         .onChange(v => { this.scheduledDate = v; }));
 

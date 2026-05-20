@@ -390,7 +390,7 @@ export class BinderView extends ItemView {
     menu.addItem(i => i.setTitle('Duplicate').setIcon('copy').onClick(() => { void this.duplicateItem(item); }));
     menu.addItem(i => i.setTitle('Move to research').setIcon('folder').onClick(() => { void this.moveToResearch(item); }));
     menu.addSeparator();
-    menu.addItem(i => i.setTitle('Publish to wordpress').setIcon('globe').onClick(() => {
+    menu.addItem(i => i.setTitle('Publish to WordPress').setIcon('globe').onClick(() => {
       new PublishModal(this.app, this.plugin, item.filePath).open();
     }));
     menu.addSeparator();

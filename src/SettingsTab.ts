@@ -303,7 +303,7 @@ export class WritingStudioSettingsTab extends PluginSettingTab {
     new Setting(el)
       .setName('Default paper size')
       .addDropdown(d => d
-        .addOption('letter', 'Letter (us)')
+        .addOption('letter', 'Letter (US)')
         .addOption('a4', 'A4')
         .setValue(this.plugin.settings.defaultPaperSize)
         .onChange(async v => { this.plugin.settings.defaultPaperSize = v as 'letter' | 'a4'; await this.plugin.saveSettings(); }));
@@ -335,10 +335,10 @@ export class WritingStudioSettingsTab extends PluginSettingTab {
     new Setting(el).setName('EPUB').setHeading();
 
     new Setting(el)
-      .setName('Epub language')
-      .setDesc('Bcp 47 language tag (e.g. En, fr, de).')
+      .setName('EPUB language')
+      .setDesc('BCP 47 language tag (e.g. en, fr, de).')
       .addText(t => t
-        .setPlaceholder('En')
+        .setPlaceholder('en')
         .setValue(this.plugin.settings.epubLanguage)
         .onChange(async v => { this.plugin.settings.epubLanguage = v.trim() || 'en'; await this.plugin.saveSettings(); }));
 
@@ -362,7 +362,7 @@ export class WritingStudioSettingsTab extends PluginSettingTab {
   }
 
   private renderWordPress(el: HTMLElement): void {
-    new Setting(el).setName('Wordpress sites').setHeading();
+    new Setting(el).setName('WordPress sites').setHeading();
 
     const sites = this.plugin.settings.wordPressSites;
 
@@ -373,7 +373,7 @@ export class WritingStudioSettingsTab extends PluginSettingTab {
 
     new Setting(el)
       .addButton(b => b
-        .setButtonText('+ add wordpress site')
+        .setButtonText('+ add WordPress site')
         .onClick(async () => {
           this.plugin.settings.wordPressSites.push({
             id: `site-${Date.now()}`,
@@ -424,7 +424,7 @@ export class WritingStudioSettingsTab extends PluginSettingTab {
 
     new Setting(siteEl)
       .setName('Application password')
-      .setDesc('Generated in wordpress under users → profile → application passwords.')
+      .setDesc('Generated in WordPress under Users → Profile → Application passwords.')
       .addText(t => {
         t.inputEl.type = 'password';
         t.setValue(site.appPassword)

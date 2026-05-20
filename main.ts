@@ -285,7 +285,7 @@ export default class WritingStudioPlugin extends Plugin {
 
     this.addCommand({
       id: 'publish-wordpress',
-      name: 'Publish to wordpress',
+      name: 'Publish to WordPress',
       callback: () => this.publishCurrentFile(),
     });
 
@@ -353,7 +353,7 @@ export default class WritingStudioPlugin extends Plugin {
       this.app.workspace.on('editor-menu', (menu, _editor, view) => {
         menu.addItem(i => i.setTitle('Writing studio options').setSection('writing-studio').setDisabled(true));
         menu.addItem(i => i.setTitle('Export this document').setIcon('download').setSection('writing-studio').onClick(() => new ExportModal(this.app, this).open()));
-        menu.addItem(i => i.setTitle('Publish to wordpress').setIcon('globe').setSection('writing-studio').onClick(() => this.publishCurrentFile()));
+        menu.addItem(i => i.setTitle('Publish to WordPress').setIcon('globe').setSection('writing-studio').onClick(() => this.publishCurrentFile()));
         menu.addItem(i => i.setTitle('Set word count goal').setIcon('target').setSection('writing-studio').onClick(() => this.setWordCountGoal(view.file)));
         menu.addItem(i => i.setTitle('Switch writing mode →').setIcon('layout-dashboard').setSection('writing-studio').onClick((e: MouseEvent | KeyboardEvent) => this.showModeSwitcher(e)));
         if (this.typographyMode.isActive()) {
@@ -618,9 +618,9 @@ export default class WritingStudioPlugin extends Plugin {
 
   private showModeSwitcher(e: MouseEvent | KeyboardEvent): void {
     const menu = new Menu();
-    menu.addItem(i => i.setTitle('✍ draft mode').setIcon('pencil').onClick(() => this.writingModes.switchMode('draft')));
-    menu.addItem(i => i.setTitle('✎ edit mode').setIcon('edit-3').onClick(() => this.writingModes.switchMode('edit')));
-    menu.addItem(i => i.setTitle('👁 review mode').setIcon('eye').onClick(() => this.writingModes.switchMode('review')));
+    menu.addItem(i => i.setTitle('✍ Draft mode').setIcon('pencil').onClick(() => this.writingModes.switchMode('draft')));
+    menu.addItem(i => i.setTitle('✎ Edit mode').setIcon('edit-3').onClick(() => this.writingModes.switchMode('edit')));
+    menu.addItem(i => i.setTitle('👁 Review mode').setIcon('eye').onClick(() => this.writingModes.switchMode('review')));
     menu.addSeparator();
     menu.addItem(i => i.setTitle('Normal (no mode)').onClick(() => this.writingModes.switchMode('none')));
     if (e instanceof MouseEvent) menu.showAtMouseEvent(e);
