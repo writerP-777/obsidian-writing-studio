@@ -3,7 +3,7 @@ import { App, TFile } from 'obsidian';
 interface FileSystemAdapter {
   getFullPath?(vaultPath: string): string;
 }
-import { zipSync, strToU8, type ZipOptions } from 'fflate';
+import { zipSync, strToU8, type Zippable } from 'fflate';
 import { promises as fsp } from 'fs';
 import type WritingStudioPlugin from '../main';
 
@@ -37,7 +37,7 @@ export class EpubEngine {
 
     // Entries are written in insertion order — mimetype MUST be first and
     // stored uncompressed (level 0) per the EPUB OCF spec.
-    const entries: Record<string, [Uint8Array, ZipOptions]> = {};
+    const entries: Zippable = {};
     entries['mimetype'] = [strToU8('application/epub+zip'), { level: 0 }];
     entries['META-INF/container.xml'] = [strToU8(this.containerXml()), { level: 6 }];
 
@@ -69,7 +69,7 @@ export class EpubEngine {
     entries['OEBPS/content.opf'] = [strToU8(this.contentOpf(uid, opts, modified, coverImageFile, coverImageMime)), { level: 6 }];
 
     const absPath = this.absPath(outputVaultPath);
-    await fsp.writeFile(absPath, zipSync(entries));
+    await fsp.writeFile(absPath, Buffer.from(zipSync(entries)));
   }
 
   // ── Helpers ────────────────────────────────────────────────────────────────
