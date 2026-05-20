@@ -69,7 +69,7 @@ export class EpubEngine {
     entries['OEBPS/content.opf'] = [strToU8(this.contentOpf(uid, opts, modified, coverImageFile, coverImageMime)), { level: 6 }];
 
     const absPath = this.absPath(outputVaultPath);
-    await fsp.writeFile(absPath, Buffer.from(zipSync(entries)));
+    await fsp.writeFile(absPath, zipSync(entries));
   }
 
   // ── Helpers ────────────────────────────────────────────────────────────────
