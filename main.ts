@@ -386,8 +386,9 @@ export default class WritingStudioPlugin extends Plugin {
     // Keep binder in sync when a file is renamed outside the binder
     this.registerEvent(
       this.app.vault.on('rename', (file, oldPath) => {
-        if (file instanceof TFile && file.extension === 'md') {
-          void this.syncBinderOnExternalRename(file, oldPath);
+        if (!(file instanceof TFile)) return;
+        if (file.extension === 'md') {
+          void this.repairBinderPaths(oldPath, file.path, file.basename);
         }
       })
     );
@@ -496,17 +497,20 @@ export default class WritingStudioPlugin extends Plugin {
     await this.refreshBinder();
   }
 
-  private async syncBinderOnExternalRename(file: TFile, oldPath: string): Promise<void> {
-    const project = this.projectManager.getActiveProject();
-    if (!project) return;
-    const binder = await this.projectManager.loadBinder(project);
-    const flat = this.projectManager.flattenBinder(binder.items);
-    const item = flat.find(i => i.filePath === oldPath);
-    if (!item) return;
-    item.filePath = file.path;
-    item.title = file.basename;
-    await this.projectManager.saveBinder(binder);
-    await this.refreshBinder();
+  private async repairBinderPaths(oldPath: string, newPath: string, newBasename: string): Promise<void> {
+    const projects = this.projectManager.getProjects();
+    for (const project of projects) {
+      const binder = await this.projectManager.loadBinder(project);
+      const flat = this.projectManager.flattenBinder(binder.items);
+      const item = flat.find(i => i.filePath === oldPath);
+      if (item) {
+        item.filePath = newPath;
+        item.title = newBasename;
+        await this.projectManager.saveBinder(binder);
+        await this.refreshBinder();
+        break;
+      }
+    }
   }
 
   async openCompilePreview(): Promise<void> {

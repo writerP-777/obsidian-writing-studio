@@ -178,10 +178,16 @@ export class BinderView extends ItemView {
       dot.setCssProps({ '--ws-status-color': STATUS_COLORS[item.status] });
       dot.title = STATUS_LABELS[item.status];
 
-      // Title
+      // Title — derive from the live filename so stale binder JSON is never shown
       const titleEl = row.createSpan('ws-binder-title');
-      titleEl.textContent = item.title;
+      const liveFile = this.app.vault.getAbstractFileByPath(item.filePath);
+      const displayTitle = liveFile instanceof TFile ? liveFile.basename : item.title;
+      titleEl.textContent = displayTitle;
       titleEl.contentEditable = 'false';
+      if (liveFile instanceof TFile && item.title !== liveFile.basename) {
+        item.title = liveFile.basename;
+        void this.saveBinder();
+      }
 
       // Word count
       const wcEl = row.createSpan('ws-binder-wc');
@@ -312,10 +318,12 @@ export class BinderView extends ItemView {
 
   private async openDocument(item: BinderItem): Promise<void> {
     const file = this.app.vault.getAbstractFileByPath(item.filePath);
-    if (file instanceof TFile) {
-      const leaf = this.app.workspace.getLeaf(false);
-      await leaf.openFile(file);
+    if (!(file instanceof TFile)) {
+      new Notice(`Cannot find file: ${item.filePath}. Try renaming or re-linking the document.`);
+      return;
     }
+    const leaf = this.app.workspace.getLeaf(false);
+    await leaf.openFile(file);
   }
 
   private startRename(el: HTMLElement, item: BinderItem): void {
