@@ -285,7 +285,7 @@ export default class WritingStudioPlugin extends Plugin {
 
     this.addCommand({
       id: 'publish-wordpress',
-      name: 'Publish to wordpress',
+      name: 'Publish to WordPress',
       callback: () => this.publishCurrentFile(),
     });
 
@@ -327,6 +327,20 @@ export default class WritingStudioPlugin extends Plugin {
       },
     });
 
+    this.addCommand({
+      id: 'add-files-to-binder',
+      name: 'Add files copied to project folder',
+      callback: async () => {
+        await this.openBinder();
+        for (const leaf of this.app.workspace.getLeavesOfType(BINDER_VIEW_TYPE)) {
+          if (leaf.view instanceof BinderView) {
+            await leaf.view.scanProjectFolder();
+            break;
+          }
+        }
+      },
+    });
+
     // Keyboard: Escape to exit focus mode
     this.registerDomEvent(activeDocument, 'keydown', (e: KeyboardEvent) => {
       if (e.key === 'Escape' && this.focusMode.isActive()) {
@@ -339,7 +353,7 @@ export default class WritingStudioPlugin extends Plugin {
       this.app.workspace.on('editor-menu', (menu, _editor, view) => {
         menu.addItem(i => i.setTitle('Writing studio options').setSection('writing-studio').setDisabled(true));
         menu.addItem(i => i.setTitle('Export this document').setIcon('download').setSection('writing-studio').onClick(() => new ExportModal(this.app, this).open()));
-        menu.addItem(i => i.setTitle('Publish to wordpress').setIcon('globe').setSection('writing-studio').onClick(() => this.publishCurrentFile()));
+        menu.addItem(i => i.setTitle('Publish to WordPress').setIcon('globe').setSection('writing-studio').onClick(() => this.publishCurrentFile()));
         menu.addItem(i => i.setTitle('Set word count goal').setIcon('target').setSection('writing-studio').onClick(() => this.setWordCountGoal(view.file)));
         menu.addItem(i => i.setTitle('Switch writing mode →').setIcon('layout-dashboard').setSection('writing-studio').onClick((e: MouseEvent | KeyboardEvent) => this.showModeSwitcher(e)));
         if (this.typographyMode.isActive()) {
@@ -379,6 +393,16 @@ export default class WritingStudioPlugin extends Plugin {
           this.fmManager.scheduleUpdate(file);
           this.scheduleWordCountUpdate();
           this.scheduleProjectGoalUpdate();
+        }
+      })
+    );
+
+    // Keep binder in sync when a file is renamed outside the binder
+    this.registerEvent(
+      this.app.vault.on('rename', (file, oldPath) => {
+        if (!(file instanceof TFile)) return;
+        if (file.extension === 'md') {
+          void this.repairBinderPaths(oldPath, file.path, file.basename);
         }
       })
     );
@@ -461,6 +485,7 @@ export default class WritingStudioPlugin extends Plugin {
     const existing = this.app.workspace.getLeavesOfType(BINDER_VIEW_TYPE);
     if (existing.length > 0) {
       void this.app.workspace.revealLeaf(existing[0]);
+      await this.refreshBinder();
       return;
     }
 
@@ -468,6 +493,7 @@ export default class WritingStudioPlugin extends Plugin {
     if (leaf) {
       await leaf.setViewState({ type: BINDER_VIEW_TYPE, active: true });
       void this.app.workspace.revealLeaf(leaf);
+      await this.refreshBinder();
     }
   }
 
@@ -476,6 +502,27 @@ export default class WritingStudioPlugin extends Plugin {
     for (const leaf of leaves) {
       if (leaf.view instanceof BinderView) {
         await leaf.view.refresh();
+      }
+    }
+  }
+
+  async onActiveProjectChanged(): Promise<void> {
+    await this.refreshLauncher();
+    await this.refreshBinder();
+  }
+
+  private async repairBinderPaths(oldPath: string, newPath: string, newBasename: string): Promise<void> {
+    const projects = this.projectManager.getProjects();
+    for (const project of projects) {
+      const binder = await this.projectManager.loadBinder(project);
+      const flat = this.projectManager.flattenBinder(binder.items);
+      const item = flat.find(i => i.filePath === oldPath);
+      if (item) {
+        item.filePath = newPath;
+        item.title = newBasename;
+        await this.projectManager.saveBinder(binder);
+        await this.refreshBinder();
+        break;
       }
     }
   }
@@ -571,9 +618,9 @@ export default class WritingStudioPlugin extends Plugin {
 
   private showModeSwitcher(e: MouseEvent | KeyboardEvent): void {
     const menu = new Menu();
-    menu.addItem(i => i.setTitle('✍ draft mode').setIcon('pencil').onClick(() => this.writingModes.switchMode('draft')));
-    menu.addItem(i => i.setTitle('✎ edit mode').setIcon('edit-3').onClick(() => this.writingModes.switchMode('edit')));
-    menu.addItem(i => i.setTitle('👁 review mode').setIcon('eye').onClick(() => this.writingModes.switchMode('review')));
+    menu.addItem(i => i.setTitle('✍ Draft mode').setIcon('pencil').onClick(() => this.writingModes.switchMode('draft')));
+    menu.addItem(i => i.setTitle('✎ Edit mode').setIcon('edit-3').onClick(() => this.writingModes.switchMode('edit')));
+    menu.addItem(i => i.setTitle('👁 Review mode').setIcon('eye').onClick(() => this.writingModes.switchMode('review')));
     menu.addSeparator();
     menu.addItem(i => i.setTitle('Normal (no mode)').onClick(() => this.writingModes.switchMode('none')));
     if (e instanceof MouseEvent) menu.showAtMouseEvent(e);

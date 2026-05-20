@@ -1,42 +1,10 @@
 # Obsidian Writing Studio
 
-**Version 2.1.12** · Desktop only
+**Version 2.2.0** · Desktop only
 
 ![GitHub all releases](https://img.shields.io/github/downloads/writerP-777/obsidian-writing-studio/total)
 
-Transform Obsidian into a professional writing environment. Writing Studio bundles a project binder, writing sprints, focus and typography modes, session word count tracking, manuscript export, WordPress publishing, a daily writing log, and a folder sidebar explorer into a single plugin.
-
----
-
-## Installation
-
-1. Download `main.js`, `manifest.json`, and `styles.css` from the latest [GitHub release](../../releases/latest).
-2. Create the folder `<vault>/.obsidian/plugins/obsidian-writing-studio/` if it does not exist.
-3. Copy the three files into that folder.
-4. In Obsidian, go to **Settings → Community Plugins**, find **Writing Studio**, and enable it.
-
-> **Building from source:** Clone the repository, run `npm install`, then `npm run build`. Copy the three output files as above.
-
----
-
-## Security
-
-[![CodeQL](https://github.com/writerP-777/obsidian-writing-studio/actions/workflows/codeql.yml/badge.svg)](https://github.com/writerP-777/obsidian-writing-studio/actions/workflows/codeql.yml)
-[![OpenSSF Scorecard](https://api.securityscorecards.dev/projects/github.com/writerP-777/obsidian-writing-studio/badge)](https://securityscorecards.dev/viewer/?uri=github.com/writerP-777/obsidian-writing-studio)
-[![OpenSSF Baseline](https://www.bestpractices.dev/projects/12832/baseline)](https://www.bestpractices.dev/projects/12832)
-[![ESLint](https://github.com/writerP-777/obsidian-writing-studio/actions/workflows/eslint.yml/badge.svg)](https://github.com/writerP-777/obsidian-writing-studio/actions/workflows/eslint.yml)
-
-Every push and pull request is scanned automatically:
-
-| Tool | What it checks |
-|------|----------------|
-| **CodeQL** | Static analysis for security vulnerabilities (XSS, injection, unsafe patterns) in TypeScript/JavaScript source |
-| **OpenSSF Scorecard** | Supply-chain security posture: dependency hygiene, branch protection, signed releases, and more |
-| **ESLint** (`eslint-plugin-obsidianmd`) | Obsidian plugin guideline compliance — fails on any warning or error |
-
-Results are published to the **Security** tab of this repository (GitHub code scanning).
-
-For local development, a pre-commit hook runs ESLint (blocking) and a pre-push hook runs a full CodeQL scan (blocks the push if any HIGH or CRITICAL findings are present). Install the [CodeQL CLI](https://github.com/github/codeql-cli-binaries/releases) to enable local scanning (`winget install GitHub.CodeQL` on Windows).
+Writing Studio turns Obsidian into a dedicated environment for serious nonfiction work — from your first research notes to a finished, exported manuscript. It bundles a project binder, writing modes, focus and typography tools, sprint timer, progress tracking, manuscript export, and WordPress publishing into a single plugin.
 
 ---
 
@@ -44,7 +12,7 @@ For local development, a pre-commit hook runs ESLint (blocking) and a pre-push h
 
 ### Writing Studio Launcher
 
-The Launcher is a left-sidebar dashboard that shows your active project, word count and goal progress, writing mode controls, sprint timer, today's writing stats, and quick-action buttons for the most common Writing Studio tasks.
+The Launcher is your home base in Writing Studio — a sidebar panel that shows your active project, progress toward your goals, and one-click access to every major feature.
 
 By default it opens automatically when Obsidian loads. To disable this, turn off **Open on startup** in **Settings → General**.
 
@@ -60,9 +28,40 @@ By default it opens automatically when Obsidian loads. To disable this, turn off
 
 ---
 
-### Writing Binder
+### Your Project
 
-The Binder is a left-sidebar project panel that lists all documents in your active writing project. Each document shows its title, type (Chapter, Section, Article, Note), status (Draft, In Progress, Complete), and live word count. Documents can be reordered by drag-and-drop and toggled in or out of export.
+#### Project Manager
+
+Projects group a set of documents (binder items) and act as the scope for export, statistics, and the word count goal banner.
+
+**To create a project:** Use the command **New writing project** from the command palette, or click **+ New** in the Launcher panel.
+
+**To switch projects:** Use the Launcher panel or the project selector at the top of the Binder panel.
+
+Each project stores:
+- Title, type, author, and description
+- Ordered binder with chapters, sections, articles, and notes
+- Per-item word count goals, statuses, and export flags
+- Optional total word count goal (shown in the Launcher and status bar)
+
+**Project templates available at creation:**
+
+| Template | Structure created |
+|----------|------------------|
+| Blank | Empty — build your own structure |
+| Book | Front Matter, Part 1 / Chapter 1, Back Matter |
+| Article series | Series folder, Article 1 placeholder, series metadata |
+| Blog collection | Date-organized folder, first post placeholder |
+| Journal article | Title Page, Abstract, Keywords, Introduction, Literature Review, Methodology, Findings / Analysis, Discussion, Conclusion, References, Appendices |
+| Magazine article | Pitch / Query Notes, Headline & Deck, Lede, Nut Graf, Body, Quotes & Sources, Kicker, Fact-Check Notes, Author Bio |
+
+---
+
+#### Writing Binder
+
+Keeping a book-length manuscript organized means knowing at a glance which chapters are drafted, which are in progress, and how each contributes to your total word count. The Binder is a sidebar panel that shows all of that for your active project.
+
+Each document shows its title, type (Chapter, Section, Article, Note), status (Draft, In Progress, Complete), and live word count. Documents can be reordered by drag-and-drop and toggled in or out of export.
 
 **To open:** Use the command **Open binder** from the command palette, or assign a hotkey in Settings → Hotkeys.
 
@@ -71,9 +70,23 @@ The Binder is a left-sidebar project panel that lists all documents in your acti
 2. A modal appears with a dropdown listing all your writing projects.
 3. Select the target project and click **Add to project**.
 
+**Adding files copied directly to the project folder:**
+
+If you copied or moved files into the project folder outside of Obsidian and they do not appear in the binder, use the **Add files copied to this folder** button in the binder toolbar (immediately to the right of the **+ document** button). The plugin scans the project folder, lists any files not yet in the binder, and lets you select which ones to add before making any changes.
+
 ---
 
-### Writing Modes
+#### Compile Preview
+
+The Compile Preview opens a split pane showing all binder documents for the active project concatenated in order, rendered as a finished manuscript.
+
+**To open:** Use the command **Preview compiled manuscript** from the command palette, or click the **Preview manuscript** button in the Launcher panel.
+
+---
+
+### Your Writing Environment
+
+#### Writing Modes
 
 Three modes shape how the editor behaves. The current mode is always shown in the status bar. Click the mode pill in the status bar to switch modes.
 
@@ -94,7 +107,7 @@ The active mode persists across Obsidian restarts.
 
 ---
 
-### Focus Mode
+#### Focus Mode
 
 Focus Mode dims everything in the editor except the paragraph or sentence you are currently writing, reducing visual noise and keeping attention on the active thought.
 
@@ -112,7 +125,7 @@ Focus Mode dims everything in the editor except the paragraph or sentence you ar
 
 ---
 
-### Typography Mode
+#### Typography Mode
 
 Typography Mode applies a consistent, reader-friendly text treatment to the editor: a curated font, constrained line length, controlled line height, and optional letter spacing.
 
@@ -155,7 +168,9 @@ Typography Mode applies a consistent, reader-friendly text treatment to the edit
 
 ---
 
-### Writing Sprint Timer
+### Tracking Your Progress
+
+#### Writing Sprint Timer
 
 The Sprint Timer runs a timed writing session. A countdown appears in the status bar and in a floating overlay. When the sprint ends, a summary modal shows words written, duration, and words-per-minute. The session is logged to sprint history and optionally appended to your Daily Note.
 
@@ -178,7 +193,7 @@ The sprint modal lets you set:
 
 ---
 
-### Word Count Goal
+#### Word Count Goal
 
 A per-document word count goal can be set and tracked inline.
 
@@ -190,19 +205,19 @@ When a goal is set and **Inline goal banner** is enabled, a progress bar appears
 
 ---
 
-### Session Word Count
+#### Session Word Count
 
 The status bar shows a `(+N)` delta next to the current file's word count, indicating how many words you have added since opening that file this session. The Launcher's **Today** card also shows a cumulative session total across all files opened during the current Obsidian session. Both counts reset when Obsidian restarts.
 
 ---
 
-### Project Word Count Goal
+#### Project Word Count Goal
 
 When an active project has a total word count goal set, a dedicated status bar item shows `{current} / {goal} project words`. This updates automatically as you write. Set a project goal in the Project modal when creating or editing a project.
 
 ---
 
-### Writing Dashboard
+#### Writing Dashboard
 
 The Writing Dashboard shows session statistics (words written, sprints completed, time), sprint history, daily progress toward your goal, and per-project word counts with reading time.
 
@@ -210,7 +225,7 @@ The Writing Dashboard shows session statistics (words written, sprints completed
 
 ---
 
-### Targets Dashboard
+#### Targets Dashboard
 
 The Targets Dashboard lets you assign word count goals to individual documents in the active project's binder and track progress across the whole project at a glance. Goals can be edited inline in the table. Rows are sortable and filterable by status.
 
@@ -218,7 +233,7 @@ The Targets Dashboard lets you assign word count goals to individual documents i
 
 ---
 
-### Daily Writing Log
+#### Daily Writing Log
 
 The Writing Log is a sidebar panel that shows your writing history at a glance.
 
@@ -233,44 +248,11 @@ When **Append to daily note** is enabled (Settings → Writing log), a summary o
 
 ---
 
-### Project Manager
+### Getting Your Work Out
 
-Projects group a set of documents (binder items) and act as the scope for export, statistics, and the word count goal banner.
+#### Export Engine
 
-**To create a project:** Use the command **New writing project** from the command palette, or click **+ New** in the Launcher panel.
-
-**To switch projects:** Use the Launcher panel or the project selector at the top of the Binder panel.
-
-Each project stores:
-- Title, type, author, and description
-- Ordered binder with chapters, sections, articles, and notes
-- Per-item word count goals, statuses, and export flags
-- Optional total word count goal (shown in the Launcher and status bar)
-
-**Project templates available at creation:**
-
-| Template | Structure created |
-|----------|------------------|
-| Blank | Empty — build your own structure |
-| Book | Front Matter, Part 1 / Chapter 1, Back Matter |
-| Article series | Series folder, Article 1 placeholder, series metadata |
-| Blog collection | Date-organized folder, first post placeholder |
-| Journal article | Title Page, Abstract, Keywords, Introduction, Literature Review, Methodology, Findings / Analysis, Discussion, Conclusion, References, Appendices |
-| Magazine article | Pitch / Query Notes, Headline & Deck, Lede, Nut Graf, Body, Quotes & Sources, Kicker, Fact-Check Notes, Author Bio |
-
----
-
-### Compile Preview
-
-The Compile Preview opens a split pane showing all binder documents for the active project concatenated in order, rendered as a finished manuscript.
-
-**To open:** Use the command **Preview compiled manuscript** from the command palette, or click the **Preview manuscript** button in the Launcher panel.
-
----
-
-### Export Engine
-
-The Export Engine converts the current document or the active project's compiled manuscript to a finished file.
+When your draft is ready, the Export Engine converts it to a finished file in your chosen format — no reformatting required.
 
 **Supported formats:** Manuscript (HTML) · PDF · Word (.docx) · RTF · HTML · Markdown · EPUB
 
@@ -306,9 +288,9 @@ No external tools are required for manuscript export.
 
 ---
 
-### WordPress Publishing
+#### WordPress Publishing
 
-Publish the current Markdown file directly to one or more WordPress sites using the WordPress REST API. The modal lets you choose the target site, set the post title, status, categories, tags, excerpt, and an optional scheduled publication date.
+Publish your finished draft directly to WordPress without leaving Obsidian. The modal lets you choose the target site, set the post title, status, categories, tags, excerpt, and an optional scheduled publication date.
 
 **To publish:**
 - Right-click inside the editor and choose **Publish to WordPress** under **Writing studio options**.
@@ -332,7 +314,9 @@ Publish the current Markdown file directly to one or more WordPress sites using 
 
 ---
 
-### Folder Sidebar Explorer
+### Supporting Tools
+
+#### Folder Sidebar Explorer
 
 The Folder Sidebar Explorer opens a navigable folder tree in a sidebar panel. You can browse subfolders, search by name or file content, sort the listing, preview files inline, and insert copied text directly into the active editor.
 
@@ -403,7 +387,7 @@ The word count updates asynchronously from Obsidian's file cache and appears wit
 
 ---
 
-### Frontmatter Manager
+#### Frontmatter Manager
 
 Writing Studio automatically manages YAML frontmatter in your documents when **Frontmatter auto-update** is enabled. On every save it updates:
 
@@ -466,18 +450,7 @@ No default hotkeys are assigned. All commands can be given a hotkey in **Setting
 | Open targets dashboard | Open the word count targets panel |
 | Set word count goal | Set a per-document word count goal |
 | Open folder in sidebar explorer | Search and open a vault folder in the sidebar |
-
----
-
-## Ribbon Icon
-
-Writing Studio adds a single icon to the Obsidian ribbon.
-
-| Icon | Action |
-|------|--------|
-| Feather | Open the Writing Studio Launcher panel |
-
-All other features are accessible from the Launcher panel, the command palette, context menus, or assigned hotkeys.
+| Add files copied to project folder | Scan the active project folder for files not in the binder and import selected files |
 
 ---
 
@@ -497,7 +470,32 @@ Open via **Settings → Writing Studio**.
 
 ---
 
+## Ribbon Icon
+
+Writing Studio adds a single icon to the Obsidian ribbon.
+
+| Icon | Action |
+|------|--------|
+| Feather | Open the Writing Studio Launcher panel |
+
+All other features are accessible from the Launcher panel, the command palette, context menus, or assigned hotkeys.
+
+---
+
+## Installation
+
+1. Download `main.js`, `manifest.json`, and `styles.css` from the latest [GitHub release](../../releases/latest).
+2. Create the folder `<vault>/.obsidian/plugins/obsidian-writing-studio/` if it does not exist.
+3. Copy the three files into that folder.
+4. In Obsidian, go to **Settings → Community Plugins**, find **Writing Studio**, and enable it.
+
+> **Building from source:** Clone the repository, run `npm install`, then `npm run build`. Copy the three output files as above.
+
+---
+
 ## Requirements
+
+Most features work out of the box. A few require additional software for specific functions, noted below.
 
 | Requirement | When needed |
 |-------------|-------------|
@@ -508,3 +506,42 @@ Open via **Settings → Writing Studio**.
 | LaTeX (TeX Live / MiKTeX) | Export to PDF only |
 | WordPress 5.6+ with REST API enabled | WordPress publishing |
 | WordPress Application Password | WordPress publishing |
+
+---
+
+## Reporting a Bug
+
+If something isn't working, please open an issue on GitHub:
+
+**[Submit a bug report](https://github.com/writerP-777/obsidian-writing-studio/issues/new)**
+
+Include the following when you report:
+
+- Writing Studio version (visible in **Settings → Community Plugins**)
+- Obsidian version (visible in **Settings → About**)
+- Operating system (Windows / macOS / Linux) and version
+- What you expected to happen
+- What actually happened, and any steps to reproduce it
+
+Feature requests are welcome in the same place — please label them as **[Feature Request]** in the issue title.
+
+---
+
+## Security
+
+[![CodeQL](https://github.com/writerP-777/obsidian-writing-studio/actions/workflows/codeql.yml/badge.svg)](https://github.com/writerP-777/obsidian-writing-studio/actions/workflows/codeql.yml)
+[![OpenSSF Scorecard](https://api.securityscorecards.dev/projects/github.com/writerP-777/obsidian-writing-studio/badge)](https://securityscorecards.dev/viewer/?uri=github.com/writerP-777/obsidian-writing-studio)
+[![OpenSSF Baseline](https://www.bestpractices.dev/projects/12832/baseline)](https://www.bestpractices.dev/projects/12832)
+[![ESLint](https://github.com/writerP-777/obsidian-writing-studio/actions/workflows/eslint.yml/badge.svg)](https://github.com/writerP-777/obsidian-writing-studio/actions/workflows/eslint.yml)
+
+Every push and pull request is scanned automatically:
+
+| Tool | What it checks |
+|------|----------------|
+| **CodeQL** | Static analysis for security vulnerabilities (XSS, injection, unsafe patterns) in TypeScript/JavaScript source |
+| **OpenSSF Scorecard** | Supply-chain security posture: dependency hygiene, branch protection, signed releases, and more |
+| **ESLint** (`eslint-plugin-obsidianmd`) | Obsidian plugin guideline compliance — fails on any warning or error |
+
+Results are published to the **Security** tab of this repository (GitHub code scanning).
+
+For local development, a pre-commit hook runs ESLint (blocking) and a pre-push hook runs a full CodeQL scan (blocks the push if any HIGH or CRITICAL findings are present). Install the [CodeQL CLI](https://github.com/github/codeql-cli-binaries/releases) to enable local scanning (`winget install GitHub.CodeQL` on Windows).

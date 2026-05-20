@@ -525,17 +525,17 @@ export class FolderSidebarView extends ItemView {
     const navRow = container.createDiv({ cls: 'ws-folder-nav-row' });
 
     if (canGoBack) {
-      const backBtn = navRow.createEl('button', { text: '← back', cls: 'ws-folder-nav-btn' });
+      const backBtn = navRow.createEl('button', { text: '← Back', cls: 'ws-folder-nav-btn' });
       backBtn.addEventListener('click', () => this.navigateBack());
     }
 
-    const rootBtn = navRow.createEl('button', { text: '⌂ root', cls: 'ws-folder-nav-btn' });
+    const rootBtn = navRow.createEl('button', { text: '⌂ Root', cls: 'ws-folder-nav-btn' });
     rootBtn.addEventListener('click', () => this.navigateToRoot());
 
     // "Insert selection" button — only in file preview mode
     if (this.currentFile) {
       const insertBtn = navRow.createEl('button', {
-        text: '↩ insert selection',
+        text: '↩ Insert selection',
         cls: 'ws-folder-nav-btn ws-folder-insert-btn',
       });
 

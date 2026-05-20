@@ -4,6 +4,22 @@ All notable changes to Writing Studio are documented here.
 
 ---
 
+## [2.2.0]
+
+### Added
+- Binder rename now updates the file's YAML `title:` field and renames the `.md` file on disk via `fileManager.renameFile()`, keeping the filename as the single source of truth
+- Binder display title now resolves from the live filename on every render, self-healing stale binder JSON silently on first open
+- Vault rename event listener repairs binder item paths across all projects when a file is renamed outside the plugin (file explorer, Windows Explorer, etc.)
+- `openDocument()` shows a descriptive notice when a binder item's file path no longer resolves, instead of silently doing nothing
+- **Add files copied to this folder** toolbar button and command scan the active project folder for `.md` files not yet in the binder and let you select which ones to import via a per-file checkbox modal
+- Dashboard project switch now refreshes the binder immediately; `openBinder()` always refreshes on reveal
+- README restructured into workflow groups with new opening description, Reporting a Bug section, and updated Commands Reference
+
+### Fixed
+- Binder project-switch dropdown no longer leaves the open binder showing stale data from the previous project
+
+---
+
 ## [2.1.12]
 
 ### Fixed

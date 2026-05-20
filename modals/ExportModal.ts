@@ -33,11 +33,11 @@ export class ExportModal extends Modal {
       .addDropdown(d => d
         .addOption('md', 'Markdown (.md)')
         .addOption('html', 'HTML')
-        .addOption('manuscript', 'Manuscript (.HTML)')
-        .addOption('epub', 'Epub (.epub)')
+        .addOption('manuscript', 'Manuscript (HTML)')
+        .addOption('epub', 'EPUB (.epub)')
         .addOption('pdf', 'PDF (requires pandoc)')
         .addOption('docx', 'Word (.docx) (requires pandoc)')
-        .addOption('rtf', 'Rtf (requires pandoc)')
+        .addOption('rtf', 'RTF (requires pandoc)')
         .setValue(this.format)
         .onChange(v => {
           this.format = v as ExportFormat;
