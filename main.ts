@@ -383,6 +383,15 @@ export default class WritingStudioPlugin extends Plugin {
       })
     );
 
+    // Keep binder in sync when a file is renamed outside the binder
+    this.registerEvent(
+      this.app.vault.on('rename', (file, oldPath) => {
+        if (file instanceof TFile && file.extension === 'md') {
+          void this.syncBinderOnExternalRename(file, oldPath);
+        }
+      })
+    );
+
     // Word count update when active leaf changes
     this.registerEvent(
       this.app.workspace.on('active-leaf-change', () => {
@@ -461,6 +470,7 @@ export default class WritingStudioPlugin extends Plugin {
     const existing = this.app.workspace.getLeavesOfType(BINDER_VIEW_TYPE);
     if (existing.length > 0) {
       void this.app.workspace.revealLeaf(existing[0]);
+      await this.refreshBinder();
       return;
     }
 
@@ -468,6 +478,7 @@ export default class WritingStudioPlugin extends Plugin {
     if (leaf) {
       await leaf.setViewState({ type: BINDER_VIEW_TYPE, active: true });
       void this.app.workspace.revealLeaf(leaf);
+      await this.refreshBinder();
     }
   }
 
@@ -478,6 +489,24 @@ export default class WritingStudioPlugin extends Plugin {
         await leaf.view.refresh();
       }
     }
+  }
+
+  async onActiveProjectChanged(): Promise<void> {
+    await this.refreshLauncher();
+    await this.refreshBinder();
+  }
+
+  private async syncBinderOnExternalRename(file: TFile, oldPath: string): Promise<void> {
+    const project = this.projectManager.getActiveProject();
+    if (!project) return;
+    const binder = await this.projectManager.loadBinder(project);
+    const flat = this.projectManager.flattenBinder(binder.items);
+    const item = flat.find(i => i.filePath === oldPath);
+    if (!item) return;
+    item.filePath = file.path;
+    item.title = file.basename;
+    await this.projectManager.saveBinder(binder);
+    await this.refreshBinder();
   }
 
   async openCompilePreview(): Promise<void> {

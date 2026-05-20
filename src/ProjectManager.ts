@@ -324,6 +324,7 @@ tags: [writing-studio]
     this.activeProjectId = id;
     this.plugin.settings.activeProjectId = id;
     await this.plugin.saveSettings();
+    await this.plugin.onActiveProjectChanged();
   }
 
   flattenBinder(items: BinderItem[]): BinderItem[] {

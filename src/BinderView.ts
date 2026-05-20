@@ -332,6 +332,17 @@ export class BinderView extends ItemView {
       el.contentEditable = 'false';
       const newTitle = el.textContent?.trim() || item.title;
       if (newTitle !== item.title) {
+        const file = this.app.vault.getAbstractFileByPath(item.filePath);
+        if (file instanceof TFile) {
+          await this.app.fileManager.processFrontMatter(file, (fm: Record<string, unknown>) => {
+            fm['title'] = newTitle;
+          });
+          const parentPath = item.filePath.substring(0, item.filePath.lastIndexOf('/'));
+          const sanitized = newTitle.replace(/[\\/:*?"<>|]/g, '-');
+          const newPath = normalizePath(`${parentPath}/${sanitized}.md`);
+          await this.app.fileManager.renameFile(file, newPath);
+          item.filePath = newPath;
+        }
         item.title = newTitle;
         await this.saveBinder();
       }
