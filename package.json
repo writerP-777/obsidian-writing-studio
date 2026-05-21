@@ -1,13 +1,15 @@
 {
   "name": "obsidian-writing-studio",
-  "version": "2.2.0",
+  "version": "2.2.1",
   "description": "Obsidian Writing Studio Plugin",
   "main": "main.js",
   "scripts": {
     "dev": "node esbuild.config.mjs",
     "build": "tsc -noEmit -skipLibCheck && node esbuild.config.mjs production",
     "lint": "node node_modules/eslint-plugin-obsidianmd/node_modules/eslint/bin/eslint.js --max-warnings 0 main.ts src/ modals/",
-    "version": "node version-bump.mjs && git add manifest.json versions.json"
+    "version": "node version-bump.mjs && git add manifest.json versions.json",
+    "fetch:guidelines": "bash scripts/fetch-plugin-guidelines.sh",
+    "check:scorecard": "bash scripts/scorecard-check.sh"
   },
   "overrides": {
     "@codemirror/state": "6.5.0",

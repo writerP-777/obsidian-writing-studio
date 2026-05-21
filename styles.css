@@ -79,10 +79,9 @@
 }
 
 /* ── Hidden utility ─────────────────────────────────────────────── */
-/* !important is intentional: this is a programmatic show/hide toggle.
-   It must win regardless of whatever display value the element would
-   otherwise inherit from a theme or Obsidian's own stylesheet. */
-.ws-hidden { display: none !important; }
+/* body prefix gives specificity (0,1,1), beating theme element selectors
+   without needing !important. */
+body .ws-hidden { display: none; }
 
 /* ── Typography Mode ────────────────────────────────────────────── */
 /*

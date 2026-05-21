@@ -1,6 +1,6 @@
 # Obsidian Writing Studio
 
-**Version 2.2.0** · Desktop only
+**Version 2.2.1** · Desktop only
 
 ![GitHub all releases](https://img.shields.io/github/downloads/writerP-777/obsidian-writing-studio/total)
 

@@ -1,10 +1,5 @@
 import { App, TFile } from 'obsidian';
-
-interface FileSystemAdapter {
-  getFullPath?(vaultPath: string): string;
-}
-import { zipSync, type ZipOptions } from 'fflate';
-import { promises as fsp } from 'fs';
+import { zipSync, type Zippable } from 'fflate';
 import type WritingStudioPlugin from '../main';
 
 export interface EpubChapter {
@@ -37,7 +32,7 @@ export class EpubEngine {
 
     // Entries are written in insertion order — mimetype MUST be first and
     // stored uncompressed (level 0) per the EPUB OCF spec.
-    const entries: Record<string, [Uint8Array, ZipOptions]> = {};
+    const entries: Zippable = {};
     entries['mimetype'] = [Buffer.from('application/epub+zip'), { level: 0 }];
     entries['META-INF/container.xml'] = [Buffer.from(this.containerXml()), { level: 6 }];
 
@@ -68,16 +63,18 @@ export class EpubEngine {
     entries['OEBPS/toc.ncx'] = [Buffer.from(this.tocNcx(uid, opts.title, opts.author, opts.chapters)), { level: 6 }];
     entries['OEBPS/content.opf'] = [Buffer.from(this.contentOpf(uid, opts, modified, coverImageFile, coverImageMime)), { level: 6 }];
 
-    const absPath = this.absPath(outputVaultPath);
-    await fsp.writeFile(absPath, zipSync(entries) as Uint8Array);
+    const compressed = zipSync(entries) as unknown as Uint8Array;
+    const data = new ArrayBuffer(compressed.byteLength);
+    new Uint8Array(data).set(compressed);
+    const existing = this.app.vault.getAbstractFileByPath(outputVaultPath);
+    if (existing instanceof TFile) {
+      await this.app.vault.modifyBinary(existing, data);
+    } else {
+      await this.app.vault.createBinary(outputVaultPath, data);
+    }
   }
 
   // ── Helpers ────────────────────────────────────────────────────────────────
-
-  private absPath(vaultPath: string): string {
-    const adapter = this.app.vault.adapter as unknown as FileSystemAdapter;
-    return adapter.getFullPath ? adapter.getFullPath(vaultPath) : vaultPath;
-  }
 
   private uuid(): string {
     return crypto.randomUUID();
