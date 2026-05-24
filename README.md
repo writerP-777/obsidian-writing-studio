@@ -2,12 +2,6 @@
   <img src="assets/logo.png" width="120" alt="Writing Studio logo">
 </p>
 
-<p align="center">
-  <a href="https://buymeacoffee.com/writerp777">
-    <img src="https://img.buymeacoffee.com/button-api/?text=Buy%20me%20a%20coffee&slug=writerp777&button_colour=c9a84c&font_colour=000000&font_family=Georgia&outline_colour=000000&coffee_colour=ffffff" alt="Buy me a coffee" height="40">
-  </a>
-</p>
-
 # Obsidian Writing Studio
 
 **Version 2.2.1** · Desktop only
@@ -15,6 +9,12 @@
 ![GitHub all releases](https://img.shields.io/github/downloads/writerP-777/obsidian-writing-studio/total)
 
 Writing Studio turns Obsidian into a dedicated environment for serious nonfiction work — from your first research notes to a finished, exported manuscript. It bundles a project binder, writing modes, focus and typography tools, sprint timer, progress tracking, manuscript export, and WordPress publishing into a single plugin.
+
+<p align="center">
+  <a href="https://buymeacoffee.com/writerp777">
+    <img src="https://img.buymeacoffee.com/button-api/?text=Buy%20me%20a%20coffee&slug=writerp777&button_colour=c9a84c&font_colour=000000&font_family=Georgia&outline_colour=000000&coffee_colour=ffffff" alt="Buy me a coffee" height="40">
+  </a>
+</p>
 
 ---
 
