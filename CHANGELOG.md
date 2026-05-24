@@ -4,6 +4,15 @@ All notable changes to Writing Studio are documented here.
 
 ---
 
+## [2.2.2]
+
+### Added
+- Buy Me a Coffee support button added to the bottom of the **How to use** settings tab
+- Plugin logo and Buy Me a Coffee button added to README
+- ORCID iD badge added to README Security section
+
+---
+
 ## [2.2.1]
 
 ### Fixed
