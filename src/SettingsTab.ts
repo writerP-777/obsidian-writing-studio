@@ -480,5 +480,16 @@ export class WritingStudioSettingsTab extends PluginSettingTab {
     this.helpComponent.load();
     el.addClass('ws-help-content');
     await MarkdownRenderer.render(this.app, HELP_CONTENT, el, '', this.helpComponent);
+    const supportDiv = el.createDiv({ cls: 'ws-support-footer' });
+    supportDiv.createEl('a', {
+      href: 'https://buymeacoffee.com/writerp777',
+      attr: { target: '_blank', rel: 'noopener noreferrer' }
+    }).createEl('img', {
+      attr: {
+        src: 'https://img.buymeacoffee.com/button-api/?text=Buy%20me%20a%20coffee&slug=writerp777&button_colour=c9a84c&font_colour=000000&font_family=Georgia&outline_colour=000000&coffee_colour=ffffff',
+        alt: 'Buy me a coffee',
+        height: '40'
+      }
+    });
   }
 }
