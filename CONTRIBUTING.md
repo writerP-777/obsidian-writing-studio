@@ -11,6 +11,7 @@ Thank you for your interest in contributing to Obsidian Writing Studio. This doc
 - [Reporting Bugs](#reporting-bugs)
 - [Requesting Features](#requesting-features)
 - [Development Setup](#development-setup)
+- [Automated Tests](#automated-tests)
 - [Submitting a Pull Request](#submitting-a-pull-request)
 - [Coding Standards](#coding-standards)
 - [Commit Messages](#commit-messages)
@@ -114,6 +115,31 @@ Run `npm run lint` manually at any time to check for issues before committing.
 
 ---
 
+## Automated Tests
+
+The project uses [Jest](https://jestjs.io/) with [ts-jest](https://kulshekhar.github.io/ts-jest/) for unit testing. Tests live in the `tests/` directory and are run automatically by CI on every push and pull request.
+
+### Running the tests
+
+```bash
+npm test
+```
+
+### Test policy
+
+**Any new functionality added to the plugin must include tests for that functionality.** This applies to pure business logic, utility functions, and any module that can be tested without the Obsidian runtime. Tests are not required for Obsidian UI components (views, modals, leaf management) that cannot run outside the Obsidian desktop context.
+
+When adding a new feature:
+
+1. Place test files in `tests/` next to a name that mirrors the module under test (e.g. `tests/myFeature.test.ts` for `src/MyFeature.ts`).
+2. Focus on the public interface of each module. Test inputs and outputs, not internal implementation details.
+3. Use the Obsidian mock in `tests/__mocks__/obsidian.ts` to stub Obsidian API classes when the module under test imports from `obsidian` but the methods being tested do not actually call the Obsidian API at runtime.
+4. Run `npm test` before opening a pull request and confirm all tests pass.
+
+Pull requests that add new functionality without accompanying tests will be asked to add tests before merge.
+
+---
+
 ## Submitting a Pull Request
 
 1. **Open an issue first** for any non-trivial change so the approach can be discussed before you invest significant time.
@@ -122,10 +148,11 @@ Run `npm run lint` manually at any time to check for issues before committing.
    git checkout -b fix/short-description-of-change
    ```
 3. **Make your changes**, following the coding standards below.
-4. **Test thoroughly** — verify the change works in Obsidian on at least one platform and does not break existing features.
-5. **Commit** with a clear message (see Commit Messages below).
-6. **Push** your branch and open a pull request against `main`.
-7. Fill out the pull request template completely.
+4. **Run the automated test suite** with `npm test` and fix any failures.
+5. **Test in Obsidian** — verify the change works on at least one platform and does not break existing features.
+6. **Commit** with a clear message (see Commit Messages below).
+7. **Push** your branch and open a pull request against `main`.
+8. Fill out the pull request template completely.
 
 Pull requests that lack a description, skip testing, or include unrelated changes will be asked to revise before review.
 
