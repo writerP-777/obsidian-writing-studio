@@ -37,9 +37,9 @@ jobs:
 
       - name: Sign release artifacts
         run: |
-          cosign sign-blob --bundle=main.js.bundle main.js
-          cosign sign-blob --bundle=manifest.json.bundle manifest.json
-          cosign sign-blob --bundle=styles.css.bundle styles.css
+          cosign sign-blob --yes --bundle=main.js.bundle main.js
+          cosign sign-blob --yes --bundle=manifest.json.bundle manifest.json
+          cosign sign-blob --yes --bundle=styles.css.bundle styles.css
 
       - name: Create GitHub release
         uses: softprops/action-gh-release@b4309332981a82ec1c5618f44dd2e27cc8bfbfda # v3.0.0
