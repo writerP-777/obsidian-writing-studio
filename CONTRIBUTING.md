@@ -15,6 +15,7 @@ Thank you for your interest in contributing to Obsidian Writing Studio. This doc
 - [Submitting a Pull Request](#submitting-a-pull-request)
 - [Coding Standards](#coding-standards)
 - [Commit Messages](#commit-messages)
+- [Releasing a new version](#releasing-a-new-version)
 
 ---
 
@@ -183,6 +184,57 @@ Reference related issues where applicable:
 ```
 Fix word count goal not persisting after vault reload (#42)
 ```
+
+---
+
+## Releasing a new version
+
+> **Maintainers only.** External contributors do not need to follow this process.
+
+### 1. Run the version bump script
+
+```bash
+npm run bump -- X.X.X
+```
+
+Replace `X.X.X` with the target semver string (e.g. `2.3.0`). The script will:
+
+- Validate the argument is a valid semver string and that the version does not already exist
+- Update `manifest.json` — `version` field
+- Update `versions.json` — prepend `"X.X.X": "1.7.2"` at the top
+- Update `package.json` — `version` field
+- Update `README.md` — the `**Version X.X.X**` header line
+- Update `SECURITY.md` — supported version table rows (minor or major bumps only; skipped for patch-only bumps)
+- Prepend a new `## [X.X.X]` section to `CHANGELOG.md` populated from commits since the last tag, categorised into **Added**, **Fixed**, **Changed**, and **Security**
+
+### 2. Review all changed files
+
+Open each modified file and verify the content is correct before committing:
+
+- `manifest.json` — version field updated
+- `versions.json` — new entry at the top
+- `package.json` — version field updated
+- `README.md` — version line updated
+- `SECURITY.md` — supported version rows updated (minor/major bumps only)
+- `CHANGELOG.md` — new section at the top; **edit the generated entries for accuracy and clarity** before committing
+
+### 3. Commit and tag
+
+```bash
+git add manifest.json versions.json package.json README.md CHANGELOG.md SECURITY.md
+git commit -m "Bump version to X.X.X"
+git tag X.X.X
+```
+
+Omit `SECURITY.md` from the `git add` line if the script skipped it (patch-only bump).
+
+### 4. Push
+
+```bash
+git push && git push --tags
+```
+
+Pushing the tag triggers the release workflow, which builds the plugin and attaches `main.js`, `manifest.json`, and `styles.css` as individual binary files to the GitHub Release automatically.
 
 ---
 
