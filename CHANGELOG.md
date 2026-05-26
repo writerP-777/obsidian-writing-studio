@@ -4,6 +4,17 @@ All notable changes to Writing Studio are documented here.
 
 ---
 
+## [2.2.3]
+
+### Added
+- Unit test suite (Jest) covering word count, frontmatter, and binder operations
+- Version bump script (`npm run bump -- X.X.X`) for atomic multi-file release preparation
+
+### Changed
+- OpenSSF Best Practices badge added to README
+
+---
+
 ## [2.2.2]
 
 ### Added

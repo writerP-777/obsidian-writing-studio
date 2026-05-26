@@ -1,11 +1,12 @@
 {
   "name": "obsidian-writing-studio",
-  "version": "2.2.2",
+  "version": "2.2.3",
   "description": "Obsidian Writing Studio Plugin",
   "main": "main.js",
   "scripts": {
     "dev": "node esbuild.config.mjs",
     "build": "tsc -noEmit -skipLibCheck && node esbuild.config.mjs production",
+    "bump": "node scripts/bump.js",
     "test": "jest",
     "lint": "node node_modules/eslint-plugin-obsidianmd/node_modules/eslint/bin/eslint.js --max-warnings 0 main.ts src/ modals/",
     "version": "node version-bump.mjs && git add manifest.json versions.json",
