@@ -47,513 +47,7 @@ var STATUS_LABELS = {
 };
 
 // modals/ProjectModal.ts
-var import_obsidian = require("obsidian");
-var ProjectModal = class extends import_obsidian.Modal {
-  constructor(app, plugin, onDone) {
-    super(app);
-    this.title = "";
-    this.type = "blank";
-    this.description = "";
-    this.plugin = plugin;
-    this.onDone = onDone;
-  }
-  onOpen() {
-    const { contentEl } = this;
-    contentEl.empty();
-    contentEl.addClass("ws-project-modal");
-    contentEl.createEl("h2", { text: "New writing project" });
-    let previewEl;
-    new import_obsidian.Setting(contentEl).setName("Project title").addText((t3) => t3.setPlaceholder("My novel").onChange((v) => {
-      this.title = v;
-    }));
-    new import_obsidian.Setting(contentEl).setName("Template").setDesc("Choose a pre-configured project structure.").addDropdown((d) => d.addOption("blank", "Blank (custom structure)").addOption("book", "Book (parts \u2192 chapters \u2192 scenes)").addOption("series", "Article series (series \u2192 articles)").addOption("blog", "Blog collection (posts by date/category)").addOption("journal-article", "Journal article \u2014 academic or professional journal submission").addOption("magazine-article", "Magazine article \u2014 feature, long-form, or narrative nonfiction").setValue(this.type).onChange((v) => {
-      this.type = v;
-      this.updateTemplatePreview(previewEl, this.type);
-    }));
-    new import_obsidian.Setting(contentEl).setName("Description (optional)").addTextArea((t3) => t3.setPlaceholder("Brief description of this project\u2026").onChange((v) => {
-      this.description = v;
-    }));
-    previewEl = contentEl.createDiv("ws-template-preview");
-    this.updateTemplatePreview(previewEl, this.type);
-    const btnRow = contentEl.createDiv("ws-modal-btn-row");
-    const createBtn = btnRow.createEl("button", { cls: "mod-cta", text: "Create project" });
-    createBtn.onclick = async () => {
-      if (!this.title.trim()) {
-        new import_obsidian.Notice("Please enter a project title.");
-        return;
-      }
-      createBtn.disabled = true;
-      createBtn.textContent = "Creating\u2026";
-      try {
-        const project = await this.plugin.projectManager.createProject(
-          this.title.trim(),
-          this.type,
-          this.plugin.settings.authorName,
-          this.description
-        );
-        await this.plugin.projectManager.setActiveProject(project.id);
-        new import_obsidian.Notice(`Project "${project.title}" created!`);
-        this.close();
-        this.onDone();
-      } catch (e) {
-        new import_obsidian.Notice(`Failed to create project: ${e instanceof Error ? e.message : String(e)}`);
-        createBtn.disabled = false;
-        createBtn.textContent = "Create project";
-      }
-    };
-    const cancelBtn = btnRow.createEl("button", { text: "Cancel" });
-    cancelBtn.onclick = () => this.close();
-  }
-  updateTemplatePreview(el, type) {
-    el.empty();
-    const previews = {
-      blank: "Empty project \u2014 build your own structure.",
-      book: "Creates: Front Matter, Part 1 / Chapter 1, Back Matter placeholder.",
-      series: "Creates: Series folder, Article 1 placeholder, series metadata.",
-      blog: "Creates: date-organized folder, first post placeholder.",
-      "journal-article": "Creates: Title Page, Abstract, Keywords, Introduction, Literature Review, Methodology, Findings / Analysis, Discussion, Conclusion, References, Appendices.",
-      "magazine-article": "Creates: Pitch / Query Notes, Headline & Deck, Lede, Nut Graf, Body, Quotes & Sources, Kicker, Fact-Check Notes, Author Bio. Notes documents excluded from export by default."
-    };
-    el.createEl("p", { text: previews[type], cls: "ws-template-desc" });
-  }
-  onClose() {
-    this.contentEl.empty();
-  }
-};
-
-// modals/TargetsDashboardModal.ts
 var import_obsidian2 = require("obsidian");
-var TargetsDashboardModal = class extends import_obsidian2.Modal {
-  constructor(app, plugin) {
-    super(app);
-    this.stats = [];
-    this.sortCol = "order";
-    this.sortAsc = true;
-    this.statusFilter = "all";
-    this.plugin = plugin;
-  }
-  async onOpen() {
-    const { contentEl } = this;
-    contentEl.empty();
-    contentEl.addClass("ws-dashboard-modal");
-    contentEl.createEl("h2", { text: "Chapter targets dashboard" });
-    const project = this.plugin.projectManager.getActiveProject();
-    if (!project) {
-      contentEl.createEl("p", { text: "No project selected.", cls: "ws-empty-state" });
-      return;
-    }
-    await this.loadStats(project);
-    const filterRow = contentEl.createDiv("ws-dashboard-filters");
-    filterRow.createEl("label", { text: "Filter: " });
-    const statusSel = filterRow.createEl("select");
-    ["all", "draft", "in-progress", "complete", "published"].forEach((s) => {
-      const opt = statusSel.createEl("option", { text: s === "all" ? "All statuses" : STATUS_LABELS[s] || s });
-      opt.value = s;
-    });
-    statusSel.value = this.statusFilter;
-    statusSel.onchange = () => {
-      this.statusFilter = statusSel.value;
-      this.renderTable(contentEl);
-    };
-    const refreshBtn = filterRow.createEl("button", { text: "\u21BB Refresh", cls: "ws-dashboard-refresh" });
-    refreshBtn.onclick = async () => {
-      await this.loadStats(project);
-      this.renderTable(contentEl);
-    };
-    this.renderTable(contentEl);
-  }
-  async loadStats(project) {
-    if (!project) return;
-    const binder = await this.plugin.projectManager.loadBinder(project);
-    const items = this.plugin.projectManager.flattenBinder(binder.items);
-    this.stats = [];
-    for (const item of items) {
-      if (item.type === "group" || item.type === "part") continue;
-      const file = this.app.vault.getAbstractFileByPath(item.filePath);
-      let wordCount = 0;
-      if (file instanceof import_obsidian2.TFile) {
-        const content = await this.app.vault.read(file);
-        wordCount = this.plugin.fmManager.countWords(content);
-      }
-      this.stats.push({
-        item,
-        wordCount,
-        readingTime: this.plugin.statsTracker.calculateReadingTime(wordCount)
-      });
-    }
-  }
-  renderTable(container) {
-    const existing = container.querySelector(".ws-dashboard-table-wrap");
-    if (existing) existing.remove();
-    const wrap = container.createDiv("ws-dashboard-table-wrap");
-    const table = wrap.createEl("table", { cls: "ws-dashboard-table" });
-    const thead = table.createEl("thead");
-    const hr = thead.createEl("tr");
-    const cols = [
-      { key: "title", label: "Title" },
-      { key: "type", label: "Type" },
-      { key: "status", label: "Status" },
-      { key: "wordCount", label: "Words" },
-      { key: "goal", label: "Goal" },
-      { key: "progress", label: "Progress" },
-      { key: "readingTime", label: "Reading time" }
-    ];
-    for (const col of cols) {
-      const th = hr.createEl("th", { text: col.label });
-      if (col.key !== "progress") {
-        th.addClass("ws-sortable");
-        th.onclick = () => {
-          if (this.sortCol === col.key) this.sortAsc = !this.sortAsc;
-          else {
-            this.sortCol = col.key;
-            this.sortAsc = true;
-          }
-          this.renderTable(container);
-        };
-        if (this.sortCol === col.key) {
-          th.textContent += this.sortAsc ? " \u2191" : " \u2193";
-        }
-      }
-    }
-    let filtered = this.stats.filter(
-      (s) => this.statusFilter === "all" || s.item.status === this.statusFilter
-    );
-    filtered.sort((a, b) => {
-      let av = 0, bv = 0;
-      switch (this.sortCol) {
-        case "title":
-          av = a.item.title.toLowerCase();
-          bv = b.item.title.toLowerCase();
-          break;
-        case "type":
-          av = a.item.type;
-          bv = b.item.type;
-          break;
-        case "status":
-          av = a.item.status;
-          bv = b.item.status;
-          break;
-        case "wordCount":
-          av = a.wordCount;
-          bv = b.wordCount;
-          break;
-        case "goal":
-          av = a.item.wordCountGoal || 0;
-          bv = b.item.wordCountGoal || 0;
-          break;
-        case "readingTime":
-          av = a.wordCount;
-          bv = b.wordCount;
-          break;
-        default:
-          av = a.item.order;
-          bv = b.item.order;
-      }
-      if (av < bv) return this.sortAsc ? -1 : 1;
-      if (av > bv) return this.sortAsc ? 1 : -1;
-      return 0;
-    });
-    const tbody = table.createEl("tbody");
-    for (const stat of filtered) {
-      const tr = tbody.createEl("tr");
-      const titleTd = tr.createEl("td", { cls: "ws-dash-title" });
-      const titleLink = titleTd.createEl("a", { text: stat.item.title });
-      titleLink.href = "#";
-      titleLink.onclick = async (e) => {
-        e.preventDefault();
-        const file = this.app.vault.getAbstractFileByPath(stat.item.filePath);
-        if (file instanceof import_obsidian2.TFile) {
-          const leaf = this.app.workspace.getLeaf(false);
-          await leaf.openFile(file);
-          this.close();
-        }
-      };
-      tr.createEl("td", { text: stat.item.type });
-      const statusTd = tr.createEl("td");
-      const badge = statusTd.createSpan("ws-status-badge");
-      badge.textContent = STATUS_LABELS[stat.item.status];
-      badge.setCssProps({ "--ws-status-color": STATUS_COLORS[stat.item.status] });
-      tr.createEl("td", { text: String(stat.wordCount) });
-      const goalTd = tr.createEl("td");
-      const goalInput = goalTd.createEl("input", { type: "number", cls: "ws-dash-goal-input" });
-      goalInput.value = String(stat.item.wordCountGoal || "");
-      goalInput.placeholder = "\u2014";
-      goalInput.onchange = async () => {
-        const val = parseInt(goalInput.value) || 0;
-        stat.item.wordCountGoal = val || void 0;
-        const project = this.plugin.projectManager.getActiveProject();
-        if (project) {
-          const binder = await this.plugin.projectManager.loadBinder(project);
-          const found = this.plugin.projectManager.findItem(binder.items, stat.item.id);
-          if (found) {
-            found.wordCountGoal = stat.item.wordCountGoal;
-            await this.plugin.projectManager.saveBinder(binder);
-          }
-        }
-        this.renderTable(container);
-      };
-      const progressTd = tr.createEl("td");
-      const goal = stat.item.wordCountGoal;
-      if (goal && goal > 0) {
-        const pct = Math.min(100, Math.round(stat.wordCount / goal * 100));
-        const barWrap = progressTd.createDiv("ws-progress-wrap");
-        const bar = barWrap.createDiv("ws-progress-bar");
-        bar.setCssProps({ "--ws-bar-width": `${pct}%` });
-        progressTd.createSpan({ text: `${pct}%`, cls: "ws-progress-pct" });
-      } else {
-        progressTd.textContent = "\u2014";
-      }
-      tr.createEl("td", { text: stat.readingTime });
-    }
-    const tfoot = table.createEl("tfoot");
-    const sumRow = tfoot.createEl("tr", { cls: "ws-dash-summary" });
-    const totalWords = filtered.reduce((s, d) => s + d.wordCount, 0);
-    const totalGoal = filtered.reduce((s, d) => s + (d.item.wordCountGoal || 0), 0);
-    const overallPct = totalGoal > 0 ? Math.round(totalWords / totalGoal * 100) : 0;
-    sumRow.createEl("td", { text: "Total" });
-    sumRow.createEl("td");
-    sumRow.createEl("td");
-    sumRow.createEl("td", { text: String(totalWords) });
-    sumRow.createEl("td", { text: totalGoal > 0 ? String(totalGoal) : "\u2014" });
-    const sumProgressTd = sumRow.createEl("td");
-    if (totalGoal > 0) {
-      const barWrap = sumProgressTd.createDiv("ws-progress-wrap");
-      const bar = barWrap.createDiv("ws-progress-bar");
-      bar.setCssProps({ "--ws-bar-width": `${overallPct}%` });
-      sumProgressTd.createSpan({ text: `${overallPct}%`, cls: "ws-progress-pct" });
-    }
-    sumRow.createEl("td", { text: this.plugin.statsTracker.calculateReadingTime(totalWords) });
-  }
-  onClose() {
-    this.contentEl.empty();
-  }
-};
-
-// modals/PublishModal.ts
-var import_obsidian3 = require("obsidian");
-var PublishModal = class extends import_obsidian3.Modal {
-  constructor(app, plugin, filePath) {
-    super(app);
-    this.selectedSiteId = "";
-    this.postTitle = "";
-    this.postStatus = "draft";
-    this.selectedCategoryIds = [];
-    this.tags = [];
-    this.excerpt = "";
-    this.scheduledDate = "";
-    this.categories = [];
-    this.plugin = plugin;
-    this.filePath = filePath;
-  }
-  async onOpen() {
-    const { contentEl } = this;
-    contentEl.empty();
-    contentEl.addClass("ws-publish-modal");
-    contentEl.createEl("h2", { text: "Publish to WordPress" });
-    const sites = this.plugin.settings.wordPressSites;
-    if (sites.length === 0) {
-      contentEl.createEl("p", {
-        text: "No WordPress sites configured. Add a site in settings \u2192 WordPress.",
-        cls: "ws-empty-state"
-      });
-      contentEl.createEl("button", { text: "Close" }).onclick = () => this.close();
-      return;
-    }
-    await this.loadExistingMeta();
-    new import_obsidian3.Setting(contentEl).setName("WordPress site").addDropdown((d) => {
-      sites.forEach((s) => {
-        d.addOption(s.id, s.nickname || s.url);
-      });
-      if (this.selectedSiteId) d.setValue(this.selectedSiteId);
-      else {
-        this.selectedSiteId = sites[0].id;
-        d.setValue(this.selectedSiteId);
-      }
-      d.onChange((v) => {
-        this.selectedSiteId = v;
-        void this.loadCategories().then(() => this.render());
-      });
-    });
-    new import_obsidian3.Setting(contentEl).setName("Post title").addText((t3) => t3.setValue(this.postTitle).onChange((v) => {
-      this.postTitle = v;
-    }));
-    new import_obsidian3.Setting(contentEl).setName("Post status").addDropdown((d) => d.addOption("draft", "Draft").addOption("pending", "Pending review").addOption("publish", "Published").setValue(this.postStatus).onChange((v) => {
-      this.postStatus = v;
-    }));
-    const site = this.getSite();
-    if (site) {
-      this.categories = await this.plugin.wpClient.getCategories(site);
-    }
-    if (this.categories.length > 0) {
-      new import_obsidian3.Setting(contentEl).setName("Category");
-      const catList = contentEl.createDiv("ws-publish-categories");
-      for (const cat of this.categories) {
-        const label = catList.createEl("label", { cls: "ws-publish-cat-label" });
-        const cb = label.createEl("input", { type: "checkbox" });
-        cb.checked = this.selectedCategoryIds.includes(cat.id);
-        cb.onchange = () => {
-          if (cb.checked) {
-            if (!this.selectedCategoryIds.includes(cat.id)) this.selectedCategoryIds.push(cat.id);
-          } else {
-            this.selectedCategoryIds = this.selectedCategoryIds.filter((id) => id !== cat.id);
-          }
-        };
-        label.createSpan({ text: ` ${cat.name} (${cat.count})` });
-      }
-    }
-    new import_obsidian3.Setting(contentEl).setName("Tags").setDesc("Comma-separated.").addText((t3) => t3.setValue(this.tags.join(", ")).onChange((v) => {
-      this.tags = v.split(",").map((s) => s.trim()).filter(Boolean);
-    }));
-    new import_obsidian3.Setting(contentEl).setName("Excerpt (optional)").addTextArea((t3) => t3.setValue(this.excerpt).onChange((v) => {
-      this.excerpt = v;
-    }));
-    new import_obsidian3.Setting(contentEl).setName("Schedule publication (optional)").setDesc("Leave empty to publish immediately.").addText((t3) => t3.setPlaceholder("yyyy-mm-ddThh:mm:ss").setValue(this.scheduledDate).onChange((v) => {
-      this.scheduledDate = v;
-    }));
-    if (this.existingPostId) {
-      const noticeEl = contentEl.createDiv("ws-publish-existing-notice");
-      noticeEl.createSpan({ text: `\u26A0 This document was previously published (Post ID: ${this.existingPostId}).` });
-      const choiceRow = noticeEl.createDiv("ws-publish-choice");
-      const updateBtn = choiceRow.createEl("button", { text: "Update existing post", cls: "mod-cta" });
-      updateBtn.onclick = () => {
-        void this.doPublish(true);
-      };
-      const newBtn = choiceRow.createEl("button", { text: "Create new post" });
-      newBtn.onclick = () => {
-        void this.doPublish(false);
-      };
-    }
-    const btnRow = contentEl.createDiv("ws-modal-btn-row");
-    if (!this.existingPostId) {
-      const publishBtn = btnRow.createEl("button", {
-        cls: "mod-cta",
-        text: this.scheduledDate ? "Schedule" : "Publish"
-      });
-      publishBtn.onclick = () => {
-        void this.doPublish(false);
-      };
-    }
-    const cancelBtn = btnRow.createEl("button", { text: "Cancel" });
-    cancelBtn.onclick = () => this.close();
-  }
-  render() {
-    void this.onOpen();
-  }
-  async loadExistingMeta() {
-    const file = this.app.vault.getAbstractFileByPath(this.filePath);
-    if (!(file instanceof import_obsidian3.TFile)) return;
-    const content = await this.app.vault.read(file);
-    const fm = this.plugin.fmManager.parseFrontmatter(content);
-    if (fm) {
-      this.postTitle = fm["title"] || file.basename;
-      if (fm["wp-post-id"]) this.existingPostId = Number(fm["wp-post-id"]);
-      if (fm["wp-status"]) this.postStatus = fm["wp-status"];
-      if (fm["tags"] && Array.isArray(fm["tags"])) {
-        this.tags = fm["tags"].filter((t3) => t3 !== "writing-studio");
-      }
-      if (fm["wp-site"]) {
-        const site = this.plugin.settings.wordPressSites.find((s) => s.nickname === fm["wp-site"]);
-        if (site) this.selectedSiteId = site.id;
-      }
-    }
-  }
-  async loadCategories() {
-    const site = this.getSite();
-    if (!site) return;
-    this.categories = await this.plugin.wpClient.getCategories(site);
-  }
-  getSite() {
-    return this.plugin.settings.wordPressSites.find((s) => s.id === this.selectedSiteId);
-  }
-  async doPublish(updateExisting) {
-    const site = this.getSite();
-    if (!site) {
-      new import_obsidian3.Notice("No site selected.");
-      return;
-    }
-    const file = this.app.vault.getAbstractFileByPath(this.filePath);
-    if (!(file instanceof import_obsidian3.TFile)) {
-      new import_obsidian3.Notice("File not found.");
-      return;
-    }
-    try {
-      const rawContent = await this.app.vault.read(file);
-      const htmlContent = this.plugin.wpClient.convertMarkdownToHtml(rawContent, site);
-      const result = await this.plugin.wpClient.publish(site, {
-        title: this.postTitle,
-        content: htmlContent,
-        status: this.postStatus,
-        categoryIds: this.selectedCategoryIds,
-        tags: this.tags,
-        excerpt: this.excerpt,
-        scheduledDate: this.scheduledDate || void 0,
-        existingPostId: updateExisting ? this.existingPostId : void 0
-      });
-      await this.app.vault.process(file, (data) => {
-        return this.plugin.fmManager.setWpMeta(data, {
-          wpSite: site.nickname,
-          wpPostId: result.postId,
-          wpUrl: result.url,
-          wpStatus: result.status,
-          wpPublished: result.scheduledDate ? void 0 : (/* @__PURE__ */ new Date()).toISOString().split("T")[0],
-          wpScheduled: result.scheduledDate
-        });
-      });
-      const action = this.scheduledDate ? "Scheduled" : "Published";
-      new import_obsidian3.Notice(`${action}! View post: ${result.url}`, 1e4);
-      this.close();
-    } catch (e) {
-      new import_obsidian3.Notice(`Publish failed: ${e instanceof Error ? e.message : String(e)}`);
-    }
-  }
-  onClose() {
-    this.contentEl.empty();
-  }
-};
-
-// modals/ScanFolderModal.ts
-var import_obsidian4 = require("obsidian");
-var ScanFolderModal = class extends import_obsidian4.Modal {
-  constructor(app, files, onConfirm) {
-    super(app);
-    this.files = files;
-    this.checked = new Map(files.map((f) => [f.path, true]));
-    this.onConfirm = onConfirm;
-  }
-  onOpen() {
-    const { contentEl } = this;
-    contentEl.empty();
-    contentEl.addClass("ws-scan-folder-modal");
-    contentEl.createEl("h2", { text: "Add files to binder" });
-    contentEl.createEl("p", {
-      text: "Select the files to add to this project:",
-      cls: "ws-scan-folder-desc"
-    });
-    const listEl = contentEl.createDiv("ws-scan-folder-list");
-    for (const file of this.files) {
-      const label = listEl.createEl("label", { cls: "ws-scan-folder-row" });
-      const checkbox = label.createEl("input");
-      checkbox.type = "checkbox";
-      checkbox.checked = true;
-      checkbox.addEventListener("change", () => {
-        this.checked.set(file.path, checkbox.checked);
-      });
-      label.createSpan({ text: file.basename });
-    }
-    const btnRow = contentEl.createDiv("ws-modal-btn-row");
-    const addBtn = btnRow.createEl("button", { cls: "mod-cta", text: "Add selected files" });
-    addBtn.onclick = async () => {
-      const selected = this.files.filter((f) => this.checked.get(f.path));
-      await this.onConfirm(selected);
-      this.close();
-    };
-    const cancelBtn = btnRow.createEl("button", { text: "Cancel" });
-    cancelBtn.onclick = () => this.close();
-  }
-  onClose() {
-    this.contentEl.empty();
-  }
-};
 
 // node_modules/i18next/dist/esm/i18next.js
 var isString = (obj) => typeof obj === "string";
@@ -2817,7 +2311,7 @@ var loadNamespaces = instance.loadNamespaces;
 var loadLanguages = instance.loadLanguages;
 
 // src/i18n.ts
-var import_obsidian5 = require("obsidian");
+var import_obsidian = require("obsidian");
 
 // src/i18n/en.json
 var en_default = {
@@ -3139,6 +2633,182 @@ var en_default = {
     proceedToExport: "Proceed to export",
     closePreview: "Close preview",
     noContent: "No content to preview. Open a writing project first."
+  },
+  projectModal: {
+    title: "New writing project",
+    projectTitle: "Project title",
+    titlePlaceholder: "My novel",
+    template: "Template",
+    templateDesc: "Choose a pre-configured project structure.",
+    templateOption: {
+      blank: "Blank (custom structure)",
+      book: "Book (parts \u2192 chapters \u2192 scenes)",
+      series: "Article series (series \u2192 articles)",
+      blog: "Blog collection (posts by date/category)",
+      journalArticle: "Journal article \u2014 academic or professional journal submission",
+      magazineArticle: "Magazine article \u2014 feature, long-form, or narrative nonfiction"
+    },
+    descriptionLabel: "Description (optional)",
+    descriptionPlaceholder: "Brief description of this project\u2026",
+    preview: {
+      blank: "Empty project \u2014 build your own structure.",
+      book: "Creates: Front Matter, Part 1 / Chapter 1, Back Matter placeholder.",
+      series: "Creates: Series folder, Article 1 placeholder, series metadata.",
+      blog: "Creates: date-organized folder, first post placeholder.",
+      journalArticle: "Creates: Title Page, Abstract, Keywords, Introduction, Literature Review, Methodology, Findings / Analysis, Discussion, Conclusion, References, Appendices.",
+      magazineArticle: "Creates: Pitch / Query Notes, Headline & Deck, Lede, Nut Graf, Body, Quotes & Sources, Kicker, Fact-Check Notes, Author Bio. Notes documents excluded from export by default."
+    },
+    createBtn: "Create project",
+    creating: "Creating\u2026",
+    errorNoTitle: "Please enter a project title.",
+    errorCreate: "Failed to create project: {{error}}",
+    created: 'Project "{{title}}" created!',
+    cancel: "Cancel"
+  },
+  sprintModal: {
+    title: "Start writing sprint",
+    durationName: "Duration (minutes)",
+    durationDesc: "Preset: 10, 15, 25, 30, 45, 60",
+    durationCustom: "Custom\u2026",
+    durationCustomPlaceholder: "Custom minutes",
+    wordGoalName: "Word count goal (optional)",
+    wordGoalDesc: "Leave 0 for no goal.",
+    scopeName: "Scope",
+    scopeFile: "Current file",
+    scopeProject: "Entire project",
+    startBtn: "Start sprint",
+    errorDuration: "Please set a valid duration.",
+    cancel: "Cancel"
+  },
+  exportModal: {
+    title: "Export document",
+    formatName: "Format",
+    format: {
+      md: "Markdown (.md)",
+      html: "HTML",
+      manuscript: "Manuscript (HTML)",
+      epub: "EPUB (.epub)",
+      pdf: "PDF (requires pandoc)",
+      docx: "Word (.docx) (requires pandoc)",
+      rtf: "RTF (requires pandoc)"
+    },
+    coverImageName: "Cover image path",
+    coverImageDesc: "Vault path to a JPG or PNG cover image. Leave empty for a generated text cover.",
+    coverImagePlaceholder: "e.g. Assets/cover.jpg",
+    contactInfoName: "Contact info (optional)",
+    contactInfoDesc: "Appears on the title page \u2014 name, email, or mailing address.",
+    contactInfoPlaceholder: "Name, email, or mailing address",
+    scopeName: "Scope",
+    scopeCurrent: "Current document",
+    scopeProject: "Entire project (in binder order)",
+    includeFrontmatter: "Include frontmatter",
+    includeResearch: "Include research notes",
+    includeTitlesAsHeadings: "Include document titles as headings",
+    addTitlePage: "Add title page",
+    addTitlePageDesc: "Prepend a title page with project title, author, and date.",
+    previewBtn: "Preview compiled manuscript",
+    exportBtn: "Export",
+    exporting: "Exporting\u2026",
+    exportFailed: "Export failed: {{error}}",
+    cancel: "Cancel"
+  },
+  publishModal: {
+    title: "Publish to WordPress",
+    noSites: "No WordPress sites configured. Add a site in settings \u2192 WordPress.",
+    close: "Close",
+    siteName: "WordPress site",
+    postTitleName: "Post title",
+    postStatusName: "Post status",
+    postStatus: {
+      draft: "Draft",
+      pending: "Pending review",
+      publish: "Published"
+    },
+    categoryName: "Category",
+    tagsName: "Tags",
+    tagsDesc: "Comma-separated.",
+    excerptName: "Excerpt (optional)",
+    scheduleName: "Schedule publication (optional)",
+    scheduleDesc: "Leave empty to publish immediately.",
+    schedulePlaceholder: "yyyy-mm-ddThh:mm:ss",
+    existingNotice: "\u26A0 This document was previously published (Post ID: {{id}}).",
+    updatePost: "Update existing post",
+    newPost: "Create new post",
+    schedule: "Schedule",
+    publish: "Publish",
+    cancel: "Cancel",
+    noSiteSelected: "No site selected.",
+    fileNotFound: "File not found.",
+    publishFailed: "Publish failed: {{error}}",
+    published: "Published",
+    scheduled: "Scheduled",
+    actionNotice: "{{action}}! View post: {{url}}"
+  },
+  targetsDashboard: {
+    title: "Chapter targets dashboard",
+    noProject: "No project selected.",
+    filterLabel: "Filter: ",
+    allStatuses: "All statuses",
+    refresh: "\u21BB Refresh",
+    col: {
+      title: "Title",
+      type: "Type",
+      status: "Status",
+      words: "Words",
+      goal: "Goal",
+      progress: "Progress",
+      readingTime: "Reading time"
+    },
+    total: "Total"
+  },
+  writingDashboard: {
+    title: "Writing dashboard",
+    thisSession: "This session",
+    stat: {
+      wordsWritten: "Words written",
+      sprints: "Sprints",
+      minutes: "Minutes",
+      writingStreak: "Writing streak",
+      streakDays_one: "{{count}} day",
+      streakDays_other: "{{count}} days",
+      totalWords: "Total words",
+      goal: "Goal",
+      progress: "Progress",
+      readingTime: "Reading time"
+    },
+    project: "Project: {{title}}",
+    recentSprints: "Recent sprints",
+    noSprints: "No sprints recorded yet.",
+    sprintTable: {
+      date: "Date",
+      duration: "Duration",
+      words: "Words",
+      wpm: "WPM",
+      goal: "Goal"
+    },
+    documentWordCounts: "Document word counts",
+    docTable: {
+      document: "Document",
+      words: "Words",
+      readingTime: "Reading time"
+    },
+    close: "Close"
+  },
+  addToProject: {
+    title: "Add to writing project",
+    noProjects: "No writing projects found. Create a project first.",
+    close: "Close",
+    file: "File: {{path}}",
+    projectName: "Writing project",
+    projectDesc: "What writing project do you wish to add this file to?",
+    addBtn: "Add to project",
+    cancel: "Cancel"
+  },
+  scanFolder: {
+    title: "Add files to binder",
+    desc: "Select the files to add to this project:",
+    addBtn: "Add selected files",
+    cancel: "Cancel"
   }
 };
 
@@ -3460,6 +3130,182 @@ var zh_default = {
     proceedToExport: "\u8FDB\u884C\u5BFC\u51FA",
     closePreview: "\u5173\u95ED\u9884\u89C8",
     noContent: "\u65E0\u5185\u5BB9\u53EF\u9884\u89C8\u3002\u8BF7\u5148\u6253\u5F00\u5199\u4F5C\u9879\u76EE\u3002"
+  },
+  projectModal: {
+    title: "\u65B0\u5EFA\u5199\u4F5C\u9879\u76EE",
+    projectTitle: "\u9879\u76EE\u6807\u9898",
+    titlePlaceholder: "\u6211\u7684\u5C0F\u8BF4",
+    template: "\u6A21\u677F",
+    templateDesc: "\u9009\u62E9\u9884\u914D\u7F6E\u7684\u9879\u76EE\u7ED3\u6784\u3002",
+    templateOption: {
+      blank: "\u7A7A\u767D\uFF08\u81EA\u5B9A\u4E49\u7ED3\u6784\uFF09",
+      book: "\u4E66\u7C4D\uFF08\u90E8\u5206 \u2192 \u7AE0\u8282 \u2192 \u573A\u666F\uFF09",
+      series: "\u7CFB\u5217\u6587\u7AE0\uFF08\u7CFB\u5217 \u2192 \u6587\u7AE0\uFF09",
+      blog: "\u535A\u5BA2\u96C6\uFF08\u6309\u65E5\u671F/\u5206\u7C7B\u7684\u5E16\u5B50\uFF09",
+      journalArticle: "\u671F\u520A\u6587\u7AE0 \u2014 \u5B66\u672F\u6216\u4E13\u4E1A\u671F\u520A\u6295\u7A3F",
+      magazineArticle: "\u6742\u5FD7\u6587\u7AE0 \u2014 \u7279\u5199\u3001\u957F\u7BC7\u6216\u53D9\u4E8B\u6027\u975E\u865A\u6784"
+    },
+    descriptionLabel: "\u63CF\u8FF0\uFF08\u53EF\u9009\uFF09",
+    descriptionPlaceholder: "\u5BF9\u8BE5\u9879\u76EE\u7684\u7B80\u8981\u63CF\u8FF0\u2026",
+    preview: {
+      blank: "\u7A7A\u767D\u9879\u76EE \u2014 \u6784\u5EFA\u60A8\u81EA\u5DF1\u7684\u7ED3\u6784\u3002",
+      book: "\u521B\u5EFA\uFF1A\u6B63\u6587\u90E8\u5206\u3001\u7B2C\u4E00\u90E8\u5206 / \u7B2C\u4E00\u7AE0\u3001\u540E\u8BB0\u5360\u4F4D\u7B26\u3002",
+      series: "\u521B\u5EFA\uFF1A\u7CFB\u5217\u6587\u4EF6\u5939\u3001\u7B2C\u4E00\u7BC7\u6587\u7AE0\u5360\u4F4D\u7B26\u3001\u7CFB\u5217\u5143\u6570\u636E\u3002",
+      blog: "\u521B\u5EFA\uFF1A\u6309\u65E5\u671F\u7EC4\u7EC7\u7684\u6587\u4EF6\u5939\u3001\u7B2C\u4E00\u7BC7\u5E16\u5B50\u5360\u4F4D\u7B26\u3002",
+      journalArticle: "\u521B\u5EFA\uFF1A\u6807\u9898\u9875\u3001\u6458\u8981\u3001\u5173\u952E\u8BCD\u3001\u5F15\u8A00\u3001\u6587\u732E\u7EFC\u8FF0\u3001\u7814\u7A76\u65B9\u6CD5\u3001\u7814\u7A76\u7ED3\u679C/\u5206\u6790\u3001\u8BA8\u8BBA\u3001\u7ED3\u8BBA\u3001\u53C2\u8003\u6587\u732E\u3001\u9644\u5F55\u3002",
+      magazineArticle: "\u521B\u5EFA\uFF1A\u63D0\u6848/\u67E5\u8BE2\u5907\u6CE8\u3001\u6807\u9898\u4E0E\u526F\u6807\u9898\u3001\u5BFC\u8A00\u3001\u6838\u5FC3\u6BB5\u843D\u3001\u6B63\u6587\u3001\u5F15\u8FF0\u4E0E\u8D44\u6599\u6765\u6E90\u3001\u7ED3\u5C3E\u3001\u4E8B\u5B9E\u6838\u67E5\u5907\u6CE8\u3001\u4F5C\u8005\u7B80\u4ECB\u3002\u5907\u6CE8\u6587\u6863\u9ED8\u8BA4\u4E0D\u5305\u542B\u5728\u5BFC\u51FA\u4E2D\u3002"
+    },
+    createBtn: "\u521B\u5EFA\u9879\u76EE",
+    creating: "\u521B\u5EFA\u4E2D\u2026",
+    errorNoTitle: "\u8BF7\u8F93\u5165\u9879\u76EE\u6807\u9898\u3002",
+    errorCreate: "\u521B\u5EFA\u9879\u76EE\u5931\u8D25\uFF1A{{error}}",
+    created: "\u9879\u76EE\u300C{{title}}\u300D\u5DF2\u521B\u5EFA\uFF01",
+    cancel: "\u53D6\u6D88"
+  },
+  sprintModal: {
+    title: "\u5F00\u59CB\u5199\u4F5C\u51B2\u523A",
+    durationName: "\u65F6\u957F\uFF08\u5206\u949F\uFF09",
+    durationDesc: "\u9884\u8BBE\uFF1A10\u300115\u300125\u300130\u300145\u300160",
+    durationCustom: "\u81EA\u5B9A\u4E49\u2026",
+    durationCustomPlaceholder: "\u81EA\u5B9A\u4E49\u5206\u949F\u6570",
+    wordGoalName: "\u5B57\u6570\u76EE\u6807\uFF08\u53EF\u9009\uFF09",
+    wordGoalDesc: "\u8BBE\u4E3A 0 \u8868\u793A\u65E0\u76EE\u6807\u3002",
+    scopeName: "\u8303\u56F4",
+    scopeFile: "\u5F53\u524D\u6587\u4EF6",
+    scopeProject: "\u6574\u4E2A\u9879\u76EE",
+    startBtn: "\u5F00\u59CB\u51B2\u523A",
+    errorDuration: "\u8BF7\u8BBE\u7F6E\u6709\u6548\u7684\u65F6\u957F\u3002",
+    cancel: "\u53D6\u6D88"
+  },
+  exportModal: {
+    title: "\u5BFC\u51FA\u6587\u6863",
+    formatName: "\u683C\u5F0F",
+    format: {
+      md: "Markdown (.md)",
+      html: "HTML",
+      manuscript: "\u624B\u7A3F\uFF08HTML\uFF09",
+      epub: "EPUB (.epub)",
+      pdf: "PDF\uFF08\u9700\u8981 pandoc\uFF09",
+      docx: "Word (.docx)\uFF08\u9700\u8981 pandoc\uFF09",
+      rtf: "RTF\uFF08\u9700\u8981 pandoc\uFF09"
+    },
+    coverImageName: "\u5C01\u9762\u56FE\u7247\u8DEF\u5F84",
+    coverImageDesc: "JPG \u6216 PNG \u5C01\u9762\u56FE\u7247\u7684 Vault \u8DEF\u5F84\u3002\u7559\u7A7A\u5C06\u751F\u6210\u6587\u5B57\u5C01\u9762\u3002",
+    coverImagePlaceholder: "\u4F8B\u5982 Assets/cover.jpg",
+    contactInfoName: "\u8054\u7CFB\u4FE1\u606F\uFF08\u53EF\u9009\uFF09",
+    contactInfoDesc: "\u663E\u793A\u5728\u6807\u9898\u9875\u4E0A \u2014 \u59D3\u540D\u3001\u7535\u5B50\u90AE\u4EF6\u6216\u90AE\u5BC4\u5730\u5740\u3002",
+    contactInfoPlaceholder: "\u59D3\u540D\u3001\u7535\u5B50\u90AE\u4EF6\u6216\u90AE\u5BC4\u5730\u5740",
+    scopeName: "\u8303\u56F4",
+    scopeCurrent: "\u5F53\u524D\u6587\u6863",
+    scopeProject: "\u6574\u4E2A\u9879\u76EE\uFF08\u6309\u6D3B\u9875\u5939\u987A\u5E8F\uFF09",
+    includeFrontmatter: "\u5305\u542B\u524D\u7F6E\u5185\u5BB9",
+    includeResearch: "\u5305\u542B\u7814\u7A76\u7B14\u8BB0",
+    includeTitlesAsHeadings: "\u5C06\u6587\u6863\u6807\u9898\u4F5C\u4E3A\u6807\u9898\u5305\u542B",
+    addTitlePage: "\u6DFB\u52A0\u6807\u9898\u9875",
+    addTitlePageDesc: "\u5728\u5F00\u5934\u6DFB\u52A0\u5305\u542B\u9879\u76EE\u6807\u9898\u3001\u4F5C\u8005\u548C\u65E5\u671F\u7684\u6807\u9898\u9875\u3002",
+    previewBtn: "\u9884\u89C8\u7F16\u8BD1\u7A3F",
+    exportBtn: "\u5BFC\u51FA",
+    exporting: "\u5BFC\u51FA\u4E2D\u2026",
+    exportFailed: "\u5BFC\u51FA\u5931\u8D25\uFF1A{{error}}",
+    cancel: "\u53D6\u6D88"
+  },
+  publishModal: {
+    title: "\u53D1\u5E03\u5230 WordPress",
+    noSites: "\u672A\u914D\u7F6E WordPress \u7AD9\u70B9\u3002\u8BF7\u5728\u8BBE\u7F6E \u2192 WordPress \u4E2D\u6DFB\u52A0\u7AD9\u70B9\u3002",
+    close: "\u5173\u95ED",
+    siteName: "WordPress \u7AD9\u70B9",
+    postTitleName: "\u6587\u7AE0\u6807\u9898",
+    postStatusName: "\u6587\u7AE0\u72B6\u6001",
+    postStatus: {
+      draft: "\u8349\u7A3F",
+      pending: "\u5F85\u5BA1\u6838",
+      publish: "\u5DF2\u53D1\u5E03"
+    },
+    categoryName: "\u5206\u7C7B",
+    tagsName: "\u6807\u7B7E",
+    tagsDesc: "\u7528\u9017\u53F7\u5206\u9694\u3002",
+    excerptName: "\u6458\u8981\uFF08\u53EF\u9009\uFF09",
+    scheduleName: "\u5B9A\u65F6\u53D1\u5E03\uFF08\u53EF\u9009\uFF09",
+    scheduleDesc: "\u7559\u7A7A\u5373\u7ACB\u5373\u53D1\u5E03\u3002",
+    schedulePlaceholder: "yyyy-mm-ddThh:mm:ss",
+    existingNotice: "\u26A0 \u8BE5\u6587\u6863\u4E4B\u524D\u5DF2\u53D1\u5E03\uFF08\u6587\u7AE0 ID\uFF1A{{id}}\uFF09\u3002",
+    updatePost: "\u66F4\u65B0\u73B0\u6709\u6587\u7AE0",
+    newPost: "\u521B\u5EFA\u65B0\u6587\u7AE0",
+    schedule: "\u5B9A\u65F6\u53D1\u5E03",
+    publish: "\u53D1\u5E03",
+    cancel: "\u53D6\u6D88",
+    noSiteSelected: "\u672A\u9009\u62E9\u7AD9\u70B9\u3002",
+    fileNotFound: "\u672A\u627E\u5230\u6587\u4EF6\u3002",
+    publishFailed: "\u53D1\u5E03\u5931\u8D25\uFF1A{{error}}",
+    published: "\u5DF2\u53D1\u5E03",
+    scheduled: "\u5DF2\u5B9A\u65F6",
+    actionNotice: "{{action}}\uFF01\u67E5\u770B\u6587\u7AE0\uFF1A{{url}}"
+  },
+  targetsDashboard: {
+    title: "\u7AE0\u8282\u76EE\u6807\u4EEA\u8868\u677F",
+    noProject: "\u672A\u9009\u62E9\u9879\u76EE\u3002",
+    filterLabel: "\u7B5B\u9009\uFF1A",
+    allStatuses: "\u6240\u6709\u72B6\u6001",
+    refresh: "\u21BB \u5237\u65B0",
+    col: {
+      title: "\u6807\u9898",
+      type: "\u7C7B\u578B",
+      status: "\u72B6\u6001",
+      words: "\u5B57\u6570",
+      goal: "\u76EE\u6807",
+      progress: "\u8FDB\u5EA6",
+      readingTime: "\u9605\u8BFB\u65F6\u95F4"
+    },
+    total: "\u5408\u8BA1"
+  },
+  writingDashboard: {
+    title: "\u5199\u4F5C\u4EEA\u8868\u677F",
+    thisSession: "\u672C\u6B21\u4F1A\u8BDD",
+    stat: {
+      wordsWritten: "\u5DF2\u5199\u5B57\u6570",
+      sprints: "\u51B2\u523A\u6B21\u6570",
+      minutes: "\u5206\u949F\u6570",
+      writingStreak: "\u5199\u4F5C\u8FDE\u7EED\u5929\u6570",
+      streakDays_one: "{{count}} \u5929",
+      streakDays_other: "{{count}} \u5929",
+      totalWords: "\u603B\u5B57\u6570",
+      goal: "\u76EE\u6807",
+      progress: "\u8FDB\u5EA6",
+      readingTime: "\u9605\u8BFB\u65F6\u95F4"
+    },
+    project: "\u9879\u76EE\uFF1A{{title}}",
+    recentSprints: "\u6700\u8FD1\u51B2\u523A",
+    noSprints: "\u5C1A\u65E0\u51B2\u523A\u8BB0\u5F55\u3002",
+    sprintTable: {
+      date: "\u65E5\u671F",
+      duration: "\u65F6\u957F",
+      words: "\u5B57\u6570",
+      wpm: "\u5B57/\u5206",
+      goal: "\u76EE\u6807"
+    },
+    documentWordCounts: "\u6587\u6863\u5B57\u6570",
+    docTable: {
+      document: "\u6587\u6863",
+      words: "\u5B57\u6570",
+      readingTime: "\u9605\u8BFB\u65F6\u95F4"
+    },
+    close: "\u5173\u95ED"
+  },
+  addToProject: {
+    title: "\u6DFB\u52A0\u5230\u5199\u4F5C\u9879\u76EE",
+    noProjects: "\u672A\u627E\u5230\u5199\u4F5C\u9879\u76EE\u3002\u8BF7\u5148\u521B\u5EFA\u4E00\u4E2A\u9879\u76EE\u3002",
+    close: "\u5173\u95ED",
+    file: "\u6587\u4EF6\uFF1A{{path}}",
+    projectName: "\u5199\u4F5C\u9879\u76EE",
+    projectDesc: "\u60A8\u5E0C\u671B\u5C06\u6B64\u6587\u4EF6\u6DFB\u52A0\u5230\u54EA\u4E2A\u5199\u4F5C\u9879\u76EE\uFF1F",
+    addBtn: "\u6DFB\u52A0\u5230\u9879\u76EE",
+    cancel: "\u53D6\u6D88"
+  },
+  scanFolder: {
+    title: "\u5C06\u6587\u4EF6\u6DFB\u52A0\u5230\u6D3B\u9875\u5939",
+    desc: "\u9009\u62E9\u8981\u6DFB\u52A0\u5230\u6B64\u9879\u76EE\u7684\u6587\u4EF6\uFF1A",
+    addBtn: "\u6DFB\u52A0\u6240\u9009\u6587\u4EF6",
+    cancel: "\u53D6\u6D88"
   }
 };
 
@@ -3783,6 +3629,182 @@ var hi_default = {
     proceedToExport: "\u0928\u093F\u0930\u094D\u092F\u093E\u0924 \u0915\u0930\u0947\u0902",
     closePreview: "\u092A\u0942\u0930\u094D\u0935\u093E\u0935\u0932\u094B\u0915\u0928 \u092C\u0902\u0926 \u0915\u0930\u0947\u0902",
     noContent: "\u092A\u0942\u0930\u094D\u0935\u093E\u0935\u0932\u094B\u0915\u0928 \u0915\u0947 \u0932\u093F\u090F \u0915\u094B\u0908 \u0938\u093E\u092E\u0917\u094D\u0930\u0940 \u0928\u0939\u0940\u0902\u0964 \u092A\u0939\u0932\u0947 \u0915\u094B\u0908 \u0932\u0947\u0916\u0928 \u092A\u0930\u093F\u092F\u094B\u091C\u0928\u093E \u0916\u094B\u0932\u0947\u0902\u0964"
+  },
+  projectModal: {
+    title: "\u0928\u0908 \u0932\u0947\u0916\u0928 \u092A\u0930\u093F\u092F\u094B\u091C\u0928\u093E",
+    projectTitle: "\u092A\u0930\u093F\u092F\u094B\u091C\u0928\u093E \u0936\u0940\u0930\u094D\u0937\u0915",
+    titlePlaceholder: "\u092E\u0947\u0930\u093E \u0909\u092A\u0928\u094D\u092F\u093E\u0938",
+    template: "\u091F\u0947\u092E\u094D\u092A\u0932\u0947\u091F",
+    templateDesc: "\u092A\u0942\u0930\u094D\u0935-\u0915\u0949\u0928\u094D\u092B\u093C\u093F\u0917\u0930 \u0915\u0940 \u0917\u0908 \u092A\u0930\u093F\u092F\u094B\u091C\u0928\u093E \u0938\u0902\u0930\u091A\u0928\u093E \u091A\u0941\u0928\u0947\u0902\u0964",
+    templateOption: {
+      blank: "\u0916\u093E\u0932\u0940 (\u0915\u0938\u094D\u091F\u092E \u0938\u0902\u0930\u091A\u0928\u093E)",
+      book: "\u092A\u0941\u0938\u094D\u0924\u0915 (\u092D\u093E\u0917 \u2192 \u0905\u0927\u094D\u092F\u093E\u092F \u2192 \u0926\u0943\u0936\u094D\u092F)",
+      series: "\u0932\u0947\u0916 \u0936\u094D\u0930\u0943\u0902\u0916\u0932\u093E (\u0936\u094D\u0930\u0943\u0902\u0916\u0932\u093E \u2192 \u0932\u0947\u0916)",
+      blog: "\u092C\u094D\u0932\u0949\u0917 \u0938\u0902\u0917\u094D\u0930\u0939 (\u0926\u093F\u0928\u093E\u0902\u0915/\u0936\u094D\u0930\u0947\u0923\u0940 \u0905\u0928\u0941\u0938\u093E\u0930 \u092A\u094B\u0938\u094D\u091F)",
+      journalArticle: "\u091C\u0930\u094D\u0928\u0932 \u0906\u0932\u0947\u0916 \u2014 \u0936\u0948\u0915\u094D\u0937\u0923\u093F\u0915 \u092F\u093E \u092A\u0947\u0936\u0947\u0935\u0930 \u092A\u0924\u094D\u0930\u093F\u0915\u093E \u092A\u094D\u0930\u0938\u094D\u0924\u0941\u0924\u093F",
+      magazineArticle: "\u092A\u0924\u094D\u0930\u093F\u0915\u093E \u0906\u0932\u0947\u0916 \u2014 \u092B\u093C\u0940\u091A\u0930, \u0932\u0902\u092C\u0947-\u092A\u094D\u0930\u093E\u0930\u0942\u092A, \u092F\u093E \u0915\u0925\u093E\u0924\u094D\u092E\u0915 \u0928\u0949\u0928\u092B\u093C\u093F\u0915\u094D\u0936\u0928"
+    },
+    descriptionLabel: "\u0935\u093F\u0935\u0930\u0923 (\u0935\u0948\u0915\u0932\u094D\u092A\u093F\u0915)",
+    descriptionPlaceholder: "\u0907\u0938 \u092A\u0930\u093F\u092F\u094B\u091C\u0928\u093E \u0915\u093E \u0938\u0902\u0915\u094D\u0937\u093F\u092A\u094D\u0924 \u0935\u093F\u0935\u0930\u0923\u2026",
+    preview: {
+      blank: "\u0916\u093E\u0932\u0940 \u092A\u0930\u093F\u092F\u094B\u091C\u0928\u093E \u2014 \u0905\u092A\u0928\u0940 \u0938\u0902\u0930\u091A\u0928\u093E \u0938\u094D\u0935\u092F\u0902 \u092C\u0928\u093E\u090F\u0902\u0964",
+      book: "\u092C\u0928\u093E\u0924\u093E \u0939\u0948: \u092B\u094D\u0930\u0902\u091F \u092E\u0948\u091F\u0930, \u092D\u093E\u0917 1 / \u0905\u0927\u094D\u092F\u093E\u092F 1, \u092C\u0948\u0915 \u092E\u0948\u091F\u0930 \u092A\u094D\u0932\u0947\u0938\u0939\u094B\u0932\u094D\u0921\u0930\u0964",
+      series: "\u092C\u0928\u093E\u0924\u093E \u0939\u0948: \u0936\u094D\u0930\u0943\u0902\u0916\u0932\u093E \u092B\u093C\u094B\u0932\u094D\u0921\u0930, \u0932\u0947\u0916 1 \u092A\u094D\u0932\u0947\u0938\u0939\u094B\u0932\u094D\u0921\u0930, \u0936\u094D\u0930\u0943\u0902\u0916\u0932\u093E \u092E\u0947\u091F\u093E\u0921\u0947\u091F\u093E\u0964",
+      blog: "\u092C\u0928\u093E\u0924\u093E \u0939\u0948: \u0926\u093F\u0928\u093E\u0902\u0915-\u0935\u094D\u092F\u0935\u0938\u094D\u0925\u093F\u0924 \u092B\u093C\u094B\u0932\u094D\u0921\u0930, \u092A\u0939\u0932\u0940 \u092A\u094B\u0938\u094D\u091F \u092A\u094D\u0932\u0947\u0938\u0939\u094B\u0932\u094D\u0921\u0930\u0964",
+      journalArticle: "\u092C\u0928\u093E\u0924\u093E \u0939\u0948: \u0936\u0940\u0930\u094D\u0937\u0915 \u092A\u0943\u0937\u094D\u0920, \u0938\u093E\u0930, \u092E\u0941\u0916\u094D\u092F \u0936\u092C\u094D\u0926, \u092A\u0930\u093F\u091A\u092F, \u0938\u093E\u0939\u093F\u0924\u094D\u092F \u0938\u092E\u0940\u0915\u094D\u0937\u093E, \u0915\u093E\u0930\u094D\u092F\u092A\u094D\u0930\u0923\u093E\u0932\u0940, \u0928\u093F\u0937\u094D\u0915\u0930\u094D\u0937/\u0935\u093F\u0936\u094D\u0932\u0947\u0937\u0923, \u091A\u0930\u094D\u091A\u093E, \u0928\u093F\u0937\u094D\u0915\u0930\u094D\u0937, \u0938\u0902\u0926\u0930\u094D\u092D, \u092A\u0930\u093F\u0936\u093F\u0937\u094D\u091F\u0964",
+      magazineArticle: "\u092C\u0928\u093E\u0924\u093E \u0939\u0948: \u092A\u093F\u091A/\u0915\u094D\u0935\u0947\u0930\u0940 \u0928\u094B\u091F\u094D\u0938, \u0939\u0947\u0921\u0932\u093E\u0907\u0928 \u0914\u0930 \u0921\u0947\u0915, \u0932\u0947\u0921, \u0928\u091F \u0917\u094D\u0930\u093E\u092B, \u092C\u0949\u0921\u0940, \u0909\u0926\u094D\u0927\u0930\u0923 \u0914\u0930 \u0938\u094D\u0930\u094B\u0924, \u0915\u093F\u0915\u0930, \u0924\u0925\u094D\u092F-\u091C\u093E\u0902\u091A \u0928\u094B\u091F\u094D\u0938, \u0932\u0947\u0916\u0915 \u091C\u0940\u0935\u0928\u0940\u0964 \u0928\u093F\u0930\u094D\u092F\u093E\u0924 \u0938\u0947 \u0928\u094B\u091F\u094D\u0938 \u0921\u0949\u0915\u094D\u092F\u0942\u092E\u0947\u0902\u091F \u0921\u093F\u092B\u093C\u0949\u0932\u094D\u091F \u0930\u0942\u092A \u0938\u0947 \u092C\u093E\u0939\u0930\u0964"
+    },
+    createBtn: "\u092A\u0930\u093F\u092F\u094B\u091C\u0928\u093E \u092C\u0928\u093E\u090F\u0902",
+    creating: "\u092C\u0928 \u0930\u0939\u093E \u0939\u0948\u2026",
+    errorNoTitle: "\u0915\u0943\u092A\u092F\u093E \u092A\u0930\u093F\u092F\u094B\u091C\u0928\u093E \u0936\u0940\u0930\u094D\u0937\u0915 \u0926\u0930\u094D\u091C \u0915\u0930\u0947\u0902\u0964",
+    errorCreate: "\u092A\u0930\u093F\u092F\u094B\u091C\u0928\u093E \u092C\u0928\u093E\u0928\u0947 \u092E\u0947\u0902 \u0935\u093F\u092B\u0932: {{error}}",
+    created: '\u092A\u0930\u093F\u092F\u094B\u091C\u0928\u093E "{{title}}" \u092C\u0928\u093E\u0908 \u0917\u0908!',
+    cancel: "\u0930\u0926\u094D\u0926 \u0915\u0930\u0947\u0902"
+  },
+  sprintModal: {
+    title: "\u0932\u0947\u0916\u0928 \u0938\u094D\u092A\u094D\u0930\u093F\u0902\u091F \u0936\u0941\u0930\u0942 \u0915\u0930\u0947\u0902",
+    durationName: "\u0905\u0935\u0927\u093F (\u092E\u093F\u0928\u091F)",
+    durationDesc: "\u092A\u094D\u0930\u0940\u0938\u0947\u091F: 10, 15, 25, 30, 45, 60",
+    durationCustom: "\u0915\u0938\u094D\u091F\u092E\u2026",
+    durationCustomPlaceholder: "\u0915\u0938\u094D\u091F\u092E \u092E\u093F\u0928\u091F",
+    wordGoalName: "\u0936\u092C\u094D\u0926 \u0917\u0923\u0928\u093E \u0932\u0915\u094D\u0937\u094D\u092F (\u0935\u0948\u0915\u0932\u094D\u092A\u093F\u0915)",
+    wordGoalDesc: "\u0915\u094B\u0908 \u0932\u0915\u094D\u0937\u094D\u092F \u0928 \u0939\u094B \u0924\u094B 0 \u091B\u094B\u0921\u093C\u0947\u0902\u0964",
+    scopeName: "\u0926\u093E\u092F\u0930\u093E",
+    scopeFile: "\u0935\u0930\u094D\u0924\u092E\u093E\u0928 \u092B\u093C\u093E\u0907\u0932",
+    scopeProject: "\u092A\u0942\u0930\u0940 \u092A\u0930\u093F\u092F\u094B\u091C\u0928\u093E",
+    startBtn: "\u0938\u094D\u092A\u094D\u0930\u093F\u0902\u091F \u0936\u0941\u0930\u0942 \u0915\u0930\u0947\u0902",
+    errorDuration: "\u0915\u0943\u092A\u092F\u093E \u090F\u0915 \u0935\u0948\u0927 \u0905\u0935\u0927\u093F \u0938\u0947\u091F \u0915\u0930\u0947\u0902\u0964",
+    cancel: "\u0930\u0926\u094D\u0926 \u0915\u0930\u0947\u0902"
+  },
+  exportModal: {
+    title: "\u0926\u0938\u094D\u0924\u093E\u0935\u0947\u091C\u093C \u0928\u093F\u0930\u094D\u092F\u093E\u0924 \u0915\u0930\u0947\u0902",
+    formatName: "\u092A\u094D\u0930\u093E\u0930\u0942\u092A",
+    format: {
+      md: "Markdown (.md)",
+      html: "HTML",
+      manuscript: "\u092A\u093E\u0902\u0921\u0941\u0932\u093F\u092A\u093F (HTML)",
+      epub: "EPUB (.epub)",
+      pdf: "PDF (pandoc \u0906\u0935\u0936\u094D\u092F\u0915)",
+      docx: "Word (.docx) (pandoc \u0906\u0935\u0936\u094D\u092F\u0915)",
+      rtf: "RTF (pandoc \u0906\u0935\u0936\u094D\u092F\u0915)"
+    },
+    coverImageName: "\u0915\u0935\u0930 \u091B\u0935\u093F \u092A\u0925",
+    coverImageDesc: "JPG \u092F\u093E PNG \u0915\u0935\u0930 \u091B\u0935\u093F \u0915\u093E Vault \u092A\u0925\u0964 \u0909\u0924\u094D\u092A\u0928\u094D\u0928 \u091F\u0947\u0915\u094D\u0938\u094D\u091F \u0915\u0935\u0930 \u0915\u0947 \u0932\u093F\u090F \u0916\u093E\u0932\u0940 \u091B\u094B\u0921\u093C\u0947\u0902\u0964",
+    coverImagePlaceholder: "\u0909\u0926\u093E. Assets/cover.jpg",
+    contactInfoName: "\u0938\u0902\u092A\u0930\u094D\u0915 \u091C\u093E\u0928\u0915\u093E\u0930\u0940 (\u0935\u0948\u0915\u0932\u094D\u092A\u093F\u0915)",
+    contactInfoDesc: "\u0936\u0940\u0930\u094D\u0937\u0915 \u092A\u0943\u0937\u094D\u0920 \u092A\u0930 \u0926\u093F\u0916\u093E\u0908 \u0926\u0947\u0924\u0940 \u0939\u0948 \u2014 \u0928\u093E\u092E, \u0908\u092E\u0947\u0932, \u092F\u093E \u0921\u093E\u0915 \u092A\u0924\u093E\u0964",
+    contactInfoPlaceholder: "\u0928\u093E\u092E, \u0908\u092E\u0947\u0932, \u092F\u093E \u0921\u093E\u0915 \u092A\u0924\u093E",
+    scopeName: "\u0926\u093E\u092F\u0930\u093E",
+    scopeCurrent: "\u0935\u0930\u094D\u0924\u092E\u093E\u0928 \u0926\u0938\u094D\u0924\u093E\u0935\u0947\u091C\u093C",
+    scopeProject: "\u092A\u0942\u0930\u0940 \u092A\u0930\u093F\u092F\u094B\u091C\u0928\u093E (\u092C\u093E\u0907\u0902\u0921\u0930 \u0915\u094D\u0930\u092E \u092E\u0947\u0902)",
+    includeFrontmatter: "\u092B\u094D\u0930\u0902\u091F\u092E\u0948\u091F\u0930 \u0936\u093E\u092E\u093F\u0932 \u0915\u0930\u0947\u0902",
+    includeResearch: "\u0936\u094B\u0927 \u0928\u094B\u091F\u094D\u0938 \u0936\u093E\u092E\u093F\u0932 \u0915\u0930\u0947\u0902",
+    includeTitlesAsHeadings: "\u0936\u0940\u0930\u094D\u0937\u0915 \u0915\u0947 \u0930\u0942\u092A \u092E\u0947\u0902 \u0926\u0938\u094D\u0924\u093E\u0935\u0947\u091C\u093C \u0936\u0940\u0930\u094D\u0937\u0915 \u0936\u093E\u092E\u093F\u0932 \u0915\u0930\u0947\u0902",
+    addTitlePage: "\u0936\u0940\u0930\u094D\u0937\u0915 \u092A\u0943\u0937\u094D\u0920 \u091C\u094B\u0921\u093C\u0947\u0902",
+    addTitlePageDesc: "\u092A\u0930\u093F\u092F\u094B\u091C\u0928\u093E \u0936\u0940\u0930\u094D\u0937\u0915, \u0932\u0947\u0916\u0915 \u0914\u0930 \u0926\u093F\u0928\u093E\u0902\u0915 \u0915\u0947 \u0938\u093E\u0925 \u0936\u0940\u0930\u094D\u0937\u0915 \u092A\u0943\u0937\u094D\u0920 \u091C\u094B\u0921\u093C\u0947\u0902\u0964",
+    previewBtn: "\u0938\u0902\u0915\u0932\u093F\u0924 \u092A\u093E\u0902\u0921\u0941\u0932\u093F\u092A\u093F \u0915\u093E \u092A\u0942\u0930\u094D\u0935\u093E\u0935\u0932\u094B\u0915\u0928",
+    exportBtn: "\u0928\u093F\u0930\u094D\u092F\u093E\u0924",
+    exporting: "\u0928\u093F\u0930\u094D\u092F\u093E\u0924 \u0939\u094B \u0930\u0939\u093E \u0939\u0948\u2026",
+    exportFailed: "\u0928\u093F\u0930\u094D\u092F\u093E\u0924 \u0935\u093F\u092B\u0932: {{error}}",
+    cancel: "\u0930\u0926\u094D\u0926 \u0915\u0930\u0947\u0902"
+  },
+  publishModal: {
+    title: "WordPress \u092A\u0930 \u092A\u094D\u0930\u0915\u093E\u0936\u093F\u0924 \u0915\u0930\u0947\u0902",
+    noSites: "\u0915\u094B\u0908 WordPress \u0938\u093E\u0907\u091F \u0915\u0949\u0928\u094D\u092B\u093C\u093F\u0917\u0930 \u0928\u0939\u0940\u0902\u0964 \u0938\u0947\u091F\u093F\u0902\u0917\u094D\u0938 \u2192 WordPress \u092E\u0947\u0902 \u0938\u093E\u0907\u091F \u091C\u094B\u0921\u093C\u0947\u0902\u0964",
+    close: "\u092C\u0902\u0926 \u0915\u0930\u0947\u0902",
+    siteName: "WordPress \u0938\u093E\u0907\u091F",
+    postTitleName: "\u092A\u094B\u0938\u094D\u091F \u0936\u0940\u0930\u094D\u0937\u0915",
+    postStatusName: "\u092A\u094B\u0938\u094D\u091F \u0938\u094D\u0925\u093F\u0924\u093F",
+    postStatus: {
+      draft: "\u092E\u0938\u094C\u0926\u093E",
+      pending: "\u0938\u092E\u0940\u0915\u094D\u0937\u093E \u0915\u0947 \u0932\u093F\u090F \u0932\u0902\u092C\u093F\u0924",
+      publish: "\u092A\u094D\u0930\u0915\u093E\u0936\u093F\u0924"
+    },
+    categoryName: "\u0936\u094D\u0930\u0947\u0923\u0940",
+    tagsName: "\u091F\u0948\u0917",
+    tagsDesc: "\u0905\u0932\u094D\u092A\u0935\u093F\u0930\u093E\u092E \u0938\u0947 \u0905\u0932\u0917\u0964",
+    excerptName: "\u0905\u0902\u0936 (\u0935\u0948\u0915\u0932\u094D\u092A\u093F\u0915)",
+    scheduleName: "\u092A\u094D\u0930\u0915\u093E\u0936\u0928 \u0936\u0947\u0921\u094D\u092F\u0942\u0932 \u0915\u0930\u0947\u0902 (\u0935\u0948\u0915\u0932\u094D\u092A\u093F\u0915)",
+    scheduleDesc: "\u0924\u0941\u0930\u0902\u0924 \u092A\u094D\u0930\u0915\u093E\u0936\u093F\u0924 \u0915\u0930\u0928\u0947 \u0915\u0947 \u0932\u093F\u090F \u0916\u093E\u0932\u0940 \u091B\u094B\u0921\u093C\u0947\u0902\u0964",
+    schedulePlaceholder: "yyyy-mm-ddThh:mm:ss",
+    existingNotice: "\u26A0 \u092F\u0939 \u0926\u0938\u094D\u0924\u093E\u0935\u0947\u091C\u093C \u092A\u0939\u0932\u0947 \u092A\u094D\u0930\u0915\u093E\u0936\u093F\u0924 \u0939\u094B \u091A\u0941\u0915\u093E \u0939\u0948 (\u092A\u094B\u0938\u094D\u091F ID: {{id}})\u0964",
+    updatePost: "\u092E\u094C\u091C\u0942\u0926\u093E \u092A\u094B\u0938\u094D\u091F \u0905\u092A\u0921\u0947\u091F \u0915\u0930\u0947\u0902",
+    newPost: "\u0928\u0908 \u092A\u094B\u0938\u094D\u091F \u092C\u0928\u093E\u090F\u0902",
+    schedule: "\u0936\u0947\u0921\u094D\u092F\u0942\u0932 \u0915\u0930\u0947\u0902",
+    publish: "\u092A\u094D\u0930\u0915\u093E\u0936\u093F\u0924 \u0915\u0930\u0947\u0902",
+    cancel: "\u0930\u0926\u094D\u0926 \u0915\u0930\u0947\u0902",
+    noSiteSelected: "\u0915\u094B\u0908 \u0938\u093E\u0907\u091F \u0928\u0939\u0940\u0902 \u091A\u0941\u0928\u0940 \u0917\u0908\u0964",
+    fileNotFound: "\u092B\u093C\u093E\u0907\u0932 \u0928\u0939\u0940\u0902 \u092E\u093F\u0932\u0940\u0964",
+    publishFailed: "\u092A\u094D\u0930\u0915\u093E\u0936\u0928 \u0935\u093F\u092B\u0932: {{error}}",
+    published: "\u092A\u094D\u0930\u0915\u093E\u0936\u093F\u0924",
+    scheduled: "\u0936\u0947\u0921\u094D\u092F\u0942\u0932 \u0915\u093F\u092F\u093E \u0917\u092F\u093E",
+    actionNotice: "{{action}}! \u092A\u094B\u0938\u094D\u091F \u0926\u0947\u0916\u0947\u0902: {{url}}"
+  },
+  targetsDashboard: {
+    title: "\u0905\u0927\u094D\u092F\u093E\u092F \u0932\u0915\u094D\u0937\u094D\u092F \u0921\u0948\u0936\u092C\u094B\u0930\u094D\u0921",
+    noProject: "\u0915\u094B\u0908 \u092A\u0930\u093F\u092F\u094B\u091C\u0928\u093E \u0928\u0939\u0940\u0902 \u091A\u0941\u0928\u0940 \u0917\u0908\u0964",
+    filterLabel: "\u092B\u093C\u093F\u0932\u094D\u091F\u0930: ",
+    allStatuses: "\u0938\u092D\u0940 \u0938\u094D\u0925\u093F\u0924\u093F\u092F\u093E\u0901",
+    refresh: "\u21BB \u0930\u0940\u092B\u094D\u0930\u0947\u0936",
+    col: {
+      title: "\u0936\u0940\u0930\u094D\u0937\u0915",
+      type: "\u092A\u094D\u0930\u0915\u093E\u0930",
+      status: "\u0938\u094D\u0925\u093F\u0924\u093F",
+      words: "\u0936\u092C\u094D\u0926",
+      goal: "\u0932\u0915\u094D\u0937\u094D\u092F",
+      progress: "\u092A\u094D\u0930\u0917\u0924\u093F",
+      readingTime: "\u092A\u0922\u093C\u0928\u0947 \u0915\u093E \u0938\u092E\u092F"
+    },
+    total: "\u0915\u0941\u0932"
+  },
+  writingDashboard: {
+    title: "\u0932\u0947\u0916\u0928 \u0921\u0948\u0936\u092C\u094B\u0930\u094D\u0921",
+    thisSession: "\u092F\u0939 \u0938\u0924\u094D\u0930",
+    stat: {
+      wordsWritten: "\u0932\u093F\u0916\u0947 \u0917\u090F \u0936\u092C\u094D\u0926",
+      sprints: "\u0938\u094D\u092A\u094D\u0930\u093F\u0902\u091F",
+      minutes: "\u092E\u093F\u0928\u091F",
+      writingStreak: "\u0932\u0947\u0916\u0928 \u0936\u094D\u0930\u0943\u0902\u0916\u0932\u093E",
+      streakDays_one: "{{count}} \u0926\u093F\u0928",
+      streakDays_other: "{{count}} \u0926\u093F\u0928",
+      totalWords: "\u0915\u0941\u0932 \u0936\u092C\u094D\u0926",
+      goal: "\u0932\u0915\u094D\u0937\u094D\u092F",
+      progress: "\u092A\u094D\u0930\u0917\u0924\u093F",
+      readingTime: "\u092A\u0922\u093C\u0928\u0947 \u0915\u093E \u0938\u092E\u092F"
+    },
+    project: "\u092A\u0930\u093F\u092F\u094B\u091C\u0928\u093E: {{title}}",
+    recentSprints: "\u0939\u093E\u0932\u093F\u092F\u093E \u0938\u094D\u092A\u094D\u0930\u093F\u0902\u091F",
+    noSprints: "\u0905\u092D\u0940 \u0924\u0915 \u0915\u094B\u0908 \u0938\u094D\u092A\u094D\u0930\u093F\u0902\u091F \u0930\u093F\u0915\u0949\u0930\u094D\u0921 \u0928\u0939\u0940\u0902\u0964",
+    sprintTable: {
+      date: "\u0926\u093F\u0928\u093E\u0902\u0915",
+      duration: "\u0905\u0935\u0927\u093F",
+      words: "\u0936\u092C\u094D\u0926",
+      wpm: "\u0936\u092C\u094D\u0926/\u092E\u093F\u0928\u091F",
+      goal: "\u0932\u0915\u094D\u0937\u094D\u092F"
+    },
+    documentWordCounts: "\u0926\u0938\u094D\u0924\u093E\u0935\u0947\u091C\u093C \u0936\u092C\u094D\u0926 \u0917\u0923\u0928\u093E",
+    docTable: {
+      document: "\u0926\u0938\u094D\u0924\u093E\u0935\u0947\u091C\u093C",
+      words: "\u0936\u092C\u094D\u0926",
+      readingTime: "\u092A\u0922\u093C\u0928\u0947 \u0915\u093E \u0938\u092E\u092F"
+    },
+    close: "\u092C\u0902\u0926 \u0915\u0930\u0947\u0902"
+  },
+  addToProject: {
+    title: "\u0932\u0947\u0916\u0928 \u092A\u0930\u093F\u092F\u094B\u091C\u0928\u093E \u092E\u0947\u0902 \u091C\u094B\u0921\u093C\u0947\u0902",
+    noProjects: "\u0915\u094B\u0908 \u0932\u0947\u0916\u0928 \u092A\u0930\u093F\u092F\u094B\u091C\u0928\u093E \u0928\u0939\u0940\u0902 \u092E\u093F\u0932\u0940\u0964 \u092A\u0939\u0932\u0947 \u092A\u0930\u093F\u092F\u094B\u091C\u0928\u093E \u092C\u0928\u093E\u090F\u0902\u0964",
+    close: "\u092C\u0902\u0926 \u0915\u0930\u0947\u0902",
+    file: "\u092B\u093C\u093E\u0907\u0932: {{path}}",
+    projectName: "\u0932\u0947\u0916\u0928 \u092A\u0930\u093F\u092F\u094B\u091C\u0928\u093E",
+    projectDesc: "\u0906\u092A \u0907\u0938 \u092B\u093C\u093E\u0907\u0932 \u0915\u094B \u0915\u093F\u0938 \u0932\u0947\u0916\u0928 \u092A\u0930\u093F\u092F\u094B\u091C\u0928\u093E \u092E\u0947\u0902 \u091C\u094B\u0921\u093C\u0928\u093E \u091A\u093E\u0939\u0924\u0947 \u0939\u0948\u0902?",
+    addBtn: "\u092A\u0930\u093F\u092F\u094B\u091C\u0928\u093E \u092E\u0947\u0902 \u091C\u094B\u0921\u093C\u0947\u0902",
+    cancel: "\u0930\u0926\u094D\u0926 \u0915\u0930\u0947\u0902"
+  },
+  scanFolder: {
+    title: "\u092C\u093E\u0907\u0902\u0921\u0930 \u092E\u0947\u0902 \u092B\u093C\u093E\u0907\u0932\u0947\u0902 \u091C\u094B\u0921\u093C\u0947\u0902",
+    desc: "\u0907\u0938 \u092A\u0930\u093F\u092F\u094B\u091C\u0928\u093E \u092E\u0947\u0902 \u091C\u094B\u0921\u093C\u0928\u0947 \u0915\u0947 \u0932\u093F\u090F \u092B\u093C\u093E\u0907\u0932\u0947\u0902 \u091A\u0941\u0928\u0947\u0902:",
+    addBtn: "\u091A\u0941\u0928\u0940 \u0917\u0908 \u092B\u093C\u093E\u0907\u0932\u0947\u0902 \u091C\u094B\u0921\u093C\u0947\u0902",
+    cancel: "\u0930\u0926\u094D\u0926 \u0915\u0930\u0947\u0902"
   }
 };
 
@@ -4106,6 +4128,182 @@ var es_default = {
     proceedToExport: "Proceder a exportar",
     closePreview: "Cerrar vista previa",
     noContent: "Sin contenido para previsualizar. Abra primero un proyecto de escritura."
+  },
+  projectModal: {
+    title: "Nuevo proyecto de escritura",
+    projectTitle: "T\xEDtulo del proyecto",
+    titlePlaceholder: "Mi novela",
+    template: "Plantilla",
+    templateDesc: "Elige una estructura de proyecto preconfigurada.",
+    templateOption: {
+      blank: "En blanco (estructura personalizada)",
+      book: "Libro (partes \u2192 cap\xEDtulos \u2192 escenas)",
+      series: "Serie de art\xEDculos (serie \u2192 art\xEDculos)",
+      blog: "Colecci\xF3n de blog (publicaciones por fecha/categor\xEDa)",
+      journalArticle: "Art\xEDculo de revista acad\xE9mica \u2014 env\xEDo acad\xE9mico o profesional",
+      magazineArticle: "Art\xEDculo de revista \u2014 reportaje, largo formato o no ficci\xF3n narrativa"
+    },
+    descriptionLabel: "Descripci\xF3n (opcional)",
+    descriptionPlaceholder: "Breve descripci\xF3n de este proyecto\u2026",
+    preview: {
+      blank: "Proyecto vac\xEDo \u2014 construye tu propia estructura.",
+      book: "Crea: p\xE1ginas preliminares, Parte 1 / Cap\xEDtulo 1, p\xE1ginas finales.",
+      series: "Crea: carpeta de serie, marcador del Art\xEDculo 1, metadatos de la serie.",
+      blog: "Crea: carpeta organizada por fecha, marcador de la primera publicaci\xF3n.",
+      journalArticle: "Crea: portada, resumen, palabras clave, introducci\xF3n, revisi\xF3n literaria, metodolog\xEDa, hallazgos/an\xE1lisis, discusi\xF3n, conclusi\xF3n, referencias, ap\xE9ndices.",
+      magazineArticle: "Crea: notas de propuesta/consulta, titular y sumario, entrada, p\xE1rrafo n\xFAcleo, cuerpo, citas y fuentes, cierre, notas de verificaci\xF3n, biograf\xEDa del autor. Los documentos de notas se excluyen de la exportaci\xF3n por defecto."
+    },
+    createBtn: "Crear proyecto",
+    creating: "Creando\u2026",
+    errorNoTitle: "Por favor, ingresa un t\xEDtulo de proyecto.",
+    errorCreate: "Error al crear el proyecto: {{error}}",
+    created: "\xA1Proyecto \xAB{{title}}\xBB creado!",
+    cancel: "Cancelar"
+  },
+  sprintModal: {
+    title: "Iniciar sprint de escritura",
+    durationName: "Duraci\xF3n (minutos)",
+    durationDesc: "Preestablecido: 10, 15, 25, 30, 45, 60",
+    durationCustom: "Personalizado\u2026",
+    durationCustomPlaceholder: "Minutos personalizados",
+    wordGoalName: "Meta de palabras (opcional)",
+    wordGoalDesc: "Deja 0 para ninguna meta.",
+    scopeName: "Alcance",
+    scopeFile: "Archivo actual",
+    scopeProject: "Proyecto completo",
+    startBtn: "Iniciar sprint",
+    errorDuration: "Por favor, establece una duraci\xF3n v\xE1lida.",
+    cancel: "Cancelar"
+  },
+  exportModal: {
+    title: "Exportar documento",
+    formatName: "Formato",
+    format: {
+      md: "Markdown (.md)",
+      html: "HTML",
+      manuscript: "Manuscrito (HTML)",
+      epub: "EPUB (.epub)",
+      pdf: "PDF (requiere pandoc)",
+      docx: "Word (.docx) (requiere pandoc)",
+      rtf: "RTF (requiere pandoc)"
+    },
+    coverImageName: "Ruta de imagen de portada",
+    coverImageDesc: "Ruta del vault a una imagen JPG o PNG. Deja vac\xEDo para una portada de texto generada.",
+    coverImagePlaceholder: "p. ej. Assets/cover.jpg",
+    contactInfoName: "Informaci\xF3n de contacto (opcional)",
+    contactInfoDesc: "Aparece en la portada \u2014 nombre, correo electr\xF3nico o direcci\xF3n postal.",
+    contactInfoPlaceholder: "Nombre, correo electr\xF3nico o direcci\xF3n postal",
+    scopeName: "Alcance",
+    scopeCurrent: "Documento actual",
+    scopeProject: "Proyecto completo (en orden del binder)",
+    includeFrontmatter: "Incluir portada",
+    includeResearch: "Incluir notas de investigaci\xF3n",
+    includeTitlesAsHeadings: "Incluir t\xEDtulos de documento como encabezados",
+    addTitlePage: "A\xF1adir portada",
+    addTitlePageDesc: "A\xF1ade una portada con el t\xEDtulo del proyecto, autor y fecha.",
+    previewBtn: "Vista previa del manuscrito compilado",
+    exportBtn: "Exportar",
+    exporting: "Exportando\u2026",
+    exportFailed: "Error de exportaci\xF3n: {{error}}",
+    cancel: "Cancelar"
+  },
+  publishModal: {
+    title: "Publicar en WordPress",
+    noSites: "No hay sitios de WordPress configurados. A\xF1ade un sitio en Ajustes \u2192 WordPress.",
+    close: "Cerrar",
+    siteName: "Sitio de WordPress",
+    postTitleName: "T\xEDtulo de la publicaci\xF3n",
+    postStatusName: "Estado de la publicaci\xF3n",
+    postStatus: {
+      draft: "Borrador",
+      pending: "Pendiente de revisi\xF3n",
+      publish: "Publicado"
+    },
+    categoryName: "Categor\xEDa",
+    tagsName: "Etiquetas",
+    tagsDesc: "Separadas por comas.",
+    excerptName: "Extracto (opcional)",
+    scheduleName: "Programar publicaci\xF3n (opcional)",
+    scheduleDesc: "Deja vac\xEDo para publicar inmediatamente.",
+    schedulePlaceholder: "yyyy-mm-ddThh:mm:ss",
+    existingNotice: "\u26A0 Este documento fue publicado anteriormente (ID de publicaci\xF3n: {{id}}).",
+    updatePost: "Actualizar publicaci\xF3n existente",
+    newPost: "Crear nueva publicaci\xF3n",
+    schedule: "Programar",
+    publish: "Publicar",
+    cancel: "Cancelar",
+    noSiteSelected: "Ning\xFAn sitio seleccionado.",
+    fileNotFound: "Archivo no encontrado.",
+    publishFailed: "Error al publicar: {{error}}",
+    published: "Publicado",
+    scheduled: "Programado",
+    actionNotice: "\xA1{{action}}! Ver publicaci\xF3n: {{url}}"
+  },
+  targetsDashboard: {
+    title: "Panel de objetivos de cap\xEDtulos",
+    noProject: "Ning\xFAn proyecto seleccionado.",
+    filterLabel: "Filtrar: ",
+    allStatuses: "Todos los estados",
+    refresh: "\u21BB Actualizar",
+    col: {
+      title: "T\xEDtulo",
+      type: "Tipo",
+      status: "Estado",
+      words: "Palabras",
+      goal: "Objetivo",
+      progress: "Progreso",
+      readingTime: "Tiempo de lectura"
+    },
+    total: "Total"
+  },
+  writingDashboard: {
+    title: "Panel de escritura",
+    thisSession: "Esta sesi\xF3n",
+    stat: {
+      wordsWritten: "Palabras escritas",
+      sprints: "Sprints",
+      minutes: "Minutos",
+      writingStreak: "Racha de escritura",
+      streakDays_one: "{{count}} d\xEDa",
+      streakDays_other: "{{count}} d\xEDas",
+      totalWords: "Total de palabras",
+      goal: "Objetivo",
+      progress: "Progreso",
+      readingTime: "Tiempo de lectura"
+    },
+    project: "Proyecto: {{title}}",
+    recentSprints: "Sprints recientes",
+    noSprints: "No hay sprints registrados a\xFAn.",
+    sprintTable: {
+      date: "Fecha",
+      duration: "Duraci\xF3n",
+      words: "Palabras",
+      wpm: "PPM",
+      goal: "Objetivo"
+    },
+    documentWordCounts: "Recuento de palabras por documento",
+    docTable: {
+      document: "Documento",
+      words: "Palabras",
+      readingTime: "Tiempo de lectura"
+    },
+    close: "Cerrar"
+  },
+  addToProject: {
+    title: "A\xF1adir a proyecto de escritura",
+    noProjects: "No se encontraron proyectos de escritura. Crea un proyecto primero.",
+    close: "Cerrar",
+    file: "Archivo: {{path}}",
+    projectName: "Proyecto de escritura",
+    projectDesc: "\xBFA qu\xE9 proyecto de escritura deseas a\xF1adir este archivo?",
+    addBtn: "A\xF1adir al proyecto",
+    cancel: "Cancelar"
+  },
+  scanFolder: {
+    title: "A\xF1adir archivos al binder",
+    desc: "Selecciona los archivos para a\xF1adir a este proyecto:",
+    addBtn: "A\xF1adir archivos seleccionados",
+    cancel: "Cancelar"
   }
 };
 
@@ -4436,6 +4634,186 @@ var ar_default = {
     proceedToExport: "\u0627\u0644\u0645\u062A\u0627\u0628\u0639\u0629 \u0644\u0644\u062A\u0635\u062F\u064A\u0631",
     closePreview: "\u0625\u063A\u0644\u0627\u0642 \u0627\u0644\u0645\u0639\u0627\u064A\u0646\u0629",
     noContent: "\u0644\u0627 \u0645\u062D\u062A\u0648\u0649 \u0644\u0644\u0645\u0639\u0627\u064A\u0646\u0629. \u0627\u0641\u062A\u062D \u0645\u0634\u0631\u0648\u0639 \u0643\u062A\u0627\u0628\u0629 \u0623\u0648\u0644\u0627\u064B."
+  },
+  projectModal: {
+    title: "\u0645\u0634\u0631\u0648\u0639 \u0643\u062A\u0627\u0628\u0629 \u062C\u062F\u064A\u062F",
+    projectTitle: "\u0639\u0646\u0648\u0627\u0646 \u0627\u0644\u0645\u0634\u0631\u0648\u0639",
+    titlePlaceholder: "\u0631\u0648\u0627\u064A\u062A\u064A",
+    template: "\u0642\u0627\u0644\u0628",
+    templateDesc: "\u0627\u062E\u062A\u0631 \u0647\u064A\u0643\u0644 \u0645\u0634\u0631\u0648\u0639 \u0645\u064F\u0639\u062F\u064B\u0651\u0627 \u0645\u0633\u0628\u0642\u064B\u0627.",
+    templateOption: {
+      blank: "\u0641\u0627\u0631\u063A (\u0647\u064A\u0643\u0644 \u0645\u062E\u0635\u0635)",
+      book: "\u0643\u062A\u0627\u0628 (\u0623\u062C\u0632\u0627\u0621 \u2192 \u0641\u0635\u0648\u0644 \u2192 \u0645\u0634\u0627\u0647\u062F)",
+      series: "\u0633\u0644\u0633\u0644\u0629 \u0645\u0642\u0627\u0644\u0627\u062A (\u0633\u0644\u0633\u0644\u0629 \u2192 \u0645\u0642\u0627\u0644\u0627\u062A)",
+      blog: "\u0645\u062C\u0645\u0648\u0639\u0629 \u0645\u062F\u0648\u0646\u0629 (\u0645\u0634\u0627\u0631\u0643\u0627\u062A \u062D\u0633\u0628 \u0627\u0644\u062A\u0627\u0631\u064A\u062E/\u0627\u0644\u0641\u0626\u0629)",
+      journalArticle: "\u0645\u0642\u0627\u0644 \u0623\u0643\u0627\u062F\u064A\u0645\u064A \u2014 \u062A\u0642\u062F\u064A\u0645 \u0644\u0645\u062C\u0644\u0629 \u0623\u0643\u0627\u062F\u064A\u0645\u064A\u0629 \u0623\u0648 \u0645\u0647\u0646\u064A\u0629",
+      magazineArticle: "\u0645\u0642\u0627\u0644 \u0645\u062C\u0644\u0629 \u2014 \u062A\u0642\u0631\u064A\u0631 \u0623\u0648 \u0637\u0648\u064A\u0644 \u0627\u0644\u0634\u0643\u0644 \u0623\u0648 \u063A\u064A\u0631 \u062E\u064A\u0627\u0644\u064A \u0633\u0631\u062F\u064A"
+    },
+    descriptionLabel: "\u0648\u0635\u0641 (\u0627\u062E\u062A\u064A\u0627\u0631\u064A)",
+    descriptionPlaceholder: "\u0648\u0635\u0641 \u0645\u0648\u062C\u0632 \u0644\u0647\u0630\u0627 \u0627\u0644\u0645\u0634\u0631\u0648\u0639\u2026",
+    preview: {
+      blank: "\u0645\u0634\u0631\u0648\u0639 \u0641\u0627\u0631\u063A \u2014 \u0627\u0628\u0646\u0650 \u0647\u064A\u0643\u0644\u0643 \u0627\u0644\u062E\u0627\u0635.",
+      book: "\u064A\u0646\u0634\u0626: \u0645\u0642\u062F\u0645\u0629\u060C \u0627\u0644\u062C\u0632\u0621 1 / \u0627\u0644\u0641\u0635\u0644 1\u060C \u0645\u0644\u062D\u0642 \u0646\u0647\u0627\u0626\u064A.",
+      series: "\u064A\u0646\u0634\u0626: \u0645\u062C\u0644\u062F \u0627\u0644\u0633\u0644\u0633\u0644\u0629\u060C \u0639\u0646\u0635\u0631 \u0646\u0627\u0626\u0628 \u0644\u0644\u0645\u0642\u0627\u0644 1\u060C \u0628\u064A\u0627\u0646\u0627\u062A \u0648\u0635\u0641\u064A\u0629 \u0644\u0644\u0633\u0644\u0633\u0644\u0629.",
+      blog: "\u064A\u0646\u0634\u0626: \u0645\u062C\u0644\u062F \u0645\u0646\u0638\u0645 \u0628\u0627\u0644\u062A\u0627\u0631\u064A\u062E\u060C \u0639\u0646\u0635\u0631 \u0646\u0627\u0626\u0628 \u0644\u0644\u0645\u0634\u0627\u0631\u0643\u0629 \u0627\u0644\u0623\u0648\u0644\u0649.",
+      journalArticle: "\u064A\u0646\u0634\u0626: \u0635\u0641\u062D\u0629 \u0627\u0644\u0639\u0646\u0648\u0627\u0646\u060C \u0627\u0644\u0645\u0644\u062E\u0635\u060C \u0627\u0644\u0643\u0644\u0645\u0627\u062A \u0627\u0644\u0645\u0641\u062A\u0627\u062D\u064A\u0629\u060C \u0627\u0644\u0645\u0642\u062F\u0645\u0629\u060C \u0645\u0631\u0627\u062C\u0639\u0629 \u0627\u0644\u0623\u062F\u0628\u064A\u0627\u062A\u060C \u0627\u0644\u0645\u0646\u0647\u062C\u064A\u0629\u060C \u0627\u0644\u0646\u062A\u0627\u0626\u062C/\u0627\u0644\u062A\u062D\u0644\u064A\u0644\u060C \u0627\u0644\u0646\u0642\u0627\u0634\u060C \u0627\u0644\u062E\u0627\u062A\u0645\u0629\u060C \u0627\u0644\u0645\u0631\u0627\u062C\u0639\u060C \u0627\u0644\u0645\u0644\u0627\u062D\u0642.",
+      magazineArticle: "\u064A\u0646\u0634\u0626: \u0645\u0644\u0627\u062D\u0638\u0627\u062A \u0627\u0644\u0627\u0642\u062A\u0631\u0627\u062D/\u0627\u0644\u0627\u0633\u062A\u0641\u0633\u0627\u0631\u060C \u0627\u0644\u0639\u0646\u0648\u0627\u0646 \u0627\u0644\u0631\u0626\u064A\u0633\u064A \u0648\u0627\u0644\u0641\u0631\u0639\u064A\u060C \u0627\u0644\u0645\u0642\u062F\u0645\u0629\u060C \u0627\u0644\u0641\u0642\u0631\u0629 \u0627\u0644\u0645\u062D\u0648\u0631\u064A\u0629\u060C \u0627\u0644\u0645\u062A\u0646\u060C \u0627\u0644\u0627\u0642\u062A\u0628\u0627\u0633\u0627\u062A \u0648\u0627\u0644\u0645\u0635\u0627\u062F\u0631\u060C \u0627\u0644\u062E\u0627\u062A\u0645\u0629\u060C \u0645\u0644\u0627\u062D\u0638\u0627\u062A \u0627\u0644\u062A\u062D\u0642\u0642\u060C \u0646\u0628\u0630\u0629 \u0627\u0644\u0645\u0624\u0644\u0641. \u0645\u0633\u062A\u0646\u062F\u0627\u062A \u0627\u0644\u0645\u0644\u0627\u062D\u0638\u0627\u062A \u0645\u0633\u062A\u0628\u0639\u062F\u0629 \u0645\u0646 \u0627\u0644\u062A\u0635\u062F\u064A\u0631 \u0627\u0641\u062A\u0631\u0627\u0636\u064A\u064B\u0627."
+    },
+    createBtn: "\u0625\u0646\u0634\u0627\u0621 \u0645\u0634\u0631\u0648\u0639",
+    creating: "\u062C\u0627\u0631\u064D \u0627\u0644\u0625\u0646\u0634\u0627\u0621\u2026",
+    errorNoTitle: "\u064A\u064F\u0631\u062C\u0649 \u0625\u062F\u062E\u0627\u0644 \u0639\u0646\u0648\u0627\u0646 \u0644\u0644\u0645\u0634\u0631\u0648\u0639.",
+    errorCreate: "\u0641\u0634\u0644 \u0625\u0646\u0634\u0627\u0621 \u0627\u0644\u0645\u0634\u0631\u0648\u0639: {{error}}",
+    created: "\u062A\u0645 \u0625\u0646\u0634\u0627\u0621 \u0627\u0644\u0645\u0634\u0631\u0648\u0639 \xAB{{title}}\xBB!",
+    cancel: "\u0625\u0644\u063A\u0627\u0621"
+  },
+  sprintModal: {
+    title: "\u0628\u062F\u0621 \u0633\u0628\u0627\u0642 \u0627\u0644\u0643\u062A\u0627\u0628\u0629",
+    durationName: "\u0627\u0644\u0645\u062F\u0629 (\u0628\u0627\u0644\u062F\u0642\u0627\u0626\u0642)",
+    durationDesc: "\u0627\u0644\u0625\u0639\u062F\u0627\u062F\u0627\u062A \u0627\u0644\u0645\u0633\u0628\u0642\u0629: 10\u060C 15\u060C 25\u060C 30\u060C 45\u060C 60",
+    durationCustom: "\u0645\u062E\u0635\u0635\u2026",
+    durationCustomPlaceholder: "\u062F\u0642\u0627\u0626\u0642 \u0645\u062E\u0635\u0635\u0629",
+    wordGoalName: "\u0647\u062F\u0641 \u0639\u062F\u062F \u0627\u0644\u0643\u0644\u0645\u0627\u062A (\u0627\u062E\u062A\u064A\u0627\u0631\u064A)",
+    wordGoalDesc: "\u0627\u062A\u0631\u0643 0 \u0644\u0639\u062F\u0645 \u0648\u0636\u0639 \u0647\u062F\u0641.",
+    scopeName: "\u0627\u0644\u0646\u0637\u0627\u0642",
+    scopeFile: "\u0627\u0644\u0645\u0644\u0641 \u0627\u0644\u062D\u0627\u0644\u064A",
+    scopeProject: "\u0627\u0644\u0645\u0634\u0631\u0648\u0639 \u0628\u0627\u0644\u0643\u0627\u0645\u0644",
+    startBtn: "\u0628\u062F\u0621 \u0627\u0644\u0633\u0628\u0627\u0642",
+    errorDuration: "\u064A\u064F\u0631\u062C\u0649 \u062A\u062D\u062F\u064A\u062F \u0645\u062F\u0629 \u0635\u0627\u0644\u062D\u0629.",
+    cancel: "\u0625\u0644\u063A\u0627\u0621"
+  },
+  exportModal: {
+    title: "\u062A\u0635\u062F\u064A\u0631 \u0627\u0644\u0645\u0633\u062A\u0646\u062F",
+    formatName: "\u0627\u0644\u0635\u064A\u063A\u0629",
+    format: {
+      md: "Markdown (.md)",
+      html: "HTML",
+      manuscript: "\u0645\u062E\u0637\u0648\u0637\u0629 (HTML)",
+      epub: "EPUB (.epub)",
+      pdf: "PDF (\u064A\u062A\u0637\u0644\u0628 pandoc)",
+      docx: "Word (.docx) (\u064A\u062A\u0637\u0644\u0628 pandoc)",
+      rtf: "RTF (\u064A\u062A\u0637\u0644\u0628 pandoc)"
+    },
+    coverImageName: "\u0645\u0633\u0627\u0631 \u0635\u0648\u0631\u0629 \u0627\u0644\u063A\u0644\u0627\u0641",
+    coverImageDesc: "\u0645\u0633\u0627\u0631 vault \u0644\u0635\u0648\u0631\u0629 \u063A\u0644\u0627\u0641 JPG \u0623\u0648 PNG. \u0627\u062A\u0631\u0643\u0647 \u0641\u0627\u0631\u063A\u064B\u0627 \u0644\u0625\u0646\u0634\u0627\u0621 \u063A\u0644\u0627\u0641 \u0646\u0635\u064A.",
+    coverImagePlaceholder: "\u0645\u062B\u0627\u0644: Assets/cover.jpg",
+    contactInfoName: "\u0645\u0639\u0644\u0648\u0645\u0627\u062A \u0627\u0644\u0627\u062A\u0635\u0627\u0644 (\u0627\u062E\u062A\u064A\u0627\u0631\u064A)",
+    contactInfoDesc: "\u062A\u0638\u0647\u0631 \u0641\u064A \u0635\u0641\u062D\u0629 \u0627\u0644\u0639\u0646\u0648\u0627\u0646 \u2014 \u0627\u0644\u0627\u0633\u0645 \u0623\u0648 \u0627\u0644\u0628\u0631\u064A\u062F \u0627\u0644\u0625\u0644\u0643\u062A\u0631\u0648\u0646\u064A \u0623\u0648 \u0627\u0644\u0639\u0646\u0648\u0627\u0646 \u0627\u0644\u0628\u0631\u064A\u062F\u064A.",
+    contactInfoPlaceholder: "\u0627\u0644\u0627\u0633\u0645 \u0623\u0648 \u0627\u0644\u0628\u0631\u064A\u062F \u0627\u0644\u0625\u0644\u0643\u062A\u0631\u0648\u0646\u064A \u0623\u0648 \u0627\u0644\u0639\u0646\u0648\u0627\u0646 \u0627\u0644\u0628\u0631\u064A\u062F\u064A",
+    scopeName: "\u0627\u0644\u0646\u0637\u0627\u0642",
+    scopeCurrent: "\u0627\u0644\u0645\u0633\u062A\u0646\u062F \u0627\u0644\u062D\u0627\u0644\u064A",
+    scopeProject: "\u0627\u0644\u0645\u0634\u0631\u0648\u0639 \u0628\u0627\u0644\u0643\u0627\u0645\u0644 (\u0628\u062A\u0631\u062A\u064A\u0628 \u0627\u0644\u0645\u0648\u062B\u0642)",
+    includeFrontmatter: "\u062A\u0636\u0645\u064A\u0646 \u0627\u0644\u0628\u064A\u0627\u0646\u0627\u062A \u0627\u0644\u0623\u0645\u0627\u0645\u064A\u0629",
+    includeResearch: "\u062A\u0636\u0645\u064A\u0646 \u0645\u0644\u0627\u062D\u0638\u0627\u062A \u0627\u0644\u0628\u062D\u062B",
+    includeTitlesAsHeadings: "\u062A\u0636\u0645\u064A\u0646 \u0639\u0646\u0627\u0648\u064A\u0646 \u0627\u0644\u0645\u0633\u062A\u0646\u062F\u0627\u062A \u0643\u0639\u0646\u0627\u0648\u064A\u0646",
+    addTitlePage: "\u0625\u0636\u0627\u0641\u0629 \u0635\u0641\u062D\u0629 \u0639\u0646\u0648\u0627\u0646",
+    addTitlePageDesc: "\u0625\u0636\u0627\u0641\u0629 \u0635\u0641\u062D\u0629 \u0639\u0646\u0648\u0627\u0646 \u062A\u062D\u062A\u0648\u064A \u0639\u0644\u0649 \u0639\u0646\u0648\u0627\u0646 \u0627\u0644\u0645\u0634\u0631\u0648\u0639 \u0648\u0627\u0644\u0645\u0624\u0644\u0641 \u0648\u0627\u0644\u062A\u0627\u0631\u064A\u062E.",
+    previewBtn: "\u0645\u0639\u0627\u064A\u0646\u0629 \u0627\u0644\u0645\u062E\u0637\u0648\u0637\u0629 \u0627\u0644\u0645\u062C\u0645\u0639\u0629",
+    exportBtn: "\u062A\u0635\u062F\u064A\u0631",
+    exporting: "\u062C\u0627\u0631\u064D \u0627\u0644\u062A\u0635\u062F\u064A\u0631\u2026",
+    exportFailed: "\u0641\u0634\u0644 \u0627\u0644\u062A\u0635\u062F\u064A\u0631: {{error}}",
+    cancel: "\u0625\u0644\u063A\u0627\u0621"
+  },
+  publishModal: {
+    title: "\u0646\u0634\u0631 \u0625\u0644\u0649 WordPress",
+    noSites: "\u0644\u0627 \u062A\u0648\u062C\u062F \u0645\u0648\u0627\u0642\u0639 WordPress \u0645\u064F\u0647\u064A\u064E\u0651\u0623\u0629. \u0623\u0636\u0641 \u0645\u0648\u0642\u0639\u064B\u0627 \u0641\u064A \u0627\u0644\u0625\u0639\u062F\u0627\u062F\u0627\u062A \u2192 WordPress.",
+    close: "\u0625\u063A\u0644\u0627\u0642",
+    siteName: "\u0645\u0648\u0642\u0639 WordPress",
+    postTitleName: "\u0639\u0646\u0648\u0627\u0646 \u0627\u0644\u0645\u0646\u0634\u0648\u0631",
+    postStatusName: "\u062D\u0627\u0644\u0629 \u0627\u0644\u0645\u0646\u0634\u0648\u0631",
+    postStatus: {
+      draft: "\u0645\u0633\u0648\u062F\u0629",
+      pending: "\u0641\u064A \u0627\u0646\u062A\u0638\u0627\u0631 \u0627\u0644\u0645\u0631\u0627\u062C\u0639\u0629",
+      publish: "\u0645\u0646\u0634\u0648\u0631"
+    },
+    categoryName: "\u0627\u0644\u0641\u0626\u0629",
+    tagsName: "\u0627\u0644\u0648\u0633\u0648\u0645",
+    tagsDesc: "\u0645\u0641\u0635\u0648\u0644\u0629 \u0628\u0641\u0648\u0627\u0635\u0644.",
+    excerptName: "\u0645\u0642\u062A\u0637\u0641 (\u0627\u062E\u062A\u064A\u0627\u0631\u064A)",
+    scheduleName: "\u062C\u062F\u0648\u0644\u0629 \u0627\u0644\u0646\u0634\u0631 (\u0627\u062E\u062A\u064A\u0627\u0631\u064A)",
+    scheduleDesc: "\u0627\u062A\u0631\u0643\u0647 \u0641\u0627\u0631\u063A\u064B\u0627 \u0644\u0644\u0646\u0634\u0631 \u0627\u0644\u0641\u0648\u0631\u064A.",
+    schedulePlaceholder: "yyyy-mm-ddThh:mm:ss",
+    existingNotice: "\u26A0 \u062A\u0645 \u0646\u0634\u0631 \u0647\u0630\u0627 \u0627\u0644\u0645\u0633\u062A\u0646\u062F \u0633\u0627\u0628\u0642\u064B\u0627 (\u0645\u0639\u0631\u0651\u0641 \u0627\u0644\u0645\u0646\u0634\u0648\u0631: {{id}}).",
+    updatePost: "\u062A\u062D\u062F\u064A\u062B \u0627\u0644\u0645\u0646\u0634\u0648\u0631 \u0627\u0644\u062D\u0627\u0644\u064A",
+    newPost: "\u0625\u0646\u0634\u0627\u0621 \u0645\u0646\u0634\u0648\u0631 \u062C\u062F\u064A\u062F",
+    schedule: "\u062C\u062F\u0648\u0644\u0629",
+    publish: "\u0646\u0634\u0631",
+    cancel: "\u0625\u0644\u063A\u0627\u0621",
+    noSiteSelected: "\u0644\u0645 \u064A\u062A\u0645 \u0627\u062E\u062A\u064A\u0627\u0631 \u0645\u0648\u0642\u0639.",
+    fileNotFound: "\u0627\u0644\u0645\u0644\u0641 \u063A\u064A\u0631 \u0645\u0648\u062C\u0648\u062F.",
+    publishFailed: "\u0641\u0634\u0644 \u0627\u0644\u0646\u0634\u0631: {{error}}",
+    published: "\u062A\u0645 \u0627\u0644\u0646\u0634\u0631",
+    scheduled: "\u0645\u062C\u062F\u0648\u064E\u0644",
+    actionNotice: "{{action}}! \u0639\u0631\u0636 \u0627\u0644\u0645\u0646\u0634\u0648\u0631: {{url}}"
+  },
+  targetsDashboard: {
+    title: "\u0644\u0648\u062D\u0629 \u0623\u0647\u062F\u0627\u0641 \u0627\u0644\u0641\u0635\u0648\u0644",
+    noProject: "\u0644\u0645 \u064A\u064F\u062D\u062F\u064E\u0651\u062F \u0645\u0634\u0631\u0648\u0639.",
+    filterLabel: "\u062A\u0635\u0641\u064A\u0629: ",
+    allStatuses: "\u062C\u0645\u064A\u0639 \u0627\u0644\u062D\u0627\u0644\u0627\u062A",
+    refresh: "\u21BB \u062A\u062D\u062F\u064A\u062B",
+    col: {
+      title: "\u0627\u0644\u0639\u0646\u0648\u0627\u0646",
+      type: "\u0627\u0644\u0646\u0648\u0639",
+      status: "\u0627\u0644\u062D\u0627\u0644\u0629",
+      words: "\u0627\u0644\u0643\u0644\u0645\u0627\u062A",
+      goal: "\u0627\u0644\u0647\u062F\u0641",
+      progress: "\u0627\u0644\u062A\u0642\u062F\u0645",
+      readingTime: "\u0648\u0642\u062A \u0627\u0644\u0642\u0631\u0627\u0621\u0629"
+    },
+    total: "\u0627\u0644\u0645\u062C\u0645\u0648\u0639"
+  },
+  writingDashboard: {
+    title: "\u0644\u0648\u062D\u0629 \u0627\u0644\u0643\u062A\u0627\u0628\u0629",
+    thisSession: "\u0647\u0630\u0647 \u0627\u0644\u062C\u0644\u0633\u0629",
+    stat: {
+      wordsWritten: "\u0627\u0644\u0643\u0644\u0645\u0627\u062A \u0627\u0644\u0645\u0643\u062A\u0648\u0628\u0629",
+      sprints: "\u0627\u0644\u0633\u0628\u0627\u0642\u0627\u062A",
+      minutes: "\u0627\u0644\u062F\u0642\u0627\u0626\u0642",
+      writingStreak: "\u0633\u0644\u0633\u0644\u0629 \u0627\u0644\u0643\u062A\u0627\u0628\u0629",
+      streakDays_zero: "\u0644\u0627 \u0623\u064A\u0627\u0645",
+      streakDays_one: "{{count}} \u064A\u0648\u0645",
+      streakDays_two: "{{count}} \u064A\u0648\u0645\u0627\u0646",
+      streakDays_few: "{{count}} \u0623\u064A\u0627\u0645",
+      streakDays_many: "{{count}} \u064A\u0648\u0645\u064B\u0627",
+      streakDays_other: "{{count}} \u064A\u0648\u0645",
+      totalWords: "\u0625\u062C\u0645\u0627\u0644\u064A \u0627\u0644\u0643\u0644\u0645\u0627\u062A",
+      goal: "\u0627\u0644\u0647\u062F\u0641",
+      progress: "\u0627\u0644\u062A\u0642\u062F\u0645",
+      readingTime: "\u0648\u0642\u062A \u0627\u0644\u0642\u0631\u0627\u0621\u0629"
+    },
+    project: "\u0627\u0644\u0645\u0634\u0631\u0648\u0639: {{title}}",
+    recentSprints: "\u0627\u0644\u0633\u0628\u0627\u0642\u0627\u062A \u0627\u0644\u0623\u062E\u064A\u0631\u0629",
+    noSprints: "\u0644\u0627 \u0633\u0628\u0627\u0642\u0627\u062A \u0645\u0633\u062C\u0651\u0644\u0629 \u0628\u0639\u062F.",
+    sprintTable: {
+      date: "\u0627\u0644\u062A\u0627\u0631\u064A\u062E",
+      duration: "\u0627\u0644\u0645\u062F\u0629",
+      words: "\u0627\u0644\u0643\u0644\u0645\u0627\u062A",
+      wpm: "\u0643/\u062F",
+      goal: "\u0627\u0644\u0647\u062F\u0641"
+    },
+    documentWordCounts: "\u0639\u062F\u062F \u0643\u0644\u0645\u0627\u062A \u0627\u0644\u0645\u0633\u062A\u0646\u062F\u0627\u062A",
+    docTable: {
+      document: "\u0627\u0644\u0645\u0633\u062A\u0646\u062F",
+      words: "\u0627\u0644\u0643\u0644\u0645\u0627\u062A",
+      readingTime: "\u0648\u0642\u062A \u0627\u0644\u0642\u0631\u0627\u0621\u0629"
+    },
+    close: "\u0625\u063A\u0644\u0627\u0642"
+  },
+  addToProject: {
+    title: "\u0625\u0636\u0627\u0641\u0629 \u0625\u0644\u0649 \u0645\u0634\u0631\u0648\u0639 \u0643\u062A\u0627\u0628\u0629",
+    noProjects: "\u0644\u0645 \u064A\u064F\u0639\u062B\u0631 \u0639\u0644\u0649 \u0645\u0634\u0627\u0631\u064A\u0639 \u0643\u062A\u0627\u0628\u0629. \u0623\u0646\u0634\u0626 \u0645\u0634\u0631\u0648\u0639\u064B\u0627 \u0623\u0648\u0644\u0627\u064B.",
+    close: "\u0625\u063A\u0644\u0627\u0642",
+    file: "\u0627\u0644\u0645\u0644\u0641: {{path}}",
+    projectName: "\u0645\u0634\u0631\u0648\u0639 \u0627\u0644\u0643\u062A\u0627\u0628\u0629",
+    projectDesc: "\u0625\u0644\u0649 \u0623\u064A \u0645\u0634\u0631\u0648\u0639 \u0643\u062A\u0627\u0628\u0629 \u062A\u0631\u064A\u062F \u0625\u0636\u0627\u0641\u0629 \u0647\u0630\u0627 \u0627\u0644\u0645\u0644\u0641\u061F",
+    addBtn: "\u0625\u0636\u0627\u0641\u0629 \u0625\u0644\u0649 \u0627\u0644\u0645\u0634\u0631\u0648\u0639",
+    cancel: "\u0625\u0644\u063A\u0627\u0621"
+  },
+  scanFolder: {
+    title: "\u0625\u0636\u0627\u0641\u0629 \u0645\u0644\u0641\u0627\u062A \u0625\u0644\u0649 \u0627\u0644\u0645\u0648\u062B\u0642",
+    desc: "\u062D\u062F\u062F \u0627\u0644\u0645\u0644\u0641\u0627\u062A \u0644\u0625\u0636\u0627\u0641\u062A\u0647\u0627 \u0625\u0644\u0649 \u0647\u0630\u0627 \u0627\u0644\u0645\u0634\u0631\u0648\u0639:",
+    addBtn: "\u0625\u0636\u0627\u0641\u0629 \u0627\u0644\u0645\u0644\u0641\u0627\u062A \u0627\u0644\u0645\u062D\u062F\u062F\u0629",
+    cancel: "\u0625\u0644\u063A\u0627\u0621"
   }
 };
 
@@ -4759,6 +5137,182 @@ var fr_default = {
     proceedToExport: "Proc\xE9der \xE0 l'export",
     closePreview: "Fermer l'aper\xE7u",
     noContent: "Aucun contenu \xE0 pr\xE9visualiser. Ouvrez d'abord un projet d'\xE9criture."
+  },
+  projectModal: {
+    title: "Nouveau projet d'\xE9criture",
+    projectTitle: "Titre du projet",
+    titlePlaceholder: "Mon roman",
+    template: "Mod\xE8le",
+    templateDesc: "Choisissez une structure de projet pr\xE9configur\xE9e.",
+    templateOption: {
+      blank: "Vierge (structure personnalis\xE9e)",
+      book: "Livre (parties \u2192 chapitres \u2192 sc\xE8nes)",
+      series: "S\xE9rie d'articles (s\xE9rie \u2192 articles)",
+      blog: "Collection de blog (publications par date/cat\xE9gorie)",
+      journalArticle: "Article de revue \u2014 soumission \xE0 une revue acad\xE9mique ou professionnelle",
+      magazineArticle: "Article de magazine \u2014 reportage, long format ou non-fiction narrative"
+    },
+    descriptionLabel: "Description (facultative)",
+    descriptionPlaceholder: "Br\xE8ve description de ce projet\u2026",
+    preview: {
+      blank: "Projet vide \u2014 construisez votre propre structure.",
+      book: "Cr\xE9e : pages liminaires, Partie 1 / Chapitre 1, pages finales.",
+      series: "Cr\xE9e : dossier de s\xE9rie, espace r\xE9serv\xE9 Article 1, m\xE9tadonn\xE9es de s\xE9rie.",
+      blog: "Cr\xE9e : dossier organis\xE9 par date, espace r\xE9serv\xE9 pour la premi\xE8re publication.",
+      journalArticle: "Cr\xE9e : page de titre, r\xE9sum\xE9, mots-cl\xE9s, introduction, revue de litt\xE9rature, m\xE9thodologie, r\xE9sultats/analyse, discussion, conclusion, r\xE9f\xE9rences, annexes.",
+      magazineArticle: "Cr\xE9e : notes de proposition/demande, titre et sous-titre, entr\xE9e, paragraphe central, corps, citations et sources, chute, notes de v\xE9rification, biographie de l'auteur. Les documents de notes sont exclus de l'export par d\xE9faut."
+    },
+    createBtn: "Cr\xE9er le projet",
+    creating: "Cr\xE9ation en cours\u2026",
+    errorNoTitle: "Veuillez saisir un titre de projet.",
+    errorCreate: "\xC9chec de la cr\xE9ation du projet : {{error}}",
+    created: "Projet \xAB {{title}} \xBB cr\xE9\xE9 !",
+    cancel: "Annuler"
+  },
+  sprintModal: {
+    title: "D\xE9marrer un sprint d'\xE9criture",
+    durationName: "Dur\xE9e (minutes)",
+    durationDesc: "Pr\xE9r\xE9glages : 10, 15, 25, 30, 45, 60",
+    durationCustom: "Personnalis\xE9\u2026",
+    durationCustomPlaceholder: "Minutes personnalis\xE9es",
+    wordGoalName: "Objectif de mots (facultatif)",
+    wordGoalDesc: "Laissez 0 pour aucun objectif.",
+    scopeName: "Port\xE9e",
+    scopeFile: "Fichier actuel",
+    scopeProject: "Projet entier",
+    startBtn: "D\xE9marrer le sprint",
+    errorDuration: "Veuillez d\xE9finir une dur\xE9e valide.",
+    cancel: "Annuler"
+  },
+  exportModal: {
+    title: "Exporter le document",
+    formatName: "Format",
+    format: {
+      md: "Markdown (.md)",
+      html: "HTML",
+      manuscript: "Manuscrit (HTML)",
+      epub: "EPUB (.epub)",
+      pdf: "PDF (n\xE9cessite pandoc)",
+      docx: "Word (.docx) (n\xE9cessite pandoc)",
+      rtf: "RTF (n\xE9cessite pandoc)"
+    },
+    coverImageName: "Chemin de l'image de couverture",
+    coverImageDesc: "Chemin vault vers une image JPG ou PNG. Laissez vide pour une couverture texte g\xE9n\xE9r\xE9e.",
+    coverImagePlaceholder: "ex. Assets/cover.jpg",
+    contactInfoName: "Informations de contact (facultatif)",
+    contactInfoDesc: "Appara\xEEt sur la page de titre \u2014 nom, e-mail ou adresse postale.",
+    contactInfoPlaceholder: "Nom, e-mail ou adresse postale",
+    scopeName: "Port\xE9e",
+    scopeCurrent: "Document actuel",
+    scopeProject: "Projet entier (dans l'ordre du binder)",
+    includeFrontmatter: "Inclure les m\xE9tadonn\xE9es",
+    includeResearch: "Inclure les notes de recherche",
+    includeTitlesAsHeadings: "Inclure les titres de document comme titres",
+    addTitlePage: "Ajouter une page de titre",
+    addTitlePageDesc: "Ajouter une page de titre avec le titre du projet, l'auteur et la date.",
+    previewBtn: "Aper\xE7u du manuscrit compil\xE9",
+    exportBtn: "Exporter",
+    exporting: "Export en cours\u2026",
+    exportFailed: "\xC9chec de l'export : {{error}}",
+    cancel: "Annuler"
+  },
+  publishModal: {
+    title: "Publier sur WordPress",
+    noSites: "Aucun site WordPress configur\xE9. Ajoutez un site dans Param\xE8tres \u2192 WordPress.",
+    close: "Fermer",
+    siteName: "Site WordPress",
+    postTitleName: "Titre de l'article",
+    postStatusName: "Statut de l'article",
+    postStatus: {
+      draft: "Brouillon",
+      pending: "En attente de r\xE9vision",
+      publish: "Publi\xE9"
+    },
+    categoryName: "Cat\xE9gorie",
+    tagsName: "\xC9tiquettes",
+    tagsDesc: "S\xE9par\xE9es par des virgules.",
+    excerptName: "Extrait (facultatif)",
+    scheduleName: "Planifier la publication (facultatif)",
+    scheduleDesc: "Laissez vide pour publier imm\xE9diatement.",
+    schedulePlaceholder: "aaaa-mm-jjThh:mm:ss",
+    existingNotice: "\u26A0 Ce document a d\xE9j\xE0 \xE9t\xE9 publi\xE9 (ID d'article : {{id}}).",
+    updatePost: "Mettre \xE0 jour l'article existant",
+    newPost: "Cr\xE9er un nouvel article",
+    schedule: "Planifier",
+    publish: "Publier",
+    cancel: "Annuler",
+    noSiteSelected: "Aucun site s\xE9lectionn\xE9.",
+    fileNotFound: "Fichier introuvable.",
+    publishFailed: "\xC9chec de la publication : {{error}}",
+    published: "Publi\xE9",
+    scheduled: "Planifi\xE9",
+    actionNotice: "{{action}} ! Voir l'article : {{url}}"
+  },
+  targetsDashboard: {
+    title: "Tableau de bord des objectifs par chapitre",
+    noProject: "Aucun projet s\xE9lectionn\xE9.",
+    filterLabel: "Filtrer : ",
+    allStatuses: "Tous les statuts",
+    refresh: "\u21BB Actualiser",
+    col: {
+      title: "Titre",
+      type: "Type",
+      status: "Statut",
+      words: "Mots",
+      goal: "Objectif",
+      progress: "Progression",
+      readingTime: "Temps de lecture"
+    },
+    total: "Total"
+  },
+  writingDashboard: {
+    title: "Tableau de bord d'\xE9criture",
+    thisSession: "Cette session",
+    stat: {
+      wordsWritten: "Mots \xE9crits",
+      sprints: "Sprints",
+      minutes: "Minutes",
+      writingStreak: "S\xE9rie d'\xE9criture",
+      streakDays_one: "{{count}} jour",
+      streakDays_other: "{{count}} jours",
+      totalWords: "Total des mots",
+      goal: "Objectif",
+      progress: "Progression",
+      readingTime: "Temps de lecture"
+    },
+    project: "Projet : {{title}}",
+    recentSprints: "Sprints r\xE9cents",
+    noSprints: "Aucun sprint enregistr\xE9 pour l'instant.",
+    sprintTable: {
+      date: "Date",
+      duration: "Dur\xE9e",
+      words: "Mots",
+      wpm: "M/min",
+      goal: "Objectif"
+    },
+    documentWordCounts: "Nombre de mots par document",
+    docTable: {
+      document: "Document",
+      words: "Mots",
+      readingTime: "Temps de lecture"
+    },
+    close: "Fermer"
+  },
+  addToProject: {
+    title: "Ajouter \xE0 un projet d'\xE9criture",
+    noProjects: "Aucun projet d'\xE9criture trouv\xE9. Cr\xE9ez d'abord un projet.",
+    close: "Fermer",
+    file: "Fichier : {{path}}",
+    projectName: "Projet d'\xE9criture",
+    projectDesc: "\xC0 quel projet d'\xE9criture souhaitez-vous ajouter ce fichier ?",
+    addBtn: "Ajouter au projet",
+    cancel: "Annuler"
+  },
+  scanFolder: {
+    title: "Ajouter des fichiers au binder",
+    desc: "S\xE9lectionnez les fichiers \xE0 ajouter \xE0 ce projet :",
+    addBtn: "Ajouter les fichiers s\xE9lectionn\xE9s",
+    cancel: "Annuler"
   }
 };
 
@@ -5082,6 +5636,182 @@ var bn_default = {
     proceedToExport: "\u09B0\u09AA\u09CD\u09A4\u09BE\u09A8\u09BF\u09A4\u09C7 \u098F\u0997\u09BF\u09AF\u09BC\u09C7 \u09AF\u09BE\u09A8",
     closePreview: "\u09AA\u09C2\u09B0\u09CD\u09AC\u09B0\u09C2\u09AA \u09AC\u09A8\u09CD\u09A7 \u0995\u09B0\u09C1\u09A8",
     noContent: "\u09AA\u09C2\u09B0\u09CD\u09AC\u09B0\u09C2\u09AA\u09C7\u09B0 \u099C\u09A8\u09CD\u09AF \u0995\u09CB\u09A8\u09CB \u09AC\u09BF\u09B7\u09AF\u09BC\u09AC\u09B8\u09CD\u09A4\u09C1 \u09A8\u09C7\u0987\u0964 \u09AA\u09CD\u09B0\u09A5\u09AE\u09C7 \u098F\u0995\u099F\u09BF \u09B2\u09C7\u0996\u09BE\u09B0 \u09AA\u09CD\u09B0\u0995\u09B2\u09CD\u09AA \u0996\u09C1\u09B2\u09C1\u09A8\u0964"
+  },
+  projectModal: {
+    title: "\u09A8\u09A4\u09C1\u09A8 \u09B2\u09C7\u0996\u09BE\u09B0 \u09AA\u09CD\u09B0\u0995\u09B2\u09CD\u09AA",
+    projectTitle: "\u09AA\u09CD\u09B0\u0995\u09B2\u09CD\u09AA\u09C7\u09B0 \u09B6\u09BF\u09B0\u09CB\u09A8\u09BE\u09AE",
+    titlePlaceholder: "\u0986\u09AE\u09BE\u09B0 \u0989\u09AA\u09A8\u09CD\u09AF\u09BE\u09B8",
+    template: "\u099F\u09C7\u09AE\u09AA\u09CD\u09B2\u09C7\u099F",
+    templateDesc: "\u09AA\u09C2\u09B0\u09CD\u09AC-\u0995\u09A8\u09AB\u09BF\u0997\u09BE\u09B0 \u0995\u09B0\u09BE \u09AA\u09CD\u09B0\u0995\u09B2\u09CD\u09AA \u0995\u09BE\u09A0\u09BE\u09AE\u09CB \u09AC\u09C7\u099B\u09C7 \u09A8\u09BF\u09A8\u0964",
+    templateOption: {
+      blank: "\u09AB\u09BE\u0981\u0995\u09BE (\u0995\u09BE\u09B8\u09CD\u099F\u09AE \u0995\u09BE\u09A0\u09BE\u09AE\u09CB)",
+      book: "\u09AC\u0987 (\u0985\u0982\u09B6 \u2192 \u0985\u09A7\u09CD\u09AF\u09BE\u09AF\u09BC \u2192 \u09A6\u09C3\u09B6\u09CD\u09AF)",
+      series: "\u09A8\u09BF\u09AC\u09A8\u09CD\u09A7 \u09B8\u09BF\u09B0\u09BF\u099C (\u09B8\u09BF\u09B0\u09BF\u099C \u2192 \u09A8\u09BF\u09AC\u09A8\u09CD\u09A7)",
+      blog: "\u09AC\u09CD\u09B2\u0997 \u09B8\u0982\u0997\u09CD\u09B0\u09B9 (\u09A4\u09BE\u09B0\u09BF\u0996/\u09AC\u09BF\u09AD\u09BE\u0997 \u0985\u09A8\u09C1\u09AF\u09BE\u09AF\u09BC\u09C0 \u09AA\u09CB\u09B8\u09CD\u099F)",
+      journalArticle: "\u099C\u09BE\u09B0\u09CD\u09A8\u09BE\u09B2 \u09A8\u09BF\u09AC\u09A8\u09CD\u09A7 \u2014 \u098F\u0995\u09BE\u09A1\u09C7\u09AE\u09BF\u0995 \u09AC\u09BE \u09AA\u09C7\u09B6\u09BE\u09A6\u09BE\u09B0 \u099C\u09BE\u09B0\u09CD\u09A8\u09BE\u09B2\u09C7 \u099C\u09AE\u09BE",
+      magazineArticle: "\u09AE\u09CD\u09AF\u09BE\u0997\u09BE\u099C\u09BF\u09A8 \u09A8\u09BF\u09AC\u09A8\u09CD\u09A7 \u2014 \u09AB\u09BF\u099A\u09BE\u09B0, \u09A6\u09C0\u09B0\u09CD\u0998-\u09AB\u09B0\u09CD\u09AE \u09AC\u09BE \u0986\u0996\u09CD\u09AF\u09BE\u09A8\u09AE\u09C2\u09B2\u0995 \u09A8\u09A8-\u09AB\u09BF\u0995\u09B6\u09A8"
+    },
+    descriptionLabel: "\u09AC\u09BF\u09AC\u09B0\u09A3 (\u0990\u099A\u09CD\u099B\u09BF\u0995)",
+    descriptionPlaceholder: "\u098F\u0987 \u09AA\u09CD\u09B0\u0995\u09B2\u09CD\u09AA\u09C7\u09B0 \u09B8\u0982\u0995\u09CD\u09B7\u09BF\u09AA\u09CD\u09A4 \u09AC\u09BF\u09AC\u09B0\u09A3\u2026",
+    preview: {
+      blank: "\u09AB\u09BE\u0981\u0995\u09BE \u09AA\u09CD\u09B0\u0995\u09B2\u09CD\u09AA \u2014 \u09A8\u09BF\u099C\u09C7\u09B0 \u0995\u09BE\u09A0\u09BE\u09AE\u09CB \u09A4\u09C8\u09B0\u09BF \u0995\u09B0\u09C1\u09A8\u0964",
+      book: "\u09A4\u09C8\u09B0\u09BF \u0995\u09B0\u09C7: \u09B8\u09BE\u09AE\u09A8\u09C7\u09B0 \u0989\u09AA\u09BE\u09A6\u09BE\u09A8, \u0985\u0982\u09B6 \u09E7 / \u0985\u09A7\u09CD\u09AF\u09BE\u09AF\u09BC \u09E7, \u09AA\u09C7\u099B\u09A8\u09C7\u09B0 \u0989\u09AA\u09BE\u09A6\u09BE\u09A8\u0964",
+      series: "\u09A4\u09C8\u09B0\u09BF \u0995\u09B0\u09C7: \u09B8\u09BF\u09B0\u09BF\u099C \u09AB\u09CB\u09B2\u09CD\u09A1\u09BE\u09B0, \u09A8\u09BF\u09AC\u09A8\u09CD\u09A7 \u09E7 \u09B8\u09CD\u09A5\u09BE\u09A8\u09A7\u09BE\u09B0\u0995, \u09B8\u09BF\u09B0\u09BF\u099C \u09AE\u09C7\u099F\u09BE\u09A1\u09C7\u099F\u09BE\u0964",
+      blog: "\u09A4\u09C8\u09B0\u09BF \u0995\u09B0\u09C7: \u09A4\u09BE\u09B0\u09BF\u0996-\u09B8\u0982\u0997\u09A0\u09BF\u09A4 \u09AB\u09CB\u09B2\u09CD\u09A1\u09BE\u09B0, \u09AA\u09CD\u09B0\u09A5\u09AE \u09AA\u09CB\u09B8\u09CD\u099F \u09B8\u09CD\u09A5\u09BE\u09A8\u09A7\u09BE\u09B0\u0995\u0964",
+      journalArticle: "\u09A4\u09C8\u09B0\u09BF \u0995\u09B0\u09C7: \u09B6\u09BF\u09B0\u09CB\u09A8\u09BE\u09AE \u09AA\u09C3\u09B7\u09CD\u09A0\u09BE, \u09B8\u09BE\u09B0\u09B8\u0982\u0995\u09CD\u09B7\u09C7\u09AA, \u09AE\u09C2\u09B2 \u09B6\u09AC\u09CD\u09A6, \u09AD\u09C2\u09AE\u09BF\u0995\u09BE, \u09B8\u09BE\u09B9\u09BF\u09A4\u09CD\u09AF \u09AA\u09B0\u09CD\u09AF\u09BE\u09B2\u09CB\u099A\u09A8\u09BE, \u09AA\u09A6\u09CD\u09A7\u09A4\u09BF\u09A4\u09A4\u09CD\u09A4\u09CD\u09AC, \u09AB\u09B2\u09BE\u09AB\u09B2/\u09AC\u09BF\u09B6\u09CD\u09B2\u09C7\u09B7\u09A3, \u0986\u09B2\u09CB\u099A\u09A8\u09BE, \u0989\u09AA\u09B8\u0982\u09B9\u09BE\u09B0, \u09A4\u09A5\u09CD\u09AF\u09B8\u09C2\u09A4\u09CD\u09B0, \u09AA\u09B0\u09BF\u09B6\u09BF\u09B7\u09CD\u099F\u0964",
+      magazineArticle: "\u09A4\u09C8\u09B0\u09BF \u0995\u09B0\u09C7: \u09AA\u09BF\u099A/\u0995\u09CB\u09AF\u09BC\u09C7\u09B0\u09BF \u09A8\u09CB\u099F, \u09B6\u09BF\u09B0\u09CB\u09A8\u09BE\u09AE \u0993 \u09B8\u09BE\u09AC\u099F\u09BE\u0987\u099F\u09C7\u09B2, \u09B2\u09BF\u09A1, \u09AE\u09C2\u09B2 \u0985\u09A8\u09C1\u099A\u09CD\u099B\u09C7\u09A6, \u09AC\u09A1\u09BF, \u0989\u09A6\u09CD\u09A7\u09C3\u09A4\u09BF \u0993 \u0989\u09CE\u09B8, \u09AA\u09B0\u09BF\u09B8\u09AE\u09BE\u09AA\u09CD\u09A4\u09BF, \u09A4\u09A5\u09CD\u09AF-\u09AF\u09BE\u099A\u09BE\u0987 \u09A8\u09CB\u099F, \u09B2\u09C7\u0996\u0995 \u09AA\u09B0\u09BF\u099A\u09BF\u09A4\u09BF\u0964 \u09A8\u09CB\u099F \u09A8\u09A5\u09BF \u09A1\u09BF\u09AB\u09B2\u09CD\u099F\u09AD\u09BE\u09AC\u09C7 \u09B0\u09AA\u09CD\u09A4\u09BE\u09A8\u09BF \u09A5\u09C7\u0995\u09C7 \u09AC\u09BE\u09A6\u0964"
+    },
+    createBtn: "\u09AA\u09CD\u09B0\u0995\u09B2\u09CD\u09AA \u09A4\u09C8\u09B0\u09BF \u0995\u09B0\u09C1\u09A8",
+    creating: "\u09A4\u09C8\u09B0\u09BF \u09B9\u099A\u09CD\u099B\u09C7\u2026",
+    errorNoTitle: "\u0985\u09A8\u09C1\u0997\u09CD\u09B0\u09B9 \u0995\u09B0\u09C7 \u09AA\u09CD\u09B0\u0995\u09B2\u09CD\u09AA\u09C7\u09B0 \u09B6\u09BF\u09B0\u09CB\u09A8\u09BE\u09AE \u09B2\u09BF\u0996\u09C1\u09A8\u0964",
+    errorCreate: "\u09AA\u09CD\u09B0\u0995\u09B2\u09CD\u09AA \u09A4\u09C8\u09B0\u09BF\u09A4\u09C7 \u09AC\u09CD\u09AF\u09B0\u09CD\u09A5: {{error}}",
+    created: '\u09AA\u09CD\u09B0\u0995\u09B2\u09CD\u09AA "{{title}}" \u09A4\u09C8\u09B0\u09BF \u09B9\u09AF\u09BC\u09C7\u099B\u09C7!',
+    cancel: "\u09AC\u09BE\u09A4\u09BF\u09B2"
+  },
+  sprintModal: {
+    title: "\u09B2\u09C7\u0996\u09BE\u09B0 \u09B8\u09CD\u09AA\u09CD\u09B0\u09BF\u09A8\u09CD\u099F \u09B6\u09C1\u09B0\u09C1 \u0995\u09B0\u09C1\u09A8",
+    durationName: "\u09B8\u09AE\u09AF\u09BC\u0995\u09BE\u09B2 (\u09AE\u09BF\u09A8\u09BF\u099F)",
+    durationDesc: "\u09AA\u09CD\u09B0\u09BF\u09B8\u09C7\u099F: \u09E7\u09E6, \u09E7\u09EB, \u09E8\u09EB, \u09E9\u09E6, \u09EA\u09EB, \u09EC\u09E6",
+    durationCustom: "\u0995\u09BE\u09B8\u09CD\u099F\u09AE\u2026",
+    durationCustomPlaceholder: "\u0995\u09BE\u09B8\u09CD\u099F\u09AE \u09AE\u09BF\u09A8\u09BF\u099F",
+    wordGoalName: "\u09B6\u09AC\u09CD\u09A6 \u0997\u09A3\u09A8\u09BE \u09B2\u0995\u09CD\u09B7\u09CD\u09AF (\u0990\u099A\u09CD\u099B\u09BF\u0995)",
+    wordGoalDesc: "\u0995\u09CB\u09A8\u09CB \u09B2\u0995\u09CD\u09B7\u09CD\u09AF \u09A8\u09BE \u09A5\u09BE\u0995\u09B2\u09C7 \u09E6 \u09B0\u09BE\u0996\u09C1\u09A8\u0964",
+    scopeName: "\u09AA\u09B0\u09BF\u09A7\u09BF",
+    scopeFile: "\u09AC\u09B0\u09CD\u09A4\u09AE\u09BE\u09A8 \u09AB\u09BE\u0987\u09B2",
+    scopeProject: "\u09AA\u09C1\u09B0\u09CB \u09AA\u09CD\u09B0\u0995\u09B2\u09CD\u09AA",
+    startBtn: "\u09B8\u09CD\u09AA\u09CD\u09B0\u09BF\u09A8\u09CD\u099F \u09B6\u09C1\u09B0\u09C1 \u0995\u09B0\u09C1\u09A8",
+    errorDuration: "\u0985\u09A8\u09C1\u0997\u09CD\u09B0\u09B9 \u0995\u09B0\u09C7 \u098F\u0995\u099F\u09BF \u09AC\u09C8\u09A7 \u09B8\u09AE\u09AF\u09BC\u0995\u09BE\u09B2 \u09B8\u09C7\u099F \u0995\u09B0\u09C1\u09A8\u0964",
+    cancel: "\u09AC\u09BE\u09A4\u09BF\u09B2"
+  },
+  exportModal: {
+    title: "\u09A8\u09A5\u09BF \u09B0\u09AA\u09CD\u09A4\u09BE\u09A8\u09BF \u0995\u09B0\u09C1\u09A8",
+    formatName: "\u09AB\u09B0\u09AE\u09CD\u09AF\u09BE\u099F",
+    format: {
+      md: "Markdown (.md)",
+      html: "HTML",
+      manuscript: "\u09AA\u09BE\u09A3\u09CD\u09A1\u09C1\u09B2\u09BF\u09AA\u09BF (HTML)",
+      epub: "EPUB (.epub)",
+      pdf: "PDF (pandoc \u09AA\u09CD\u09B0\u09AF\u09BC\u09CB\u099C\u09A8)",
+      docx: "Word (.docx) (pandoc \u09AA\u09CD\u09B0\u09AF\u09BC\u09CB\u099C\u09A8)",
+      rtf: "RTF (pandoc \u09AA\u09CD\u09B0\u09AF\u09BC\u09CB\u099C\u09A8)"
+    },
+    coverImageName: "\u09AA\u09CD\u09B0\u099A\u09CD\u099B\u09A6 \u099B\u09AC\u09BF\u09B0 \u09AA\u09A5",
+    coverImageDesc: "JPG \u09AC\u09BE PNG \u09AA\u09CD\u09B0\u099A\u09CD\u099B\u09A6 \u099B\u09AC\u09BF\u09B0 Vault \u09AA\u09A5\u0964 \u099F\u09C7\u0995\u09CD\u09B8\u099F \u09AA\u09CD\u09B0\u099A\u09CD\u099B\u09A6 \u09A4\u09C8\u09B0\u09BF\u09B0 \u099C\u09A8\u09CD\u09AF \u09AB\u09BE\u0981\u0995\u09BE \u09B0\u09BE\u0996\u09C1\u09A8\u0964",
+    coverImagePlaceholder: "\u09AF\u09C7\u09AE\u09A8 Assets/cover.jpg",
+    contactInfoName: "\u09AF\u09CB\u0997\u09BE\u09AF\u09CB\u0997\u09C7\u09B0 \u09A4\u09A5\u09CD\u09AF (\u0990\u099A\u09CD\u099B\u09BF\u0995)",
+    contactInfoDesc: "\u09B6\u09BF\u09B0\u09CB\u09A8\u09BE\u09AE \u09AA\u09C3\u09B7\u09CD\u09A0\u09BE\u09AF\u09BC \u09AA\u09CD\u09B0\u09A6\u09B0\u09CD\u09B6\u09BF\u09A4 \u2014 \u09A8\u09BE\u09AE, \u0987\u09AE\u09C7\u0987\u09B2 \u09AC\u09BE \u09A1\u09BE\u0995 \u09A0\u09BF\u0995\u09BE\u09A8\u09BE\u0964",
+    contactInfoPlaceholder: "\u09A8\u09BE\u09AE, \u0987\u09AE\u09C7\u0987\u09B2 \u09AC\u09BE \u09A1\u09BE\u0995 \u09A0\u09BF\u0995\u09BE\u09A8\u09BE",
+    scopeName: "\u09AA\u09B0\u09BF\u09A7\u09BF",
+    scopeCurrent: "\u09AC\u09B0\u09CD\u09A4\u09AE\u09BE\u09A8 \u09A8\u09A5\u09BF",
+    scopeProject: "\u09AA\u09C1\u09B0\u09CB \u09AA\u09CD\u09B0\u0995\u09B2\u09CD\u09AA (\u09AC\u09BE\u0987\u09A8\u09CD\u09A1\u09BE\u09B0 \u0995\u09CD\u09B0\u09AE\u09C7)",
+    includeFrontmatter: "\u09AB\u09CD\u09B0\u09A8\u09CD\u099F\u09AE\u09CD\u09AF\u09BE\u099F\u09BE\u09B0 \u0985\u09A8\u09CD\u09A4\u09B0\u09CD\u09AD\u09C1\u0995\u09CD\u09A4 \u0995\u09B0\u09C1\u09A8",
+    includeResearch: "\u0997\u09AC\u09C7\u09B7\u09A3\u09BE \u09A8\u09CB\u099F \u0985\u09A8\u09CD\u09A4\u09B0\u09CD\u09AD\u09C1\u0995\u09CD\u09A4 \u0995\u09B0\u09C1\u09A8",
+    includeTitlesAsHeadings: "\u09A8\u09A5\u09BF\u09B0 \u09B6\u09BF\u09B0\u09CB\u09A8\u09BE\u09AE \u09B9\u09C7\u09A1\u09BF\u0982 \u09B9\u09BF\u09B8\u09C7\u09AC\u09C7 \u0985\u09A8\u09CD\u09A4\u09B0\u09CD\u09AD\u09C1\u0995\u09CD\u09A4 \u0995\u09B0\u09C1\u09A8",
+    addTitlePage: "\u09B6\u09BF\u09B0\u09CB\u09A8\u09BE\u09AE \u09AA\u09C3\u09B7\u09CD\u09A0\u09BE \u09AF\u09CB\u0997 \u0995\u09B0\u09C1\u09A8",
+    addTitlePageDesc: "\u09AA\u09CD\u09B0\u0995\u09B2\u09CD\u09AA\u09C7\u09B0 \u09B6\u09BF\u09B0\u09CB\u09A8\u09BE\u09AE, \u09B2\u09C7\u0996\u0995 \u0993 \u09A4\u09BE\u09B0\u09BF\u0996 \u09B8\u09B9 \u09B6\u09BF\u09B0\u09CB\u09A8\u09BE\u09AE \u09AA\u09C3\u09B7\u09CD\u09A0\u09BE \u09AF\u09CB\u0997 \u0995\u09B0\u09C1\u09A8\u0964",
+    previewBtn: "\u09B8\u0982\u0995\u09B2\u09BF\u09A4 \u09AA\u09BE\u09A3\u09CD\u09A1\u09C1\u09B2\u09BF\u09AA\u09BF\u09B0 \u09AA\u09C2\u09B0\u09CD\u09AC\u09B0\u09C2\u09AA",
+    exportBtn: "\u09B0\u09AA\u09CD\u09A4\u09BE\u09A8\u09BF",
+    exporting: "\u09B0\u09AA\u09CD\u09A4\u09BE\u09A8\u09BF \u09B9\u099A\u09CD\u099B\u09C7\u2026",
+    exportFailed: "\u09B0\u09AA\u09CD\u09A4\u09BE\u09A8\u09BF \u09AC\u09CD\u09AF\u09B0\u09CD\u09A5: {{error}}",
+    cancel: "\u09AC\u09BE\u09A4\u09BF\u09B2"
+  },
+  publishModal: {
+    title: "WordPress-\u098F \u09AA\u09CD\u09B0\u0995\u09BE\u09B6 \u0995\u09B0\u09C1\u09A8",
+    noSites: "\u0995\u09CB\u09A8\u09CB WordPress \u09B8\u09BE\u0987\u099F \u0995\u09A8\u09AB\u09BF\u0997\u09BE\u09B0 \u0995\u09B0\u09BE \u09A8\u09C7\u0987\u0964 \u09B8\u09C7\u099F\u09BF\u0982\u09B8 \u2192 WordPress-\u098F \u09B8\u09BE\u0987\u099F \u09AF\u09CB\u0997 \u0995\u09B0\u09C1\u09A8\u0964",
+    close: "\u09AC\u09A8\u09CD\u09A7 \u0995\u09B0\u09C1\u09A8",
+    siteName: "WordPress \u09B8\u09BE\u0987\u099F",
+    postTitleName: "\u09AA\u09CB\u09B8\u09CD\u099F\u09C7\u09B0 \u09B6\u09BF\u09B0\u09CB\u09A8\u09BE\u09AE",
+    postStatusName: "\u09AA\u09CB\u09B8\u09CD\u099F\u09C7\u09B0 \u0985\u09AC\u09B8\u09CD\u09A5\u09BE",
+    postStatus: {
+      draft: "\u0996\u09B8\u09A1\u09BC\u09BE",
+      pending: "\u09AA\u09B0\u09CD\u09AF\u09BE\u09B2\u09CB\u099A\u09A8\u09BE\u09B0 \u0985\u09AA\u09C7\u0995\u09CD\u09B7\u09BE\u09AF\u09BC",
+      publish: "\u09AA\u09CD\u09B0\u0995\u09BE\u09B6\u09BF\u09A4"
+    },
+    categoryName: "\u09AC\u09BF\u09AD\u09BE\u0997",
+    tagsName: "\u099F\u09CD\u09AF\u09BE\u0997",
+    tagsDesc: "\u0995\u09AE\u09BE \u09A6\u09BF\u09AF\u09BC\u09C7 \u0986\u09B2\u09BE\u09A6\u09BE\u0964",
+    excerptName: "\u0985\u0982\u09B6 (\u0990\u099A\u09CD\u099B\u09BF\u0995)",
+    scheduleName: "\u09AA\u09CD\u09B0\u0995\u09BE\u09B6\u09A8\u09BE \u09A8\u09BF\u09B0\u09CD\u09A7\u09BE\u09B0\u09A3 \u0995\u09B0\u09C1\u09A8 (\u0990\u099A\u09CD\u099B\u09BF\u0995)",
+    scheduleDesc: "\u09A4\u09BE\u09CE\u0995\u09CD\u09B7\u09A3\u09BF\u0995 \u09AA\u09CD\u09B0\u0995\u09BE\u09B6\u09C7\u09B0 \u099C\u09A8\u09CD\u09AF \u09AB\u09BE\u0981\u0995\u09BE \u09B0\u09BE\u0996\u09C1\u09A8\u0964",
+    schedulePlaceholder: "yyyy-mm-ddThh:mm:ss",
+    existingNotice: "\u26A0 \u098F\u0987 \u09A8\u09A5\u09BF\u099F\u09BF \u0986\u0997\u09C7 \u09AA\u09CD\u09B0\u0995\u09BE\u09B6\u09BF\u09A4 \u09B9\u09AF\u09BC\u09C7\u099B\u09BF\u09B2 (\u09AA\u09CB\u09B8\u09CD\u099F ID: {{id}})\u0964",
+    updatePost: "\u09AC\u09BF\u09A6\u09CD\u09AF\u09AE\u09BE\u09A8 \u09AA\u09CB\u09B8\u09CD\u099F \u0986\u09AA\u09A1\u09C7\u099F \u0995\u09B0\u09C1\u09A8",
+    newPost: "\u09A8\u09A4\u09C1\u09A8 \u09AA\u09CB\u09B8\u09CD\u099F \u09A4\u09C8\u09B0\u09BF \u0995\u09B0\u09C1\u09A8",
+    schedule: "\u09A8\u09BF\u09B0\u09CD\u09A7\u09BE\u09B0\u09A3 \u0995\u09B0\u09C1\u09A8",
+    publish: "\u09AA\u09CD\u09B0\u0995\u09BE\u09B6 \u0995\u09B0\u09C1\u09A8",
+    cancel: "\u09AC\u09BE\u09A4\u09BF\u09B2",
+    noSiteSelected: "\u0995\u09CB\u09A8\u09CB \u09B8\u09BE\u0987\u099F \u09A8\u09BF\u09B0\u09CD\u09AC\u09BE\u099A\u09BF\u09A4 \u09A8\u09AF\u09BC\u0964",
+    fileNotFound: "\u09AB\u09BE\u0987\u09B2 \u09AA\u09BE\u0993\u09AF\u09BC\u09BE \u09AF\u09BE\u09AF\u09BC\u09A8\u09BF\u0964",
+    publishFailed: "\u09AA\u09CD\u09B0\u0995\u09BE\u09B6\u09A8\u09BE \u09AC\u09CD\u09AF\u09B0\u09CD\u09A5: {{error}}",
+    published: "\u09AA\u09CD\u09B0\u0995\u09BE\u09B6\u09BF\u09A4",
+    scheduled: "\u09A8\u09BF\u09B0\u09CD\u09A7\u09BE\u09B0\u09BF\u09A4",
+    actionNotice: "{{action}}! \u09AA\u09CB\u09B8\u09CD\u099F \u09A6\u09C7\u0996\u09C1\u09A8: {{url}}"
+  },
+  targetsDashboard: {
+    title: "\u0985\u09A7\u09CD\u09AF\u09BE\u09AF\u09BC \u09B2\u0995\u09CD\u09B7\u09CD\u09AF \u09A1\u09CD\u09AF\u09BE\u09B6\u09AC\u09CB\u09B0\u09CD\u09A1",
+    noProject: "\u0995\u09CB\u09A8\u09CB \u09AA\u09CD\u09B0\u0995\u09B2\u09CD\u09AA \u09A8\u09BF\u09B0\u09CD\u09AC\u09BE\u099A\u09BF\u09A4 \u09A8\u09AF\u09BC\u0964",
+    filterLabel: "\u09AB\u09BF\u09B2\u09CD\u099F\u09BE\u09B0: ",
+    allStatuses: "\u09B8\u09AC \u0985\u09AC\u09B8\u09CD\u09A5\u09BE",
+    refresh: "\u21BB \u09B0\u09BF\u09AB\u09CD\u09B0\u09C7\u09B6",
+    col: {
+      title: "\u09B6\u09BF\u09B0\u09CB\u09A8\u09BE\u09AE",
+      type: "\u09A7\u09B0\u09A8",
+      status: "\u0985\u09AC\u09B8\u09CD\u09A5\u09BE",
+      words: "\u09B6\u09AC\u09CD\u09A6",
+      goal: "\u09B2\u0995\u09CD\u09B7\u09CD\u09AF",
+      progress: "\u0985\u0997\u09CD\u09B0\u0997\u09A4\u09BF",
+      readingTime: "\u09AA\u09A1\u09BC\u09BE\u09B0 \u09B8\u09AE\u09AF\u09BC"
+    },
+    total: "\u09AE\u09CB\u099F"
+  },
+  writingDashboard: {
+    title: "\u09B2\u09C7\u0996\u09BE\u09B0 \u09A1\u09CD\u09AF\u09BE\u09B6\u09AC\u09CB\u09B0\u09CD\u09A1",
+    thisSession: "\u098F\u0987 \u09B8\u09C7\u09B6\u09A8",
+    stat: {
+      wordsWritten: "\u09B2\u09C7\u0996\u09BE \u09B6\u09AC\u09CD\u09A6",
+      sprints: "\u09B8\u09CD\u09AA\u09CD\u09B0\u09BF\u09A8\u09CD\u099F",
+      minutes: "\u09AE\u09BF\u09A8\u09BF\u099F",
+      writingStreak: "\u09B2\u09C7\u0996\u09BE\u09B0 \u09A7\u09BE\u09B0\u09BE\u09AC\u09BE\u09B9\u09BF\u0995\u09A4\u09BE",
+      streakDays_one: "{{count}} \u09A6\u09BF\u09A8",
+      streakDays_other: "{{count}} \u09A6\u09BF\u09A8",
+      totalWords: "\u09AE\u09CB\u099F \u09B6\u09AC\u09CD\u09A6",
+      goal: "\u09B2\u0995\u09CD\u09B7\u09CD\u09AF",
+      progress: "\u0985\u0997\u09CD\u09B0\u0997\u09A4\u09BF",
+      readingTime: "\u09AA\u09A1\u09BC\u09BE\u09B0 \u09B8\u09AE\u09AF\u09BC"
+    },
+    project: "\u09AA\u09CD\u09B0\u0995\u09B2\u09CD\u09AA: {{title}}",
+    recentSprints: "\u09B8\u09BE\u09AE\u09CD\u09AA\u09CD\u09B0\u09A4\u09BF\u0995 \u09B8\u09CD\u09AA\u09CD\u09B0\u09BF\u09A8\u09CD\u099F",
+    noSprints: "\u098F\u0996\u09A8\u09CB \u0995\u09CB\u09A8\u09CB \u09B8\u09CD\u09AA\u09CD\u09B0\u09BF\u09A8\u09CD\u099F \u09B0\u09C7\u0995\u09B0\u09CD\u09A1 \u09A8\u09C7\u0987\u0964",
+    sprintTable: {
+      date: "\u09A4\u09BE\u09B0\u09BF\u0996",
+      duration: "\u09B8\u09AE\u09AF\u09BC\u0995\u09BE\u09B2",
+      words: "\u09B6\u09AC\u09CD\u09A6",
+      wpm: "\u09B6\u09AC\u09CD\u09A6/\u09AE\u09BF\u09A8\u09BF\u099F",
+      goal: "\u09B2\u0995\u09CD\u09B7\u09CD\u09AF"
+    },
+    documentWordCounts: "\u09A8\u09A5\u09BF\u09B0 \u09B6\u09AC\u09CD\u09A6 \u0997\u09A3\u09A8\u09BE",
+    docTable: {
+      document: "\u09A8\u09A5\u09BF",
+      words: "\u09B6\u09AC\u09CD\u09A6",
+      readingTime: "\u09AA\u09A1\u09BC\u09BE\u09B0 \u09B8\u09AE\u09AF\u09BC"
+    },
+    close: "\u09AC\u09A8\u09CD\u09A7 \u0995\u09B0\u09C1\u09A8"
+  },
+  addToProject: {
+    title: "\u09B2\u09C7\u0996\u09BE\u09B0 \u09AA\u09CD\u09B0\u0995\u09B2\u09CD\u09AA\u09C7 \u09AF\u09CB\u0997 \u0995\u09B0\u09C1\u09A8",
+    noProjects: "\u0995\u09CB\u09A8\u09CB \u09B2\u09C7\u0996\u09BE\u09B0 \u09AA\u09CD\u09B0\u0995\u09B2\u09CD\u09AA \u09AA\u09BE\u0993\u09AF\u09BC\u09BE \u09AF\u09BE\u09AF\u09BC\u09A8\u09BF\u0964 \u0986\u0997\u09C7 \u098F\u0995\u099F\u09BF \u09AA\u09CD\u09B0\u0995\u09B2\u09CD\u09AA \u09A4\u09C8\u09B0\u09BF \u0995\u09B0\u09C1\u09A8\u0964",
+    close: "\u09AC\u09A8\u09CD\u09A7 \u0995\u09B0\u09C1\u09A8",
+    file: "\u09AB\u09BE\u0987\u09B2: {{path}}",
+    projectName: "\u09B2\u09C7\u0996\u09BE\u09B0 \u09AA\u09CD\u09B0\u0995\u09B2\u09CD\u09AA",
+    projectDesc: "\u0986\u09AA\u09A8\u09BF \u0995\u09CB\u09A8 \u09B2\u09C7\u0996\u09BE\u09B0 \u09AA\u09CD\u09B0\u0995\u09B2\u09CD\u09AA\u09C7 \u098F\u0987 \u09AB\u09BE\u0987\u09B2\u099F\u09BF \u09AF\u09CB\u0997 \u0995\u09B0\u09A4\u09C7 \u099A\u09BE\u09A8?",
+    addBtn: "\u09AA\u09CD\u09B0\u0995\u09B2\u09CD\u09AA\u09C7 \u09AF\u09CB\u0997 \u0995\u09B0\u09C1\u09A8",
+    cancel: "\u09AC\u09BE\u09A4\u09BF\u09B2"
+  },
+  scanFolder: {
+    title: "\u09AC\u09BE\u0987\u09A8\u09CD\u09A1\u09BE\u09B0\u09C7 \u09AB\u09BE\u0987\u09B2 \u09AF\u09CB\u0997 \u0995\u09B0\u09C1\u09A8",
+    desc: "\u098F\u0987 \u09AA\u09CD\u09B0\u0995\u09B2\u09CD\u09AA\u09C7 \u09AF\u09CB\u0997 \u0995\u09B0\u09BE\u09B0 \u099C\u09A8\u09CD\u09AF \u09AB\u09BE\u0987\u09B2 \u09A8\u09BF\u09B0\u09CD\u09AC\u09BE\u099A\u09A8 \u0995\u09B0\u09C1\u09A8:",
+    addBtn: "\u09A8\u09BF\u09B0\u09CD\u09AC\u09BE\u099A\u09BF\u09A4 \u09AB\u09BE\u0987\u09B2 \u09AF\u09CB\u0997 \u0995\u09B0\u09C1\u09A8",
+    cancel: "\u09AC\u09BE\u09A4\u09BF\u09B2"
   }
 };
 
@@ -5405,6 +6135,182 @@ var pt_BR_default = {
     proceedToExport: "Prosseguir para exportar",
     closePreview: "Fechar visualiza\xE7\xE3o",
     noContent: "Sem conte\xFAdo para visualizar. Abra um projeto de escrita primeiro."
+  },
+  projectModal: {
+    title: "Novo projeto de escrita",
+    projectTitle: "T\xEDtulo do projeto",
+    titlePlaceholder: "Meu romance",
+    template: "Modelo",
+    templateDesc: "Escolha uma estrutura de projeto pr\xE9-configurada.",
+    templateOption: {
+      blank: "Em branco (estrutura personalizada)",
+      book: "Livro (partes \u2192 cap\xEDtulos \u2192 cenas)",
+      series: "S\xE9rie de artigos (s\xE9rie \u2192 artigos)",
+      blog: "Cole\xE7\xE3o de blog (publica\xE7\xF5es por data/categoria)",
+      journalArticle: "Artigo de peri\xF3dico \u2014 envio para peri\xF3dico acad\xEAmico ou profissional",
+      magazineArticle: "Artigo de revista \u2014 reportagem, longa dura\xE7\xE3o ou n\xE3o fic\xE7\xE3o narrativa"
+    },
+    descriptionLabel: "Descri\xE7\xE3o (opcional)",
+    descriptionPlaceholder: "Breve descri\xE7\xE3o deste projeto\u2026",
+    preview: {
+      blank: "Projeto vazio \u2014 construa sua pr\xF3pria estrutura.",
+      book: "Cria: p\xE1ginas iniciais, Parte 1 / Cap\xEDtulo 1, p\xE1ginas finais.",
+      series: "Cria: pasta da s\xE9rie, espa\xE7o reservado para o Artigo 1, metadados da s\xE9rie.",
+      blog: "Cria: pasta organizada por data, espa\xE7o reservado para a primeira publica\xE7\xE3o.",
+      journalArticle: "Cria: p\xE1gina de t\xEDtulo, resumo, palavras-chave, introdu\xE7\xE3o, revis\xE3o de literatura, metodologia, resultados/an\xE1lise, discuss\xE3o, conclus\xE3o, refer\xEAncias, ap\xEAndices.",
+      magazineArticle: "Cria: notas de proposta/consulta, t\xEDtulo e subt\xEDtulo, abertura, par\xE1grafo central, corpo, cita\xE7\xF5es e fontes, fechamento, notas de verifica\xE7\xE3o de fatos, biografia do autor. Documentos de notas exclu\xEDdos da exporta\xE7\xE3o por padr\xE3o."
+    },
+    createBtn: "Criar projeto",
+    creating: "Criando\u2026",
+    errorNoTitle: "Por favor, insira um t\xEDtulo para o projeto.",
+    errorCreate: "Falha ao criar o projeto: {{error}}",
+    created: 'Projeto "{{title}}" criado!',
+    cancel: "Cancelar"
+  },
+  sprintModal: {
+    title: "Iniciar sprint de escrita",
+    durationName: "Dura\xE7\xE3o (minutos)",
+    durationDesc: "Predefinido: 10, 15, 25, 30, 45, 60",
+    durationCustom: "Personalizado\u2026",
+    durationCustomPlaceholder: "Minutos personalizados",
+    wordGoalName: "Meta de palavras (opcional)",
+    wordGoalDesc: "Deixe 0 para nenhuma meta.",
+    scopeName: "Escopo",
+    scopeFile: "Arquivo atual",
+    scopeProject: "Projeto inteiro",
+    startBtn: "Iniciar sprint",
+    errorDuration: "Por favor, defina uma dura\xE7\xE3o v\xE1lida.",
+    cancel: "Cancelar"
+  },
+  exportModal: {
+    title: "Exportar documento",
+    formatName: "Formato",
+    format: {
+      md: "Markdown (.md)",
+      html: "HTML",
+      manuscript: "Manuscrito (HTML)",
+      epub: "EPUB (.epub)",
+      pdf: "PDF (requer pandoc)",
+      docx: "Word (.docx) (requer pandoc)",
+      rtf: "RTF (requer pandoc)"
+    },
+    coverImageName: "Caminho da imagem de capa",
+    coverImageDesc: "Caminho no vault para uma imagem JPG ou PNG. Deixe vazio para uma capa de texto gerada.",
+    coverImagePlaceholder: "ex. Assets/cover.jpg",
+    contactInfoName: "Informa\xE7\xF5es de contato (opcional)",
+    contactInfoDesc: "Aparece na p\xE1gina de t\xEDtulo \u2014 nome, e-mail ou endere\xE7o postal.",
+    contactInfoPlaceholder: "Nome, e-mail ou endere\xE7o postal",
+    scopeName: "Escopo",
+    scopeCurrent: "Documento atual",
+    scopeProject: "Projeto inteiro (na ordem do binder)",
+    includeFrontmatter: "Incluir metadados",
+    includeResearch: "Incluir notas de pesquisa",
+    includeTitlesAsHeadings: "Incluir t\xEDtulos de documentos como t\xEDtulos",
+    addTitlePage: "Adicionar p\xE1gina de t\xEDtulo",
+    addTitlePageDesc: "Adiciona uma p\xE1gina de t\xEDtulo com o t\xEDtulo do projeto, autor e data.",
+    previewBtn: "Visualizar manuscrito compilado",
+    exportBtn: "Exportar",
+    exporting: "Exportando\u2026",
+    exportFailed: "Falha na exporta\xE7\xE3o: {{error}}",
+    cancel: "Cancelar"
+  },
+  publishModal: {
+    title: "Publicar no WordPress",
+    noSites: "Nenhum site WordPress configurado. Adicione um site em Configura\xE7\xF5es \u2192 WordPress.",
+    close: "Fechar",
+    siteName: "Site WordPress",
+    postTitleName: "T\xEDtulo do post",
+    postStatusName: "Status do post",
+    postStatus: {
+      draft: "Rascunho",
+      pending: "Aguardando revis\xE3o",
+      publish: "Publicado"
+    },
+    categoryName: "Categoria",
+    tagsName: "Tags",
+    tagsDesc: "Separadas por v\xEDrgulas.",
+    excerptName: "Trecho (opcional)",
+    scheduleName: "Agendar publica\xE7\xE3o (opcional)",
+    scheduleDesc: "Deixe vazio para publicar imediatamente.",
+    schedulePlaceholder: "aaaa-mm-ddThh:mm:ss",
+    existingNotice: "\u26A0 Este documento foi publicado anteriormente (ID do post: {{id}}).",
+    updatePost: "Atualizar post existente",
+    newPost: "Criar novo post",
+    schedule: "Agendar",
+    publish: "Publicar",
+    cancel: "Cancelar",
+    noSiteSelected: "Nenhum site selecionado.",
+    fileNotFound: "Arquivo n\xE3o encontrado.",
+    publishFailed: "Falha na publica\xE7\xE3o: {{error}}",
+    published: "Publicado",
+    scheduled: "Agendado",
+    actionNotice: "{{action}}! Ver post: {{url}}"
+  },
+  targetsDashboard: {
+    title: "Painel de metas por cap\xEDtulo",
+    noProject: "Nenhum projeto selecionado.",
+    filterLabel: "Filtrar: ",
+    allStatuses: "Todos os status",
+    refresh: "\u21BB Atualizar",
+    col: {
+      title: "T\xEDtulo",
+      type: "Tipo",
+      status: "Status",
+      words: "Palavras",
+      goal: "Meta",
+      progress: "Progresso",
+      readingTime: "Tempo de leitura"
+    },
+    total: "Total"
+  },
+  writingDashboard: {
+    title: "Painel de escrita",
+    thisSession: "Esta sess\xE3o",
+    stat: {
+      wordsWritten: "Palavras escritas",
+      sprints: "Sprints",
+      minutes: "Minutos",
+      writingStreak: "Sequ\xEAncia de escrita",
+      streakDays_one: "{{count}} dia",
+      streakDays_other: "{{count}} dias",
+      totalWords: "Total de palavras",
+      goal: "Meta",
+      progress: "Progresso",
+      readingTime: "Tempo de leitura"
+    },
+    project: "Projeto: {{title}}",
+    recentSprints: "Sprints recentes",
+    noSprints: "Nenhum sprint registrado ainda.",
+    sprintTable: {
+      date: "Data",
+      duration: "Dura\xE7\xE3o",
+      words: "Palavras",
+      wpm: "PPM",
+      goal: "Meta"
+    },
+    documentWordCounts: "Contagem de palavras por documento",
+    docTable: {
+      document: "Documento",
+      words: "Palavras",
+      readingTime: "Tempo de leitura"
+    },
+    close: "Fechar"
+  },
+  addToProject: {
+    title: "Adicionar a projeto de escrita",
+    noProjects: "Nenhum projeto de escrita encontrado. Crie um projeto primeiro.",
+    close: "Fechar",
+    file: "Arquivo: {{path}}",
+    projectName: "Projeto de escrita",
+    projectDesc: "A qual projeto de escrita voc\xEA deseja adicionar este arquivo?",
+    addBtn: "Adicionar ao projeto",
+    cancel: "Cancelar"
+  },
+  scanFolder: {
+    title: "Adicionar arquivos ao binder",
+    desc: "Selecione os arquivos para adicionar a este projeto:",
+    addBtn: "Adicionar arquivos selecionados",
+    cancel: "Cancelar"
   }
 };
 
@@ -5732,12 +6638,190 @@ var ru_default = {
     proceedToExport: "\u041F\u0435\u0440\u0435\u0439\u0442\u0438 \u043A \u044D\u043A\u0441\u043F\u043E\u0440\u0442\u0443",
     closePreview: "\u0417\u0430\u043A\u0440\u044B\u0442\u044C \u043F\u0440\u0435\u0434\u043F\u0440\u043E\u0441\u043C\u043E\u0442\u0440",
     noContent: "\u041D\u0435\u0442 \u0441\u043E\u0434\u0435\u0440\u0436\u0438\u043C\u043E\u0433\u043E \u0434\u043B\u044F \u043F\u0440\u0435\u0434\u043F\u0440\u043E\u0441\u043C\u043E\u0442\u0440\u0430. \u0421\u043D\u0430\u0447\u0430\u043B\u0430 \u043E\u0442\u043A\u0440\u043E\u0439\u0442\u0435 \u043F\u0438\u0441\u044C\u043C\u0435\u043D\u043D\u044B\u0439 \u043F\u0440\u043E\u0435\u043A\u0442."
+  },
+  projectModal: {
+    title: "\u041D\u043E\u0432\u044B\u0439 \u043F\u0438\u0441\u044C\u043C\u0435\u043D\u043D\u044B\u0439 \u043F\u0440\u043E\u0435\u043A\u0442",
+    projectTitle: "\u041D\u0430\u0437\u0432\u0430\u043D\u0438\u0435 \u043F\u0440\u043E\u0435\u043A\u0442\u0430",
+    titlePlaceholder: "\u041C\u043E\u0439 \u0440\u043E\u043C\u0430\u043D",
+    template: "\u0428\u0430\u0431\u043B\u043E\u043D",
+    templateDesc: "\u0412\u044B\u0431\u0435\u0440\u0438\u0442\u0435 \u043F\u0440\u0435\u0434\u043D\u0430\u0441\u0442\u0440\u043E\u0435\u043D\u043D\u0443\u044E \u0441\u0442\u0440\u0443\u043A\u0442\u0443\u0440\u0443 \u043F\u0440\u043E\u0435\u043A\u0442\u0430.",
+    templateOption: {
+      blank: "\u041F\u0443\u0441\u0442\u043E\u0439 (\u043F\u0440\u043E\u0438\u0437\u0432\u043E\u043B\u044C\u043D\u0430\u044F \u0441\u0442\u0440\u0443\u043A\u0442\u0443\u0440\u0430)",
+      book: "\u041A\u043D\u0438\u0433\u0430 (\u0447\u0430\u0441\u0442\u0438 \u2192 \u0433\u043B\u0430\u0432\u044B \u2192 \u0441\u0446\u0435\u043D\u044B)",
+      series: "\u0421\u0435\u0440\u0438\u044F \u0441\u0442\u0430\u0442\u0435\u0439 (\u0441\u0435\u0440\u0438\u044F \u2192 \u0441\u0442\u0430\u0442\u044C\u0438)",
+      blog: "\u041A\u043E\u043B\u043B\u0435\u043A\u0446\u0438\u044F \u0431\u043B\u043E\u0433\u0430 (\u043F\u0443\u0431\u043B\u0438\u043A\u0430\u0446\u0438\u0438 \u043F\u043E \u0434\u0430\u0442\u0435/\u043A\u0430\u0442\u0435\u0433\u043E\u0440\u0438\u0438)",
+      journalArticle: "\u041D\u0430\u0443\u0447\u043D\u0430\u044F \u0441\u0442\u0430\u0442\u044C\u044F \u2014 \u043F\u043E\u0434\u0430\u0447\u0430 \u0432 \u0430\u043A\u0430\u0434\u0435\u043C\u0438\u0447\u0435\u0441\u043A\u0438\u0439 \u0438\u043B\u0438 \u043F\u0440\u043E\u0444\u0435\u0441\u0441\u0438\u043E\u043D\u0430\u043B\u044C\u043D\u044B\u0439 \u0436\u0443\u0440\u043D\u0430\u043B",
+      magazineArticle: "\u0416\u0443\u0440\u043D\u0430\u043B\u044C\u043D\u0430\u044F \u0441\u0442\u0430\u0442\u044C\u044F \u2014 \u0440\u0435\u043F\u043E\u0440\u0442\u0430\u0436, \u043B\u043E\u043D\u0433\u0440\u0438\u0434 \u0438\u043B\u0438 \u043D\u0430\u0440\u0440\u0430\u0442\u0438\u0432\u043D\u0430\u044F \u0434\u043E\u043A\u0443\u043C\u0435\u043D\u0442\u0430\u043B\u0438\u0441\u0442\u0438\u043A\u0430"
+    },
+    descriptionLabel: "\u041E\u043F\u0438\u0441\u0430\u043D\u0438\u0435 (\u043D\u0435\u043E\u0431\u044F\u0437\u0430\u0442\u0435\u043B\u044C\u043D\u043E)",
+    descriptionPlaceholder: "\u041A\u0440\u0430\u0442\u043A\u043E\u0435 \u043E\u043F\u0438\u0441\u0430\u043D\u0438\u0435 \u044D\u0442\u043E\u0433\u043E \u043F\u0440\u043E\u0435\u043A\u0442\u0430\u2026",
+    preview: {
+      blank: "\u041F\u0443\u0441\u0442\u043E\u0439 \u043F\u0440\u043E\u0435\u043A\u0442 \u2014 \u0441\u043E\u0437\u0434\u0430\u0439\u0442\u0435 \u0441\u043E\u0431\u0441\u0442\u0432\u0435\u043D\u043D\u0443\u044E \u0441\u0442\u0440\u0443\u043A\u0442\u0443\u0440\u0443.",
+      book: "\u0421\u043E\u0437\u0434\u0430\u0451\u0442: \u0432\u0441\u0442\u0443\u043F\u0438\u0442\u0435\u043B\u044C\u043D\u044B\u0435 \u043C\u0430\u0442\u0435\u0440\u0438\u0430\u043B\u044B, \u0427\u0430\u0441\u0442\u044C 1 / \u0413\u043B\u0430\u0432\u0430 1, \u0437\u0430\u043A\u043B\u044E\u0447\u0438\u0442\u0435\u043B\u044C\u043D\u044B\u0435 \u043C\u0430\u0442\u0435\u0440\u0438\u0430\u043B\u044B.",
+      series: "\u0421\u043E\u0437\u0434\u0430\u0451\u0442: \u043F\u0430\u043F\u043A\u0443 \u0441\u0435\u0440\u0438\u0438, \u0437\u0430\u0433\u043B\u0443\u0448\u043A\u0443 \u0434\u043B\u044F \u0421\u0442\u0430\u0442\u044C\u0438 1, \u043C\u0435\u0442\u0430\u0434\u0430\u043D\u043D\u044B\u0435 \u0441\u0435\u0440\u0438\u0438.",
+      blog: "\u0421\u043E\u0437\u0434\u0430\u0451\u0442: \u043F\u0430\u043F\u043A\u0443, \u043E\u0440\u0433\u0430\u043D\u0438\u0437\u043E\u0432\u0430\u043D\u043D\u0443\u044E \u043F\u043E \u0434\u0430\u0442\u0430\u043C, \u0437\u0430\u0433\u043B\u0443\u0448\u043A\u0443 \u0434\u043B\u044F \u043F\u0435\u0440\u0432\u043E\u0439 \u043F\u0443\u0431\u043B\u0438\u043A\u0430\u0446\u0438\u0438.",
+      journalArticle: "\u0421\u043E\u0437\u0434\u0430\u0451\u0442: \u0442\u0438\u0442\u0443\u043B\u044C\u043D\u0443\u044E \u0441\u0442\u0440\u0430\u043D\u0438\u0446\u0443, \u0430\u043D\u043D\u043E\u0442\u0430\u0446\u0438\u044E, \u043A\u043B\u044E\u0447\u0435\u0432\u044B\u0435 \u0441\u043B\u043E\u0432\u0430, \u0432\u0432\u0435\u0434\u0435\u043D\u0438\u0435, \u043E\u0431\u0437\u043E\u0440 \u043B\u0438\u0442\u0435\u0440\u0430\u0442\u0443\u0440\u044B, \u043C\u0435\u0442\u043E\u0434\u043E\u043B\u043E\u0433\u0438\u044E, \u0440\u0435\u0437\u0443\u043B\u044C\u0442\u0430\u0442\u044B/\u0430\u043D\u0430\u043B\u0438\u0437, \u043E\u0431\u0441\u0443\u0436\u0434\u0435\u043D\u0438\u0435, \u0437\u0430\u043A\u043B\u044E\u0447\u0435\u043D\u0438\u0435, \u0441\u043F\u0438\u0441\u043E\u043A \u043B\u0438\u0442\u0435\u0440\u0430\u0442\u0443\u0440\u044B, \u043F\u0440\u0438\u043B\u043E\u0436\u0435\u043D\u0438\u044F.",
+      magazineArticle: "\u0421\u043E\u0437\u0434\u0430\u0451\u0442: \u0437\u0430\u043C\u0435\u0442\u043A\u0438 \u043F\u0440\u0435\u0434\u043B\u043E\u0436\u0435\u043D\u0438\u044F/\u0437\u0430\u043F\u0440\u043E\u0441\u0430, \u0437\u0430\u0433\u043E\u043B\u043E\u0432\u043E\u043A \u0438 \u043F\u043E\u0434\u0437\u0430\u0433\u043E\u043B\u043E\u0432\u043E\u043A, \u043B\u0438\u0434, \u043E\u0441\u043D\u043E\u0432\u043D\u043E\u0439 \u0430\u0431\u0437\u0430\u0446, \u0442\u0435\u043B\u043E, \u0446\u0438\u0442\u0430\u0442\u044B \u0438 \u0438\u0441\u0442\u043E\u0447\u043D\u0438\u043A\u0438, \u043A\u043E\u043D\u0446\u043E\u0432\u043A\u0443, \u043F\u0440\u0438\u043C\u0435\u0447\u0430\u043D\u0438\u044F \u043F\u043E \u043F\u0440\u043E\u0432\u0435\u0440\u043A\u0435 \u0444\u0430\u043A\u0442\u043E\u0432, \u0431\u0438\u043E\u0433\u0440\u0430\u0444\u0438\u044E \u0430\u0432\u0442\u043E\u0440\u0430. \u0414\u043E\u043A\u0443\u043C\u0435\u043D\u0442\u044B \u0441 \u0437\u0430\u043C\u0435\u0442\u043A\u0430\u043C\u0438 \u043F\u043E \u0443\u043C\u043E\u043B\u0447\u0430\u043D\u0438\u044E \u0438\u0441\u043A\u043B\u044E\u0447\u0435\u043D\u044B \u0438\u0437 \u044D\u043A\u0441\u043F\u043E\u0440\u0442\u0430."
+    },
+    createBtn: "\u0421\u043E\u0437\u0434\u0430\u0442\u044C \u043F\u0440\u043E\u0435\u043A\u0442",
+    creating: "\u0421\u043E\u0437\u0434\u0430\u043D\u0438\u0435\u2026",
+    errorNoTitle: "\u0412\u0432\u0435\u0434\u0438\u0442\u0435 \u043D\u0430\u0437\u0432\u0430\u043D\u0438\u0435 \u043F\u0440\u043E\u0435\u043A\u0442\u0430.",
+    errorCreate: "\u041D\u0435 \u0443\u0434\u0430\u043B\u043E\u0441\u044C \u0441\u043E\u0437\u0434\u0430\u0442\u044C \u043F\u0440\u043E\u0435\u043A\u0442: {{error}}",
+    created: "\u041F\u0440\u043E\u0435\u043A\u0442 \xAB{{title}}\xBB \u0441\u043E\u0437\u0434\u0430\u043D!",
+    cancel: "\u041E\u0442\u043C\u0435\u043D\u0430"
+  },
+  sprintModal: {
+    title: "\u041D\u0430\u0447\u0430\u0442\u044C \u0441\u043F\u0440\u0438\u043D\u0442 \u043D\u0430\u043F\u0438\u0441\u0430\u043D\u0438\u044F",
+    durationName: "\u0414\u043B\u0438\u0442\u0435\u043B\u044C\u043D\u043E\u0441\u0442\u044C (\u043C\u0438\u043D\u0443\u0442\u044B)",
+    durationDesc: "\u041F\u0440\u0435\u0434\u0443\u0441\u0442\u0430\u043D\u043E\u0432\u043A\u0438: 10, 15, 25, 30, 45, 60",
+    durationCustom: "\u041F\u0440\u043E\u0438\u0437\u0432\u043E\u043B\u044C\u043D\u043E\u2026",
+    durationCustomPlaceholder: "\u0421\u0432\u043E\u0438 \u043C\u0438\u043D\u0443\u0442\u044B",
+    wordGoalName: "\u0426\u0435\u043B\u044C \u043F\u043E \u0441\u043B\u043E\u0432\u0430\u043C (\u043D\u0435\u043E\u0431\u044F\u0437\u0430\u0442\u0435\u043B\u044C\u043D\u043E)",
+    wordGoalDesc: "\u041E\u0441\u0442\u0430\u0432\u044C\u0442\u0435 0, \u0435\u0441\u043B\u0438 \u0446\u0435\u043B\u0438 \u043D\u0435\u0442.",
+    scopeName: "\u041E\u0431\u043B\u0430\u0441\u0442\u044C",
+    scopeFile: "\u0422\u0435\u043A\u0443\u0449\u0438\u0439 \u0444\u0430\u0439\u043B",
+    scopeProject: "\u0412\u0435\u0441\u044C \u043F\u0440\u043E\u0435\u043A\u0442",
+    startBtn: "\u041D\u0430\u0447\u0430\u0442\u044C \u0441\u043F\u0440\u0438\u043D\u0442",
+    errorDuration: "\u0423\u043A\u0430\u0436\u0438\u0442\u0435 \u0434\u043E\u043F\u0443\u0441\u0442\u0438\u043C\u0443\u044E \u0434\u043B\u0438\u0442\u0435\u043B\u044C\u043D\u043E\u0441\u0442\u044C.",
+    cancel: "\u041E\u0442\u043C\u0435\u043D\u0430"
+  },
+  exportModal: {
+    title: "\u042D\u043A\u0441\u043F\u043E\u0440\u0442 \u0434\u043E\u043A\u0443\u043C\u0435\u043D\u0442\u0430",
+    formatName: "\u0424\u043E\u0440\u043C\u0430\u0442",
+    format: {
+      md: "Markdown (.md)",
+      html: "HTML",
+      manuscript: "\u0420\u0443\u043A\u043E\u043F\u0438\u0441\u044C (HTML)",
+      epub: "EPUB (.epub)",
+      pdf: "PDF (\u0442\u0440\u0435\u0431\u0443\u0435\u0442\u0441\u044F pandoc)",
+      docx: "Word (.docx) (\u0442\u0440\u0435\u0431\u0443\u0435\u0442\u0441\u044F pandoc)",
+      rtf: "RTF (\u0442\u0440\u0435\u0431\u0443\u0435\u0442\u0441\u044F pandoc)"
+    },
+    coverImageName: "\u041F\u0443\u0442\u044C \u043A \u043E\u0431\u043B\u043E\u0436\u043A\u0435",
+    coverImageDesc: "\u041F\u0443\u0442\u044C \u0432 \u0445\u0440\u0430\u043D\u0438\u043B\u0438\u0449\u0435 \u043A \u0438\u0437\u043E\u0431\u0440\u0430\u0436\u0435\u043D\u0438\u044E JPG \u0438\u043B\u0438 PNG. \u041E\u0441\u0442\u0430\u0432\u044C\u0442\u0435 \u043F\u0443\u0441\u0442\u044B\u043C \u0434\u043B\u044F \u0442\u0435\u043A\u0441\u0442\u043E\u0432\u043E\u0439 \u043E\u0431\u043B\u043E\u0436\u043A\u0438.",
+    coverImagePlaceholder: "\u043D\u0430\u043F\u0440. Assets/cover.jpg",
+    contactInfoName: "\u041A\u043E\u043D\u0442\u0430\u043A\u0442\u043D\u0430\u044F \u0438\u043D\u0444\u043E\u0440\u043C\u0430\u0446\u0438\u044F (\u043D\u0435\u043E\u0431\u044F\u0437\u0430\u0442\u0435\u043B\u044C\u043D\u043E)",
+    contactInfoDesc: "\u041E\u0442\u043E\u0431\u0440\u0430\u0436\u0430\u0435\u0442\u0441\u044F \u043D\u0430 \u0442\u0438\u0442\u0443\u043B\u044C\u043D\u043E\u0439 \u0441\u0442\u0440\u0430\u043D\u0438\u0446\u0435 \u2014 \u0438\u043C\u044F, e-mail \u0438\u043B\u0438 \u043F\u043E\u0447\u0442\u043E\u0432\u044B\u0439 \u0430\u0434\u0440\u0435\u0441.",
+    contactInfoPlaceholder: "\u0418\u043C\u044F, e-mail \u0438\u043B\u0438 \u043F\u043E\u0447\u0442\u043E\u0432\u044B\u0439 \u0430\u0434\u0440\u0435\u0441",
+    scopeName: "\u041E\u0431\u043B\u0430\u0441\u0442\u044C",
+    scopeCurrent: "\u0422\u0435\u043A\u0443\u0449\u0438\u0439 \u0434\u043E\u043A\u0443\u043C\u0435\u043D\u0442",
+    scopeProject: "\u0412\u0435\u0441\u044C \u043F\u0440\u043E\u0435\u043A\u0442 (\u0432 \u043F\u043E\u0440\u044F\u0434\u043A\u0435 \u0431\u0430\u043D\u0434\u0435\u0440\u0430)",
+    includeFrontmatter: "\u0412\u043A\u043B\u044E\u0447\u0438\u0442\u044C \u043C\u0435\u0442\u0430\u0434\u0430\u043D\u043D\u044B\u0435",
+    includeResearch: "\u0412\u043A\u043B\u044E\u0447\u0438\u0442\u044C \u0438\u0441\u0441\u043B\u0435\u0434\u043E\u0432\u0430\u0442\u0435\u043B\u044C\u0441\u043A\u0438\u0435 \u0437\u0430\u043C\u0435\u0442\u043A\u0438",
+    includeTitlesAsHeadings: "\u0412\u043A\u043B\u044E\u0447\u0438\u0442\u044C \u0437\u0430\u0433\u043E\u043B\u043E\u0432\u043A\u0438 \u0434\u043E\u043A\u0443\u043C\u0435\u043D\u0442\u043E\u0432 \u043A\u0430\u043A \u0437\u0430\u0433\u043E\u043B\u043E\u0432\u043A\u0438",
+    addTitlePage: "\u0414\u043E\u0431\u0430\u0432\u0438\u0442\u044C \u0442\u0438\u0442\u0443\u043B\u044C\u043D\u0443\u044E \u0441\u0442\u0440\u0430\u043D\u0438\u0446\u0443",
+    addTitlePageDesc: "\u0414\u043E\u0431\u0430\u0432\u043B\u044F\u0435\u0442 \u0442\u0438\u0442\u0443\u043B\u044C\u043D\u0443\u044E \u0441\u0442\u0440\u0430\u043D\u0438\u0446\u0443 \u0441 \u043D\u0430\u0437\u0432\u0430\u043D\u0438\u0435\u043C \u043F\u0440\u043E\u0435\u043A\u0442\u0430, \u0430\u0432\u0442\u043E\u0440\u043E\u043C \u0438 \u0434\u0430\u0442\u043E\u0439.",
+    previewBtn: "\u041F\u0440\u043E\u0441\u043C\u043E\u0442\u0440 \u0441\u043E\u0431\u0440\u0430\u043D\u043D\u043E\u0439 \u0440\u0443\u043A\u043E\u043F\u0438\u0441\u0438",
+    exportBtn: "\u042D\u043A\u0441\u043F\u043E\u0440\u0442",
+    exporting: "\u042D\u043A\u0441\u043F\u043E\u0440\u0442\u2026",
+    exportFailed: "\u041E\u0448\u0438\u0431\u043A\u0430 \u044D\u043A\u0441\u043F\u043E\u0440\u0442\u0430: {{error}}",
+    cancel: "\u041E\u0442\u043C\u0435\u043D\u0430"
+  },
+  publishModal: {
+    title: "\u041E\u043F\u0443\u0431\u043B\u0438\u043A\u043E\u0432\u0430\u0442\u044C \u0432 WordPress",
+    noSites: "\u041D\u0435\u0442 \u043D\u0430\u0441\u0442\u0440\u043E\u0435\u043D\u043D\u044B\u0445 \u0441\u0430\u0439\u0442\u043E\u0432 WordPress. \u0414\u043E\u0431\u0430\u0432\u044C\u0442\u0435 \u0441\u0430\u0439\u0442 \u0432 \u041D\u0430\u0441\u0442\u0440\u043E\u0439\u043A\u0430\u0445 \u2192 WordPress.",
+    close: "\u0417\u0430\u043A\u0440\u044B\u0442\u044C",
+    siteName: "\u0421\u0430\u0439\u0442 WordPress",
+    postTitleName: "\u0417\u0430\u0433\u043E\u043B\u043E\u0432\u043E\u043A \u0437\u0430\u043F\u0438\u0441\u0438",
+    postStatusName: "\u0421\u0442\u0430\u0442\u0443\u0441 \u0437\u0430\u043F\u0438\u0441\u0438",
+    postStatus: {
+      draft: "\u0427\u0435\u0440\u043D\u043E\u0432\u0438\u043A",
+      pending: "\u041D\u0430 \u0440\u0430\u0441\u0441\u043C\u043E\u0442\u0440\u0435\u043D\u0438\u0438",
+      publish: "\u041E\u043F\u0443\u0431\u043B\u0438\u043A\u043E\u0432\u0430\u043D\u043E"
+    },
+    categoryName: "\u041A\u0430\u0442\u0435\u0433\u043E\u0440\u0438\u044F",
+    tagsName: "\u041C\u0435\u0442\u043A\u0438",
+    tagsDesc: "\u0427\u0435\u0440\u0435\u0437 \u0437\u0430\u043F\u044F\u0442\u0443\u044E.",
+    excerptName: "\u041E\u0442\u0440\u044B\u0432\u043E\u043A (\u043D\u0435\u043E\u0431\u044F\u0437\u0430\u0442\u0435\u043B\u044C\u043D\u043E)",
+    scheduleName: "\u0417\u0430\u043F\u043B\u0430\u043D\u0438\u0440\u043E\u0432\u0430\u0442\u044C \u043F\u0443\u0431\u043B\u0438\u043A\u0430\u0446\u0438\u044E (\u043D\u0435\u043E\u0431\u044F\u0437\u0430\u0442\u0435\u043B\u044C\u043D\u043E)",
+    scheduleDesc: "\u041E\u0441\u0442\u0430\u0432\u044C\u0442\u0435 \u043F\u0443\u0441\u0442\u044B\u043C \u0434\u043B\u044F \u043D\u0435\u043C\u0435\u0434\u043B\u0435\u043D\u043D\u043E\u0439 \u043F\u0443\u0431\u043B\u0438\u043A\u0430\u0446\u0438\u0438.",
+    schedulePlaceholder: "\u0433\u0433\u0433\u0433-\u043C\u043C-\u0434\u0434T\u0447\u0447:\u043C\u043C:\u0441\u0441",
+    existingNotice: "\u26A0 \u042D\u0442\u043E\u0442 \u0434\u043E\u043A\u0443\u043C\u0435\u043D\u0442 \u0443\u0436\u0435 \u0431\u044B\u043B \u043E\u043F\u0443\u0431\u043B\u0438\u043A\u043E\u0432\u0430\u043D (ID \u0437\u0430\u043F\u0438\u0441\u0438: {{id}}).",
+    updatePost: "\u041E\u0431\u043D\u043E\u0432\u0438\u0442\u044C \u0441\u0443\u0449\u0435\u0441\u0442\u0432\u0443\u044E\u0449\u0443\u044E \u0437\u0430\u043F\u0438\u0441\u044C",
+    newPost: "\u0421\u043E\u0437\u0434\u0430\u0442\u044C \u043D\u043E\u0432\u0443\u044E \u0437\u0430\u043F\u0438\u0441\u044C",
+    schedule: "\u0417\u0430\u043F\u043B\u0430\u043D\u0438\u0440\u043E\u0432\u0430\u0442\u044C",
+    publish: "\u041E\u043F\u0443\u0431\u043B\u0438\u043A\u043E\u0432\u0430\u0442\u044C",
+    cancel: "\u041E\u0442\u043C\u0435\u043D\u0430",
+    noSiteSelected: "\u0421\u0430\u0439\u0442 \u043D\u0435 \u0432\u044B\u0431\u0440\u0430\u043D.",
+    fileNotFound: "\u0424\u0430\u0439\u043B \u043D\u0435 \u043D\u0430\u0439\u0434\u0435\u043D.",
+    publishFailed: "\u041E\u0448\u0438\u0431\u043A\u0430 \u043F\u0443\u0431\u043B\u0438\u043A\u0430\u0446\u0438\u0438: {{error}}",
+    published: "\u041E\u043F\u0443\u0431\u043B\u0438\u043A\u043E\u0432\u0430\u043D\u043E",
+    scheduled: "\u0417\u0430\u043F\u043B\u0430\u043D\u0438\u0440\u043E\u0432\u0430\u043D\u043E",
+    actionNotice: "{{action}}! \u041F\u043E\u0441\u043C\u043E\u0442\u0440\u0435\u0442\u044C \u0437\u0430\u043F\u0438\u0441\u044C: {{url}}"
+  },
+  targetsDashboard: {
+    title: "\u041F\u0430\u043D\u0435\u043B\u044C \u0446\u0435\u043B\u0435\u0439 \u043F\u043E \u0433\u043B\u0430\u0432\u0430\u043C",
+    noProject: "\u041F\u0440\u043E\u0435\u043A\u0442 \u043D\u0435 \u0432\u044B\u0431\u0440\u0430\u043D.",
+    filterLabel: "\u0424\u0438\u043B\u044C\u0442\u0440: ",
+    allStatuses: "\u0412\u0441\u0435 \u0441\u0442\u0430\u0442\u0443\u0441\u044B",
+    refresh: "\u21BB \u041E\u0431\u043D\u043E\u0432\u0438\u0442\u044C",
+    col: {
+      title: "\u041D\u0430\u0437\u0432\u0430\u043D\u0438\u0435",
+      type: "\u0422\u0438\u043F",
+      status: "\u0421\u0442\u0430\u0442\u0443\u0441",
+      words: "\u0421\u043B\u043E\u0432\u0430",
+      goal: "\u0426\u0435\u043B\u044C",
+      progress: "\u041F\u0440\u043E\u0433\u0440\u0435\u0441\u0441",
+      readingTime: "\u0412\u0440\u0435\u043C\u044F \u0447\u0442\u0435\u043D\u0438\u044F"
+    },
+    total: "\u0418\u0442\u043E\u0433\u043E"
+  },
+  writingDashboard: {
+    title: "\u041F\u0430\u043D\u0435\u043B\u044C \u043D\u0430\u043F\u0438\u0441\u0430\u043D\u0438\u044F",
+    thisSession: "\u042D\u0442\u0430 \u0441\u0435\u0441\u0441\u0438\u044F",
+    stat: {
+      wordsWritten: "\u041D\u0430\u043F\u0438\u0441\u0430\u043D\u043E \u0441\u043B\u043E\u0432",
+      sprints: "\u0421\u043F\u0440\u0438\u043D\u0442\u044B",
+      minutes: "\u041C\u0438\u043D\u0443\u0442\u044B",
+      writingStreak: "\u0421\u0435\u0440\u0438\u044F \u043D\u0430\u043F\u0438\u0441\u0430\u043D\u0438\u044F",
+      streakDays_one: "{{count}} \u0434\u0435\u043D\u044C",
+      streakDays_few: "{{count}} \u0434\u043D\u044F",
+      streakDays_many: "{{count}} \u0434\u043D\u0435\u0439",
+      streakDays_other: "{{count}} \u0434\u043D\u044F",
+      totalWords: "\u0412\u0441\u0435\u0433\u043E \u0441\u043B\u043E\u0432",
+      goal: "\u0426\u0435\u043B\u044C",
+      progress: "\u041F\u0440\u043E\u0433\u0440\u0435\u0441\u0441",
+      readingTime: "\u0412\u0440\u0435\u043C\u044F \u0447\u0442\u0435\u043D\u0438\u044F"
+    },
+    project: "\u041F\u0440\u043E\u0435\u043A\u0442: {{title}}",
+    recentSprints: "\u041D\u0435\u0434\u0430\u0432\u043D\u0438\u0435 \u0441\u043F\u0440\u0438\u043D\u0442\u044B",
+    noSprints: "\u0421\u043F\u0440\u0438\u043D\u0442\u044B \u0435\u0449\u0451 \u043D\u0435 \u0437\u0430\u043F\u0438\u0441\u0430\u043D\u044B.",
+    sprintTable: {
+      date: "\u0414\u0430\u0442\u0430",
+      duration: "\u0414\u043B\u0438\u0442\u0435\u043B\u044C\u043D\u043E\u0441\u0442\u044C",
+      words: "\u0421\u043B\u043E\u0432\u0430",
+      wpm: "\u0421\u043B/\u043C\u0438\u043D",
+      goal: "\u0426\u0435\u043B\u044C"
+    },
+    documentWordCounts: "\u041A\u043E\u043B\u0438\u0447\u0435\u0441\u0442\u0432\u043E \u0441\u043B\u043E\u0432 \u043F\u043E \u0434\u043E\u043A\u0443\u043C\u0435\u043D\u0442\u0430\u043C",
+    docTable: {
+      document: "\u0414\u043E\u043A\u0443\u043C\u0435\u043D\u0442",
+      words: "\u0421\u043B\u043E\u0432\u0430",
+      readingTime: "\u0412\u0440\u0435\u043C\u044F \u0447\u0442\u0435\u043D\u0438\u044F"
+    },
+    close: "\u0417\u0430\u043A\u0440\u044B\u0442\u044C"
+  },
+  addToProject: {
+    title: "\u0414\u043E\u0431\u0430\u0432\u0438\u0442\u044C \u0432 \u043F\u0438\u0441\u044C\u043C\u0435\u043D\u043D\u044B\u0439 \u043F\u0440\u043E\u0435\u043A\u0442",
+    noProjects: "\u041F\u0438\u0441\u044C\u043C\u0435\u043D\u043D\u044B\u0435 \u043F\u0440\u043E\u0435\u043A\u0442\u044B \u043D\u0435 \u043D\u0430\u0439\u0434\u0435\u043D\u044B. \u0421\u043D\u0430\u0447\u0430\u043B\u0430 \u0441\u043E\u0437\u0434\u0430\u0439\u0442\u0435 \u043F\u0440\u043E\u0435\u043A\u0442.",
+    close: "\u0417\u0430\u043A\u0440\u044B\u0442\u044C",
+    file: "\u0424\u0430\u0439\u043B: {{path}}",
+    projectName: "\u041F\u0438\u0441\u044C\u043C\u0435\u043D\u043D\u044B\u0439 \u043F\u0440\u043E\u0435\u043A\u0442",
+    projectDesc: "\u0412 \u043A\u0430\u043A\u043E\u0439 \u043F\u0438\u0441\u044C\u043C\u0435\u043D\u043D\u044B\u0439 \u043F\u0440\u043E\u0435\u043A\u0442 \u0434\u043E\u0431\u0430\u0432\u0438\u0442\u044C \u044D\u0442\u043E\u0442 \u0444\u0430\u0439\u043B?",
+    addBtn: "\u0414\u043E\u0431\u0430\u0432\u0438\u0442\u044C \u0432 \u043F\u0440\u043E\u0435\u043A\u0442",
+    cancel: "\u041E\u0442\u043C\u0435\u043D\u0430"
+  },
+  scanFolder: {
+    title: "\u0414\u043E\u0431\u0430\u0432\u0438\u0442\u044C \u0444\u0430\u0439\u043B\u044B \u0432 \u0431\u0430\u043D\u0434\u0435\u0440",
+    desc: "\u0412\u044B\u0431\u0435\u0440\u0438\u0442\u0435 \u0444\u0430\u0439\u043B\u044B \u0434\u043B\u044F \u0434\u043E\u0431\u0430\u0432\u043B\u0435\u043D\u0438\u044F \u0432 \u044D\u0442\u043E\u0442 \u043F\u0440\u043E\u0435\u043A\u0442:",
+    addBtn: "\u0414\u043E\u0431\u0430\u0432\u0438\u0442\u044C \u0432\u044B\u0431\u0440\u0430\u043D\u043D\u044B\u0435 \u0444\u0430\u0439\u043B\u044B",
+    cancel: "\u041E\u0442\u043C\u0435\u043D\u0430"
   }
 };
 
 // src/i18n.ts
 function initI18n() {
-  const lang = (0, import_obsidian5.getLanguage)();
+  const lang = (0, import_obsidian.getLanguage)();
   void instance.init({
     lng: lang,
     fallbackLng: "en",
@@ -5758,6 +6842,514 @@ function initI18n() {
 function t2(key, vars) {
   return String(instance.t(key, vars));
 }
+
+// modals/ProjectModal.ts
+var ProjectModal = class extends import_obsidian2.Modal {
+  constructor(app, plugin, onDone) {
+    super(app);
+    this.title = "";
+    this.type = "blank";
+    this.description = "";
+    this.plugin = plugin;
+    this.onDone = onDone;
+  }
+  onOpen() {
+    const { contentEl } = this;
+    contentEl.empty();
+    contentEl.addClass("ws-project-modal");
+    contentEl.createEl("h2", { text: t2("projectModal.title") });
+    let previewEl;
+    new import_obsidian2.Setting(contentEl).setName(t2("projectModal.projectTitle")).addText((tx) => tx.setPlaceholder(t2("projectModal.titlePlaceholder")).onChange((v) => {
+      this.title = v;
+    }));
+    new import_obsidian2.Setting(contentEl).setName(t2("projectModal.template")).setDesc(t2("projectModal.templateDesc")).addDropdown((d) => d.addOption("blank", t2("projectModal.templateOption.blank")).addOption("book", t2("projectModal.templateOption.book")).addOption("series", t2("projectModal.templateOption.series")).addOption("blog", t2("projectModal.templateOption.blog")).addOption("journal-article", t2("projectModal.templateOption.journalArticle")).addOption("magazine-article", t2("projectModal.templateOption.magazineArticle")).setValue(this.type).onChange((v) => {
+      this.type = v;
+      this.updateTemplatePreview(previewEl, this.type);
+    }));
+    new import_obsidian2.Setting(contentEl).setName(t2("projectModal.descriptionLabel")).addTextArea((tx) => tx.setPlaceholder(t2("projectModal.descriptionPlaceholder")).onChange((v) => {
+      this.description = v;
+    }));
+    previewEl = contentEl.createDiv("ws-template-preview");
+    this.updateTemplatePreview(previewEl, this.type);
+    const btnRow = contentEl.createDiv("ws-modal-btn-row");
+    const createBtn = btnRow.createEl("button", { cls: "mod-cta", text: t2("projectModal.createBtn") });
+    createBtn.onclick = async () => {
+      if (!this.title.trim()) {
+        new import_obsidian2.Notice(t2("projectModal.errorNoTitle"));
+        return;
+      }
+      createBtn.disabled = true;
+      createBtn.textContent = t2("projectModal.creating");
+      try {
+        const project = await this.plugin.projectManager.createProject(
+          this.title.trim(),
+          this.type,
+          this.plugin.settings.authorName,
+          this.description
+        );
+        await this.plugin.projectManager.setActiveProject(project.id);
+        new import_obsidian2.Notice(t2("projectModal.created", { title: project.title }));
+        this.close();
+        this.onDone();
+      } catch (e) {
+        new import_obsidian2.Notice(t2("projectModal.errorCreate", { error: e instanceof Error ? e.message : String(e) }));
+        createBtn.disabled = false;
+        createBtn.textContent = t2("projectModal.createBtn");
+      }
+    };
+    const cancelBtn = btnRow.createEl("button", { text: t2("projectModal.cancel") });
+    cancelBtn.onclick = () => this.close();
+  }
+  updateTemplatePreview(el, type) {
+    el.empty();
+    const previews = {
+      blank: t2("projectModal.preview.blank"),
+      book: t2("projectModal.preview.book"),
+      series: t2("projectModal.preview.series"),
+      blog: t2("projectModal.preview.blog"),
+      "journal-article": t2("projectModal.preview.journalArticle"),
+      "magazine-article": t2("projectModal.preview.magazineArticle")
+    };
+    el.createEl("p", { text: previews[type], cls: "ws-template-desc" });
+  }
+  onClose() {
+    this.contentEl.empty();
+  }
+};
+
+// modals/TargetsDashboardModal.ts
+var import_obsidian3 = require("obsidian");
+var TargetsDashboardModal = class extends import_obsidian3.Modal {
+  constructor(app, plugin) {
+    super(app);
+    this.stats = [];
+    this.sortCol = "order";
+    this.sortAsc = true;
+    this.statusFilter = "all";
+    this.plugin = plugin;
+  }
+  async onOpen() {
+    const { contentEl } = this;
+    contentEl.empty();
+    contentEl.addClass("ws-dashboard-modal");
+    contentEl.createEl("h2", { text: t2("targetsDashboard.title") });
+    const project = this.plugin.projectManager.getActiveProject();
+    if (!project) {
+      contentEl.createEl("p", { text: t2("targetsDashboard.noProject"), cls: "ws-empty-state" });
+      return;
+    }
+    await this.loadStats(project);
+    const filterRow = contentEl.createDiv("ws-dashboard-filters");
+    filterRow.createEl("label", { text: t2("targetsDashboard.filterLabel") });
+    const statusSel = filterRow.createEl("select");
+    ["all", "draft", "in-progress", "complete", "published"].forEach((s) => {
+      const opt = statusSel.createEl("option", { text: s === "all" ? t2("targetsDashboard.allStatuses") : STATUS_LABELS[s] || s });
+      opt.value = s;
+    });
+    statusSel.value = this.statusFilter;
+    statusSel.onchange = () => {
+      this.statusFilter = statusSel.value;
+      this.renderTable(contentEl);
+    };
+    const refreshBtn = filterRow.createEl("button", { text: t2("targetsDashboard.refresh"), cls: "ws-dashboard-refresh" });
+    refreshBtn.onclick = async () => {
+      await this.loadStats(project);
+      this.renderTable(contentEl);
+    };
+    this.renderTable(contentEl);
+  }
+  async loadStats(project) {
+    if (!project) return;
+    const binder = await this.plugin.projectManager.loadBinder(project);
+    const items = this.plugin.projectManager.flattenBinder(binder.items);
+    this.stats = [];
+    for (const item of items) {
+      if (item.type === "group" || item.type === "part") continue;
+      const file = this.app.vault.getAbstractFileByPath(item.filePath);
+      let wordCount = 0;
+      if (file instanceof import_obsidian3.TFile) {
+        const content = await this.app.vault.read(file);
+        wordCount = this.plugin.fmManager.countWords(content);
+      }
+      this.stats.push({
+        item,
+        wordCount,
+        readingTime: this.plugin.statsTracker.calculateReadingTime(wordCount)
+      });
+    }
+  }
+  renderTable(container) {
+    const existing = container.querySelector(".ws-dashboard-table-wrap");
+    if (existing) existing.remove();
+    const wrap = container.createDiv("ws-dashboard-table-wrap");
+    const table = wrap.createEl("table", { cls: "ws-dashboard-table" });
+    const thead = table.createEl("thead");
+    const hr = thead.createEl("tr");
+    const cols = [
+      { key: "title", label: t2("targetsDashboard.col.title") },
+      { key: "type", label: t2("targetsDashboard.col.type") },
+      { key: "status", label: t2("targetsDashboard.col.status") },
+      { key: "wordCount", label: t2("targetsDashboard.col.words") },
+      { key: "goal", label: t2("targetsDashboard.col.goal") },
+      { key: "progress", label: t2("targetsDashboard.col.progress") },
+      { key: "readingTime", label: t2("targetsDashboard.col.readingTime") }
+    ];
+    for (const col of cols) {
+      const th = hr.createEl("th", { text: col.label });
+      if (col.key !== "progress") {
+        th.addClass("ws-sortable");
+        th.onclick = () => {
+          if (this.sortCol === col.key) this.sortAsc = !this.sortAsc;
+          else {
+            this.sortCol = col.key;
+            this.sortAsc = true;
+          }
+          this.renderTable(container);
+        };
+        if (this.sortCol === col.key) {
+          th.textContent += this.sortAsc ? " \u2191" : " \u2193";
+        }
+      }
+    }
+    let filtered = this.stats.filter(
+      (s) => this.statusFilter === "all" || s.item.status === this.statusFilter
+    );
+    filtered.sort((a, b) => {
+      let av = 0, bv = 0;
+      switch (this.sortCol) {
+        case "title":
+          av = a.item.title.toLowerCase();
+          bv = b.item.title.toLowerCase();
+          break;
+        case "type":
+          av = a.item.type;
+          bv = b.item.type;
+          break;
+        case "status":
+          av = a.item.status;
+          bv = b.item.status;
+          break;
+        case "wordCount":
+          av = a.wordCount;
+          bv = b.wordCount;
+          break;
+        case "goal":
+          av = a.item.wordCountGoal || 0;
+          bv = b.item.wordCountGoal || 0;
+          break;
+        case "readingTime":
+          av = a.wordCount;
+          bv = b.wordCount;
+          break;
+        default:
+          av = a.item.order;
+          bv = b.item.order;
+      }
+      if (av < bv) return this.sortAsc ? -1 : 1;
+      if (av > bv) return this.sortAsc ? 1 : -1;
+      return 0;
+    });
+    const tbody = table.createEl("tbody");
+    for (const stat of filtered) {
+      const tr = tbody.createEl("tr");
+      const titleTd = tr.createEl("td", { cls: "ws-dash-title" });
+      const titleLink = titleTd.createEl("a", { text: stat.item.title });
+      titleLink.href = "#";
+      titleLink.onclick = async (e) => {
+        e.preventDefault();
+        const file = this.app.vault.getAbstractFileByPath(stat.item.filePath);
+        if (file instanceof import_obsidian3.TFile) {
+          const leaf = this.app.workspace.getLeaf(false);
+          await leaf.openFile(file);
+          this.close();
+        }
+      };
+      tr.createEl("td", { text: stat.item.type });
+      const statusTd = tr.createEl("td");
+      const badge = statusTd.createSpan("ws-status-badge");
+      badge.textContent = STATUS_LABELS[stat.item.status];
+      badge.setCssProps({ "--ws-status-color": STATUS_COLORS[stat.item.status] });
+      tr.createEl("td", { text: String(stat.wordCount) });
+      const goalTd = tr.createEl("td");
+      const goalInput = goalTd.createEl("input", { type: "number", cls: "ws-dash-goal-input" });
+      goalInput.value = String(stat.item.wordCountGoal || "");
+      goalInput.placeholder = "\u2014";
+      goalInput.onchange = async () => {
+        const val = parseInt(goalInput.value) || 0;
+        stat.item.wordCountGoal = val || void 0;
+        const project = this.plugin.projectManager.getActiveProject();
+        if (project) {
+          const binder = await this.plugin.projectManager.loadBinder(project);
+          const found = this.plugin.projectManager.findItem(binder.items, stat.item.id);
+          if (found) {
+            found.wordCountGoal = stat.item.wordCountGoal;
+            await this.plugin.projectManager.saveBinder(binder);
+          }
+        }
+        this.renderTable(container);
+      };
+      const progressTd = tr.createEl("td");
+      const goal = stat.item.wordCountGoal;
+      if (goal && goal > 0) {
+        const pct = Math.min(100, Math.round(stat.wordCount / goal * 100));
+        const barWrap = progressTd.createDiv("ws-progress-wrap");
+        const bar = barWrap.createDiv("ws-progress-bar");
+        bar.setCssProps({ "--ws-bar-width": `${pct}%` });
+        progressTd.createSpan({ text: `${pct}%`, cls: "ws-progress-pct" });
+      } else {
+        progressTd.textContent = "\u2014";
+      }
+      tr.createEl("td", { text: stat.readingTime });
+    }
+    const tfoot = table.createEl("tfoot");
+    const sumRow = tfoot.createEl("tr", { cls: "ws-dash-summary" });
+    const totalWords = filtered.reduce((s, d) => s + d.wordCount, 0);
+    const totalGoal = filtered.reduce((s, d) => s + (d.item.wordCountGoal || 0), 0);
+    const overallPct = totalGoal > 0 ? Math.round(totalWords / totalGoal * 100) : 0;
+    sumRow.createEl("td", { text: t2("targetsDashboard.total") });
+    sumRow.createEl("td");
+    sumRow.createEl("td");
+    sumRow.createEl("td", { text: String(totalWords) });
+    sumRow.createEl("td", { text: totalGoal > 0 ? String(totalGoal) : "\u2014" });
+    const sumProgressTd = sumRow.createEl("td");
+    if (totalGoal > 0) {
+      const barWrap = sumProgressTd.createDiv("ws-progress-wrap");
+      const bar = barWrap.createDiv("ws-progress-bar");
+      bar.setCssProps({ "--ws-bar-width": `${overallPct}%` });
+      sumProgressTd.createSpan({ text: `${overallPct}%`, cls: "ws-progress-pct" });
+    }
+    sumRow.createEl("td", { text: this.plugin.statsTracker.calculateReadingTime(totalWords) });
+  }
+  onClose() {
+    this.contentEl.empty();
+  }
+};
+
+// modals/PublishModal.ts
+var import_obsidian4 = require("obsidian");
+var PublishModal = class extends import_obsidian4.Modal {
+  constructor(app, plugin, filePath) {
+    super(app);
+    this.selectedSiteId = "";
+    this.postTitle = "";
+    this.postStatus = "draft";
+    this.selectedCategoryIds = [];
+    this.tags = [];
+    this.excerpt = "";
+    this.scheduledDate = "";
+    this.categories = [];
+    this.plugin = plugin;
+    this.filePath = filePath;
+  }
+  async onOpen() {
+    const { contentEl } = this;
+    contentEl.empty();
+    contentEl.addClass("ws-publish-modal");
+    contentEl.createEl("h2", { text: t2("publishModal.title") });
+    const sites = this.plugin.settings.wordPressSites;
+    if (sites.length === 0) {
+      contentEl.createEl("p", {
+        text: t2("publishModal.noSites"),
+        cls: "ws-empty-state"
+      });
+      contentEl.createEl("button", { text: t2("publishModal.close") }).onclick = () => this.close();
+      return;
+    }
+    await this.loadExistingMeta();
+    new import_obsidian4.Setting(contentEl).setName(t2("publishModal.siteName")).addDropdown((d) => {
+      sites.forEach((s) => {
+        d.addOption(s.id, s.nickname || s.url);
+      });
+      if (this.selectedSiteId) d.setValue(this.selectedSiteId);
+      else {
+        this.selectedSiteId = sites[0].id;
+        d.setValue(this.selectedSiteId);
+      }
+      d.onChange((v) => {
+        this.selectedSiteId = v;
+        void this.loadCategories().then(() => this.render());
+      });
+    });
+    new import_obsidian4.Setting(contentEl).setName(t2("publishModal.postTitleName")).addText((tx) => tx.setValue(this.postTitle).onChange((v) => {
+      this.postTitle = v;
+    }));
+    new import_obsidian4.Setting(contentEl).setName(t2("publishModal.postStatusName")).addDropdown((d) => d.addOption("draft", t2("publishModal.postStatus.draft")).addOption("pending", t2("publishModal.postStatus.pending")).addOption("publish", t2("publishModal.postStatus.publish")).setValue(this.postStatus).onChange((v) => {
+      this.postStatus = v;
+    }));
+    const site = this.getSite();
+    if (site) {
+      this.categories = await this.plugin.wpClient.getCategories(site);
+    }
+    if (this.categories.length > 0) {
+      new import_obsidian4.Setting(contentEl).setName(t2("publishModal.categoryName"));
+      const catList = contentEl.createDiv("ws-publish-categories");
+      for (const cat of this.categories) {
+        const label = catList.createEl("label", { cls: "ws-publish-cat-label" });
+        const cb = label.createEl("input", { type: "checkbox" });
+        cb.checked = this.selectedCategoryIds.includes(cat.id);
+        cb.onchange = () => {
+          if (cb.checked) {
+            if (!this.selectedCategoryIds.includes(cat.id)) this.selectedCategoryIds.push(cat.id);
+          } else {
+            this.selectedCategoryIds = this.selectedCategoryIds.filter((id) => id !== cat.id);
+          }
+        };
+        label.createSpan({ text: ` ${cat.name} (${cat.count})` });
+      }
+    }
+    new import_obsidian4.Setting(contentEl).setName(t2("publishModal.tagsName")).setDesc(t2("publishModal.tagsDesc")).addText((tx) => tx.setValue(this.tags.join(", ")).onChange((v) => {
+      this.tags = v.split(",").map((s) => s.trim()).filter(Boolean);
+    }));
+    new import_obsidian4.Setting(contentEl).setName(t2("publishModal.excerptName")).addTextArea((tx) => tx.setValue(this.excerpt).onChange((v) => {
+      this.excerpt = v;
+    }));
+    new import_obsidian4.Setting(contentEl).setName(t2("publishModal.scheduleName")).setDesc(t2("publishModal.scheduleDesc")).addText((tx) => tx.setPlaceholder(t2("publishModal.schedulePlaceholder")).setValue(this.scheduledDate).onChange((v) => {
+      this.scheduledDate = v;
+    }));
+    if (this.existingPostId) {
+      const noticeEl = contentEl.createDiv("ws-publish-existing-notice");
+      noticeEl.createSpan({ text: t2("publishModal.existingNotice", { id: this.existingPostId }) });
+      const choiceRow = noticeEl.createDiv("ws-publish-choice");
+      const updateBtn = choiceRow.createEl("button", { text: t2("publishModal.updatePost"), cls: "mod-cta" });
+      updateBtn.onclick = () => {
+        void this.doPublish(true);
+      };
+      const newBtn = choiceRow.createEl("button", { text: t2("publishModal.newPost") });
+      newBtn.onclick = () => {
+        void this.doPublish(false);
+      };
+    }
+    const btnRow = contentEl.createDiv("ws-modal-btn-row");
+    if (!this.existingPostId) {
+      const publishBtn = btnRow.createEl("button", {
+        cls: "mod-cta",
+        text: this.scheduledDate ? t2("publishModal.schedule") : t2("publishModal.publish")
+      });
+      publishBtn.onclick = () => {
+        void this.doPublish(false);
+      };
+    }
+    const cancelBtn = btnRow.createEl("button", { text: t2("publishModal.cancel") });
+    cancelBtn.onclick = () => this.close();
+  }
+  render() {
+    void this.onOpen();
+  }
+  async loadExistingMeta() {
+    const file = this.app.vault.getAbstractFileByPath(this.filePath);
+    if (!(file instanceof import_obsidian4.TFile)) return;
+    const content = await this.app.vault.read(file);
+    const fm = this.plugin.fmManager.parseFrontmatter(content);
+    if (fm) {
+      this.postTitle = fm["title"] || file.basename;
+      if (fm["wp-post-id"]) this.existingPostId = Number(fm["wp-post-id"]);
+      if (fm["wp-status"]) this.postStatus = fm["wp-status"];
+      if (fm["tags"] && Array.isArray(fm["tags"])) {
+        this.tags = fm["tags"].filter((tag) => tag !== "writing-studio");
+      }
+      if (fm["wp-site"]) {
+        const site = this.plugin.settings.wordPressSites.find((s) => s.nickname === fm["wp-site"]);
+        if (site) this.selectedSiteId = site.id;
+      }
+    }
+  }
+  async loadCategories() {
+    const site = this.getSite();
+    if (!site) return;
+    this.categories = await this.plugin.wpClient.getCategories(site);
+  }
+  getSite() {
+    return this.plugin.settings.wordPressSites.find((s) => s.id === this.selectedSiteId);
+  }
+  async doPublish(updateExisting) {
+    const site = this.getSite();
+    if (!site) {
+      new import_obsidian4.Notice(t2("publishModal.noSiteSelected"));
+      return;
+    }
+    const file = this.app.vault.getAbstractFileByPath(this.filePath);
+    if (!(file instanceof import_obsidian4.TFile)) {
+      new import_obsidian4.Notice(t2("publishModal.fileNotFound"));
+      return;
+    }
+    try {
+      const rawContent = await this.app.vault.read(file);
+      const htmlContent = this.plugin.wpClient.convertMarkdownToHtml(rawContent, site);
+      const result = await this.plugin.wpClient.publish(site, {
+        title: this.postTitle,
+        content: htmlContent,
+        status: this.postStatus,
+        categoryIds: this.selectedCategoryIds,
+        tags: this.tags,
+        excerpt: this.excerpt,
+        scheduledDate: this.scheduledDate || void 0,
+        existingPostId: updateExisting ? this.existingPostId : void 0
+      });
+      await this.app.vault.process(file, (data) => {
+        return this.plugin.fmManager.setWpMeta(data, {
+          wpSite: site.nickname,
+          wpPostId: result.postId,
+          wpUrl: result.url,
+          wpStatus: result.status,
+          wpPublished: result.scheduledDate ? void 0 : (/* @__PURE__ */ new Date()).toISOString().split("T")[0],
+          wpScheduled: result.scheduledDate
+        });
+      });
+      const action = this.scheduledDate ? t2("publishModal.scheduled") : t2("publishModal.published");
+      new import_obsidian4.Notice(t2("publishModal.actionNotice", { action, url: result.url }), 1e4);
+      this.close();
+    } catch (e) {
+      new import_obsidian4.Notice(t2("publishModal.publishFailed", { error: e instanceof Error ? e.message : String(e) }));
+    }
+  }
+  onClose() {
+    this.contentEl.empty();
+  }
+};
+
+// modals/ScanFolderModal.ts
+var import_obsidian5 = require("obsidian");
+var ScanFolderModal = class extends import_obsidian5.Modal {
+  constructor(app, files, onConfirm) {
+    super(app);
+    this.files = files;
+    this.checked = new Map(files.map((f) => [f.path, true]));
+    this.onConfirm = onConfirm;
+  }
+  onOpen() {
+    const { contentEl } = this;
+    contentEl.empty();
+    contentEl.addClass("ws-scan-folder-modal");
+    contentEl.createEl("h2", { text: t2("scanFolder.title") });
+    contentEl.createEl("p", {
+      text: t2("scanFolder.desc"),
+      cls: "ws-scan-folder-desc"
+    });
+    const listEl = contentEl.createDiv("ws-scan-folder-list");
+    for (const file of this.files) {
+      const label = listEl.createEl("label", { cls: "ws-scan-folder-row" });
+      const checkbox = label.createEl("input");
+      checkbox.type = "checkbox";
+      checkbox.checked = true;
+      checkbox.addEventListener("change", () => {
+        this.checked.set(file.path, checkbox.checked);
+      });
+      label.createSpan({ text: file.basename });
+    }
+    const btnRow = contentEl.createDiv("ws-modal-btn-row");
+    const addBtn = btnRow.createEl("button", { cls: "mod-cta", text: t2("scanFolder.addBtn") });
+    addBtn.onclick = async () => {
+      const selected = this.files.filter((f) => this.checked.get(f.path));
+      await this.onConfirm(selected);
+      this.close();
+    };
+    const cancelBtn = btnRow.createEl("button", { text: t2("scanFolder.cancel") });
+    cancelBtn.onclick = () => this.close();
+  }
+  onClose() {
+    this.contentEl.empty();
+  }
+};
 
 // src/BinderView.ts
 var BINDER_VIEW_TYPE = "writing-studio-binder";
@@ -6365,50 +7957,50 @@ var ExportModal = class extends import_obsidian7.Modal {
     const { contentEl } = this;
     contentEl.empty();
     contentEl.addClass("ws-export-modal");
-    contentEl.createEl("h2", { text: "Export document" });
+    contentEl.createEl("h2", { text: t2("exportModal.title") });
     let coverSetting;
     let contactSetting;
-    new import_obsidian7.Setting(contentEl).setName("Format").addDropdown((d) => d.addOption("md", "Markdown (.md)").addOption("html", "HTML").addOption("manuscript", "Manuscript (HTML)").addOption("epub", "EPUB (.epub)").addOption("pdf", "PDF (requires pandoc)").addOption("docx", "Word (.docx) (requires pandoc)").addOption("rtf", "RTF (requires pandoc)").setValue(this.format).onChange((v) => {
+    new import_obsidian7.Setting(contentEl).setName(t2("exportModal.formatName")).addDropdown((d) => d.addOption("md", t2("exportModal.format.md")).addOption("html", t2("exportModal.format.html")).addOption("manuscript", t2("exportModal.format.manuscript")).addOption("epub", t2("exportModal.format.epub")).addOption("pdf", t2("exportModal.format.pdf")).addOption("docx", t2("exportModal.format.docx")).addOption("rtf", t2("exportModal.format.rtf")).setValue(this.format).onChange((v) => {
       this.format = v;
       coverSetting.settingEl.toggleClass("ws-hidden", v !== "epub");
       contactSetting.settingEl.toggleClass("ws-hidden", v !== "manuscript");
     }));
-    coverSetting = new import_obsidian7.Setting(contentEl).setName("Cover image path").setDesc("Vault path to a JPG or PNG cover image. Leave empty for a generated text cover.").addText((t3) => t3.setValue(this.coverImagePath).setPlaceholder("e.g. Assets/cover.jpg").onChange((v) => {
+    coverSetting = new import_obsidian7.Setting(contentEl).setName(t2("exportModal.coverImageName")).setDesc(t2("exportModal.coverImageDesc")).addText((tx) => tx.setValue(this.coverImagePath).setPlaceholder(t2("exportModal.coverImagePlaceholder")).onChange((v) => {
       this.coverImagePath = v.trim();
     }));
     coverSetting.settingEl.toggleClass("ws-hidden", this.format !== "epub");
-    contactSetting = new import_obsidian7.Setting(contentEl).setName("Contact info (optional)").setDesc("Appears on the title page \u2014 name, email, or mailing address.").addTextArea((t3) => t3.setValue(this.authorContact).setPlaceholder("Name, email, or mailing address").onChange((v) => {
+    contactSetting = new import_obsidian7.Setting(contentEl).setName(t2("exportModal.contactInfoName")).setDesc(t2("exportModal.contactInfoDesc")).addTextArea((tx) => tx.setValue(this.authorContact).setPlaceholder(t2("exportModal.contactInfoPlaceholder")).onChange((v) => {
       this.authorContact = v;
     }));
     contactSetting.settingEl.toggleClass("ws-hidden", this.format !== "manuscript");
-    new import_obsidian7.Setting(contentEl).setName("Scope").addDropdown((d) => d.addOption("current", "Current document").addOption("project", "Entire project (in binder order)").setValue(this.exportScope).onChange((v) => {
+    new import_obsidian7.Setting(contentEl).setName(t2("exportModal.scopeName")).addDropdown((d) => d.addOption("current", t2("exportModal.scopeCurrent")).addOption("project", t2("exportModal.scopeProject")).setValue(this.exportScope).onChange((v) => {
       this.exportScope = v;
     }));
-    new import_obsidian7.Setting(contentEl).setName("Include frontmatter").addToggle((t3) => t3.setValue(this.includeFrontmatter).onChange((v) => {
+    new import_obsidian7.Setting(contentEl).setName(t2("exportModal.includeFrontmatter")).addToggle((tx) => tx.setValue(this.includeFrontmatter).onChange((v) => {
       this.includeFrontmatter = v;
     }));
-    new import_obsidian7.Setting(contentEl).setName("Include research notes").addToggle((t3) => t3.setValue(this.includeResearch).onChange((v) => {
+    new import_obsidian7.Setting(contentEl).setName(t2("exportModal.includeResearch")).addToggle((tx) => tx.setValue(this.includeResearch).onChange((v) => {
       this.includeResearch = v;
     }));
-    new import_obsidian7.Setting(contentEl).setName("Include document titles as headings").addToggle((t3) => t3.setValue(this.includeTitlesAsHeadings).onChange((v) => {
+    new import_obsidian7.Setting(contentEl).setName(t2("exportModal.includeTitlesAsHeadings")).addToggle((tx) => tx.setValue(this.includeTitlesAsHeadings).onChange((v) => {
       this.includeTitlesAsHeadings = v;
     }));
-    new import_obsidian7.Setting(contentEl).setName("Add title page").setDesc("Prepend a title page with project title, author, and date.").addToggle((t3) => t3.setValue(this.addTitlePage).onChange((v) => {
+    new import_obsidian7.Setting(contentEl).setName(t2("exportModal.addTitlePage")).setDesc(t2("exportModal.addTitlePageDesc")).addToggle((tx) => tx.setValue(this.addTitlePage).onChange((v) => {
       this.addTitlePage = v;
     }));
     const previewBtn = contentEl.createEl("button", {
       cls: "ws-export-preview-btn",
-      text: "Preview compiled manuscript"
+      text: t2("exportModal.previewBtn")
     });
     previewBtn.onclick = async () => {
       this.close();
       await this.plugin.openCompilePreview();
     };
     const btnRow = contentEl.createDiv("ws-modal-btn-row");
-    const exportBtn = btnRow.createEl("button", { cls: "mod-cta", text: "Export" });
+    const exportBtn = btnRow.createEl("button", { cls: "mod-cta", text: t2("exportModal.exportBtn") });
     exportBtn.onclick = async () => {
       exportBtn.disabled = true;
-      exportBtn.textContent = "Exporting\u2026";
+      exportBtn.textContent = t2("exportModal.exporting");
       try {
         await this.plugin.exportEngine.export({
           format: this.format,
@@ -6425,12 +8017,12 @@ var ExportModal = class extends import_obsidian7.Modal {
         });
         this.close();
       } catch (e) {
-        new import_obsidian7.Notice(`Export failed: ${e instanceof Error ? e.message : String(e)}`);
+        new import_obsidian7.Notice(t2("exportModal.exportFailed", { error: e instanceof Error ? e.message : String(e) }));
         exportBtn.disabled = false;
-        exportBtn.textContent = "Export";
+        exportBtn.textContent = t2("exportModal.exportBtn");
       }
     };
-    const cancelBtn = btnRow.createEl("button", { text: "Cancel" });
+    const cancelBtn = btnRow.createEl("button", { text: t2("exportModal.cancel") });
     cancelBtn.onclick = () => this.close();
   }
   onClose() {
@@ -6558,30 +8150,30 @@ var WritingDashboardModal = class extends import_obsidian9.Modal {
     const { contentEl } = this;
     contentEl.empty();
     contentEl.addClass("ws-writing-dashboard");
-    contentEl.createEl("h2", { text: "Writing dashboard" });
+    contentEl.createEl("h2", { text: t2("writingDashboard.title") });
     const project = this.plugin.projectManager.getActiveProject();
     const sessionStats = this.plugin.statsTracker.getSessionStats();
     const streak = await this.plugin.statsTracker.getStreak();
     const summarySection = contentEl.createDiv("ws-dash-section");
-    summarySection.createEl("h3", { text: "This session" });
+    summarySection.createEl("h3", { text: t2("writingDashboard.thisSession") });
     const grid = summarySection.createDiv("ws-dash-grid");
-    this.addStat(grid, "Words written", String(sessionStats.wordsWritten));
-    this.addStat(grid, "Sprints", String(sessionStats.sprintsCompleted));
-    this.addStat(grid, "Minutes", String(sessionStats.totalMinutes));
-    this.addStat(grid, "Writing streak", `${streak} day${streak !== 1 ? "s" : ""}`);
+    this.addStat(grid, t2("writingDashboard.stat.wordsWritten"), String(sessionStats.wordsWritten));
+    this.addStat(grid, t2("writingDashboard.stat.sprints"), String(sessionStats.sprintsCompleted));
+    this.addStat(grid, t2("writingDashboard.stat.minutes"), String(sessionStats.totalMinutes));
+    this.addStat(grid, t2("writingDashboard.stat.writingStreak"), t2("writingDashboard.stat.streakDays", { count: streak }));
     if (project) {
       const projectSection = contentEl.createDiv("ws-dash-section");
-      projectSection.createEl("h3", { text: `Project: ${project.title}` });
+      projectSection.createEl("h3", { text: t2("writingDashboard.project", { title: project.title }) });
       const totalWords = await this.plugin.statsTracker.getTotalWordCount();
       const totalGoal = ((_a2 = project.goals) == null ? void 0 : _a2.totalWordCount) || 0;
       const projGrid = projectSection.createDiv("ws-dash-grid");
-      this.addStat(projGrid, "Total words", String(totalWords));
+      this.addStat(projGrid, t2("writingDashboard.stat.totalWords"), String(totalWords));
       if (totalGoal > 0) {
         const pct = Math.min(100, Math.round(totalWords / totalGoal * 100));
-        this.addStat(projGrid, "Goal", `${totalGoal}`);
-        this.addStat(projGrid, "Progress", `${pct}%`);
+        this.addStat(projGrid, t2("writingDashboard.stat.goal"), `${totalGoal}`);
+        this.addStat(projGrid, t2("writingDashboard.stat.progress"), `${pct}%`);
       }
-      this.addStat(projGrid, "Reading time", this.plugin.statsTracker.calculateReadingTime(totalWords));
+      this.addStat(projGrid, t2("writingDashboard.stat.readingTime"), this.plugin.statsTracker.calculateReadingTime(totalWords));
       if (totalGoal > 0) {
         const pct = Math.min(100, Math.round(totalWords / totalGoal * 100));
         const barWrap = projectSection.createDiv("ws-progress-wrap ws-dash-progress");
@@ -6592,16 +8184,22 @@ var WritingDashboardModal = class extends import_obsidian9.Modal {
     }
     if (project) {
       const historySection = contentEl.createDiv("ws-dash-section");
-      historySection.createEl("h3", { text: "Recent sprints" });
+      historySection.createEl("h3", { text: t2("writingDashboard.recentSprints") });
       const log = await this.plugin.projectManager.getWritingLog(project);
       const recent = [...log].reverse().slice(0, 10);
       if (recent.length === 0) {
-        historySection.createEl("p", { text: "No sprints recorded yet.", cls: "ws-empty-state" });
+        historySection.createEl("p", { text: t2("writingDashboard.noSprints"), cls: "ws-empty-state" });
       } else {
         const table = historySection.createEl("table", { cls: "ws-sprint-history-table" });
         const thead = table.createEl("thead");
         const hr = thead.createEl("tr");
-        ["Date", "Duration", "Words", "WPM", "Goal"].forEach((h) => hr.createEl("th", { text: h }));
+        [
+          t2("writingDashboard.sprintTable.date"),
+          t2("writingDashboard.sprintTable.duration"),
+          t2("writingDashboard.sprintTable.words"),
+          t2("writingDashboard.sprintTable.wpm"),
+          t2("writingDashboard.sprintTable.goal")
+        ].forEach((h) => hr.createEl("th", { text: h }));
         const tbody = table.createEl("tbody");
         for (const s of recent) {
           const tr = tbody.createEl("tr");
@@ -6617,13 +8215,17 @@ var WritingDashboardModal = class extends import_obsidian9.Modal {
     }
     if (project) {
       const docsSection = contentEl.createDiv("ws-dash-section");
-      docsSection.createEl("h3", { text: "Document word counts" });
+      docsSection.createEl("h3", { text: t2("writingDashboard.documentWordCounts") });
       const binder = await this.plugin.projectManager.loadBinder(project);
       const items = this.plugin.projectManager.flattenBinder(binder.items);
       const table = docsSection.createEl("table", { cls: "ws-doc-wc-table" });
       const thead = table.createEl("thead");
       const hr = thead.createEl("tr");
-      ["Document", "Words", "Reading time"].forEach((h) => hr.createEl("th", { text: h }));
+      [
+        t2("writingDashboard.docTable.document"),
+        t2("writingDashboard.docTable.words"),
+        t2("writingDashboard.docTable.readingTime")
+      ].forEach((h) => hr.createEl("th", { text: h }));
       const tbody = table.createEl("tbody");
       for (const item of items) {
         if (item.type === "group" || item.type === "part") continue;
@@ -6649,7 +8251,7 @@ var WritingDashboardModal = class extends import_obsidian9.Modal {
         tr.createEl("td", { text: this.plugin.statsTracker.calculateReadingTime(wc) });
       }
     }
-    const closeBtn = contentEl.createEl("button", { text: "Close", cls: "ws-dash-close" });
+    const closeBtn = contentEl.createEl("button", { text: t2("writingDashboard.close"), cls: "ws-dash-close" });
     closeBtn.onclick = () => this.close();
   }
   addStat(container, label, value) {
@@ -6676,40 +8278,40 @@ var SprintModal = class extends import_obsidian10.Modal {
     const { contentEl } = this;
     contentEl.empty();
     contentEl.addClass("ws-sprint-modal");
-    contentEl.createEl("h2", { text: "Start writing sprint" });
-    new import_obsidian10.Setting(contentEl).setName("Duration (minutes)").setDesc("Preset: 10, 15, 25, 30, 45, 60").addDropdown((d) => {
+    contentEl.createEl("h2", { text: t2("sprintModal.title") });
+    new import_obsidian10.Setting(contentEl).setName(t2("sprintModal.durationName")).setDesc(t2("sprintModal.durationDesc")).addDropdown((d) => {
       [10, 15, 25, 30, 45, 60].forEach((m) => {
         d.addOption(String(m), `${m} min`);
       });
-      d.addOption("custom", "Custom\u2026");
+      d.addOption("custom", t2("sprintModal.durationCustom"));
       d.setValue(String(this.duration));
       d.onChange((v) => {
         if (v === "custom") return;
         this.duration = parseInt(v);
       });
-    }).addText((t3) => t3.setPlaceholder("Custom minutes").onChange((v) => {
+    }).addText((tx) => tx.setPlaceholder(t2("sprintModal.durationCustomPlaceholder")).onChange((v) => {
       this.duration = parseInt(v) || this.duration;
     }));
-    new import_obsidian10.Setting(contentEl).setName("Word count goal (optional)").setDesc("Leave 0 for no goal.").addText((t3) => t3.setPlaceholder("0").setValue(String(this.wordGoal || "")).onChange((v) => {
+    new import_obsidian10.Setting(contentEl).setName(t2("sprintModal.wordGoalName")).setDesc(t2("sprintModal.wordGoalDesc")).addText((tx) => tx.setPlaceholder("0").setValue(String(this.wordGoal || "")).onChange((v) => {
       this.wordGoal = parseInt(v) || 0;
     }));
-    new import_obsidian10.Setting(contentEl).setName("Scope").addDropdown((d) => d.addOption("file", "Current file").addOption("project", "Entire project").setValue(this.sprintScope).onChange((v) => {
+    new import_obsidian10.Setting(contentEl).setName(t2("sprintModal.scopeName")).addDropdown((d) => d.addOption("file", t2("sprintModal.scopeFile")).addOption("project", t2("sprintModal.scopeProject")).setValue(this.sprintScope).onChange((v) => {
       this.sprintScope = v;
     }));
     const btnRow = contentEl.createDiv("ws-modal-btn-row");
     const startBtn = btnRow.createEl("button", {
       cls: "mod-cta",
-      text: "Start sprint"
+      text: t2("sprintModal.startBtn")
     });
     startBtn.onclick = () => {
       if (!this.duration || this.duration <= 0) {
-        new import_obsidian10.Notice("Please set a valid duration.");
+        new import_obsidian10.Notice(t2("sprintModal.errorDuration"));
         return;
       }
       this.plugin.sprintTimer.start(this.duration, this.wordGoal || void 0, this.sprintScope);
       this.close();
     };
-    const cancelBtn = btnRow.createEl("button", { text: "Cancel" });
+    const cancelBtn = btnRow.createEl("button", { text: t2("sprintModal.cancel") });
     cancelBtn.onclick = () => this.close();
   }
   onClose() {
@@ -11546,17 +13148,17 @@ var AddToProjectModal = class extends import_obsidian28.Modal {
     const { contentEl } = this;
     contentEl.empty();
     contentEl.addClass("ws-add-to-project-modal");
-    contentEl.createEl("h2", { text: "Add to writing project" });
+    contentEl.createEl("h2", { text: t2("addToProject.title") });
     const projects = this.plugin.projectManager.getProjects();
     if (projects.length === 0) {
-      contentEl.createEl("p", { text: "No writing projects found. Create a project first.", cls: "ws-empty-state" });
-      const closeBtn = contentEl.createEl("button", { text: "Close" });
+      contentEl.createEl("p", { text: t2("addToProject.noProjects"), cls: "ws-empty-state" });
+      const closeBtn = contentEl.createEl("button", { text: t2("addToProject.close") });
       closeBtn.onclick = () => this.close();
       return;
     }
     this.selectedProjectId = projects[0].id;
-    contentEl.createEl("p", { text: `File: ${this.file.path}`, cls: "ws-add-to-project-path" });
-    new import_obsidian28.Setting(contentEl).setName("Writing project").setDesc("What writing project do you wish to add this file to?").addDropdown((d) => {
+    contentEl.createEl("p", { text: t2("addToProject.file", { path: this.file.path }), cls: "ws-add-to-project-path" });
+    new import_obsidian28.Setting(contentEl).setName(t2("addToProject.projectName")).setDesc(t2("addToProject.projectDesc")).addDropdown((d) => {
       projects.forEach((p) => {
         d.addOption(p.id, p.title);
       });
@@ -11566,12 +13168,12 @@ var AddToProjectModal = class extends import_obsidian28.Modal {
       });
     });
     const btnRow = contentEl.createDiv("ws-modal-btn-row");
-    const addBtn = btnRow.createEl("button", { cls: "mod-cta", text: "Add to project" });
+    const addBtn = btnRow.createEl("button", { cls: "mod-cta", text: t2("addToProject.addBtn") });
     addBtn.onclick = () => {
       void this.onConfirm(this.selectedProjectId);
       this.close();
     };
-    const cancelBtn = btnRow.createEl("button", { text: "Cancel" });
+    const cancelBtn = btnRow.createEl("button", { text: t2("addToProject.cancel") });
     cancelBtn.onclick = () => this.close();
   }
   onClose() {

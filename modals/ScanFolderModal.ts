@@ -1,4 +1,5 @@
 import { App, Modal, TFile } from 'obsidian';
+import { t } from '../src/i18n';
 
 export class ScanFolderModal extends Modal {
   private files: TFile[];
@@ -16,9 +17,9 @@ export class ScanFolderModal extends Modal {
     const { contentEl } = this;
     contentEl.empty();
     contentEl.addClass('ws-scan-folder-modal');
-    contentEl.createEl('h2', { text: 'Add files to binder' });
+    contentEl.createEl('h2', { text: t('scanFolder.title') });
     contentEl.createEl('p', {
-      text: 'Select the files to add to this project:',
+      text: t('scanFolder.desc'),
       cls: 'ws-scan-folder-desc',
     });
 
@@ -36,14 +37,14 @@ export class ScanFolderModal extends Modal {
 
     const btnRow = contentEl.createDiv('ws-modal-btn-row');
 
-    const addBtn = btnRow.createEl('button', { cls: 'mod-cta', text: 'Add selected files' });
+    const addBtn = btnRow.createEl('button', { cls: 'mod-cta', text: t('scanFolder.addBtn') });
     addBtn.onclick = async () => {
       const selected = this.files.filter(f => this.checked.get(f.path));
       await this.onConfirm(selected);
       this.close();
     };
 
-    const cancelBtn = btnRow.createEl('button', { text: 'Cancel' });
+    const cancelBtn = btnRow.createEl('button', { text: t('scanFolder.cancel') });
     cancelBtn.onclick = () => this.close();
   }
 

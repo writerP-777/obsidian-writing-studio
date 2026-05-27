@@ -317,5 +317,181 @@
     "proceedToExport": "Proceed to export",
     "closePreview": "Close preview",
     "noContent": "No content to preview. Open a writing project first."
+  },
+  "projectModal": {
+    "title": "New writing project",
+    "projectTitle": "Project title",
+    "titlePlaceholder": "My novel",
+    "template": "Template",
+    "templateDesc": "Choose a pre-configured project structure.",
+    "templateOption": {
+      "blank": "Blank (custom structure)",
+      "book": "Book (parts → chapters → scenes)",
+      "series": "Article series (series → articles)",
+      "blog": "Blog collection (posts by date/category)",
+      "journalArticle": "Journal article — academic or professional journal submission",
+      "magazineArticle": "Magazine article — feature, long-form, or narrative nonfiction"
+    },
+    "descriptionLabel": "Description (optional)",
+    "descriptionPlaceholder": "Brief description of this project…",
+    "preview": {
+      "blank": "Empty project — build your own structure.",
+      "book": "Creates: Front Matter, Part 1 / Chapter 1, Back Matter placeholder.",
+      "series": "Creates: Series folder, Article 1 placeholder, series metadata.",
+      "blog": "Creates: date-organized folder, first post placeholder.",
+      "journalArticle": "Creates: Title Page, Abstract, Keywords, Introduction, Literature Review, Methodology, Findings / Analysis, Discussion, Conclusion, References, Appendices.",
+      "magazineArticle": "Creates: Pitch / Query Notes, Headline & Deck, Lede, Nut Graf, Body, Quotes & Sources, Kicker, Fact-Check Notes, Author Bio. Notes documents excluded from export by default."
+    },
+    "createBtn": "Create project",
+    "creating": "Creating…",
+    "errorNoTitle": "Please enter a project title.",
+    "errorCreate": "Failed to create project: {{error}}",
+    "created": "Project \"{{title}}\" created!",
+    "cancel": "Cancel"
+  },
+  "sprintModal": {
+    "title": "Start writing sprint",
+    "durationName": "Duration (minutes)",
+    "durationDesc": "Preset: 10, 15, 25, 30, 45, 60",
+    "durationCustom": "Custom…",
+    "durationCustomPlaceholder": "Custom minutes",
+    "wordGoalName": "Word count goal (optional)",
+    "wordGoalDesc": "Leave 0 for no goal.",
+    "scopeName": "Scope",
+    "scopeFile": "Current file",
+    "scopeProject": "Entire project",
+    "startBtn": "Start sprint",
+    "errorDuration": "Please set a valid duration.",
+    "cancel": "Cancel"
+  },
+  "exportModal": {
+    "title": "Export document",
+    "formatName": "Format",
+    "format": {
+      "md": "Markdown (.md)",
+      "html": "HTML",
+      "manuscript": "Manuscript (HTML)",
+      "epub": "EPUB (.epub)",
+      "pdf": "PDF (requires pandoc)",
+      "docx": "Word (.docx) (requires pandoc)",
+      "rtf": "RTF (requires pandoc)"
+    },
+    "coverImageName": "Cover image path",
+    "coverImageDesc": "Vault path to a JPG or PNG cover image. Leave empty for a generated text cover.",
+    "coverImagePlaceholder": "e.g. Assets/cover.jpg",
+    "contactInfoName": "Contact info (optional)",
+    "contactInfoDesc": "Appears on the title page — name, email, or mailing address.",
+    "contactInfoPlaceholder": "Name, email, or mailing address",
+    "scopeName": "Scope",
+    "scopeCurrent": "Current document",
+    "scopeProject": "Entire project (in binder order)",
+    "includeFrontmatter": "Include frontmatter",
+    "includeResearch": "Include research notes",
+    "includeTitlesAsHeadings": "Include document titles as headings",
+    "addTitlePage": "Add title page",
+    "addTitlePageDesc": "Prepend a title page with project title, author, and date.",
+    "previewBtn": "Preview compiled manuscript",
+    "exportBtn": "Export",
+    "exporting": "Exporting…",
+    "exportFailed": "Export failed: {{error}}",
+    "cancel": "Cancel"
+  },
+  "publishModal": {
+    "title": "Publish to WordPress",
+    "noSites": "No WordPress sites configured. Add a site in settings → WordPress.",
+    "close": "Close",
+    "siteName": "WordPress site",
+    "postTitleName": "Post title",
+    "postStatusName": "Post status",
+    "postStatus": {
+      "draft": "Draft",
+      "pending": "Pending review",
+      "publish": "Published"
+    },
+    "categoryName": "Category",
+    "tagsName": "Tags",
+    "tagsDesc": "Comma-separated.",
+    "excerptName": "Excerpt (optional)",
+    "scheduleName": "Schedule publication (optional)",
+    "scheduleDesc": "Leave empty to publish immediately.",
+    "schedulePlaceholder": "yyyy-mm-ddThh:mm:ss",
+    "existingNotice": "⚠ This document was previously published (Post ID: {{id}}).",
+    "updatePost": "Update existing post",
+    "newPost": "Create new post",
+    "schedule": "Schedule",
+    "publish": "Publish",
+    "cancel": "Cancel",
+    "noSiteSelected": "No site selected.",
+    "fileNotFound": "File not found.",
+    "publishFailed": "Publish failed: {{error}}",
+    "published": "Published",
+    "scheduled": "Scheduled",
+    "actionNotice": "{{action}}! View post: {{url}}"
+  },
+  "targetsDashboard": {
+    "title": "Chapter targets dashboard",
+    "noProject": "No project selected.",
+    "filterLabel": "Filter: ",
+    "allStatuses": "All statuses",
+    "refresh": "↻ Refresh",
+    "col": {
+      "title": "Title",
+      "type": "Type",
+      "status": "Status",
+      "words": "Words",
+      "goal": "Goal",
+      "progress": "Progress",
+      "readingTime": "Reading time"
+    },
+    "total": "Total"
+  },
+  "writingDashboard": {
+    "title": "Writing dashboard",
+    "thisSession": "This session",
+    "stat": {
+      "wordsWritten": "Words written",
+      "sprints": "Sprints",
+      "minutes": "Minutes",
+      "writingStreak": "Writing streak",
+      "streakDays_one": "{{count}} day",
+      "streakDays_other": "{{count}} days",
+      "totalWords": "Total words",
+      "goal": "Goal",
+      "progress": "Progress",
+      "readingTime": "Reading time"
+    },
+    "project": "Project: {{title}}",
+    "recentSprints": "Recent sprints",
+    "noSprints": "No sprints recorded yet.",
+    "sprintTable": {
+      "date": "Date",
+      "duration": "Duration",
+      "words": "Words",
+      "wpm": "WPM",
+      "goal": "Goal"
+    },
+    "documentWordCounts": "Document word counts",
+    "docTable": {
+      "document": "Document",
+      "words": "Words",
+      "readingTime": "Reading time"
+    },
+    "close": "Close"
+  },
+  "addToProject": {
+    "title": "Add to writing project",
+    "noProjects": "No writing projects found. Create a project first.",
+    "close": "Close",
+    "file": "File: {{path}}",
+    "projectName": "Writing project",
+    "projectDesc": "What writing project do you wish to add this file to?",
+    "addBtn": "Add to project",
+    "cancel": "Cancel"
+  },
+  "scanFolder": {
+    "title": "Add files to binder",
+    "desc": "Select the files to add to this project:",
+    "addBtn": "Add selected files",
+    "cancel": "Cancel"
   }
 }

@@ -1,5 +1,6 @@
 import { App, Modal, TFile } from 'obsidian';
 import type WritingStudioPlugin from '../main';
+import { t } from '../src/i18n';
 
 export class WritingDashboardModal extends Modal {
   private plugin: WritingStudioPlugin;
@@ -13,7 +14,7 @@ export class WritingDashboardModal extends Modal {
     const { contentEl } = this;
     contentEl.empty();
     contentEl.addClass('ws-writing-dashboard');
-    contentEl.createEl('h2', { text: 'Writing dashboard' });
+    contentEl.createEl('h2', { text: t('writingDashboard.title') });
 
     const project = this.plugin.projectManager.getActiveProject();
     const sessionStats = this.plugin.statsTracker.getSessionStats();
@@ -21,30 +22,30 @@ export class WritingDashboardModal extends Modal {
 
     // Session Summary
     const summarySection = contentEl.createDiv('ws-dash-section');
-    summarySection.createEl('h3', { text: 'This session' });
+    summarySection.createEl('h3', { text: t('writingDashboard.thisSession') });
 
     const grid = summarySection.createDiv('ws-dash-grid');
-    this.addStat(grid, 'Words written', String(sessionStats.wordsWritten));
-    this.addStat(grid, 'Sprints', String(sessionStats.sprintsCompleted));
-    this.addStat(grid, 'Minutes', String(sessionStats.totalMinutes));
-    this.addStat(grid, 'Writing streak', `${streak} day${streak !== 1 ? 's' : ''}`);
+    this.addStat(grid, t('writingDashboard.stat.wordsWritten'), String(sessionStats.wordsWritten));
+    this.addStat(grid, t('writingDashboard.stat.sprints'), String(sessionStats.sprintsCompleted));
+    this.addStat(grid, t('writingDashboard.stat.minutes'), String(sessionStats.totalMinutes));
+    this.addStat(grid, t('writingDashboard.stat.writingStreak'), t('writingDashboard.stat.streakDays', { count: streak }));
 
     // Active Project
     if (project) {
       const projectSection = contentEl.createDiv('ws-dash-section');
-      projectSection.createEl('h3', { text: `Project: ${project.title}` });
+      projectSection.createEl('h3', { text: t('writingDashboard.project', { title: project.title }) });
 
       const totalWords = await this.plugin.statsTracker.getTotalWordCount();
       const totalGoal = project.goals?.totalWordCount || 0;
 
       const projGrid = projectSection.createDiv('ws-dash-grid');
-      this.addStat(projGrid, 'Total words', String(totalWords));
+      this.addStat(projGrid, t('writingDashboard.stat.totalWords'), String(totalWords));
       if (totalGoal > 0) {
         const pct = Math.min(100, Math.round((totalWords / totalGoal) * 100));
-        this.addStat(projGrid, 'Goal', `${totalGoal}`);
-        this.addStat(projGrid, 'Progress', `${pct}%`);
+        this.addStat(projGrid, t('writingDashboard.stat.goal'), `${totalGoal}`);
+        this.addStat(projGrid, t('writingDashboard.stat.progress'), `${pct}%`);
       }
-      this.addStat(projGrid, 'Reading time', this.plugin.statsTracker.calculateReadingTime(totalWords));
+      this.addStat(projGrid, t('writingDashboard.stat.readingTime'), this.plugin.statsTracker.calculateReadingTime(totalWords));
 
       // Progress bar
       if (totalGoal > 0) {
@@ -59,18 +60,24 @@ export class WritingDashboardModal extends Modal {
     // Sprint History
     if (project) {
       const historySection = contentEl.createDiv('ws-dash-section');
-      historySection.createEl('h3', { text: 'Recent sprints' });
+      historySection.createEl('h3', { text: t('writingDashboard.recentSprints') });
 
       const log = await this.plugin.projectManager.getWritingLog(project);
       const recent = [...log].reverse().slice(0, 10);
 
       if (recent.length === 0) {
-        historySection.createEl('p', { text: 'No sprints recorded yet.', cls: 'ws-empty-state' });
+        historySection.createEl('p', { text: t('writingDashboard.noSprints'), cls: 'ws-empty-state' });
       } else {
         const table = historySection.createEl('table', { cls: 'ws-sprint-history-table' });
         const thead = table.createEl('thead');
         const hr = thead.createEl('tr');
-        ['Date', 'Duration', 'Words', 'WPM', 'Goal'].forEach(h => hr.createEl('th', { text: h }));
+        [
+          t('writingDashboard.sprintTable.date'),
+          t('writingDashboard.sprintTable.duration'),
+          t('writingDashboard.sprintTable.words'),
+          t('writingDashboard.sprintTable.wpm'),
+          t('writingDashboard.sprintTable.goal'),
+        ].forEach(h => hr.createEl('th', { text: h }));
 
         const tbody = table.createEl('tbody');
         for (const s of recent) {
@@ -89,7 +96,7 @@ export class WritingDashboardModal extends Modal {
     // Per-document breakdown
     if (project) {
       const docsSection = contentEl.createDiv('ws-dash-section');
-      docsSection.createEl('h3', { text: 'Document word counts' });
+      docsSection.createEl('h3', { text: t('writingDashboard.documentWordCounts') });
 
       const binder = await this.plugin.projectManager.loadBinder(project);
       const items = this.plugin.projectManager.flattenBinder(binder.items);
@@ -97,7 +104,11 @@ export class WritingDashboardModal extends Modal {
       const table = docsSection.createEl('table', { cls: 'ws-doc-wc-table' });
       const thead = table.createEl('thead');
       const hr = thead.createEl('tr');
-      ['Document', 'Words', 'Reading time'].forEach(h => hr.createEl('th', { text: h }));
+      [
+        t('writingDashboard.docTable.document'),
+        t('writingDashboard.docTable.words'),
+        t('writingDashboard.docTable.readingTime'),
+      ].forEach(h => hr.createEl('th', { text: h }));
 
       const tbody = table.createEl('tbody');
       for (const item of items) {
@@ -125,7 +136,7 @@ export class WritingDashboardModal extends Modal {
       }
     }
 
-    const closeBtn = contentEl.createEl('button', { text: 'Close', cls: 'ws-dash-close' });
+    const closeBtn = contentEl.createEl('button', { text: t('writingDashboard.close'), cls: 'ws-dash-close' });
     closeBtn.onclick = () => this.close();
   }
 

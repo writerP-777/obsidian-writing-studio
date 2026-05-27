@@ -317,5 +317,181 @@
     "proceedToExport": "Proceder a exportar",
     "closePreview": "Cerrar vista previa",
     "noContent": "Sin contenido para previsualizar. Abra primero un proyecto de escritura."
+  },
+  "projectModal": {
+    "title": "Nuevo proyecto de escritura",
+    "projectTitle": "Título del proyecto",
+    "titlePlaceholder": "Mi novela",
+    "template": "Plantilla",
+    "templateDesc": "Elige una estructura de proyecto preconfigurada.",
+    "templateOption": {
+      "blank": "En blanco (estructura personalizada)",
+      "book": "Libro (partes → capítulos → escenas)",
+      "series": "Serie de artículos (serie → artículos)",
+      "blog": "Colección de blog (publicaciones por fecha/categoría)",
+      "journalArticle": "Artículo de revista académica — envío académico o profesional",
+      "magazineArticle": "Artículo de revista — reportaje, largo formato o no ficción narrativa"
+    },
+    "descriptionLabel": "Descripción (opcional)",
+    "descriptionPlaceholder": "Breve descripción de este proyecto…",
+    "preview": {
+      "blank": "Proyecto vacío — construye tu propia estructura.",
+      "book": "Crea: páginas preliminares, Parte 1 / Capítulo 1, páginas finales.",
+      "series": "Crea: carpeta de serie, marcador del Artículo 1, metadatos de la serie.",
+      "blog": "Crea: carpeta organizada por fecha, marcador de la primera publicación.",
+      "journalArticle": "Crea: portada, resumen, palabras clave, introducción, revisión literaria, metodología, hallazgos/análisis, discusión, conclusión, referencias, apéndices.",
+      "magazineArticle": "Crea: notas de propuesta/consulta, titular y sumario, entrada, párrafo núcleo, cuerpo, citas y fuentes, cierre, notas de verificación, biografía del autor. Los documentos de notas se excluyen de la exportación por defecto."
+    },
+    "createBtn": "Crear proyecto",
+    "creating": "Creando…",
+    "errorNoTitle": "Por favor, ingresa un título de proyecto.",
+    "errorCreate": "Error al crear el proyecto: {{error}}",
+    "created": "¡Proyecto «{{title}}» creado!",
+    "cancel": "Cancelar"
+  },
+  "sprintModal": {
+    "title": "Iniciar sprint de escritura",
+    "durationName": "Duración (minutos)",
+    "durationDesc": "Preestablecido: 10, 15, 25, 30, 45, 60",
+    "durationCustom": "Personalizado…",
+    "durationCustomPlaceholder": "Minutos personalizados",
+    "wordGoalName": "Meta de palabras (opcional)",
+    "wordGoalDesc": "Deja 0 para ninguna meta.",
+    "scopeName": "Alcance",
+    "scopeFile": "Archivo actual",
+    "scopeProject": "Proyecto completo",
+    "startBtn": "Iniciar sprint",
+    "errorDuration": "Por favor, establece una duración válida.",
+    "cancel": "Cancelar"
+  },
+  "exportModal": {
+    "title": "Exportar documento",
+    "formatName": "Formato",
+    "format": {
+      "md": "Markdown (.md)",
+      "html": "HTML",
+      "manuscript": "Manuscrito (HTML)",
+      "epub": "EPUB (.epub)",
+      "pdf": "PDF (requiere pandoc)",
+      "docx": "Word (.docx) (requiere pandoc)",
+      "rtf": "RTF (requiere pandoc)"
+    },
+    "coverImageName": "Ruta de imagen de portada",
+    "coverImageDesc": "Ruta del vault a una imagen JPG o PNG. Deja vacío para una portada de texto generada.",
+    "coverImagePlaceholder": "p. ej. Assets/cover.jpg",
+    "contactInfoName": "Información de contacto (opcional)",
+    "contactInfoDesc": "Aparece en la portada — nombre, correo electrónico o dirección postal.",
+    "contactInfoPlaceholder": "Nombre, correo electrónico o dirección postal",
+    "scopeName": "Alcance",
+    "scopeCurrent": "Documento actual",
+    "scopeProject": "Proyecto completo (en orden del binder)",
+    "includeFrontmatter": "Incluir portada",
+    "includeResearch": "Incluir notas de investigación",
+    "includeTitlesAsHeadings": "Incluir títulos de documento como encabezados",
+    "addTitlePage": "Añadir portada",
+    "addTitlePageDesc": "Añade una portada con el título del proyecto, autor y fecha.",
+    "previewBtn": "Vista previa del manuscrito compilado",
+    "exportBtn": "Exportar",
+    "exporting": "Exportando…",
+    "exportFailed": "Error de exportación: {{error}}",
+    "cancel": "Cancelar"
+  },
+  "publishModal": {
+    "title": "Publicar en WordPress",
+    "noSites": "No hay sitios de WordPress configurados. Añade un sitio en Ajustes → WordPress.",
+    "close": "Cerrar",
+    "siteName": "Sitio de WordPress",
+    "postTitleName": "Título de la publicación",
+    "postStatusName": "Estado de la publicación",
+    "postStatus": {
+      "draft": "Borrador",
+      "pending": "Pendiente de revisión",
+      "publish": "Publicado"
+    },
+    "categoryName": "Categoría",
+    "tagsName": "Etiquetas",
+    "tagsDesc": "Separadas por comas.",
+    "excerptName": "Extracto (opcional)",
+    "scheduleName": "Programar publicación (opcional)",
+    "scheduleDesc": "Deja vacío para publicar inmediatamente.",
+    "schedulePlaceholder": "yyyy-mm-ddThh:mm:ss",
+    "existingNotice": "⚠ Este documento fue publicado anteriormente (ID de publicación: {{id}}).",
+    "updatePost": "Actualizar publicación existente",
+    "newPost": "Crear nueva publicación",
+    "schedule": "Programar",
+    "publish": "Publicar",
+    "cancel": "Cancelar",
+    "noSiteSelected": "Ningún sitio seleccionado.",
+    "fileNotFound": "Archivo no encontrado.",
+    "publishFailed": "Error al publicar: {{error}}",
+    "published": "Publicado",
+    "scheduled": "Programado",
+    "actionNotice": "¡{{action}}! Ver publicación: {{url}}"
+  },
+  "targetsDashboard": {
+    "title": "Panel de objetivos de capítulos",
+    "noProject": "Ningún proyecto seleccionado.",
+    "filterLabel": "Filtrar: ",
+    "allStatuses": "Todos los estados",
+    "refresh": "↻ Actualizar",
+    "col": {
+      "title": "Título",
+      "type": "Tipo",
+      "status": "Estado",
+      "words": "Palabras",
+      "goal": "Objetivo",
+      "progress": "Progreso",
+      "readingTime": "Tiempo de lectura"
+    },
+    "total": "Total"
+  },
+  "writingDashboard": {
+    "title": "Panel de escritura",
+    "thisSession": "Esta sesión",
+    "stat": {
+      "wordsWritten": "Palabras escritas",
+      "sprints": "Sprints",
+      "minutes": "Minutos",
+      "writingStreak": "Racha de escritura",
+      "streakDays_one": "{{count}} día",
+      "streakDays_other": "{{count}} días",
+      "totalWords": "Total de palabras",
+      "goal": "Objetivo",
+      "progress": "Progreso",
+      "readingTime": "Tiempo de lectura"
+    },
+    "project": "Proyecto: {{title}}",
+    "recentSprints": "Sprints recientes",
+    "noSprints": "No hay sprints registrados aún.",
+    "sprintTable": {
+      "date": "Fecha",
+      "duration": "Duración",
+      "words": "Palabras",
+      "wpm": "PPM",
+      "goal": "Objetivo"
+    },
+    "documentWordCounts": "Recuento de palabras por documento",
+    "docTable": {
+      "document": "Documento",
+      "words": "Palabras",
+      "readingTime": "Tiempo de lectura"
+    },
+    "close": "Cerrar"
+  },
+  "addToProject": {
+    "title": "Añadir a proyecto de escritura",
+    "noProjects": "No se encontraron proyectos de escritura. Crea un proyecto primero.",
+    "close": "Cerrar",
+    "file": "Archivo: {{path}}",
+    "projectName": "Proyecto de escritura",
+    "projectDesc": "¿A qué proyecto de escritura deseas añadir este archivo?",
+    "addBtn": "Añadir al proyecto",
+    "cancel": "Cancelar"
+  },
+  "scanFolder": {
+    "title": "Añadir archivos al binder",
+    "desc": "Selecciona los archivos para añadir a este proyecto:",
+    "addBtn": "Añadir archivos seleccionados",
+    "cancel": "Cancelar"
   }
 }

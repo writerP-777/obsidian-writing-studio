@@ -1,6 +1,7 @@
 import { App, Modal, TFile } from 'obsidian';
 import type WritingStudioPlugin from '../main';
 import { BinderItem, STATUS_COLORS, STATUS_LABELS, DocumentStatus } from '../models/BinderItem';
+import { t } from '../src/i18n';
 
 interface DocStats {
   item: BinderItem;
@@ -24,11 +25,11 @@ export class TargetsDashboardModal extends Modal {
     const { contentEl } = this;
     contentEl.empty();
     contentEl.addClass('ws-dashboard-modal');
-    contentEl.createEl('h2', { text: 'Chapter targets dashboard' });
+    contentEl.createEl('h2', { text: t('targetsDashboard.title') });
 
     const project = this.plugin.projectManager.getActiveProject();
     if (!project) {
-      contentEl.createEl('p', { text: 'No project selected.', cls: 'ws-empty-state' });
+      contentEl.createEl('p', { text: t('targetsDashboard.noProject'), cls: 'ws-empty-state' });
       return;
     }
 
@@ -37,10 +38,10 @@ export class TargetsDashboardModal extends Modal {
 
     // Filters
     const filterRow = contentEl.createDiv('ws-dashboard-filters');
-    filterRow.createEl('label', { text: 'Filter: ' });
+    filterRow.createEl('label', { text: t('targetsDashboard.filterLabel') });
     const statusSel = filterRow.createEl('select');
     ['all', 'draft', 'in-progress', 'complete', 'published'].forEach(s => {
-      const opt = statusSel.createEl('option', { text: s === 'all' ? 'All statuses' : STATUS_LABELS[s as DocumentStatus] || s });
+      const opt = statusSel.createEl('option', { text: s === 'all' ? t('targetsDashboard.allStatuses') : STATUS_LABELS[s as DocumentStatus] || s });
       opt.value = s;
     });
     statusSel.value = this.statusFilter;
@@ -49,7 +50,7 @@ export class TargetsDashboardModal extends Modal {
       this.renderTable(contentEl);
     };
 
-    const refreshBtn = filterRow.createEl('button', { text: '↻ Refresh', cls: 'ws-dashboard-refresh' });
+    const refreshBtn = filterRow.createEl('button', { text: t('targetsDashboard.refresh'), cls: 'ws-dashboard-refresh' });
     refreshBtn.onclick = async () => {
       await this.loadStats(project);
       this.renderTable(contentEl);
@@ -91,13 +92,13 @@ export class TargetsDashboardModal extends Modal {
     const thead = table.createEl('thead');
     const hr = thead.createEl('tr');
     const cols: Array<{ key: string; label: string }> = [
-      { key: 'title', label: 'Title' },
-      { key: 'type', label: 'Type' },
-      { key: 'status', label: 'Status' },
-      { key: 'wordCount', label: 'Words' },
-      { key: 'goal', label: 'Goal' },
-      { key: 'progress', label: 'Progress' },
-      { key: 'readingTime', label: 'Reading time' },
+      { key: 'title',       label: t('targetsDashboard.col.title') },
+      { key: 'type',        label: t('targetsDashboard.col.type') },
+      { key: 'status',      label: t('targetsDashboard.col.status') },
+      { key: 'wordCount',   label: t('targetsDashboard.col.words') },
+      { key: 'goal',        label: t('targetsDashboard.col.goal') },
+      { key: 'progress',    label: t('targetsDashboard.col.progress') },
+      { key: 'readingTime', label: t('targetsDashboard.col.readingTime') },
     ];
 
     for (const col of cols) {
@@ -207,7 +208,7 @@ export class TargetsDashboardModal extends Modal {
     const totalGoal = filtered.reduce((s, d) => s + (d.item.wordCountGoal || 0), 0);
     const overallPct = totalGoal > 0 ? Math.round((totalWords / totalGoal) * 100) : 0;
 
-    sumRow.createEl('td', { text: 'Total' });
+    sumRow.createEl('td', { text: t('targetsDashboard.total') });
     sumRow.createEl('td');
     sumRow.createEl('td');
     sumRow.createEl('td', { text: String(totalWords) });

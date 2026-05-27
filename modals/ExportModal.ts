@@ -1,6 +1,7 @@
 import { App, Modal, Setting, Notice } from 'obsidian';
 import type WritingStudioPlugin from '../main';
 import { ExportFormat, ExportScope } from '../src/ExportEngine';
+import { t } from '../src/i18n';
 
 export class ExportModal extends Modal {
   private plugin: WritingStudioPlugin;
@@ -23,21 +24,21 @@ export class ExportModal extends Modal {
     const { contentEl } = this;
     contentEl.empty();
     contentEl.addClass('ws-export-modal');
-    contentEl.createEl('h2', { text: 'Export document' });
+    contentEl.createEl('h2', { text: t('exportModal.title') });
 
     let coverSetting: Setting;
     let contactSetting: Setting;
 
     new Setting(contentEl)
-      .setName('Format')
+      .setName(t('exportModal.formatName'))
       .addDropdown(d => d
-        .addOption('md', 'Markdown (.md)')
-        .addOption('html', 'HTML')
-        .addOption('manuscript', 'Manuscript (HTML)')
-        .addOption('epub', 'EPUB (.epub)')
-        .addOption('pdf', 'PDF (requires pandoc)')
-        .addOption('docx', 'Word (.docx) (requires pandoc)')
-        .addOption('rtf', 'RTF (requires pandoc)')
+        .addOption('md', t('exportModal.format.md'))
+        .addOption('html', t('exportModal.format.html'))
+        .addOption('manuscript', t('exportModal.format.manuscript'))
+        .addOption('epub', t('exportModal.format.epub'))
+        .addOption('pdf', t('exportModal.format.pdf'))
+        .addOption('docx', t('exportModal.format.docx'))
+        .addOption('rtf', t('exportModal.format.rtf'))
         .setValue(this.format)
         .onChange(v => {
           this.format = v as ExportFormat;
@@ -46,51 +47,51 @@ export class ExportModal extends Modal {
         }));
 
     coverSetting = new Setting(contentEl)
-      .setName('Cover image path')
-      .setDesc('Vault path to a JPG or PNG cover image. Leave empty for a generated text cover.')
-      .addText(t => t
+      .setName(t('exportModal.coverImageName'))
+      .setDesc(t('exportModal.coverImageDesc'))
+      .addText(tx => tx
         .setValue(this.coverImagePath)
-        .setPlaceholder('e.g. Assets/cover.jpg')
+        .setPlaceholder(t('exportModal.coverImagePlaceholder'))
         .onChange(v => { this.coverImagePath = v.trim(); }));
     coverSetting.settingEl.toggleClass('ws-hidden', this.format !== 'epub');
 
     contactSetting = new Setting(contentEl)
-      .setName('Contact info (optional)')
-      .setDesc('Appears on the title page — name, email, or mailing address.')
-      .addTextArea(t => t
+      .setName(t('exportModal.contactInfoName'))
+      .setDesc(t('exportModal.contactInfoDesc'))
+      .addTextArea(tx => tx
         .setValue(this.authorContact)
-        .setPlaceholder('Name, email, or mailing address')
+        .setPlaceholder(t('exportModal.contactInfoPlaceholder'))
         .onChange(v => { this.authorContact = v; }));
     contactSetting.settingEl.toggleClass('ws-hidden', this.format !== 'manuscript');
 
     new Setting(contentEl)
-      .setName('Scope')
+      .setName(t('exportModal.scopeName'))
       .addDropdown(d => d
-        .addOption('current', 'Current document')
-        .addOption('project', 'Entire project (in binder order)')
+        .addOption('current', t('exportModal.scopeCurrent'))
+        .addOption('project', t('exportModal.scopeProject'))
         .setValue(this.exportScope)
         .onChange(v => { this.exportScope = v as ExportScope; }));
 
     new Setting(contentEl)
-      .setName('Include frontmatter')
-      .addToggle(t => t.setValue(this.includeFrontmatter).onChange(v => { this.includeFrontmatter = v; }));
+      .setName(t('exportModal.includeFrontmatter'))
+      .addToggle(tx => tx.setValue(this.includeFrontmatter).onChange(v => { this.includeFrontmatter = v; }));
 
     new Setting(contentEl)
-      .setName('Include research notes')
-      .addToggle(t => t.setValue(this.includeResearch).onChange(v => { this.includeResearch = v; }));
+      .setName(t('exportModal.includeResearch'))
+      .addToggle(tx => tx.setValue(this.includeResearch).onChange(v => { this.includeResearch = v; }));
 
     new Setting(contentEl)
-      .setName('Include document titles as headings')
-      .addToggle(t => t.setValue(this.includeTitlesAsHeadings).onChange(v => { this.includeTitlesAsHeadings = v; }));
+      .setName(t('exportModal.includeTitlesAsHeadings'))
+      .addToggle(tx => tx.setValue(this.includeTitlesAsHeadings).onChange(v => { this.includeTitlesAsHeadings = v; }));
 
     new Setting(contentEl)
-      .setName('Add title page')
-      .setDesc('Prepend a title page with project title, author, and date.')
-      .addToggle(t => t.setValue(this.addTitlePage).onChange(v => { this.addTitlePage = v; }));
+      .setName(t('exportModal.addTitlePage'))
+      .setDesc(t('exportModal.addTitlePageDesc'))
+      .addToggle(tx => tx.setValue(this.addTitlePage).onChange(v => { this.addTitlePage = v; }));
 
     const previewBtn = contentEl.createEl('button', {
       cls: 'ws-export-preview-btn',
-      text: 'Preview compiled manuscript',
+      text: t('exportModal.previewBtn'),
     });
     previewBtn.onclick = async () => {
       this.close();
@@ -99,10 +100,10 @@ export class ExportModal extends Modal {
 
     const btnRow = contentEl.createDiv('ws-modal-btn-row');
 
-    const exportBtn = btnRow.createEl('button', { cls: 'mod-cta', text: 'Export' });
+    const exportBtn = btnRow.createEl('button', { cls: 'mod-cta', text: t('exportModal.exportBtn') });
     exportBtn.onclick = async () => {
       exportBtn.disabled = true;
-      exportBtn.textContent = 'Exporting…';
+      exportBtn.textContent = t('exportModal.exporting');
       try {
         await this.plugin.exportEngine.export({
           format: this.format,
@@ -119,13 +120,13 @@ export class ExportModal extends Modal {
         });
         this.close();
       } catch (e) {
-        new Notice(`Export failed: ${e instanceof Error ? e.message : String(e)}`);
+        new Notice(t('exportModal.exportFailed', { error: e instanceof Error ? e.message : String(e) }));
         exportBtn.disabled = false;
-        exportBtn.textContent = 'Export';
+        exportBtn.textContent = t('exportModal.exportBtn');
       }
     };
 
-    const cancelBtn = btnRow.createEl('button', { text: 'Cancel' });
+    const cancelBtn = btnRow.createEl('button', { text: t('exportModal.cancel') });
     cancelBtn.onclick = () => this.close();
   }
 

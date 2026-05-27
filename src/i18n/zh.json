@@ -315,5 +315,181 @@
     "proceedToExport": "进行导出",
     "closePreview": "关闭预览",
     "noContent": "无内容可预览。请先打开写作项目。"
+  },
+  "projectModal": {
+    "title": "新建写作项目",
+    "projectTitle": "项目标题",
+    "titlePlaceholder": "我的小说",
+    "template": "模板",
+    "templateDesc": "选择预配置的项目结构。",
+    "templateOption": {
+      "blank": "空白（自定义结构）",
+      "book": "书籍（部分 → 章节 → 场景）",
+      "series": "系列文章（系列 → 文章）",
+      "blog": "博客集（按日期/分类的帖子）",
+      "journalArticle": "期刊文章 — 学术或专业期刊投稿",
+      "magazineArticle": "杂志文章 — 特写、长篇或叙事性非虚构"
+    },
+    "descriptionLabel": "描述（可选）",
+    "descriptionPlaceholder": "对该项目的简要描述…",
+    "preview": {
+      "blank": "空白项目 — 构建您自己的结构。",
+      "book": "创建：正文部分、第一部分 / 第一章、后记占位符。",
+      "series": "创建：系列文件夹、第一篇文章占位符、系列元数据。",
+      "blog": "创建：按日期组织的文件夹、第一篇帖子占位符。",
+      "journalArticle": "创建：标题页、摘要、关键词、引言、文献综述、研究方法、研究结果/分析、讨论、结论、参考文献、附录。",
+      "magazineArticle": "创建：提案/查询备注、标题与副标题、导言、核心段落、正文、引述与资料来源、结尾、事实核查备注、作者简介。备注文档默认不包含在导出中。"
+    },
+    "createBtn": "创建项目",
+    "creating": "创建中…",
+    "errorNoTitle": "请输入项目标题。",
+    "errorCreate": "创建项目失败：{{error}}",
+    "created": "项目「{{title}}」已创建！",
+    "cancel": "取消"
+  },
+  "sprintModal": {
+    "title": "开始写作冲刺",
+    "durationName": "时长（分钟）",
+    "durationDesc": "预设：10、15、25、30、45、60",
+    "durationCustom": "自定义…",
+    "durationCustomPlaceholder": "自定义分钟数",
+    "wordGoalName": "字数目标（可选）",
+    "wordGoalDesc": "设为 0 表示无目标。",
+    "scopeName": "范围",
+    "scopeFile": "当前文件",
+    "scopeProject": "整个项目",
+    "startBtn": "开始冲刺",
+    "errorDuration": "请设置有效的时长。",
+    "cancel": "取消"
+  },
+  "exportModal": {
+    "title": "导出文档",
+    "formatName": "格式",
+    "format": {
+      "md": "Markdown (.md)",
+      "html": "HTML",
+      "manuscript": "手稿（HTML）",
+      "epub": "EPUB (.epub)",
+      "pdf": "PDF（需要 pandoc）",
+      "docx": "Word (.docx)（需要 pandoc）",
+      "rtf": "RTF（需要 pandoc）"
+    },
+    "coverImageName": "封面图片路径",
+    "coverImageDesc": "JPG 或 PNG 封面图片的 Vault 路径。留空将生成文字封面。",
+    "coverImagePlaceholder": "例如 Assets/cover.jpg",
+    "contactInfoName": "联系信息（可选）",
+    "contactInfoDesc": "显示在标题页上 — 姓名、电子邮件或邮寄地址。",
+    "contactInfoPlaceholder": "姓名、电子邮件或邮寄地址",
+    "scopeName": "范围",
+    "scopeCurrent": "当前文档",
+    "scopeProject": "整个项目（按活页夹顺序）",
+    "includeFrontmatter": "包含前置内容",
+    "includeResearch": "包含研究笔记",
+    "includeTitlesAsHeadings": "将文档标题作为标题包含",
+    "addTitlePage": "添加标题页",
+    "addTitlePageDesc": "在开头添加包含项目标题、作者和日期的标题页。",
+    "previewBtn": "预览编译稿",
+    "exportBtn": "导出",
+    "exporting": "导出中…",
+    "exportFailed": "导出失败：{{error}}",
+    "cancel": "取消"
+  },
+  "publishModal": {
+    "title": "发布到 WordPress",
+    "noSites": "未配置 WordPress 站点。请在设置 → WordPress 中添加站点。",
+    "close": "关闭",
+    "siteName": "WordPress 站点",
+    "postTitleName": "文章标题",
+    "postStatusName": "文章状态",
+    "postStatus": {
+      "draft": "草稿",
+      "pending": "待审核",
+      "publish": "已发布"
+    },
+    "categoryName": "分类",
+    "tagsName": "标签",
+    "tagsDesc": "用逗号分隔。",
+    "excerptName": "摘要（可选）",
+    "scheduleName": "定时发布（可选）",
+    "scheduleDesc": "留空即立即发布。",
+    "schedulePlaceholder": "yyyy-mm-ddThh:mm:ss",
+    "existingNotice": "⚠ 该文档之前已发布（文章 ID：{{id}}）。",
+    "updatePost": "更新现有文章",
+    "newPost": "创建新文章",
+    "schedule": "定时发布",
+    "publish": "发布",
+    "cancel": "取消",
+    "noSiteSelected": "未选择站点。",
+    "fileNotFound": "未找到文件。",
+    "publishFailed": "发布失败：{{error}}",
+    "published": "已发布",
+    "scheduled": "已定时",
+    "actionNotice": "{{action}}！查看文章：{{url}}"
+  },
+  "targetsDashboard": {
+    "title": "章节目标仪表板",
+    "noProject": "未选择项目。",
+    "filterLabel": "筛选：",
+    "allStatuses": "所有状态",
+    "refresh": "↻ 刷新",
+    "col": {
+      "title": "标题",
+      "type": "类型",
+      "status": "状态",
+      "words": "字数",
+      "goal": "目标",
+      "progress": "进度",
+      "readingTime": "阅读时间"
+    },
+    "total": "合计"
+  },
+  "writingDashboard": {
+    "title": "写作仪表板",
+    "thisSession": "本次会话",
+    "stat": {
+      "wordsWritten": "已写字数",
+      "sprints": "冲刺次数",
+      "minutes": "分钟数",
+      "writingStreak": "写作连续天数",
+      "streakDays_one": "{{count}} 天",
+      "streakDays_other": "{{count}} 天",
+      "totalWords": "总字数",
+      "goal": "目标",
+      "progress": "进度",
+      "readingTime": "阅读时间"
+    },
+    "project": "项目：{{title}}",
+    "recentSprints": "最近冲刺",
+    "noSprints": "尚无冲刺记录。",
+    "sprintTable": {
+      "date": "日期",
+      "duration": "时长",
+      "words": "字数",
+      "wpm": "字/分",
+      "goal": "目标"
+    },
+    "documentWordCounts": "文档字数",
+    "docTable": {
+      "document": "文档",
+      "words": "字数",
+      "readingTime": "阅读时间"
+    },
+    "close": "关闭"
+  },
+  "addToProject": {
+    "title": "添加到写作项目",
+    "noProjects": "未找到写作项目。请先创建一个项目。",
+    "close": "关闭",
+    "file": "文件：{{path}}",
+    "projectName": "写作项目",
+    "projectDesc": "您希望将此文件添加到哪个写作项目？",
+    "addBtn": "添加到项目",
+    "cancel": "取消"
+  },
+  "scanFolder": {
+    "title": "将文件添加到活页夹",
+    "desc": "选择要添加到此项目的文件：",
+    "addBtn": "添加所选文件",
+    "cancel": "取消"
   }
 }

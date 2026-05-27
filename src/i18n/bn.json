@@ -317,5 +317,181 @@
     "proceedToExport": "রপ্তানিতে এগিয়ে যান",
     "closePreview": "পূর্বরূপ বন্ধ করুন",
     "noContent": "পূর্বরূপের জন্য কোনো বিষয়বস্তু নেই। প্রথমে একটি লেখার প্রকল্প খুলুন।"
+  },
+  "projectModal": {
+    "title": "নতুন লেখার প্রকল্প",
+    "projectTitle": "প্রকল্পের শিরোনাম",
+    "titlePlaceholder": "আমার উপন্যাস",
+    "template": "টেমপ্লেট",
+    "templateDesc": "পূর্ব-কনফিগার করা প্রকল্প কাঠামো বেছে নিন।",
+    "templateOption": {
+      "blank": "ফাঁকা (কাস্টম কাঠামো)",
+      "book": "বই (অংশ → অধ্যায় → দৃশ্য)",
+      "series": "নিবন্ধ সিরিজ (সিরিজ → নিবন্ধ)",
+      "blog": "ব্লগ সংগ্রহ (তারিখ/বিভাগ অনুযায়ী পোস্ট)",
+      "journalArticle": "জার্নাল নিবন্ধ — একাডেমিক বা পেশাদার জার্নালে জমা",
+      "magazineArticle": "ম্যাগাজিন নিবন্ধ — ফিচার, দীর্ঘ-ফর্ম বা আখ্যানমূলক নন-ফিকশন"
+    },
+    "descriptionLabel": "বিবরণ (ঐচ্ছিক)",
+    "descriptionPlaceholder": "এই প্রকল্পের সংক্ষিপ্ত বিবরণ…",
+    "preview": {
+      "blank": "ফাঁকা প্রকল্প — নিজের কাঠামো তৈরি করুন।",
+      "book": "তৈরি করে: সামনের উপাদান, অংশ ১ / অধ্যায় ১, পেছনের উপাদান।",
+      "series": "তৈরি করে: সিরিজ ফোল্ডার, নিবন্ধ ১ স্থানধারক, সিরিজ মেটাডেটা।",
+      "blog": "তৈরি করে: তারিখ-সংগঠিত ফোল্ডার, প্রথম পোস্ট স্থানধারক।",
+      "journalArticle": "তৈরি করে: শিরোনাম পৃষ্ঠা, সারসংক্ষেপ, মূল শব্দ, ভূমিকা, সাহিত্য পর্যালোচনা, পদ্ধতিতত্ত্ব, ফলাফল/বিশ্লেষণ, আলোচনা, উপসংহার, তথ্যসূত্র, পরিশিষ্ট।",
+      "magazineArticle": "তৈরি করে: পিচ/কোয়েরি নোট, শিরোনাম ও সাবটাইটেল, লিড, মূল অনুচ্ছেদ, বডি, উদ্ধৃতি ও উৎস, পরিসমাপ্তি, তথ্য-যাচাই নোট, লেখক পরিচিতি। নোট নথি ডিফল্টভাবে রপ্তানি থেকে বাদ।"
+    },
+    "createBtn": "প্রকল্প তৈরি করুন",
+    "creating": "তৈরি হচ্ছে…",
+    "errorNoTitle": "অনুগ্রহ করে প্রকল্পের শিরোনাম লিখুন।",
+    "errorCreate": "প্রকল্প তৈরিতে ব্যর্থ: {{error}}",
+    "created": "প্রকল্প \"{{title}}\" তৈরি হয়েছে!",
+    "cancel": "বাতিল"
+  },
+  "sprintModal": {
+    "title": "লেখার স্প্রিন্ট শুরু করুন",
+    "durationName": "সময়কাল (মিনিট)",
+    "durationDesc": "প্রিসেট: ১০, ১৫, ২৫, ৩০, ৪৫, ৬০",
+    "durationCustom": "কাস্টম…",
+    "durationCustomPlaceholder": "কাস্টম মিনিট",
+    "wordGoalName": "শব্দ গণনা লক্ষ্য (ঐচ্ছিক)",
+    "wordGoalDesc": "কোনো লক্ষ্য না থাকলে ০ রাখুন।",
+    "scopeName": "পরিধি",
+    "scopeFile": "বর্তমান ফাইল",
+    "scopeProject": "পুরো প্রকল্প",
+    "startBtn": "স্প্রিন্ট শুরু করুন",
+    "errorDuration": "অনুগ্রহ করে একটি বৈধ সময়কাল সেট করুন।",
+    "cancel": "বাতিল"
+  },
+  "exportModal": {
+    "title": "নথি রপ্তানি করুন",
+    "formatName": "ফরম্যাট",
+    "format": {
+      "md": "Markdown (.md)",
+      "html": "HTML",
+      "manuscript": "পাণ্ডুলিপি (HTML)",
+      "epub": "EPUB (.epub)",
+      "pdf": "PDF (pandoc প্রয়োজন)",
+      "docx": "Word (.docx) (pandoc প্রয়োজন)",
+      "rtf": "RTF (pandoc প্রয়োজন)"
+    },
+    "coverImageName": "প্রচ্ছদ ছবির পথ",
+    "coverImageDesc": "JPG বা PNG প্রচ্ছদ ছবির Vault পথ। টেক্সট প্রচ্ছদ তৈরির জন্য ফাঁকা রাখুন।",
+    "coverImagePlaceholder": "যেমন Assets/cover.jpg",
+    "contactInfoName": "যোগাযোগের তথ্য (ঐচ্ছিক)",
+    "contactInfoDesc": "শিরোনাম পৃষ্ঠায় প্রদর্শিত — নাম, ইমেইল বা ডাক ঠিকানা।",
+    "contactInfoPlaceholder": "নাম, ইমেইল বা ডাক ঠিকানা",
+    "scopeName": "পরিধি",
+    "scopeCurrent": "বর্তমান নথি",
+    "scopeProject": "পুরো প্রকল্প (বাইন্ডার ক্রমে)",
+    "includeFrontmatter": "ফ্রন্টম্যাটার অন্তর্ভুক্ত করুন",
+    "includeResearch": "গবেষণা নোট অন্তর্ভুক্ত করুন",
+    "includeTitlesAsHeadings": "নথির শিরোনাম হেডিং হিসেবে অন্তর্ভুক্ত করুন",
+    "addTitlePage": "শিরোনাম পৃষ্ঠা যোগ করুন",
+    "addTitlePageDesc": "প্রকল্পের শিরোনাম, লেখক ও তারিখ সহ শিরোনাম পৃষ্ঠা যোগ করুন।",
+    "previewBtn": "সংকলিত পাণ্ডুলিপির পূর্বরূপ",
+    "exportBtn": "রপ্তানি",
+    "exporting": "রপ্তানি হচ্ছে…",
+    "exportFailed": "রপ্তানি ব্যর্থ: {{error}}",
+    "cancel": "বাতিল"
+  },
+  "publishModal": {
+    "title": "WordPress-এ প্রকাশ করুন",
+    "noSites": "কোনো WordPress সাইট কনফিগার করা নেই। সেটিংস → WordPress-এ সাইট যোগ করুন।",
+    "close": "বন্ধ করুন",
+    "siteName": "WordPress সাইট",
+    "postTitleName": "পোস্টের শিরোনাম",
+    "postStatusName": "পোস্টের অবস্থা",
+    "postStatus": {
+      "draft": "খসড়া",
+      "pending": "পর্যালোচনার অপেক্ষায়",
+      "publish": "প্রকাশিত"
+    },
+    "categoryName": "বিভাগ",
+    "tagsName": "ট্যাগ",
+    "tagsDesc": "কমা দিয়ে আলাদা।",
+    "excerptName": "অংশ (ঐচ্ছিক)",
+    "scheduleName": "প্রকাশনা নির্ধারণ করুন (ঐচ্ছিক)",
+    "scheduleDesc": "তাৎক্ষণিক প্রকাশের জন্য ফাঁকা রাখুন।",
+    "schedulePlaceholder": "yyyy-mm-ddThh:mm:ss",
+    "existingNotice": "⚠ এই নথিটি আগে প্রকাশিত হয়েছিল (পোস্ট ID: {{id}})।",
+    "updatePost": "বিদ্যমান পোস্ট আপডেট করুন",
+    "newPost": "নতুন পোস্ট তৈরি করুন",
+    "schedule": "নির্ধারণ করুন",
+    "publish": "প্রকাশ করুন",
+    "cancel": "বাতিল",
+    "noSiteSelected": "কোনো সাইট নির্বাচিত নয়।",
+    "fileNotFound": "ফাইল পাওয়া যায়নি।",
+    "publishFailed": "প্রকাশনা ব্যর্থ: {{error}}",
+    "published": "প্রকাশিত",
+    "scheduled": "নির্ধারিত",
+    "actionNotice": "{{action}}! পোস্ট দেখুন: {{url}}"
+  },
+  "targetsDashboard": {
+    "title": "অধ্যায় লক্ষ্য ড্যাশবোর্ড",
+    "noProject": "কোনো প্রকল্প নির্বাচিত নয়।",
+    "filterLabel": "ফিল্টার: ",
+    "allStatuses": "সব অবস্থা",
+    "refresh": "↻ রিফ্রেশ",
+    "col": {
+      "title": "শিরোনাম",
+      "type": "ধরন",
+      "status": "অবস্থা",
+      "words": "শব্দ",
+      "goal": "লক্ষ্য",
+      "progress": "অগ্রগতি",
+      "readingTime": "পড়ার সময়"
+    },
+    "total": "মোট"
+  },
+  "writingDashboard": {
+    "title": "লেখার ড্যাশবোর্ড",
+    "thisSession": "এই সেশন",
+    "stat": {
+      "wordsWritten": "লেখা শব্দ",
+      "sprints": "স্প্রিন্ট",
+      "minutes": "মিনিট",
+      "writingStreak": "লেখার ধারাবাহিকতা",
+      "streakDays_one": "{{count}} দিন",
+      "streakDays_other": "{{count}} দিন",
+      "totalWords": "মোট শব্দ",
+      "goal": "লক্ষ্য",
+      "progress": "অগ্রগতি",
+      "readingTime": "পড়ার সময়"
+    },
+    "project": "প্রকল্প: {{title}}",
+    "recentSprints": "সাম্প্রতিক স্প্রিন্ট",
+    "noSprints": "এখনো কোনো স্প্রিন্ট রেকর্ড নেই।",
+    "sprintTable": {
+      "date": "তারিখ",
+      "duration": "সময়কাল",
+      "words": "শব্দ",
+      "wpm": "শব্দ/মিনিট",
+      "goal": "লক্ষ্য"
+    },
+    "documentWordCounts": "নথির শব্দ গণনা",
+    "docTable": {
+      "document": "নথি",
+      "words": "শব্দ",
+      "readingTime": "পড়ার সময়"
+    },
+    "close": "বন্ধ করুন"
+  },
+  "addToProject": {
+    "title": "লেখার প্রকল্পে যোগ করুন",
+    "noProjects": "কোনো লেখার প্রকল্প পাওয়া যায়নি। আগে একটি প্রকল্প তৈরি করুন।",
+    "close": "বন্ধ করুন",
+    "file": "ফাইল: {{path}}",
+    "projectName": "লেখার প্রকল্প",
+    "projectDesc": "আপনি কোন লেখার প্রকল্পে এই ফাইলটি যোগ করতে চান?",
+    "addBtn": "প্রকল্পে যোগ করুন",
+    "cancel": "বাতিল"
+  },
+  "scanFolder": {
+    "title": "বাইন্ডারে ফাইল যোগ করুন",
+    "desc": "এই প্রকল্পে যোগ করার জন্য ফাইল নির্বাচন করুন:",
+    "addBtn": "নির্বাচিত ফাইল যোগ করুন",
+    "cancel": "বাতিল"
   }
 }
