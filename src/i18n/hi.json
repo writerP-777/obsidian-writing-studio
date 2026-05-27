@@ -174,5 +174,76 @@
       "publishToWordPress": "WordPress पर प्रकाशित करें",
       "delete": "हटाएं"
     }
+  },
+  "launcher": {
+    "displayText": "राइटिंग स्टूडियो",
+    "title": "राइटिंग स्टूडियो",
+    "settings": "सेटिंग्स",
+    "project": "प्रोजेक्ट",
+    "newProject": "+ नया",
+    "noProjectSelected": "कोई प्रोजेक्ट नहीं चुना गया।",
+    "chooseProject": "— प्रोजेक्ट चुनें —",
+    "wordCount": "{{n}} शब्द",
+    "wordGoal": "/ {{n}} लक्ष्य",
+    "pctComplete": "{{pct}}% पूर्ण",
+    "openBinder": "📖 बाइंडर खोलें",
+    "writingMode": "लेखन मोड",
+    "mode": {
+      "draft": "ड्राफ्ट",
+      "draftDesc": "फोकस + टाइपोग्राफी चालू, साइडबार छिपे",
+      "edit": "संपादन",
+      "editDesc": "बाइंडर खुला, पूरा UI दिखाई दे",
+      "review": "समीक्षा",
+      "reviewDesc": "पठन दृश्य, कोई संपादन नहीं",
+      "clearMode": "✕ मोड साफ करें"
+    },
+    "focusTypography": "फोकस और टाइपोग्राफी",
+    "focusMode": "फोकस मोड",
+    "typographyMode": "टाइपोग्राफी मोड",
+    "on": "चालू",
+    "off": "बंद",
+    "quickActions": "त्वरित कार्य",
+    "action": {
+      "targetsDashboard": "लक्ष्य डैशबोर्ड",
+      "writingDashboard": "लेखन डैशबोर्ड",
+      "previewManuscript": "पांडुलिपि पूर्वावलोकन",
+      "export": "निर्यात",
+      "writingLog": "लेखन लॉग",
+      "publishToWordPress": "WordPress पर प्रकाशित करें"
+    },
+    "openDocumentFirst": "पहले एक दस्तावेज़ खोलें।",
+    "sprintTimer": "स्प्रिंट टाइमर",
+    "pause": "⏸ रोकें",
+    "stop": "■ बंद करें",
+    "startSprint": "⏱ स्प्रिंट शुरू करें",
+    "quickStart": "त्वरित शुरुआत:",
+    "today": "आज",
+    "stat": {
+      "words": "शब्द",
+      "sprints": "स्प्रिंट",
+      "minutes": "मिनट",
+      "streak": "स्ट्रीक",
+      "streakDays": "{{streak}}दि"
+    },
+    "sessionWordsTyped": "सत्र: +{{n}} शब्द लिखे",
+    "dailyGoal": "दैनिक लक्ष्य: {{written}} / {{goal}} शब्द"
+  },
+  "log": {
+    "displayText": "लेखन लॉग",
+    "title": "लेखन लॉग",
+    "noProjectSelected": "कोई प्रोजेक्ट नहीं चुना गया। इतिहास देखने के लिए लॉन्चर खोलें और प्रोजेक्ट चुनें।",
+    "streak": "🔥 {{streak}}-दिन की स्ट्रीक",
+    "startStreak": "स्ट्रीक शुरू करने के लिए आज लिखें",
+    "thisSession": "यह सत्र",
+    "stat": {
+      "session": "सत्र",
+      "sprintWords": "स्प्रिंट शब्द",
+      "sprints": "स्प्रिंट",
+      "minutes": "मिनट"
+    },
+    "last30Days": "पिछले 30 दिन",
+    "today": "आज",
+    "sprintsCount_one": "· {{count}} स्प्रिंट",
+    "sprintsCount_other": "· {{count}} स्प्रिंट"
   }
 }

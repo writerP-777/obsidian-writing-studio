@@ -174,5 +174,76 @@
       "publishToWordPress": "Publicar no WordPress",
       "delete": "Excluir"
     }
+  },
+  "launcher": {
+    "displayText": "Estúdio de escrita",
+    "title": "Estúdio de escrita",
+    "settings": "Configurações",
+    "project": "Projeto",
+    "newProject": "+ novo",
+    "noProjectSelected": "Nenhum projeto selecionado.",
+    "chooseProject": "— escolha um projeto —",
+    "wordCount": "{{n}} palavras",
+    "wordGoal": "/ {{n}} objetivo",
+    "pctComplete": "{{pct}}% concluído",
+    "openBinder": "📖 Abrir pasta",
+    "writingMode": "Modo de escrita",
+    "mode": {
+      "draft": "Rascunho",
+      "draftDesc": "Foco + tipografia ativos, barras laterais ocultas",
+      "edit": "Editar",
+      "editDesc": "Pasta aberta, interface completa visível",
+      "review": "Revisar",
+      "reviewDesc": "Modo leitura, sem edição",
+      "clearMode": "✕ Limpar modo"
+    },
+    "focusTypography": "Foco e tipografia",
+    "focusMode": "Modo foco",
+    "typographyMode": "Modo tipografia",
+    "on": "SIM",
+    "off": "NÃO",
+    "quickActions": "Ações rápidas",
+    "action": {
+      "targetsDashboard": "Painel de metas",
+      "writingDashboard": "Painel de escrita",
+      "previewManuscript": "Visualizar manuscrito",
+      "export": "Exportar",
+      "writingLog": "Diário de escrita",
+      "publishToWordPress": "Publicar no WordPress"
+    },
+    "openDocumentFirst": "Abra um documento primeiro.",
+    "sprintTimer": "Cronômetro de sprint",
+    "pause": "⏸ Pausar",
+    "stop": "■ Parar",
+    "startSprint": "⏱ Iniciar sprint",
+    "quickStart": "Início rápido:",
+    "today": "Hoje",
+    "stat": {
+      "words": "Palavras",
+      "sprints": "Sprints",
+      "minutes": "Minutos",
+      "streak": "Sequência",
+      "streakDays": "{{streak}}d"
+    },
+    "sessionWordsTyped": "Sessão: +{{n}} palavras digitadas",
+    "dailyGoal": "Meta diária: {{written}} / {{goal}} palavras"
+  },
+  "log": {
+    "displayText": "Diário de escrita",
+    "title": "Diário de escrita",
+    "noProjectSelected": "Nenhum projeto selecionado. Abra o lançador e selecione um projeto para ver seu histórico.",
+    "streak": "🔥 Sequência de {{streak}} dias",
+    "startStreak": "Escreva hoje para começar uma sequência",
+    "thisSession": "Esta sessão",
+    "stat": {
+      "session": "Sessão",
+      "sprintWords": "Palavras de sprint",
+      "sprints": "Sprints",
+      "minutes": "Minutos"
+    },
+    "last30Days": "Últimos 30 dias",
+    "today": "Hoje",
+    "sprintsCount_one": "· {{count}} sprint",
+    "sprintsCount_other": "· {{count}} sprints"
   }
 }

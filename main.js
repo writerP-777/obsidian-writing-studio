@@ -2996,6 +2996,77 @@ var en_default = {
       publishToWordPress: "Publish to WordPress",
       delete: "Delete"
     }
+  },
+  launcher: {
+    displayText: "Writing studio",
+    title: "Writing Studio",
+    settings: "Settings",
+    project: "Project",
+    newProject: "+ new",
+    noProjectSelected: "No project selected.",
+    chooseProject: "\u2014 choose project \u2014",
+    wordCount: "{{n}} words",
+    wordGoal: "/ {{n}} goal",
+    pctComplete: "{{pct}}% complete",
+    openBinder: "\u{1F4D6} Open binder",
+    writingMode: "Writing mode",
+    mode: {
+      draft: "Draft",
+      draftDesc: "Focus + typography on, sidebars hidden",
+      edit: "Edit",
+      editDesc: "Binder open, full UI visible",
+      review: "Review",
+      reviewDesc: "Reading view, no editing",
+      clearMode: "\u2715 Clear mode"
+    },
+    focusTypography: "Focus & typography",
+    focusMode: "Focus mode",
+    typographyMode: "Typography mode",
+    on: "ON",
+    off: "OFF",
+    quickActions: "Quick actions",
+    action: {
+      targetsDashboard: "Targets dashboard",
+      writingDashboard: "Writing dashboard",
+      previewManuscript: "Preview manuscript",
+      export: "Export",
+      writingLog: "Writing log",
+      publishToWordPress: "Publish to WordPress"
+    },
+    openDocumentFirst: "Open a document first.",
+    sprintTimer: "Sprint timer",
+    pause: "\u23F8 Pause",
+    stop: "\u25A0 Stop",
+    startSprint: "\u23F1 Start sprint",
+    quickStart: "Quick start:",
+    today: "Today",
+    stat: {
+      words: "Words",
+      sprints: "Sprints",
+      minutes: "Minutes",
+      streak: "Streak",
+      streakDays: "{{streak}}d"
+    },
+    sessionWordsTyped: "Session: +{{n}} words typed",
+    dailyGoal: "Daily goal: {{written}} / {{goal}} words"
+  },
+  log: {
+    displayText: "Writing log",
+    title: "Writing log",
+    noProjectSelected: "No project selected. Open the launcher and select a project to see your writing history.",
+    streak: "\u{1F525} {{streak}}-day streak",
+    startStreak: "Write today to start a streak",
+    thisSession: "This session",
+    stat: {
+      session: "Session",
+      sprintWords: "Sprint words",
+      sprints: "Sprints",
+      minutes: "Minutes"
+    },
+    last30Days: "Last 30 days",
+    today: "Today",
+    sprintsCount_one: "\xB7 {{count}} sprint",
+    sprintsCount_other: "\xB7 {{count}} sprints"
   }
 };
 
@@ -3176,6 +3247,76 @@ var zh_default = {
       publishToWordPress: "\u53D1\u5E03\u5230 WordPress",
       delete: "\u5220\u9664"
     }
+  },
+  launcher: {
+    displayText: "\u5199\u4F5C\u5DE5\u4F5C\u5BA4",
+    title: "\u5199\u4F5C\u5DE5\u4F5C\u5BA4",
+    settings: "\u8BBE\u7F6E",
+    project: "\u9879\u76EE",
+    newProject: "+ \u65B0\u5EFA",
+    noProjectSelected: "\u672A\u9009\u62E9\u9879\u76EE\u3002",
+    chooseProject: "\u2014 \u9009\u62E9\u9879\u76EE \u2014",
+    wordCount: "{{n}} \u5B57",
+    wordGoal: "/ {{n}} \u76EE\u6807",
+    pctComplete: "{{pct}}% \u5B8C\u6210",
+    openBinder: "\u{1F4D6} \u6253\u5F00\u6D3B\u9875\u5939",
+    writingMode: "\u5199\u4F5C\u6A21\u5F0F",
+    mode: {
+      draft: "\u8349\u7A3F",
+      draftDesc: "\u4E13\u6CE8+\u6392\u7248\u5DF2\u5F00\u542F\uFF0C\u4FA7\u8FB9\u680F\u9690\u85CF",
+      edit: "\u7F16\u8F91",
+      editDesc: "\u6D3B\u9875\u5939\u5DF2\u6253\u5F00\uFF0C\u663E\u793A\u5B8C\u6574\u754C\u9762",
+      review: "\u5BA1\u9605",
+      reviewDesc: "\u9605\u8BFB\u89C6\u56FE\uFF0C\u7981\u6B62\u7F16\u8F91",
+      clearMode: "\u2715 \u6E05\u9664\u6A21\u5F0F"
+    },
+    focusTypography: "\u4E13\u6CE8\u4E0E\u6392\u7248",
+    focusMode: "\u4E13\u6CE8\u6A21\u5F0F",
+    typographyMode: "\u6392\u7248\u6A21\u5F0F",
+    on: "\u5F00",
+    off: "\u5173",
+    quickActions: "\u5FEB\u6377\u64CD\u4F5C",
+    action: {
+      targetsDashboard: "\u76EE\u6807\u4EEA\u8868\u677F",
+      writingDashboard: "\u5199\u4F5C\u4EEA\u8868\u677F",
+      previewManuscript: "\u9884\u89C8\u7A3F\u4EF6",
+      export: "\u5BFC\u51FA",
+      writingLog: "\u5199\u4F5C\u65E5\u5FD7",
+      publishToWordPress: "\u53D1\u5E03\u5230 WordPress"
+    },
+    openDocumentFirst: "\u8BF7\u5148\u6253\u5F00\u6587\u6863\u3002",
+    sprintTimer: "\u51B2\u523A\u8BA1\u65F6\u5668",
+    pause: "\u23F8 \u6682\u505C",
+    stop: "\u25A0 \u505C\u6B62",
+    startSprint: "\u23F1 \u5F00\u59CB\u51B2\u523A",
+    quickStart: "\u5FEB\u901F\u5F00\u59CB\uFF1A",
+    today: "\u4ECA\u65E5",
+    stat: {
+      words: "\u5B57\u6570",
+      sprints: "\u51B2\u523A",
+      minutes: "\u5206\u949F",
+      streak: "\u8FDE\u7EED",
+      streakDays: "{{streak}}\u5929"
+    },
+    sessionWordsTyped: "\u672C\u6B21\uFF1A+{{n}} \u5B57",
+    dailyGoal: "\u6BCF\u65E5\u76EE\u6807\uFF1A{{written}} / {{goal}} \u5B57"
+  },
+  log: {
+    displayText: "\u5199\u4F5C\u65E5\u5FD7",
+    title: "\u5199\u4F5C\u65E5\u5FD7",
+    noProjectSelected: "\u672A\u9009\u62E9\u9879\u76EE\u3002\u8BF7\u6253\u5F00\u542F\u52A8\u5668\u5E76\u9009\u62E9\u9879\u76EE\u4EE5\u67E5\u770B\u5199\u4F5C\u5386\u53F2\u3002",
+    streak: "\u{1F525} {{streak}}\u5929\u8FDE\u7EED\u5199\u4F5C",
+    startStreak: "\u4ECA\u5929\u5199\u4F5C\u5F00\u59CB\u8FDE\u7EED\u8BB0\u5F55",
+    thisSession: "\u672C\u6B21\u4F1A\u8BDD",
+    stat: {
+      session: "\u4F1A\u8BDD",
+      sprintWords: "\u51B2\u523A\u5B57\u6570",
+      sprints: "\u51B2\u523A\u6B21\u6570",
+      minutes: "\u5206\u949F"
+    },
+    last30Days: "\u6700\u8FD130\u5929",
+    today: "\u4ECA\u5929",
+    sprintsCount_other: "\xB7 {{count}} \u6B21\u51B2\u523A"
   }
 };
 
@@ -3356,6 +3497,77 @@ var hi_default = {
       publishToWordPress: "WordPress \u092A\u0930 \u092A\u094D\u0930\u0915\u093E\u0936\u093F\u0924 \u0915\u0930\u0947\u0902",
       delete: "\u0939\u091F\u093E\u090F\u0902"
     }
+  },
+  launcher: {
+    displayText: "\u0930\u093E\u0907\u091F\u093F\u0902\u0917 \u0938\u094D\u091F\u0942\u0921\u093F\u092F\u094B",
+    title: "\u0930\u093E\u0907\u091F\u093F\u0902\u0917 \u0938\u094D\u091F\u0942\u0921\u093F\u092F\u094B",
+    settings: "\u0938\u0947\u091F\u093F\u0902\u0917\u094D\u0938",
+    project: "\u092A\u094D\u0930\u094B\u091C\u0947\u0915\u094D\u091F",
+    newProject: "+ \u0928\u092F\u093E",
+    noProjectSelected: "\u0915\u094B\u0908 \u092A\u094D\u0930\u094B\u091C\u0947\u0915\u094D\u091F \u0928\u0939\u0940\u0902 \u091A\u0941\u0928\u093E \u0917\u092F\u093E\u0964",
+    chooseProject: "\u2014 \u092A\u094D\u0930\u094B\u091C\u0947\u0915\u094D\u091F \u091A\u0941\u0928\u0947\u0902 \u2014",
+    wordCount: "{{n}} \u0936\u092C\u094D\u0926",
+    wordGoal: "/ {{n}} \u0932\u0915\u094D\u0937\u094D\u092F",
+    pctComplete: "{{pct}}% \u092A\u0942\u0930\u094D\u0923",
+    openBinder: "\u{1F4D6} \u092C\u093E\u0907\u0902\u0921\u0930 \u0916\u094B\u0932\u0947\u0902",
+    writingMode: "\u0932\u0947\u0916\u0928 \u092E\u094B\u0921",
+    mode: {
+      draft: "\u0921\u094D\u0930\u093E\u092B\u094D\u091F",
+      draftDesc: "\u092B\u094B\u0915\u0938 + \u091F\u093E\u0907\u092A\u094B\u0917\u094D\u0930\u093E\u092B\u0940 \u091A\u093E\u0932\u0942, \u0938\u093E\u0907\u0921\u092C\u093E\u0930 \u091B\u093F\u092A\u0947",
+      edit: "\u0938\u0902\u092A\u093E\u0926\u0928",
+      editDesc: "\u092C\u093E\u0907\u0902\u0921\u0930 \u0916\u0941\u0932\u093E, \u092A\u0942\u0930\u093E UI \u0926\u093F\u0916\u093E\u0908 \u0926\u0947",
+      review: "\u0938\u092E\u0940\u0915\u094D\u0937\u093E",
+      reviewDesc: "\u092A\u0920\u0928 \u0926\u0943\u0936\u094D\u092F, \u0915\u094B\u0908 \u0938\u0902\u092A\u093E\u0926\u0928 \u0928\u0939\u0940\u0902",
+      clearMode: "\u2715 \u092E\u094B\u0921 \u0938\u093E\u092B \u0915\u0930\u0947\u0902"
+    },
+    focusTypography: "\u092B\u094B\u0915\u0938 \u0914\u0930 \u091F\u093E\u0907\u092A\u094B\u0917\u094D\u0930\u093E\u092B\u0940",
+    focusMode: "\u092B\u094B\u0915\u0938 \u092E\u094B\u0921",
+    typographyMode: "\u091F\u093E\u0907\u092A\u094B\u0917\u094D\u0930\u093E\u092B\u0940 \u092E\u094B\u0921",
+    on: "\u091A\u093E\u0932\u0942",
+    off: "\u092C\u0902\u0926",
+    quickActions: "\u0924\u094D\u0935\u0930\u093F\u0924 \u0915\u093E\u0930\u094D\u092F",
+    action: {
+      targetsDashboard: "\u0932\u0915\u094D\u0937\u094D\u092F \u0921\u0948\u0936\u092C\u094B\u0930\u094D\u0921",
+      writingDashboard: "\u0932\u0947\u0916\u0928 \u0921\u0948\u0936\u092C\u094B\u0930\u094D\u0921",
+      previewManuscript: "\u092A\u093E\u0902\u0921\u0941\u0932\u093F\u092A\u093F \u092A\u0942\u0930\u094D\u0935\u093E\u0935\u0932\u094B\u0915\u0928",
+      export: "\u0928\u093F\u0930\u094D\u092F\u093E\u0924",
+      writingLog: "\u0932\u0947\u0916\u0928 \u0932\u0949\u0917",
+      publishToWordPress: "WordPress \u092A\u0930 \u092A\u094D\u0930\u0915\u093E\u0936\u093F\u0924 \u0915\u0930\u0947\u0902"
+    },
+    openDocumentFirst: "\u092A\u0939\u0932\u0947 \u090F\u0915 \u0926\u0938\u094D\u0924\u093E\u0935\u0947\u091C\u093C \u0916\u094B\u0932\u0947\u0902\u0964",
+    sprintTimer: "\u0938\u094D\u092A\u094D\u0930\u093F\u0902\u091F \u091F\u093E\u0907\u092E\u0930",
+    pause: "\u23F8 \u0930\u094B\u0915\u0947\u0902",
+    stop: "\u25A0 \u092C\u0902\u0926 \u0915\u0930\u0947\u0902",
+    startSprint: "\u23F1 \u0938\u094D\u092A\u094D\u0930\u093F\u0902\u091F \u0936\u0941\u0930\u0942 \u0915\u0930\u0947\u0902",
+    quickStart: "\u0924\u094D\u0935\u0930\u093F\u0924 \u0936\u0941\u0930\u0941\u0906\u0924:",
+    today: "\u0906\u091C",
+    stat: {
+      words: "\u0936\u092C\u094D\u0926",
+      sprints: "\u0938\u094D\u092A\u094D\u0930\u093F\u0902\u091F",
+      minutes: "\u092E\u093F\u0928\u091F",
+      streak: "\u0938\u094D\u091F\u094D\u0930\u0940\u0915",
+      streakDays: "{{streak}}\u0926\u093F"
+    },
+    sessionWordsTyped: "\u0938\u0924\u094D\u0930: +{{n}} \u0936\u092C\u094D\u0926 \u0932\u093F\u0916\u0947",
+    dailyGoal: "\u0926\u0948\u0928\u093F\u0915 \u0932\u0915\u094D\u0937\u094D\u092F: {{written}} / {{goal}} \u0936\u092C\u094D\u0926"
+  },
+  log: {
+    displayText: "\u0932\u0947\u0916\u0928 \u0932\u0949\u0917",
+    title: "\u0932\u0947\u0916\u0928 \u0932\u0949\u0917",
+    noProjectSelected: "\u0915\u094B\u0908 \u092A\u094D\u0930\u094B\u091C\u0947\u0915\u094D\u091F \u0928\u0939\u0940\u0902 \u091A\u0941\u0928\u093E \u0917\u092F\u093E\u0964 \u0907\u0924\u093F\u0939\u093E\u0938 \u0926\u0947\u0916\u0928\u0947 \u0915\u0947 \u0932\u093F\u090F \u0932\u0949\u0928\u094D\u091A\u0930 \u0916\u094B\u0932\u0947\u0902 \u0914\u0930 \u092A\u094D\u0930\u094B\u091C\u0947\u0915\u094D\u091F \u091A\u0941\u0928\u0947\u0902\u0964",
+    streak: "\u{1F525} {{streak}}-\u0926\u093F\u0928 \u0915\u0940 \u0938\u094D\u091F\u094D\u0930\u0940\u0915",
+    startStreak: "\u0938\u094D\u091F\u094D\u0930\u0940\u0915 \u0936\u0941\u0930\u0942 \u0915\u0930\u0928\u0947 \u0915\u0947 \u0932\u093F\u090F \u0906\u091C \u0932\u093F\u0916\u0947\u0902",
+    thisSession: "\u092F\u0939 \u0938\u0924\u094D\u0930",
+    stat: {
+      session: "\u0938\u0924\u094D\u0930",
+      sprintWords: "\u0938\u094D\u092A\u094D\u0930\u093F\u0902\u091F \u0936\u092C\u094D\u0926",
+      sprints: "\u0938\u094D\u092A\u094D\u0930\u093F\u0902\u091F",
+      minutes: "\u092E\u093F\u0928\u091F"
+    },
+    last30Days: "\u092A\u093F\u091B\u0932\u0947 30 \u0926\u093F\u0928",
+    today: "\u0906\u091C",
+    sprintsCount_one: "\xB7 {{count}} \u0938\u094D\u092A\u094D\u0930\u093F\u0902\u091F",
+    sprintsCount_other: "\xB7 {{count}} \u0938\u094D\u092A\u094D\u0930\u093F\u0902\u091F"
   }
 };
 
@@ -3536,6 +3748,77 @@ var es_default = {
       publishToWordPress: "Publicar en WordPress",
       delete: "Eliminar"
     }
+  },
+  launcher: {
+    displayText: "Estudio de escritura",
+    title: "Estudio de escritura",
+    settings: "Configuraci\xF3n",
+    project: "Proyecto",
+    newProject: "+ nuevo",
+    noProjectSelected: "Ning\xFAn proyecto seleccionado.",
+    chooseProject: "\u2014 elige proyecto \u2014",
+    wordCount: "{{n}} palabras",
+    wordGoal: "/ {{n}} objetivo",
+    pctComplete: "{{pct}}% completado",
+    openBinder: "\u{1F4D6} Abrir carpeta",
+    writingMode: "Modo de escritura",
+    mode: {
+      draft: "Borrador",
+      draftDesc: "Foco + tipograf\xEDa activados, barras laterales ocultas",
+      edit: "Editar",
+      editDesc: "Carpeta abierta, interfaz completa visible",
+      review: "Revisar",
+      reviewDesc: "Vista de lectura, sin edici\xF3n",
+      clearMode: "\u2715 Limpiar modo"
+    },
+    focusTypography: "Foco y tipograf\xEDa",
+    focusMode: "Modo foco",
+    typographyMode: "Modo tipograf\xEDa",
+    on: "S\xCD",
+    off: "NO",
+    quickActions: "Acciones r\xE1pidas",
+    action: {
+      targetsDashboard: "Panel de objetivos",
+      writingDashboard: "Panel de escritura",
+      previewManuscript: "Vista previa del manuscrito",
+      export: "Exportar",
+      writingLog: "Registro de escritura",
+      publishToWordPress: "Publicar en WordPress"
+    },
+    openDocumentFirst: "Abre un documento primero.",
+    sprintTimer: "Temporizador de sprint",
+    pause: "\u23F8 Pausar",
+    stop: "\u25A0 Detener",
+    startSprint: "\u23F1 Iniciar sprint",
+    quickStart: "Inicio r\xE1pido:",
+    today: "Hoy",
+    stat: {
+      words: "Palabras",
+      sprints: "Sprints",
+      minutes: "Minutos",
+      streak: "Racha",
+      streakDays: "{{streak}}d"
+    },
+    sessionWordsTyped: "Sesi\xF3n: +{{n}} palabras escritas",
+    dailyGoal: "Meta diaria: {{written}} / {{goal}} palabras"
+  },
+  log: {
+    displayText: "Registro de escritura",
+    title: "Registro de escritura",
+    noProjectSelected: "Ning\xFAn proyecto seleccionado. Abre el lanzador y selecciona un proyecto para ver tu historial.",
+    streak: "\u{1F525} Racha de {{streak}} d\xEDas",
+    startStreak: "Escribe hoy para empezar una racha",
+    thisSession: "Esta sesi\xF3n",
+    stat: {
+      session: "Sesi\xF3n",
+      sprintWords: "Palabras de sprint",
+      sprints: "Sprints",
+      minutes: "Minutos"
+    },
+    last30Days: "\xDAltimos 30 d\xEDas",
+    today: "Hoy",
+    sprintsCount_one: "\xB7 {{count}} sprint",
+    sprintsCount_other: "\xB7 {{count}} sprints"
   }
 };
 
@@ -3716,6 +3999,80 @@ var ar_default = {
       publishToWordPress: "\u0646\u0634\u0631 \u0639\u0644\u0649 WordPress",
       delete: "\u062D\u0630\u0641"
     }
+  },
+  launcher: {
+    displayText: "\u0627\u0633\u062A\u0648\u062F\u064A\u0648 \u0627\u0644\u0643\u062A\u0627\u0628\u0629",
+    title: "\u0627\u0633\u062A\u0648\u062F\u064A\u0648 \u0627\u0644\u0643\u062A\u0627\u0628\u0629",
+    settings: "\u0627\u0644\u0625\u0639\u062F\u0627\u062F\u0627\u062A",
+    project: "\u0627\u0644\u0645\u0634\u0631\u0648\u0639",
+    newProject: "+ \u062C\u062F\u064A\u062F",
+    noProjectSelected: "\u0644\u0645 \u064A\u062A\u0645 \u0627\u062E\u062A\u064A\u0627\u0631 \u0645\u0634\u0631\u0648\u0639.",
+    chooseProject: "\u2014 \u0627\u062E\u062A\u0631 \u0645\u0634\u0631\u0648\u0639\u0627\u064B \u2014",
+    wordCount: "{{n}} \u0643\u0644\u0645\u0629",
+    wordGoal: "/ {{n}} \u0647\u062F\u0641",
+    pctComplete: "{{pct}}% \u0645\u0643\u062A\u0645\u0644",
+    openBinder: "\u{1F4D6} \u0641\u062A\u062D \u0627\u0644\u0645\u0644\u0641",
+    writingMode: "\u0648\u0636\u0639 \u0627\u0644\u0643\u062A\u0627\u0628\u0629",
+    mode: {
+      draft: "\u0645\u0633\u0648\u062F\u0629",
+      draftDesc: "\u0627\u0644\u062A\u0631\u0643\u064A\u0632 \u0648\u0627\u0644\u0637\u0628\u0627\u0639\u0629 \u0645\u0641\u0639\u0651\u0644\u0627\u0646\u060C \u0627\u0644\u0634\u0631\u064A\u0637 \u0627\u0644\u062C\u0627\u0646\u0628\u064A \u0645\u062E\u0641\u064A",
+      edit: "\u062A\u062D\u0631\u064A\u0631",
+      editDesc: "\u0627\u0644\u0645\u0644\u0641 \u0645\u0641\u062A\u0648\u062D\u060C \u0648\u0627\u062C\u0647\u0629 \u0627\u0644\u0645\u0633\u062A\u062E\u062F\u0645 \u0643\u0627\u0645\u0644\u0629",
+      review: "\u0645\u0631\u0627\u062C\u0639\u0629",
+      reviewDesc: "\u0648\u0636\u0639 \u0627\u0644\u0642\u0631\u0627\u0621\u0629\u060C \u0644\u0627 \u062A\u062D\u0631\u064A\u0631",
+      clearMode: "\u2715 \u0645\u0633\u062D \u0627\u0644\u0648\u0636\u0639"
+    },
+    focusTypography: "\u0627\u0644\u062A\u0631\u0643\u064A\u0632 \u0648\u0627\u0644\u0637\u0628\u0627\u0639\u0629",
+    focusMode: "\u0648\u0636\u0639 \u0627\u0644\u062A\u0631\u0643\u064A\u0632",
+    typographyMode: "\u0648\u0636\u0639 \u0627\u0644\u0637\u0628\u0627\u0639\u0629",
+    on: "\u062A\u0634\u063A\u064A\u0644",
+    off: "\u0625\u064A\u0642\u0627\u0641",
+    quickActions: "\u0627\u0644\u0625\u062C\u0631\u0627\u0621\u0627\u062A \u0627\u0644\u0633\u0631\u064A\u0639\u0629",
+    action: {
+      targetsDashboard: "\u0644\u0648\u062D\u0629 \u0627\u0644\u0623\u0647\u062F\u0627\u0641",
+      writingDashboard: "\u0644\u0648\u062D\u0629 \u0627\u0644\u0643\u062A\u0627\u0628\u0629",
+      previewManuscript: "\u0645\u0639\u0627\u064A\u0646\u0629 \u0627\u0644\u0645\u062E\u0637\u0648\u0637\u0629",
+      export: "\u062A\u0635\u062F\u064A\u0631",
+      writingLog: "\u0633\u062C\u0644 \u0627\u0644\u0643\u062A\u0627\u0628\u0629",
+      publishToWordPress: "\u0646\u0634\u0631 \u0639\u0644\u0649 WordPress"
+    },
+    openDocumentFirst: "\u0627\u0641\u062A\u062D \u0645\u0633\u062A\u0646\u062F\u0627\u064B \u0623\u0648\u0644\u0627\u064B.",
+    sprintTimer: "\u0645\u0624\u0642\u062A \u0627\u0644\u0633\u0628\u0627\u0642",
+    pause: "\u23F8 \u0625\u064A\u0642\u0627\u0641 \u0645\u0624\u0642\u062A",
+    stop: "\u25A0 \u0625\u064A\u0642\u0627\u0641",
+    startSprint: "\u23F1 \u0628\u062F\u0621 \u0627\u0644\u0633\u0628\u0627\u0642",
+    quickStart: "\u0628\u062F\u0621 \u0633\u0631\u064A\u0639:",
+    today: "\u0627\u0644\u064A\u0648\u0645",
+    stat: {
+      words: "\u0627\u0644\u0643\u0644\u0645\u0627\u062A",
+      sprints: "\u0627\u0644\u0633\u0628\u0627\u0642\u0627\u062A",
+      minutes: "\u0627\u0644\u062F\u0642\u0627\u0626\u0642",
+      streak: "\u0627\u0644\u062A\u0633\u0644\u0633\u0644",
+      streakDays: "{{streak}}\u064A"
+    },
+    sessionWordsTyped: "\u0627\u0644\u062C\u0644\u0633\u0629: +{{n}} \u0643\u0644\u0645\u0629 \u0645\u0643\u062A\u0648\u0628\u0629",
+    dailyGoal: "\u0627\u0644\u0647\u062F\u0641 \u0627\u0644\u064A\u0648\u0645\u064A: {{written}} / {{goal}} \u0643\u0644\u0645\u0629"
+  },
+  log: {
+    displayText: "\u0633\u062C\u0644 \u0627\u0644\u0643\u062A\u0627\u0628\u0629",
+    title: "\u0633\u062C\u0644 \u0627\u0644\u0643\u062A\u0627\u0628\u0629",
+    noProjectSelected: "\u0644\u0645 \u064A\u062A\u0645 \u0627\u062E\u062A\u064A\u0627\u0631 \u0645\u0634\u0631\u0648\u0639. \u0627\u0641\u062A\u062D \u0627\u0644\u0642\u0627\u0630\u0641 \u0648\u0627\u062E\u062A\u0631 \u0645\u0634\u0631\u0648\u0639\u0627\u064B \u0644\u0631\u0624\u064A\u0629 \u062A\u0627\u0631\u064A\u062E \u0643\u062A\u0627\u0628\u062A\u0643.",
+    streak: "\u{1F525} \u062A\u0633\u0644\u0633\u0644 {{streak}} \u0623\u064A\u0627\u0645",
+    startStreak: "\u0627\u0643\u062A\u0628 \u0627\u0644\u064A\u0648\u0645 \u0644\u0628\u062F\u0621 \u062A\u0633\u0644\u0633\u0644",
+    thisSession: "\u0647\u0630\u0647 \u0627\u0644\u062C\u0644\u0633\u0629",
+    stat: {
+      session: "\u0627\u0644\u062C\u0644\u0633\u0629",
+      sprintWords: "\u0643\u0644\u0645\u0627\u062A \u0627\u0644\u0633\u0628\u0627\u0642",
+      sprints: "\u0627\u0644\u0633\u0628\u0627\u0642\u0627\u062A",
+      minutes: "\u0627\u0644\u062F\u0642\u0627\u0626\u0642"
+    },
+    last30Days: "\u0622\u062E\u0631 30 \u064A\u0648\u0645\u0627\u064B",
+    today: "\u0627\u0644\u064A\u0648\u0645",
+    sprintsCount_one: "\xB7 {{count}} \u0633\u0628\u0627\u0642",
+    sprintsCount_two: "\xB7 {{count}} \u0633\u0628\u0627\u0642\u0627\u0646",
+    sprintsCount_few: "\xB7 {{count}} \u0633\u0628\u0627\u0642\u0627\u062A",
+    sprintsCount_many: "\xB7 {{count}} \u0633\u0628\u0627\u0642\u0627\u064B",
+    sprintsCount_other: "\xB7 {{count}} \u0633\u0628\u0627\u0642"
   }
 };
 
@@ -3896,6 +4253,77 @@ var fr_default = {
       publishToWordPress: "Publier sur WordPress",
       delete: "Supprimer"
     }
+  },
+  launcher: {
+    displayText: "Studio d'\xE9criture",
+    title: "Studio d'\xE9criture",
+    settings: "Param\xE8tres",
+    project: "Projet",
+    newProject: "+ nouveau",
+    noProjectSelected: "Aucun projet s\xE9lectionn\xE9.",
+    chooseProject: "\u2014 choisir un projet \u2014",
+    wordCount: "{{n}} mots",
+    wordGoal: "/ {{n}} objectif",
+    pctComplete: "{{pct}}% termin\xE9",
+    openBinder: "\u{1F4D6} Ouvrir le classeur",
+    writingMode: "Mode d'\xE9criture",
+    mode: {
+      draft: "Brouillon",
+      draftDesc: "Focus + typographie activ\xE9s, barres lat\xE9rales masqu\xE9es",
+      edit: "\xC9diter",
+      editDesc: "Classeur ouvert, interface compl\xE8te visible",
+      review: "R\xE9viser",
+      reviewDesc: "Vue lecture, pas d'\xE9dition",
+      clearMode: "\u2715 Effacer le mode"
+    },
+    focusTypography: "Focus et typographie",
+    focusMode: "Mode focus",
+    typographyMode: "Mode typographie",
+    on: "OUI",
+    off: "NON",
+    quickActions: "Actions rapides",
+    action: {
+      targetsDashboard: "Tableau des objectifs",
+      writingDashboard: "Tableau de bord d'\xE9criture",
+      previewManuscript: "Aper\xE7u du manuscrit",
+      export: "Exporter",
+      writingLog: "Journal d'\xE9criture",
+      publishToWordPress: "Publier sur WordPress"
+    },
+    openDocumentFirst: "Ouvrez d'abord un document.",
+    sprintTimer: "Minuteur de sprint",
+    pause: "\u23F8 Pause",
+    stop: "\u25A0 Arr\xEAter",
+    startSprint: "\u23F1 D\xE9marrer un sprint",
+    quickStart: "D\xE9marrage rapide :",
+    today: "Aujourd'hui",
+    stat: {
+      words: "Mots",
+      sprints: "Sprints",
+      minutes: "Minutes",
+      streak: "S\xE9rie",
+      streakDays: "{{streak}}j"
+    },
+    sessionWordsTyped: "Session : +{{n}} mots \xE9crits",
+    dailyGoal: "Objectif quotidien : {{written}} / {{goal}} mots"
+  },
+  log: {
+    displayText: "Journal d'\xE9criture",
+    title: "Journal d'\xE9criture",
+    noProjectSelected: "Aucun projet s\xE9lectionn\xE9. Ouvrez le lanceur et s\xE9lectionnez un projet pour voir votre historique.",
+    streak: "\u{1F525} S\xE9rie de {{streak}} jours",
+    startStreak: "\xC9crivez aujourd'hui pour commencer une s\xE9rie",
+    thisSession: "Cette session",
+    stat: {
+      session: "Session",
+      sprintWords: "Mots de sprint",
+      sprints: "Sprints",
+      minutes: "Minutes"
+    },
+    last30Days: "30 derniers jours",
+    today: "Aujourd'hui",
+    sprintsCount_one: "\xB7 {{count}} sprint",
+    sprintsCount_other: "\xB7 {{count}} sprints"
   }
 };
 
@@ -4076,6 +4504,77 @@ var bn_default = {
       publishToWordPress: "WordPress-\u098F \u09AA\u09CD\u09B0\u0995\u09BE\u09B6 \u0995\u09B0\u09C1\u09A8",
       delete: "\u09AE\u09C1\u099B\u09C1\u09A8"
     }
+  },
+  launcher: {
+    displayText: "\u09B2\u09C7\u0996\u09BE\u09B0 \u09B8\u09CD\u099F\u09C1\u09A1\u09BF\u0993",
+    title: "\u09B2\u09C7\u0996\u09BE\u09B0 \u09B8\u09CD\u099F\u09C1\u09A1\u09BF\u0993",
+    settings: "\u09B8\u09C7\u099F\u09BF\u0982\u09B8",
+    project: "\u09AA\u09CD\u09B0\u0995\u09B2\u09CD\u09AA",
+    newProject: "+ \u09A8\u09A4\u09C1\u09A8",
+    noProjectSelected: "\u0995\u09CB\u09A8\u09CB \u09AA\u09CD\u09B0\u0995\u09B2\u09CD\u09AA \u09A8\u09BF\u09B0\u09CD\u09AC\u09BE\u099A\u09A8 \u0995\u09B0\u09BE \u09B9\u09AF\u09BC\u09A8\u09BF\u0964",
+    chooseProject: "\u2014 \u09AA\u09CD\u09B0\u0995\u09B2\u09CD\u09AA \u09AC\u09C7\u099B\u09C7 \u09A8\u09BF\u09A8 \u2014",
+    wordCount: "{{n}} \u09B6\u09AC\u09CD\u09A6",
+    wordGoal: "/ {{n}} \u09B2\u0995\u09CD\u09B7\u09CD\u09AF",
+    pctComplete: "{{pct}}% \u09B8\u09AE\u09CD\u09AA\u09A8\u09CD\u09A8",
+    openBinder: "\u{1F4D6} \u09AC\u09BE\u0987\u09A8\u09CD\u09A1\u09BE\u09B0 \u0996\u09C1\u09B2\u09C1\u09A8",
+    writingMode: "\u09B2\u09C7\u0996\u09BE\u09B0 \u09AE\u09CB\u09A1",
+    mode: {
+      draft: "\u0996\u09B8\u09A1\u09BC\u09BE",
+      draftDesc: "\u09AB\u09CB\u0995\u09BE\u09B8 + \u099F\u09BE\u0987\u09AA\u09CB\u0997\u09CD\u09B0\u09BE\u09AB\u09BF \u099A\u09BE\u09B2\u09C1, \u09B8\u09BE\u0987\u09A1\u09AC\u09BE\u09B0 \u09B2\u09C1\u0995\u09BE\u09A8\u09CB",
+      edit: "\u09B8\u09AE\u09CD\u09AA\u09BE\u09A6\u09A8\u09BE",
+      editDesc: "\u09AC\u09BE\u0987\u09A8\u09CD\u09A1\u09BE\u09B0 \u0996\u09CB\u09B2\u09BE, \u09B8\u09AE\u09CD\u09AA\u09C2\u09B0\u09CD\u09A3 UI \u09A6\u09C3\u09B6\u09CD\u09AF\u09AE\u09BE\u09A8",
+      review: "\u09AA\u09B0\u09CD\u09AF\u09BE\u09B2\u09CB\u099A\u09A8\u09BE",
+      reviewDesc: "\u09AA\u09BE\u09A0 \u09A6\u09C3\u09B6\u09CD\u09AF, \u0995\u09CB\u09A8\u09CB \u09B8\u09AE\u09CD\u09AA\u09BE\u09A6\u09A8\u09BE \u09A8\u09C7\u0987",
+      clearMode: "\u2715 \u09AE\u09CB\u09A1 \u09B8\u09BE\u09AB \u0995\u09B0\u09C1\u09A8"
+    },
+    focusTypography: "\u09AB\u09CB\u0995\u09BE\u09B8 \u0993 \u099F\u09BE\u0987\u09AA\u09CB\u0997\u09CD\u09B0\u09BE\u09AB\u09BF",
+    focusMode: "\u09AB\u09CB\u0995\u09BE\u09B8 \u09AE\u09CB\u09A1",
+    typographyMode: "\u099F\u09BE\u0987\u09AA\u09CB\u0997\u09CD\u09B0\u09BE\u09AB\u09BF \u09AE\u09CB\u09A1",
+    on: "\u099A\u09BE\u09B2\u09C1",
+    off: "\u09AC\u09A8\u09CD\u09A7",
+    quickActions: "\u09A6\u09CD\u09B0\u09C1\u09A4 \u0995\u09BE\u09B0\u09CD\u09AF\u0995\u09CD\u09B0\u09AE",
+    action: {
+      targetsDashboard: "\u09B2\u0995\u09CD\u09B7\u09CD\u09AF \u09A1\u09CD\u09AF\u09BE\u09B6\u09AC\u09CB\u09B0\u09CD\u09A1",
+      writingDashboard: "\u09B2\u09C7\u0996\u09BE\u09B0 \u09A1\u09CD\u09AF\u09BE\u09B6\u09AC\u09CB\u09B0\u09CD\u09A1",
+      previewManuscript: "\u09AA\u09BE\u09A3\u09CD\u09A1\u09C1\u09B2\u09BF\u09AA\u09BF \u09AA\u09C2\u09B0\u09CD\u09AC\u09B0\u09C2\u09AA",
+      export: "\u09B0\u09AA\u09CD\u09A4\u09BE\u09A8\u09BF",
+      writingLog: "\u09B2\u09C7\u0996\u09BE\u09B0 \u09B2\u0997",
+      publishToWordPress: "WordPress-\u098F \u09AA\u09CD\u09B0\u0995\u09BE\u09B6 \u0995\u09B0\u09C1\u09A8"
+    },
+    openDocumentFirst: "\u0986\u0997\u09C7 \u098F\u0995\u099F\u09BF \u09A8\u09A5\u09BF \u0996\u09C1\u09B2\u09C1\u09A8\u0964",
+    sprintTimer: "\u09B8\u09CD\u09AA\u09CD\u09B0\u09BF\u09A8\u09CD\u099F \u099F\u09BE\u0987\u09AE\u09BE\u09B0",
+    pause: "\u23F8 \u09AC\u09BF\u09B0\u09A4\u09BF",
+    stop: "\u25A0 \u09A5\u09BE\u09AE\u09BE\u09A8",
+    startSprint: "\u23F1 \u09B8\u09CD\u09AA\u09CD\u09B0\u09BF\u09A8\u09CD\u099F \u09B6\u09C1\u09B0\u09C1 \u0995\u09B0\u09C1\u09A8",
+    quickStart: "\u09A6\u09CD\u09B0\u09C1\u09A4 \u09B6\u09C1\u09B0\u09C1:",
+    today: "\u0986\u099C",
+    stat: {
+      words: "\u09B6\u09AC\u09CD\u09A6",
+      sprints: "\u09B8\u09CD\u09AA\u09CD\u09B0\u09BF\u09A8\u09CD\u099F",
+      minutes: "\u09AE\u09BF\u09A8\u09BF\u099F",
+      streak: "\u09A7\u09BE\u09B0\u09BE",
+      streakDays: "{{streak}}\u09A6\u09BF"
+    },
+    sessionWordsTyped: "\u09B8\u09C7\u09B6\u09A8: +{{n}} \u09B6\u09AC\u09CD\u09A6 \u099F\u09BE\u0987\u09AA \u0995\u09B0\u09BE \u09B9\u09AF\u09BC\u09C7\u099B\u09C7",
+    dailyGoal: "\u09A6\u09C8\u09A8\u09BF\u0995 \u09B2\u0995\u09CD\u09B7\u09CD\u09AF: {{written}} / {{goal}} \u09B6\u09AC\u09CD\u09A6"
+  },
+  log: {
+    displayText: "\u09B2\u09C7\u0996\u09BE\u09B0 \u09B2\u0997",
+    title: "\u09B2\u09C7\u0996\u09BE\u09B0 \u09B2\u0997",
+    noProjectSelected: "\u0995\u09CB\u09A8\u09CB \u09AA\u09CD\u09B0\u0995\u09B2\u09CD\u09AA \u09A8\u09BF\u09B0\u09CD\u09AC\u09BE\u099A\u09A8 \u0995\u09B0\u09BE \u09B9\u09AF\u09BC\u09A8\u09BF\u0964 \u0987\u09A4\u09BF\u09B9\u09BE\u09B8 \u09A6\u09C7\u0996\u09A4\u09C7 \u09B2\u099E\u09CD\u099A\u09BE\u09B0 \u0996\u09C1\u09B2\u09C1\u09A8 \u098F\u09AC\u0982 \u098F\u0995\u099F\u09BF \u09AA\u09CD\u09B0\u0995\u09B2\u09CD\u09AA \u09A8\u09BF\u09B0\u09CD\u09AC\u09BE\u099A\u09A8 \u0995\u09B0\u09C1\u09A8\u0964",
+    streak: "\u{1F525} {{streak}}-\u09A6\u09BF\u09A8\u09C7\u09B0 \u09A7\u09BE\u09B0\u09BE",
+    startStreak: "\u09A7\u09BE\u09B0\u09BE \u09B6\u09C1\u09B0\u09C1 \u0995\u09B0\u09A4\u09C7 \u0986\u099C \u09B2\u09BF\u0996\u09C1\u09A8",
+    thisSession: "\u098F\u0987 \u09B8\u09C7\u09B6\u09A8",
+    stat: {
+      session: "\u09B8\u09C7\u09B6\u09A8",
+      sprintWords: "\u09B8\u09CD\u09AA\u09CD\u09B0\u09BF\u09A8\u09CD\u099F \u09B6\u09AC\u09CD\u09A6",
+      sprints: "\u09B8\u09CD\u09AA\u09CD\u09B0\u09BF\u09A8\u09CD\u099F",
+      minutes: "\u09AE\u09BF\u09A8\u09BF\u099F"
+    },
+    last30Days: "\u09B6\u09C7\u09B7 \u09E9\u09E6 \u09A6\u09BF\u09A8",
+    today: "\u0986\u099C",
+    sprintsCount_one: "\xB7 {{count}} \u09B8\u09CD\u09AA\u09CD\u09B0\u09BF\u09A8\u09CD\u099F",
+    sprintsCount_other: "\xB7 {{count}} \u09B8\u09CD\u09AA\u09CD\u09B0\u09BF\u09A8\u09CD\u099F"
   }
 };
 
@@ -4256,6 +4755,77 @@ var pt_BR_default = {
       publishToWordPress: "Publicar no WordPress",
       delete: "Excluir"
     }
+  },
+  launcher: {
+    displayText: "Est\xFAdio de escrita",
+    title: "Est\xFAdio de escrita",
+    settings: "Configura\xE7\xF5es",
+    project: "Projeto",
+    newProject: "+ novo",
+    noProjectSelected: "Nenhum projeto selecionado.",
+    chooseProject: "\u2014 escolha um projeto \u2014",
+    wordCount: "{{n}} palavras",
+    wordGoal: "/ {{n}} objetivo",
+    pctComplete: "{{pct}}% conclu\xEDdo",
+    openBinder: "\u{1F4D6} Abrir pasta",
+    writingMode: "Modo de escrita",
+    mode: {
+      draft: "Rascunho",
+      draftDesc: "Foco + tipografia ativos, barras laterais ocultas",
+      edit: "Editar",
+      editDesc: "Pasta aberta, interface completa vis\xEDvel",
+      review: "Revisar",
+      reviewDesc: "Modo leitura, sem edi\xE7\xE3o",
+      clearMode: "\u2715 Limpar modo"
+    },
+    focusTypography: "Foco e tipografia",
+    focusMode: "Modo foco",
+    typographyMode: "Modo tipografia",
+    on: "SIM",
+    off: "N\xC3O",
+    quickActions: "A\xE7\xF5es r\xE1pidas",
+    action: {
+      targetsDashboard: "Painel de metas",
+      writingDashboard: "Painel de escrita",
+      previewManuscript: "Visualizar manuscrito",
+      export: "Exportar",
+      writingLog: "Di\xE1rio de escrita",
+      publishToWordPress: "Publicar no WordPress"
+    },
+    openDocumentFirst: "Abra um documento primeiro.",
+    sprintTimer: "Cron\xF4metro de sprint",
+    pause: "\u23F8 Pausar",
+    stop: "\u25A0 Parar",
+    startSprint: "\u23F1 Iniciar sprint",
+    quickStart: "In\xEDcio r\xE1pido:",
+    today: "Hoje",
+    stat: {
+      words: "Palavras",
+      sprints: "Sprints",
+      minutes: "Minutos",
+      streak: "Sequ\xEAncia",
+      streakDays: "{{streak}}d"
+    },
+    sessionWordsTyped: "Sess\xE3o: +{{n}} palavras digitadas",
+    dailyGoal: "Meta di\xE1ria: {{written}} / {{goal}} palavras"
+  },
+  log: {
+    displayText: "Di\xE1rio de escrita",
+    title: "Di\xE1rio de escrita",
+    noProjectSelected: "Nenhum projeto selecionado. Abra o lan\xE7ador e selecione um projeto para ver seu hist\xF3rico.",
+    streak: "\u{1F525} Sequ\xEAncia de {{streak}} dias",
+    startStreak: "Escreva hoje para come\xE7ar uma sequ\xEAncia",
+    thisSession: "Esta sess\xE3o",
+    stat: {
+      session: "Sess\xE3o",
+      sprintWords: "Palavras de sprint",
+      sprints: "Sprints",
+      minutes: "Minutos"
+    },
+    last30Days: "\xDAltimos 30 dias",
+    today: "Hoje",
+    sprintsCount_one: "\xB7 {{count}} sprint",
+    sprintsCount_other: "\xB7 {{count}} sprints"
   }
 };
 
@@ -4436,6 +5006,79 @@ var ru_default = {
       publishToWordPress: "\u041E\u043F\u0443\u0431\u043B\u0438\u043A\u043E\u0432\u0430\u0442\u044C \u0432 WordPress",
       delete: "\u0423\u0434\u0430\u043B\u0438\u0442\u044C"
     }
+  },
+  launcher: {
+    displayText: "\u0421\u0442\u0443\u0434\u0438\u044F \u043F\u0438\u0441\u044C\u043C\u0430",
+    title: "\u0421\u0442\u0443\u0434\u0438\u044F \u043F\u0438\u0441\u044C\u043C\u0430",
+    settings: "\u041D\u0430\u0441\u0442\u0440\u043E\u0439\u043A\u0438",
+    project: "\u041F\u0440\u043E\u0435\u043A\u0442",
+    newProject: "+ \u043D\u043E\u0432\u044B\u0439",
+    noProjectSelected: "\u041F\u0440\u043E\u0435\u043A\u0442 \u043D\u0435 \u0432\u044B\u0431\u0440\u0430\u043D.",
+    chooseProject: "\u2014 \u0432\u044B\u0431\u0435\u0440\u0438\u0442\u0435 \u043F\u0440\u043E\u0435\u043A\u0442 \u2014",
+    wordCount: "{{n}} \u0441\u043B\u043E\u0432",
+    wordGoal: "/ {{n}} \u0446\u0435\u043B\u044C",
+    pctComplete: "{{pct}}% \u0437\u0430\u0432\u0435\u0440\u0448\u0435\u043D\u043E",
+    openBinder: "\u{1F4D6} \u041E\u0442\u043A\u0440\u044B\u0442\u044C \u043F\u0430\u043F\u043A\u0443",
+    writingMode: "\u0420\u0435\u0436\u0438\u043C \u043F\u0438\u0441\u044C\u043C\u0430",
+    mode: {
+      draft: "\u0427\u0435\u0440\u043D\u043E\u0432\u0438\u043A",
+      draftDesc: "\u0424\u043E\u043A\u0443\u0441 + \u0442\u0438\u043F\u043E\u0433\u0440\u0430\u0444\u0438\u043A\u0430 \u0432\u043A\u043B\u044E\u0447\u0435\u043D\u044B, \u0431\u043E\u043A\u043E\u0432\u044B\u0435 \u043F\u0430\u043D\u0435\u043B\u0438 \u0441\u043A\u0440\u044B\u0442\u044B",
+      edit: "\u0420\u0435\u0434\u0430\u043A\u0442\u0438\u0440\u043E\u0432\u0430\u043D\u0438\u0435",
+      editDesc: "\u041F\u0430\u043F\u043A\u0430 \u043E\u0442\u043A\u0440\u044B\u0442\u0430, \u043F\u043E\u043B\u043D\u044B\u0439 \u0438\u043D\u0442\u0435\u0440\u0444\u0435\u0439\u0441 \u0432\u0438\u0434\u0435\u043D",
+      review: "\u0420\u0435\u0446\u0435\u043D\u0437\u0438\u0440\u043E\u0432\u0430\u043D\u0438\u0435",
+      reviewDesc: "\u0420\u0435\u0436\u0438\u043C \u0447\u0442\u0435\u043D\u0438\u044F, \u0431\u0435\u0437 \u0440\u0435\u0434\u0430\u043A\u0442\u0438\u0440\u043E\u0432\u0430\u043D\u0438\u044F",
+      clearMode: "\u2715 \u0421\u0431\u0440\u043E\u0441\u0438\u0442\u044C \u0440\u0435\u0436\u0438\u043C"
+    },
+    focusTypography: "\u0424\u043E\u043A\u0443\u0441 \u0438 \u0442\u0438\u043F\u043E\u0433\u0440\u0430\u0444\u0438\u043A\u0430",
+    focusMode: "\u0420\u0435\u0436\u0438\u043C \u0444\u043E\u043A\u0443\u0441\u0430",
+    typographyMode: "\u0420\u0435\u0436\u0438\u043C \u0442\u0438\u043F\u043E\u0433\u0440\u0430\u0444\u0438\u043A\u0438",
+    on: "\u0412\u041A\u041B",
+    off: "\u0412\u042B\u041A\u041B",
+    quickActions: "\u0411\u044B\u0441\u0442\u0440\u044B\u0435 \u0434\u0435\u0439\u0441\u0442\u0432\u0438\u044F",
+    action: {
+      targetsDashboard: "\u041F\u0430\u043D\u0435\u043B\u044C \u0446\u0435\u043B\u0435\u0439",
+      writingDashboard: "\u041F\u0430\u043D\u0435\u043B\u044C \u043F\u0438\u0441\u044C\u043C\u0430",
+      previewManuscript: "\u041F\u0440\u0435\u0434\u043F\u0440\u043E\u0441\u043C\u043E\u0442\u0440 \u0440\u0443\u043A\u043E\u043F\u0438\u0441\u0438",
+      export: "\u042D\u043A\u0441\u043F\u043E\u0440\u0442",
+      writingLog: "\u0416\u0443\u0440\u043D\u0430\u043B \u043F\u0438\u0441\u044C\u043C\u0430",
+      publishToWordPress: "\u041E\u043F\u0443\u0431\u043B\u0438\u043A\u043E\u0432\u0430\u0442\u044C \u0432 WordPress"
+    },
+    openDocumentFirst: "\u0421\u043D\u0430\u0447\u0430\u043B\u0430 \u043E\u0442\u043A\u0440\u043E\u0439\u0442\u0435 \u0434\u043E\u043A\u0443\u043C\u0435\u043D\u0442.",
+    sprintTimer: "\u0422\u0430\u0439\u043C\u0435\u0440 \u0441\u043F\u0440\u0438\u043D\u0442\u0430",
+    pause: "\u23F8 \u041F\u0430\u0443\u0437\u0430",
+    stop: "\u25A0 \u0421\u0442\u043E\u043F",
+    startSprint: "\u23F1 \u041D\u0430\u0447\u0430\u0442\u044C \u0441\u043F\u0440\u0438\u043D\u0442",
+    quickStart: "\u0411\u044B\u0441\u0442\u0440\u044B\u0439 \u0441\u0442\u0430\u0440\u0442:",
+    today: "\u0421\u0435\u0433\u043E\u0434\u043D\u044F",
+    stat: {
+      words: "\u0421\u043B\u043E\u0432\u0430",
+      sprints: "\u0421\u043F\u0440\u0438\u043D\u0442\u044B",
+      minutes: "\u041C\u0438\u043D\u0443\u0442\u044B",
+      streak: "\u0421\u0435\u0440\u0438\u044F",
+      streakDays: "{{streak}}\u0434"
+    },
+    sessionWordsTyped: "\u0421\u0435\u0430\u043D\u0441: +{{n}} \u043D\u0430\u043F\u0438\u0441\u0430\u043D\u043D\u044B\u0445 \u0441\u043B\u043E\u0432",
+    dailyGoal: "\u0414\u043D\u0435\u0432\u043D\u0430\u044F \u0446\u0435\u043B\u044C: {{written}} / {{goal}} \u0441\u043B\u043E\u0432"
+  },
+  log: {
+    displayText: "\u0416\u0443\u0440\u043D\u0430\u043B \u043F\u0438\u0441\u044C\u043C\u0430",
+    title: "\u0416\u0443\u0440\u043D\u0430\u043B \u043F\u0438\u0441\u044C\u043C\u0430",
+    noProjectSelected: "\u041F\u0440\u043E\u0435\u043A\u0442 \u043D\u0435 \u0432\u044B\u0431\u0440\u0430\u043D. \u041E\u0442\u043A\u0440\u043E\u0439\u0442\u0435 \u043B\u0430\u0443\u043D\u0447\u0435\u0440 \u0438 \u0432\u044B\u0431\u0435\u0440\u0438\u0442\u0435 \u043F\u0440\u043E\u0435\u043A\u0442 \u0434\u043B\u044F \u043F\u0440\u043E\u0441\u043C\u043E\u0442\u0440\u0430 \u0438\u0441\u0442\u043E\u0440\u0438\u0438.",
+    streak: "\u{1F525} \u0421\u0435\u0440\u0438\u044F {{streak}} \u0434\u043D\u0435\u0439",
+    startStreak: "\u041D\u0430\u043F\u0438\u0448\u0438\u0442\u0435 \u0441\u0435\u0433\u043E\u0434\u043D\u044F, \u0447\u0442\u043E\u0431\u044B \u043D\u0430\u0447\u0430\u0442\u044C \u0441\u0435\u0440\u0438\u044E",
+    thisSession: "\u042D\u0442\u043E\u0442 \u0441\u0435\u0430\u043D\u0441",
+    stat: {
+      session: "\u0421\u0435\u0430\u043D\u0441",
+      sprintWords: "\u0421\u043B\u043E\u0432\u0430 \u0441\u043F\u0440\u0438\u043D\u0442\u0430",
+      sprints: "\u0421\u043F\u0440\u0438\u043D\u0442\u044B",
+      minutes: "\u041C\u0438\u043D\u0443\u0442\u044B"
+    },
+    last30Days: "\u041F\u043E\u0441\u043B\u0435\u0434\u043D\u0438\u0435 30 \u0434\u043D\u0435\u0439",
+    today: "\u0421\u0435\u0433\u043E\u0434\u043D\u044F",
+    sprintsCount_one: "\xB7 {{count}} \u0441\u043F\u0440\u0438\u043D\u0442",
+    sprintsCount_few: "\xB7 {{count}} \u0441\u043F\u0440\u0438\u043D\u0442\u0430",
+    sprintsCount_many: "\xB7 {{count}} \u0441\u043F\u0440\u0438\u043D\u0442\u043E\u0432",
+    sprintsCount_other: "\xB7 {{count}} \u0441\u043F\u0440\u0438\u043D\u0442\u043E\u0432"
   }
 };
 
@@ -5433,7 +6076,7 @@ var LauncherView = class extends import_obsidian11.ItemView {
     return LAUNCHER_VIEW_TYPE;
   }
   getDisplayText() {
-    return "Writing studio";
+    return t2("launcher.displayText");
   }
   getIcon() {
     return "feather";
@@ -5469,8 +6112,8 @@ var LauncherView = class extends import_obsidian11.ItemView {
   // ── Header ──────────────────────────────────────────────────────
   renderHeader(root) {
     const header = root.createDiv("ws-launcher-header");
-    header.createSpan({ text: "Writing Studio", cls: "ws-launcher-title" });
-    const settingsBtn = header.createEl("button", { cls: "ws-launcher-icon-btn", title: "Settings" });
+    header.createSpan({ text: t2("launcher.title"), cls: "ws-launcher-title" });
+    const settingsBtn = header.createEl("button", { cls: "ws-launcher-icon-btn", title: t2("launcher.settings") });
     (0, import_obsidian11.setIcon)(settingsBtn, "settings");
     settingsBtn.onclick = () => {
       var _a2, _b2;
@@ -5484,8 +6127,8 @@ var LauncherView = class extends import_obsidian11.ItemView {
     const project = this.plugin.projectManager.getActiveProject();
     const card = root.createDiv("ws-launcher-card");
     const cardHeader = card.createDiv("ws-launcher-card-header");
-    cardHeader.createSpan({ text: "Project", cls: "ws-launcher-card-label" });
-    const newProjectBtn = cardHeader.createEl("button", { cls: "ws-launcher-text-btn", text: "+ new" });
+    cardHeader.createSpan({ text: t2("launcher.project"), cls: "ws-launcher-card-label" });
+    const newProjectBtn = cardHeader.createEl("button", { cls: "ws-launcher-text-btn", text: t2("launcher.newProject") });
     newProjectBtn.onclick = () => {
       new ProjectModal(this.app, this.plugin, () => {
         void this.refresh();
@@ -5493,11 +6136,11 @@ var LauncherView = class extends import_obsidian11.ItemView {
     };
     if (!project) {
       const emptyRow = card.createDiv("ws-launcher-empty");
-      emptyRow.textContent = "No project selected.";
+      emptyRow.textContent = t2("launcher.noProjectSelected");
       const projects2 = this.plugin.projectManager.getProjects();
       if (projects2.length > 0) {
         const sel = card.createEl("select", { cls: "ws-launcher-project-sel" });
-        sel.createEl("option", { text: "\u2014 choose project \u2014", value: "" });
+        sel.createEl("option", { text: t2("launcher.chooseProject"), value: "" });
         for (const p of projects2) {
           sel.createEl("option", { text: p.title, value: p.id });
         }
@@ -5528,20 +6171,20 @@ var LauncherView = class extends import_obsidian11.ItemView {
       const totalWords = await this.plugin.statsTracker.getTotalWordCount();
       const goal = ((_a2 = project.goals) == null ? void 0 : _a2.totalWordCount) || 0;
       const wcRow = card.createDiv("ws-launcher-wc-row");
-      wcRow.createSpan({ text: `${totalWords.toLocaleString()} words`, cls: "ws-launcher-wc-num" });
+      wcRow.createSpan({ text: t2("launcher.wordCount", { n: totalWords.toLocaleString() }), cls: "ws-launcher-wc-num" });
       if (goal > 0) {
         const pct = Math.min(100, Math.round(totalWords / goal * 100));
-        wcRow.createSpan({ text: `/ ${goal.toLocaleString()} goal`, cls: "ws-launcher-wc-goal" });
+        wcRow.createSpan({ text: t2("launcher.wordGoal", { n: goal.toLocaleString() }), cls: "ws-launcher-wc-goal" });
         const barWrap = card.createDiv("ws-progress-wrap ws-launcher-progress");
         const bar = barWrap.createDiv("ws-progress-bar");
         bar.setCssProps({ "--ws-bar-width": `${pct}%` });
-        card.createSpan({ text: `${pct}% complete`, cls: "ws-launcher-pct" });
+        card.createSpan({ text: t2("launcher.pctComplete", { pct }), cls: "ws-launcher-pct" });
       } else {
         wcRow.createSpan({ text: this.plugin.statsTracker.calculateReadingTime(totalWords), cls: "ws-launcher-wc-goal" });
       }
     } catch (e) {
     }
-    const binderBtn = card.createEl("button", { cls: "ws-launcher-action-btn", text: "\u{1F4D6} Open binder" });
+    const binderBtn = card.createEl("button", { cls: "ws-launcher-action-btn", text: t2("launcher.openBinder") });
     binderBtn.onclick = () => {
       void this.plugin.openBinder();
     };
@@ -5549,11 +6192,11 @@ var LauncherView = class extends import_obsidian11.ItemView {
   // ── Writing Mode Selector ────────────────────────────────────────
   renderModeSelector(root) {
     const card = root.createDiv("ws-launcher-card");
-    card.createDiv({ text: "Writing mode", cls: "ws-launcher-card-label" });
+    card.createDiv({ text: t2("launcher.writingMode"), cls: "ws-launcher-card-label" });
     const modes = [
-      { id: "draft", label: "Draft", icon: "\u270D", desc: "Focus + typography on, sidebars hidden" },
-      { id: "edit", label: "Edit", icon: "\u270E", desc: "Binder open, full UI visible" },
-      { id: "review", label: "Review", icon: "\u{1F441}", desc: "Reading view, no editing" }
+      { id: "draft", label: t2("launcher.mode.draft"), icon: "\u270D", desc: t2("launcher.mode.draftDesc") },
+      { id: "edit", label: t2("launcher.mode.edit"), icon: "\u270E", desc: t2("launcher.mode.editDesc") },
+      { id: "review", label: t2("launcher.mode.review"), icon: "\u{1F441}", desc: t2("launcher.mode.reviewDesc") }
     ];
     const btnRow = card.createDiv("ws-launcher-mode-btns");
     const current = this.plugin.writingModes.getCurrentMode();
@@ -5574,7 +6217,7 @@ var LauncherView = class extends import_obsidian11.ItemView {
       };
     }
     if (current !== "none") {
-      const clearBtn = card.createEl("button", { cls: "ws-launcher-text-btn ws-launcher-clear-mode", text: "\u2715 Clear mode" });
+      const clearBtn = card.createEl("button", { cls: "ws-launcher-text-btn ws-launcher-clear-mode", text: t2("launcher.mode.clearMode") });
       clearBtn.onclick = async () => {
         await this.plugin.writingModes.switchMode("none");
         await this.render();
@@ -5584,10 +6227,10 @@ var LauncherView = class extends import_obsidian11.ItemView {
   // ── Focus & Typography Toggles ───────────────────────────────────
   renderFocusToggles(root) {
     const card = root.createDiv("ws-launcher-card");
-    card.createDiv({ text: "Focus & typography", cls: "ws-launcher-card-label" });
+    card.createDiv({ text: t2("launcher.focusTypography"), cls: "ws-launcher-card-label" });
     const toggles = [
       {
-        label: "Focus mode",
+        label: t2("launcher.focusMode"),
         isOn: () => this.plugin.focusMode.isActive(),
         toggle: () => {
           this.plugin.focusMode.toggle();
@@ -5595,7 +6238,7 @@ var LauncherView = class extends import_obsidian11.ItemView {
         }
       },
       {
-        label: "Typography mode",
+        label: t2("launcher.typographyMode"),
         isOn: () => this.plugin.typographyMode.isActive(),
         toggle: () => {
           this.plugin.typographyMode.toggle();
@@ -5603,59 +6246,59 @@ var LauncherView = class extends import_obsidian11.ItemView {
         }
       }
     ];
-    for (const t3 of toggles) {
+    for (const tog of toggles) {
       const row = card.createDiv("ws-launcher-toggle-row");
-      row.createSpan({ text: t3.label, cls: "ws-launcher-toggle-label" });
+      row.createSpan({ text: tog.label, cls: "ws-launcher-toggle-label" });
       const toggle = row.createEl("button", {
-        cls: `ws-launcher-toggle ${t3.isOn() ? "is-on" : "is-off"}`,
-        text: t3.isOn() ? "ON" : "OFF"
+        cls: `ws-launcher-toggle ${tog.isOn() ? "is-on" : "is-off"}`,
+        text: tog.isOn() ? t2("launcher.on") : t2("launcher.off")
       });
-      toggle.onclick = () => t3.toggle();
+      toggle.onclick = () => tog.toggle();
     }
   }
   // ── Quick Actions ────────────────────────────────────────────────
   renderQuickActions(root) {
     const card = root.createDiv("ws-launcher-card");
-    card.createDiv({ text: "Quick actions", cls: "ws-launcher-card-label" });
+    card.createDiv({ text: t2("launcher.quickActions"), cls: "ws-launcher-card-label" });
     const actions = [
       {
         icon: "target",
-        label: "Targets dashboard",
+        label: t2("launcher.action.targetsDashboard"),
         action: () => {
           new TargetsDashboardModal(this.app, this.plugin).open();
         }
       },
       {
         icon: "bar-chart-2",
-        label: "Writing dashboard",
+        label: t2("launcher.action.writingDashboard"),
         action: () => {
           new WritingDashboardModal(this.app, this.plugin).open();
         }
       },
       {
         icon: "layers",
-        label: "Preview manuscript",
+        label: t2("launcher.action.previewManuscript"),
         action: () => {
           void this.plugin.openCompilePreview();
         }
       },
       {
         icon: "download",
-        label: "Export",
+        label: t2("launcher.action.export"),
         action: () => {
           new ExportModal(this.app, this.plugin).open();
         }
       },
       {
         icon: "calendar-days",
-        label: "Writing log",
+        label: t2("launcher.action.writingLog"),
         action: () => {
           void this.plugin.openWritingLog();
         }
       },
       {
         icon: "globe",
-        label: "Publish to WordPress",
+        label: t2("launcher.action.publishToWordPress"),
         action: () => {
           const leaf = this.app.workspace.getMostRecentLeaf();
           const view = leaf == null ? void 0 : leaf.view;
@@ -5663,7 +6306,7 @@ var LauncherView = class extends import_obsidian11.ItemView {
           if (file instanceof import_obsidian11.TFile) {
             new PublishModal(this.app, this.plugin, file.path).open();
           } else {
-            new import_obsidian11.Notice("Open a document first.");
+            new import_obsidian11.Notice(t2("launcher.openDocumentFirst"));
           }
         }
       }
@@ -5680,28 +6323,28 @@ var LauncherView = class extends import_obsidian11.ItemView {
   // ── Sprint Card ──────────────────────────────────────────────────
   renderSprintCard(root) {
     const card = root.createDiv("ws-launcher-card");
-    card.createDiv({ text: "Sprint timer", cls: "ws-launcher-card-label" });
+    card.createDiv({ text: t2("launcher.sprintTimer"), cls: "ws-launcher-card-label" });
     if (this.plugin.sprintTimer.isActive()) {
       const timeEl = card.createDiv("ws-launcher-sprint-time");
       timeEl.textContent = this.plugin.sprintTimer.getFormattedRemaining();
       const ctrlRow = card.createDiv("ws-launcher-sprint-ctrls");
-      const pauseBtn = ctrlRow.createEl("button", { cls: "ws-launcher-action-btn", text: "\u23F8 Pause" });
+      const pauseBtn = ctrlRow.createEl("button", { cls: "ws-launcher-action-btn", text: t2("launcher.pause") });
       pauseBtn.onclick = () => {
         this.plugin.sprintTimer.pause();
         void this.render();
       };
-      const stopBtn = ctrlRow.createEl("button", { cls: "ws-launcher-action-btn ws-launcher-stop-btn", text: "\u25A0 Stop" });
+      const stopBtn = ctrlRow.createEl("button", { cls: "ws-launcher-action-btn ws-launcher-stop-btn", text: t2("launcher.stop") });
       stopBtn.onclick = () => {
         this.plugin.sprintTimer.stop();
         void this.render();
       };
     } else {
-      const startBtn = card.createEl("button", { cls: "ws-launcher-action-btn mod-cta", text: "\u23F1 Start sprint" });
+      const startBtn = card.createEl("button", { cls: "ws-launcher-action-btn mod-cta", text: t2("launcher.startSprint") });
       startBtn.onclick = () => {
         new SprintModal(this.app, this.plugin).open();
       };
       const presets = card.createDiv("ws-launcher-sprint-presets");
-      presets.createSpan({ text: "Quick start:", cls: "ws-launcher-preset-label" });
+      presets.createSpan({ text: t2("launcher.quickStart"), cls: "ws-launcher-preset-label" });
       for (const mins of [10, 15, 25]) {
         const btn = presets.createEl("button", { cls: "ws-launcher-preset-btn", text: `${mins}m` });
         btn.onclick = () => {
@@ -5714,16 +6357,16 @@ var LauncherView = class extends import_obsidian11.ItemView {
   // ── Today Card ───────────────────────────────────────────────────
   async renderTodayCard(root) {
     const card = root.createDiv("ws-launcher-card");
-    card.createDiv({ text: "Today", cls: "ws-launcher-card-label" });
+    card.createDiv({ text: t2("launcher.today"), cls: "ws-launcher-card-label" });
     const stats = this.plugin.statsTracker.getSessionStats();
     const streak = await this.plugin.statsTracker.getStreak();
     const sessionWords = this.plugin.statsTracker.getTotalSessionWords();
     const grid = card.createDiv("ws-launcher-today-grid");
     const items = [
-      ["Words", stats.wordsWritten.toLocaleString()],
-      ["Sprints", String(stats.sprintsCompleted)],
-      ["Minutes", String(stats.totalMinutes)],
-      ["Streak", `${streak}d`]
+      [t2("launcher.stat.words"), stats.wordsWritten.toLocaleString()],
+      [t2("launcher.stat.sprints"), String(stats.sprintsCompleted)],
+      [t2("launcher.stat.minutes"), String(stats.totalMinutes)],
+      [t2("launcher.stat.streak"), t2("launcher.stat.streakDays", { streak })]
     ];
     for (const [label, value] of items) {
       const stat = grid.createDiv("ws-launcher-today-stat");
@@ -5732,7 +6375,7 @@ var LauncherView = class extends import_obsidian11.ItemView {
     }
     if (sessionWords > 0) {
       card.createDiv({
-        text: `Session: +${sessionWords.toLocaleString()} words typed`,
+        text: t2("launcher.sessionWordsTyped", { n: sessionWords.toLocaleString() }),
         cls: "ws-launcher-session-words"
       });
     }
@@ -5743,7 +6386,7 @@ var LauncherView = class extends import_obsidian11.ItemView {
       const bar = barWrap.createDiv("ws-progress-bar");
       bar.setCssProps({ "--ws-bar-width": `${pct}%` });
       card.createSpan({
-        text: `Daily goal: ${stats.wordsWritten} / ${goal} words`,
+        text: t2("launcher.dailyGoal", { written: stats.wordsWritten, goal }),
         cls: "ws-launcher-pct"
       });
     }
@@ -10144,7 +10787,7 @@ var WritingLogView = class extends import_obsidian27.ItemView {
     return WRITING_LOG_VIEW_TYPE;
   }
   getDisplayText() {
-    return "Writing log";
+    return t2("log.displayText");
   }
   getIcon() {
     return "calendar-days";
@@ -10162,10 +10805,11 @@ var WritingLogView = class extends import_obsidian27.ItemView {
     const root = this.containerEl.children[1];
     root.empty();
     root.addClass("ws-log-root");
+    const lang = (0, import_obsidian27.getLanguage)();
     const header = root.createDiv("ws-log-header");
-    header.createDiv({ text: "Writing log", cls: "ws-log-title" });
+    header.createDiv({ text: t2("log.title"), cls: "ws-log-title" });
     header.createDiv({
-      text: (/* @__PURE__ */ new Date()).toLocaleDateString("en-US", {
+      text: (/* @__PURE__ */ new Date()).toLocaleDateString(lang, {
         weekday: "long",
         year: "numeric",
         month: "long",
@@ -10176,7 +10820,7 @@ var WritingLogView = class extends import_obsidian27.ItemView {
     const project = this.plugin.projectManager.getActiveProject();
     if (!project) {
       root.createDiv({
-        text: "No project selected. Open the launcher and select a project to see your writing history.",
+        text: t2("log.noProjectSelected"),
         cls: "ws-log-empty-msg"
       });
       return;
@@ -10184,21 +10828,21 @@ var WritingLogView = class extends import_obsidian27.ItemView {
     const streak = await this.plugin.statsTracker.getStreak();
     const streakEl = root.createDiv("ws-log-streak");
     if (streak > 0) {
-      streakEl.textContent = `\u{1F525} ${streak}-day streak`;
+      streakEl.textContent = t2("log.streak", { streak });
     } else {
-      streakEl.textContent = "Write today to start a streak";
+      streakEl.textContent = t2("log.startStreak");
       streakEl.addClass("ws-log-streak--zero");
     }
     const sessionSection = root.createDiv("ws-log-section");
-    sessionSection.createDiv({ text: "This session", cls: "ws-log-section-label" });
+    sessionSection.createDiv({ text: t2("log.thisSession"), cls: "ws-log-section-label" });
     const stats = this.plugin.statsTracker.getSessionStats();
     const sessionWords = this.plugin.statsTracker.getTotalSessionWords();
     const sessionGrid = sessionSection.createDiv("ws-log-today-grid");
     const sessionItems = [
-      ["Session", sessionWords.toLocaleString()],
-      ["Sprint words", stats.wordsWritten.toLocaleString()],
-      ["Sprints", String(stats.sprintsCompleted)],
-      ["Minutes", String(stats.totalMinutes)]
+      [t2("log.stat.session"), sessionWords.toLocaleString()],
+      [t2("log.stat.sprintWords"), stats.wordsWritten.toLocaleString()],
+      [t2("log.stat.sprints"), String(stats.sprintsCompleted)],
+      [t2("log.stat.minutes"), String(stats.totalMinutes)]
     ];
     for (const [label, value] of sessionItems) {
       const cell = sessionGrid.createDiv("ws-log-today-stat");
@@ -10206,7 +10850,7 @@ var WritingLogView = class extends import_obsidian27.ItemView {
       cell.createDiv({ text: label, cls: "ws-log-today-label" });
     }
     const histSection = root.createDiv("ws-log-section");
-    histSection.createDiv({ text: "Last 30 days", cls: "ws-log-section-label" });
+    histSection.createDiv({ text: t2("log.last30Days"), cls: "ws-log-section-label" });
     const history = await this.plugin.statsTracker.getWritingHistory(30);
     const maxWords = Math.max(...history.map((d) => d.wordsWritten), 1);
     const todayStr = (/* @__PURE__ */ new Date()).toISOString().split("T")[0];
@@ -10215,7 +10859,7 @@ var WritingLogView = class extends import_obsidian27.ItemView {
       const row = list.createDiv("ws-log-day-row");
       if (entry.wordsWritten === 0) row.addClass("ws-log-day-row--empty");
       const dateEl = row.createDiv("ws-log-day-date");
-      dateEl.textContent = entry.date === todayStr ? "Today" : (/* @__PURE__ */ new Date(`${entry.date}T12:00:00`)).toLocaleDateString("en-US", { month: "short", day: "numeric" });
+      dateEl.textContent = entry.date === todayStr ? t2("log.today") : (/* @__PURE__ */ new Date(`${entry.date}T12:00:00`)).toLocaleDateString(lang, { month: "short", day: "numeric" });
       const barWrap = row.createDiv("ws-log-day-bar-wrap");
       const bar = barWrap.createDiv("ws-log-day-bar");
       bar.setCssProps({ "--ws-log-bar-width": `${Math.round(entry.wordsWritten / maxWords * 100)}%` });
@@ -10224,7 +10868,7 @@ var WritingLogView = class extends import_obsidian27.ItemView {
         wordsEl.createSpan({ text: entry.wordsWritten.toLocaleString() });
         if (entry.sprintsCompleted > 0) {
           wordsEl.createSpan({
-            text: ` \xB7 ${entry.sprintsCompleted} sprint${entry.sprintsCompleted !== 1 ? "s" : ""}`,
+            text: t2("log.sprintsCount", { count: entry.sprintsCompleted }),
             cls: "ws-log-day-meta"
           });
         }

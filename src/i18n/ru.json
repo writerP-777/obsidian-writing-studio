@@ -174,5 +174,78 @@
       "publishToWordPress": "Опубликовать в WordPress",
       "delete": "Удалить"
     }
+  },
+  "launcher": {
+    "displayText": "Студия письма",
+    "title": "Студия письма",
+    "settings": "Настройки",
+    "project": "Проект",
+    "newProject": "+ новый",
+    "noProjectSelected": "Проект не выбран.",
+    "chooseProject": "— выберите проект —",
+    "wordCount": "{{n}} слов",
+    "wordGoal": "/ {{n}} цель",
+    "pctComplete": "{{pct}}% завершено",
+    "openBinder": "📖 Открыть папку",
+    "writingMode": "Режим письма",
+    "mode": {
+      "draft": "Черновик",
+      "draftDesc": "Фокус + типографика включены, боковые панели скрыты",
+      "edit": "Редактирование",
+      "editDesc": "Папка открыта, полный интерфейс виден",
+      "review": "Рецензирование",
+      "reviewDesc": "Режим чтения, без редактирования",
+      "clearMode": "✕ Сбросить режим"
+    },
+    "focusTypography": "Фокус и типографика",
+    "focusMode": "Режим фокуса",
+    "typographyMode": "Режим типографики",
+    "on": "ВКЛ",
+    "off": "ВЫКЛ",
+    "quickActions": "Быстрые действия",
+    "action": {
+      "targetsDashboard": "Панель целей",
+      "writingDashboard": "Панель письма",
+      "previewManuscript": "Предпросмотр рукописи",
+      "export": "Экспорт",
+      "writingLog": "Журнал письма",
+      "publishToWordPress": "Опубликовать в WordPress"
+    },
+    "openDocumentFirst": "Сначала откройте документ.",
+    "sprintTimer": "Таймер спринта",
+    "pause": "⏸ Пауза",
+    "stop": "■ Стоп",
+    "startSprint": "⏱ Начать спринт",
+    "quickStart": "Быстрый старт:",
+    "today": "Сегодня",
+    "stat": {
+      "words": "Слова",
+      "sprints": "Спринты",
+      "minutes": "Минуты",
+      "streak": "Серия",
+      "streakDays": "{{streak}}д"
+    },
+    "sessionWordsTyped": "Сеанс: +{{n}} написанных слов",
+    "dailyGoal": "Дневная цель: {{written}} / {{goal}} слов"
+  },
+  "log": {
+    "displayText": "Журнал письма",
+    "title": "Журнал письма",
+    "noProjectSelected": "Проект не выбран. Откройте лаунчер и выберите проект для просмотра истории.",
+    "streak": "🔥 Серия {{streak}} дней",
+    "startStreak": "Напишите сегодня, чтобы начать серию",
+    "thisSession": "Этот сеанс",
+    "stat": {
+      "session": "Сеанс",
+      "sprintWords": "Слова спринта",
+      "sprints": "Спринты",
+      "minutes": "Минуты"
+    },
+    "last30Days": "Последние 30 дней",
+    "today": "Сегодня",
+    "sprintsCount_one": "· {{count}} спринт",
+    "sprintsCount_few": "· {{count}} спринта",
+    "sprintsCount_many": "· {{count}} спринтов",
+    "sprintsCount_other": "· {{count}} спринтов"
   }
 }

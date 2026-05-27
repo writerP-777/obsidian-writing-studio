@@ -174,5 +174,76 @@
       "publishToWordPress": "WordPress-এ প্রকাশ করুন",
       "delete": "মুছুন"
     }
+  },
+  "launcher": {
+    "displayText": "লেখার স্টুডিও",
+    "title": "লেখার স্টুডিও",
+    "settings": "সেটিংস",
+    "project": "প্রকল্প",
+    "newProject": "+ নতুন",
+    "noProjectSelected": "কোনো প্রকল্প নির্বাচন করা হয়নি।",
+    "chooseProject": "— প্রকল্প বেছে নিন —",
+    "wordCount": "{{n}} শব্দ",
+    "wordGoal": "/ {{n}} লক্ষ্য",
+    "pctComplete": "{{pct}}% সম্পন্ন",
+    "openBinder": "📖 বাইন্ডার খুলুন",
+    "writingMode": "লেখার মোড",
+    "mode": {
+      "draft": "খসড়া",
+      "draftDesc": "ফোকাস + টাইপোগ্রাফি চালু, সাইডবার লুকানো",
+      "edit": "সম্পাদনা",
+      "editDesc": "বাইন্ডার খোলা, সম্পূর্ণ UI দৃশ্যমান",
+      "review": "পর্যালোচনা",
+      "reviewDesc": "পাঠ দৃশ্য, কোনো সম্পাদনা নেই",
+      "clearMode": "✕ মোড সাফ করুন"
+    },
+    "focusTypography": "ফোকাস ও টাইপোগ্রাফি",
+    "focusMode": "ফোকাস মোড",
+    "typographyMode": "টাইপোগ্রাফি মোড",
+    "on": "চালু",
+    "off": "বন্ধ",
+    "quickActions": "দ্রুত কার্যক্রম",
+    "action": {
+      "targetsDashboard": "লক্ষ্য ড্যাশবোর্ড",
+      "writingDashboard": "লেখার ড্যাশবোর্ড",
+      "previewManuscript": "পাণ্ডুলিপি পূর্বরূপ",
+      "export": "রপ্তানি",
+      "writingLog": "লেখার লগ",
+      "publishToWordPress": "WordPress-এ প্রকাশ করুন"
+    },
+    "openDocumentFirst": "আগে একটি নথি খুলুন।",
+    "sprintTimer": "স্প্রিন্ট টাইমার",
+    "pause": "⏸ বিরতি",
+    "stop": "■ থামান",
+    "startSprint": "⏱ স্প্রিন্ট শুরু করুন",
+    "quickStart": "দ্রুত শুরু:",
+    "today": "আজ",
+    "stat": {
+      "words": "শব্দ",
+      "sprints": "স্প্রিন্ট",
+      "minutes": "মিনিট",
+      "streak": "ধারা",
+      "streakDays": "{{streak}}দি"
+    },
+    "sessionWordsTyped": "সেশন: +{{n}} শব্দ টাইপ করা হয়েছে",
+    "dailyGoal": "দৈনিক লক্ষ্য: {{written}} / {{goal}} শব্দ"
+  },
+  "log": {
+    "displayText": "লেখার লগ",
+    "title": "লেখার লগ",
+    "noProjectSelected": "কোনো প্রকল্প নির্বাচন করা হয়নি। ইতিহাস দেখতে লঞ্চার খুলুন এবং একটি প্রকল্প নির্বাচন করুন।",
+    "streak": "🔥 {{streak}}-দিনের ধারা",
+    "startStreak": "ধারা শুরু করতে আজ লিখুন",
+    "thisSession": "এই সেশন",
+    "stat": {
+      "session": "সেশন",
+      "sprintWords": "স্প্রিন্ট শব্দ",
+      "sprints": "স্প্রিন্ট",
+      "minutes": "মিনিট"
+    },
+    "last30Days": "শেষ ৩০ দিন",
+    "today": "আজ",
+    "sprintsCount_one": "· {{count}} স্প্রিন্ট",
+    "sprintsCount_other": "· {{count}} স্প্রিন্ট"
   }
 }

@@ -174,5 +174,76 @@
       "publishToWordPress": "Publier sur WordPress",
       "delete": "Supprimer"
     }
+  },
+  "launcher": {
+    "displayText": "Studio d'écriture",
+    "title": "Studio d'écriture",
+    "settings": "Paramètres",
+    "project": "Projet",
+    "newProject": "+ nouveau",
+    "noProjectSelected": "Aucun projet sélectionné.",
+    "chooseProject": "— choisir un projet —",
+    "wordCount": "{{n}} mots",
+    "wordGoal": "/ {{n}} objectif",
+    "pctComplete": "{{pct}}% terminé",
+    "openBinder": "📖 Ouvrir le classeur",
+    "writingMode": "Mode d'écriture",
+    "mode": {
+      "draft": "Brouillon",
+      "draftDesc": "Focus + typographie activés, barres latérales masquées",
+      "edit": "Éditer",
+      "editDesc": "Classeur ouvert, interface complète visible",
+      "review": "Réviser",
+      "reviewDesc": "Vue lecture, pas d'édition",
+      "clearMode": "✕ Effacer le mode"
+    },
+    "focusTypography": "Focus et typographie",
+    "focusMode": "Mode focus",
+    "typographyMode": "Mode typographie",
+    "on": "OUI",
+    "off": "NON",
+    "quickActions": "Actions rapides",
+    "action": {
+      "targetsDashboard": "Tableau des objectifs",
+      "writingDashboard": "Tableau de bord d'écriture",
+      "previewManuscript": "Aperçu du manuscrit",
+      "export": "Exporter",
+      "writingLog": "Journal d'écriture",
+      "publishToWordPress": "Publier sur WordPress"
+    },
+    "openDocumentFirst": "Ouvrez d'abord un document.",
+    "sprintTimer": "Minuteur de sprint",
+    "pause": "⏸ Pause",
+    "stop": "■ Arrêter",
+    "startSprint": "⏱ Démarrer un sprint",
+    "quickStart": "Démarrage rapide :",
+    "today": "Aujourd'hui",
+    "stat": {
+      "words": "Mots",
+      "sprints": "Sprints",
+      "minutes": "Minutes",
+      "streak": "Série",
+      "streakDays": "{{streak}}j"
+    },
+    "sessionWordsTyped": "Session : +{{n}} mots écrits",
+    "dailyGoal": "Objectif quotidien : {{written}} / {{goal}} mots"
+  },
+  "log": {
+    "displayText": "Journal d'écriture",
+    "title": "Journal d'écriture",
+    "noProjectSelected": "Aucun projet sélectionné. Ouvrez le lanceur et sélectionnez un projet pour voir votre historique.",
+    "streak": "🔥 Série de {{streak}} jours",
+    "startStreak": "Écrivez aujourd'hui pour commencer une série",
+    "thisSession": "Cette session",
+    "stat": {
+      "session": "Session",
+      "sprintWords": "Mots de sprint",
+      "sprints": "Sprints",
+      "minutes": "Minutes"
+    },
+    "last30Days": "30 derniers jours",
+    "today": "Aujourd'hui",
+    "sprintsCount_one": "· {{count}} sprint",
+    "sprintsCount_other": "· {{count}} sprints"
   }
 }

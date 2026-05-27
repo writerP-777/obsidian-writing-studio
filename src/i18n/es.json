@@ -174,5 +174,76 @@
       "publishToWordPress": "Publicar en WordPress",
       "delete": "Eliminar"
     }
+  },
+  "launcher": {
+    "displayText": "Estudio de escritura",
+    "title": "Estudio de escritura",
+    "settings": "Configuración",
+    "project": "Proyecto",
+    "newProject": "+ nuevo",
+    "noProjectSelected": "Ningún proyecto seleccionado.",
+    "chooseProject": "— elige proyecto —",
+    "wordCount": "{{n}} palabras",
+    "wordGoal": "/ {{n}} objetivo",
+    "pctComplete": "{{pct}}% completado",
+    "openBinder": "📖 Abrir carpeta",
+    "writingMode": "Modo de escritura",
+    "mode": {
+      "draft": "Borrador",
+      "draftDesc": "Foco + tipografía activados, barras laterales ocultas",
+      "edit": "Editar",
+      "editDesc": "Carpeta abierta, interfaz completa visible",
+      "review": "Revisar",
+      "reviewDesc": "Vista de lectura, sin edición",
+      "clearMode": "✕ Limpiar modo"
+    },
+    "focusTypography": "Foco y tipografía",
+    "focusMode": "Modo foco",
+    "typographyMode": "Modo tipografía",
+    "on": "SÍ",
+    "off": "NO",
+    "quickActions": "Acciones rápidas",
+    "action": {
+      "targetsDashboard": "Panel de objetivos",
+      "writingDashboard": "Panel de escritura",
+      "previewManuscript": "Vista previa del manuscrito",
+      "export": "Exportar",
+      "writingLog": "Registro de escritura",
+      "publishToWordPress": "Publicar en WordPress"
+    },
+    "openDocumentFirst": "Abre un documento primero.",
+    "sprintTimer": "Temporizador de sprint",
+    "pause": "⏸ Pausar",
+    "stop": "■ Detener",
+    "startSprint": "⏱ Iniciar sprint",
+    "quickStart": "Inicio rápido:",
+    "today": "Hoy",
+    "stat": {
+      "words": "Palabras",
+      "sprints": "Sprints",
+      "minutes": "Minutos",
+      "streak": "Racha",
+      "streakDays": "{{streak}}d"
+    },
+    "sessionWordsTyped": "Sesión: +{{n}} palabras escritas",
+    "dailyGoal": "Meta diaria: {{written}} / {{goal}} palabras"
+  },
+  "log": {
+    "displayText": "Registro de escritura",
+    "title": "Registro de escritura",
+    "noProjectSelected": "Ningún proyecto seleccionado. Abre el lanzador y selecciona un proyecto para ver tu historial.",
+    "streak": "🔥 Racha de {{streak}} días",
+    "startStreak": "Escribe hoy para empezar una racha",
+    "thisSession": "Esta sesión",
+    "stat": {
+      "session": "Sesión",
+      "sprintWords": "Palabras de sprint",
+      "sprints": "Sprints",
+      "minutes": "Minutos"
+    },
+    "last30Days": "Últimos 30 días",
+    "today": "Hoy",
+    "sprintsCount_one": "· {{count}} sprint",
+    "sprintsCount_other": "· {{count}} sprints"
   }
 }

@@ -174,5 +174,79 @@
       "publishToWordPress": "نشر على WordPress",
       "delete": "حذف"
     }
+  },
+  "launcher": {
+    "displayText": "استوديو الكتابة",
+    "title": "استوديو الكتابة",
+    "settings": "الإعدادات",
+    "project": "المشروع",
+    "newProject": "+ جديد",
+    "noProjectSelected": "لم يتم اختيار مشروع.",
+    "chooseProject": "— اختر مشروعاً —",
+    "wordCount": "{{n}} كلمة",
+    "wordGoal": "/ {{n}} هدف",
+    "pctComplete": "{{pct}}% مكتمل",
+    "openBinder": "📖 فتح الملف",
+    "writingMode": "وضع الكتابة",
+    "mode": {
+      "draft": "مسودة",
+      "draftDesc": "التركيز والطباعة مفعّلان، الشريط الجانبي مخفي",
+      "edit": "تحرير",
+      "editDesc": "الملف مفتوح، واجهة المستخدم كاملة",
+      "review": "مراجعة",
+      "reviewDesc": "وضع القراءة، لا تحرير",
+      "clearMode": "✕ مسح الوضع"
+    },
+    "focusTypography": "التركيز والطباعة",
+    "focusMode": "وضع التركيز",
+    "typographyMode": "وضع الطباعة",
+    "on": "تشغيل",
+    "off": "إيقاف",
+    "quickActions": "الإجراءات السريعة",
+    "action": {
+      "targetsDashboard": "لوحة الأهداف",
+      "writingDashboard": "لوحة الكتابة",
+      "previewManuscript": "معاينة المخطوطة",
+      "export": "تصدير",
+      "writingLog": "سجل الكتابة",
+      "publishToWordPress": "نشر على WordPress"
+    },
+    "openDocumentFirst": "افتح مستنداً أولاً.",
+    "sprintTimer": "مؤقت السباق",
+    "pause": "⏸ إيقاف مؤقت",
+    "stop": "■ إيقاف",
+    "startSprint": "⏱ بدء السباق",
+    "quickStart": "بدء سريع:",
+    "today": "اليوم",
+    "stat": {
+      "words": "الكلمات",
+      "sprints": "السباقات",
+      "minutes": "الدقائق",
+      "streak": "التسلسل",
+      "streakDays": "{{streak}}ي"
+    },
+    "sessionWordsTyped": "الجلسة: +{{n}} كلمة مكتوبة",
+    "dailyGoal": "الهدف اليومي: {{written}} / {{goal}} كلمة"
+  },
+  "log": {
+    "displayText": "سجل الكتابة",
+    "title": "سجل الكتابة",
+    "noProjectSelected": "لم يتم اختيار مشروع. افتح القاذف واختر مشروعاً لرؤية تاريخ كتابتك.",
+    "streak": "🔥 تسلسل {{streak}} أيام",
+    "startStreak": "اكتب اليوم لبدء تسلسل",
+    "thisSession": "هذه الجلسة",
+    "stat": {
+      "session": "الجلسة",
+      "sprintWords": "كلمات السباق",
+      "sprints": "السباقات",
+      "minutes": "الدقائق"
+    },
+    "last30Days": "آخر 30 يوماً",
+    "today": "اليوم",
+    "sprintsCount_one": "· {{count}} سباق",
+    "sprintsCount_two": "· {{count}} سباقان",
+    "sprintsCount_few": "· {{count}} سباقات",
+    "sprintsCount_many": "· {{count}} سباقاً",
+    "sprintsCount_other": "· {{count}} سباق"
   }
 }

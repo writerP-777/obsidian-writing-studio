@@ -174,5 +174,75 @@
       "publishToWordPress": "发布到 WordPress",
       "delete": "删除"
     }
+  },
+  "launcher": {
+    "displayText": "写作工作室",
+    "title": "写作工作室",
+    "settings": "设置",
+    "project": "项目",
+    "newProject": "+ 新建",
+    "noProjectSelected": "未选择项目。",
+    "chooseProject": "— 选择项目 —",
+    "wordCount": "{{n}} 字",
+    "wordGoal": "/ {{n}} 目标",
+    "pctComplete": "{{pct}}% 完成",
+    "openBinder": "📖 打开活页夹",
+    "writingMode": "写作模式",
+    "mode": {
+      "draft": "草稿",
+      "draftDesc": "专注+排版已开启，侧边栏隐藏",
+      "edit": "编辑",
+      "editDesc": "活页夹已打开，显示完整界面",
+      "review": "审阅",
+      "reviewDesc": "阅读视图，禁止编辑",
+      "clearMode": "✕ 清除模式"
+    },
+    "focusTypography": "专注与排版",
+    "focusMode": "专注模式",
+    "typographyMode": "排版模式",
+    "on": "开",
+    "off": "关",
+    "quickActions": "快捷操作",
+    "action": {
+      "targetsDashboard": "目标仪表板",
+      "writingDashboard": "写作仪表板",
+      "previewManuscript": "预览稿件",
+      "export": "导出",
+      "writingLog": "写作日志",
+      "publishToWordPress": "发布到 WordPress"
+    },
+    "openDocumentFirst": "请先打开文档。",
+    "sprintTimer": "冲刺计时器",
+    "pause": "⏸ 暂停",
+    "stop": "■ 停止",
+    "startSprint": "⏱ 开始冲刺",
+    "quickStart": "快速开始：",
+    "today": "今日",
+    "stat": {
+      "words": "字数",
+      "sprints": "冲刺",
+      "minutes": "分钟",
+      "streak": "连续",
+      "streakDays": "{{streak}}天"
+    },
+    "sessionWordsTyped": "本次：+{{n}} 字",
+    "dailyGoal": "每日目标：{{written}} / {{goal}} 字"
+  },
+  "log": {
+    "displayText": "写作日志",
+    "title": "写作日志",
+    "noProjectSelected": "未选择项目。请打开启动器并选择项目以查看写作历史。",
+    "streak": "🔥 {{streak}}天连续写作",
+    "startStreak": "今天写作开始连续记录",
+    "thisSession": "本次会话",
+    "stat": {
+      "session": "会话",
+      "sprintWords": "冲刺字数",
+      "sprints": "冲刺次数",
+      "minutes": "分钟"
+    },
+    "last30Days": "最近30天",
+    "today": "今天",
+    "sprintsCount_other": "· {{count}} 次冲刺"
   }
 }

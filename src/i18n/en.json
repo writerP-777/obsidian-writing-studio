@@ -174,5 +174,76 @@
       "publishToWordPress": "Publish to WordPress",
       "delete": "Delete"
     }
+  },
+  "launcher": {
+    "displayText": "Writing studio",
+    "title": "Writing Studio",
+    "settings": "Settings",
+    "project": "Project",
+    "newProject": "+ new",
+    "noProjectSelected": "No project selected.",
+    "chooseProject": "— choose project —",
+    "wordCount": "{{n}} words",
+    "wordGoal": "/ {{n}} goal",
+    "pctComplete": "{{pct}}% complete",
+    "openBinder": "📖 Open binder",
+    "writingMode": "Writing mode",
+    "mode": {
+      "draft": "Draft",
+      "draftDesc": "Focus + typography on, sidebars hidden",
+      "edit": "Edit",
+      "editDesc": "Binder open, full UI visible",
+      "review": "Review",
+      "reviewDesc": "Reading view, no editing",
+      "clearMode": "✕ Clear mode"
+    },
+    "focusTypography": "Focus & typography",
+    "focusMode": "Focus mode",
+    "typographyMode": "Typography mode",
+    "on": "ON",
+    "off": "OFF",
+    "quickActions": "Quick actions",
+    "action": {
+      "targetsDashboard": "Targets dashboard",
+      "writingDashboard": "Writing dashboard",
+      "previewManuscript": "Preview manuscript",
+      "export": "Export",
+      "writingLog": "Writing log",
+      "publishToWordPress": "Publish to WordPress"
+    },
+    "openDocumentFirst": "Open a document first.",
+    "sprintTimer": "Sprint timer",
+    "pause": "⏸ Pause",
+    "stop": "■ Stop",
+    "startSprint": "⏱ Start sprint",
+    "quickStart": "Quick start:",
+    "today": "Today",
+    "stat": {
+      "words": "Words",
+      "sprints": "Sprints",
+      "minutes": "Minutes",
+      "streak": "Streak",
+      "streakDays": "{{streak}}d"
+    },
+    "sessionWordsTyped": "Session: +{{n}} words typed",
+    "dailyGoal": "Daily goal: {{written}} / {{goal}} words"
+  },
+  "log": {
+    "displayText": "Writing log",
+    "title": "Writing log",
+    "noProjectSelected": "No project selected. Open the launcher and select a project to see your writing history.",
+    "streak": "🔥 {{streak}}-day streak",
+    "startStreak": "Write today to start a streak",
+    "thisSession": "This session",
+    "stat": {
+      "session": "Session",
+      "sprintWords": "Sprint words",
+      "sprints": "Sprints",
+      "minutes": "Minutes"
+    },
+    "last30Days": "Last 30 days",
+    "today": "Today",
+    "sprintsCount_one": "· {{count}} sprint",
+    "sprintsCount_other": "· {{count}} sprints"
   }
 }
