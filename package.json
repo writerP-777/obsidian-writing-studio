@@ -39,6 +39,7 @@
   "author": "Don Pucik",
   "license": "MIT",
   "dependencies": {
-    "fflate": "^0.8.3"
+    "fflate": "^0.8.3",
+    "i18next": "^26.3.0"
   }
 }

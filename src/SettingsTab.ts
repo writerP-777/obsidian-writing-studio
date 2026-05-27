@@ -2,6 +2,7 @@ import { App, Component, MarkdownRenderer, PluginSettingTab, Setting } from 'obs
 import type WritingStudioPlugin from '../main';
 import { WordPressSite, WPPostStatus } from '../models/WordPressSite';
 import { HELP_CONTENT } from './HelpContent';
+import { t } from './i18n';
 
 export class WritingStudioSettingsTab extends PluginSettingTab {
   plugin: WritingStudioPlugin;
@@ -22,14 +23,14 @@ export class WritingStudioSettingsTab extends PluginSettingTab {
     // Tab bar
     const tabBar = containerEl.createDiv('ws-settings-tabs');
     const tabs = [
-      { id: 'general', label: 'General' },
-      { id: 'focus', label: 'Focus mode' },
-      { id: 'typography', label: 'Typography' },
-      { id: 'sprint', label: 'Sprint & goals' },
-      { id: 'export', label: 'Export' },
-      { id: 'log', label: 'Writing log' },
-      { id: 'wordpress', label: 'WordPress' },
-      { id: 'help', label: 'How to use' },
+      { id: 'general', label: t('settings.tab.general') },
+      { id: 'focus', label: t('settings.tab.focus') },
+      { id: 'typography', label: t('settings.tab.typography') },
+      { id: 'sprint', label: t('settings.tab.sprint') },
+      { id: 'export', label: t('settings.tab.export') },
+      { id: 'log', label: t('settings.tab.log') },
+      { id: 'wordpress', label: t('settings.tab.wordpress') },
+      { id: 'help', label: t('settings.tab.help') },
     ];
 
     const contentEl = containerEl.createDiv('ws-settings-content');
@@ -67,35 +68,35 @@ export class WritingStudioSettingsTab extends PluginSettingTab {
   private renderGeneral(el: HTMLElement): void {
 
     new Setting(el)
-      .setName('Open on startup')
-      .setDesc('Automatically open the writing studio panel when Obsidian launches.')
-      .addToggle(t => t
+      .setName(t('settings.general.openOnStartup'))
+      .setDesc(t('settings.general.openOnStartupDesc'))
+      .addToggle(toggle => toggle
         .setValue(this.plugin.settings.openOnStartup)
         .onChange(async v => { this.plugin.settings.openOnStartup = v; await this.plugin.saveSettings(); }));
 
     new Setting(el)
-      .setName('Default project folder')
-      .setDesc('Vault path where writing projects are stored.')
-      .addText(t => t
-        .setPlaceholder('Writing projects')
+      .setName(t('settings.general.defaultProjectFolder'))
+      .setDesc(t('settings.general.defaultProjectFolderDesc'))
+      .addText(text => text
+        .setPlaceholder(t('settings.general.defaultProjectFolderPlaceholder'))
         .setValue(this.plugin.settings.defaultProjectFolder)
         .onChange(async v => { this.plugin.settings.defaultProjectFolder = v; await this.plugin.saveSettings(); }));
 
     new Setting(el)
-      .setName('Author name')
-      .setDesc('Used in exports and title pages.')
-      .addText(t => t
-        .setPlaceholder('Your name')
+      .setName(t('settings.general.authorName'))
+      .setDesc(t('settings.general.authorNameDesc'))
+      .addText(text => text
+        .setPlaceholder(t('settings.general.authorNamePlaceholder'))
         .setValue(this.plugin.settings.authorName)
         .onChange(async v => { this.plugin.settings.authorName = v; await this.plugin.saveSettings(); }));
 
     new Setting(el)
-      .setName('Default document type')
+      .setName(t('settings.general.defaultDocumentType'))
       .addDropdown(d => d
-        .addOption('chapter', 'Chapter')
-        .addOption('section', 'Section')
-        .addOption('article', 'Article')
-        .addOption('note', 'Note')
+        .addOption('chapter', t('settings.general.docType.chapter'))
+        .addOption('section', t('settings.general.docType.section'))
+        .addOption('article', t('settings.general.docType.article'))
+        .addOption('note', t('settings.general.docType.note'))
         .setValue(this.plugin.settings.defaultDocumentType)
         .onChange(async v => {
           this.plugin.settings.defaultDocumentType = v as 'chapter' | 'section' | 'article' | 'note';
@@ -103,22 +104,22 @@ export class WritingStudioSettingsTab extends PluginSettingTab {
         }));
 
     new Setting(el)
-      .setName('Frontmatter auto-update')
-      .setDesc('Automatically update word-count and modified date on save.')
-      .addToggle(t => t
+      .setName(t('settings.general.frontmatterAutoUpdate'))
+      .setDesc(t('settings.general.frontmatterAutoUpdateDesc'))
+      .addToggle(toggle => toggle
         .setValue(this.plugin.settings.frontmatterAutoUpdate)
         .onChange(async v => { this.plugin.settings.frontmatterAutoUpdate = v; await this.plugin.saveSettings(); }));
   }
 
   private renderFocusMode(el: HTMLElement): void {
-    new Setting(el).setName('Focus mode').setHeading();
+    new Setting(el).setName(t('settings.focus.heading')).setHeading();
 
     new Setting(el)
-      .setName('Focus unit')
-      .setDesc('Highlight at paragraph or sentence level.')
+      .setName(t('settings.focus.focusUnit'))
+      .setDesc(t('settings.focus.focusUnitDesc'))
       .addDropdown(d => d
-        .addOption('paragraph', 'Paragraph')
-        .addOption('sentence', 'Sentence (line)')
+        .addOption('paragraph', t('settings.focus.paragraph'))
+        .addOption('sentence', t('settings.focus.sentence'))
         .setValue(this.plugin.settings.focusUnit)
         .onChange(async v => {
           this.plugin.settings.focusUnit = v as 'paragraph' | 'sentence';
@@ -126,8 +127,8 @@ export class WritingStudioSettingsTab extends PluginSettingTab {
         }));
 
     new Setting(el)
-      .setName('Dim opacity (%)')
-      .setDesc('Opacity of non-active text (10–50).')
+      .setName(t('settings.focus.dimOpacity'))
+      .setDesc(t('settings.focus.dimOpacityDesc'))
       .addSlider(s => s
         .setLimits(10, 50, 5)
         .setValue(this.plugin.settings.dimOpacity)
@@ -139,9 +140,9 @@ export class WritingStudioSettingsTab extends PluginSettingTab {
         }));
 
     new Setting(el)
-      .setName('Font size override (px)')
-      .setDesc('Leave 0 to use current theme font size.')
-      .addText(t => t
+      .setName(t('settings.focus.fontSizeOverride'))
+      .setDesc(t('settings.focus.fontSizeOverrideDesc'))
+      .addText(text => text
         .setValue(String(this.plugin.settings.focusFontSize || 0))
         .onChange(async v => {
           this.plugin.settings.focusFontSize = parseInt(v) || 0;
@@ -149,39 +150,39 @@ export class WritingStudioSettingsTab extends PluginSettingTab {
         }));
 
     new Setting(el)
-      .setName('Auto-hide sidebars')
-      .addToggle(t => t
+      .setName(t('settings.focus.autoHideSidebars'))
+      .addToggle(toggle => toggle
         .setValue(this.plugin.settings.focusAutoHideSidebars)
         .onChange(async v => { this.plugin.settings.focusAutoHideSidebars = v; await this.plugin.saveSettings(); }));
 
     new Setting(el)
-      .setName('Typewriter scroll')
-      .setDesc('Keep active line centered on screen.')
-      .addToggle(t => t
+      .setName(t('settings.focus.typewriterScroll'))
+      .setDesc(t('settings.focus.typewriterScrollDesc'))
+      .addToggle(toggle => toggle
         .setValue(this.plugin.settings.typewriterScroll)
         .onChange(async v => { this.plugin.settings.typewriterScroll = v; await this.plugin.saveSettings(); }));
   }
 
   private renderTypography(el: HTMLElement): void {
-    new Setting(el).setName('Typography mode').setHeading();
+    new Setting(el).setName(t('settings.typography.heading')).setHeading();
 
     new Setting(el)
-      .setName('Font family')
+      .setName(t('settings.typography.fontFamily'))
       .addDropdown(d => {
-        d.addOption('mono', 'Monospaced (ia writer mono)');
-        d.addOption('serif', 'Serif (ia writer duo serif)');
-        d.addOption('sans', 'Sans-serif (ia writer quattro)');
-        d.addOption('cormorant-garamond', 'Cormorant garamond');
-        d.addOption('crimson-text', 'Crimson text');
-        d.addOption('eb-garamond', 'Eb garamond');
-        d.addOption('libre-baskerville', 'Libre baskerville');
-        d.addOption('libre-caslon-text', 'Libre caslon text');
-        d.addOption('literata', 'Literata');
-        d.addOption('lora', 'Lora');
-        d.addOption('inter', 'Inter');
-        d.addOption('lato', 'Lato');
-        d.addOption('source-sans-3', 'Source sans 3');
-        d.addOption('custom', 'Custom font name…');
+        d.addOption('mono', t('settings.typography.font.mono'));
+        d.addOption('serif', t('settings.typography.font.serif'));
+        d.addOption('sans', t('settings.typography.font.sans'));
+        d.addOption('cormorant-garamond', t('settings.typography.font.cormorant-garamond'));
+        d.addOption('crimson-text', t('settings.typography.font.crimson-text'));
+        d.addOption('eb-garamond', t('settings.typography.font.eb-garamond'));
+        d.addOption('libre-baskerville', t('settings.typography.font.libre-baskerville'));
+        d.addOption('libre-caslon-text', t('settings.typography.font.libre-caslon-text'));
+        d.addOption('literata', t('settings.typography.font.literata'));
+        d.addOption('lora', t('settings.typography.font.lora'));
+        d.addOption('inter', t('settings.typography.font.inter'));
+        d.addOption('lato', t('settings.typography.font.lato'));
+        d.addOption('source-sans-3', t('settings.typography.font.source-sans-3'));
+        d.addOption('custom', t('settings.typography.font.custom'));
         d.setValue(this.plugin.settings.typographyFont);
         d.onChange(async v => {
           this.plugin.settings.typographyFont = v;
@@ -191,16 +192,16 @@ export class WritingStudioSettingsTab extends PluginSettingTab {
       });
 
     new Setting(el)
-      .setName('Custom font name')
-      .setDesc('Font name if "custom" is selected above.')
-      .addText(t => t
-        .setPlaceholder('E.g. Merriweather')
+      .setName(t('settings.typography.customFontName'))
+      .setDesc(t('settings.typography.customFontNameDesc'))
+      .addText(text => text
+        .setPlaceholder(t('settings.typography.customFontNamePlaceholder'))
         .setValue(this.plugin.settings.customFontName)
         .onChange(async v => { this.plugin.settings.customFontName = v; await this.plugin.saveSettings(); }));
 
     new Setting(el)
-      .setName('Max line length (characters)')
-      .setDesc('55–80 characters recommended.')
+      .setName(t('settings.typography.maxLineLength'))
+      .setDesc(t('settings.typography.maxLineLengthDesc'))
       .addSlider(s => s
         .setLimits(55, 80, 1)
         .setValue(this.plugin.settings.maxLineLength)
@@ -208,8 +209,8 @@ export class WritingStudioSettingsTab extends PluginSettingTab {
         .onChange(async v => { this.plugin.settings.maxLineLength = v; await this.plugin.saveSettings(); }));
 
     new Setting(el)
-      .setName('Font size (px)')
-      .addText(t => t
+      .setName(t('settings.typography.fontSize'))
+      .addText(text => text
         .setValue(String(this.plugin.settings.typographyFontSize))
         .onChange(async v => {
           this.plugin.settings.typographyFontSize = parseInt(v) || 18;
@@ -217,9 +218,9 @@ export class WritingStudioSettingsTab extends PluginSettingTab {
         }));
 
     new Setting(el)
-      .setName('Line height')
-      .setDesc('Default: 1.7')
-      .addText(t => t
+      .setName(t('settings.typography.lineHeight'))
+      .setDesc(t('settings.typography.lineHeightDesc'))
+      .addText(text => text
         .setValue(String(this.plugin.settings.lineHeight))
         .onChange(async v => {
           this.plugin.settings.lineHeight = parseFloat(v) || 1.7;
@@ -227,26 +228,26 @@ export class WritingStudioSettingsTab extends PluginSettingTab {
         }));
 
     new Setting(el)
-      .setName('Letter spacing')
-      .setDesc('CSS letter-spacing value (e.g. "normal", "0.02em").')
-      .addText(t => t
+      .setName(t('settings.typography.letterSpacing'))
+      .setDesc(t('settings.typography.letterSpacingDesc'))
+      .addText(text => text
         .setValue(this.plugin.settings.letterSpacing)
         .onChange(async v => { this.plugin.settings.letterSpacing = v; await this.plugin.saveSettings(); }));
 
     new Setting(el)
-      .setName('Persist across sessions')
-      .setDesc('Keep typography mode active when Obsidian reopens.')
-      .addToggle(t => t
+      .setName(t('settings.typography.persistAcrossSessions'))
+      .setDesc(t('settings.typography.persistAcrossSessionsDesc'))
+      .addToggle(toggle => toggle
         .setValue(this.plugin.settings.persistTypography)
         .onChange(async v => { this.plugin.settings.persistTypography = v; await this.plugin.saveSettings(); }));
   }
 
   private renderSprint(el: HTMLElement): void {
-    new Setting(el).setName('Sprint & goals').setHeading();
+    new Setting(el).setName(t('settings.sprint.heading')).setHeading();
 
     new Setting(el)
-      .setName('Default sprint duration (minutes)')
-      .addText(t => t
+      .setName(t('settings.sprint.defaultDuration'))
+      .addText(text => text
         .setValue(String(this.plugin.settings.defaultSprintDuration))
         .onChange(async v => {
           this.plugin.settings.defaultSprintDuration = parseInt(v) || 25;
@@ -254,8 +255,8 @@ export class WritingStudioSettingsTab extends PluginSettingTab {
         }));
 
     new Setting(el)
-      .setName('Default daily word goal')
-      .addText(t => t
+      .setName(t('settings.sprint.defaultDailyGoal'))
+      .addText(text => text
         .setValue(String(this.plugin.settings.defaultDailyWordGoal))
         .onChange(async v => {
           this.plugin.settings.defaultDailyWordGoal = parseInt(v) || 0;
@@ -263,15 +264,15 @@ export class WritingStudioSettingsTab extends PluginSettingTab {
         }));
 
     new Setting(el)
-      .setName('Sound notifications')
-      .setDesc('Play a tone when sprint ends.')
-      .addToggle(t => t
+      .setName(t('settings.sprint.soundNotifications'))
+      .setDesc(t('settings.sprint.soundNotificationsDesc'))
+      .addToggle(toggle => toggle
         .setValue(this.plugin.settings.soundNotifications)
         .onChange(async v => { this.plugin.settings.soundNotifications = v; await this.plugin.saveSettings(); }));
 
     new Setting(el)
-      .setName('Sprint history retention (days)')
-      .addText(t => t
+      .setName(t('settings.sprint.historyRetention'))
+      .addText(text => text
         .setValue(String(this.plugin.settings.sprintHistoryRetention))
         .onChange(async v => {
           this.plugin.settings.sprintHistoryRetention = parseInt(v) || 90;
@@ -279,45 +280,45 @@ export class WritingStudioSettingsTab extends PluginSettingTab {
         }));
 
     new Setting(el)
-      .setName('Inline goal banner')
-      .setDesc('Show word count goal progress below the title when a document is opened.')
-      .addToggle(t => t
+      .setName(t('settings.sprint.inlineGoalBanner'))
+      .setDesc(t('settings.sprint.inlineGoalBannerDesc'))
+      .addToggle(toggle => toggle
         .setValue(this.plugin.settings.inlineGoalBanner)
         .onChange(async v => { this.plugin.settings.inlineGoalBanner = v; await this.plugin.saveSettings(); }));
   }
 
   private renderExport(el: HTMLElement): void {
-    new Setting(el).setName('Export').setHeading();
+    new Setting(el).setName(t('settings.export.heading')).setHeading();
 
     new Setting(el)
-      .setName('Default export format')
+      .setName(t('settings.export.defaultFormat'))
       .addDropdown(d => d
-        .addOption('md', 'Markdown (.md)')
-        .addOption('html', 'HTML')
-        .addOption('pdf', 'PDF')
-        .addOption('docx', 'Word (.docx)')
-        .addOption('rtf', 'RTF')
+        .addOption('md', t('settings.export.format.md'))
+        .addOption('html', t('settings.export.format.html'))
+        .addOption('pdf', t('settings.export.format.pdf'))
+        .addOption('docx', t('settings.export.format.docx'))
+        .addOption('rtf', t('settings.export.format.rtf'))
         .setValue(this.plugin.settings.defaultExportFormat)
         .onChange(async v => { this.plugin.settings.defaultExportFormat = v as 'pdf' | 'docx' | 'rtf' | 'md' | 'html'; await this.plugin.saveSettings(); }));
 
     new Setting(el)
-      .setName('Default paper size')
+      .setName(t('settings.export.defaultPaperSize'))
       .addDropdown(d => d
-        .addOption('letter', 'Letter (US)')
-        .addOption('a4', 'A4')
+        .addOption('letter', t('settings.export.paperSize.letter'))
+        .addOption('a4', t('settings.export.paperSize.a4'))
         .setValue(this.plugin.settings.defaultPaperSize)
         .onChange(async v => { this.plugin.settings.defaultPaperSize = v as 'letter' | 'a4'; await this.plugin.saveSettings(); }));
 
     new Setting(el)
-      .setName('Export font')
-      .addText(t => t
+      .setName(t('settings.export.exportFont'))
+      .addText(text => text
         .setPlaceholder('Georgia')
         .setValue(this.plugin.settings.defaultExportFont)
         .onChange(async v => { this.plugin.settings.defaultExportFont = v; await this.plugin.saveSettings(); }));
 
     new Setting(el)
-      .setName('Export font size (pt)')
-      .addText(t => t
+      .setName(t('settings.export.exportFontSize'))
+      .addText(text => text
         .setValue(String(this.plugin.settings.defaultExportFontSize))
         .onChange(async v => {
           this.plugin.settings.defaultExportFontSize = parseInt(v) || 12;
@@ -325,44 +326,44 @@ export class WritingStudioSettingsTab extends PluginSettingTab {
         }));
 
     new Setting(el)
-      .setName('Pandoc path')
-      .setDesc('Full path to pandoc binary if not in system path.')
-      .addText(t => t
+      .setName(t('settings.export.pandocPath'))
+      .setDesc(t('settings.export.pandocPathDesc'))
+      .addText(text => text
         .setPlaceholder('Pandoc')
         .setValue(this.plugin.settings.pandocPath)
         .onChange(async v => { this.plugin.settings.pandocPath = v; await this.plugin.saveSettings(); }));
 
-    new Setting(el).setName('EPUB').setHeading();
+    new Setting(el).setName(t('settings.export.epubHeading')).setHeading();
 
     new Setting(el)
-      .setName('EPUB language')
-      .setDesc('BCP 47 language tag (e.g. en, fr, de).')
-      .addText(t => t
+      .setName(t('settings.export.epubLanguage'))
+      .setDesc(t('settings.export.epubLanguageDesc'))
+      .addText(text => text
         .setPlaceholder('en')
         .setValue(this.plugin.settings.epubLanguage)
         .onChange(async v => { this.plugin.settings.epubLanguage = v.trim() || 'en'; await this.plugin.saveSettings(); }));
 
     new Setting(el)
-      .setName('Include cover')
-      .setDesc('Generate a text cover page when no cover image is provided.')
-      .addToggle(t => t
+      .setName(t('settings.export.includeCover'))
+      .setDesc(t('settings.export.includeCoverDesc'))
+      .addToggle(toggle => toggle
         .setValue(this.plugin.settings.epubIncludeCover)
         .onChange(async v => { this.plugin.settings.epubIncludeCover = v; await this.plugin.saveSettings(); }));
   }
 
   private renderLog(el: HTMLElement): void {
-    new Setting(el).setName('Daily writing log').setHeading();
+    new Setting(el).setName(t('settings.log.heading')).setHeading();
 
     new Setting(el)
-      .setName('Append to daily note')
-      .setDesc('Add a writing activity summary to today\'s daily note after each sprint.')
-      .addToggle(t => t
+      .setName(t('settings.log.appendToDailyNote'))
+      .setDesc(t('settings.log.appendToDailyNoteDesc'))
+      .addToggle(toggle => toggle
         .setValue(this.plugin.settings.appendToDailyNote)
         .onChange(async v => { this.plugin.settings.appendToDailyNote = v; await this.plugin.saveSettings(); }));
   }
 
   private renderWordPress(el: HTMLElement): void {
-    new Setting(el).setName('WordPress sites').setHeading();
+    new Setting(el).setName(t('settings.wordpress.sitesHeading')).setHeading();
 
     const sites = this.plugin.settings.wordPressSites;
 
@@ -373,7 +374,7 @@ export class WritingStudioSettingsTab extends PluginSettingTab {
 
     new Setting(el)
       .addButton(b => b
-        .setButtonText('+ add WordPress site')
+        .setButtonText(t('settings.wordpress.addSite'))
         .onClick(async () => {
           this.plugin.settings.wordPressSites.push({
             id: `site-${Date.now()}`,
@@ -388,76 +389,77 @@ export class WritingStudioSettingsTab extends PluginSettingTab {
           this.display();
         }));
 
-    new Setting(el).setName('Wikilink defaults').setHeading();
+    new Setting(el).setName(t('settings.wordpress.wikilinksHeading')).setHeading();
 
     new Setting(el)
-      .setName('Default wikilink handling')
+      .setName(t('settings.wordpress.defaultWikilinkHandling'))
       .addDropdown(d => d
-        .addOption('strip', 'Strip (convert to plain text)')
-        .addOption('convert', 'Convert to URL')
+        .addOption('strip', t('settings.wordpress.wikilinkStrip'))
+        .addOption('convert', t('settings.wordpress.wikilinkConvert'))
         .setValue(this.plugin.settings.wikilinkHandling)
         .onChange(async v => { this.plugin.settings.wikilinkHandling = v as 'strip' | 'convert'; await this.plugin.saveSettings(); }));
   }
 
   private renderSiteConfig(container: HTMLElement, site: WordPressSite, index: number): void {
     const siteEl = container.createDiv('ws-wp-site-config');
-    new Setting(siteEl).setName(`Site: ${site.nickname || 'Unnamed'}`).setHeading();
+    const heading = t('settings.wordpress.siteHeading', { nickname: site.nickname || t('settings.wordpress.siteUnnamed') });
+    new Setting(siteEl).setName(heading).setHeading();
 
     new Setting(siteEl)
-      .setName('Nickname')
-      .addText(t => t
+      .setName(t('settings.wordpress.nickname'))
+      .addText(text => text
         .setValue(site.nickname)
         .onChange(async v => { site.nickname = v; await this.plugin.saveSettings(); }));
 
     new Setting(siteEl)
-      .setName('Site URL')
-      .addText(t => t
+      .setName(t('settings.wordpress.siteUrl'))
+      .addText(text => text
         .setPlaceholder('https://example.com')
         .setValue(site.url)
         .onChange(async v => { site.url = v; await this.plugin.saveSettings(); }));
 
     new Setting(siteEl)
-      .setName('Username')
-      .addText(t => t
+      .setName(t('settings.wordpress.username'))
+      .addText(text => text
         .setValue(site.username)
         .onChange(async v => { site.username = v; await this.plugin.saveSettings(); }));
 
     new Setting(siteEl)
-      .setName('Application password')
-      .setDesc('Generated in WordPress under Users → Profile → Application passwords.')
-      .addText(t => {
-        t.inputEl.type = 'password';
-        t.setValue(site.appPassword)
+      .setName(t('settings.wordpress.appPassword'))
+      .setDesc(t('settings.wordpress.appPasswordDesc'))
+      .addText(text => {
+        text.inputEl.type = 'password';
+        text.setValue(site.appPassword)
           .onChange(async v => { site.appPassword = v; await this.plugin.saveSettings(); });
       });
 
     new Setting(siteEl)
-      .setName('Default post status')
+      .setName(t('settings.wordpress.defaultPostStatus'))
       .addDropdown(d => d
-        .addOption('draft', 'Draft')
-        .addOption('pending', 'Pending review')
-        .addOption('publish', 'Published')
+        .addOption('draft', t('settings.wordpress.postStatus.draft'))
+        .addOption('pending', t('settings.wordpress.postStatus.pending'))
+        .addOption('publish', t('settings.wordpress.postStatus.publish'))
         .setValue(site.defaultStatus)
         .onChange(async v => { site.defaultStatus = v as WPPostStatus; await this.plugin.saveSettings(); }));
 
     new Setting(siteEl)
-      .setName('Wikilink handling')
+      .setName(t('settings.wordpress.wikilinkHandling'))
       .addDropdown(d => d
-        .addOption('strip', 'Strip')
-        .addOption('convert', 'Convert to URL')
+        .addOption('strip', t('settings.wordpress.wikilinkHandlingStrip'))
+        .addOption('convert', t('settings.wordpress.wikilinkHandlingConvert'))
         .setValue(site.wikilinkHandling)
         .onChange(async v => { site.wikilinkHandling = v as 'strip' | 'convert'; await this.plugin.saveSettings(); }));
 
     const testRow = new Setting(siteEl)
-      .setName('Test connection')
-      .setDesc('Verify credentials and connectivity.');
+      .setName(t('settings.wordpress.testConnection'))
+      .setDesc(t('settings.wordpress.testConnectionDesc'));
 
     const statusEl = siteEl.createDiv('ws-wp-test-status');
 
     testRow.addButton(b => b
-      .setButtonText('Test connection')
+      .setButtonText(t('settings.wordpress.testConnection'))
       .onClick(async () => {
-        statusEl.textContent = 'Testing…';
+        statusEl.textContent = t('settings.wordpress.testing');
         statusEl.className = 'ws-wp-test-status ws-wp-test-pending';
         const result = await this.plugin.wpClient.testConnection(site);
         statusEl.textContent = result.message;
@@ -466,7 +468,7 @@ export class WritingStudioSettingsTab extends PluginSettingTab {
 
     new Setting(siteEl)
       .addButton(b => b
-        .setButtonText('Remove site')
+        .setButtonText(t('settings.wordpress.removeSite'))
         .setWarning()
         .onClick(async () => {
           this.plugin.settings.wordPressSites.splice(index, 1);
@@ -487,7 +489,7 @@ export class WritingStudioSettingsTab extends PluginSettingTab {
     }).createEl('img', {
       attr: {
         src: 'https://img.buymeacoffee.com/button-api/?text=Buy%20me%20a%20coffee&slug=writerp777&button_colour=c9a84c&font_colour=000000&font_family=Georgia&outline_colour=000000&coffee_colour=ffffff',
-        alt: 'Buy me a coffee',
+        alt: t('settings.wordpress.buyMeACoffee'),
         height: '40'
       }
     });

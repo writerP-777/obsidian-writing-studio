@@ -4,6 +4,18 @@ All notable changes to Writing Studio are documented here.
 
 ---
 
+## [Unreleased]
+
+### Added
+- **Internationalization (i18n):** all Settings tab and Writing Binder UI strings are now fully translated into 9 languages: English, Chinese Simplified, Hindi, Spanish, Arabic, French, Bengali, Portuguese (Brazil), and Russian. Locale is detected automatically from Obsidian's language setting and falls back to English for any unsupported locale.
+- `src/i18n.ts` — i18next wrapper with `initI18n()` and `t()` helper
+- `src/i18n/` — locale JSON files for all 9 languages
+
+### Changed
+- `minAppVersion` bumped from 1.7.2 → 1.8.7 to enable the native `getLanguage()` API for locale detection
+
+---
+
 ## [2.2.3]
 
 ### Added

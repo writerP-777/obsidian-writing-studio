@@ -6,6 +6,7 @@ import { ProjectModal } from '../modals/ProjectModal';
 import { TargetsDashboardModal } from '../modals/TargetsDashboardModal';
 import { PublishModal } from '../modals/PublishModal';
 import { ScanFolderModal } from '../modals/ScanFolderModal';
+import { t } from './i18n';
 
 export const BINDER_VIEW_TYPE = 'writing-studio-binder';
 
@@ -29,7 +30,7 @@ export class BinderView extends ItemView {
   }
 
   getDisplayText(): string {
-    return 'Writing binder';
+    return t('binder.displayText');
   }
 
   getIcon(): string {
@@ -65,7 +66,7 @@ export class BinderView extends ItemView {
     const projectSel = projectRow.createEl('select', { cls: 'ws-binder-project-sel' });
     const projects = this.plugin.projectManager.getProjects();
 
-    const noOpt = projectSel.createEl('option', { text: '— select project —' });
+    const noOpt = projectSel.createEl('option', { text: t('binder.selectProject') });
     noOpt.value = '';
 
     for (const p of projects) {
@@ -79,7 +80,7 @@ export class BinderView extends ItemView {
       await this.refresh();
     };
 
-    const newProjectBtn = projectRow.createEl('button', { cls: 'ws-binder-btn', title: 'New project' });
+    const newProjectBtn = projectRow.createEl('button', { cls: 'ws-binder-btn', title: t('binder.newProject') });
     setIcon(newProjectBtn, 'plus');
     newProjectBtn.onclick = () => {
       new ProjectModal(this.app, this.plugin, () => { void this.refresh(); }).open();
@@ -89,29 +90,29 @@ export class BinderView extends ItemView {
     const toolbar = header.createDiv('ws-binder-toolbar');
     const newDocBtn = toolbar.createEl('button', {
       cls: 'ws-binder-btn',
-      text: '+ document',
+      text: t('binder.addDocument'),
     });
     newDocBtn.onclick = async () => {
       if (!this.activeProject) {
-        new Notice('Select a project first.');
+        new Notice(t('binder.selectProjectFirst'));
         return;
       }
       await this.createNewDocument();
     };
 
     const scanBtn = toolbar.createEl('button', { cls: 'ws-binder-btn' });
-    scanBtn.ariaLabel = 'Add files copied to this folder';
+    scanBtn.ariaLabel = t('binder.addFiles');
     setIcon(scanBtn, 'folder-sync');
-    setTooltip(scanBtn, 'Add files copied to this folder');
+    setTooltip(scanBtn, t('binder.addFiles'));
     scanBtn.onclick = async () => {
       if (!this.activeProject) {
-        new Notice('Select a project first.');
+        new Notice(t('binder.selectProjectFirst'));
         return;
       }
       await this.scanProjectFolder();
     };
 
-    const dashBtn = toolbar.createEl('button', { cls: 'ws-binder-btn', title: 'Targets dashboard' });
+    const dashBtn = toolbar.createEl('button', { cls: 'ws-binder-btn', title: t('binder.targetsDashboard') });
     setIcon(dashBtn, 'target');
     dashBtn.onclick = () => {
       new TargetsDashboardModal(this.app, this.plugin).open();
@@ -121,7 +122,7 @@ export class BinderView extends ItemView {
     const searchInput = header.createEl('input', {
       cls: 'ws-binder-search',
       type: 'text',
-      placeholder: 'Search documents…',
+      placeholder: t('binder.searchPlaceholder'),
     });
     searchInput.oninput = () => this.filterItems(searchInput.value, container);
 
@@ -130,13 +131,13 @@ export class BinderView extends ItemView {
 
     if (!this.activeProject) {
       const empty = listEl.createDiv('ws-binder-empty');
-      empty.textContent = 'No project selected. Create or select a writing project to get started.';
+      empty.textContent = t('binder.noProjectSelected');
       return;
     }
 
     if (this.binderItems.length === 0) {
       const empty = listEl.createDiv('ws-binder-empty');
-      empty.textContent = 'No documents yet. Click "+ document" to add one.';
+      empty.textContent = t('binder.noDocuments');
       return;
     }
 
@@ -144,7 +145,7 @@ export class BinderView extends ItemView {
 
     // Root append zone — visible during drag to promote/append at root level
     const rootZone = listEl.createDiv('ws-binder-root-append-zone');
-    rootZone.textContent = '↓ drop here to promote to root';
+    rootZone.textContent = t('binder.dropToRoot');
     rootZone.ondragover = (e) => { e.preventDefault(); rootZone.classList.add('ws-binder-root-append-active'); };
     rootZone.ondragleave = (e) => {
       if (!rootZone.contains(e.relatedTarget as Node)) rootZone.classList.remove('ws-binder-root-append-active');
@@ -295,7 +296,7 @@ export class BinderView extends ItemView {
     if (goal) {
       const pct = Math.min(100, Math.round((wc / goal) * 100));
       el.textContent = `${wc}/${goal}`;
-      el.title = `${pct}% complete`;
+      el.title = t('binder.pctComplete', { pct });
     } else {
       el.textContent = `${wc}w`;
     }
@@ -311,7 +312,7 @@ export class BinderView extends ItemView {
     if (goal && goal > 0) {
       const pct = Math.min(100, Math.round((wc / goal) * 100));
       el.textContent = `${wc}/${goal}`;
-      el.title = `${pct}% complete`;
+      el.title = t('binder.pctComplete', { pct });
     } else {
       el.textContent = `${wc}w`;
     }
@@ -332,7 +333,7 @@ export class BinderView extends ItemView {
   private async openDocument(item: BinderItem): Promise<void> {
     const file = this.app.vault.getAbstractFileByPath(item.filePath);
     if (!(file instanceof TFile)) {
-      new Notice(`Cannot find file: ${item.filePath}. Try renaming or re-linking the document.`);
+      new Notice(t('binder.cannotFindFile', { filePath: item.filePath }));
       return;
     }
     const leaf = this.app.workspace.getLeaf(false);
@@ -379,29 +380,29 @@ export class BinderView extends ItemView {
   private showContextMenu(e: MouseEvent, item: BinderItem): void {
     const menu = new Menu();
 
-    menu.addItem(i => i.setTitle('Open document').setIcon('file-text').onClick(() => { void this.openDocument(item); }));
-    menu.addItem(i => i.setTitle('New child document').setIcon('plus').onClick(() => { void this.createNewDocument(item.id); }));
+    menu.addItem(i => i.setTitle(t('binder.menu.openDocument')).setIcon('file-text').onClick(() => { void this.openDocument(item); }));
+    menu.addItem(i => i.setTitle(t('binder.menu.newChildDocument')).setIcon('plus').onClick(() => { void this.createNewDocument(item.id); }));
     menu.addSeparator();
-    menu.addItem(i => i.setTitle('Set status: draft').onClick(() => { void this.setItemStatus(item, 'draft'); }));
-    menu.addItem(i => i.setTitle('Set status: in progress').onClick(() => { void this.setItemStatus(item, 'in-progress'); }));
-    menu.addItem(i => i.setTitle('Set status: complete').onClick(() => { void this.setItemStatus(item, 'complete'); }));
-    menu.addItem(i => i.setTitle('Set status: published').onClick(() => { void this.setItemStatus(item, 'published'); }));
+    menu.addItem(i => i.setTitle(t('binder.menu.setStatusDraft')).onClick(() => { void this.setItemStatus(item, 'draft'); }));
+    menu.addItem(i => i.setTitle(t('binder.menu.setStatusInProgress')).onClick(() => { void this.setItemStatus(item, 'in-progress'); }));
+    menu.addItem(i => i.setTitle(t('binder.menu.setStatusComplete')).onClick(() => { void this.setItemStatus(item, 'complete'); }));
+    menu.addItem(i => i.setTitle(t('binder.menu.setStatusPublished')).onClick(() => { void this.setItemStatus(item, 'published'); }));
     menu.addSeparator();
-    menu.addItem(i => i.setTitle('Duplicate').setIcon('copy').onClick(() => { void this.duplicateItem(item); }));
-    menu.addItem(i => i.setTitle('Move to research').setIcon('folder').onClick(() => { void this.moveToResearch(item); }));
+    menu.addItem(i => i.setTitle(t('binder.menu.duplicate')).setIcon('copy').onClick(() => { void this.duplicateItem(item); }));
+    menu.addItem(i => i.setTitle(t('binder.menu.moveToResearch')).setIcon('folder').onClick(() => { void this.moveToResearch(item); }));
     menu.addSeparator();
-    menu.addItem(i => i.setTitle('Publish to WordPress').setIcon('globe').onClick(() => {
+    menu.addItem(i => i.setTitle(t('binder.menu.publishToWordPress')).setIcon('globe').onClick(() => {
       new PublishModal(this.app, this.plugin, item.filePath).open();
     }));
     menu.addSeparator();
-    menu.addItem(i => i.setTitle('Delete').setIcon('trash').onClick(() => { void this.deleteItem(item); }));
+    menu.addItem(i => i.setTitle(t('binder.menu.delete')).setIcon('trash').onClick(() => { void this.deleteItem(item); }));
 
     menu.showAtMouseEvent(e);
   }
 
   private async createNewDocument(parentId?: string): Promise<void> {
     if (!this.activeProject) return;
-    const title = `Untitled ${new Date().toLocaleTimeString()}`;
+    const title = t('binder.untitledDocument', { time: new Date().toLocaleTimeString() });
     await this.plugin.projectManager.addDocumentToBinder(
       this.activeProject,
       title,
@@ -420,7 +421,7 @@ export class BinderView extends ItemView {
   private async duplicateItem(item: BinderItem): Promise<void> {
     if (!this.activeProject) return;
     if (item.type === 'group' || item.type === 'part') return;
-    const newTitle = `${item.title} (Copy)`;
+    const newTitle = `${item.title} ${t('binder.copySuffix')}`;
     const newItem = await this.plugin.projectManager.addDocumentToBinder(
       this.activeProject,
       newTitle,
@@ -586,7 +587,7 @@ export class BinderView extends ItemView {
 
   async scanProjectFolder(): Promise<void> {
     if (!this.activeProject) {
-      new Notice('Select a project first.');
+      new Notice(t('binder.selectProjectFirst'));
       return;
     }
 
@@ -603,7 +604,7 @@ export class BinderView extends ItemView {
     );
 
     if (untracked.length === 0) {
-      new Notice('No new files found in the project folder.');
+      new Notice(t('binder.noNewFiles'));
       return;
     }
 

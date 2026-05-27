@@ -1,0 +1,178 @@
+{
+  "settings": {
+    "tab": {
+      "general": "Geral",
+      "focus": "Modo foco",
+      "typography": "Tipografia",
+      "sprint": "Sprint e metas",
+      "export": "Exportar",
+      "log": "Log de escrita",
+      "wordpress": "WordPress",
+      "help": "Como usar"
+    },
+    "general": {
+      "openOnStartup": "Abrir ao iniciar",
+      "openOnStartupDesc": "Abrir automaticamente o painel Writing Studio quando o Obsidian iniciar.",
+      "defaultProjectFolder": "Pasta de projeto padrão",
+      "defaultProjectFolderDesc": "Caminho do vault onde os projetos de escrita são armazenados.",
+      "defaultProjectFolderPlaceholder": "Projetos de escrita",
+      "authorName": "Nome do autor",
+      "authorNameDesc": "Usado em exportações e páginas de título.",
+      "authorNamePlaceholder": "Seu nome",
+      "defaultDocumentType": "Tipo de documento padrão",
+      "docType": {
+        "chapter": "Capítulo",
+        "section": "Seção",
+        "article": "Artigo",
+        "note": "Nota"
+      },
+      "frontmatterAutoUpdate": "Atualização automática do frontmatter",
+      "frontmatterAutoUpdateDesc": "Atualizar automaticamente a contagem de palavras e a data de modificação ao salvar."
+    },
+    "focus": {
+      "heading": "Modo foco",
+      "focusUnit": "Unidade de foco",
+      "focusUnitDesc": "Destacar no nível de parágrafo ou frase.",
+      "paragraph": "Parágrafo",
+      "sentence": "Frase (linha)",
+      "dimOpacity": "Opacidade de escurecimento (%)",
+      "dimOpacityDesc": "Opacidade do texto não ativo (10–50).",
+      "fontSizeOverride": "Substituição do tamanho da fonte (px)",
+      "fontSizeOverrideDesc": "Deixar 0 para usar o tamanho de fonte do tema atual.",
+      "autoHideSidebars": "Ocultar barras laterais automaticamente",
+      "typewriterScroll": "Rolagem de máquina de escrever",
+      "typewriterScrollDesc": "Manter a linha ativa centralizada na tela."
+    },
+    "typography": {
+      "heading": "Modo tipografia",
+      "fontFamily": "Família de fonte",
+      "font": {
+        "mono": "Monoespaçada (iA Writer Mono)",
+        "serif": "Serifada (iA Writer Duo Serif)",
+        "sans": "Sem serifa (iA Writer Quattro)",
+        "cormorant-garamond": "Cormorant garamond",
+        "crimson-text": "Crimson text",
+        "eb-garamond": "Eb garamond",
+        "libre-baskerville": "Libre baskerville",
+        "libre-caslon-text": "Libre caslon text",
+        "literata": "Literata",
+        "lora": "Lora",
+        "inter": "Inter",
+        "lato": "Lato",
+        "source-sans-3": "Source sans 3",
+        "custom": "Nome de fonte personalizado…"
+      },
+      "customFontName": "Nome de fonte personalizado",
+      "customFontNameDesc": "Nome da fonte se \"personalizado\" estiver selecionado acima.",
+      "customFontNamePlaceholder": "Ex.: Merriweather",
+      "maxLineLength": "Comprimento máximo de linha (caracteres)",
+      "maxLineLengthDesc": "Recomendado 55–80 caracteres.",
+      "fontSize": "Tamanho da fonte (px)",
+      "lineHeight": "Altura da linha",
+      "lineHeightDesc": "Padrão: 1.7",
+      "letterSpacing": "Espaçamento entre letras",
+      "letterSpacingDesc": "Valor CSS de letter-spacing (ex.: \"normal\", \"0.02em\").",
+      "persistAcrossSessions": "Persistir entre sessões",
+      "persistAcrossSessionsDesc": "Manter o modo tipografia ativo quando o Obsidian reabrir."
+    },
+    "sprint": {
+      "heading": "Sprint e metas",
+      "defaultDuration": "Duração padrão do sprint (minutos)",
+      "defaultDailyGoal": "Meta diária de palavras padrão",
+      "soundNotifications": "Notificações sonoras",
+      "soundNotificationsDesc": "Tocar um som quando o sprint terminar.",
+      "historyRetention": "Retenção do histórico de sprints (dias)",
+      "inlineGoalBanner": "Banner de meta inline",
+      "inlineGoalBannerDesc": "Mostrar o progresso da meta de palavras abaixo do título quando um documento for aberto."
+    },
+    "export": {
+      "heading": "Exportar",
+      "defaultFormat": "Formato de exportação padrão",
+      "format": {
+        "md": "Markdown (.md)",
+        "html": "HTML",
+        "pdf": "PDF",
+        "docx": "Word (.docx)",
+        "rtf": "RTF"
+      },
+      "defaultPaperSize": "Tamanho de papel padrão",
+      "paperSize": {
+        "letter": "Carta (EUA)",
+        "a4": "A4"
+      },
+      "exportFont": "Fonte de exportação",
+      "exportFontSize": "Tamanho da fonte de exportação (pt)",
+      "pandocPath": "Caminho do Pandoc",
+      "pandocPathDesc": "Caminho completo para o binário do pandoc se não estiver no path do sistema.",
+      "epubHeading": "EPUB",
+      "epubLanguage": "Idioma do EPUB",
+      "epubLanguageDesc": "Tag de idioma BCP 47 (ex.: en, fr, de).",
+      "includeCover": "Incluir capa",
+      "includeCoverDesc": "Gerar uma capa de texto quando nenhuma imagem de capa for fornecida."
+    },
+    "log": {
+      "heading": "Log diário de escrita",
+      "appendToDailyNote": "Adicionar à nota diária",
+      "appendToDailyNoteDesc": "Adicionar um resumo de atividade de escrita à nota diária de hoje após cada sprint."
+    },
+    "wordpress": {
+      "sitesHeading": "Sites WordPress",
+      "addSite": "+ adicionar site WordPress",
+      "wikilinksHeading": "Padrões de wikilinks",
+      "defaultWikilinkHandling": "Tratamento padrão de wikilinks",
+      "wikilinkStrip": "Remover (converter para texto simples)",
+      "wikilinkConvert": "Converter para URL",
+      "siteHeading": "Site: {{nickname}}",
+      "siteUnnamed": "Sem nome",
+      "nickname": "Apelido",
+      "siteUrl": "URL do site",
+      "username": "Nome de usuário",
+      "appPassword": "Senha de aplicativo",
+      "appPasswordDesc": "Gerada no WordPress em Usuários → Perfil → Senhas de aplicativo.",
+      "defaultPostStatus": "Status de publicação padrão",
+      "postStatus": {
+        "draft": "Rascunho",
+        "pending": "Aguardando revisão",
+        "publish": "Publicado"
+      },
+      "wikilinkHandling": "Tratamento de wikilinks",
+      "wikilinkHandlingStrip": "Remover",
+      "wikilinkHandlingConvert": "Converter para URL",
+      "testConnection": "Testar conexão",
+      "testConnectionDesc": "Verificar credenciais e conectividade.",
+      "testing": "Testando…",
+      "removeSite": "Remover site",
+      "buyMeACoffee": "Me pague um café"
+    }
+  },
+  "binder": {
+    "displayText": "Pasta de escrita",
+    "selectProject": "— selecionar projeto —",
+    "newProject": "Novo projeto",
+    "addDocument": "+ documento",
+    "addFiles": "Adicionar arquivos copiados para esta pasta",
+    "targetsDashboard": "Painel de metas",
+    "searchPlaceholder": "Pesquisar documentos…",
+    "noProjectSelected": "Nenhum projeto selecionado. Crie ou selecione um projeto de escrita para começar.",
+    "noDocuments": "Nenhum documento ainda. Clique em \"+ documento\" para adicionar um.",
+    "dropToRoot": "↓ soltar aqui para promover à raiz",
+    "selectProjectFirst": "Selecione um projeto primeiro.",
+    "cannotFindFile": "Não é possível encontrar o arquivo: {{filePath}}. Tente renomeá-lo ou vinculá-lo novamente.",
+    "untitledDocument": "Sem título {{time}}",
+    "noNewFiles": "Nenhum arquivo novo encontrado na pasta do projeto.",
+    "pctComplete": "{{pct}}% concluído",
+    "copySuffix": "(Cópia)",
+    "menu": {
+      "openDocument": "Abrir documento",
+      "newChildDocument": "Novo documento filho",
+      "setStatusDraft": "Definir status: rascunho",
+      "setStatusInProgress": "Definir status: em andamento",
+      "setStatusComplete": "Definir status: concluído",
+      "setStatusPublished": "Definir status: publicado",
+      "duplicate": "Duplicar",
+      "moveToResearch": "Mover para pesquisa",
+      "publishToWordPress": "Publicar no WordPress",
+      "delete": "Excluir"
+    }
+  }
+}

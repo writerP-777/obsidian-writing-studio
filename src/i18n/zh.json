@@ -1,0 +1,178 @@
+{
+  "settings": {
+    "tab": {
+      "general": "通用",
+      "focus": "专注模式",
+      "typography": "排版",
+      "sprint": "冲刺与目标",
+      "export": "导出",
+      "log": "写作日志",
+      "wordpress": "WordPress",
+      "help": "使用说明"
+    },
+    "general": {
+      "openOnStartup": "启动时打开",
+      "openOnStartupDesc": "Obsidian 启动时自动打开写作工作室面板。",
+      "defaultProjectFolder": "默认项目文件夹",
+      "defaultProjectFolderDesc": "存储写作项目的库路径。",
+      "defaultProjectFolderPlaceholder": "写作项目",
+      "authorName": "作者姓名",
+      "authorNameDesc": "用于导出文件和标题页。",
+      "authorNamePlaceholder": "您的姓名",
+      "defaultDocumentType": "默认文档类型",
+      "docType": {
+        "chapter": "章节",
+        "section": "小节",
+        "article": "文章",
+        "note": "笔记"
+      },
+      "frontmatterAutoUpdate": "前置数据自动更新",
+      "frontmatterAutoUpdateDesc": "保存时自动更新字数统计和修改日期。"
+    },
+    "focus": {
+      "heading": "专注模式",
+      "focusUnit": "专注单位",
+      "focusUnitDesc": "在段落或句子级别高亮。",
+      "paragraph": "段落",
+      "sentence": "句子（行）",
+      "dimOpacity": "遥暗不透明度（%）",
+      "dimOpacityDesc": "非活跃文本的不透明度（10–50）。",
+      "fontSizeOverride": "字体大小覆盖（px）",
+      "fontSizeOverrideDesc": "输入 0 则使用当前主题字体大小。",
+      "autoHideSidebars": "自动隐藏侧边栏",
+      "typewriterScroll": "打字机滚动",
+      "typewriterScrollDesc": "保持当前行居中显示。"
+    },
+    "typography": {
+      "heading": "排版模式",
+      "fontFamily": "字体",
+      "font": {
+        "mono": "等宽字体（iA Writer Mono）",
+        "serif": "衬线字体（iA Writer Duo Serif）",
+        "sans": "无衬线字体（iA Writer Quattro）",
+        "cormorant-garamond": "Cormorant garamond",
+        "crimson-text": "Crimson text",
+        "eb-garamond": "Eb garamond",
+        "libre-baskerville": "Libre baskerville",
+        "libre-caslon-text": "Libre caslon text",
+        "literata": "Literata",
+        "lora": "Lora",
+        "inter": "Inter",
+        "lato": "Lato",
+        "source-sans-3": "Source sans 3",
+        "custom": "自定义字体名称…"
+      },
+      "customFontName": "自定义字体名称",
+      "customFontNameDesc": "选择“自定义”时输入字体名称。",
+      "customFontNamePlaceholder": "例如：Merriweather",
+      "maxLineLength": "最大行长度（字符）",
+      "maxLineLengthDesc": "建议 55–80 个字符。",
+      "fontSize": "字体大小（px）",
+      "lineHeight": "行高",
+      "lineHeightDesc": "默认：1.7",
+      "letterSpacing": "字间距",
+      "letterSpacingDesc": "CSS letter-spacing 值（例如 “normal”、“0.02em”）。",
+      "persistAcrossSessions": "跨会话保持",
+      "persistAcrossSessionsDesc": "Obsidian 重新打开时保持排版模式。"
+    },
+    "sprint": {
+      "heading": "冲刺与目标",
+      "defaultDuration": "默认冲刺时长（分钟）",
+      "defaultDailyGoal": "默认每日字数目标",
+      "soundNotifications": "声音通知",
+      "soundNotificationsDesc": "冲刺结束时播放提示音。",
+      "historyRetention": "冲刺历史保留天数（天）",
+      "inlineGoalBanner": "内联目标横幅",
+      "inlineGoalBannerDesc": "打开文档时在标题下方显示字数目标进度。"
+    },
+    "export": {
+      "heading": "导出",
+      "defaultFormat": "默认导出格式",
+      "format": {
+        "md": "Markdown（.md）",
+        "html": "HTML",
+        "pdf": "PDF",
+        "docx": "Word（.docx）",
+        "rtf": "RTF"
+      },
+      "defaultPaperSize": "默认纸张大小",
+      "paperSize": {
+        "letter": "Letter（美国）",
+        "a4": "A4"
+      },
+      "exportFont": "导出字体",
+      "exportFontSize": "导出字体大小（pt）",
+      "pandocPath": "Pandoc 路径",
+      "pandocPathDesc": "如果 pandoc 不在系统路径中，请填写完整路径。",
+      "epubHeading": "EPUB",
+      "epubLanguage": "EPUB 语言",
+      "epubLanguageDesc": "BCP 47 语言标签（例如 en、fr、de）。",
+      "includeCover": "包含封面",
+      "includeCoverDesc": "未提供封面图片时自动生成文字封面页。"
+    },
+    "log": {
+      "heading": "每日写作日志",
+      "appendToDailyNote": "追加到每日笔记",
+      "appendToDailyNoteDesc": "每次冲刺后将写作活动摘要添加到今日每日笔记。"
+    },
+    "wordpress": {
+      "sitesHeading": "WordPress 站点",
+      "addSite": "+ 添加 WordPress 站点",
+      "wikilinksHeading": "维基链接默认设置",
+      "defaultWikilinkHandling": "默认维基链接处理",
+      "wikilinkStrip": "剥离（转换为纯文本）",
+      "wikilinkConvert": "转换为 URL",
+      "siteHeading": "站点：{{nickname}}",
+      "siteUnnamed": "未命名",
+      "nickname": "昵称",
+      "siteUrl": "站点 URL",
+      "username": "用户名",
+      "appPassword": "应用程序密码",
+      "appPasswordDesc": "在 WordPress 的用户 → 个人资料 → 应用程序密码中生成。",
+      "defaultPostStatus": "默认发布状态",
+      "postStatus": {
+        "draft": "草稿",
+        "pending": "待审核",
+        "publish": "已发布"
+      },
+      "wikilinkHandling": "维基链接处理",
+      "wikilinkHandlingStrip": "剥离",
+      "wikilinkHandlingConvert": "转换为 URL",
+      "testConnection": "测试连接",
+      "testConnectionDesc": "验证凭据和连接性。",
+      "testing": "测试中…",
+      "removeSite": "删除站点",
+      "buyMeACoffee": "请我喝咏啡"
+    }
+  },
+  "binder": {
+    "displayText": "写作活页夹",
+    "selectProject": "— 选择项目 —",
+    "newProject": "新建项目",
+    "addDocument": "+ 文档",
+    "addFiles": "添加复制到此文件夹的文件",
+    "targetsDashboard": "目标仪表板",
+    "searchPlaceholder": "搜索文档…",
+    "noProjectSelected": "未选择项目。请创建或选择一个写作项目以开始。",
+    "noDocuments": "暂无文档。点击“+ 文档”添加一个。",
+    "dropToRoot": "↓ 拖放到此处提升至根级",
+    "selectProjectFirst": "请先选择一个项目。",
+    "cannotFindFile": "找不到文件：{{filePath}}。请尝试重命名或重新链接文档。",
+    "untitledDocument": "无标题 {{time}}",
+    "noNewFiles": "在项目文件夹中未找到新文件。",
+    "pctComplete": "已完成 {{pct}}%",
+    "copySuffix": "（副本）",
+    "menu": {
+      "openDocument": "打开文档",
+      "newChildDocument": "新建子文档",
+      "setStatusDraft": "设置状态：草稿",
+      "setStatusInProgress": "设置状态：进行中",
+      "setStatusComplete": "设置状态：完成",
+      "setStatusPublished": "设置状态：已发布",
+      "duplicate": "复制",
+      "moveToResearch": "移至研究",
+      "publishToWordPress": "发布到 WordPress",
+      "delete": "删除"
+    }
+  }
+}
