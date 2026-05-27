@@ -1,0 +1,178 @@
+{
+  "settings": {
+    "tab": {
+      "general": "General",
+      "focus": "Focus mode",
+      "typography": "Typography",
+      "sprint": "Sprint & goals",
+      "export": "Export",
+      "log": "Writing log",
+      "wordpress": "WordPress",
+      "help": "How to use"
+    },
+    "general": {
+      "openOnStartup": "Open on startup",
+      "openOnStartupDesc": "Automatically open the writing studio panel when Obsidian launches.",
+      "defaultProjectFolder": "Default project folder",
+      "defaultProjectFolderDesc": "Vault path where writing projects are stored.",
+      "defaultProjectFolderPlaceholder": "Writing projects",
+      "authorName": "Author name",
+      "authorNameDesc": "Used in exports and title pages.",
+      "authorNamePlaceholder": "Your name",
+      "defaultDocumentType": "Default document type",
+      "docType": {
+        "chapter": "Chapter",
+        "section": "Section",
+        "article": "Article",
+        "note": "Note"
+      },
+      "frontmatterAutoUpdate": "Frontmatter auto-update",
+      "frontmatterAutoUpdateDesc": "Automatically update word-count and modified date on save."
+    },
+    "focus": {
+      "heading": "Focus mode",
+      "focusUnit": "Focus unit",
+      "focusUnitDesc": "Highlight at paragraph or sentence level.",
+      "paragraph": "Paragraph",
+      "sentence": "Sentence (line)",
+      "dimOpacity": "Dim opacity (%)",
+      "dimOpacityDesc": "Opacity of non-active text (10–50).",
+      "fontSizeOverride": "Font size override (px)",
+      "fontSizeOverrideDesc": "Leave 0 to use current theme font size.",
+      "autoHideSidebars": "Auto-hide sidebars",
+      "typewriterScroll": "Typewriter scroll",
+      "typewriterScrollDesc": "Keep active line centered on screen."
+    },
+    "typography": {
+      "heading": "Typography mode",
+      "fontFamily": "Font family",
+      "font": {
+        "mono": "Monospaced (ia writer mono)",
+        "serif": "Serif (ia writer duo serif)",
+        "sans": "Sans-serif (ia writer quattro)",
+        "cormorant-garamond": "Cormorant garamond",
+        "crimson-text": "Crimson text",
+        "eb-garamond": "Eb garamond",
+        "libre-baskerville": "Libre baskerville",
+        "libre-caslon-text": "Libre caslon text",
+        "literata": "Literata",
+        "lora": "Lora",
+        "inter": "Inter",
+        "lato": "Lato",
+        "source-sans-3": "Source sans 3",
+        "custom": "Custom font name…"
+      },
+      "customFontName": "Custom font name",
+      "customFontNameDesc": "Font name if “custom” is selected above.",
+      "customFontNamePlaceholder": "E.g. Merriweather",
+      "maxLineLength": "Max line length (characters)",
+      "maxLineLengthDesc": "55–80 characters recommended.",
+      "fontSize": "Font size (px)",
+      "lineHeight": "Line height",
+      "lineHeightDesc": "Default: 1.7",
+      "letterSpacing": "Letter spacing",
+      "letterSpacingDesc": "CSS letter-spacing value (e.g. “normal”, “0.02em”).",
+      "persistAcrossSessions": "Persist across sessions",
+      "persistAcrossSessionsDesc": "Keep typography mode active when Obsidian reopens."
+    },
+    "sprint": {
+      "heading": "Sprint & goals",
+      "defaultDuration": "Default sprint duration (minutes)",
+      "defaultDailyGoal": "Default daily word goal",
+      "soundNotifications": "Sound notifications",
+      "soundNotificationsDesc": "Play a tone when sprint ends.",
+      "historyRetention": "Sprint history retention (days)",
+      "inlineGoalBanner": "Inline goal banner",
+      "inlineGoalBannerDesc": "Show word count goal progress below the title when a document is opened."
+    },
+    "export": {
+      "heading": "Export",
+      "defaultFormat": "Default export format",
+      "format": {
+        "md": "Markdown (.md)",
+        "html": "HTML",
+        "pdf": "PDF",
+        "docx": "Word (.docx)",
+        "rtf": "RTF"
+      },
+      "defaultPaperSize": "Default paper size",
+      "paperSize": {
+        "letter": "Letter (US)",
+        "a4": "A4"
+      },
+      "exportFont": "Export font",
+      "exportFontSize": "Export font size (pt)",
+      "pandocPath": "Pandoc path",
+      "pandocPathDesc": "Full path to pandoc binary if not in system path.",
+      "epubHeading": "EPUB",
+      "epubLanguage": "EPUB language",
+      "epubLanguageDesc": "BCP 47 language tag (e.g. en, fr, de).",
+      "includeCover": "Include cover",
+      "includeCoverDesc": "Generate a text cover page when no cover image is provided."
+    },
+    "log": {
+      "heading": "Daily writing log",
+      "appendToDailyNote": "Append to daily note",
+      "appendToDailyNoteDesc": "Add a writing activity summary to today’s daily note after each sprint."
+    },
+    "wordpress": {
+      "sitesHeading": "WordPress sites",
+      "addSite": "+ add WordPress site",
+      "wikilinksHeading": "Wikilink defaults",
+      "defaultWikilinkHandling": "Default wikilink handling",
+      "wikilinkStrip": "Strip (convert to plain text)",
+      "wikilinkConvert": "Convert to URL",
+      "siteHeading": "Site: {{nickname}}",
+      "siteUnnamed": "Unnamed",
+      "nickname": "Nickname",
+      "siteUrl": "Site URL",
+      "username": "Username",
+      "appPassword": "Application password",
+      "appPasswordDesc": "Generated in WordPress under Users → Profile → Application passwords.",
+      "defaultPostStatus": "Default post status",
+      "postStatus": {
+        "draft": "Draft",
+        "pending": "Pending review",
+        "publish": "Published"
+      },
+      "wikilinkHandling": "Wikilink handling",
+      "wikilinkHandlingStrip": "Strip",
+      "wikilinkHandlingConvert": "Convert to URL",
+      "testConnection": "Test connection",
+      "testConnectionDesc": "Verify credentials and connectivity.",
+      "testing": "Testing…",
+      "removeSite": "Remove site",
+      "buyMeACoffee": "Buy me a coffee"
+    }
+  },
+  "binder": {
+    "displayText": "Writing binder",
+    "selectProject": "— select project —",
+    "newProject": "New project",
+    "addDocument": "+ document",
+    "addFiles": "Add files copied to this folder",
+    "targetsDashboard": "Targets dashboard",
+    "searchPlaceholder": "Search documents…",
+    "noProjectSelected": "No project selected. Create or select a writing project to get started.",
+    "noDocuments": "No documents yet. Click “+ document” to add one.",
+    "dropToRoot": "↓ drop here to promote to root",
+    "selectProjectFirst": "Select a project first.",
+    "cannotFindFile": "Cannot find file: {{filePath}}. Try renaming or re-linking the document.",
+    "untitledDocument": "Untitled {{time}}",
+    "noNewFiles": "No new files found in the project folder.",
+    "pctComplete": "{{pct}}% complete",
+    "copySuffix": "(Copy)",
+    "menu": {
+      "openDocument": "Open document",
+      "newChildDocument": "New child document",
+      "setStatusDraft": "Set status: draft",
+      "setStatusInProgress": "Set status: in progress",
+      "setStatusComplete": "Set status: complete",
+      "setStatusPublished": "Set status: published",
+      "duplicate": "Duplicate",
+      "moveToResearch": "Move to research",
+      "publishToWordPress": "Publish to WordPress",
+      "delete": "Delete"
+    }
+  }
+}

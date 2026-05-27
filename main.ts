@@ -25,6 +25,7 @@ import { StatsTracker } from './src/StatsTracker';
 import { FrontmatterManager } from './src/FrontmatterManager';
 import { WritingStudioSettingsTab } from './src/SettingsTab';
 import { FolderSidebarView, FolderPickerModal, FOLDER_SIDEBAR_VIEW_TYPE } from './src/FolderSidebarView';
+import { initI18n } from './src/i18n';
 import { WritingLogView, WRITING_LOG_VIEW_TYPE } from './src/WritingLogView';
 
 import { AddToProjectModal } from './modals/AddToProjectModal';
@@ -161,6 +162,7 @@ export default class WritingStudioPlugin extends Plugin {
   private currentBannerGoal = 0;
 
   async onload(): Promise<void> {
+    initI18n();
     await this.loadSettings();
 
     // Register custom icons

@@ -1,0 +1,178 @@
+{
+  "settings": {
+    "tab": {
+      "general": "Общие",
+      "focus": "Режим фокусировки",
+      "typography": "Типографика",
+      "sprint": "Спринт и цели",
+      "export": "Экспорт",
+      "log": "Журнал написания",
+      "wordpress": "WordPress",
+      "help": "Как использовать"
+    },
+    "general": {
+      "openOnStartup": "Открывать при запуске",
+      "openOnStartupDesc": "Автоматически открывать панель Writing Studio при запуске Obsidian.",
+      "defaultProjectFolder": "Папка проекта по умолчанию",
+      "defaultProjectFolderDesc": "Путь в хранилище, где хранятся проекты.",
+      "defaultProjectFolderPlaceholder": "Письменные проекты",
+      "authorName": "Имя автора",
+      "authorNameDesc": "Используется в экспортах и титульных страницах.",
+      "authorNamePlaceholder": "Ваше имя",
+      "defaultDocumentType": "Тип документа по умолчанию",
+      "docType": {
+        "chapter": "Глава",
+        "section": "Раздел",
+        "article": "Статья",
+        "note": "Заметка"
+      },
+      "frontmatterAutoUpdate": "Автообновление метаданных",
+      "frontmatterAutoUpdateDesc": "Автоматически обновлять количество слов и дату изменения при сохранении."
+    },
+    "focus": {
+      "heading": "Режим фокусировки",
+      "focusUnit": "Единица фокусировки",
+      "focusUnitDesc": "Подсвечивать на уровне абзаца или предложения.",
+      "paragraph": "Абзац",
+      "sentence": "Предложение (строка)",
+      "dimOpacity": "Прозрачность затемнения (%)",
+      "dimOpacityDesc": "Прозрачность неактивного текста (10–50).",
+      "fontSizeOverride": "Переопределение размера шрифта (px)",
+      "fontSizeOverrideDesc": "Оставьте 0, чтобы использовать размер шрифта текущей темы.",
+      "autoHideSidebars": "Автоскрытие боковых панелей",
+      "typewriterScroll": "Прокрутка пишущей машинки",
+      "typewriterScrollDesc": "Держать активную строку в центре экрана."
+    },
+    "typography": {
+      "heading": "Режим типографики",
+      "fontFamily": "Семейство шрифтов",
+      "font": {
+        "mono": "Моноширинный (iA Writer Mono)",
+        "serif": "С засечками (iA Writer Duo Serif)",
+        "sans": "Без засечек (iA Writer Quattro)",
+        "cormorant-garamond": "Cormorant garamond",
+        "crimson-text": "Crimson text",
+        "eb-garamond": "Eb garamond",
+        "libre-baskerville": "Libre baskerville",
+        "libre-caslon-text": "Libre caslon text",
+        "literata": "Literata",
+        "lora": "Lora",
+        "inter": "Inter",
+        "lato": "Lato",
+        "source-sans-3": "Source sans 3",
+        "custom": "Собственное название шрифта…"
+      },
+      "customFontName": "Собственное название шрифта",
+      "customFontNameDesc": "Название шрифта, если выше выбрано «собственный».",
+      "customFontNamePlaceholder": "Например: Merriweather",
+      "maxLineLength": "Максимальная длина строки (символов)",
+      "maxLineLengthDesc": "Рекомендуется 55–80 символов.",
+      "fontSize": "Размер шрифта (px)",
+      "lineHeight": "Межстрочный интервал",
+      "lineHeightDesc": "По умолчанию: 1.7",
+      "letterSpacing": "Межбуквенный интервал",
+      "letterSpacingDesc": "Значение CSS letter-spacing (например «normal», «0.02em»).",
+      "persistAcrossSessions": "Сохранять между сессиями",
+      "persistAcrossSessionsDesc": "Сохранять режим типографики активным при повторном открытии Obsidian."
+    },
+    "sprint": {
+      "heading": "Спринт и цели",
+      "defaultDuration": "Длительность спринта по умолчанию (минуты)",
+      "defaultDailyGoal": "Дневная цель по умолчанию (слова)",
+      "soundNotifications": "Звуковые уведомления",
+      "soundNotificationsDesc": "Воспроизводить звук по окончании спринта.",
+      "historyRetention": "Хранение истории спринтов (дней)",
+      "inlineGoalBanner": "Встроенный баннер цели",
+      "inlineGoalBannerDesc": "Показывать прогресс достижения цели по словам под заголовком при открытии документа."
+    },
+    "export": {
+      "heading": "Экспорт",
+      "defaultFormat": "Формат экспорта по умолчанию",
+      "format": {
+        "md": "Markdown (.md)",
+        "html": "HTML",
+        "pdf": "PDF",
+        "docx": "Word (.docx)",
+        "rtf": "RTF"
+      },
+      "defaultPaperSize": "Размер бумаги по умолчанию",
+      "paperSize": {
+        "letter": "Letter (США)",
+        "a4": "A4"
+      },
+      "exportFont": "Шрифт экспорта",
+      "exportFontSize": "Размер шрифта экспорта (pt)",
+      "pandocPath": "Путь к Pandoc",
+      "pandocPathDesc": "Полный путь к исполняемому файлу pandoc, если он не в системном пути.",
+      "epubHeading": "EPUB",
+      "epubLanguage": "Язык EPUB",
+      "epubLanguageDesc": "Языковой тег BCP 47 (например en, fr, de).",
+      "includeCover": "Включить обложку",
+      "includeCoverDesc": "Создать текстовую обложку, если изображение обложки не предоставлено."
+    },
+    "log": {
+      "heading": "Ежедневный журнал написания",
+      "appendToDailyNote": "Добавлять в ежедневную заметку",
+      "appendToDailyNoteDesc": "Добавлять сводку активности после каждого спринта в сегодняшнюю ежедневную заметку."
+    },
+    "wordpress": {
+      "sitesHeading": "Сайты WordPress",
+      "addSite": "+ добавить сайт WordPress",
+      "wikilinksHeading": "Настройки вики-ссылок по умолчанию",
+      "defaultWikilinkHandling": "Обработка вики-ссылок по умолчанию",
+      "wikilinkStrip": "Удалить (преобразовать в простой текст)",
+      "wikilinkConvert": "Преобразовать в URL",
+      "siteHeading": "Сайт: {{nickname}}",
+      "siteUnnamed": "Без названия",
+      "nickname": "Название",
+      "siteUrl": "URL сайта",
+      "username": "Имя пользователя",
+      "appPassword": "Пароль приложения",
+      "appPasswordDesc": "Создаётся в WordPress в разделе Пользователи → Профиль → Пароли приложений.",
+      "defaultPostStatus": "Статус публикации по умолчанию",
+      "postStatus": {
+        "draft": "Черновик",
+        "pending": "На проверке",
+        "publish": "Опубликовано"
+      },
+      "wikilinkHandling": "Обработка вики-ссылок",
+      "wikilinkHandlingStrip": "Удалить",
+      "wikilinkHandlingConvert": "Преобразовать в URL",
+      "testConnection": "Проверить подключение",
+      "testConnectionDesc": "Проверить учётные данные и подключение.",
+      "testing": "Проверка…",
+      "removeSite": "Удалить сайт",
+      "buyMeACoffee": "Купи мне кофе"
+    }
+  },
+  "binder": {
+    "displayText": "Папка для записей",
+    "selectProject": "— выберите проект —",
+    "newProject": "Новый проект",
+    "addDocument": "+ документ",
+    "addFiles": "Добавить файлы, скопированные в эту папку",
+    "targetsDashboard": "Панель целей",
+    "searchPlaceholder": "Поиск документов…",
+    "noProjectSelected": "Проект не выбран. Создайте или выберите письменный проект для начала работы.",
+    "noDocuments": "Документов пока нет. Нажмите «+ документ», чтобы добавить.",
+    "dropToRoot": "↓ перетащите сюда, чтобы переместить в корень",
+    "selectProjectFirst": "Сначала выберите проект.",
+    "cannotFindFile": "Не удаётся найти файл: {{filePath}}. Попробуйте переименовать или повторно привязать документ.",
+    "untitledDocument": "Без названия {{time}}",
+    "noNewFiles": "Новых файлов в папке проекта не найдено.",
+    "pctComplete": "{{pct}}% выполнено",
+    "copySuffix": "(Копия)",
+    "menu": {
+      "openDocument": "Открыть документ",
+      "newChildDocument": "Новый дочерний документ",
+      "setStatusDraft": "Установить статус: черновик",
+      "setStatusInProgress": "Установить статус: в работе",
+      "setStatusComplete": "Установить статус: завершён",
+      "setStatusPublished": "Установить статус: опубликован",
+      "duplicate": "Дублировать",
+      "moveToResearch": "Переместить в исследования",
+      "publishToWordPress": "Опубликовать в WordPress",
+      "delete": "Удалить"
+    }
+  }
+}

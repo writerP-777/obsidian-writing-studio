@@ -1,0 +1,178 @@
+{
+  "settings": {
+    "tab": {
+      "general": "Général",
+      "focus": "Mode concentration",
+      "typography": "Typographie",
+      "sprint": "Sprint et objectifs",
+      "export": "Exporter",
+      "log": "Journal d’écriture",
+      "wordpress": "WordPress",
+      "help": "Mode d’emploi"
+    },
+    "general": {
+      "openOnStartup": "Ouvrir au démarrage",
+      "openOnStartupDesc": "Ouvrir automatiquement le panneau Writing Studio au lancement d’Obsidian.",
+      "defaultProjectFolder": "Dossier de projet par défaut",
+      "defaultProjectFolderDesc": "Chemin du coffre où les projets d’écriture sont stockés.",
+      "defaultProjectFolderPlaceholder": "Projets d’écriture",
+      "authorName": "Nom de l’auteur",
+      "authorNameDesc": "Utilisé dans les exports et les pages de titre.",
+      "authorNamePlaceholder": "Votre nom",
+      "defaultDocumentType": "Type de document par défaut",
+      "docType": {
+        "chapter": "Chapitre",
+        "section": "Section",
+        "article": "Article",
+        "note": "Note"
+      },
+      "frontmatterAutoUpdate": "Mise à jour automatique du frontmatter",
+      "frontmatterAutoUpdateDesc": "Mettre à jour automatiquement le nombre de mots et la date de modification lors de l’enregistrement."
+    },
+    "focus": {
+      "heading": "Mode concentration",
+      "focusUnit": "Unité de concentration",
+      "focusUnitDesc": "Mettre en surbrillance au niveau du paragraphe ou de la phrase.",
+      "paragraph": "Paragraphe",
+      "sentence": "Phrase (ligne)",
+      "dimOpacity": "Opacité d’atténuation (%)",
+      "dimOpacityDesc": "Opacité du texte non actif (10–50).",
+      "fontSizeOverride": "Taille de police personnalisée (px)",
+      "fontSizeOverrideDesc": "Laisser 0 pour utiliser la taille de police du thème actuel.",
+      "autoHideSidebars": "Masquer automatiquement les barres latérales",
+      "typewriterScroll": "Défilement machine à écrire",
+      "typewriterScrollDesc": "Maintenir la ligne active centrée à l’écran."
+    },
+    "typography": {
+      "heading": "Mode typographie",
+      "fontFamily": "Famille de police",
+      "font": {
+        "mono": "Monospace (iA Writer Mono)",
+        "serif": "Serif (iA Writer Duo Serif)",
+        "sans": "Sans-serif (iA Writer Quattro)",
+        "cormorant-garamond": "Cormorant garamond",
+        "crimson-text": "Crimson text",
+        "eb-garamond": "Eb garamond",
+        "libre-baskerville": "Libre baskerville",
+        "libre-caslon-text": "Libre caslon text",
+        "literata": "Literata",
+        "lora": "Lora",
+        "inter": "Inter",
+        "lato": "Lato",
+        "source-sans-3": "Source sans 3",
+        "custom": "Nom de police personnalisé…"
+      },
+      "customFontName": "Nom de police personnalisé",
+      "customFontNameDesc": "Nom de la police si « personnalisé » est sélectionné ci-dessus.",
+      "customFontNamePlaceholder": "Ex. Merriweather",
+      "maxLineLength": "Longueur maximale de ligne (caractères)",
+      "maxLineLengthDesc": "55–80 caractères recommandés.",
+      "fontSize": "Taille de police (px)",
+      "lineHeight": "Hauteur de ligne",
+      "lineHeightDesc": "Par défaut : 1.7",
+      "letterSpacing": "Espacement des lettres",
+      "letterSpacingDesc": "Valeur CSS letter-spacing (ex. « normal », « 0.02em »).",
+      "persistAcrossSessions": "Persister entre les sessions",
+      "persistAcrossSessionsDesc": "Maintenir le mode typographie actif à la réouverture d’Obsidian."
+    },
+    "sprint": {
+      "heading": "Sprint et objectifs",
+      "defaultDuration": "Durée de sprint par défaut (minutes)",
+      "defaultDailyGoal": "Objectif quotidien de mots par défaut",
+      "soundNotifications": "Notifications sonores",
+      "soundNotificationsDesc": "Jouer un son à la fin du sprint.",
+      "historyRetention": "Conservation de l’historique des sprints (jours)",
+      "inlineGoalBanner": "Bandeau d’objectif intégré",
+      "inlineGoalBannerDesc": "Afficher la progression de l’objectif de mots sous le titre à l’ouverture d’un document."
+    },
+    "export": {
+      "heading": "Exporter",
+      "defaultFormat": "Format d’export par défaut",
+      "format": {
+        "md": "Markdown (.md)",
+        "html": "HTML",
+        "pdf": "PDF",
+        "docx": "Word (.docx)",
+        "rtf": "RTF"
+      },
+      "defaultPaperSize": "Format de papier par défaut",
+      "paperSize": {
+        "letter": "Lettre (US)",
+        "a4": "A4"
+      },
+      "exportFont": "Police d’export",
+      "exportFontSize": "Taille de police d’export (pt)",
+      "pandocPath": "Chemin Pandoc",
+      "pandocPathDesc": "Chemin complet vers le binaire pandoc s’il n’est pas dans le path système.",
+      "epubHeading": "EPUB",
+      "epubLanguage": "Langue EPUB",
+      "epubLanguageDesc": "Balise de langue BCP 47 (ex. en, fr, de).",
+      "includeCover": "Inclure une couverture",
+      "includeCoverDesc": "Générer une page de couverture texte si aucune image de couverture n’est fournie."
+    },
+    "log": {
+      "heading": "Journal quotidien d’écriture",
+      "appendToDailyNote": "Ajouter à la note quotidienne",
+      "appendToDailyNoteDesc": "Ajouter un résumé d’activité d’écriture à la note quotidienne d’aujourd’hui après chaque sprint."
+    },
+    "wordpress": {
+      "sitesHeading": "Sites WordPress",
+      "addSite": "+ ajouter un site WordPress",
+      "wikilinksHeading": "Paramètres par défaut des wikilinks",
+      "defaultWikilinkHandling": "Gestion par défaut des wikilinks",
+      "wikilinkStrip": "Supprimer (convertir en texte brut)",
+      "wikilinkConvert": "Convertir en URL",
+      "siteHeading": "Site : {{nickname}}",
+      "siteUnnamed": "Sans nom",
+      "nickname": "Surnom",
+      "siteUrl": "URL du site",
+      "username": "Nom d’utilisateur",
+      "appPassword": "Mot de passe d’application",
+      "appPasswordDesc": "Généré dans WordPress sous Utilisateurs → Profil → Mots de passe d’application.",
+      "defaultPostStatus": "Statut de publication par défaut",
+      "postStatus": {
+        "draft": "Brouillon",
+        "pending": "En attente de révision",
+        "publish": "Publié"
+      },
+      "wikilinkHandling": "Gestion des wikilinks",
+      "wikilinkHandlingStrip": "Supprimer",
+      "wikilinkHandlingConvert": "Convertir en URL",
+      "testConnection": "Tester la connexion",
+      "testConnectionDesc": "Vérifier les identifiants et la connectivité.",
+      "testing": "Test en cours…",
+      "removeSite": "Supprimer le site",
+      "buyMeACoffee": "Offrez-moi un café"
+    }
+  },
+  "binder": {
+    "displayText": "Classeur d’écriture",
+    "selectProject": "— sélectionner un projet —",
+    "newProject": "Nouveau projet",
+    "addDocument": "+ document",
+    "addFiles": "Ajouter les fichiers copiés dans ce dossier",
+    "targetsDashboard": "Tableau de bord des objectifs",
+    "searchPlaceholder": "Rechercher des documents…",
+    "noProjectSelected": "Aucun projet sélectionné. Créez ou sélectionnez un projet d’écriture pour commencer.",
+    "noDocuments": "Aucun document pour l’instant. Cliquez sur « + document » pour en ajouter un.",
+    "dropToRoot": "↓ déposer ici pour promouvoir à la racine",
+    "selectProjectFirst": "Veuillez d’abord sélectionner un projet.",
+    "cannotFindFile": "Impossible de trouver le fichier : {{filePath}}. Essayez de le renommer ou de le relier.",
+    "untitledDocument": "Sans titre {{time}}",
+    "noNewFiles": "Aucun nouveau fichier trouvé dans le dossier du projet.",
+    "pctComplete": "{{pct}}% terminé",
+    "copySuffix": "(Copie)",
+    "menu": {
+      "openDocument": "Ouvrir le document",
+      "newChildDocument": "Nouveau document enfant",
+      "setStatusDraft": "Définir le statut : brouillon",
+      "setStatusInProgress": "Définir le statut : en cours",
+      "setStatusComplete": "Définir le statut : terminé",
+      "setStatusPublished": "Définir le statut : publié",
+      "duplicate": "Dupliquer",
+      "moveToResearch": "Déplacer vers la recherche",
+      "publishToWordPress": "Publier sur WordPress",
+      "delete": "Supprimer"
+    }
+  }
+}

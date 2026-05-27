@@ -1,0 +1,178 @@
+{
+  "settings": {
+    "tab": {
+      "general": "عام",
+      "focus": "وضع التركيز",
+      "typography": "الطباعة",
+      "sprint": "السباق والأهداف",
+      "export": "تصدير",
+      "log": "سجل الكتابة",
+      "wordpress": "WordPress",
+      "help": "كيفية الاستخدام"
+    },
+    "general": {
+      "openOnStartup": "فتح عند بدء التشغيل",
+      "openOnStartupDesc": "فتح لوحة استوديو الكتابة تلقائيًا عند تشغيل Obsidian.",
+      "defaultProjectFolder": "مجلد المشروع الافتراضي",
+      "defaultProjectFolderDesc": "مسار الخزنة حيث تُخزَّن مشاريع الكتابة.",
+      "defaultProjectFolderPlaceholder": "مشاريع الكتابة",
+      "authorName": "اسم المؤلف",
+      "authorNameDesc": "يُستخدم في الصادرات وصفحات العنوان.",
+      "authorNamePlaceholder": "اسمك",
+      "defaultDocumentType": "نوع المستند الافتراضي",
+      "docType": {
+        "chapter": "فصل",
+        "section": "قسم",
+        "article": "مقالة",
+        "note": "ملاحظة"
+      },
+      "frontmatterAutoUpdate": "التحديث التلقائي للبيانات الأمامية",
+      "frontmatterAutoUpdateDesc": "تحديث عدد الكلمات وتاريخ التعديل تلقائيًا عند الحفظ."
+    },
+    "focus": {
+      "heading": "وضع التركيز",
+      "focusUnit": "وحدة التركيز",
+      "focusUnitDesc": "التمييز على مستوى الفقرة أو الجملة.",
+      "paragraph": "فقرة",
+      "sentence": "جملة (سطر)",
+      "dimOpacity": "شفافية التخفيت (%)",
+      "dimOpacityDesc": "شفافية النص غير النشط (10–50).",
+      "fontSizeOverride": "تجاوز حجم الخط (px)",
+      "fontSizeOverrideDesc": "اتركه 0 لاستخدام حجم خط السمة الحالية.",
+      "autoHideSidebars": "إخفاء الأشرطة الجانبية تلقائيًا",
+      "typewriterScroll": "تمرير الآلة الكاتبة",
+      "typewriterScrollDesc": "إبقاء السطر النشط في وسط الشاشة."
+    },
+    "typography": {
+      "heading": "وضع الطباعة",
+      "fontFamily": "عائلة الخط",
+      "font": {
+        "mono": "أحادي المسافة (iA Writer Mono)",
+        "serif": "ذو سريفات (iA Writer Duo Serif)",
+        "sans": "بلا سريفات (iA Writer Quattro)",
+        "cormorant-garamond": "Cormorant garamond",
+        "crimson-text": "Crimson text",
+        "eb-garamond": "Eb garamond",
+        "libre-baskerville": "Libre baskerville",
+        "libre-caslon-text": "Libre caslon text",
+        "literata": "Literata",
+        "lora": "Lora",
+        "inter": "Inter",
+        "lato": "Lato",
+        "source-sans-3": "Source sans 3",
+        "custom": "اسم خط مخصص…"
+      },
+      "customFontName": "اسم الخط المخصص",
+      "customFontNameDesc": "اسم الخط إذا تم اختيار “مخصص” أعلاه.",
+      "customFontNamePlaceholder": "مثال: Merriweather",
+      "maxLineLength": "الحد الأقصى لطول السطر (حرف)",
+      "maxLineLengthDesc": "يُنصح بـ 55–80 حرفًا.",
+      "fontSize": "حجم الخط (px)",
+      "lineHeight": "ارتفاع السطر",
+      "lineHeightDesc": "الافتراضي: 1.7",
+      "letterSpacing": "تباعد الأحرف",
+      "letterSpacingDesc": "قيمة CSS letter-spacing (مثال: “normal”، “0.02em”).",
+      "persistAcrossSessions": "الإبقاء عبر الجلسات",
+      "persistAcrossSessionsDesc": "إبقاء وضع الطباعة نشطًا عند إعادة فتح Obsidian."
+    },
+    "sprint": {
+      "heading": "السباق والأهداف",
+      "defaultDuration": "مدة السباق الافتراضية (دقائق)",
+      "defaultDailyGoal": "هدف الكلمات اليومي الافتراضي",
+      "soundNotifications": "الإشعارات الصوتية",
+      "soundNotificationsDesc": "تشغيل نغمة عند انتهاء السباق.",
+      "historyRetention": "الاحتفاظ بسجل السباق (أيام)",
+      "inlineGoalBanner": "لافتة الهدف المضمّنة",
+      "inlineGoalBannerDesc": "عرض تقدم هدف عدد الكلمات أسفل العنوان عند فتح مستند."
+    },
+    "export": {
+      "heading": "تصدير",
+      "defaultFormat": "تنسيق التصدير الافتراضي",
+      "format": {
+        "md": "Markdown (.md)",
+        "html": "HTML",
+        "pdf": "PDF",
+        "docx": "Word (.docx)",
+        "rtf": "RTF"
+      },
+      "defaultPaperSize": "حجم الورق الافتراضي",
+      "paperSize": {
+        "letter": "Letter (أمريكي)",
+        "a4": "A4"
+      },
+      "exportFont": "خط التصدير",
+      "exportFontSize": "حجم خط التصدير (pt)",
+      "pandocPath": "مسار Pandoc",
+      "pandocPathDesc": "المسار الكامل للملف الثنائي لـ pandoc إذا لم يكن في مسار النظام.",
+      "epubHeading": "EPUB",
+      "epubLanguage": "لغة EPUB",
+      "epubLanguageDesc": "علامة لغة BCP 47 (مثال: en، fr، de).",
+      "includeCover": "تضمين الغلاف",
+      "includeCoverDesc": "إنشاء صفحة غلاف نصية عند عدم توفر صورة غلاف."
+    },
+    "log": {
+      "heading": "سجل الكتابة اليومي",
+      "appendToDailyNote": "إضافة إلى الملاحظة اليومية",
+      "appendToDailyNoteDesc": "إضافة ملخص نشاط الكتابة إلى الملاحظة اليومية بعد كل سباق."
+    },
+    "wordpress": {
+      "sitesHeading": "مواقع WordPress",
+      "addSite": "+ إضافة موقع WordPress",
+      "wikilinksHeading": "الإعدادات الافتراضية لروابط الويكي",
+      "defaultWikilinkHandling": "معالجة روابط الويكي الافتراضية",
+      "wikilinkStrip": "إزالة (تحويل إلى نص عادي)",
+      "wikilinkConvert": "تحويل إلى URL",
+      "siteHeading": "الموقع: {{nickname}}",
+      "siteUnnamed": "بدون اسم",
+      "nickname": "اللقب",
+      "siteUrl": "رابط الموقع",
+      "username": "اسم المستخدم",
+      "appPassword": "كلمة مرور التطبيق",
+      "appPasswordDesc": "تُولَّد في WordPress تحت المستخدمون ← الملف الشخصي ← كلمات مرور التطبيقات.",
+      "defaultPostStatus": "حالة النشر الافتراضية",
+      "postStatus": {
+        "draft": "مسودة",
+        "pending": "في انتظار المراجعة",
+        "publish": "منشور"
+      },
+      "wikilinkHandling": "معالجة روابط الويكي",
+      "wikilinkHandlingStrip": "إزالة",
+      "wikilinkHandlingConvert": "تحويل إلى URL",
+      "testConnection": "اختبار الاتصال",
+      "testConnectionDesc": "التحقق من بيانات الاعتماد والاتصال.",
+      "testing": "جارٍ الاختبار…",
+      "removeSite": "إزالة الموقع",
+      "buyMeACoffee": "اشترِ لي قهوة"
+    }
+  },
+  "binder": {
+    "displayText": "ملزمة الكتابة",
+    "selectProject": "— اختر مشروعًا —",
+    "newProject": "مشروع جديد",
+    "addDocument": "+ مستند",
+    "addFiles": "إضافة الملفات المنسوخة إلى هذا المجلد",
+    "targetsDashboard": "لوحة الأهداف",
+    "searchPlaceholder": "بحث في المستندات…",
+    "noProjectSelected": "لم يتم اختيار مشروع. أنشئ مشروعًا أو اختر مشروع كتابة للبدء.",
+    "noDocuments": "لا توجد مستندات بعد. انقر على “+ مستند” لإضافة واحد.",
+    "dropToRoot": "↓ أسقط هنا للترقية إلى الجذر",
+    "selectProjectFirst": "اختر مشروعًا أولًا.",
+    "cannotFindFile": "تعذّر العثور على الملف: {{filePath}}. حاول إعادة تسميته أو ربطه.",
+    "untitledDocument": "بدون عنوان {{time}}",
+    "noNewFiles": "لم يتم العثور على ملفات جديدة في مجلد المشروع.",
+    "pctComplete": "{{pct}}% مكتمل",
+    "copySuffix": "(نسخة)",
+    "menu": {
+      "openDocument": "فتح المستند",
+      "newChildDocument": "مستند فرعي جديد",
+      "setStatusDraft": "تعيين الحالة: مسودة",
+      "setStatusInProgress": "تعيين الحالة: قيد التقدم",
+      "setStatusComplete": "تعيين الحالة: مكتمل",
+      "setStatusPublished": "تعيين الحالة: منشور",
+      "duplicate": "تكرار",
+      "moveToResearch": "نقل إلى البحث",
+      "publishToWordPress": "نشر على WordPress",
+      "delete": "حذف"
+    }
+  }
+}

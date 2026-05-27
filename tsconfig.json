@@ -11,6 +11,7 @@
     "isolatedModules": true,
     "strictNullChecks": true,
     "allowSyntheticDefaultImports": true,
+    "resolveJsonModule": true,
     "types": ["node"],
     "lib": [
       "DOM",

@@ -1,0 +1,178 @@
+{
+  "settings": {
+    "tab": {
+      "general": "সাধারণ",
+      "focus": "ফোকাস মোড",
+      "typography": "টাইপোগ্রাফি",
+      "sprint": "স্প্রিন্ট ও লক্ষ্য",
+      "export": "রপ্তানি",
+      "log": "লেখার লগ",
+      "wordpress": "WordPress",
+      "help": "কীভাবে ব্যবহার করবেন"
+    },
+    "general": {
+      "openOnStartup": "চালু হলে খুলুন",
+      "openOnStartupDesc": "Obsidian চালু হলে Writing Studio প্যানেল স্বয়ংক্রিয়ভাবে খুলুন।",
+      "defaultProjectFolder": "ডিফল্ট প্রকল্প ফোল্ডার",
+      "defaultProjectFolderDesc": "ভল্ট পাথ যেখানে লেখার প্রকল্পগুলি সংরক্ষিত হয়।",
+      "defaultProjectFolderPlaceholder": "লেখার প্রকল্প",
+      "authorName": "লেখকের নাম",
+      "authorNameDesc": "রপ্তানি এবং শিরোনাম পৃষ্ঠায় ব্যবহৃত হয়।",
+      "authorNamePlaceholder": "আপনার নাম",
+      "defaultDocumentType": "ডিফল্ট নথির ধরন",
+      "docType": {
+        "chapter": "অধ্যায়",
+        "section": "বিভাগ",
+        "article": "নিবন্ধ",
+        "note": "নোট"
+      },
+      "frontmatterAutoUpdate": "ফ্রন্টম্যাটার স্বয়ংক্রিয় আপডেট",
+      "frontmatterAutoUpdateDesc": "সংরক্ষণের সময় শব্দ সংখ্যা এবং পরিবর্তনের তারিখ স্বয়ংক্রিয়ভাবে আপডেট করুন।"
+    },
+    "focus": {
+      "heading": "ফোকাস মোড",
+      "focusUnit": "ফোকাস একক",
+      "focusUnitDesc": "অনুচ্ছেদ বা বাক্য স্তরে হাইলাইট করুন।",
+      "paragraph": "অনুচ্ছেদ",
+      "sentence": "বাক্য (লাইন)",
+      "dimOpacity": "ডিম অপাসিটি (%)",
+      "dimOpacityDesc": "নিষ্ক্রিয় পাঠ্যের অপাসিটি (10–50)।",
+      "fontSizeOverride": "ফন্ট সাইজ ওভাররাইড (px)",
+      "fontSizeOverrideDesc": "বর্তমান থিম ফন্ট সাইজ ব্যবহার করতে 0 রাখুন।",
+      "autoHideSidebars": "সাইডবার স্বয়ংক্রিয়ভাবে লুকান",
+      "typewriterScroll": "টাইপরাইটার স্ক্রোল",
+      "typewriterScrollDesc": "সক্রিয় লাইন স্ক্রিনের মাঝখানে রাখুন।"
+    },
+    "typography": {
+      "heading": "টাইপোগ্রাফি মোড",
+      "fontFamily": "ফন্ট পরিবার",
+      "font": {
+        "mono": "মনোস্পেসড (iA Writer Mono)",
+        "serif": "সেরিফ (iA Writer Duo Serif)",
+        "sans": "স্যান্স-সেরিফ (iA Writer Quattro)",
+        "cormorant-garamond": "Cormorant garamond",
+        "crimson-text": "Crimson text",
+        "eb-garamond": "Eb garamond",
+        "libre-baskerville": "Libre baskerville",
+        "libre-caslon-text": "Libre caslon text",
+        "literata": "Literata",
+        "lora": "Lora",
+        "inter": "Inter",
+        "lato": "Lato",
+        "source-sans-3": "Source sans 3",
+        "custom": "কাস্টম ফন্ট নাম…"
+      },
+      "customFontName": "কাস্টম ফন্ট নাম",
+      "customFontNameDesc": "উপরে 'কাস্টম' নির্বাচন করলে ফন্টের নাম দিন।",
+      "customFontNamePlaceholder": "যেমন: Merriweather",
+      "maxLineLength": "সর্বাধিক লাইন দৈর্ঘ্য (অক্ষর)",
+      "maxLineLengthDesc": "55–80 অক্ষর প্রস্তাবিত।",
+      "fontSize": "ফন্ট সাইজ (px)",
+      "lineHeight": "লাইন উচ্চতা",
+      "lineHeightDesc": "ডিফল্ট: 1.7",
+      "letterSpacing": "অক্ষর ব্যবধান",
+      "letterSpacingDesc": "CSS letter-spacing মান (যেমন \"normal\", \"0.02em\")।",
+      "persistAcrossSessions": "সেশন জুড়ে বজায় রাখুন",
+      "persistAcrossSessionsDesc": "Obsidian পুনরায় খুললে টাইপোগ্রাফি মোড সক্রিয় রাখুন।"
+    },
+    "sprint": {
+      "heading": "স্প্রিন্ট ও লক্ষ্য",
+      "defaultDuration": "ডিফল্ট স্প্রিন্ট সময়কাল (মিনিট)",
+      "defaultDailyGoal": "ডিফল্ট দৈনিক শব্দ লক্ষ্য",
+      "soundNotifications": "শব্দ বিজ্ঞপ্তি",
+      "soundNotificationsDesc": "স্প্রিন্ট শেষ হলে শব্দ বাজান।",
+      "historyRetention": "স্প্রিন্ট ইতিহাস ধরে রাখা (দিন)",
+      "inlineGoalBanner": "ইনলাইন লক্ষ্য ব্যানার",
+      "inlineGoalBannerDesc": "নথি খুললে শিরোনামের নিচে শব্দ গণনার লক্ষ্য অগ্রগতি দেখান।"
+    },
+    "export": {
+      "heading": "রপ্তানি",
+      "defaultFormat": "ডিফল্ট রপ্তানি ফরম্যাট",
+      "format": {
+        "md": "Markdown (.md)",
+        "html": "HTML",
+        "pdf": "PDF",
+        "docx": "Word (.docx)",
+        "rtf": "RTF"
+      },
+      "defaultPaperSize": "ডিফল্ট কাগজের আকার",
+      "paperSize": {
+        "letter": "Letter (US)",
+        "a4": "A4"
+      },
+      "exportFont": "রপ্তানি ফন্ট",
+      "exportFontSize": "রপ্তানি ফন্ট সাইজ (pt)",
+      "pandocPath": "Pandoc পাথ",
+      "pandocPathDesc": "সিস্টেম পাথে না থাকলে pandoc বাইনারির সম্পূর্ণ পাথ।",
+      "epubHeading": "EPUB",
+      "epubLanguage": "EPUB ভাষা",
+      "epubLanguageDesc": "BCP 47 ভাষা ট্যাগ (যেমন en, fr, de)।",
+      "includeCover": "কভার অন্তর্ভুক্ত করুন",
+      "includeCoverDesc": "কভার ছবি না থাকলে টেক্সট কভার পেজ তৈরি করুন।"
+    },
+    "log": {
+      "heading": "দৈনিক লেখার লগ",
+      "appendToDailyNote": "দৈনিক নোটে যোগ করুন",
+      "appendToDailyNoteDesc": "প্রতিটি স্প্রিন্টের পরে আজকের দৈনিক নোটে লেখার কার্যকলাপের সারসংক্ষেপ যোগ করুন।"
+    },
+    "wordpress": {
+      "sitesHeading": "WordPress সাইট",
+      "addSite": "+ WordPress সাইট যোগ করুন",
+      "wikilinksHeading": "উইকিলিংক ডিফল্ট",
+      "defaultWikilinkHandling": "ডিফল্ট উইকিলিংক পরিচালনা",
+      "wikilinkStrip": "সরান (সাদা পাঠ্যে রূপান্তর করুন)",
+      "wikilinkConvert": "URL-এ রূপান্তর করুন",
+      "siteHeading": "সাইট: {{nickname}}",
+      "siteUnnamed": "নামহীন",
+      "nickname": "ডাকনাম",
+      "siteUrl": "সাইট URL",
+      "username": "ব্যবহারকারীর নাম",
+      "appPassword": "অ্যাপ্লিকেশন পাসওয়ার্ড",
+      "appPasswordDesc": "WordPress-এ Users → Profile → Application passwords-এর অধীনে তৈরি করুন।",
+      "defaultPostStatus": "ডিফল্ট পোস্ট স্ট্যাটাস",
+      "postStatus": {
+        "draft": "ড্রাফট",
+        "pending": "পর্যালোচনার অপেক্ষায়",
+        "publish": "প্রকাশিত"
+      },
+      "wikilinkHandling": "উইকিলিংক পরিচালনা",
+      "wikilinkHandlingStrip": "সরান",
+      "wikilinkHandlingConvert": "URL-এ রূপান্তর করুন",
+      "testConnection": "সংযোগ পরীক্ষা",
+      "testConnectionDesc": "শংসাপত্র এবং সংযোগ যাচাই করুন।",
+      "testing": "পরীক্ষা করা হচ্ছে…",
+      "removeSite": "সাইট সরান",
+      "buyMeACoffee": "আমাকে কফি কিনুন"
+    }
+  },
+  "binder": {
+    "displayText": "লেখার বাইন্ডার",
+    "selectProject": "— প্রকল্প নির্বাচন করুন —",
+    "newProject": "নতুন প্রকল্প",
+    "addDocument": "+ নথি",
+    "addFiles": "এই ফোল্ডারে কপি করা ফাইল যোগ করুন",
+    "targetsDashboard": "লক্ষ্য ড্যাশবোর্ড",
+    "searchPlaceholder": "নথি খুঁজুন…",
+    "noProjectSelected": "কোনো প্রকল্প নির্বাচিত নয়। শুরু করতে একটি লেখার প্রকল্প তৈরি বা নির্বাচন করুন।",
+    "noDocuments": "এখনো কোনো নথি নেই। একটি যোগ করতে \"+ নথি\" ক্লিক করুন।",
+    "dropToRoot": "↓ মূলে প্রমোট করতে এখানে ফেলুন",
+    "selectProjectFirst": "প্রথমে একটি প্রকল্প নির্বাচন করুন।",
+    "cannotFindFile": "ফাইল পাওয়া যাচ্ছে না: {{filePath}}। নাম পরিবর্তন বা পুনরায় লিংক করার চেষ্টা করুন।",
+    "untitledDocument": "শিরোনামহীন {{time}}",
+    "noNewFiles": "প্রকল্প ফোল্ডারে কোনো নতুন ফাইল পাওয়া যায়নি।",
+    "pctComplete": "{{pct}}% সম্পন্ন",
+    "copySuffix": "(কপি)",
+    "menu": {
+      "openDocument": "নথি খুলুন",
+      "newChildDocument": "নতুন চাইল্ড নথি",
+      "setStatusDraft": "স্ট্যাটাস সেট করুন: ড্রাফট",
+      "setStatusInProgress": "স্ট্যাটাস সেট করুন: চলমান",
+      "setStatusComplete": "স্ট্যাটাস সেট করুন: সম্পন্ন",
+      "setStatusPublished": "স্ট্যাটাস সেট করুন: প্রকাশিত",
+      "duplicate": "ডুপ্লিকেট",
+      "moveToResearch": "গবেষণায় সরান",
+      "publishToWordPress": "WordPress-এ প্রকাশ করুন",
+      "delete": "মুছুন"
+    }
+  }
+}
