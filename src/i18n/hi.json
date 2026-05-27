@@ -245,5 +245,77 @@
     "today": "आज",
     "sprintsCount_one": "· {{count}} स्प्रिंट",
     "sprintsCount_other": "· {{count}} स्प्रिंट"
+  },
+  "sprint": {
+    "started": "लेखन स्प्रिंट शुरू हुआ: {{minutes}} मिनट",
+    "complete": "स्प्रिंट पूरा! शानदार काम।",
+    "words": "+{{n}} शब्द",
+    "header": "लेखन स्प्रिंट",
+    "pauseTitle": "रोकें/जारी रखें",
+    "stopTitle": "स्प्रिंट रोकें"
+  },
+  "writingModes": {
+    "switchedTo": "राइटिंग स्टूडियो: {{mode}} मोड",
+    "normal": "सामान्य",
+    "statusDraft": "✍ ड्राफ्ट",
+    "statusEdit": "✎ संपादन",
+    "statusReview": "👁 समीक्षा",
+    "statusNone": "— मोड"
+  },
+  "exportEngine": {
+    "epubExported": "EPUB {{path}} पर निर्यात किया",
+    "manuscriptExported": "पांडुलिपि {{path}} पर निर्यात की",
+    "exportedTo": "{{path}} पर निर्यात किया",
+    "exportedHtmlTo": "HTML {{path}} पर निर्यात किया",
+    "pdfRequiresPandoc": "PDF निर्यात के लिए pandoc चाहिए। pandoc इंस्टॉल करें और सेटिंग में पाथ सेट करें।"
+  },
+  "wpClient": {
+    "authFailed": "प्रमाणीकरण विफल। उपयोगकर्ता नाम और एप्लिकेशन पासवर्ड जांचें।",
+    "connectedAs": "\"{{site}}\" से \"{{user}}\" के रूप में कनेक्ट",
+    "networkError": "नेटवर्क त्रुटि: {{error}}",
+    "httpError": "HTTP {{status}}",
+    "fetchCategoriesFailed": "श्रेणियां प्राप्त करने में विफल: {{error}}"
+  },
+  "folderSidebar": {
+    "displayText": "फ़ोल्डर एक्सप्लोरर",
+    "back": "← वापस",
+    "root": "⌂ मूल",
+    "insertSelection": "↩ चयन डालें",
+    "searchPlaceholder": "नाम और सामग्री खोजें… (Enter)",
+    "sort": {
+      "foldersAz": "फ़ोल्डर ↑ A-Z",
+      "foldersZa": "फ़ोल्डर ↑ Z-A",
+      "az": "नाम A-Z",
+      "za": "नाम Z-A",
+      "modifiedNew": "नवीनतम पहले",
+      "modifiedOld": "पुराना पहले"
+    },
+    "noPreview": ".{{ext}} फ़ाइलों के लिए कोई पूर्वावलोकन नहीं",
+    "openInEditor": "संपादक में खोलें",
+    "searching": "खोज रहा है…",
+    "noResults": "\"{{query}}\" के लिए कोई परिणाम नहीं",
+    "emptyFolder": "यह फ़ोल्डर खाली है",
+    "tooltip": {
+      "modified": "संशोधित",
+      "size": "आकार",
+      "words": "शब्द",
+      "files": "फ़ाइलें",
+      "subfolders": "उपफ़ोल्डर"
+    },
+    "pickerPlaceholder": "साइडबार एक्सप्लोरर में खोलने के लिए फ़ोल्डर नाम लिखें…",
+    "vaultRoot": "/ (vault मूल)"
+  },
+  "focusToolbar": {
+    "exitTitle": "फ़ोकस मोड से बाहर निकलें (esc)",
+    "exitBtn": "✕ बाहर निकलें",
+    "wordCount_one": "{{count}} शब्द",
+    "wordCount_other": "{{count}} शब्द"
+  },
+  "compilePreview": {
+    "displayText": "संकलित पांडुलिपि",
+    "jumpToSection": "अनुभाग पर जाएं...",
+    "proceedToExport": "निर्यात करें",
+    "closePreview": "पूर्वावलोकन बंद करें",
+    "noContent": "पूर्वावलोकन के लिए कोई सामग्री नहीं। पहले कोई लेखन परियोजना खोलें।"
   }
 }

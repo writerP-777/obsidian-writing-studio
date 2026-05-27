@@ -247,5 +247,79 @@
     "sprintsCount_few": "· {{count}} спринта",
     "sprintsCount_many": "· {{count}} спринтов",
     "sprintsCount_other": "· {{count}} спринтов"
+  },
+  "sprint": {
+    "started": "Спринт начат: {{minutes}} минут",
+    "complete": "Спринт завершён! Отличная работа.",
+    "words": "+{{n}} слов",
+    "header": "Спринт написания",
+    "pauseTitle": "Пауза/продолжить",
+    "stopTitle": "Остановить спринт"
+  },
+  "writingModes": {
+    "switchedTo": "Студия письма: режим {{mode}}",
+    "normal": "Обычный",
+    "statusDraft": "✍ черновик",
+    "statusEdit": "✎ редактирование",
+    "statusReview": "👁 рецензия",
+    "statusNone": "— режим"
+  },
+  "exportEngine": {
+    "epubExported": "EPUB экспортирован в {{path}}",
+    "manuscriptExported": "Рукопись экспортирована в {{path}}",
+    "exportedTo": "Экспортировано в {{path}}",
+    "exportedHtmlTo": "HTML экспортирован в {{path}}",
+    "pdfRequiresPandoc": "Для экспорта в PDF требуется pandoc. Установите pandoc и укажите путь в настройках."
+  },
+  "wpClient": {
+    "authFailed": "Ошибка аутентификации. Проверьте имя пользователя и пароль приложения.",
+    "connectedAs": "Подключено как «{{user}}» к «{{site}}»",
+    "networkError": "Ошибка сети: {{error}}",
+    "httpError": "HTTP {{status}}",
+    "fetchCategoriesFailed": "Не удалось получить категории: {{error}}"
+  },
+  "folderSidebar": {
+    "displayText": "Файловый проводник",
+    "back": "← Назад",
+    "root": "⌂ Корень",
+    "insertSelection": "↩ Вставить выделенное",
+    "searchPlaceholder": "Поиск имён и содержимого… (Enter)",
+    "sort": {
+      "foldersAz": "Папки ↑ А-Я",
+      "foldersZa": "Папки ↑ Я-А",
+      "az": "Имя А-Я",
+      "za": "Имя Я-А",
+      "modifiedNew": "Новые сначала",
+      "modifiedOld": "Старые сначала"
+    },
+    "noPreview": "Нет предпросмотра для файлов .{{ext}}",
+    "openInEditor": "Открыть в редакторе",
+    "searching": "Поиск…",
+    "noResults": "Нет результатов для «{{query}}»",
+    "emptyFolder": "Папка пуста",
+    "tooltip": {
+      "modified": "Изменён",
+      "size": "Размер",
+      "words": "Слова",
+      "files": "Файлы",
+      "subfolders": "Подпапки"
+    },
+    "pickerPlaceholder": "Введите название папки для открытия в боковом проводнике…",
+    "vaultRoot": "/ (корень хранилища)"
+  },
+  "focusToolbar": {
+    "exitTitle": "Выйти из режима фокуса (esc)",
+    "exitBtn": "✕ выйти",
+    "wordCount_one": "{{count}} слово",
+    "wordCount_few": "{{count}} слова",
+    "wordCount_many": "{{count}} слов",
+    "wordCount_other": "{{count}} слова"
+  },
+  "compilePreview": {
+    "displayText": "Собранная рукопись",
+    "jumpToSection": "Перейти к разделу...",
+    "proceedToExport": "Перейти к экспорту",
+    "closePreview": "Закрыть предпросмотр",
+    "noContent": "Нет содержимого для предпросмотра. Сначала откройте письменный проект."
   }
 }

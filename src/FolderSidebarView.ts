@@ -8,6 +8,7 @@ import {
   WorkspaceLeaf,
   setIcon,
 } from 'obsidian';
+import { t } from './i18n';
 
 type SortMode = 'folders-az' | 'folders-za' | 'az' | 'za' | 'modified-new' | 'modified-old';
 type MatchType = 'name' | 'content';
@@ -47,7 +48,7 @@ export class FolderSidebarView extends ItemView {
   getDisplayText(): string {
     if (this.currentFile) return `📄 ${this.currentFile.name}`;
     if (this.currentFolder) return `📁 ${this.currentFolder.name}`;
-    return 'Folder explorer';
+    return t('folderSidebar.displayText');
   }
 
   getIcon(): string { return 'folder'; }
@@ -288,12 +289,12 @@ export class FolderSidebarView extends ItemView {
         year: 'numeric', month: 'short', day: 'numeric',
         hour: '2-digit', minute: '2-digit',
       });
-      this.addTooltipRow(tip, 'Modified', modStr);
-      this.addTooltipRow(tip, 'Size', this.formatFileSize(item.stat.size));
+      this.addTooltipRow(tip, t('folderSidebar.tooltip.modified'), modStr);
+      this.addTooltipRow(tip, t('folderSidebar.tooltip.size'), this.formatFileSize(item.stat.size));
 
       // Word count — async; show placeholder then update in-place
       if (['md', 'txt'].includes(item.extension.toLowerCase())) {
-        const wordRow = this.addTooltipRow(tip, 'Words', '…');
+        const wordRow = this.addTooltipRow(tip, t('folderSidebar.tooltip.words'), '…');
         try {
           const text = await this.app.vault.cachedRead(item);
           const body2 = this.stripFrontmatter(text);
@@ -317,9 +318,9 @@ export class FolderSidebarView extends ItemView {
         }
       };
       walk(item);
-      this.addTooltipRow(tip, 'Files', fileCount.toLocaleString());
+      this.addTooltipRow(tip, t('folderSidebar.tooltip.files'), fileCount.toLocaleString());
       if (folderCount > 0) {
-        this.addTooltipRow(tip, 'Subfolders', folderCount.toLocaleString());
+        this.addTooltipRow(tip, t('folderSidebar.tooltip.subfolders'), folderCount.toLocaleString());
       }
     }
   }
@@ -525,17 +526,17 @@ export class FolderSidebarView extends ItemView {
     const navRow = container.createDiv({ cls: 'ws-folder-nav-row' });
 
     if (canGoBack) {
-      const backBtn = navRow.createEl('button', { text: '← Back', cls: 'ws-folder-nav-btn' });
+      const backBtn = navRow.createEl('button', { text: t('folderSidebar.back'), cls: 'ws-folder-nav-btn' });
       backBtn.addEventListener('click', () => this.navigateBack());
     }
 
-    const rootBtn = navRow.createEl('button', { text: '⌂ Root', cls: 'ws-folder-nav-btn' });
+    const rootBtn = navRow.createEl('button', { text: t('folderSidebar.root'), cls: 'ws-folder-nav-btn' });
     rootBtn.addEventListener('click', () => this.navigateToRoot());
 
     // "Insert selection" button — only in file preview mode
     if (this.currentFile) {
       const insertBtn = navRow.createEl('button', {
-        text: '↩ Insert selection',
+        text: t('folderSidebar.insertSelection'),
         cls: 'ws-folder-nav-btn ws-folder-insert-btn',
       });
 
@@ -581,7 +582,7 @@ export class FolderSidebarView extends ItemView {
     const searchInput = searchWrap.createEl('input', {
       cls: 'ws-folder-search-input',
       type: 'text',
-      placeholder: 'Search names & content… (Enter)',
+      placeholder: t('folderSidebar.searchPlaceholder'),
     });
     searchInput.value = this.searchQuery;
 
@@ -618,12 +619,12 @@ export class FolderSidebarView extends ItemView {
     // Sort dropdown
     const sortSel = toolbar.createEl('select', { cls: 'ws-folder-sort-select' });
     const sortOptions: { value: SortMode; label: string }[] = [
-      { value: 'folders-az',   label: 'Folders ↑ A-Z' },
-      { value: 'folders-za',   label: 'Folders ↑ Z-A' },
-      { value: 'az',           label: 'Name A-Z' },
-      { value: 'za',           label: 'Name Z-A' },
-      { value: 'modified-new', label: 'Newest first' },
-      { value: 'modified-old', label: 'Oldest first' },
+      { value: 'folders-az',   label: t('folderSidebar.sort.foldersAz') },
+      { value: 'folders-za',   label: t('folderSidebar.sort.foldersZa') },
+      { value: 'az',           label: t('folderSidebar.sort.az') },
+      { value: 'za',           label: t('folderSidebar.sort.za') },
+      { value: 'modified-new', label: t('folderSidebar.sort.modifiedNew') },
+      { value: 'modified-old', label: t('folderSidebar.sort.modifiedOld') },
     ];
     for (const opt of sortOptions) {
       const el = sortSel.createEl('option', { value: opt.value, text: opt.label });
@@ -656,8 +657,8 @@ export class FolderSidebarView extends ItemView {
     } else {
       // Unsupported type — offer to open in the main editor
       const msg = content.createDiv({ cls: 'ws-folder-unsupported' });
-      msg.setText(`No preview available for .${file.extension} files`);
-      const openBtn = content.createEl('button', { cls: 'ws-folder-open-btn', text: 'Open in editor' });
+      msg.setText(t('folderSidebar.noPreview', { ext: file.extension }));
+      const openBtn = content.createEl('button', { cls: 'ws-folder-open-btn', text: t('folderSidebar.openInEditor') });
       openBtn.addEventListener('click', () => {
         void this.app.workspace.getLeaf('tab').openFile(file);
       });
@@ -675,11 +676,11 @@ export class FolderSidebarView extends ItemView {
     // ── Search results mode ─────────────────────────────────────────────────
     if (query) {
       if (this.searchResults === null) {
-        list.createDiv({ cls: 'ws-folder-empty', text: 'Searching…' });
+        list.createDiv({ cls: 'ws-folder-empty', text: t('folderSidebar.searching') });
         return;
       }
       if (this.searchResults.length === 0) {
-        list.createDiv({ cls: 'ws-folder-empty', text: `No results for "${this.searchQuery}"` });
+        list.createDiv({ cls: 'ws-folder-empty', text: t('folderSidebar.noResults', { query: this.searchQuery }) });
         return;
       }
 
@@ -777,7 +778,7 @@ export class FolderSidebarView extends ItemView {
     const sorted = this.sortItems(displayItems);
 
     if (sorted.length === 0) {
-      list.createDiv({ cls: 'ws-folder-empty', text: 'This folder is empty' });
+      list.createDiv({ cls: 'ws-folder-empty', text: t('folderSidebar.emptyFolder') });
       return;
     }
 
@@ -851,7 +852,7 @@ export class FolderPickerModal extends FuzzySuggestModal<TFolder> {
   constructor(app: import('obsidian').App, onChoose: (folder: TFolder) => void) {
     super(app);
     this.onChoose = onChoose;
-    this.setPlaceholder('Type a folder name to open in sidebar explorer…');
+    this.setPlaceholder(t('folderSidebar.pickerPlaceholder'));
   }
 
   getItems(): TFolder[] {
@@ -867,7 +868,7 @@ export class FolderPickerModal extends FuzzySuggestModal<TFolder> {
   }
 
   getItemText(folder: TFolder): string {
-    return folder.path === '/' ? '/ (vault root)' : folder.path;
+    return folder.path === '/' ? t('folderSidebar.vaultRoot') : folder.path;
   }
 
   onChooseItem(folder: TFolder): void {

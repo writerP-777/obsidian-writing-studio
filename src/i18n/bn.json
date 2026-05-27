@@ -245,5 +245,77 @@
     "today": "আজ",
     "sprintsCount_one": "· {{count}} স্প্রিন্ট",
     "sprintsCount_other": "· {{count}} স্প্রিন্ট"
+  },
+  "sprint": {
+    "started": "লেখার স্প্রিন্ট শুরু হয়েছে: {{minutes}} মিনিট",
+    "complete": "স্প্রিন্ট সম্পন্ন! দারুণ কাজ।",
+    "words": "+{{n}} শব্দ",
+    "header": "লেখার স্প্রিন্ট",
+    "pauseTitle": "বিরতি/পুনরায় শুরু",
+    "stopTitle": "স্প্রিন্ট থামান"
+  },
+  "writingModes": {
+    "switchedTo": "রাইটিং স্টুডিও: {{mode}} মোড",
+    "normal": "সাধারণ",
+    "statusDraft": "✍ খসড়া",
+    "statusEdit": "✎ সম্পাদনা",
+    "statusReview": "👁 পর্যালোচনা",
+    "statusNone": "— মোড"
+  },
+  "exportEngine": {
+    "epubExported": "EPUB {{path}}-এ রপ্তানি করা হয়েছে",
+    "manuscriptExported": "পাণ্ডুলিপি {{path}}-এ রপ্তানি করা হয়েছে",
+    "exportedTo": "{{path}}-এ রপ্তানি করা হয়েছে",
+    "exportedHtmlTo": "HTML {{path}}-এ রপ্তানি করা হয়েছে",
+    "pdfRequiresPandoc": "PDF রপ্তানির জন্য pandoc প্রয়োজন। pandoc ইনস্টল করুন এবং সেটিংসে পাথ সেট করুন।"
+  },
+  "wpClient": {
+    "authFailed": "প্রমাণীকরণ ব্যর্থ। ব্যবহারকারীর নাম ও অ্যাপ্লিকেশন পাসওয়ার্ড যাচাই করুন।",
+    "connectedAs": "\"{{site}}\"-এ \"{{user}}\" হিসেবে সংযুক্ত",
+    "networkError": "নেটওয়ার্ক ত্রুটি: {{error}}",
+    "httpError": "HTTP {{status}}",
+    "fetchCategoriesFailed": "বিভাগ আনতে ব্যর্থ: {{error}}"
+  },
+  "folderSidebar": {
+    "displayText": "ফোল্ডার এক্সপ্লোরার",
+    "back": "← পিছনে",
+    "root": "⌂ মূল",
+    "insertSelection": "↩ নির্বাচন সন্নিবেশ করুন",
+    "searchPlaceholder": "নাম ও বিষয়বস্তু খুঁজুন… (Enter)",
+    "sort": {
+      "foldersAz": "ফোল্ডার ↑ A-Z",
+      "foldersZa": "ফোল্ডার ↑ Z-A",
+      "az": "নাম A-Z",
+      "za": "নাম Z-A",
+      "modifiedNew": "সর্বশেষ আগে",
+      "modifiedOld": "সবচেয়ে পুরানো আগে"
+    },
+    "noPreview": ".{{ext}} ফাইলের জন্য কোনো পূর্বরূপ নেই",
+    "openInEditor": "সম্পাদকে খুলুন",
+    "searching": "খোঁজা হচ্ছে…",
+    "noResults": "\"{{query}}\" এর জন্য কোনো ফলাফল নেই",
+    "emptyFolder": "এই ফোল্ডারটি খালি",
+    "tooltip": {
+      "modified": "পরিবর্তিত",
+      "size": "আকার",
+      "words": "শব্দ",
+      "files": "ফাইল",
+      "subfolders": "সাবফোল্ডার"
+    },
+    "pickerPlaceholder": "সাইডবার এক্সপ্লোরারে খুলতে ফোল্ডারের নাম লিখুন…",
+    "vaultRoot": "/ (ভল্ট মূল)"
+  },
+  "focusToolbar": {
+    "exitTitle": "ফোকাস মোড থেকে বের হন (esc)",
+    "exitBtn": "✕ বের হন",
+    "wordCount_one": "{{count}} শব্দ",
+    "wordCount_other": "{{count}} শব্দ"
+  },
+  "compilePreview": {
+    "displayText": "সংকলিত পাণ্ডুলিপি",
+    "jumpToSection": "বিভাগে যান...",
+    "proceedToExport": "রপ্তানিতে এগিয়ে যান",
+    "closePreview": "পূর্বরূপ বন্ধ করুন",
+    "noContent": "পূর্বরূপের জন্য কোনো বিষয়বস্তু নেই। প্রথমে একটি লেখার প্রকল্প খুলুন।"
   }
 }

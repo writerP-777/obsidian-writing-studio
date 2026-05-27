@@ -245,5 +245,77 @@
     "today": "Hoy",
     "sprintsCount_one": "· {{count}} sprint",
     "sprintsCount_other": "· {{count}} sprints"
+  },
+  "sprint": {
+    "started": "Sprint iniciado: {{minutes}} minutos",
+    "complete": "¡Sprint completado! Excelente trabajo.",
+    "words": "+{{n}} palabras",
+    "header": "Sprint de escritura",
+    "pauseTitle": "Pausar/reanudar",
+    "stopTitle": "Detener sprint"
+  },
+  "writingModes": {
+    "switchedTo": "Estudio de escritura: modo {{mode}}",
+    "normal": "Normal",
+    "statusDraft": "✍ borrador",
+    "statusEdit": "✎ editar",
+    "statusReview": "👁 revisar",
+    "statusNone": "— modo"
+  },
+  "exportEngine": {
+    "epubExported": "EPUB exportado a {{path}}",
+    "manuscriptExported": "Manuscrito exportado a {{path}}",
+    "exportedTo": "Exportado a {{path}}",
+    "exportedHtmlTo": "HTML exportado a {{path}}",
+    "pdfRequiresPandoc": "La exportación a PDF requiere pandoc. Instale pandoc y configure la ruta en los ajustes."
+  },
+  "wpClient": {
+    "authFailed": "Autenticación fallida. Verifique el nombre de usuario y la contraseña de aplicación.",
+    "connectedAs": "Conectado como \"{{user}}\" en \"{{site}}\"",
+    "networkError": "Error de red: {{error}}",
+    "httpError": "HTTP {{status}}",
+    "fetchCategoriesFailed": "Error al obtener categorías: {{error}}"
+  },
+  "folderSidebar": {
+    "displayText": "Explorador de carpetas",
+    "back": "← Atrás",
+    "root": "⌂ Raíz",
+    "insertSelection": "↩ Insertar selección",
+    "searchPlaceholder": "Buscar nombres y contenido… (Enter)",
+    "sort": {
+      "foldersAz": "Carpetas ↑ A-Z",
+      "foldersZa": "Carpetas ↑ Z-A",
+      "az": "Nombre A-Z",
+      "za": "Nombre Z-A",
+      "modifiedNew": "Más reciente primero",
+      "modifiedOld": "Más antiguo primero"
+    },
+    "noPreview": "Sin vista previa para archivos .{{ext}}",
+    "openInEditor": "Abrir en editor",
+    "searching": "Buscando…",
+    "noResults": "Sin resultados para \"{{query}}\"",
+    "emptyFolder": "Esta carpeta está vacía",
+    "tooltip": {
+      "modified": "Modificado",
+      "size": "Tamaño",
+      "words": "Palabras",
+      "files": "Archivos",
+      "subfolders": "Subcarpetas"
+    },
+    "pickerPlaceholder": "Escribe un nombre de carpeta para abrir en el explorador lateral…",
+    "vaultRoot": "/ (raíz del vault)"
+  },
+  "focusToolbar": {
+    "exitTitle": "Salir del modo foco (esc)",
+    "exitBtn": "✕ salir",
+    "wordCount_one": "{{count}} palabra",
+    "wordCount_other": "{{count}} palabras"
+  },
+  "compilePreview": {
+    "displayText": "Manuscrito compilado",
+    "jumpToSection": "Ir a la sección...",
+    "proceedToExport": "Proceder a exportar",
+    "closePreview": "Cerrar vista previa",
+    "noContent": "Sin contenido para previsualizar. Abra primero un proyecto de escritura."
   }
 }

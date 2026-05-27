@@ -245,5 +245,77 @@
     "today": "Aujourd'hui",
     "sprintsCount_one": "· {{count}} sprint",
     "sprintsCount_other": "· {{count}} sprints"
+  },
+  "sprint": {
+    "started": "Sprint démarré : {{minutes}} minutes",
+    "complete": "Sprint terminé ! Excellent travail.",
+    "words": "+{{n}} mots",
+    "header": "Sprint d'écriture",
+    "pauseTitle": "Pause/reprendre",
+    "stopTitle": "Arrêter le sprint"
+  },
+  "writingModes": {
+    "switchedTo": "Studio d'écriture : mode {{mode}}",
+    "normal": "Normal",
+    "statusDraft": "✍ brouillon",
+    "statusEdit": "✎ édition",
+    "statusReview": "👁 révision",
+    "statusNone": "— mode"
+  },
+  "exportEngine": {
+    "epubExported": "EPUB exporté vers {{path}}",
+    "manuscriptExported": "Manuscrit exporté vers {{path}}",
+    "exportedTo": "Exporté vers {{path}}",
+    "exportedHtmlTo": "HTML exporté vers {{path}}",
+    "pdfRequiresPandoc": "L'export PDF nécessite pandoc. Installez pandoc et définissez le chemin dans les paramètres."
+  },
+  "wpClient": {
+    "authFailed": "Échec de l'authentification. Vérifiez le nom d'utilisateur et le mot de passe de l'application.",
+    "connectedAs": "Connecté en tant que \"{{user}}\" sur \"{{site}}\"",
+    "networkError": "Erreur réseau : {{error}}",
+    "httpError": "HTTP {{status}}",
+    "fetchCategoriesFailed": "Échec de la récupération des catégories : {{error}}"
+  },
+  "folderSidebar": {
+    "displayText": "Explorateur de dossiers",
+    "back": "← Retour",
+    "root": "⌂ Racine",
+    "insertSelection": "↩ Insérer la sélection",
+    "searchPlaceholder": "Rechercher noms et contenu… (Entrée)",
+    "sort": {
+      "foldersAz": "Dossiers ↑ A-Z",
+      "foldersZa": "Dossiers ↑ Z-A",
+      "az": "Nom A-Z",
+      "za": "Nom Z-A",
+      "modifiedNew": "Plus récent d'abord",
+      "modifiedOld": "Plus ancien d'abord"
+    },
+    "noPreview": "Pas d'aperçu pour les fichiers .{{ext}}",
+    "openInEditor": "Ouvrir dans l'éditeur",
+    "searching": "Recherche en cours…",
+    "noResults": "Aucun résultat pour « {{query}} »",
+    "emptyFolder": "Ce dossier est vide",
+    "tooltip": {
+      "modified": "Modifié",
+      "size": "Taille",
+      "words": "Mots",
+      "files": "Fichiers",
+      "subfolders": "Sous-dossiers"
+    },
+    "pickerPlaceholder": "Saisissez un nom de dossier pour l'ouvrir dans l'explorateur latéral…",
+    "vaultRoot": "/ (racine du coffre)"
+  },
+  "focusToolbar": {
+    "exitTitle": "Quitter le mode focus (esc)",
+    "exitBtn": "✕ quitter",
+    "wordCount_one": "{{count}} mot",
+    "wordCount_other": "{{count}} mots"
+  },
+  "compilePreview": {
+    "displayText": "Manuscrit compilé",
+    "jumpToSection": "Aller à la section...",
+    "proceedToExport": "Procéder à l'export",
+    "closePreview": "Fermer l'aperçu",
+    "noContent": "Aucun contenu à prévisualiser. Ouvrez d'abord un projet d'écriture."
   }
 }

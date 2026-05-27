@@ -245,5 +245,77 @@
     "today": "Hoje",
     "sprintsCount_one": "· {{count}} sprint",
     "sprintsCount_other": "· {{count}} sprints"
+  },
+  "sprint": {
+    "started": "Sprint iniciado: {{minutes}} minutos",
+    "complete": "Sprint concluído! Ótimo trabalho.",
+    "words": "+{{n}} palavras",
+    "header": "Sprint de escrita",
+    "pauseTitle": "Pausar/retomar",
+    "stopTitle": "Parar sprint"
+  },
+  "writingModes": {
+    "switchedTo": "Estúdio de escrita: modo {{mode}}",
+    "normal": "Normal",
+    "statusDraft": "✍ rascunho",
+    "statusEdit": "✎ editar",
+    "statusReview": "👁 revisar",
+    "statusNone": "— modo"
+  },
+  "exportEngine": {
+    "epubExported": "EPUB exportado para {{path}}",
+    "manuscriptExported": "Manuscrito exportado para {{path}}",
+    "exportedTo": "Exportado para {{path}}",
+    "exportedHtmlTo": "HTML exportado para {{path}}",
+    "pdfRequiresPandoc": "A exportação para PDF requer pandoc. Instale o pandoc e defina o caminho nas configurações."
+  },
+  "wpClient": {
+    "authFailed": "Falha na autenticação. Verifique o nome de usuário e a senha de aplicativo.",
+    "connectedAs": "Conectado como \"{{user}}\" em \"{{site}}\"",
+    "networkError": "Erro de rede: {{error}}",
+    "httpError": "HTTP {{status}}",
+    "fetchCategoriesFailed": "Falha ao buscar categorias: {{error}}"
+  },
+  "folderSidebar": {
+    "displayText": "Explorador de pastas",
+    "back": "← Voltar",
+    "root": "⌂ Raiz",
+    "insertSelection": "↩ Inserir seleção",
+    "searchPlaceholder": "Pesquisar nomes e conteúdo… (Enter)",
+    "sort": {
+      "foldersAz": "Pastas ↑ A-Z",
+      "foldersZa": "Pastas ↑ Z-A",
+      "az": "Nome A-Z",
+      "za": "Nome Z-A",
+      "modifiedNew": "Mais recente primeiro",
+      "modifiedOld": "Mais antigo primeiro"
+    },
+    "noPreview": "Sem visualização para arquivos .{{ext}}",
+    "openInEditor": "Abrir no editor",
+    "searching": "Pesquisando…",
+    "noResults": "Sem resultados para \"{{query}}\"",
+    "emptyFolder": "Esta pasta está vazia",
+    "tooltip": {
+      "modified": "Modificado",
+      "size": "Tamanho",
+      "words": "Palavras",
+      "files": "Arquivos",
+      "subfolders": "Subpastas"
+    },
+    "pickerPlaceholder": "Digite um nome de pasta para abrir no explorador lateral…",
+    "vaultRoot": "/ (raiz do vault)"
+  },
+  "focusToolbar": {
+    "exitTitle": "Sair do modo foco (esc)",
+    "exitBtn": "✕ sair",
+    "wordCount_one": "{{count}} palavra",
+    "wordCount_other": "{{count}} palavras"
+  },
+  "compilePreview": {
+    "displayText": "Manuscrito compilado",
+    "jumpToSection": "Ir para seção...",
+    "proceedToExport": "Prosseguir para exportar",
+    "closePreview": "Fechar visualização",
+    "noContent": "Sem conteúdo para visualizar. Abra um projeto de escrita primeiro."
   }
 }

@@ -3067,6 +3067,78 @@ var en_default = {
     today: "Today",
     sprintsCount_one: "\xB7 {{count}} sprint",
     sprintsCount_other: "\xB7 {{count}} sprints"
+  },
+  sprint: {
+    started: "Sprint started: {{minutes}} minutes",
+    complete: "Sprint complete! Great work.",
+    words: "+{{n}} words",
+    header: "Writing sprint",
+    pauseTitle: "Pause/resume",
+    stopTitle: "Stop sprint"
+  },
+  writingModes: {
+    switchedTo: "Writing studio: {{mode}} mode",
+    normal: "Normal",
+    statusDraft: "\u270D draft",
+    statusEdit: "\u270E edit",
+    statusReview: "\u{1F441} review",
+    statusNone: "\u2014 mode"
+  },
+  exportEngine: {
+    epubExported: "EPUB exported to {{path}}",
+    manuscriptExported: "Manuscript exported to {{path}}",
+    exportedTo: "Exported to {{path}}",
+    exportedHtmlTo: "Exported HTML to {{path}}",
+    pdfRequiresPandoc: "PDF export requires pandoc. Install pandoc and set path in settings."
+  },
+  wpClient: {
+    authFailed: "Authentication failed. Check username and application password.",
+    connectedAs: 'Connected as "{{user}}" to "{{site}}"',
+    networkError: "Network error: {{error}}",
+    httpError: "HTTP {{status}}",
+    fetchCategoriesFailed: "Failed to fetch categories: {{error}}"
+  },
+  folderSidebar: {
+    displayText: "Folder explorer",
+    back: "\u2190 Back",
+    root: "\u2302 Root",
+    insertSelection: "\u21A9 Insert selection",
+    searchPlaceholder: "Search names & content\u2026 (Enter)",
+    sort: {
+      foldersAz: "Folders \u2191 A-Z",
+      foldersZa: "Folders \u2191 Z-A",
+      az: "Name A-Z",
+      za: "Name Z-A",
+      modifiedNew: "Newest first",
+      modifiedOld: "Oldest first"
+    },
+    noPreview: "No preview available for .{{ext}} files",
+    openInEditor: "Open in editor",
+    searching: "Searching\u2026",
+    noResults: 'No results for "{{query}}"',
+    emptyFolder: "This folder is empty",
+    tooltip: {
+      modified: "Modified",
+      size: "Size",
+      words: "Words",
+      files: "Files",
+      subfolders: "Subfolders"
+    },
+    pickerPlaceholder: "Type a folder name to open in sidebar explorer\u2026",
+    vaultRoot: "/ (vault root)"
+  },
+  focusToolbar: {
+    exitTitle: "Exit focus mode (esc)",
+    exitBtn: "\u2715 exit",
+    wordCount_one: "{{count}} word",
+    wordCount_other: "{{count}} words"
+  },
+  compilePreview: {
+    displayText: "Compiled manuscript",
+    jumpToSection: "Jump to section...",
+    proceedToExport: "Proceed to export",
+    closePreview: "Close preview",
+    noContent: "No content to preview. Open a writing project first."
   }
 };
 
@@ -3317,6 +3389,77 @@ var zh_default = {
     last30Days: "\u6700\u8FD130\u5929",
     today: "\u4ECA\u5929",
     sprintsCount_other: "\xB7 {{count}} \u6B21\u51B2\u523A"
+  },
+  sprint: {
+    started: "\u5199\u4F5C\u51B2\u523A\u5DF2\u5F00\u59CB\uFF1A{{minutes}} \u5206\u949F",
+    complete: "\u51B2\u523A\u5B8C\u6210\uFF01\u5E72\u5F97\u597D\u3002",
+    words: "+{{n}} \u4E2A\u5B57",
+    header: "\u5199\u4F5C\u51B2\u523A",
+    pauseTitle: "\u6682\u505C/\u7EE7\u7EED",
+    stopTitle: "\u505C\u6B62\u51B2\u523A"
+  },
+  writingModes: {
+    switchedTo: "\u5199\u4F5C\u5DE5\u4F5C\u5BA4\uFF1A{{mode}} \u6A21\u5F0F",
+    normal: "\u666E\u901A",
+    statusDraft: "\u270D \u8349\u7A3F",
+    statusEdit: "\u270E \u7F16\u8F91",
+    statusReview: "\u{1F441} \u5BA1\u9605",
+    statusNone: "\u2014 \u6A21\u5F0F"
+  },
+  exportEngine: {
+    epubExported: "EPUB \u5DF2\u5BFC\u51FA\u5230 {{path}}",
+    manuscriptExported: "\u7A3F\u4EF6\u5DF2\u5BFC\u51FA\u5230 {{path}}",
+    exportedTo: "\u5DF2\u5BFC\u51FA\u5230 {{path}}",
+    exportedHtmlTo: "HTML \u5DF2\u5BFC\u51FA\u5230 {{path}}",
+    pdfRequiresPandoc: "PDF \u5BFC\u51FA\u9700\u8981 pandoc\u3002\u8BF7\u5B89\u88C5 pandoc \u5E76\u5728\u8BBE\u7F6E\u4E2D\u8BBE\u7F6E\u8DEF\u5F84\u3002"
+  },
+  wpClient: {
+    authFailed: "\u8EAB\u4EFD\u9A8C\u8BC1\u5931\u8D25\u3002\u8BF7\u68C0\u67E5\u7528\u6237\u540D\u548C\u5E94\u7528\u7A0B\u5E8F\u5BC6\u7801\u3002",
+    connectedAs: '\u5DF2\u4EE5 "{{user}}" \u8EAB\u4EFD\u8FDE\u63A5\u5230 "{{site}}"',
+    networkError: "\u7F51\u7EDC\u9519\u8BEF\uFF1A{{error}}",
+    httpError: "HTTP {{status}}",
+    fetchCategoriesFailed: "\u83B7\u53D6\u5206\u7C7B\u5931\u8D25\uFF1A{{error}}"
+  },
+  folderSidebar: {
+    displayText: "\u6587\u4EF6\u5939\u6D4F\u89C8\u5668",
+    back: "\u2190 \u8FD4\u56DE",
+    root: "\u2302 \u6839\u76EE\u5F55",
+    insertSelection: "\u21A9 \u63D2\u5165\u9009\u62E9",
+    searchPlaceholder: "\u641C\u7D22\u540D\u79F0\u548C\u5185\u5BB9\u2026\uFF08\u56DE\u8F66\uFF09",
+    sort: {
+      foldersAz: "\u6587\u4EF6\u5939 \u2191 A-Z",
+      foldersZa: "\u6587\u4EF6\u5939 \u2191 Z-A",
+      az: "\u540D\u79F0 A-Z",
+      za: "\u540D\u79F0 Z-A",
+      modifiedNew: "\u6700\u65B0\u4F18\u5148",
+      modifiedOld: "\u6700\u65E7\u4F18\u5148"
+    },
+    noPreview: "\u6CA1\u6709\u9002\u7528\u4E8E .{{ext}} \u6587\u4EF6\u7684\u9884\u89C8",
+    openInEditor: "\u5728\u7F16\u8F91\u5668\u4E2D\u6253\u5F00",
+    searching: "\u641C\u7D22\u4E2D\u2026",
+    noResults: '"{{query}}" \u65E0\u7ED3\u679C',
+    emptyFolder: "\u6B64\u6587\u4EF6\u5939\u4E3A\u7A7A",
+    tooltip: {
+      modified: "\u4FEE\u6539\u65F6\u95F4",
+      size: "\u5927\u5C0F",
+      words: "\u5B57\u6570",
+      files: "\u6587\u4EF6",
+      subfolders: "\u5B50\u6587\u4EF6\u5939"
+    },
+    pickerPlaceholder: "\u8F93\u5165\u6587\u4EF6\u5939\u540D\u79F0\u4EE5\u5728\u4FA7\u8FB9\u680F\u6D4F\u89C8\u5668\u4E2D\u6253\u5F00\u2026",
+    vaultRoot: "/ (\u4ED3\u5E93\u6839\u76EE\u5F55)"
+  },
+  focusToolbar: {
+    exitTitle: "\u9000\u51FA\u4E13\u6CE8\u6A21\u5F0F (esc)",
+    exitBtn: "\u2715 \u9000\u51FA",
+    wordCount_other: "{{count}} \u4E2A\u5B57"
+  },
+  compilePreview: {
+    displayText: "\u5DF2\u7F16\u8BD1\u7A3F\u4EF6",
+    jumpToSection: "\u8DF3\u8F6C\u5230\u7AE0\u8282...",
+    proceedToExport: "\u8FDB\u884C\u5BFC\u51FA",
+    closePreview: "\u5173\u95ED\u9884\u89C8",
+    noContent: "\u65E0\u5185\u5BB9\u53EF\u9884\u89C8\u3002\u8BF7\u5148\u6253\u5F00\u5199\u4F5C\u9879\u76EE\u3002"
   }
 };
 
@@ -3568,6 +3711,78 @@ var hi_default = {
     today: "\u0906\u091C",
     sprintsCount_one: "\xB7 {{count}} \u0938\u094D\u092A\u094D\u0930\u093F\u0902\u091F",
     sprintsCount_other: "\xB7 {{count}} \u0938\u094D\u092A\u094D\u0930\u093F\u0902\u091F"
+  },
+  sprint: {
+    started: "\u0932\u0947\u0916\u0928 \u0938\u094D\u092A\u094D\u0930\u093F\u0902\u091F \u0936\u0941\u0930\u0942 \u0939\u0941\u0906: {{minutes}} \u092E\u093F\u0928\u091F",
+    complete: "\u0938\u094D\u092A\u094D\u0930\u093F\u0902\u091F \u092A\u0942\u0930\u093E! \u0936\u093E\u0928\u0926\u093E\u0930 \u0915\u093E\u092E\u0964",
+    words: "+{{n}} \u0936\u092C\u094D\u0926",
+    header: "\u0932\u0947\u0916\u0928 \u0938\u094D\u092A\u094D\u0930\u093F\u0902\u091F",
+    pauseTitle: "\u0930\u094B\u0915\u0947\u0902/\u091C\u093E\u0930\u0940 \u0930\u0916\u0947\u0902",
+    stopTitle: "\u0938\u094D\u092A\u094D\u0930\u093F\u0902\u091F \u0930\u094B\u0915\u0947\u0902"
+  },
+  writingModes: {
+    switchedTo: "\u0930\u093E\u0907\u091F\u093F\u0902\u0917 \u0938\u094D\u091F\u0942\u0921\u093F\u092F\u094B: {{mode}} \u092E\u094B\u0921",
+    normal: "\u0938\u093E\u092E\u093E\u0928\u094D\u092F",
+    statusDraft: "\u270D \u0921\u094D\u0930\u093E\u092B\u094D\u091F",
+    statusEdit: "\u270E \u0938\u0902\u092A\u093E\u0926\u0928",
+    statusReview: "\u{1F441} \u0938\u092E\u0940\u0915\u094D\u0937\u093E",
+    statusNone: "\u2014 \u092E\u094B\u0921"
+  },
+  exportEngine: {
+    epubExported: "EPUB {{path}} \u092A\u0930 \u0928\u093F\u0930\u094D\u092F\u093E\u0924 \u0915\u093F\u092F\u093E",
+    manuscriptExported: "\u092A\u093E\u0902\u0921\u0941\u0932\u093F\u092A\u093F {{path}} \u092A\u0930 \u0928\u093F\u0930\u094D\u092F\u093E\u0924 \u0915\u0940",
+    exportedTo: "{{path}} \u092A\u0930 \u0928\u093F\u0930\u094D\u092F\u093E\u0924 \u0915\u093F\u092F\u093E",
+    exportedHtmlTo: "HTML {{path}} \u092A\u0930 \u0928\u093F\u0930\u094D\u092F\u093E\u0924 \u0915\u093F\u092F\u093E",
+    pdfRequiresPandoc: "PDF \u0928\u093F\u0930\u094D\u092F\u093E\u0924 \u0915\u0947 \u0932\u093F\u090F pandoc \u091A\u093E\u0939\u093F\u090F\u0964 pandoc \u0907\u0902\u0938\u094D\u091F\u0949\u0932 \u0915\u0930\u0947\u0902 \u0914\u0930 \u0938\u0947\u091F\u093F\u0902\u0917 \u092E\u0947\u0902 \u092A\u093E\u0925 \u0938\u0947\u091F \u0915\u0930\u0947\u0902\u0964"
+  },
+  wpClient: {
+    authFailed: "\u092A\u094D\u0930\u092E\u093E\u0923\u0940\u0915\u0930\u0923 \u0935\u093F\u092B\u0932\u0964 \u0909\u092A\u092F\u094B\u0917\u0915\u0930\u094D\u0924\u093E \u0928\u093E\u092E \u0914\u0930 \u090F\u092A\u094D\u0932\u093F\u0915\u0947\u0936\u0928 \u092A\u093E\u0938\u0935\u0930\u094D\u0921 \u091C\u093E\u0902\u091A\u0947\u0902\u0964",
+    connectedAs: '"{{site}}" \u0938\u0947 "{{user}}" \u0915\u0947 \u0930\u0942\u092A \u092E\u0947\u0902 \u0915\u0928\u0947\u0915\u094D\u091F',
+    networkError: "\u0928\u0947\u091F\u0935\u0930\u094D\u0915 \u0924\u094D\u0930\u0941\u091F\u093F: {{error}}",
+    httpError: "HTTP {{status}}",
+    fetchCategoriesFailed: "\u0936\u094D\u0930\u0947\u0923\u093F\u092F\u093E\u0902 \u092A\u094D\u0930\u093E\u092A\u094D\u0924 \u0915\u0930\u0928\u0947 \u092E\u0947\u0902 \u0935\u093F\u092B\u0932: {{error}}"
+  },
+  folderSidebar: {
+    displayText: "\u092B\u093C\u094B\u0932\u094D\u0921\u0930 \u090F\u0915\u094D\u0938\u092A\u094D\u0932\u094B\u0930\u0930",
+    back: "\u2190 \u0935\u093E\u092A\u0938",
+    root: "\u2302 \u092E\u0942\u0932",
+    insertSelection: "\u21A9 \u091A\u092F\u0928 \u0921\u093E\u0932\u0947\u0902",
+    searchPlaceholder: "\u0928\u093E\u092E \u0914\u0930 \u0938\u093E\u092E\u0917\u094D\u0930\u0940 \u0916\u094B\u091C\u0947\u0902\u2026 (Enter)",
+    sort: {
+      foldersAz: "\u092B\u093C\u094B\u0932\u094D\u0921\u0930 \u2191 A-Z",
+      foldersZa: "\u092B\u093C\u094B\u0932\u094D\u0921\u0930 \u2191 Z-A",
+      az: "\u0928\u093E\u092E A-Z",
+      za: "\u0928\u093E\u092E Z-A",
+      modifiedNew: "\u0928\u0935\u0940\u0928\u0924\u092E \u092A\u0939\u0932\u0947",
+      modifiedOld: "\u092A\u0941\u0930\u093E\u0928\u093E \u092A\u0939\u0932\u0947"
+    },
+    noPreview: ".{{ext}} \u092B\u093C\u093E\u0907\u0932\u094B\u0902 \u0915\u0947 \u0932\u093F\u090F \u0915\u094B\u0908 \u092A\u0942\u0930\u094D\u0935\u093E\u0935\u0932\u094B\u0915\u0928 \u0928\u0939\u0940\u0902",
+    openInEditor: "\u0938\u0902\u092A\u093E\u0926\u0915 \u092E\u0947\u0902 \u0916\u094B\u0932\u0947\u0902",
+    searching: "\u0916\u094B\u091C \u0930\u0939\u093E \u0939\u0948\u2026",
+    noResults: '"{{query}}" \u0915\u0947 \u0932\u093F\u090F \u0915\u094B\u0908 \u092A\u0930\u093F\u0923\u093E\u092E \u0928\u0939\u0940\u0902',
+    emptyFolder: "\u092F\u0939 \u092B\u093C\u094B\u0932\u094D\u0921\u0930 \u0916\u093E\u0932\u0940 \u0939\u0948",
+    tooltip: {
+      modified: "\u0938\u0902\u0936\u094B\u0927\u093F\u0924",
+      size: "\u0906\u0915\u093E\u0930",
+      words: "\u0936\u092C\u094D\u0926",
+      files: "\u092B\u093C\u093E\u0907\u0932\u0947\u0902",
+      subfolders: "\u0909\u092A\u092B\u093C\u094B\u0932\u094D\u0921\u0930"
+    },
+    pickerPlaceholder: "\u0938\u093E\u0907\u0921\u092C\u093E\u0930 \u090F\u0915\u094D\u0938\u092A\u094D\u0932\u094B\u0930\u0930 \u092E\u0947\u0902 \u0916\u094B\u0932\u0928\u0947 \u0915\u0947 \u0932\u093F\u090F \u092B\u093C\u094B\u0932\u094D\u0921\u0930 \u0928\u093E\u092E \u0932\u093F\u0916\u0947\u0902\u2026",
+    vaultRoot: "/ (vault \u092E\u0942\u0932)"
+  },
+  focusToolbar: {
+    exitTitle: "\u092B\u093C\u094B\u0915\u0938 \u092E\u094B\u0921 \u0938\u0947 \u092C\u093E\u0939\u0930 \u0928\u093F\u0915\u0932\u0947\u0902 (esc)",
+    exitBtn: "\u2715 \u092C\u093E\u0939\u0930 \u0928\u093F\u0915\u0932\u0947\u0902",
+    wordCount_one: "{{count}} \u0936\u092C\u094D\u0926",
+    wordCount_other: "{{count}} \u0936\u092C\u094D\u0926"
+  },
+  compilePreview: {
+    displayText: "\u0938\u0902\u0915\u0932\u093F\u0924 \u092A\u093E\u0902\u0921\u0941\u0932\u093F\u092A\u093F",
+    jumpToSection: "\u0905\u0928\u0941\u092D\u093E\u0917 \u092A\u0930 \u091C\u093E\u090F\u0902...",
+    proceedToExport: "\u0928\u093F\u0930\u094D\u092F\u093E\u0924 \u0915\u0930\u0947\u0902",
+    closePreview: "\u092A\u0942\u0930\u094D\u0935\u093E\u0935\u0932\u094B\u0915\u0928 \u092C\u0902\u0926 \u0915\u0930\u0947\u0902",
+    noContent: "\u092A\u0942\u0930\u094D\u0935\u093E\u0935\u0932\u094B\u0915\u0928 \u0915\u0947 \u0932\u093F\u090F \u0915\u094B\u0908 \u0938\u093E\u092E\u0917\u094D\u0930\u0940 \u0928\u0939\u0940\u0902\u0964 \u092A\u0939\u0932\u0947 \u0915\u094B\u0908 \u0932\u0947\u0916\u0928 \u092A\u0930\u093F\u092F\u094B\u091C\u0928\u093E \u0916\u094B\u0932\u0947\u0902\u0964"
   }
 };
 
@@ -3819,6 +4034,78 @@ var es_default = {
     today: "Hoy",
     sprintsCount_one: "\xB7 {{count}} sprint",
     sprintsCount_other: "\xB7 {{count}} sprints"
+  },
+  sprint: {
+    started: "Sprint iniciado: {{minutes}} minutos",
+    complete: "\xA1Sprint completado! Excelente trabajo.",
+    words: "+{{n}} palabras",
+    header: "Sprint de escritura",
+    pauseTitle: "Pausar/reanudar",
+    stopTitle: "Detener sprint"
+  },
+  writingModes: {
+    switchedTo: "Estudio de escritura: modo {{mode}}",
+    normal: "Normal",
+    statusDraft: "\u270D borrador",
+    statusEdit: "\u270E editar",
+    statusReview: "\u{1F441} revisar",
+    statusNone: "\u2014 modo"
+  },
+  exportEngine: {
+    epubExported: "EPUB exportado a {{path}}",
+    manuscriptExported: "Manuscrito exportado a {{path}}",
+    exportedTo: "Exportado a {{path}}",
+    exportedHtmlTo: "HTML exportado a {{path}}",
+    pdfRequiresPandoc: "La exportaci\xF3n a PDF requiere pandoc. Instale pandoc y configure la ruta en los ajustes."
+  },
+  wpClient: {
+    authFailed: "Autenticaci\xF3n fallida. Verifique el nombre de usuario y la contrase\xF1a de aplicaci\xF3n.",
+    connectedAs: 'Conectado como "{{user}}" en "{{site}}"',
+    networkError: "Error de red: {{error}}",
+    httpError: "HTTP {{status}}",
+    fetchCategoriesFailed: "Error al obtener categor\xEDas: {{error}}"
+  },
+  folderSidebar: {
+    displayText: "Explorador de carpetas",
+    back: "\u2190 Atr\xE1s",
+    root: "\u2302 Ra\xEDz",
+    insertSelection: "\u21A9 Insertar selecci\xF3n",
+    searchPlaceholder: "Buscar nombres y contenido\u2026 (Enter)",
+    sort: {
+      foldersAz: "Carpetas \u2191 A-Z",
+      foldersZa: "Carpetas \u2191 Z-A",
+      az: "Nombre A-Z",
+      za: "Nombre Z-A",
+      modifiedNew: "M\xE1s reciente primero",
+      modifiedOld: "M\xE1s antiguo primero"
+    },
+    noPreview: "Sin vista previa para archivos .{{ext}}",
+    openInEditor: "Abrir en editor",
+    searching: "Buscando\u2026",
+    noResults: 'Sin resultados para "{{query}}"',
+    emptyFolder: "Esta carpeta est\xE1 vac\xEDa",
+    tooltip: {
+      modified: "Modificado",
+      size: "Tama\xF1o",
+      words: "Palabras",
+      files: "Archivos",
+      subfolders: "Subcarpetas"
+    },
+    pickerPlaceholder: "Escribe un nombre de carpeta para abrir en el explorador lateral\u2026",
+    vaultRoot: "/ (ra\xEDz del vault)"
+  },
+  focusToolbar: {
+    exitTitle: "Salir del modo foco (esc)",
+    exitBtn: "\u2715 salir",
+    wordCount_one: "{{count}} palabra",
+    wordCount_other: "{{count}} palabras"
+  },
+  compilePreview: {
+    displayText: "Manuscrito compilado",
+    jumpToSection: "Ir a la secci\xF3n...",
+    proceedToExport: "Proceder a exportar",
+    closePreview: "Cerrar vista previa",
+    noContent: "Sin contenido para previsualizar. Abra primero un proyecto de escritura."
   }
 };
 
@@ -4073,6 +4360,82 @@ var ar_default = {
     sprintsCount_few: "\xB7 {{count}} \u0633\u0628\u0627\u0642\u0627\u062A",
     sprintsCount_many: "\xB7 {{count}} \u0633\u0628\u0627\u0642\u0627\u064B",
     sprintsCount_other: "\xB7 {{count}} \u0633\u0628\u0627\u0642"
+  },
+  sprint: {
+    started: "\u0628\u062F\u0623 \u0627\u0644\u0633\u0628\u0627\u0642: {{minutes}} \u062F\u0642\u0627\u0626\u0642",
+    complete: "\u0627\u0643\u062A\u0645\u0644 \u0627\u0644\u0633\u0628\u0627\u0642! \u0639\u0645\u0644 \u0631\u0627\u0626\u0639.",
+    words: "+{{n}} \u0643\u0644\u0645\u0629",
+    header: "\u0633\u0628\u0627\u0642 \u0627\u0644\u0643\u062A\u0627\u0628\u0629",
+    pauseTitle: "\u0625\u064A\u0642\u0627\u0641 \u0645\u0624\u0642\u062A/\u0627\u0633\u062A\u0626\u0646\u0627\u0641",
+    stopTitle: "\u0625\u064A\u0642\u0627\u0641 \u0627\u0644\u0633\u0628\u0627\u0642"
+  },
+  writingModes: {
+    switchedTo: "\u0627\u0633\u062A\u0648\u062F\u064A\u0648 \u0627\u0644\u0643\u062A\u0627\u0628\u0629: \u0648\u0636\u0639 {{mode}}",
+    normal: "\u0639\u0627\u062F\u064A",
+    statusDraft: "\u270D \u0645\u0633\u0648\u062F\u0629",
+    statusEdit: "\u270E \u062A\u062D\u0631\u064A\u0631",
+    statusReview: "\u{1F441} \u0645\u0631\u0627\u062C\u0639\u0629",
+    statusNone: "\u2014 \u0648\u0636\u0639"
+  },
+  exportEngine: {
+    epubExported: "\u062A\u0645 \u062A\u0635\u062F\u064A\u0631 EPUB \u0625\u0644\u0649 {{path}}",
+    manuscriptExported: "\u062A\u0645 \u062A\u0635\u062F\u064A\u0631 \u0627\u0644\u0645\u062E\u0637\u0648\u0637\u0629 \u0625\u0644\u0649 {{path}}",
+    exportedTo: "\u062A\u0645 \u0627\u0644\u062A\u0635\u062F\u064A\u0631 \u0625\u0644\u0649 {{path}}",
+    exportedHtmlTo: "\u062A\u0645 \u062A\u0635\u062F\u064A\u0631 HTML \u0625\u0644\u0649 {{path}}",
+    pdfRequiresPandoc: "\u064A\u062A\u0637\u0644\u0628 \u062A\u0635\u062F\u064A\u0631 PDF \u062A\u062B\u0628\u064A\u062A pandoc. \u062B\u0628\u0651\u062A pandoc \u0648\u062D\u062F\u062F \u0627\u0644\u0645\u0633\u0627\u0631 \u0641\u064A \u0627\u0644\u0625\u0639\u062F\u0627\u062F\u0627\u062A."
+  },
+  wpClient: {
+    authFailed: "\u0641\u0634\u0644 \u0627\u0644\u062A\u062D\u0642\u0642. \u062A\u062D\u0642\u0642 \u0645\u0646 \u0627\u0633\u0645 \u0627\u0644\u0645\u0633\u062A\u062E\u062F\u0645 \u0648\u0643\u0644\u0645\u0629 \u0645\u0631\u0648\u0631 \u0627\u0644\u062A\u0637\u0628\u064A\u0642.",
+    connectedAs: '\u0645\u062A\u0635\u0644 \u0628\u0640 "{{site}}" \u0628\u0648\u0635\u0641\u0643 "{{user}}"',
+    networkError: "\u062E\u0637\u0623 \u0641\u064A \u0627\u0644\u0634\u0628\u0643\u0629: {{error}}",
+    httpError: "HTTP {{status}}",
+    fetchCategoriesFailed: "\u0641\u0634\u0644 \u062C\u0644\u0628 \u0627\u0644\u0641\u0626\u0627\u062A: {{error}}"
+  },
+  folderSidebar: {
+    displayText: "\u0645\u0633\u062A\u0643\u0634\u0641 \u0627\u0644\u0645\u062C\u0644\u062F\u0627\u062A",
+    back: "\u2192 \u0631\u062C\u0648\u0639",
+    root: "\u2302 \u0627\u0644\u062C\u0630\u0631",
+    insertSelection: "\u21A9 \u0625\u062F\u0631\u0627\u062C \u0627\u0644\u062A\u062D\u062F\u064A\u062F",
+    searchPlaceholder: "\u0627\u0628\u062D\u062B \u0641\u064A \u0627\u0644\u0623\u0633\u0645\u0627\u0621 \u0648\u0627\u0644\u0645\u062D\u062A\u0648\u0649\u2026 (Enter)",
+    sort: {
+      foldersAz: "\u0627\u0644\u0645\u062C\u0644\u062F\u0627\u062A \u2191 \u0623-\u064A",
+      foldersZa: "\u0627\u0644\u0645\u062C\u0644\u062F\u0627\u062A \u2191 \u064A-\u0623",
+      az: "\u0627\u0644\u0627\u0633\u0645 \u0623-\u064A",
+      za: "\u0627\u0644\u0627\u0633\u0645 \u064A-\u0623",
+      modifiedNew: "\u0627\u0644\u0623\u062D\u062F\u062B \u0623\u0648\u0644\u0627\u064B",
+      modifiedOld: "\u0627\u0644\u0623\u0642\u062F\u0645 \u0623\u0648\u0644\u0627\u064B"
+    },
+    noPreview: "\u0644\u0627 \u0645\u0639\u0627\u064A\u0646\u0629 \u0644\u0645\u0644\u0641\u0627\u062A .{{ext}}",
+    openInEditor: "\u0641\u062A\u062D \u0641\u064A \u0627\u0644\u0645\u062D\u0631\u0631",
+    searching: "\u062C\u0627\u0631\u064D \u0627\u0644\u0628\u062D\u062B\u2026",
+    noResults: '\u0644\u0627 \u0646\u062A\u0627\u0626\u062C \u0644\u0640 "{{query}}"',
+    emptyFolder: "\u0647\u0630\u0627 \u0627\u0644\u0645\u062C\u0644\u062F \u0641\u0627\u0631\u063A",
+    tooltip: {
+      modified: "\u062A\u0627\u0631\u064A\u062E \u0627\u0644\u062A\u0639\u062F\u064A\u0644",
+      size: "\u0627\u0644\u062D\u062C\u0645",
+      words: "\u0627\u0644\u0643\u0644\u0645\u0627\u062A",
+      files: "\u0627\u0644\u0645\u0644\u0641\u0627\u062A",
+      subfolders: "\u0627\u0644\u0645\u062C\u0644\u062F\u0627\u062A \u0627\u0644\u0641\u0631\u0639\u064A\u0629"
+    },
+    pickerPlaceholder: "\u0627\u0643\u062A\u0628 \u0627\u0633\u0645 \u0645\u062C\u0644\u062F \u0644\u0641\u062A\u062D\u0647 \u0641\u064A \u0645\u0633\u062A\u0643\u0634\u0641 \u0627\u0644\u0634\u0631\u064A\u0637 \u0627\u0644\u062C\u0627\u0646\u0628\u064A\u2026",
+    vaultRoot: "/ (\u062C\u0630\u0631 \u0627\u0644\u0645\u062E\u0632\u0646)"
+  },
+  focusToolbar: {
+    exitTitle: "\u0627\u0644\u062E\u0631\u0648\u062C \u0645\u0646 \u0648\u0636\u0639 \u0627\u0644\u062A\u0631\u0643\u064A\u0632 (esc)",
+    exitBtn: "\u2715 \u062E\u0631\u0648\u062C",
+    wordCount_zero: "\u0644\u0627 \u0643\u0644\u0645\u0627\u062A",
+    wordCount_one: "{{count}} \u0643\u0644\u0645\u0629",
+    wordCount_two: "{{count}} \u0643\u0644\u0645\u062A\u0627\u0646",
+    wordCount_few: "{{count}} \u0643\u0644\u0645\u0627\u062A",
+    wordCount_many: "{{count}} \u0643\u0644\u0645\u0629",
+    wordCount_other: "{{count}} \u0643\u0644\u0645\u0629"
+  },
+  compilePreview: {
+    displayText: "\u0627\u0644\u0645\u062E\u0637\u0648\u0637\u0629 \u0627\u0644\u0645\u062C\u0645\u0639\u0629",
+    jumpToSection: "\u0627\u0644\u0627\u0646\u062A\u0642\u0627\u0644 \u0625\u0644\u0649 \u0627\u0644\u0642\u0633\u0645...",
+    proceedToExport: "\u0627\u0644\u0645\u062A\u0627\u0628\u0639\u0629 \u0644\u0644\u062A\u0635\u062F\u064A\u0631",
+    closePreview: "\u0625\u063A\u0644\u0627\u0642 \u0627\u0644\u0645\u0639\u0627\u064A\u0646\u0629",
+    noContent: "\u0644\u0627 \u0645\u062D\u062A\u0648\u0649 \u0644\u0644\u0645\u0639\u0627\u064A\u0646\u0629. \u0627\u0641\u062A\u062D \u0645\u0634\u0631\u0648\u0639 \u0643\u062A\u0627\u0628\u0629 \u0623\u0648\u0644\u0627\u064B."
   }
 };
 
@@ -4324,6 +4687,78 @@ var fr_default = {
     today: "Aujourd'hui",
     sprintsCount_one: "\xB7 {{count}} sprint",
     sprintsCount_other: "\xB7 {{count}} sprints"
+  },
+  sprint: {
+    started: "Sprint d\xE9marr\xE9 : {{minutes}} minutes",
+    complete: "Sprint termin\xE9 ! Excellent travail.",
+    words: "+{{n}} mots",
+    header: "Sprint d'\xE9criture",
+    pauseTitle: "Pause/reprendre",
+    stopTitle: "Arr\xEAter le sprint"
+  },
+  writingModes: {
+    switchedTo: "Studio d'\xE9criture : mode {{mode}}",
+    normal: "Normal",
+    statusDraft: "\u270D brouillon",
+    statusEdit: "\u270E \xE9dition",
+    statusReview: "\u{1F441} r\xE9vision",
+    statusNone: "\u2014 mode"
+  },
+  exportEngine: {
+    epubExported: "EPUB export\xE9 vers {{path}}",
+    manuscriptExported: "Manuscrit export\xE9 vers {{path}}",
+    exportedTo: "Export\xE9 vers {{path}}",
+    exportedHtmlTo: "HTML export\xE9 vers {{path}}",
+    pdfRequiresPandoc: "L'export PDF n\xE9cessite pandoc. Installez pandoc et d\xE9finissez le chemin dans les param\xE8tres."
+  },
+  wpClient: {
+    authFailed: "\xC9chec de l'authentification. V\xE9rifiez le nom d'utilisateur et le mot de passe de l'application.",
+    connectedAs: 'Connect\xE9 en tant que "{{user}}" sur "{{site}}"',
+    networkError: "Erreur r\xE9seau : {{error}}",
+    httpError: "HTTP {{status}}",
+    fetchCategoriesFailed: "\xC9chec de la r\xE9cup\xE9ration des cat\xE9gories : {{error}}"
+  },
+  folderSidebar: {
+    displayText: "Explorateur de dossiers",
+    back: "\u2190 Retour",
+    root: "\u2302 Racine",
+    insertSelection: "\u21A9 Ins\xE9rer la s\xE9lection",
+    searchPlaceholder: "Rechercher noms et contenu\u2026 (Entr\xE9e)",
+    sort: {
+      foldersAz: "Dossiers \u2191 A-Z",
+      foldersZa: "Dossiers \u2191 Z-A",
+      az: "Nom A-Z",
+      za: "Nom Z-A",
+      modifiedNew: "Plus r\xE9cent d'abord",
+      modifiedOld: "Plus ancien d'abord"
+    },
+    noPreview: "Pas d'aper\xE7u pour les fichiers .{{ext}}",
+    openInEditor: "Ouvrir dans l'\xE9diteur",
+    searching: "Recherche en cours\u2026",
+    noResults: "Aucun r\xE9sultat pour \xAB {{query}} \xBB",
+    emptyFolder: "Ce dossier est vide",
+    tooltip: {
+      modified: "Modifi\xE9",
+      size: "Taille",
+      words: "Mots",
+      files: "Fichiers",
+      subfolders: "Sous-dossiers"
+    },
+    pickerPlaceholder: "Saisissez un nom de dossier pour l'ouvrir dans l'explorateur lat\xE9ral\u2026",
+    vaultRoot: "/ (racine du coffre)"
+  },
+  focusToolbar: {
+    exitTitle: "Quitter le mode focus (esc)",
+    exitBtn: "\u2715 quitter",
+    wordCount_one: "{{count}} mot",
+    wordCount_other: "{{count}} mots"
+  },
+  compilePreview: {
+    displayText: "Manuscrit compil\xE9",
+    jumpToSection: "Aller \xE0 la section...",
+    proceedToExport: "Proc\xE9der \xE0 l'export",
+    closePreview: "Fermer l'aper\xE7u",
+    noContent: "Aucun contenu \xE0 pr\xE9visualiser. Ouvrez d'abord un projet d'\xE9criture."
   }
 };
 
@@ -4575,6 +5010,78 @@ var bn_default = {
     today: "\u0986\u099C",
     sprintsCount_one: "\xB7 {{count}} \u09B8\u09CD\u09AA\u09CD\u09B0\u09BF\u09A8\u09CD\u099F",
     sprintsCount_other: "\xB7 {{count}} \u09B8\u09CD\u09AA\u09CD\u09B0\u09BF\u09A8\u09CD\u099F"
+  },
+  sprint: {
+    started: "\u09B2\u09C7\u0996\u09BE\u09B0 \u09B8\u09CD\u09AA\u09CD\u09B0\u09BF\u09A8\u09CD\u099F \u09B6\u09C1\u09B0\u09C1 \u09B9\u09AF\u09BC\u09C7\u099B\u09C7: {{minutes}} \u09AE\u09BF\u09A8\u09BF\u099F",
+    complete: "\u09B8\u09CD\u09AA\u09CD\u09B0\u09BF\u09A8\u09CD\u099F \u09B8\u09AE\u09CD\u09AA\u09A8\u09CD\u09A8! \u09A6\u09BE\u09B0\u09C1\u09A3 \u0995\u09BE\u099C\u0964",
+    words: "+{{n}} \u09B6\u09AC\u09CD\u09A6",
+    header: "\u09B2\u09C7\u0996\u09BE\u09B0 \u09B8\u09CD\u09AA\u09CD\u09B0\u09BF\u09A8\u09CD\u099F",
+    pauseTitle: "\u09AC\u09BF\u09B0\u09A4\u09BF/\u09AA\u09C1\u09A8\u09B0\u09BE\u09AF\u09BC \u09B6\u09C1\u09B0\u09C1",
+    stopTitle: "\u09B8\u09CD\u09AA\u09CD\u09B0\u09BF\u09A8\u09CD\u099F \u09A5\u09BE\u09AE\u09BE\u09A8"
+  },
+  writingModes: {
+    switchedTo: "\u09B0\u09BE\u0987\u099F\u09BF\u0982 \u09B8\u09CD\u099F\u09C1\u09A1\u09BF\u0993: {{mode}} \u09AE\u09CB\u09A1",
+    normal: "\u09B8\u09BE\u09A7\u09BE\u09B0\u09A3",
+    statusDraft: "\u270D \u0996\u09B8\u09A1\u09BC\u09BE",
+    statusEdit: "\u270E \u09B8\u09AE\u09CD\u09AA\u09BE\u09A6\u09A8\u09BE",
+    statusReview: "\u{1F441} \u09AA\u09B0\u09CD\u09AF\u09BE\u09B2\u09CB\u099A\u09A8\u09BE",
+    statusNone: "\u2014 \u09AE\u09CB\u09A1"
+  },
+  exportEngine: {
+    epubExported: "EPUB {{path}}-\u098F \u09B0\u09AA\u09CD\u09A4\u09BE\u09A8\u09BF \u0995\u09B0\u09BE \u09B9\u09AF\u09BC\u09C7\u099B\u09C7",
+    manuscriptExported: "\u09AA\u09BE\u09A3\u09CD\u09A1\u09C1\u09B2\u09BF\u09AA\u09BF {{path}}-\u098F \u09B0\u09AA\u09CD\u09A4\u09BE\u09A8\u09BF \u0995\u09B0\u09BE \u09B9\u09AF\u09BC\u09C7\u099B\u09C7",
+    exportedTo: "{{path}}-\u098F \u09B0\u09AA\u09CD\u09A4\u09BE\u09A8\u09BF \u0995\u09B0\u09BE \u09B9\u09AF\u09BC\u09C7\u099B\u09C7",
+    exportedHtmlTo: "HTML {{path}}-\u098F \u09B0\u09AA\u09CD\u09A4\u09BE\u09A8\u09BF \u0995\u09B0\u09BE \u09B9\u09AF\u09BC\u09C7\u099B\u09C7",
+    pdfRequiresPandoc: "PDF \u09B0\u09AA\u09CD\u09A4\u09BE\u09A8\u09BF\u09B0 \u099C\u09A8\u09CD\u09AF pandoc \u09AA\u09CD\u09B0\u09AF\u09BC\u09CB\u099C\u09A8\u0964 pandoc \u0987\u09A8\u09B8\u09CD\u099F\u09B2 \u0995\u09B0\u09C1\u09A8 \u098F\u09AC\u0982 \u09B8\u09C7\u099F\u09BF\u0982\u09B8\u09C7 \u09AA\u09BE\u09A5 \u09B8\u09C7\u099F \u0995\u09B0\u09C1\u09A8\u0964"
+  },
+  wpClient: {
+    authFailed: "\u09AA\u09CD\u09B0\u09AE\u09BE\u09A3\u09C0\u0995\u09B0\u09A3 \u09AC\u09CD\u09AF\u09B0\u09CD\u09A5\u0964 \u09AC\u09CD\u09AF\u09AC\u09B9\u09BE\u09B0\u0995\u09BE\u09B0\u09C0\u09B0 \u09A8\u09BE\u09AE \u0993 \u0985\u09CD\u09AF\u09BE\u09AA\u09CD\u09B2\u09BF\u0995\u09C7\u09B6\u09A8 \u09AA\u09BE\u09B8\u0993\u09AF\u09BC\u09BE\u09B0\u09CD\u09A1 \u09AF\u09BE\u099A\u09BE\u0987 \u0995\u09B0\u09C1\u09A8\u0964",
+    connectedAs: '"{{site}}"-\u098F "{{user}}" \u09B9\u09BF\u09B8\u09C7\u09AC\u09C7 \u09B8\u0982\u09AF\u09C1\u0995\u09CD\u09A4',
+    networkError: "\u09A8\u09C7\u099F\u0993\u09AF\u09BC\u09BE\u09B0\u09CD\u0995 \u09A4\u09CD\u09B0\u09C1\u099F\u09BF: {{error}}",
+    httpError: "HTTP {{status}}",
+    fetchCategoriesFailed: "\u09AC\u09BF\u09AD\u09BE\u0997 \u0986\u09A8\u09A4\u09C7 \u09AC\u09CD\u09AF\u09B0\u09CD\u09A5: {{error}}"
+  },
+  folderSidebar: {
+    displayText: "\u09AB\u09CB\u09B2\u09CD\u09A1\u09BE\u09B0 \u098F\u0995\u09CD\u09B8\u09AA\u09CD\u09B2\u09CB\u09B0\u09BE\u09B0",
+    back: "\u2190 \u09AA\u09BF\u099B\u09A8\u09C7",
+    root: "\u2302 \u09AE\u09C2\u09B2",
+    insertSelection: "\u21A9 \u09A8\u09BF\u09B0\u09CD\u09AC\u09BE\u099A\u09A8 \u09B8\u09A8\u09CD\u09A8\u09BF\u09AC\u09C7\u09B6 \u0995\u09B0\u09C1\u09A8",
+    searchPlaceholder: "\u09A8\u09BE\u09AE \u0993 \u09AC\u09BF\u09B7\u09AF\u09BC\u09AC\u09B8\u09CD\u09A4\u09C1 \u0996\u09C1\u0981\u099C\u09C1\u09A8\u2026 (Enter)",
+    sort: {
+      foldersAz: "\u09AB\u09CB\u09B2\u09CD\u09A1\u09BE\u09B0 \u2191 A-Z",
+      foldersZa: "\u09AB\u09CB\u09B2\u09CD\u09A1\u09BE\u09B0 \u2191 Z-A",
+      az: "\u09A8\u09BE\u09AE A-Z",
+      za: "\u09A8\u09BE\u09AE Z-A",
+      modifiedNew: "\u09B8\u09B0\u09CD\u09AC\u09B6\u09C7\u09B7 \u0986\u0997\u09C7",
+      modifiedOld: "\u09B8\u09AC\u099A\u09C7\u09AF\u09BC\u09C7 \u09AA\u09C1\u09B0\u09BE\u09A8\u09CB \u0986\u0997\u09C7"
+    },
+    noPreview: ".{{ext}} \u09AB\u09BE\u0987\u09B2\u09C7\u09B0 \u099C\u09A8\u09CD\u09AF \u0995\u09CB\u09A8\u09CB \u09AA\u09C2\u09B0\u09CD\u09AC\u09B0\u09C2\u09AA \u09A8\u09C7\u0987",
+    openInEditor: "\u09B8\u09AE\u09CD\u09AA\u09BE\u09A6\u0995\u09C7 \u0996\u09C1\u09B2\u09C1\u09A8",
+    searching: "\u0996\u09CB\u0981\u099C\u09BE \u09B9\u099A\u09CD\u099B\u09C7\u2026",
+    noResults: '"{{query}}" \u098F\u09B0 \u099C\u09A8\u09CD\u09AF \u0995\u09CB\u09A8\u09CB \u09AB\u09B2\u09BE\u09AB\u09B2 \u09A8\u09C7\u0987',
+    emptyFolder: "\u098F\u0987 \u09AB\u09CB\u09B2\u09CD\u09A1\u09BE\u09B0\u099F\u09BF \u0996\u09BE\u09B2\u09BF",
+    tooltip: {
+      modified: "\u09AA\u09B0\u09BF\u09AC\u09B0\u09CD\u09A4\u09BF\u09A4",
+      size: "\u0986\u0995\u09BE\u09B0",
+      words: "\u09B6\u09AC\u09CD\u09A6",
+      files: "\u09AB\u09BE\u0987\u09B2",
+      subfolders: "\u09B8\u09BE\u09AC\u09AB\u09CB\u09B2\u09CD\u09A1\u09BE\u09B0"
+    },
+    pickerPlaceholder: "\u09B8\u09BE\u0987\u09A1\u09AC\u09BE\u09B0 \u098F\u0995\u09CD\u09B8\u09AA\u09CD\u09B2\u09CB\u09B0\u09BE\u09B0\u09C7 \u0996\u09C1\u09B2\u09A4\u09C7 \u09AB\u09CB\u09B2\u09CD\u09A1\u09BE\u09B0\u09C7\u09B0 \u09A8\u09BE\u09AE \u09B2\u09BF\u0996\u09C1\u09A8\u2026",
+    vaultRoot: "/ (\u09AD\u09B2\u09CD\u099F \u09AE\u09C2\u09B2)"
+  },
+  focusToolbar: {
+    exitTitle: "\u09AB\u09CB\u0995\u09BE\u09B8 \u09AE\u09CB\u09A1 \u09A5\u09C7\u0995\u09C7 \u09AC\u09C7\u09B0 \u09B9\u09A8 (esc)",
+    exitBtn: "\u2715 \u09AC\u09C7\u09B0 \u09B9\u09A8",
+    wordCount_one: "{{count}} \u09B6\u09AC\u09CD\u09A6",
+    wordCount_other: "{{count}} \u09B6\u09AC\u09CD\u09A6"
+  },
+  compilePreview: {
+    displayText: "\u09B8\u0982\u0995\u09B2\u09BF\u09A4 \u09AA\u09BE\u09A3\u09CD\u09A1\u09C1\u09B2\u09BF\u09AA\u09BF",
+    jumpToSection: "\u09AC\u09BF\u09AD\u09BE\u0997\u09C7 \u09AF\u09BE\u09A8...",
+    proceedToExport: "\u09B0\u09AA\u09CD\u09A4\u09BE\u09A8\u09BF\u09A4\u09C7 \u098F\u0997\u09BF\u09AF\u09BC\u09C7 \u09AF\u09BE\u09A8",
+    closePreview: "\u09AA\u09C2\u09B0\u09CD\u09AC\u09B0\u09C2\u09AA \u09AC\u09A8\u09CD\u09A7 \u0995\u09B0\u09C1\u09A8",
+    noContent: "\u09AA\u09C2\u09B0\u09CD\u09AC\u09B0\u09C2\u09AA\u09C7\u09B0 \u099C\u09A8\u09CD\u09AF \u0995\u09CB\u09A8\u09CB \u09AC\u09BF\u09B7\u09AF\u09BC\u09AC\u09B8\u09CD\u09A4\u09C1 \u09A8\u09C7\u0987\u0964 \u09AA\u09CD\u09B0\u09A5\u09AE\u09C7 \u098F\u0995\u099F\u09BF \u09B2\u09C7\u0996\u09BE\u09B0 \u09AA\u09CD\u09B0\u0995\u09B2\u09CD\u09AA \u0996\u09C1\u09B2\u09C1\u09A8\u0964"
   }
 };
 
@@ -4826,6 +5333,78 @@ var pt_BR_default = {
     today: "Hoje",
     sprintsCount_one: "\xB7 {{count}} sprint",
     sprintsCount_other: "\xB7 {{count}} sprints"
+  },
+  sprint: {
+    started: "Sprint iniciado: {{minutes}} minutos",
+    complete: "Sprint conclu\xEDdo! \xD3timo trabalho.",
+    words: "+{{n}} palavras",
+    header: "Sprint de escrita",
+    pauseTitle: "Pausar/retomar",
+    stopTitle: "Parar sprint"
+  },
+  writingModes: {
+    switchedTo: "Est\xFAdio de escrita: modo {{mode}}",
+    normal: "Normal",
+    statusDraft: "\u270D rascunho",
+    statusEdit: "\u270E editar",
+    statusReview: "\u{1F441} revisar",
+    statusNone: "\u2014 modo"
+  },
+  exportEngine: {
+    epubExported: "EPUB exportado para {{path}}",
+    manuscriptExported: "Manuscrito exportado para {{path}}",
+    exportedTo: "Exportado para {{path}}",
+    exportedHtmlTo: "HTML exportado para {{path}}",
+    pdfRequiresPandoc: "A exporta\xE7\xE3o para PDF requer pandoc. Instale o pandoc e defina o caminho nas configura\xE7\xF5es."
+  },
+  wpClient: {
+    authFailed: "Falha na autentica\xE7\xE3o. Verifique o nome de usu\xE1rio e a senha de aplicativo.",
+    connectedAs: 'Conectado como "{{user}}" em "{{site}}"',
+    networkError: "Erro de rede: {{error}}",
+    httpError: "HTTP {{status}}",
+    fetchCategoriesFailed: "Falha ao buscar categorias: {{error}}"
+  },
+  folderSidebar: {
+    displayText: "Explorador de pastas",
+    back: "\u2190 Voltar",
+    root: "\u2302 Raiz",
+    insertSelection: "\u21A9 Inserir sele\xE7\xE3o",
+    searchPlaceholder: "Pesquisar nomes e conte\xFAdo\u2026 (Enter)",
+    sort: {
+      foldersAz: "Pastas \u2191 A-Z",
+      foldersZa: "Pastas \u2191 Z-A",
+      az: "Nome A-Z",
+      za: "Nome Z-A",
+      modifiedNew: "Mais recente primeiro",
+      modifiedOld: "Mais antigo primeiro"
+    },
+    noPreview: "Sem visualiza\xE7\xE3o para arquivos .{{ext}}",
+    openInEditor: "Abrir no editor",
+    searching: "Pesquisando\u2026",
+    noResults: 'Sem resultados para "{{query}}"',
+    emptyFolder: "Esta pasta est\xE1 vazia",
+    tooltip: {
+      modified: "Modificado",
+      size: "Tamanho",
+      words: "Palavras",
+      files: "Arquivos",
+      subfolders: "Subpastas"
+    },
+    pickerPlaceholder: "Digite um nome de pasta para abrir no explorador lateral\u2026",
+    vaultRoot: "/ (raiz do vault)"
+  },
+  focusToolbar: {
+    exitTitle: "Sair do modo foco (esc)",
+    exitBtn: "\u2715 sair",
+    wordCount_one: "{{count}} palavra",
+    wordCount_other: "{{count}} palavras"
+  },
+  compilePreview: {
+    displayText: "Manuscrito compilado",
+    jumpToSection: "Ir para se\xE7\xE3o...",
+    proceedToExport: "Prosseguir para exportar",
+    closePreview: "Fechar visualiza\xE7\xE3o",
+    noContent: "Sem conte\xFAdo para visualizar. Abra um projeto de escrita primeiro."
   }
 };
 
@@ -5079,6 +5658,80 @@ var ru_default = {
     sprintsCount_few: "\xB7 {{count}} \u0441\u043F\u0440\u0438\u043D\u0442\u0430",
     sprintsCount_many: "\xB7 {{count}} \u0441\u043F\u0440\u0438\u043D\u0442\u043E\u0432",
     sprintsCount_other: "\xB7 {{count}} \u0441\u043F\u0440\u0438\u043D\u0442\u043E\u0432"
+  },
+  sprint: {
+    started: "\u0421\u043F\u0440\u0438\u043D\u0442 \u043D\u0430\u0447\u0430\u0442: {{minutes}} \u043C\u0438\u043D\u0443\u0442",
+    complete: "\u0421\u043F\u0440\u0438\u043D\u0442 \u0437\u0430\u0432\u0435\u0440\u0448\u0451\u043D! \u041E\u0442\u043B\u0438\u0447\u043D\u0430\u044F \u0440\u0430\u0431\u043E\u0442\u0430.",
+    words: "+{{n}} \u0441\u043B\u043E\u0432",
+    header: "\u0421\u043F\u0440\u0438\u043D\u0442 \u043D\u0430\u043F\u0438\u0441\u0430\u043D\u0438\u044F",
+    pauseTitle: "\u041F\u0430\u0443\u0437\u0430/\u043F\u0440\u043E\u0434\u043E\u043B\u0436\u0438\u0442\u044C",
+    stopTitle: "\u041E\u0441\u0442\u0430\u043D\u043E\u0432\u0438\u0442\u044C \u0441\u043F\u0440\u0438\u043D\u0442"
+  },
+  writingModes: {
+    switchedTo: "\u0421\u0442\u0443\u0434\u0438\u044F \u043F\u0438\u0441\u044C\u043C\u0430: \u0440\u0435\u0436\u0438\u043C {{mode}}",
+    normal: "\u041E\u0431\u044B\u0447\u043D\u044B\u0439",
+    statusDraft: "\u270D \u0447\u0435\u0440\u043D\u043E\u0432\u0438\u043A",
+    statusEdit: "\u270E \u0440\u0435\u0434\u0430\u043A\u0442\u0438\u0440\u043E\u0432\u0430\u043D\u0438\u0435",
+    statusReview: "\u{1F441} \u0440\u0435\u0446\u0435\u043D\u0437\u0438\u044F",
+    statusNone: "\u2014 \u0440\u0435\u0436\u0438\u043C"
+  },
+  exportEngine: {
+    epubExported: "EPUB \u044D\u043A\u0441\u043F\u043E\u0440\u0442\u0438\u0440\u043E\u0432\u0430\u043D \u0432 {{path}}",
+    manuscriptExported: "\u0420\u0443\u043A\u043E\u043F\u0438\u0441\u044C \u044D\u043A\u0441\u043F\u043E\u0440\u0442\u0438\u0440\u043E\u0432\u0430\u043D\u0430 \u0432 {{path}}",
+    exportedTo: "\u042D\u043A\u0441\u043F\u043E\u0440\u0442\u0438\u0440\u043E\u0432\u0430\u043D\u043E \u0432 {{path}}",
+    exportedHtmlTo: "HTML \u044D\u043A\u0441\u043F\u043E\u0440\u0442\u0438\u0440\u043E\u0432\u0430\u043D \u0432 {{path}}",
+    pdfRequiresPandoc: "\u0414\u043B\u044F \u044D\u043A\u0441\u043F\u043E\u0440\u0442\u0430 \u0432 PDF \u0442\u0440\u0435\u0431\u0443\u0435\u0442\u0441\u044F pandoc. \u0423\u0441\u0442\u0430\u043D\u043E\u0432\u0438\u0442\u0435 pandoc \u0438 \u0443\u043A\u0430\u0436\u0438\u0442\u0435 \u043F\u0443\u0442\u044C \u0432 \u043D\u0430\u0441\u0442\u0440\u043E\u0439\u043A\u0430\u0445."
+  },
+  wpClient: {
+    authFailed: "\u041E\u0448\u0438\u0431\u043A\u0430 \u0430\u0443\u0442\u0435\u043D\u0442\u0438\u0444\u0438\u043A\u0430\u0446\u0438\u0438. \u041F\u0440\u043E\u0432\u0435\u0440\u044C\u0442\u0435 \u0438\u043C\u044F \u043F\u043E\u043B\u044C\u0437\u043E\u0432\u0430\u0442\u0435\u043B\u044F \u0438 \u043F\u0430\u0440\u043E\u043B\u044C \u043F\u0440\u0438\u043B\u043E\u0436\u0435\u043D\u0438\u044F.",
+    connectedAs: "\u041F\u043E\u0434\u043A\u043B\u044E\u0447\u0435\u043D\u043E \u043A\u0430\u043A \xAB{{user}}\xBB \u043A \xAB{{site}}\xBB",
+    networkError: "\u041E\u0448\u0438\u0431\u043A\u0430 \u0441\u0435\u0442\u0438: {{error}}",
+    httpError: "HTTP {{status}}",
+    fetchCategoriesFailed: "\u041D\u0435 \u0443\u0434\u0430\u043B\u043E\u0441\u044C \u043F\u043E\u043B\u0443\u0447\u0438\u0442\u044C \u043A\u0430\u0442\u0435\u0433\u043E\u0440\u0438\u0438: {{error}}"
+  },
+  folderSidebar: {
+    displayText: "\u0424\u0430\u0439\u043B\u043E\u0432\u044B\u0439 \u043F\u0440\u043E\u0432\u043E\u0434\u043D\u0438\u043A",
+    back: "\u2190 \u041D\u0430\u0437\u0430\u0434",
+    root: "\u2302 \u041A\u043E\u0440\u0435\u043D\u044C",
+    insertSelection: "\u21A9 \u0412\u0441\u0442\u0430\u0432\u0438\u0442\u044C \u0432\u044B\u0434\u0435\u043B\u0435\u043D\u043D\u043E\u0435",
+    searchPlaceholder: "\u041F\u043E\u0438\u0441\u043A \u0438\u043C\u0451\u043D \u0438 \u0441\u043E\u0434\u0435\u0440\u0436\u0438\u043C\u043E\u0433\u043E\u2026 (Enter)",
+    sort: {
+      foldersAz: "\u041F\u0430\u043F\u043A\u0438 \u2191 \u0410-\u042F",
+      foldersZa: "\u041F\u0430\u043F\u043A\u0438 \u2191 \u042F-\u0410",
+      az: "\u0418\u043C\u044F \u0410-\u042F",
+      za: "\u0418\u043C\u044F \u042F-\u0410",
+      modifiedNew: "\u041D\u043E\u0432\u044B\u0435 \u0441\u043D\u0430\u0447\u0430\u043B\u0430",
+      modifiedOld: "\u0421\u0442\u0430\u0440\u044B\u0435 \u0441\u043D\u0430\u0447\u0430\u043B\u0430"
+    },
+    noPreview: "\u041D\u0435\u0442 \u043F\u0440\u0435\u0434\u043F\u0440\u043E\u0441\u043C\u043E\u0442\u0440\u0430 \u0434\u043B\u044F \u0444\u0430\u0439\u043B\u043E\u0432 .{{ext}}",
+    openInEditor: "\u041E\u0442\u043A\u0440\u044B\u0442\u044C \u0432 \u0440\u0435\u0434\u0430\u043A\u0442\u043E\u0440\u0435",
+    searching: "\u041F\u043E\u0438\u0441\u043A\u2026",
+    noResults: "\u041D\u0435\u0442 \u0440\u0435\u0437\u0443\u043B\u044C\u0442\u0430\u0442\u043E\u0432 \u0434\u043B\u044F \xAB{{query}}\xBB",
+    emptyFolder: "\u041F\u0430\u043F\u043A\u0430 \u043F\u0443\u0441\u0442\u0430",
+    tooltip: {
+      modified: "\u0418\u0437\u043C\u0435\u043D\u0451\u043D",
+      size: "\u0420\u0430\u0437\u043C\u0435\u0440",
+      words: "\u0421\u043B\u043E\u0432\u0430",
+      files: "\u0424\u0430\u0439\u043B\u044B",
+      subfolders: "\u041F\u043E\u0434\u043F\u0430\u043F\u043A\u0438"
+    },
+    pickerPlaceholder: "\u0412\u0432\u0435\u0434\u0438\u0442\u0435 \u043D\u0430\u0437\u0432\u0430\u043D\u0438\u0435 \u043F\u0430\u043F\u043A\u0438 \u0434\u043B\u044F \u043E\u0442\u043A\u0440\u044B\u0442\u0438\u044F \u0432 \u0431\u043E\u043A\u043E\u0432\u043E\u043C \u043F\u0440\u043E\u0432\u043E\u0434\u043D\u0438\u043A\u0435\u2026",
+    vaultRoot: "/ (\u043A\u043E\u0440\u0435\u043D\u044C \u0445\u0440\u0430\u043D\u0438\u043B\u0438\u0449\u0430)"
+  },
+  focusToolbar: {
+    exitTitle: "\u0412\u044B\u0439\u0442\u0438 \u0438\u0437 \u0440\u0435\u0436\u0438\u043C\u0430 \u0444\u043E\u043A\u0443\u0441\u0430 (esc)",
+    exitBtn: "\u2715 \u0432\u044B\u0439\u0442\u0438",
+    wordCount_one: "{{count}} \u0441\u043B\u043E\u0432\u043E",
+    wordCount_few: "{{count}} \u0441\u043B\u043E\u0432\u0430",
+    wordCount_many: "{{count}} \u0441\u043B\u043E\u0432",
+    wordCount_other: "{{count}} \u0441\u043B\u043E\u0432\u0430"
+  },
+  compilePreview: {
+    displayText: "\u0421\u043E\u0431\u0440\u0430\u043D\u043D\u0430\u044F \u0440\u0443\u043A\u043E\u043F\u0438\u0441\u044C",
+    jumpToSection: "\u041F\u0435\u0440\u0435\u0439\u0442\u0438 \u043A \u0440\u0430\u0437\u0434\u0435\u043B\u0443...",
+    proceedToExport: "\u041F\u0435\u0440\u0435\u0439\u0442\u0438 \u043A \u044D\u043A\u0441\u043F\u043E\u0440\u0442\u0443",
+    closePreview: "\u0417\u0430\u043A\u0440\u044B\u0442\u044C \u043F\u0440\u0435\u0434\u043F\u0440\u043E\u0441\u043C\u043E\u0442\u0440",
+    noContent: "\u041D\u0435\u0442 \u0441\u043E\u0434\u0435\u0440\u0436\u0438\u043C\u043E\u0433\u043E \u0434\u043B\u044F \u043F\u0440\u0435\u0434\u043F\u0440\u043E\u0441\u043C\u043E\u0442\u0440\u0430. \u0421\u043D\u0430\u0447\u0430\u043B\u0430 \u043E\u0442\u043A\u0440\u043E\u0439\u0442\u0435 \u043F\u0438\u0441\u044C\u043C\u0435\u043D\u043D\u044B\u0439 \u043F\u0440\u043E\u0435\u043A\u0442."
   }
 };
 
@@ -5798,7 +6451,7 @@ var CompilePreviewView = class extends import_obsidian8.ItemView {
     return COMPILE_PREVIEW_VIEW_TYPE;
   }
   getDisplayText() {
-    return "Compiled manuscript";
+    return t2("compilePreview.displayText");
   }
   getIcon() {
     return "layers";
@@ -5841,7 +6494,7 @@ var CompilePreviewView = class extends import_obsidian8.ItemView {
     container.addClass("ws-compile-preview-container");
     const toolbar = container.createDiv("ws-compile-toolbar");
     const jumpSel = toolbar.createEl("select", { cls: "ws-compile-jump" });
-    const defaultOpt = jumpSel.createEl("option", { text: "Jump to section..." });
+    const defaultOpt = jumpSel.createEl("option", { text: t2("compilePreview.jumpToSection") });
     defaultOpt.value = "";
     for (const item of this.jumpItems) {
       const opt = jumpSel.createEl("option", { text: item.title });
@@ -5855,14 +6508,14 @@ var CompilePreviewView = class extends import_obsidian8.ItemView {
     };
     const exportBtn = toolbar.createEl("button", {
       cls: "ws-compile-export-btn mod-cta",
-      text: "Proceed to export"
+      text: t2("compilePreview.proceedToExport")
     });
     exportBtn.onclick = () => {
       new ExportModal(this.app, this.plugin).open();
     };
     const closeBtn = toolbar.createEl("button", {
       cls: "ws-compile-close-btn",
-      text: "Close preview"
+      text: t2("compilePreview.closePreview")
     });
     closeBtn.onclick = () => {
       this.leaf.detach();
@@ -5870,7 +6523,7 @@ var CompilePreviewView = class extends import_obsidian8.ItemView {
     const contentDiv = container.createDiv("ws-compile-content markdown-reading-view");
     if (!this.content) {
       contentDiv.createEl("p", {
-        text: "No content to preview. Open a writing project first.",
+        text: t2("compilePreview.noContent"),
         cls: "ws-empty-state"
       });
       return;
@@ -6466,9 +7119,9 @@ var FocusMode = class {
   showToolbar() {
     this.hideToolbar();
     const toolbar = createDiv({ cls: "ws-focus-toolbar" });
-    toolbar.createSpan({ cls: "ws-focus-wordcount", text: "0 words" });
+    toolbar.createSpan({ cls: "ws-focus-wordcount", text: t2("focusToolbar.wordCount", { count: 0 }) });
     toolbar.createSpan({ cls: "ws-focus-sprint-time ws-hidden" });
-    const exitBtn = toolbar.createEl("button", { cls: "ws-focus-exit", title: "Exit focus mode (esc)", text: "\u2715 exit" });
+    const exitBtn = toolbar.createEl("button", { cls: "ws-focus-exit", title: t2("focusToolbar.exitTitle"), text: t2("focusToolbar.exitBtn") });
     exitBtn.onclick = () => this.disable();
     activeDocument.body.appendChild(toolbar);
     this.toolbar = toolbar;
@@ -6485,7 +7138,7 @@ var FocusMode = class {
     const el = this.toolbar.querySelector(".ws-focus-wordcount");
     if (el) {
       const n = count != null ? count : this.getCurrentWordCount();
-      el.textContent = `${n} word${n === 1 ? "" : "s"}`;
+      el.textContent = t2("focusToolbar.wordCount", { count: n });
     }
   }
   updateToolbarSprintTime(timeStr) {
@@ -6744,8 +7397,8 @@ var WritingModes = class {
     this.updateStatusBar();
     this.plugin.settings.currentWritingMode = mode;
     await this.plugin.saveSettings();
-    const modeLabel = mode === "none" ? "Normal" : mode.charAt(0).toUpperCase() + mode.slice(1);
-    new import_obsidian13.Notice(`Writing Studio: ${modeLabel} mode`);
+    const modeLabel = mode === "none" ? t2("writingModes.normal") : t2(`launcher.mode.${mode}`);
+    new import_obsidian13.Notice(t2("writingModes.switchedTo", { mode: modeLabel }));
   }
   collapseSidebars() {
     const left = this.app.workspace.leftSplit;
@@ -6768,10 +7421,10 @@ var WritingModes = class {
   updateStatusBar() {
     if (!this.statusBarEl) return;
     const labels = {
-      draft: "\u270D draft",
-      edit: "\u270E edit",
-      review: "\u{1F441} review",
-      none: "\u2014 mode"
+      draft: t2("writingModes.statusDraft"),
+      edit: t2("writingModes.statusEdit"),
+      review: t2("writingModes.statusReview"),
+      none: t2("writingModes.statusNone")
     };
     this.statusBarEl.textContent = labels[this.currentMode];
     this.statusBarEl.toggleClass("ws-status-mode--active", this.currentMode !== "none");
@@ -6827,7 +7480,7 @@ var SprintTimer = class {
     };
     this.showFloating();
     this.startInterval();
-    new import_obsidian14.Notice(`Sprint started: ${durationMinutes} minutes`);
+    new import_obsidian14.Notice(t2("sprint.started", { minutes: durationMinutes }));
   }
   pause() {
     if (!this.state || !this.state.active || this.state.paused) return;
@@ -6905,7 +7558,7 @@ var SprintTimer = class {
     if (this.plugin.settings.soundNotifications) {
       this.playBell();
     }
-    new import_obsidian14.Notice("Sprint complete! Great work.", 5e3);
+    new import_obsidian14.Notice(t2("sprint.complete"), 5e3);
     const session = this.buildSession();
     this.state = null;
     this.hideFloating();
@@ -6938,7 +7591,7 @@ var SprintTimer = class {
       if (timeEl) timeEl.textContent = time;
       const wc = this.getCurrentWordCount() - (((_b2 = this.state) == null ? void 0 : _b2.startWordCount) || 0);
       const wcEl = this.floatingEl.querySelector(".ws-sprint-wc");
-      if (wcEl) wcEl.textContent = `+${Math.max(0, wc)} words`;
+      if (wcEl) wcEl.textContent = t2("sprint.words", { n: Math.max(0, wc) });
       const pauseBtn = this.floatingEl.querySelector(".ws-sprint-pause");
       if (pauseBtn) pauseBtn.textContent = ((_c = this.state) == null ? void 0 : _c.paused) ? "\u25B6" : "\u23F8";
     }
@@ -6951,12 +7604,12 @@ var SprintTimer = class {
   showFloating() {
     this.hideFloating();
     const el = createDiv({ cls: "ws-sprint-floating" });
-    el.createDiv({ cls: "ws-sprint-header", text: "Writing sprint" });
+    el.createDiv({ cls: "ws-sprint-header", text: t2("sprint.header") });
     el.createDiv({ cls: "ws-sprint-time", text: "00:00" });
-    el.createDiv({ cls: "ws-sprint-wc", text: "+0 words" });
+    el.createDiv({ cls: "ws-sprint-wc", text: t2("sprint.words", { n: 0 }) });
     const controls = el.createDiv({ cls: "ws-sprint-controls" });
-    const pauseBtn = controls.createEl("button", { cls: "ws-sprint-pause", title: "Pause/resume", text: "\u23F8" });
-    const stopBtn = controls.createEl("button", { cls: "ws-sprint-stop", title: "Stop sprint", text: "\u25A0" });
+    const pauseBtn = controls.createEl("button", { cls: "ws-sprint-pause", title: t2("sprint.pauseTitle"), text: "\u23F8" });
+    const stopBtn = controls.createEl("button", { cls: "ws-sprint-stop", title: t2("sprint.stopTitle"), text: "\u25A0" });
     pauseBtn.onclick = () => {
       var _a2;
       if ((_a2 = this.state) == null ? void 0 : _a2.paused) this.resume();
@@ -8160,7 +8813,7 @@ var ExportEngine = class {
       coverImagePath: opts.coverImagePath,
       chapters
     }, outputPath);
-    new import_obsidian16.Notice(`EPUB exported to ${outputPath}`);
+    new import_obsidian16.Notice(t2("exportEngine.epubExported", { path: outputPath }));
     return outputPath;
   }
   preprocessObsidianMarkdown(md) {
@@ -8284,12 +8937,12 @@ ${bodyHtml}
 </body>
 </html>`;
     await this.writeFile(outputPath, fullHtml);
-    new import_obsidian16.Notice(`Manuscript exported to ${outputPath}`);
+    new import_obsidian16.Notice(t2("exportEngine.manuscriptExported", { path: outputPath }));
     return outputPath;
   }
   async exportMarkdown(content, outputPath) {
     await this.writeFile(outputPath, content);
-    new import_obsidian16.Notice(`Exported to ${outputPath}`);
+    new import_obsidian16.Notice(t2("exportEngine.exportedTo", { path: outputPath }));
     return outputPath;
   }
   async exportHtml(content, outputPath, title, opts) {
@@ -8319,7 +8972,7 @@ ${this.markdownToHtml(content)}
 </body>
 </html>`;
     await this.writeFile(outputPath, html);
-    new import_obsidian16.Notice(`Exported HTML to ${outputPath}`);
+    new import_obsidian16.Notice(t2("exportEngine.exportedHtmlTo", { path: outputPath }));
     return outputPath;
   }
   async exportPandoc(content, outputPath, opts) {
@@ -8343,7 +8996,7 @@ ${this.markdownToHtml(content)}
         args.push(`-V mainfont="${safeFont}"`);
       }
       await execAsync(`${pandocPath} ${args.join(" ")}`);
-      new import_obsidian16.Notice(`Exported to ${outputPath}`);
+      new import_obsidian16.Notice(t2("exportEngine.exportedTo", { path: outputPath }));
       return outputPath;
     } catch (e) {
       throw new Error(`Pandoc export failed: ${e instanceof Error ? e.message : String(e)}
@@ -8357,7 +9010,7 @@ Ensure pandoc is installed.`);
     try {
       return await this.exportPandoc(content, outputPath, opts);
     } catch (e) {
-      new import_obsidian16.Notice("PDF export requires pandoc. Install pandoc and set path in settings.");
+      new import_obsidian16.Notice(t2("exportEngine.pdfRequiresPandoc"));
       throw e;
     }
   }
@@ -8521,10 +9174,10 @@ var WordPressClient = class {
         throw: false
       });
       if (resp.status === 401) {
-        return { success: false, message: "Authentication failed. Check username and application password." };
+        return { success: false, message: t2("wpClient.authFailed") };
       }
       if (resp.status < 200 || resp.status >= 300) {
-        return { success: false, message: `HTTP ${resp.status}` };
+        return { success: false, message: t2("wpClient.httpError", { status: resp.status }) };
       }
       const data = resp.json;
       let siteName = site.url;
@@ -8541,12 +9194,12 @@ var WordPressClient = class {
       return {
         success: true,
         siteName,
-        message: `Connected as "${data.name}" to "${siteName}"`
+        message: t2("wpClient.connectedAs", { user: data.name, site: siteName })
       };
     } catch (e) {
       return {
         success: false,
-        message: `Network error: ${e instanceof Error ? e.message : String(e)}`
+        message: t2("wpClient.networkError", { error: e instanceof Error ? e.message : String(e) })
       };
     }
   }
@@ -8566,7 +9219,7 @@ var WordPressClient = class {
         count: c.count
       }));
     } catch (e) {
-      new import_obsidian17.Notice(`Failed to fetch categories: ${e instanceof Error ? e.message : String(e)}`);
+      new import_obsidian17.Notice(t2("wpClient.fetchCategoriesFailed", { error: e instanceof Error ? e.message : String(e) }));
       return [];
     }
   }
@@ -10082,7 +10735,7 @@ var FolderSidebarView = class extends import_obsidian26.ItemView {
   getDisplayText() {
     if (this.currentFile) return `\u{1F4C4} ${this.currentFile.name}`;
     if (this.currentFolder) return `\u{1F4C1} ${this.currentFolder.name}`;
-    return "Folder explorer";
+    return t2("folderSidebar.displayText");
   }
   getIcon() {
     return "folder";
@@ -10285,10 +10938,10 @@ var FolderSidebarView = class extends import_obsidian26.ItemView {
         hour: "2-digit",
         minute: "2-digit"
       });
-      this.addTooltipRow(tip, "Modified", modStr);
-      this.addTooltipRow(tip, "Size", this.formatFileSize(item.stat.size));
+      this.addTooltipRow(tip, t2("folderSidebar.tooltip.modified"), modStr);
+      this.addTooltipRow(tip, t2("folderSidebar.tooltip.size"), this.formatFileSize(item.stat.size));
       if (["md", "txt"].includes(item.extension.toLowerCase())) {
-        const wordRow = this.addTooltipRow(tip, "Words", "\u2026");
+        const wordRow = this.addTooltipRow(tip, t2("folderSidebar.tooltip.words"), "\u2026");
         try {
           const text = await this.app.vault.cachedRead(item);
           const body2 = this.stripFrontmatter(text);
@@ -10313,9 +10966,9 @@ var FolderSidebarView = class extends import_obsidian26.ItemView {
         }
       };
       walk(item);
-      this.addTooltipRow(tip, "Files", fileCount.toLocaleString());
+      this.addTooltipRow(tip, t2("folderSidebar.tooltip.files"), fileCount.toLocaleString());
       if (folderCount > 0) {
-        this.addTooltipRow(tip, "Subfolders", folderCount.toLocaleString());
+        this.addTooltipRow(tip, t2("folderSidebar.tooltip.subfolders"), folderCount.toLocaleString());
       }
     }
   }
@@ -10482,14 +11135,14 @@ var FolderSidebarView = class extends import_obsidian26.ItemView {
     }
     const navRow = container.createDiv({ cls: "ws-folder-nav-row" });
     if (canGoBack) {
-      const backBtn = navRow.createEl("button", { text: "\u2190 Back", cls: "ws-folder-nav-btn" });
+      const backBtn = navRow.createEl("button", { text: t2("folderSidebar.back"), cls: "ws-folder-nav-btn" });
       backBtn.addEventListener("click", () => this.navigateBack());
     }
-    const rootBtn = navRow.createEl("button", { text: "\u2302 Root", cls: "ws-folder-nav-btn" });
+    const rootBtn = navRow.createEl("button", { text: t2("folderSidebar.root"), cls: "ws-folder-nav-btn" });
     rootBtn.addEventListener("click", () => this.navigateToRoot());
     if (this.currentFile) {
       const insertBtn = navRow.createEl("button", {
-        text: "\u21A9 Insert selection",
+        text: t2("folderSidebar.insertSelection"),
         cls: "ws-folder-nav-btn ws-folder-insert-btn"
       });
       let capturedText = "";
@@ -10525,7 +11178,7 @@ var FolderSidebarView = class extends import_obsidian26.ItemView {
     const searchInput = searchWrap.createEl("input", {
       cls: "ws-folder-search-input",
       type: "text",
-      placeholder: "Search names & content\u2026 (Enter)"
+      placeholder: t2("folderSidebar.searchPlaceholder")
     });
     searchInput.value = this.searchQuery;
     if (this.searchQuery) {
@@ -10556,12 +11209,12 @@ var FolderSidebarView = class extends import_obsidian26.ItemView {
     });
     const sortSel = toolbar.createEl("select", { cls: "ws-folder-sort-select" });
     const sortOptions = [
-      { value: "folders-az", label: "Folders \u2191 A-Z" },
-      { value: "folders-za", label: "Folders \u2191 Z-A" },
-      { value: "az", label: "Name A-Z" },
-      { value: "za", label: "Name Z-A" },
-      { value: "modified-new", label: "Newest first" },
-      { value: "modified-old", label: "Oldest first" }
+      { value: "folders-az", label: t2("folderSidebar.sort.foldersAz") },
+      { value: "folders-za", label: t2("folderSidebar.sort.foldersZa") },
+      { value: "az", label: t2("folderSidebar.sort.az") },
+      { value: "za", label: t2("folderSidebar.sort.za") },
+      { value: "modified-new", label: t2("folderSidebar.sort.modifiedNew") },
+      { value: "modified-old", label: t2("folderSidebar.sort.modifiedOld") }
     ];
     for (const opt of sortOptions) {
       const el = sortSel.createEl("option", { value: opt.value, text: opt.label });
@@ -10589,8 +11242,8 @@ var FolderSidebarView = class extends import_obsidian26.ItemView {
       audio.setAttribute("src", this.app.vault.getResourcePath(file));
     } else {
       const msg = content.createDiv({ cls: "ws-folder-unsupported" });
-      msg.setText(`No preview available for .${file.extension} files`);
-      const openBtn = content.createEl("button", { cls: "ws-folder-open-btn", text: "Open in editor" });
+      msg.setText(t2("folderSidebar.noPreview", { ext: file.extension }));
+      const openBtn = content.createEl("button", { cls: "ws-folder-open-btn", text: t2("folderSidebar.openInEditor") });
       openBtn.addEventListener("click", () => {
         void this.app.workspace.getLeaf("tab").openFile(file);
       });
@@ -10604,11 +11257,11 @@ var FolderSidebarView = class extends import_obsidian26.ItemView {
     const query = this.searchQuery.trim();
     if (query) {
       if (this.searchResults === null) {
-        list.createDiv({ cls: "ws-folder-empty", text: "Searching\u2026" });
+        list.createDiv({ cls: "ws-folder-empty", text: t2("folderSidebar.searching") });
         return;
       }
       if (this.searchResults.length === 0) {
-        list.createDiv({ cls: "ws-folder-empty", text: `No results for "${this.searchQuery}"` });
+        list.createDiv({ cls: "ws-folder-empty", text: t2("folderSidebar.noResults", { query: this.searchQuery }) });
         return;
       }
       const lowerQuery = query.toLowerCase();
@@ -10688,7 +11341,7 @@ var FolderSidebarView = class extends import_obsidian26.ItemView {
     );
     const sorted = this.sortItems(displayItems);
     if (sorted.length === 0) {
-      list.createDiv({ cls: "ws-folder-empty", text: "This folder is empty" });
+      list.createDiv({ cls: "ws-folder-empty", text: t2("folderSidebar.emptyFolder") });
       return;
     }
     let focusedIndex = -1;
@@ -10754,7 +11407,7 @@ var FolderPickerModal = class extends import_obsidian26.FuzzySuggestModal {
   constructor(app, onChoose) {
     super(app);
     this.onChoose = onChoose;
-    this.setPlaceholder("Type a folder name to open in sidebar explorer\u2026");
+    this.setPlaceholder(t2("folderSidebar.pickerPlaceholder"));
   }
   getItems() {
     const folders = [];
@@ -10768,7 +11421,7 @@ var FolderPickerModal = class extends import_obsidian26.FuzzySuggestModal {
     return folders;
   }
   getItemText(folder) {
-    return folder.path === "/" ? "/ (vault root)" : folder.path;
+    return folder.path === "/" ? t2("folderSidebar.vaultRoot") : folder.path;
   }
   onChooseItem(folder) {
     this.onChoose(folder);

@@ -244,5 +244,76 @@
     "last30Days": "最近30天",
     "today": "今天",
     "sprintsCount_other": "· {{count}} 次冲刺"
+  },
+  "sprint": {
+    "started": "写作冲刺已开始：{{minutes}} 分钟",
+    "complete": "冲刺完成！干得好。",
+    "words": "+{{n}} 个字",
+    "header": "写作冲刺",
+    "pauseTitle": "暂停/继续",
+    "stopTitle": "停止冲刺"
+  },
+  "writingModes": {
+    "switchedTo": "写作工作室：{{mode}} 模式",
+    "normal": "普通",
+    "statusDraft": "✍ 草稿",
+    "statusEdit": "✎ 编辑",
+    "statusReview": "👁 审阅",
+    "statusNone": "— 模式"
+  },
+  "exportEngine": {
+    "epubExported": "EPUB 已导出到 {{path}}",
+    "manuscriptExported": "稿件已导出到 {{path}}",
+    "exportedTo": "已导出到 {{path}}",
+    "exportedHtmlTo": "HTML 已导出到 {{path}}",
+    "pdfRequiresPandoc": "PDF 导出需要 pandoc。请安装 pandoc 并在设置中设置路径。"
+  },
+  "wpClient": {
+    "authFailed": "身份验证失败。请检查用户名和应用程序密码。",
+    "connectedAs": "已以 \"{{user}}\" 身份连接到 \"{{site}}\"",
+    "networkError": "网络错误：{{error}}",
+    "httpError": "HTTP {{status}}",
+    "fetchCategoriesFailed": "获取分类失败：{{error}}"
+  },
+  "folderSidebar": {
+    "displayText": "文件夹浏览器",
+    "back": "← 返回",
+    "root": "⌂ 根目录",
+    "insertSelection": "↩ 插入选择",
+    "searchPlaceholder": "搜索名称和内容…（回车）",
+    "sort": {
+      "foldersAz": "文件夹 ↑ A-Z",
+      "foldersZa": "文件夹 ↑ Z-A",
+      "az": "名称 A-Z",
+      "za": "名称 Z-A",
+      "modifiedNew": "最新优先",
+      "modifiedOld": "最旧优先"
+    },
+    "noPreview": "没有适用于 .{{ext}} 文件的预览",
+    "openInEditor": "在编辑器中打开",
+    "searching": "搜索中…",
+    "noResults": "\"{{query}}\" 无结果",
+    "emptyFolder": "此文件夹为空",
+    "tooltip": {
+      "modified": "修改时间",
+      "size": "大小",
+      "words": "字数",
+      "files": "文件",
+      "subfolders": "子文件夹"
+    },
+    "pickerPlaceholder": "输入文件夹名称以在侧边栏浏览器中打开…",
+    "vaultRoot": "/ (仓库根目录)"
+  },
+  "focusToolbar": {
+    "exitTitle": "退出专注模式 (esc)",
+    "exitBtn": "✕ 退出",
+    "wordCount_other": "{{count}} 个字"
+  },
+  "compilePreview": {
+    "displayText": "已编译稿件",
+    "jumpToSection": "跳转到章节...",
+    "proceedToExport": "进行导出",
+    "closePreview": "关闭预览",
+    "noContent": "无内容可预览。请先打开写作项目。"
   }
 }

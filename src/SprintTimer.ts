@@ -1,6 +1,7 @@
 import { App, MarkdownView, Notice } from 'obsidian';
 import type WritingStudioPlugin from '../main';
 import { SprintSession, SprintState } from '../models/SprintSession';
+import { t } from './i18n';
 
 export class SprintTimer {
   private plugin: WritingStudioPlugin;
@@ -46,7 +47,7 @@ export class SprintTimer {
 
     this.showFloating();
     this.startInterval();
-    new Notice(`Sprint started: ${durationMinutes} minutes`);
+    new Notice(t('sprint.started', { minutes: durationMinutes }));
   }
 
   pause(): void {
@@ -136,7 +137,7 @@ export class SprintTimer {
     if (this.plugin.settings.soundNotifications) {
       this.playBell();
     }
-    new Notice('Sprint complete! Great work.', 5000);
+    new Notice(t('sprint.complete'), 5000);
     const session = this.buildSession();
     this.state = null;
     this.hideFloating();
@@ -170,7 +171,7 @@ export class SprintTimer {
       if (timeEl) timeEl.textContent = time;
       const wc = this.getCurrentWordCount() - (this.state?.startWordCount || 0);
       const wcEl = this.floatingEl.querySelector('.ws-sprint-wc');
-      if (wcEl) wcEl.textContent = `+${Math.max(0, wc)} words`;
+      if (wcEl) wcEl.textContent = t('sprint.words', { n: Math.max(0, wc) });
       const pauseBtn = this.floatingEl.querySelector('.ws-sprint-pause') as HTMLButtonElement;
       if (pauseBtn) pauseBtn.textContent = this.state?.paused ? '▶' : '⏸';
     }
@@ -187,12 +188,12 @@ export class SprintTimer {
   private showFloating(): void {
     this.hideFloating();
     const el = createDiv({ cls: 'ws-sprint-floating' });
-    el.createDiv({ cls: 'ws-sprint-header', text: 'Writing sprint' });
+    el.createDiv({ cls: 'ws-sprint-header', text: t('sprint.header') });
     el.createDiv({ cls: 'ws-sprint-time', text: '00:00' });
-    el.createDiv({ cls: 'ws-sprint-wc', text: '+0 words' });
+    el.createDiv({ cls: 'ws-sprint-wc', text: t('sprint.words', { n: 0 }) });
     const controls = el.createDiv({ cls: 'ws-sprint-controls' });
-    const pauseBtn = controls.createEl('button', { cls: 'ws-sprint-pause', title: 'Pause/resume', text: '⏸' });
-    const stopBtn = controls.createEl('button', { cls: 'ws-sprint-stop', title: 'Stop sprint', text: '■' });
+    const pauseBtn = controls.createEl('button', { cls: 'ws-sprint-pause', title: t('sprint.pauseTitle'), text: '⏸' });
+    const stopBtn = controls.createEl('button', { cls: 'ws-sprint-stop', title: t('sprint.stopTitle'), text: '■' });
 
     pauseBtn.onclick = () => {
       if (this.state?.paused) this.resume();

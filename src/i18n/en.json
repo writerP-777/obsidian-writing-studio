@@ -245,5 +245,77 @@
     "today": "Today",
     "sprintsCount_one": "· {{count}} sprint",
     "sprintsCount_other": "· {{count}} sprints"
+  },
+  "sprint": {
+    "started": "Sprint started: {{minutes}} minutes",
+    "complete": "Sprint complete! Great work.",
+    "words": "+{{n}} words",
+    "header": "Writing sprint",
+    "pauseTitle": "Pause/resume",
+    "stopTitle": "Stop sprint"
+  },
+  "writingModes": {
+    "switchedTo": "Writing studio: {{mode}} mode",
+    "normal": "Normal",
+    "statusDraft": "✍ draft",
+    "statusEdit": "✎ edit",
+    "statusReview": "👁 review",
+    "statusNone": "— mode"
+  },
+  "exportEngine": {
+    "epubExported": "EPUB exported to {{path}}",
+    "manuscriptExported": "Manuscript exported to {{path}}",
+    "exportedTo": "Exported to {{path}}",
+    "exportedHtmlTo": "Exported HTML to {{path}}",
+    "pdfRequiresPandoc": "PDF export requires pandoc. Install pandoc and set path in settings."
+  },
+  "wpClient": {
+    "authFailed": "Authentication failed. Check username and application password.",
+    "connectedAs": "Connected as \"{{user}}\" to \"{{site}}\"",
+    "networkError": "Network error: {{error}}",
+    "httpError": "HTTP {{status}}",
+    "fetchCategoriesFailed": "Failed to fetch categories: {{error}}"
+  },
+  "folderSidebar": {
+    "displayText": "Folder explorer",
+    "back": "← Back",
+    "root": "⌂ Root",
+    "insertSelection": "↩ Insert selection",
+    "searchPlaceholder": "Search names & content… (Enter)",
+    "sort": {
+      "foldersAz": "Folders ↑ A-Z",
+      "foldersZa": "Folders ↑ Z-A",
+      "az": "Name A-Z",
+      "za": "Name Z-A",
+      "modifiedNew": "Newest first",
+      "modifiedOld": "Oldest first"
+    },
+    "noPreview": "No preview available for .{{ext}} files",
+    "openInEditor": "Open in editor",
+    "searching": "Searching…",
+    "noResults": "No results for \"{{query}}\"",
+    "emptyFolder": "This folder is empty",
+    "tooltip": {
+      "modified": "Modified",
+      "size": "Size",
+      "words": "Words",
+      "files": "Files",
+      "subfolders": "Subfolders"
+    },
+    "pickerPlaceholder": "Type a folder name to open in sidebar explorer…",
+    "vaultRoot": "/ (vault root)"
+  },
+  "focusToolbar": {
+    "exitTitle": "Exit focus mode (esc)",
+    "exitBtn": "✕ exit",
+    "wordCount_one": "{{count}} word",
+    "wordCount_other": "{{count}} words"
+  },
+  "compilePreview": {
+    "displayText": "Compiled manuscript",
+    "jumpToSection": "Jump to section...",
+    "proceedToExport": "Proceed to export",
+    "closePreview": "Close preview",
+    "noContent": "No content to preview. Open a writing project first."
   }
 }

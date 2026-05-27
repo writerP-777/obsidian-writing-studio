@@ -248,5 +248,81 @@
     "sprintsCount_few": "· {{count}} سباقات",
     "sprintsCount_many": "· {{count}} سباقاً",
     "sprintsCount_other": "· {{count}} سباق"
+  },
+  "sprint": {
+    "started": "بدأ السباق: {{minutes}} دقائق",
+    "complete": "اكتمل السباق! عمل رائع.",
+    "words": "+{{n}} كلمة",
+    "header": "سباق الكتابة",
+    "pauseTitle": "إيقاف مؤقت/استئناف",
+    "stopTitle": "إيقاف السباق"
+  },
+  "writingModes": {
+    "switchedTo": "استوديو الكتابة: وضع {{mode}}",
+    "normal": "عادي",
+    "statusDraft": "✍ مسودة",
+    "statusEdit": "✎ تحرير",
+    "statusReview": "👁 مراجعة",
+    "statusNone": "— وضع"
+  },
+  "exportEngine": {
+    "epubExported": "تم تصدير EPUB إلى {{path}}",
+    "manuscriptExported": "تم تصدير المخطوطة إلى {{path}}",
+    "exportedTo": "تم التصدير إلى {{path}}",
+    "exportedHtmlTo": "تم تصدير HTML إلى {{path}}",
+    "pdfRequiresPandoc": "يتطلب تصدير PDF تثبيت pandoc. ثبّت pandoc وحدد المسار في الإعدادات."
+  },
+  "wpClient": {
+    "authFailed": "فشل التحقق. تحقق من اسم المستخدم وكلمة مرور التطبيق.",
+    "connectedAs": "متصل بـ \"{{site}}\" بوصفك \"{{user}}\"",
+    "networkError": "خطأ في الشبكة: {{error}}",
+    "httpError": "HTTP {{status}}",
+    "fetchCategoriesFailed": "فشل جلب الفئات: {{error}}"
+  },
+  "folderSidebar": {
+    "displayText": "مستكشف المجلدات",
+    "back": "→ رجوع",
+    "root": "⌂ الجذر",
+    "insertSelection": "↩ إدراج التحديد",
+    "searchPlaceholder": "ابحث في الأسماء والمحتوى… (Enter)",
+    "sort": {
+      "foldersAz": "المجلدات ↑ أ-ي",
+      "foldersZa": "المجلدات ↑ ي-أ",
+      "az": "الاسم أ-ي",
+      "za": "الاسم ي-أ",
+      "modifiedNew": "الأحدث أولاً",
+      "modifiedOld": "الأقدم أولاً"
+    },
+    "noPreview": "لا معاينة لملفات .{{ext}}",
+    "openInEditor": "فتح في المحرر",
+    "searching": "جارٍ البحث…",
+    "noResults": "لا نتائج لـ \"{{query}}\"",
+    "emptyFolder": "هذا المجلد فارغ",
+    "tooltip": {
+      "modified": "تاريخ التعديل",
+      "size": "الحجم",
+      "words": "الكلمات",
+      "files": "الملفات",
+      "subfolders": "المجلدات الفرعية"
+    },
+    "pickerPlaceholder": "اكتب اسم مجلد لفتحه في مستكشف الشريط الجانبي…",
+    "vaultRoot": "/ (جذر المخزن)"
+  },
+  "focusToolbar": {
+    "exitTitle": "الخروج من وضع التركيز (esc)",
+    "exitBtn": "✕ خروج",
+    "wordCount_zero": "لا كلمات",
+    "wordCount_one": "{{count}} كلمة",
+    "wordCount_two": "{{count}} كلمتان",
+    "wordCount_few": "{{count}} كلمات",
+    "wordCount_many": "{{count}} كلمة",
+    "wordCount_other": "{{count}} كلمة"
+  },
+  "compilePreview": {
+    "displayText": "المخطوطة المجمعة",
+    "jumpToSection": "الانتقال إلى القسم...",
+    "proceedToExport": "المتابعة للتصدير",
+    "closePreview": "إغلاق المعاينة",
+    "noContent": "لا محتوى للمعاينة. افتح مشروع كتابة أولاً."
   }
 }
