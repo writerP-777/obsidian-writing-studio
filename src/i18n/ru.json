@@ -499,5 +499,92 @@
     "desc": "Выберите файлы для добавления в этот проект:",
     "addBtn": "Добавить выбранные файлы",
     "cancel": "Отмена"
+  },
+  "main": {
+    "ribbonTitle": "Открыть Writing Studio",
+    "cmd": {
+      "openLauncher": "Открыть панель запуска",
+      "openBinder": "Открыть папку",
+      "toggleFocusMode": "Переключить режим фокуса",
+      "toggleTypographyMode": "Переключить режим типографики",
+      "switchDraftMode": "Переключиться в режим черновика",
+      "switchEditMode": "Переключиться в режим редактирования",
+      "switchReviewMode": "Переключиться в режим проверки",
+      "startSprint": "Начать спринт по письму",
+      "exportDocument": "Экспортировать документ",
+      "exportProject": "Экспортировать проект",
+      "previewManuscript": "Предварительный просмотр рукописи",
+      "publishWordPress": "Опубликовать в WordPress",
+      "newProject": "Новый проект по письму",
+      "openDashboard": "Открыть панель письма",
+      "openTargetsDashboard": "Открыть панель целей",
+      "setWordCountGoal": "Установить цель по количеству слов",
+      "openWritingLog": "Открыть журнал письма",
+      "openFolderSidebar": "Открыть папку в боковом обозревателе",
+      "addFilesToBinder": "Добавить файлы, скопированные в папку проекта"
+    },
+    "menu": {
+      "studioOptions": "Параметры Writing Studio",
+      "exportDoc": "Экспортировать этот документ",
+      "publish": "Опубликовать в WordPress",
+      "setGoal": "Установить цель по словам",
+      "switchMode": "Переключить режим письма →",
+      "typographyFont": "Шрифт типографики →",
+      "addToProject": "Добавить в проект",
+      "openSidebar": "Открыть в боковом обозревателе",
+      "draftMode": "✍ Режим черновика",
+      "editMode": "✎ Режим редактирования",
+      "reviewMode": "👁 Режим проверки",
+      "normalMode": "Обычный (без режима)"
+    },
+    "notice": {
+      "noMarkdownOpen": "В данный момент не открыт ни один Markdown-файл.",
+      "addedToProject": "«{{file}}» добавлен в {{project}}"
+    },
+    "statusBar": {
+      "projectWords": "{{total}} / {{goal}} слов в проекте",
+      "wordCount": "{{count}} слов",
+      "wordCountGoal": "{{count}} / {{goal}} слов",
+      "delta": "(+{{delta}})",
+      "goalBanner": "{{count}} / {{goal}} слов — {{pct}}%",
+      "dismiss": "Закрыть"
+    }
+  },
+  "sprintSummary": {
+    "title": "Спринт завершён!",
+    "wordsWritten": "Написано слов",
+    "duration": "Продолжительность",
+    "durationValue": "{{count}} мин",
+    "wpm": "Слов/мин",
+    "goalProgress": "Прогресс цели",
+    "close": "Закрыть"
+  },
+  "wordCountGoal": {
+    "title": "Установить цель по количеству слов",
+    "name": "Цель по количеству слов",
+    "desc": "Целевое количество слов для этого документа. Установите 0 для удаления.",
+    "placeholder": "Напр. 1500",
+    "save": "Сохранить",
+    "cancel": "Отмена"
+  },
+  "statsTracker": {
+    "unknownProject": "Неизвестный проект",
+    "none": "Нет",
+    "dailyNote": {
+      "heading": "## ✍️ Писательская активность",
+      "project": "**Проект:**",
+      "documents": "**Документы:**",
+      "wordsWritten": "**Написано слов:**",
+      "sprintsCompleted": "**Завершено спринтов:**",
+      "sprintEntry": "1 ({{duration}} мин)",
+      "wpm": "**Слов в минуту:**",
+      "sessionTotal": "**Итого за сессию:**",
+      "sessionTotalValue": "{{duration}} минут"
+    },
+    "readingTime": {
+      "minutes": "{{count}} мин",
+      "hoursMinutes": "{{hours}} ч {{mins}} мин",
+      "hours": "{{hours}} ч"
+    }
   }
 }

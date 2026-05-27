@@ -493,5 +493,92 @@
     "desc": "এই প্রকল্পে যোগ করার জন্য ফাইল নির্বাচন করুন:",
     "addBtn": "নির্বাচিত ফাইল যোগ করুন",
     "cancel": "বাতিল"
+  },
+  "main": {
+    "ribbonTitle": "রাইটিং স্টুডিও খুলুন",
+    "cmd": {
+      "openLauncher": "লঞ্চার খুলুন",
+      "openBinder": "বাইন্ডার খুলুন",
+      "toggleFocusMode": "ফোকাস মোড চালু/বন্ধ করুন",
+      "toggleTypographyMode": "টাইপোগ্রাফি মোড চালু/বন্ধ করুন",
+      "switchDraftMode": "ড্রাফট মোডে যান",
+      "switchEditMode": "এডিট মোডে যান",
+      "switchReviewMode": "রিভিউ মোডে যান",
+      "startSprint": "রাইটিং স্প্রিন্ট শুরু করুন",
+      "exportDocument": "ডকুমেন্ট রপ্তানি করুন",
+      "exportProject": "প্রজেক্ট রপ্তানি করুন",
+      "previewManuscript": "সংকলিত পাণ্ডুলিপির পূর্বরূপ দেখুন",
+      "publishWordPress": "WordPress-এ প্রকাশ করুন",
+      "newProject": "নতুন রাইটিং প্রজেক্ট",
+      "openDashboard": "রাইটিং ড্যাশবোর্ড খুলুন",
+      "openTargetsDashboard": "টার্গেট ড্যাশবোর্ড খুলুন",
+      "setWordCountGoal": "শব্দ সংখ্যার লক্ষ্য নির্ধারণ করুন",
+      "openWritingLog": "রাইটিং লগ খুলুন",
+      "openFolderSidebar": "সাইডবার এক্সপ্লোরারে ফোল্ডার খুলুন",
+      "addFilesToBinder": "প্রজেক্ট ফোল্ডারে কপি করা ফাইল যোগ করুন"
+    },
+    "menu": {
+      "studioOptions": "রাইটিং স্টুডিও বিকল্প",
+      "exportDoc": "এই ডকুমেন্ট রপ্তানি করুন",
+      "publish": "WordPress-এ প্রকাশ করুন",
+      "setGoal": "শব্দ সংখ্যার লক্ষ্য নির্ধারণ করুন",
+      "switchMode": "রাইটিং মোড পরিবর্তন করুন →",
+      "typographyFont": "টাইপোগ্রাফি ফন্ট →",
+      "addToProject": "রাইটিং প্রজেক্টে যোগ করুন",
+      "openSidebar": "সাইডবার এক্সপ্লোরারে খুলুন",
+      "draftMode": "✍ ড্রাফট মোড",
+      "editMode": "✎ এডিট মোড",
+      "reviewMode": "👁 রিভিউ মোড",
+      "normalMode": "স্বাভাবিক (কোনো মোড নেই)"
+    },
+    "notice": {
+      "noMarkdownOpen": "বর্তমানে কোনো Markdown ফাইল খোলা নেই।",
+      "addedToProject": "\"{{file}}\" {{project}}-এ যোগ করা হয়েছে"
+    },
+    "statusBar": {
+      "projectWords": "{{total}} / {{goal}} প্রজেক্ট শব্দ",
+      "wordCount": "{{count}} শব্দ",
+      "wordCountGoal": "{{count}} / {{goal}} শব্দ",
+      "delta": "(+{{delta}})",
+      "goalBanner": "{{count}} / {{goal}} শব্দ — {{pct}}%",
+      "dismiss": "বন্ধ করুন"
+    }
+  },
+  "sprintSummary": {
+    "title": "স্প্রিন্ট সম্পন্ন!",
+    "wordsWritten": "লেখা শব্দ",
+    "duration": "সময়কাল",
+    "durationValue": "{{count}} মিনিট",
+    "wpm": "শব্দ/মিনিট",
+    "goalProgress": "লক্ষ্য অগ্রগতি",
+    "close": "বন্ধ করুন"
+  },
+  "wordCountGoal": {
+    "title": "শব্দ সংখ্যার লক্ষ্য নির্ধারণ করুন",
+    "name": "শব্দ সংখ্যার লক্ষ্য",
+    "desc": "এই ডকুমেন্টের লক্ষ্য শব্দ সংখ্যা। সরাতে 0 সেট করুন।",
+    "placeholder": "যেমন: 1500",
+    "save": "সংরক্ষণ করুন",
+    "cancel": "বাতিল করুন"
+  },
+  "statsTracker": {
+    "unknownProject": "অজানা প্রজেক্ট",
+    "none": "কোনোটি নেই",
+    "dailyNote": {
+      "heading": "## ✍️ লেখার কার্যক্রম",
+      "project": "**প্রজেক্ট:**",
+      "documents": "**ডকুমেন্ট:**",
+      "wordsWritten": "**লেখা শব্দ:**",
+      "sprintsCompleted": "**সম্পন্ন স্প্রিন্ট:**",
+      "sprintEntry": "1 ({{duration}} মিনিট)",
+      "wpm": "**প্রতি মিনিটে শব্দ:**",
+      "sessionTotal": "**সেশন মোট:**",
+      "sessionTotalValue": "{{duration}} মিনিট"
+    },
+    "readingTime": {
+      "minutes": "{{count}} মি.",
+      "hoursMinutes": "{{hours}} ঘ. {{mins}} মি.",
+      "hours": "{{hours}} ঘ."
+    }
   }
 }

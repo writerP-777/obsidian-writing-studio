@@ -504,5 +504,92 @@
     "desc": "حدد الملفات لإضافتها إلى هذا المشروع:",
     "addBtn": "إضافة الملفات المحددة",
     "cancel": "إلغاء"
+  },
+  "main": {
+    "ribbonTitle": "فتح استوديو الكتابة",
+    "cmd": {
+      "openLauncher": "فتح المشغّل",
+      "openBinder": "فتح المجمّع",
+      "toggleFocusMode": "تبديل وضع التركيز",
+      "toggleTypographyMode": "تبديل وضع الطباعة",
+      "switchDraftMode": "التبديل إلى وضع المسودة",
+      "switchEditMode": "التبديل إلى وضع التحرير",
+      "switchReviewMode": "التبديل إلى وضع المراجعة",
+      "startSprint": "بدء جلسة الكتابة",
+      "exportDocument": "تصدير المستند",
+      "exportProject": "تصدير المشروع",
+      "previewManuscript": "معاينة المخطوطة المجمّعة",
+      "publishWordPress": "النشر على WordPress",
+      "newProject": "مشروع كتابة جديد",
+      "openDashboard": "فتح لوحة الكتابة",
+      "openTargetsDashboard": "فتح لوحة الأهداف",
+      "setWordCountGoal": "تعيين هدف عدد الكلمات",
+      "openWritingLog": "فتح سجل الكتابة",
+      "openFolderSidebar": "فتح المجلد في المستكشف الجانبي",
+      "addFilesToBinder": "إضافة الملفات المنسوخة إلى مجلد المشروع"
+    },
+    "menu": {
+      "studioOptions": "خيارات استوديو الكتابة",
+      "exportDoc": "تصدير هذا المستند",
+      "publish": "النشر على WordPress",
+      "setGoal": "تعيين هدف عدد الكلمات",
+      "switchMode": "تبديل وضع الكتابة →",
+      "typographyFont": "خط الطباعة →",
+      "addToProject": "إضافة إلى مشروع الكتابة",
+      "openSidebar": "فتح في المستكشف الجانبي",
+      "draftMode": "✍ وضع المسودة",
+      "editMode": "✎ وضع التحرير",
+      "reviewMode": "👁 وضع المراجعة",
+      "normalMode": "عادي (بلا وضع)"
+    },
+    "notice": {
+      "noMarkdownOpen": "لا يوجد ملف Markdown مفتوح حالياً.",
+      "addedToProject": "تمت إضافة «{{file}}» إلى {{project}}"
+    },
+    "statusBar": {
+      "projectWords": "{{total}} / {{goal}} كلمة في المشروع",
+      "wordCount": "{{count}} كلمة",
+      "wordCountGoal": "{{count}} / {{goal}} كلمة",
+      "delta": "(+{{delta}})",
+      "goalBanner": "{{count}} / {{goal}} كلمة — {{pct}}%",
+      "dismiss": "إغلاق"
+    }
+  },
+  "sprintSummary": {
+    "title": "اكتملت الجلسة!",
+    "wordsWritten": "الكلمات المكتوبة",
+    "duration": "المدة",
+    "durationValue": "{{count}} دقيقة",
+    "wpm": "كلمة/دقيقة",
+    "goalProgress": "تقدّم الهدف",
+    "close": "إغلاق"
+  },
+  "wordCountGoal": {
+    "title": "تعيين هدف عدد الكلمات",
+    "name": "هدف عدد الكلمات",
+    "desc": "عدد الكلمات المستهدف لهذا المستند. اضبط على 0 للإزالة.",
+    "placeholder": "مثال: 1500",
+    "save": "حفظ",
+    "cancel": "إلغاء"
+  },
+  "statsTracker": {
+    "unknownProject": "مشروع غير معروف",
+    "none": "لا شيء",
+    "dailyNote": {
+      "heading": "## ✍️ نشاط الكتابة",
+      "project": "**المشروع:**",
+      "documents": "**المستندات:**",
+      "wordsWritten": "**الكلمات المكتوبة:**",
+      "sprintsCompleted": "**الجلسات المكتملة:**",
+      "sprintEntry": "1 ({{duration}} دقيقة)",
+      "wpm": "**كلمات في الدقيقة:**",
+      "sessionTotal": "**إجمالي الجلسة:**",
+      "sessionTotalValue": "{{duration}} دقيقة"
+    },
+    "readingTime": {
+      "minutes": "{{count}} د",
+      "hoursMinutes": "{{hours}} س {{mins}} د",
+      "hours": "{{hours}} س"
+    }
   }
 }

@@ -493,5 +493,92 @@
     "desc": "Select the files to add to this project:",
     "addBtn": "Add selected files",
     "cancel": "Cancel"
+  },
+  "main": {
+    "ribbonTitle": "Open writing studio",
+    "cmd": {
+      "openLauncher": "Open launcher",
+      "openBinder": "Open binder",
+      "toggleFocusMode": "Toggle focus mode",
+      "toggleTypographyMode": "Toggle typography mode",
+      "switchDraftMode": "Switch to draft mode",
+      "switchEditMode": "Switch to edit mode",
+      "switchReviewMode": "Switch to review mode",
+      "startSprint": "Start writing sprint",
+      "exportDocument": "Export document",
+      "exportProject": "Export project",
+      "previewManuscript": "Preview compiled manuscript",
+      "publishWordPress": "Publish to WordPress",
+      "newProject": "New writing project",
+      "openDashboard": "Open writing dashboard",
+      "openTargetsDashboard": "Open targets dashboard",
+      "setWordCountGoal": "Set word count goal",
+      "openWritingLog": "Open writing log",
+      "openFolderSidebar": "Open folder in sidebar explorer",
+      "addFilesToBinder": "Add files copied to project folder"
+    },
+    "menu": {
+      "studioOptions": "Writing studio options",
+      "exportDoc": "Export this document",
+      "publish": "Publish to WordPress",
+      "setGoal": "Set word count goal",
+      "switchMode": "Switch writing mode →",
+      "typographyFont": "Typography font →",
+      "addToProject": "Add to writing project",
+      "openSidebar": "Open in sidebar explorer",
+      "draftMode": "✍ Draft mode",
+      "editMode": "✎ Edit mode",
+      "reviewMode": "👁 Review mode",
+      "normalMode": "Normal (no mode)"
+    },
+    "notice": {
+      "noMarkdownOpen": "No Markdown file is currently open.",
+      "addedToProject": "Added \"{{file}}\" to {{project}}"
+    },
+    "statusBar": {
+      "projectWords": "{{total}} / {{goal}} project words",
+      "wordCount": "{{count}} words",
+      "wordCountGoal": "{{count}} / {{goal}} words",
+      "delta": "(+{{delta}})",
+      "goalBanner": "{{count}} / {{goal}} words — {{pct}}%",
+      "dismiss": "Dismiss"
+    }
+  },
+  "sprintSummary": {
+    "title": "Sprint complete!",
+    "wordsWritten": "Words written",
+    "duration": "Duration",
+    "durationValue": "{{count}} min",
+    "wpm": "Words/minute",
+    "goalProgress": "Goal progress",
+    "close": "Close"
+  },
+  "wordCountGoal": {
+    "title": "Set word count goal",
+    "name": "Word count goal",
+    "desc": "Target word count for this document. Set to 0 to remove.",
+    "placeholder": "E.g. 1500",
+    "save": "Save",
+    "cancel": "Cancel"
+  },
+  "statsTracker": {
+    "unknownProject": "Unknown project",
+    "none": "None",
+    "dailyNote": {
+      "heading": "## ✍️ Writing Activity",
+      "project": "**Project:**",
+      "documents": "**Documents:**",
+      "wordsWritten": "**Words Written:**",
+      "sprintsCompleted": "**Sprints Completed:**",
+      "sprintEntry": "1 ({{duration}} min)",
+      "wpm": "**Words per Minute:**",
+      "sessionTotal": "**Session Total:**",
+      "sessionTotalValue": "{{duration}} minutes"
+    },
+    "readingTime": {
+      "minutes": "{{count}} min",
+      "hoursMinutes": "{{hours}}h {{mins}}m",
+      "hours": "{{hours}}h"
+    }
   }
 }

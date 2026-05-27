@@ -493,5 +493,92 @@
     "desc": "इस परियोजना में जोड़ने के लिए फ़ाइलें चुनें:",
     "addBtn": "चुनी गई फ़ाइलें जोड़ें",
     "cancel": "रद्द करें"
+  },
+  "main": {
+    "ribbonTitle": "राइटिंग स्टूडियो खोलें",
+    "cmd": {
+      "openLauncher": "लॉन्चर खोलें",
+      "openBinder": "बाइंडर खोलें",
+      "toggleFocusMode": "फ़ोकस मोड टॉगल करें",
+      "toggleTypographyMode": "टाइपोग्राफी मोड टॉगल करें",
+      "switchDraftMode": "ड्राफ़्ट मोड पर जाएँ",
+      "switchEditMode": "एडिट मोड पर जाएँ",
+      "switchReviewMode": "रिव्यू मोड पर जाएँ",
+      "startSprint": "राइटिंग स्प्रिंट शुरू करें",
+      "exportDocument": "दस्तावेज़ निर्यात करें",
+      "exportProject": "प्रोजेक्ट निर्यात करें",
+      "previewManuscript": "संकलित पांडुलिपि का पूर्वावलोकन",
+      "publishWordPress": "WordPress पर प्रकाशित करें",
+      "newProject": "नया राइटिंग प्रोजेक्ट",
+      "openDashboard": "राइटिंग डैशबोर्ड खोलें",
+      "openTargetsDashboard": "टार्गेट डैशबोर्ड खोलें",
+      "setWordCountGoal": "शब्द संख्या लक्ष्य सेट करें",
+      "openWritingLog": "राइटिंग लॉग खोलें",
+      "openFolderSidebar": "साइडबार एक्सप्लोरर में फ़ोल्डर खोलें",
+      "addFilesToBinder": "प्रोजेक्ट फ़ोल्डर में कॉपी की गई फ़ाइलें जोड़ें"
+    },
+    "menu": {
+      "studioOptions": "राइटिंग स्टूडियो विकल्प",
+      "exportDoc": "यह दस्तावेज़ निर्यात करें",
+      "publish": "WordPress पर प्रकाशित करें",
+      "setGoal": "शब्द संख्या लक्ष्य सेट करें",
+      "switchMode": "राइटिंग मोड बदलें →",
+      "typographyFont": "टाइपोग्राफी फ़ॉन्ट →",
+      "addToProject": "राइटिंग प्रोजेक्ट में जोड़ें",
+      "openSidebar": "साइडबार एक्सप्लोरर में खोलें",
+      "draftMode": "✍ ड्राफ़्ट मोड",
+      "editMode": "✎ एडिट मोड",
+      "reviewMode": "👁 रिव्यू मोड",
+      "normalMode": "सामान्य (कोई मोड नहीं)"
+    },
+    "notice": {
+      "noMarkdownOpen": "वर्तमान में कोई Markdown फ़ाइल नहीं खुली है।",
+      "addedToProject": "\"{{file}}\" को {{project}} में जोड़ा गया"
+    },
+    "statusBar": {
+      "projectWords": "{{total}} / {{goal}} प्रोजेक्ट शब्द",
+      "wordCount": "{{count}} शब्द",
+      "wordCountGoal": "{{count}} / {{goal}} शब्द",
+      "delta": "(+{{delta}})",
+      "goalBanner": "{{count}} / {{goal}} शब्द — {{pct}}%",
+      "dismiss": "बंद करें"
+    }
+  },
+  "sprintSummary": {
+    "title": "स्प्रिंट पूर्ण!",
+    "wordsWritten": "लिखे गए शब्द",
+    "duration": "अवधि",
+    "durationValue": "{{count}} मिनट",
+    "wpm": "शब्द/मिनट",
+    "goalProgress": "लक्ष्य प्रगति",
+    "close": "बंद करें"
+  },
+  "wordCountGoal": {
+    "title": "शब्द संख्या लक्ष्य सेट करें",
+    "name": "शब्द संख्या लक्ष्य",
+    "desc": "इस दस्तावेज़ का लक्ष्य शब्द संख्या। हटाने के लिए 0 सेट करें।",
+    "placeholder": "जैसे 1500",
+    "save": "सहेजें",
+    "cancel": "रद्द करें"
+  },
+  "statsTracker": {
+    "unknownProject": "अज्ञात प्रोजेक्ट",
+    "none": "कोई नहीं",
+    "dailyNote": {
+      "heading": "## ✍️ लेखन गतिविधि",
+      "project": "**प्रोजेक्ट:**",
+      "documents": "**दस्तावेज़:**",
+      "wordsWritten": "**लिखे गए शब्द:**",
+      "sprintsCompleted": "**पूर्ण स्प्रिंट:**",
+      "sprintEntry": "1 ({{duration}} मिनट)",
+      "wpm": "**शब्द प्रति मिनट:**",
+      "sessionTotal": "**सत्र कुल:**",
+      "sessionTotalValue": "{{duration}} मिनट"
+    },
+    "readingTime": {
+      "minutes": "{{count}} मिनट",
+      "hoursMinutes": "{{hours}} घं. {{mins}} मि.",
+      "hours": "{{hours}} घं."
+    }
   }
 }

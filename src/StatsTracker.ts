@@ -1,5 +1,6 @@
 import { App, TFile, normalizePath } from 'obsidian';
 import type WritingStudioPlugin from '../main';
+import { t } from './i18n';
 import { SprintSession } from '../models/SprintSession';
 
 interface DailyStats {
@@ -61,18 +62,18 @@ export class StatsTracker {
     const dailyNotePath = this.getDailyNotePath(today);
 
     const project = this.plugin.projectManager.getActiveProject();
-    const projectName = project?.title || 'Unknown Project';
+    const projectName = project?.title || t('statsTracker.unknownProject');
     const docNames = session.documents.map(p => p.split('/').pop()?.replace('.md', '') || p).join(', ');
     const wpm = session.duration > 0 ? Math.round(session.wordsWritten / session.duration) : 0;
 
     const entry = `
-## ✍️ Writing Activity
-- **Project:** ${projectName}
-- **Documents:** ${docNames || 'None'}
-- **Words Written:** ${session.wordsWritten}
-- **Sprints Completed:** 1 (${session.duration} min)
-- **Words per Minute:** ${wpm}
-- **Session Total:** ${session.duration} minutes
+${t('statsTracker.dailyNote.heading')}
+- ${t('statsTracker.dailyNote.project')} ${projectName}
+- ${t('statsTracker.dailyNote.documents')} ${docNames || t('statsTracker.none')}
+- ${t('statsTracker.dailyNote.wordsWritten')} ${session.wordsWritten}
+- ${t('statsTracker.dailyNote.sprintsCompleted')} ${t('statsTracker.dailyNote.sprintEntry', { duration: session.duration })}
+- ${t('statsTracker.dailyNote.wpm')} ${wpm}
+- ${t('statsTracker.dailyNote.sessionTotal')} ${t('statsTracker.dailyNote.sessionTotalValue', { duration: session.duration })}
 `;
 
     let dailyFile = this.app.vault.getAbstractFileByPath(dailyNotePath);
@@ -150,10 +151,12 @@ export class StatsTracker {
   calculateReadingTime(wordCount: number): string {
     const wpm = 238; // average reading speed
     const minutes = Math.ceil(wordCount / wpm);
-    if (minutes < 60) return `${minutes} min`;
+    if (minutes < 60) return t('statsTracker.readingTime.minutes', { count: minutes });
     const hours = Math.floor(minutes / 60);
     const mins = minutes % 60;
-    return mins > 0 ? `${hours}h ${mins}m` : `${hours}h`;
+    return mins > 0
+      ? t('statsTracker.readingTime.hoursMinutes', { hours, mins })
+      : t('statsTracker.readingTime.hours', { hours });
   }
 
   async getWritingHistory(days: number): Promise<DailyLogEntry[]> {

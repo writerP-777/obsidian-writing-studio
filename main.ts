@@ -25,7 +25,7 @@ import { StatsTracker } from './src/StatsTracker';
 import { FrontmatterManager } from './src/FrontmatterManager';
 import { WritingStudioSettingsTab } from './src/SettingsTab';
 import { FolderSidebarView, FolderPickerModal, FOLDER_SIDEBAR_VIEW_TYPE } from './src/FolderSidebarView';
-import { initI18n } from './src/i18n';
+import { initI18n, t } from './src/i18n';
 import { WritingLogView, WRITING_LOG_VIEW_TYPE } from './src/WritingLogView';
 
 import { AddToProjectModal } from './modals/AddToProjectModal';
@@ -216,114 +216,114 @@ export default class WritingStudioPlugin extends Plugin {
     });
 
     // Ribbon icons — launcher only; all other features are accessible via the launcher panel, commands, or context menu
-    this.addRibbonIcon('feather', 'Open writing studio', () => this.openLauncher());
+    this.addRibbonIcon('feather', t('main.ribbonTitle'), () => this.openLauncher());
 
     // Commands
     this.addCommand({
       id: 'open-launcher',
-      name: 'Open launcher',
+      name: t('main.cmd.openLauncher'),
       callback: () => { void this.openLauncher(); },
     });
 
     this.addCommand({
       id: 'open-binder',
-      name: 'Open binder',
+      name: t('main.cmd.openBinder'),
       callback: () => { void this.openBinder(); },
     });
 
     this.addCommand({
       id: 'toggle-focus-mode',
-      name: 'Toggle focus mode',
+      name: t('main.cmd.toggleFocusMode'),
       callback: () => this.focusMode.toggle(),
     });
 
     this.addCommand({
       id: 'toggle-typography-mode',
-      name: 'Toggle typography mode',
+      name: t('main.cmd.toggleTypographyMode'),
       callback: () => this.typographyMode.toggle(),
     });
 
     this.addCommand({
       id: 'switch-draft-mode',
-      name: 'Switch to draft mode',
+      name: t('main.cmd.switchDraftMode'),
       callback: () => { void this.writingModes.switchMode('draft'); },
     });
 
     this.addCommand({
       id: 'switch-edit-mode',
-      name: 'Switch to edit mode',
+      name: t('main.cmd.switchEditMode'),
       callback: () => { void this.writingModes.switchMode('edit'); },
     });
 
     this.addCommand({
       id: 'switch-review-mode',
-      name: 'Switch to review mode',
+      name: t('main.cmd.switchReviewMode'),
       callback: () => { void this.writingModes.switchMode('review'); },
     });
 
     this.addCommand({
       id: 'start-sprint',
-      name: 'Start writing sprint',
+      name: t('main.cmd.startSprint'),
       callback: () => new SprintModal(this.app, this).open(),
     });
 
     this.addCommand({
       id: 'export-document',
-      name: 'Export document',
+      name: t('main.cmd.exportDocument'),
       callback: () => new ExportModal(this.app, this).open(),
     });
 
     this.addCommand({
       id: 'export-project',
-      name: 'Export project',
+      name: t('main.cmd.exportProject'),
       callback: () => new ExportModal(this.app, this).open(),
     });
 
     this.addCommand({
       id: 'preview-manuscript',
-      name: 'Preview compiled manuscript',
+      name: t('main.cmd.previewManuscript'),
       callback: () => { void this.openCompilePreview(); },
     });
 
     this.addCommand({
       id: 'publish-wordpress',
-      name: 'Publish to WordPress',
+      name: t('main.cmd.publishWordPress'),
       callback: () => this.publishCurrentFile(),
     });
 
     this.addCommand({
       id: 'new-project',
-      name: 'New writing project',
+      name: t('main.cmd.newProject'),
       callback: () => new ProjectModal(this.app, this, () => { void this.refreshBinder(); }).open(),
     });
 
     this.addCommand({
       id: 'open-dashboard',
-      name: 'Open writing dashboard',
+      name: t('main.cmd.openDashboard'),
       callback: () => new WritingDashboardModal(this.app, this).open(),
     });
 
     this.addCommand({
       id: 'open-targets-dashboard',
-      name: 'Open targets dashboard',
+      name: t('main.cmd.openTargetsDashboard'),
       callback: () => new TargetsDashboardModal(this.app, this).open(),
     });
 
     this.addCommand({
       id: 'set-word-count-goal',
-      name: 'Set word count goal',
+      name: t('main.cmd.setWordCountGoal'),
       editorCallback: (_editor, view) => this.setWordCountGoal(view.file),
     });
 
     this.addCommand({
       id: 'open-writing-log',
-      name: 'Open writing log',
+      name: t('main.cmd.openWritingLog'),
       callback: () => { void this.openWritingLog(); },
     });
 
     this.addCommand({
       id: 'open-folder-sidebar',
-      name: 'Open folder in sidebar explorer',
+      name: t('main.cmd.openFolderSidebar'),
       callback: () => {
         new FolderPickerModal(this.app, (folder) => { void this.openFolder(folder); }).open();
       },
@@ -331,7 +331,7 @@ export default class WritingStudioPlugin extends Plugin {
 
     this.addCommand({
       id: 'add-files-to-binder',
-      name: 'Add files copied to project folder',
+      name: t('main.cmd.addFilesToBinder'),
       callback: async () => {
         await this.openBinder();
         for (const leaf of this.app.workspace.getLeavesOfType(BINDER_VIEW_TYPE)) {
@@ -353,13 +353,13 @@ export default class WritingStudioPlugin extends Plugin {
     // Editor context menu
     this.registerEvent(
       this.app.workspace.on('editor-menu', (menu, _editor, view) => {
-        menu.addItem(i => i.setTitle('Writing studio options').setSection('writing-studio').setDisabled(true));
-        menu.addItem(i => i.setTitle('Export this document').setIcon('download').setSection('writing-studio').onClick(() => new ExportModal(this.app, this).open()));
-        menu.addItem(i => i.setTitle('Publish to WordPress').setIcon('globe').setSection('writing-studio').onClick(() => this.publishCurrentFile()));
-        menu.addItem(i => i.setTitle('Set word count goal').setIcon('target').setSection('writing-studio').onClick(() => this.setWordCountGoal(view.file)));
-        menu.addItem(i => i.setTitle('Switch writing mode →').setIcon('layout-dashboard').setSection('writing-studio').onClick((e: MouseEvent | KeyboardEvent) => this.showModeSwitcher(e)));
+        menu.addItem(i => i.setTitle(t('main.menu.studioOptions')).setSection('writing-studio').setDisabled(true));
+        menu.addItem(i => i.setTitle(t('main.menu.exportDoc')).setIcon('download').setSection('writing-studio').onClick(() => new ExportModal(this.app, this).open()));
+        menu.addItem(i => i.setTitle(t('main.menu.publish')).setIcon('globe').setSection('writing-studio').onClick(() => this.publishCurrentFile()));
+        menu.addItem(i => i.setTitle(t('main.menu.setGoal')).setIcon('target').setSection('writing-studio').onClick(() => this.setWordCountGoal(view.file)));
+        menu.addItem(i => i.setTitle(t('main.menu.switchMode')).setIcon('layout-dashboard').setSection('writing-studio').onClick((e: MouseEvent | KeyboardEvent) => this.showModeSwitcher(e)));
         if (this.typographyMode.isActive()) {
-          menu.addItem(i => i.setTitle('Typography font →').setIcon('type').setSection('writing-studio').onClick((e: MouseEvent | KeyboardEvent) => this.showFontPicker(e)));
+          menu.addItem(i => i.setTitle(t('main.menu.typographyFont')).setIcon('type').setSection('writing-studio').onClick((e: MouseEvent | KeyboardEvent) => this.showFontPicker(e)));
         }
       })
     );
@@ -368,18 +368,18 @@ export default class WritingStudioPlugin extends Plugin {
     this.registerEvent(
       this.app.workspace.on('file-menu', (menu, file) => {
         if (file instanceof TFile && file.extension === 'md') {
-          menu.addItem(i => i.setTitle('Writing studio options').setSection('writing-studio').setDisabled(true));
+          menu.addItem(i => i.setTitle(t('main.menu.studioOptions')).setSection('writing-studio').setDisabled(true));
           menu.addItem(i =>
-            i.setTitle('Add to writing project')
+            i.setTitle(t('main.menu.addToProject'))
               .setIcon('book-open')
               .setSection('writing-studio')
               .onClick(() => { void this.addFileToProject(file); })
           );
         }
         if (file instanceof TFolder) {
-          menu.addItem(i => i.setTitle('Writing studio options').setSection('writing-studio').setDisabled(true));
+          menu.addItem(i => i.setTitle(t('main.menu.studioOptions')).setSection('writing-studio').setDisabled(true));
           menu.addItem(i =>
-            i.setTitle('Open in sidebar explorer')
+            i.setTitle(t('main.menu.openSidebar'))
               .setIcon('folder')
               .setSection('writing-studio')
               .onClick(() => { void this.openFolder(file); })
@@ -591,7 +591,7 @@ export default class WritingStudioPlugin extends Plugin {
       return;
     }
     const total = await this.statsTracker.getTotalWordCount();
-    this.statusBarProjectGoal.setText(`${total.toLocaleString()} / ${goal.toLocaleString()} project words`);
+    this.statusBarProjectGoal.setText(t('main.statusBar.projectWords', { total: total.toLocaleString(), goal: goal.toLocaleString() }));
     this.statusBarProjectGoal.removeClass('ws-hidden');
   }
 
@@ -607,7 +607,7 @@ export default class WritingStudioPlugin extends Plugin {
     const view = leaf?.view;
     const file = view instanceof MarkdownView ? view.file : null;
     if (!(file instanceof TFile)) {
-      new Notice('No Markdown file is currently open.');
+      new Notice(t('main.notice.noMarkdownOpen'));
       return;
     }
     new PublishModal(this.app, this, file.path).open();
@@ -620,19 +620,19 @@ export default class WritingStudioPlugin extends Plugin {
 
   private showModeSwitcher(e: MouseEvent | KeyboardEvent): void {
     const menu = new Menu();
-    menu.addItem(i => i.setTitle('✍ Draft mode').setIcon('pencil').onClick(() => this.writingModes.switchMode('draft')));
-    menu.addItem(i => i.setTitle('✎ Edit mode').setIcon('edit-3').onClick(() => this.writingModes.switchMode('edit')));
-    menu.addItem(i => i.setTitle('👁 Review mode').setIcon('eye').onClick(() => this.writingModes.switchMode('review')));
+    menu.addItem(i => i.setTitle(t('main.menu.draftMode')).setIcon('pencil').onClick(() => this.writingModes.switchMode('draft')));
+    menu.addItem(i => i.setTitle(t('main.menu.editMode')).setIcon('edit-3').onClick(() => this.writingModes.switchMode('edit')));
+    menu.addItem(i => i.setTitle(t('main.menu.reviewMode')).setIcon('eye').onClick(() => this.writingModes.switchMode('review')));
     menu.addSeparator();
-    menu.addItem(i => i.setTitle('Normal (no mode)').onClick(() => this.writingModes.switchMode('none')));
+    menu.addItem(i => i.setTitle(t('main.menu.normalMode')).onClick(() => this.writingModes.switchMode('none')));
     if (e instanceof MouseEvent) menu.showAtMouseEvent(e);
   }
 
   private showFontPicker(e: MouseEvent | KeyboardEvent): void {
     const menu = new Menu();
-    TYPOGRAPHY_FONT_OPTIONS.forEach(({ key, label }) => {
+    TYPOGRAPHY_FONT_OPTIONS.forEach(({ key }) => {
       menu.addItem(i => {
-        i.setTitle(label).onClick(() => {
+        i.setTitle(t(`settings.typography.font.${key}`)).onClick(() => {
           this.settings.typographyFont = key;
           void this.saveSettings();
           this.typographyMode.refreshStyles();
@@ -646,7 +646,7 @@ export default class WritingStudioPlugin extends Plugin {
   private addFileToProject(file: TFile): void {
     const projects = this.projectManager.getProjects();
     if (projects.length === 0) {
-      new Notice('No writing projects found. Create a project first.');
+      new Notice(t('addToProject.noProjects'));
       return;
     }
 
@@ -668,7 +668,7 @@ export default class WritingStudioPlugin extends Plugin {
       binder.items.push(item);
       await this.projectManager.saveBinder(binder);
       await this.refreshBinder();
-      new Notice(`Added "${file.basename}" to ${project.title}`);
+      new Notice(t('main.notice.addedToProject', { file: file.basename, project: project.title }));
     }).open();
   }
 
@@ -703,11 +703,11 @@ export default class WritingStudioPlugin extends Plugin {
     // Status bar: read goal from frontmatter (acceptable for status bar only)
     const fm = this.fmManager.parseFrontmatter(content);
     const fmGoal = fm?.['word-count-goal'] as number | undefined;
-    const deltaStr = sessionDelta > 0 ? ` (+${sessionDelta})` : '';
+    const delta = sessionDelta > 0 ? ` ${t('main.statusBar.delta', { delta: sessionDelta })}` : '';
     if (fmGoal && fmGoal > 0) {
-      this.statusBarWordCount.textContent = `${wc} / ${fmGoal} words${deltaStr}`;
+      this.statusBarWordCount.textContent = t('main.statusBar.wordCountGoal', { count: wc, goal: fmGoal }) + delta;
     } else {
-      this.statusBarWordCount.textContent = `${wc} words${deltaStr}`;
+      this.statusBarWordCount.textContent = t('main.statusBar.wordCount', { count: wc }) + delta;
     }
 
     this.focusMode.updateToolbarWordCount(wc);
@@ -731,7 +731,7 @@ export default class WritingStudioPlugin extends Plugin {
     const pct = Math.min(100, Math.round((wc / this.currentBannerGoal) * 100));
     const textEl = banner.querySelector('.ws-goal-text');
     const barEl = banner.querySelector<HTMLElement>('.ws-goal-bar');
-    if (textEl) textEl.textContent = `${wc} / ${this.currentBannerGoal} words — ${pct}%`;
+    if (textEl) textEl.textContent = t('main.statusBar.goalBanner', { count: wc, goal: this.currentBannerGoal, pct });
     if (barEl) barEl.setCssProps({ '--ws-bar-width': `${pct}%` });
   }
 
@@ -792,11 +792,11 @@ export default class WritingStudioPlugin extends Plugin {
     leaf.view.containerEl.querySelectorAll('.ws-inline-goal-banner').forEach(el => el.remove());
 
     const banner = createDiv({ cls: 'ws-inline-goal-banner' });
-    banner.createSpan({ cls: 'ws-goal-text', text: `${wc} / ${goal} words — ${pct}%` });
+    banner.createSpan({ cls: 'ws-goal-text', text: t('main.statusBar.goalBanner', { count: wc, goal, pct }) });
     const barWrap = banner.createDiv({ cls: 'ws-goal-bar-wrap' });
     const barEl = barWrap.createDiv({ cls: 'ws-goal-bar' });
     barEl.setCssProps({ '--ws-bar-width': `${pct}%` });
-    const dismissBtn = banner.createEl('button', { cls: 'ws-goal-dismiss', title: 'Dismiss', text: '✕' });
+    const dismissBtn = banner.createEl('button', { cls: 'ws-goal-dismiss', title: t('main.statusBar.dismiss'), text: '✕' });
     dismissBtn.addEventListener('click', () => banner.remove());
     viewHeader.insertAdjacentElement('afterend', banner);
   }
@@ -820,21 +820,21 @@ class SprintSummaryModal extends Modal {
     const { contentEl } = this;
     contentEl.empty();
     contentEl.addClass('ws-sprint-summary-modal');
-    contentEl.createEl('h2', { text: 'Sprint complete!' });
+    contentEl.createEl('h2', { text: t('sprintSummary.title') });
 
     const s = this.session;
     const wpm = s.duration > 0 ? Math.round(s.wordsWritten / s.duration) : 0;
 
     const grid = contentEl.createDiv('ws-dash-grid');
-    this.addStat(grid, 'Words written', String(s.wordsWritten));
-    this.addStat(grid, 'Duration', `${s.duration} min`);
-    this.addStat(grid, 'Words/minute', String(wpm));
+    this.addStat(grid, t('sprintSummary.wordsWritten'), String(s.wordsWritten));
+    this.addStat(grid, t('sprintSummary.duration'), t('sprintSummary.durationValue', { count: s.duration }));
+    this.addStat(grid, t('sprintSummary.wpm'), String(wpm));
     if (s.wordCountGoal) {
       const pct = Math.min(100, Math.round((s.wordsWritten / s.wordCountGoal) * 100));
-      this.addStat(grid, 'Goal progress', `${pct}%`);
+      this.addStat(grid, t('sprintSummary.goalProgress'), `${pct}%`);
     }
 
-    contentEl.createEl('button', { text: 'Close', cls: 'mod-cta' }).onclick = () => this.close();
+    contentEl.createEl('button', { text: t('sprintSummary.close'), cls: 'mod-cta' }).onclick = () => this.close();
   }
 
   private addStat(container: HTMLElement, label: string, value: string): void {
@@ -865,23 +865,23 @@ class WordCountGoalModal extends Modal {
     const { contentEl } = this;
     contentEl.empty();
     contentEl.addClass('ws-goal-modal');
-    contentEl.createEl('h2', { text: 'Set word count goal' });
+    contentEl.createEl('h2', { text: t('wordCountGoal.title') });
 
     const content = await this.app.vault.read(this.file);
     const fm = this.plugin.fmManager.parseFrontmatter(content);
     this.goal = (fm?.['word-count-goal'] as number) || 0;
 
     new Setting(contentEl)
-      .setName('Word count goal')
-      .setDesc('Target word count for this document. Set to 0 to remove.')
-      .addText(t => t
+      .setName(t('wordCountGoal.name'))
+      .setDesc(t('wordCountGoal.desc'))
+      .addText(tx => tx
         .setValue(String(this.goal || ''))
-        .setPlaceholder('E.g. 1500')
+        .setPlaceholder(t('wordCountGoal.placeholder'))
         .onChange(v => { this.goal = parseInt(v) || 0; }));
 
     const btnRow = contentEl.createDiv('ws-modal-btn-row');
 
-    const saveBtn = btnRow.createEl('button', { cls: 'mod-cta', text: 'Save' });
+    const saveBtn = btnRow.createEl('button', { cls: 'mod-cta', text: t('wordCountGoal.save') });
     saveBtn.onclick = async () => {
       await this.app.vault.process(this.file, (data) => {
         return this.plugin.fmManager.setFrontmatterField(data, 'word-count-goal', this.goal);
@@ -889,7 +889,7 @@ class WordCountGoalModal extends Modal {
       this.close();
     };
 
-    const cancelBtn = btnRow.createEl('button', { text: 'Cancel' });
+    const cancelBtn = btnRow.createEl('button', { text: t('wordCountGoal.cancel') });
     cancelBtn.onclick = () => this.close();
   }
 

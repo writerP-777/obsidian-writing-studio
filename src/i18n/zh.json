@@ -491,5 +491,92 @@
     "desc": "选择要添加到此项目的文件：",
     "addBtn": "添加所选文件",
     "cancel": "取消"
+  },
+  "main": {
+    "ribbonTitle": "打开写作工作室",
+    "cmd": {
+      "openLauncher": "打开启动器",
+      "openBinder": "打开文件夹",
+      "toggleFocusMode": "切换专注模式",
+      "toggleTypographyMode": "切换排版模式",
+      "switchDraftMode": "切换到草稿模式",
+      "switchEditMode": "切换到编辑模式",
+      "switchReviewMode": "切换到审阅模式",
+      "startSprint": "开始写作冲刺",
+      "exportDocument": "导出文档",
+      "exportProject": "导出项目",
+      "previewManuscript": "预览编译稿件",
+      "publishWordPress": "发布到 WordPress",
+      "newProject": "新建写作项目",
+      "openDashboard": "打开写作仪表板",
+      "openTargetsDashboard": "打开目标仪表板",
+      "setWordCountGoal": "设置字数目标",
+      "openWritingLog": "打开写作日志",
+      "openFolderSidebar": "在侧边栏浏览器中打开文件夹",
+      "addFilesToBinder": "将复制到项目文件夹的文件添加进来"
+    },
+    "menu": {
+      "studioOptions": "写作工作室选项",
+      "exportDoc": "导出此文档",
+      "publish": "发布到 WordPress",
+      "setGoal": "设置字数目标",
+      "switchMode": "切换写作模式 →",
+      "typographyFont": "排版字体 →",
+      "addToProject": "添加到写作项目",
+      "openSidebar": "在侧边栏浏览器中打开",
+      "draftMode": "✍ 草稿模式",
+      "editMode": "✎ 编辑模式",
+      "reviewMode": "👁 审阅模式",
+      "normalMode": "普通（无模式）"
+    },
+    "notice": {
+      "noMarkdownOpen": "当前没有打开的 Markdown 文件。",
+      "addedToProject": "已将「{{file}}」添加到 {{project}}"
+    },
+    "statusBar": {
+      "projectWords": "{{total}} / {{goal}} 项目字数",
+      "wordCount": "{{count}} 字",
+      "wordCountGoal": "{{count}} / {{goal}} 字",
+      "delta": "(+{{delta}})",
+      "goalBanner": "{{count}} / {{goal}} 字 — {{pct}}%",
+      "dismiss": "关闭"
+    }
+  },
+  "sprintSummary": {
+    "title": "冲刺完成！",
+    "wordsWritten": "已写字数",
+    "duration": "时长",
+    "durationValue": "{{count}} 分钟",
+    "wpm": "每分钟字数",
+    "goalProgress": "目标进度",
+    "close": "关闭"
+  },
+  "wordCountGoal": {
+    "title": "设置字数目标",
+    "name": "字数目标",
+    "desc": "此文档的目标字数。设置为 0 可移除目标。",
+    "placeholder": "例如：1500",
+    "save": "保存",
+    "cancel": "取消"
+  },
+  "statsTracker": {
+    "unknownProject": "未知项目",
+    "none": "无",
+    "dailyNote": {
+      "heading": "## ✍️ 写作活动",
+      "project": "**项目：**",
+      "documents": "**文档：**",
+      "wordsWritten": "**已写字数：**",
+      "sprintsCompleted": "**完成冲刺：**",
+      "sprintEntry": "1 次（{{duration}} 分钟）",
+      "wpm": "**每分钟字数：**",
+      "sessionTotal": "**本次总计：**",
+      "sessionTotalValue": "{{duration}} 分钟"
+    },
+    "readingTime": {
+      "minutes": "{{count}} 分钟",
+      "hoursMinutes": "{{hours}} 小时 {{mins}} 分钟",
+      "hours": "{{hours}} 小时"
+    }
   }
 }

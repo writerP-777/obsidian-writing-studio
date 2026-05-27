@@ -493,5 +493,92 @@
     "desc": "Selecciona los archivos para añadir a este proyecto:",
     "addBtn": "Añadir archivos seleccionados",
     "cancel": "Cancelar"
+  },
+  "main": {
+    "ribbonTitle": "Abrir Writing Studio",
+    "cmd": {
+      "openLauncher": "Abrir lanzador",
+      "openBinder": "Abrir carpeta",
+      "toggleFocusMode": "Alternar modo enfoque",
+      "toggleTypographyMode": "Alternar modo tipografía",
+      "switchDraftMode": "Cambiar a modo borrador",
+      "switchEditMode": "Cambiar a modo edición",
+      "switchReviewMode": "Cambiar a modo revisión",
+      "startSprint": "Iniciar sprint de escritura",
+      "exportDocument": "Exportar documento",
+      "exportProject": "Exportar proyecto",
+      "previewManuscript": "Vista previa del manuscrito compilado",
+      "publishWordPress": "Publicar en WordPress",
+      "newProject": "Nuevo proyecto de escritura",
+      "openDashboard": "Abrir panel de escritura",
+      "openTargetsDashboard": "Abrir panel de objetivos",
+      "setWordCountGoal": "Establecer objetivo de recuento de palabras",
+      "openWritingLog": "Abrir registro de escritura",
+      "openFolderSidebar": "Abrir carpeta en el explorador lateral",
+      "addFilesToBinder": "Agregar archivos copiados a la carpeta del proyecto"
+    },
+    "menu": {
+      "studioOptions": "Opciones de Writing Studio",
+      "exportDoc": "Exportar este documento",
+      "publish": "Publicar en WordPress",
+      "setGoal": "Establecer objetivo de palabras",
+      "switchMode": "Cambiar modo de escritura →",
+      "typographyFont": "Fuente tipográfica →",
+      "addToProject": "Agregar al proyecto de escritura",
+      "openSidebar": "Abrir en el explorador lateral",
+      "draftMode": "✍ Modo borrador",
+      "editMode": "✎ Modo edición",
+      "reviewMode": "👁 Modo revisión",
+      "normalMode": "Normal (sin modo)"
+    },
+    "notice": {
+      "noMarkdownOpen": "No hay ningún archivo Markdown abierto actualmente.",
+      "addedToProject": "\"{{file}}\" agregado a {{project}}"
+    },
+    "statusBar": {
+      "projectWords": "{{total}} / {{goal}} palabras del proyecto",
+      "wordCount": "{{count}} palabras",
+      "wordCountGoal": "{{count}} / {{goal}} palabras",
+      "delta": "(+{{delta}})",
+      "goalBanner": "{{count}} / {{goal}} palabras — {{pct}}%",
+      "dismiss": "Cerrar"
+    }
+  },
+  "sprintSummary": {
+    "title": "¡Sprint completado!",
+    "wordsWritten": "Palabras escritas",
+    "duration": "Duración",
+    "durationValue": "{{count}} min",
+    "wpm": "Palabras/minuto",
+    "goalProgress": "Progreso del objetivo",
+    "close": "Cerrar"
+  },
+  "wordCountGoal": {
+    "title": "Establecer objetivo de recuento de palabras",
+    "name": "Objetivo de recuento de palabras",
+    "desc": "Recuento de palabras objetivo para este documento. Establecer en 0 para eliminar.",
+    "placeholder": "Ej. 1500",
+    "save": "Guardar",
+    "cancel": "Cancelar"
+  },
+  "statsTracker": {
+    "unknownProject": "Proyecto desconocido",
+    "none": "Ninguno",
+    "dailyNote": {
+      "heading": "## ✍️ Actividad de escritura",
+      "project": "**Proyecto:**",
+      "documents": "**Documentos:**",
+      "wordsWritten": "**Palabras escritas:**",
+      "sprintsCompleted": "**Sprints completados:**",
+      "sprintEntry": "1 ({{duration}} min)",
+      "wpm": "**Palabras por minuto:**",
+      "sessionTotal": "**Total de sesión:**",
+      "sessionTotalValue": "{{duration}} minutos"
+    },
+    "readingTime": {
+      "minutes": "{{count}} min",
+      "hoursMinutes": "{{hours}}h {{mins}}m",
+      "hours": "{{hours}}h"
+    }
   }
 }
