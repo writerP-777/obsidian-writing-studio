@@ -32,25 +32,13 @@ jobs:
       - name: Build plugin
         run: npm run build
 
-      - name: Install cosign
-        uses: sigstore/cosign-installer@59acb6260d9c0ba8f4a2f9d9b48431a222b68e20 # v3.5.0
-
-      - name: Sign release artifacts
-        run: |
-          cosign sign-blob --yes --bundle=main.js.bundle main.js
-          cosign sign-blob --yes --bundle=manifest.json.bundle manifest.json
-          cosign sign-blob --yes --bundle=styles.css.bundle styles.css
-
       - name: Create GitHub release
         uses: softprops/action-gh-release@b4309332981a82ec1c5618f44dd2e27cc8bfbfda # v3.0.0
         with:
           files: |
             main.js
-            main.js.bundle
             manifest.json
-            manifest.json.bundle
             styles.css
-            styles.css.bundle
           generate_release_notes: true
 
       - name: Attest build provenance
