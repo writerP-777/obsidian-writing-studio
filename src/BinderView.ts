@@ -1,6 +1,13 @@
 import { ItemView, WorkspaceLeaf, TFile, Menu, Notice, setIcon, setTooltip, normalizePath } from 'obsidian';
 import type WritingStudioPlugin from '../main';
-import { BinderItem, STATUS_COLORS, STATUS_LABELS, DocumentStatus } from '../models/BinderItem';
+import { BinderItem, STATUS_COLORS, DocumentStatus } from '../models/BinderItem';
+
+const STATUS_DOT_KEY: Record<DocumentStatus, string> = {
+  draft: 'targetsDashboard.status.draft',
+  'in-progress': 'targetsDashboard.status.inProgress',
+  complete: 'targetsDashboard.status.complete',
+  published: 'targetsDashboard.status.published',
+};
 import { WritingProject } from '../models/Project';
 import { ProjectModal } from '../modals/ProjectModal';
 import { TargetsDashboardModal } from '../modals/TargetsDashboardModal';
@@ -190,7 +197,7 @@ export class BinderView extends ItemView {
       // Status dot
       const dot = row.createSpan('ws-binder-status-dot');
       dot.setCssProps({ '--ws-status-color': STATUS_COLORS[item.status] });
-      dot.title = STATUS_LABELS[item.status];
+      dot.title = t(STATUS_DOT_KEY[item.status]);
 
       // Title — derive from the live filename so stale binder JSON is never shown
       const titleEl = row.createSpan('ws-binder-title');
@@ -298,7 +305,7 @@ export class BinderView extends ItemView {
       el.textContent = `${wc}/${goal}`;
       el.title = t('binder.pctComplete', { pct });
     } else {
-      el.textContent = `${wc}w`;
+      el.textContent = t('binder.wordCountSuffix', { count: wc });
     }
   }
 
@@ -314,7 +321,7 @@ export class BinderView extends ItemView {
       el.textContent = `${wc}/${goal}`;
       el.title = t('binder.pctComplete', { pct });
     } else {
-      el.textContent = `${wc}w`;
+      el.textContent = t('binder.wordCountSuffix', { count: wc });
     }
   }
 

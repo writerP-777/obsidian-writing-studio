@@ -39,12 +39,6 @@ var STATUS_COLORS = {
   complete: "#10b981",
   published: "#3b82f6"
 };
-var STATUS_LABELS = {
-  draft: "Draft",
-  "in-progress": "In Progress",
-  complete: "Complete",
-  published: "Published"
-};
 
 // modals/ProjectModal.ts
 var import_obsidian2 = require("obsidian");
@@ -2489,7 +2483,8 @@ var en_default = {
       moveToResearch: "Move to research",
       publishToWordPress: "Publish to WordPress",
       delete: "Delete"
-    }
+    },
+    wordCountSuffix: "{{count}}w"
   },
   launcher: {
     displayText: "Writing studio",
@@ -2759,7 +2754,21 @@ var en_default = {
       progress: "Progress",
       readingTime: "Reading time"
     },
-    total: "Total"
+    total: "Total",
+    status: {
+      draft: "Draft",
+      inProgress: "In Progress",
+      complete: "Complete",
+      published: "Published"
+    },
+    typeLabel: {
+      chapter: "Chapter",
+      section: "Section",
+      article: "Article",
+      note: "Note",
+      group: "Group",
+      part: "Part"
+    }
   },
   writingDashboard: {
     title: "Writing dashboard",
@@ -3075,7 +3084,8 @@ var zh_default = {
       moveToResearch: "\u79FB\u81F3\u7814\u7A76",
       publishToWordPress: "\u53D1\u5E03\u5230 WordPress",
       delete: "\u5220\u9664"
-    }
+    },
+    wordCountSuffix: "{{count}}\u5B57"
   },
   launcher: {
     displayText: "\u5199\u4F5C\u5DE5\u4F5C\u5BA4",
@@ -3145,6 +3155,7 @@ var zh_default = {
     },
     last30Days: "\u6700\u8FD130\u5929",
     today: "\u4ECA\u5929",
+    sprintsCount_one: "\xB7 {{count}} \u6B21\u51B2\u523A",
     sprintsCount_other: "\xB7 {{count}} \u6B21\u51B2\u523A"
   },
   sprint: {
@@ -3209,6 +3220,7 @@ var zh_default = {
   focusToolbar: {
     exitTitle: "\u9000\u51FA\u4E13\u6CE8\u6A21\u5F0F (esc)",
     exitBtn: "\u2715 \u9000\u51FA",
+    wordCount_one: "{{count}} \u4E2A\u5B57",
     wordCount_other: "{{count}} \u4E2A\u5B57"
   },
   compilePreview: {
@@ -3343,7 +3355,21 @@ var zh_default = {
       progress: "\u8FDB\u5EA6",
       readingTime: "\u9605\u8BFB\u65F6\u95F4"
     },
-    total: "\u5408\u8BA1"
+    total: "\u5408\u8BA1",
+    status: {
+      draft: "\u8349\u7A3F",
+      inProgress: "\u8FDB\u884C\u4E2D",
+      complete: "\u5B8C\u6210",
+      published: "\u5DF2\u53D1\u5E03"
+    },
+    typeLabel: {
+      chapter: "\u7AE0\u8282",
+      section: "\u90E8\u5206",
+      article: "\u6587\u7AE0",
+      note: "\u5907\u6CE8",
+      group: "\u7EC4",
+      part: "\u7BC7"
+    }
   },
   writingDashboard: {
     title: "\u5199\u4F5C\u4EEA\u8868\u677F",
@@ -3659,7 +3685,8 @@ var hi_default = {
       moveToResearch: "\u0936\u094B\u0927 \u092E\u0947\u0902 \u0932\u0947 \u091C\u093E\u090F\u0902",
       publishToWordPress: "WordPress \u092A\u0930 \u092A\u094D\u0930\u0915\u093E\u0936\u093F\u0924 \u0915\u0930\u0947\u0902",
       delete: "\u0939\u091F\u093E\u090F\u0902"
-    }
+    },
+    wordCountSuffix: "{{count}}\u0936"
   },
   launcher: {
     displayText: "\u0930\u093E\u0907\u091F\u093F\u0902\u0917 \u0938\u094D\u091F\u0942\u0921\u093F\u092F\u094B",
@@ -3929,7 +3956,21 @@ var hi_default = {
       progress: "\u092A\u094D\u0930\u0917\u0924\u093F",
       readingTime: "\u092A\u0922\u093C\u0928\u0947 \u0915\u093E \u0938\u092E\u092F"
     },
-    total: "\u0915\u0941\u0932"
+    total: "\u0915\u0941\u0932",
+    status: {
+      draft: "\u092E\u0938\u094C\u0926\u093E",
+      inProgress: "\u092A\u094D\u0930\u0917\u0924\u093F \u092E\u0947\u0902",
+      complete: "\u092A\u0942\u0930\u094D\u0923",
+      published: "\u092A\u094D\u0930\u0915\u093E\u0936\u093F\u0924"
+    },
+    typeLabel: {
+      chapter: "\u0905\u0927\u094D\u092F\u093E\u092F",
+      section: "\u0916\u0902\u0921",
+      article: "\u0932\u0947\u0916",
+      note: "\u0928\u094B\u091F",
+      group: "\u0938\u092E\u0942\u0939",
+      part: "\u092D\u093E\u0917"
+    }
   },
   writingDashboard: {
     title: "\u0932\u0947\u0916\u0928 \u0921\u0948\u0936\u092C\u094B\u0930\u094D\u0921",
@@ -4245,7 +4286,8 @@ var es_default = {
       moveToResearch: "Mover a investigaci\xF3n",
       publishToWordPress: "Publicar en WordPress",
       delete: "Eliminar"
-    }
+    },
+    wordCountSuffix: "{{count}}p"
   },
   launcher: {
     displayText: "Estudio de escritura",
@@ -4515,7 +4557,21 @@ var es_default = {
       progress: "Progreso",
       readingTime: "Tiempo de lectura"
     },
-    total: "Total"
+    total: "Total",
+    status: {
+      draft: "Borrador",
+      inProgress: "En progreso",
+      complete: "Completo",
+      published: "Publicado"
+    },
+    typeLabel: {
+      chapter: "Cap\xEDtulo",
+      section: "Secci\xF3n",
+      article: "Art\xEDculo",
+      note: "Nota",
+      group: "Grupo",
+      part: "Parte"
+    }
   },
   writingDashboard: {
     title: "Panel de escritura",
@@ -4831,7 +4887,8 @@ var ar_default = {
       moveToResearch: "\u0646\u0642\u0644 \u0625\u0644\u0649 \u0627\u0644\u0628\u062D\u062B",
       publishToWordPress: "\u0646\u0634\u0631 \u0639\u0644\u0649 WordPress",
       delete: "\u062D\u0630\u0641"
-    }
+    },
+    wordCountSuffix: "{{count}}\u0643"
   },
   launcher: {
     displayText: "\u0627\u0633\u062A\u0648\u062F\u064A\u0648 \u0627\u0644\u0643\u062A\u0627\u0628\u0629",
@@ -5108,7 +5165,21 @@ var ar_default = {
       progress: "\u0627\u0644\u062A\u0642\u062F\u0645",
       readingTime: "\u0648\u0642\u062A \u0627\u0644\u0642\u0631\u0627\u0621\u0629"
     },
-    total: "\u0627\u0644\u0645\u062C\u0645\u0648\u0639"
+    total: "\u0627\u0644\u0645\u062C\u0645\u0648\u0639",
+    status: {
+      draft: "\u0645\u0633\u0648\u062F\u0629",
+      inProgress: "\u0642\u064A\u062F \u0627\u0644\u062A\u0642\u062F\u0645",
+      complete: "\u0645\u0643\u062A\u0645\u0644",
+      published: "\u0645\u0646\u0634\u0648\u0631"
+    },
+    typeLabel: {
+      chapter: "\u0641\u0635\u0644",
+      section: "\u0642\u0633\u0645",
+      article: "\u0645\u0642\u0627\u0644\u0629",
+      note: "\u0645\u0644\u0627\u062D\u0638\u0629",
+      group: "\u0645\u062C\u0645\u0648\u0639\u0629",
+      part: "\u062C\u0632\u0621"
+    }
   },
   writingDashboard: {
     title: "\u0644\u0648\u062D\u0629 \u0627\u0644\u0643\u062A\u0627\u0628\u0629",
@@ -5428,7 +5499,8 @@ var fr_default = {
       moveToResearch: "D\xE9placer vers la recherche",
       publishToWordPress: "Publier sur WordPress",
       delete: "Supprimer"
-    }
+    },
+    wordCountSuffix: "{{count}}m"
   },
   launcher: {
     displayText: "Studio d'\xE9criture",
@@ -5698,7 +5770,21 @@ var fr_default = {
       progress: "Progression",
       readingTime: "Temps de lecture"
     },
-    total: "Total"
+    total: "Total",
+    status: {
+      draft: "Brouillon",
+      inProgress: "En cours",
+      complete: "Termin\xE9",
+      published: "Publi\xE9"
+    },
+    typeLabel: {
+      chapter: "Chapitre",
+      section: "Section",
+      article: "Article",
+      note: "Note",
+      group: "Groupe",
+      part: "Partie"
+    }
   },
   writingDashboard: {
     title: "Tableau de bord d'\xE9criture",
@@ -6014,7 +6100,8 @@ var bn_default = {
       moveToResearch: "\u0997\u09AC\u09C7\u09B7\u09A3\u09BE\u09AF\u09BC \u09B8\u09B0\u09BE\u09A8",
       publishToWordPress: "WordPress-\u098F \u09AA\u09CD\u09B0\u0995\u09BE\u09B6 \u0995\u09B0\u09C1\u09A8",
       delete: "\u09AE\u09C1\u099B\u09C1\u09A8"
-    }
+    },
+    wordCountSuffix: "{{count}}\u09B6"
   },
   launcher: {
     displayText: "\u09B2\u09C7\u0996\u09BE\u09B0 \u09B8\u09CD\u099F\u09C1\u09A1\u09BF\u0993",
@@ -6284,7 +6371,21 @@ var bn_default = {
       progress: "\u0985\u0997\u09CD\u09B0\u0997\u09A4\u09BF",
       readingTime: "\u09AA\u09A1\u09BC\u09BE\u09B0 \u09B8\u09AE\u09AF\u09BC"
     },
-    total: "\u09AE\u09CB\u099F"
+    total: "\u09AE\u09CB\u099F",
+    status: {
+      draft: "\u0996\u09B8\u09A1\u09BC\u09BE",
+      inProgress: "\u099A\u09B2\u09AE\u09BE\u09A8",
+      complete: "\u09B8\u09AE\u09CD\u09AA\u09C2\u09B0\u09CD\u09A3",
+      published: "\u09AA\u09CD\u09B0\u0995\u09BE\u09B6\u09BF\u09A4"
+    },
+    typeLabel: {
+      chapter: "\u0985\u09A7\u09CD\u09AF\u09BE\u09AF\u09BC",
+      section: "\u09AC\u09BF\u09AD\u09BE\u0997",
+      article: "\u09A8\u09BF\u09AC\u09A8\u09CD\u09A7",
+      note: "\u09A8\u09CB\u099F",
+      group: "\u0997\u09CD\u09B0\u09C1\u09AA",
+      part: "\u0985\u0982\u09B6"
+    }
   },
   writingDashboard: {
     title: "\u09B2\u09C7\u0996\u09BE\u09B0 \u09A1\u09CD\u09AF\u09BE\u09B6\u09AC\u09CB\u09B0\u09CD\u09A1",
@@ -6600,7 +6701,8 @@ var pt_BR_default = {
       moveToResearch: "Mover para pesquisa",
       publishToWordPress: "Publicar no WordPress",
       delete: "Excluir"
-    }
+    },
+    wordCountSuffix: "{{count}}p"
   },
   launcher: {
     displayText: "Est\xFAdio de escrita",
@@ -6870,7 +6972,21 @@ var pt_BR_default = {
       progress: "Progresso",
       readingTime: "Tempo de leitura"
     },
-    total: "Total"
+    total: "Total",
+    status: {
+      draft: "Rascunho",
+      inProgress: "Em progresso",
+      complete: "Completo",
+      published: "Publicado"
+    },
+    typeLabel: {
+      chapter: "Cap\xEDtulo",
+      section: "Se\xE7\xE3o",
+      article: "Artigo",
+      note: "Nota",
+      group: "Grupo",
+      part: "Parte"
+    }
   },
   writingDashboard: {
     title: "Painel de escrita",
@@ -7186,7 +7302,8 @@ var ru_default = {
       moveToResearch: "\u041F\u0435\u0440\u0435\u043C\u0435\u0441\u0442\u0438\u0442\u044C \u0432 \u0438\u0441\u0441\u043B\u0435\u0434\u043E\u0432\u0430\u043D\u0438\u044F",
       publishToWordPress: "\u041E\u043F\u0443\u0431\u043B\u0438\u043A\u043E\u0432\u0430\u0442\u044C \u0432 WordPress",
       delete: "\u0423\u0434\u0430\u043B\u0438\u0442\u044C"
-    }
+    },
+    wordCountSuffix: "{{count}}\u0441\u043B"
   },
   launcher: {
     displayText: "\u0421\u0442\u0443\u0434\u0438\u044F \u043F\u0438\u0441\u044C\u043C\u0430",
@@ -7460,7 +7577,21 @@ var ru_default = {
       progress: "\u041F\u0440\u043E\u0433\u0440\u0435\u0441\u0441",
       readingTime: "\u0412\u0440\u0435\u043C\u044F \u0447\u0442\u0435\u043D\u0438\u044F"
     },
-    total: "\u0418\u0442\u043E\u0433\u043E"
+    total: "\u0418\u0442\u043E\u0433\u043E",
+    status: {
+      draft: "\u0427\u0435\u0440\u043D\u043E\u0432\u0438\u043A",
+      inProgress: "\u0412 \u043F\u0440\u043E\u0446\u0435\u0441\u0441\u0435",
+      complete: "\u0417\u0430\u0432\u0435\u0440\u0448\u0435\u043D\u043E",
+      published: "\u041E\u043F\u0443\u0431\u043B\u0438\u043A\u043E\u0432\u0430\u043D\u043E"
+    },
+    typeLabel: {
+      chapter: "\u0413\u043B\u0430\u0432\u0430",
+      section: "\u0420\u0430\u0437\u0434\u0435\u043B",
+      article: "\u0421\u0442\u0430\u0442\u044C\u044F",
+      note: "\u0417\u0430\u043C\u0435\u0442\u043A\u0430",
+      group: "\u0413\u0440\u0443\u043F\u043F\u0430",
+      part: "\u0427\u0430\u0441\u0442\u044C"
+    }
   },
   writingDashboard: {
     title: "\u041F\u0430\u043D\u0435\u043B\u044C \u043D\u0430\u043F\u0438\u0441\u0430\u043D\u0438\u044F",
@@ -7602,6 +7733,1809 @@ var ru_default = {
   }
 };
 
+// src/i18n/ja.json
+var ja_default = {
+  settings: {
+    tab: {
+      general: "\u4E00\u822C",
+      focus: "\u30D5\u30A9\u30FC\u30AB\u30B9\u30E2\u30FC\u30C9",
+      typography: "\u30BF\u30A4\u30DD\u30B0\u30E9\u30D5\u30A3",
+      sprint: "\u30B9\u30D7\u30EA\u30F3\u30C8\u3068\u76EE\u6A19",
+      export: "\u30A8\u30AF\u30B9\u30DD\u30FC\u30C8",
+      log: "\u57F7\u7B46\u30ED\u30B0",
+      wordpress: "WordPress",
+      help: "\u4F7F\u3044\u65B9"
+    },
+    general: {
+      openOnStartup: "\u8D77\u52D5\u6642\u306B\u958B\u304F",
+      openOnStartupDesc: "Obsidian\u306E\u8D77\u52D5\u6642\u306B\u81EA\u52D5\u3067\u30E9\u30A4\u30C6\u30A3\u30F3\u30B0\u30B9\u30BF\u30B8\u30AA\u30D1\u30CD\u30EB\u3092\u958B\u304D\u307E\u3059\u3002",
+      defaultProjectFolder: "\u30C7\u30D5\u30A9\u30EB\u30C8\u306E\u30D7\u30ED\u30B8\u30A7\u30AF\u30C8\u30D5\u30A9\u30EB\u30C0",
+      defaultProjectFolderDesc: "\u57F7\u7B46\u30D7\u30ED\u30B8\u30A7\u30AF\u30C8\u3092\u4FDD\u5B58\u3059\u308BVault\u306E\u30D1\u30B9\u3002",
+      defaultProjectFolderPlaceholder: "\u57F7\u7B46\u30D7\u30ED\u30B8\u30A7\u30AF\u30C8",
+      authorName: "\u8457\u8005\u540D",
+      authorNameDesc: "\u30A8\u30AF\u30B9\u30DD\u30FC\u30C8\u3068\u30BF\u30A4\u30C8\u30EB\u30DA\u30FC\u30B8\u306B\u4F7F\u7528\u3055\u308C\u307E\u3059\u3002",
+      authorNamePlaceholder: "\u304A\u540D\u524D",
+      defaultDocumentType: "\u30C7\u30D5\u30A9\u30EB\u30C8\u306E\u30C9\u30AD\u30E5\u30E1\u30F3\u30C8\u30BF\u30A4\u30D7",
+      docType: {
+        chapter: "\u7AE0",
+        section: "\u30BB\u30AF\u30B7\u30E7\u30F3",
+        article: "\u8A18\u4E8B",
+        note: "\u30CE\u30FC\u30C8"
+      },
+      frontmatterAutoUpdate: "\u30D5\u30ED\u30F3\u30C8\u30DE\u30BF\u30FC\u81EA\u52D5\u66F4\u65B0",
+      frontmatterAutoUpdateDesc: "\u4FDD\u5B58\u6642\u306B\u8A9E\u6570\u3068\u66F4\u65B0\u65E5\u3092\u81EA\u52D5\u7684\u306B\u66F4\u65B0\u3057\u307E\u3059\u3002"
+    },
+    focus: {
+      heading: "\u30D5\u30A9\u30FC\u30AB\u30B9\u30E2\u30FC\u30C9",
+      focusUnit: "\u30D5\u30A9\u30FC\u30AB\u30B9\u5358\u4F4D",
+      focusUnitDesc: "\u6BB5\u843D\u307E\u305F\u306F\u6587\u30EC\u30D9\u30EB\u3067\u30CF\u30A4\u30E9\u30A4\u30C8\u3057\u307E\u3059\u3002",
+      paragraph: "\u6BB5\u843D",
+      sentence: "\u6587\uFF08\u884C\uFF09",
+      dimOpacity: "\u6697\u8EE2\u306E\u4E0D\u900F\u660E\u5EA6\uFF08%\uFF09",
+      dimOpacityDesc: "\u975E\u30A2\u30AF\u30C6\u30A3\u30D6\u30C6\u30AD\u30B9\u30C8\u306E\u4E0D\u900F\u660E\u5EA6\uFF0810\u301C50\uFF09\u3002",
+      fontSizeOverride: "\u30D5\u30A9\u30F3\u30C8\u30B5\u30A4\u30BA\u30AA\u30FC\u30D0\u30FC\u30E9\u30A4\u30C9\uFF08px\uFF09",
+      fontSizeOverrideDesc: "0\u306E\u307E\u307E\u306B\u3059\u308B\u3068\u30C6\u30FC\u30DE\u306E\u30D5\u30A9\u30F3\u30C8\u30B5\u30A4\u30BA\u3092\u4F7F\u7528\u3057\u307E\u3059\u3002",
+      autoHideSidebars: "\u30B5\u30A4\u30C9\u30D0\u30FC\u306E\u81EA\u52D5\u975E\u8868\u793A",
+      typewriterScroll: "\u30BF\u30A4\u30D7\u30E9\u30A4\u30BF\u30FC\u30B9\u30AF\u30ED\u30FC\u30EB",
+      typewriterScrollDesc: "\u30A2\u30AF\u30C6\u30A3\u30D6\u306A\u884C\u3092\u753B\u9762\u306E\u4E2D\u592E\u306B\u4FDD\u3061\u307E\u3059\u3002"
+    },
+    typography: {
+      heading: "\u30BF\u30A4\u30DD\u30B0\u30E9\u30D5\u30A3\u30E2\u30FC\u30C9",
+      fontFamily: "\u30D5\u30A9\u30F3\u30C8\u30D5\u30A1\u30DF\u30EA\u30FC",
+      font: {
+        mono: "\u7B49\u5E45\uFF08iA Writer Mono\uFF09",
+        serif: "\u30BB\u30EA\u30D5\uFF08iA Writer Duo Serif\uFF09",
+        sans: "\u30B5\u30F3\u30BB\u30EA\u30D5\uFF08iA Writer Quattro\uFF09",
+        "cormorant-garamond": "Cormorant garamond",
+        "crimson-text": "Crimson text",
+        "eb-garamond": "Eb garamond",
+        "libre-baskerville": "Libre baskerville",
+        "libre-caslon-text": "Libre caslon text",
+        literata: "Literata",
+        lora: "Lora",
+        inter: "Inter",
+        lato: "Lato",
+        "source-sans-3": "Source sans 3",
+        custom: "\u30AB\u30B9\u30BF\u30E0\u30D5\u30A9\u30F3\u30C8\u540D\u2026"
+      },
+      customFontName: "\u30AB\u30B9\u30BF\u30E0\u30D5\u30A9\u30F3\u30C8\u540D",
+      customFontNameDesc: "\u4E0A\u3067\u300C\u30AB\u30B9\u30BF\u30E0\u300D\u3092\u9078\u629E\u3057\u305F\u5834\u5408\u306E\u30D5\u30A9\u30F3\u30C8\u540D\u3002",
+      customFontNamePlaceholder: "\u4F8B\uFF1AMerriweather",
+      maxLineLength: "\u6700\u5927\u884C\u9577\uFF08\u6587\u5B57\uFF09",
+      maxLineLengthDesc: "55\u301C80\u6587\u5B57\u63A8\u5968\u3002",
+      fontSize: "\u30D5\u30A9\u30F3\u30C8\u30B5\u30A4\u30BA\uFF08px\uFF09",
+      lineHeight: "\u884C\u306E\u9AD8\u3055",
+      lineHeightDesc: "\u30C7\u30D5\u30A9\u30EB\u30C8\uFF1A1.7",
+      letterSpacing: "\u6587\u5B57\u9593\u9694",
+      letterSpacingDesc: "CSS\u306Eletter-spacing\u5024\uFF08\u4F8B\uFF1A\u300Cnormal\u300D\u3001\u300C0.02em\u300D\uFF09\u3002",
+      persistAcrossSessions: "\u30BB\u30C3\u30B7\u30E7\u30F3\u9593\u3067\u4FDD\u6301",
+      persistAcrossSessionsDesc: "Obsidian\u3092\u518D\u8D77\u52D5\u3057\u3066\u3082\u30BF\u30A4\u30DD\u30B0\u30E9\u30D5\u30A3\u30E2\u30FC\u30C9\u3092\u7DAD\u6301\u3057\u307E\u3059\u3002"
+    },
+    sprint: {
+      heading: "\u30B9\u30D7\u30EA\u30F3\u30C8\u3068\u76EE\u6A19",
+      defaultDuration: "\u30C7\u30D5\u30A9\u30EB\u30C8\u306E\u30B9\u30D7\u30EA\u30F3\u30C8\u6642\u9593\uFF08\u5206\uFF09",
+      defaultDailyGoal: "\u30C7\u30D5\u30A9\u30EB\u30C8\u306E1\u65E5\u306E\u8A9E\u6570\u76EE\u6A19",
+      soundNotifications: "\u30B5\u30A6\u30F3\u30C9\u901A\u77E5",
+      soundNotificationsDesc: "\u30B9\u30D7\u30EA\u30F3\u30C8\u7D42\u4E86\u6642\u306B\u97F3\u3092\u9CF4\u3089\u3057\u307E\u3059\u3002",
+      historyRetention: "\u30B9\u30D7\u30EA\u30F3\u30C8\u5C65\u6B74\u306E\u4FDD\u6301\u671F\u9593\uFF08\u65E5\uFF09",
+      inlineGoalBanner: "\u30A4\u30F3\u30E9\u30A4\u30F3\u76EE\u6A19\u30D0\u30CA\u30FC",
+      inlineGoalBannerDesc: "\u30C9\u30AD\u30E5\u30E1\u30F3\u30C8\u3092\u958B\u3044\u305F\u3068\u304D\u306B\u30BF\u30A4\u30C8\u30EB\u306E\u4E0B\u306B\u8A9E\u6570\u76EE\u6A19\u306E\u9032\u6357\u3092\u8868\u793A\u3057\u307E\u3059\u3002"
+    },
+    export: {
+      heading: "\u30A8\u30AF\u30B9\u30DD\u30FC\u30C8",
+      defaultFormat: "\u30C7\u30D5\u30A9\u30EB\u30C8\u306E\u30A8\u30AF\u30B9\u30DD\u30FC\u30C8\u5F62\u5F0F",
+      format: {
+        md: "Markdown (.md)",
+        html: "HTML",
+        pdf: "PDF",
+        docx: "Word (.docx)",
+        rtf: "RTF"
+      },
+      defaultPaperSize: "\u30C7\u30D5\u30A9\u30EB\u30C8\u306E\u7528\u7D19\u30B5\u30A4\u30BA",
+      paperSize: {
+        letter: "\u30EC\u30BF\u30FC\uFF08US\uFF09",
+        a4: "A4"
+      },
+      exportFont: "\u30A8\u30AF\u30B9\u30DD\u30FC\u30C8\u30D5\u30A9\u30F3\u30C8",
+      exportFontSize: "\u30A8\u30AF\u30B9\u30DD\u30FC\u30C8\u30D5\u30A9\u30F3\u30C8\u30B5\u30A4\u30BA\uFF08pt\uFF09",
+      pandocPath: "Pandoc\u306E\u30D1\u30B9",
+      pandocPathDesc: "\u30B7\u30B9\u30C6\u30E0\u30D1\u30B9\u306B\u306A\u3044\u5834\u5408\u306Fpandoc\u30D0\u30A4\u30CA\u30EA\u306E\u30D5\u30EB\u30D1\u30B9\u3092\u6307\u5B9A\u3057\u3066\u304F\u3060\u3055\u3044\u3002",
+      epubHeading: "EPUB",
+      epubLanguage: "EPUB\u8A00\u8A9E",
+      epubLanguageDesc: "BCP 47\u8A00\u8A9E\u30BF\u30B0\uFF08\u4F8B\uFF1Aen\u3001fr\u3001de\uFF09\u3002",
+      includeCover: "\u30AB\u30D0\u30FC\u3092\u542B\u3081\u308B",
+      includeCoverDesc: "\u30AB\u30D0\u30FC\u753B\u50CF\u304C\u306A\u3044\u5834\u5408\u3001\u30C6\u30AD\u30B9\u30C8\u30AB\u30D0\u30FC\u30DA\u30FC\u30B8\u3092\u81EA\u52D5\u751F\u6210\u3057\u307E\u3059\u3002"
+    },
+    log: {
+      heading: "\u6BCE\u65E5\u306E\u57F7\u7B46\u30ED\u30B0",
+      appendToDailyNote: "\u30C7\u30A4\u30EA\u30FC\u30CE\u30FC\u30C8\u306B\u8FFD\u8A18",
+      appendToDailyNoteDesc: "\u5404\u30B9\u30D7\u30EA\u30F3\u30C8\u5F8C\u306B\u4ECA\u65E5\u306E\u30C7\u30A4\u30EA\u30FC\u30CE\u30FC\u30C8\u306B\u57F7\u7B46\u6D3B\u52D5\u30B5\u30DE\u30EA\u30FC\u3092\u8FFD\u52A0\u3057\u307E\u3059\u3002"
+    },
+    wordpress: {
+      sitesHeading: "WordPress\u30B5\u30A4\u30C8",
+      addSite: "+ WordPress\u30B5\u30A4\u30C8\u3092\u8FFD\u52A0",
+      wikilinksHeading: "\u30A6\u30A3\u30AD\u30EA\u30F3\u30AF\u306E\u30C7\u30D5\u30A9\u30EB\u30C8",
+      defaultWikilinkHandling: "\u30C7\u30D5\u30A9\u30EB\u30C8\u306E\u30A6\u30A3\u30AD\u30EA\u30F3\u30AF\u51E6\u7406",
+      wikilinkStrip: "\u30B9\u30C8\u30EA\u30C3\u30D7\uFF08\u30D7\u30EC\u30FC\u30F3\u30C6\u30AD\u30B9\u30C8\u306B\u5909\u63DB\uFF09",
+      wikilinkConvert: "URL\u306B\u5909\u63DB",
+      siteHeading: "\u30B5\u30A4\u30C8\uFF1A{{nickname}}",
+      siteUnnamed: "\u672A\u547D\u540D",
+      nickname: "\u30CB\u30C3\u30AF\u30CD\u30FC\u30E0",
+      siteUrl: "\u30B5\u30A4\u30C8URL",
+      username: "\u30E6\u30FC\u30B6\u30FC\u540D",
+      appPassword: "\u30A2\u30D7\u30EA\u30B1\u30FC\u30B7\u30E7\u30F3\u30D1\u30B9\u30EF\u30FC\u30C9",
+      appPasswordDesc: "WordPress\u306E\u300C\u30E6\u30FC\u30B6\u30FC \u2192 \u30D7\u30ED\u30D5\u30A3\u30FC\u30EB \u2192 \u30A2\u30D7\u30EA\u30B1\u30FC\u30B7\u30E7\u30F3\u30D1\u30B9\u30EF\u30FC\u30C9\u300D\u3067\u751F\u6210\u3057\u307E\u3059\u3002",
+      defaultPostStatus: "\u30C7\u30D5\u30A9\u30EB\u30C8\u306E\u6295\u7A3F\u30B9\u30C6\u30FC\u30BF\u30B9",
+      postStatus: {
+        draft: "\u4E0B\u66F8\u304D",
+        pending: "\u627F\u8A8D\u5F85\u3061",
+        publish: "\u516C\u958B\u6E08\u307F"
+      },
+      wikilinkHandling: "\u30A6\u30A3\u30AD\u30EA\u30F3\u30AF\u51E6\u7406",
+      wikilinkHandlingStrip: "\u30B9\u30C8\u30EA\u30C3\u30D7",
+      wikilinkHandlingConvert: "URL\u306B\u5909\u63DB",
+      testConnection: "\u63A5\u7D9A\u30C6\u30B9\u30C8",
+      testConnectionDesc: "\u8A8D\u8A3C\u60C5\u5831\u3068\u63A5\u7D9A\u6027\u3092\u78BA\u8A8D\u3057\u307E\u3059\u3002",
+      testing: "\u30C6\u30B9\u30C8\u4E2D\u2026",
+      removeSite: "\u30B5\u30A4\u30C8\u3092\u524A\u9664",
+      buyMeACoffee: "\u30B3\u30FC\u30D2\u30FC\u3092\u304A\u3054\u308B"
+    }
+  },
+  binder: {
+    displayText: "\u57F7\u7B46\u30D0\u30A4\u30F3\u30C0\u30FC",
+    selectProject: "\u2014 \u30D7\u30ED\u30B8\u30A7\u30AF\u30C8\u3092\u9078\u629E \u2014",
+    newProject: "\u65B0\u898F\u30D7\u30ED\u30B8\u30A7\u30AF\u30C8",
+    addDocument: "+ \u30C9\u30AD\u30E5\u30E1\u30F3\u30C8",
+    addFiles: "\u3053\u306E\u30D5\u30A9\u30EB\u30C0\u306B\u30B3\u30D4\u30FC\u3055\u308C\u305F\u30D5\u30A1\u30A4\u30EB\u3092\u8FFD\u52A0",
+    targetsDashboard: "\u30BF\u30FC\u30B2\u30C3\u30C8\u30C0\u30C3\u30B7\u30E5\u30DC\u30FC\u30C9",
+    searchPlaceholder: "\u30C9\u30AD\u30E5\u30E1\u30F3\u30C8\u3092\u691C\u7D22\u2026",
+    noProjectSelected: "\u30D7\u30ED\u30B8\u30A7\u30AF\u30C8\u304C\u9078\u629E\u3055\u308C\u3066\u3044\u307E\u305B\u3093\u3002\u57F7\u7B46\u30D7\u30ED\u30B8\u30A7\u30AF\u30C8\u3092\u4F5C\u6210\u307E\u305F\u306F\u9078\u629E\u3057\u3066\u958B\u59CB\u3057\u3066\u304F\u3060\u3055\u3044\u3002",
+    noDocuments: "\u30C9\u30AD\u30E5\u30E1\u30F3\u30C8\u304C\u3042\u308A\u307E\u305B\u3093\u3002\u300C+ \u30C9\u30AD\u30E5\u30E1\u30F3\u30C8\u300D\u3092\u30AF\u30EA\u30C3\u30AF\u3057\u3066\u8FFD\u52A0\u3057\u3066\u304F\u3060\u3055\u3044\u3002",
+    dropToRoot: "\u2193 \u3053\u3053\u306B\u30C9\u30ED\u30C3\u30D7\u3057\u3066\u30EB\u30FC\u30C8\u306B\u6607\u683C",
+    selectProjectFirst: "\u307E\u305A\u30D7\u30ED\u30B8\u30A7\u30AF\u30C8\u3092\u9078\u629E\u3057\u3066\u304F\u3060\u3055\u3044\u3002",
+    cannotFindFile: "\u30D5\u30A1\u30A4\u30EB\u304C\u898B\u3064\u304B\u308A\u307E\u305B\u3093\uFF1A{{filePath}}\u3002\u30C9\u30AD\u30E5\u30E1\u30F3\u30C8\u306E\u540D\u524D\u5909\u66F4\u307E\u305F\u306F\u518D\u30EA\u30F3\u30AF\u3092\u304A\u8A66\u3057\u304F\u3060\u3055\u3044\u3002",
+    untitledDocument: "\u7121\u984C {{time}}",
+    noNewFiles: "\u30D7\u30ED\u30B8\u30A7\u30AF\u30C8\u30D5\u30A9\u30EB\u30C0\u306B\u65B0\u3057\u3044\u30D5\u30A1\u30A4\u30EB\u304C\u898B\u3064\u304B\u308A\u307E\u305B\u3093\u3067\u3057\u305F\u3002",
+    pctComplete: "{{pct}}% \u5B8C\u4E86",
+    copySuffix: "\uFF08\u30B3\u30D4\u30FC\uFF09",
+    menu: {
+      openDocument: "\u30C9\u30AD\u30E5\u30E1\u30F3\u30C8\u3092\u958B\u304F",
+      newChildDocument: "\u5B50\u30C9\u30AD\u30E5\u30E1\u30F3\u30C8\u3092\u65B0\u898F\u4F5C\u6210",
+      setStatusDraft: "\u30B9\u30C6\u30FC\u30BF\u30B9\u3092\u8A2D\u5B9A\uFF1A\u4E0B\u66F8\u304D",
+      setStatusInProgress: "\u30B9\u30C6\u30FC\u30BF\u30B9\u3092\u8A2D\u5B9A\uFF1A\u9032\u884C\u4E2D",
+      setStatusComplete: "\u30B9\u30C6\u30FC\u30BF\u30B9\u3092\u8A2D\u5B9A\uFF1A\u5B8C\u4E86",
+      setStatusPublished: "\u30B9\u30C6\u30FC\u30BF\u30B9\u3092\u8A2D\u5B9A\uFF1A\u516C\u958B\u6E08\u307F",
+      duplicate: "\u8907\u88FD",
+      moveToResearch: "\u30EA\u30B5\u30FC\u30C1\u306B\u79FB\u52D5",
+      publishToWordPress: "WordPress\u306B\u516C\u958B",
+      delete: "\u524A\u9664"
+    },
+    wordCountSuffix: "{{count}}\u8A9E"
+  },
+  launcher: {
+    displayText: "\u30E9\u30A4\u30C6\u30A3\u30F3\u30B0\u30B9\u30BF\u30B8\u30AA",
+    title: "\u30E9\u30A4\u30C6\u30A3\u30F3\u30B0\u30B9\u30BF\u30B8\u30AA",
+    settings: "\u8A2D\u5B9A",
+    project: "\u30D7\u30ED\u30B8\u30A7\u30AF\u30C8",
+    newProject: "\uFF0B\u65B0\u898F",
+    noProjectSelected: "\u30D7\u30ED\u30B8\u30A7\u30AF\u30C8\u304C\u9078\u629E\u3055\u308C\u3066\u3044\u307E\u305B\u3093\u3002",
+    chooseProject: "\u2014 \u30D7\u30ED\u30B8\u30A7\u30AF\u30C8\u3092\u9078\u629E \u2014",
+    wordCount: "{{n}} \u8A9E",
+    wordGoal: "/ {{n}} \u76EE\u6A19",
+    pctComplete: "{{pct}}% \u5B8C\u4E86",
+    openBinder: "\u{1F4D6} \u30D0\u30A4\u30F3\u30C0\u30FC\u3092\u958B\u304F",
+    writingMode: "\u57F7\u7B46\u30E2\u30FC\u30C9",
+    mode: {
+      draft: "\u4E0B\u66F8\u304D",
+      draftDesc: "\u30D5\u30A9\u30FC\u30AB\u30B9\uFF0B\u30BF\u30A4\u30DD\u30B0\u30E9\u30D5\u30A3ON\u3001\u30B5\u30A4\u30C9\u30D0\u30FC\u975E\u8868\u793A",
+      edit: "\u7DE8\u96C6",
+      editDesc: "\u30D0\u30A4\u30F3\u30C0\u30FC\u3092\u958B\u304D\u3001\u30D5\u30EBUI\u3092\u8868\u793A",
+      review: "\u30EC\u30D3\u30E5\u30FC",
+      reviewDesc: "\u95B2\u89A7\u30E2\u30FC\u30C9\u3001\u7DE8\u96C6\u4E0D\u53EF",
+      clearMode: "\u2715 \u30E2\u30FC\u30C9\u3092\u30AF\u30EA\u30A2"
+    },
+    focusTypography: "\u30D5\u30A9\u30FC\u30AB\u30B9\u3068\u30BF\u30A4\u30DD\u30B0\u30E9\u30D5\u30A3",
+    focusMode: "\u30D5\u30A9\u30FC\u30AB\u30B9\u30E2\u30FC\u30C9",
+    typographyMode: "\u30BF\u30A4\u30DD\u30B0\u30E9\u30D5\u30A3\u30E2\u30FC\u30C9",
+    on: "ON",
+    off: "OFF",
+    quickActions: "\u30AF\u30A4\u30C3\u30AF\u30A2\u30AF\u30B7\u30E7\u30F3",
+    action: {
+      targetsDashboard: "\u30BF\u30FC\u30B2\u30C3\u30C8\u30C0\u30C3\u30B7\u30E5\u30DC\u30FC\u30C9",
+      writingDashboard: "\u57F7\u7B46\u30C0\u30C3\u30B7\u30E5\u30DC\u30FC\u30C9",
+      previewManuscript: "\u539F\u7A3F\u3092\u30D7\u30EC\u30D3\u30E5\u30FC",
+      export: "\u30A8\u30AF\u30B9\u30DD\u30FC\u30C8",
+      writingLog: "\u57F7\u7B46\u30ED\u30B0",
+      publishToWordPress: "WordPress\u306B\u516C\u958B"
+    },
+    openDocumentFirst: "\u6700\u521D\u306B\u30C9\u30AD\u30E5\u30E1\u30F3\u30C8\u3092\u958B\u3044\u3066\u304F\u3060\u3055\u3044\u3002",
+    sprintTimer: "\u30B9\u30D7\u30EA\u30F3\u30C8\u30BF\u30A4\u30DE\u30FC",
+    pause: "\u23F8 \u4E00\u6642\u505C\u6B62",
+    stop: "\u25A0 \u505C\u6B62",
+    startSprint: "\u23F1 \u30B9\u30D7\u30EA\u30F3\u30C8\u958B\u59CB",
+    quickStart: "\u30AF\u30A4\u30C3\u30AF\u30B9\u30BF\u30FC\u30C8\uFF1A",
+    today: "\u4ECA\u65E5",
+    stat: {
+      words: "\u8A9E\u6570",
+      sprints: "\u30B9\u30D7\u30EA\u30F3\u30C8",
+      minutes: "\u5206",
+      streak: "\u9023\u7D9A",
+      streakDays: "{{streak}}\u65E5"
+    },
+    sessionWordsTyped: "\u30BB\u30C3\u30B7\u30E7\u30F3\uFF1A+{{n}} \u8A9E",
+    dailyGoal: "1\u65E5\u306E\u76EE\u6A19\uFF1A{{written}} / {{goal}} \u8A9E"
+  },
+  log: {
+    displayText: "\u57F7\u7B46\u30ED\u30B0",
+    title: "\u57F7\u7B46\u30ED\u30B0",
+    noProjectSelected: "\u30D7\u30ED\u30B8\u30A7\u30AF\u30C8\u304C\u9078\u629E\u3055\u308C\u3066\u3044\u307E\u305B\u3093\u3002\u30E9\u30F3\u30C1\u30E3\u30FC\u3092\u958B\u3044\u3066\u30D7\u30ED\u30B8\u30A7\u30AF\u30C8\u3092\u9078\u629E\u3059\u308B\u3068\u57F7\u7B46\u5C65\u6B74\u304C\u8868\u793A\u3055\u308C\u307E\u3059\u3002",
+    streak: "\u{1F525} {{streak}}\u65E5\u9023\u7D9A",
+    startStreak: "\u4ECA\u65E5\u66F8\u3044\u3066\u9023\u7D9A\u8A18\u9332\u3092\u59CB\u3081\u307E\u3057\u3087\u3046",
+    thisSession: "\u3053\u306E\u30BB\u30C3\u30B7\u30E7\u30F3",
+    stat: {
+      session: "\u30BB\u30C3\u30B7\u30E7\u30F3",
+      sprintWords: "\u30B9\u30D7\u30EA\u30F3\u30C8\u8A9E\u6570",
+      sprints: "\u30B9\u30D7\u30EA\u30F3\u30C8",
+      minutes: "\u5206"
+    },
+    last30Days: "\u904E\u53BB30\u65E5",
+    today: "\u4ECA\u65E5",
+    sprintsCount_one: "\xB7 {{count}} \u30B9\u30D7\u30EA\u30F3\u30C8",
+    sprintsCount_other: "\xB7 {{count}} \u30B9\u30D7\u30EA\u30F3\u30C8"
+  },
+  sprint: {
+    started: "\u30B9\u30D7\u30EA\u30F3\u30C8\u958B\u59CB\uFF1A{{minutes}} \u5206",
+    complete: "\u30B9\u30D7\u30EA\u30F3\u30C8\u5B8C\u4E86\uFF01\u304A\u75B2\u308C\u3055\u307E\u3067\u3057\u305F\u3002",
+    words: "+{{n}} \u8A9E",
+    header: "\u57F7\u7B46\u30B9\u30D7\u30EA\u30F3\u30C8",
+    pauseTitle: "\u4E00\u6642\u505C\u6B62/\u518D\u958B",
+    stopTitle: "\u30B9\u30D7\u30EA\u30F3\u30C8\u505C\u6B62"
+  },
+  writingModes: {
+    switchedTo: "\u30E9\u30A4\u30C6\u30A3\u30F3\u30B0\u30B9\u30BF\u30B8\u30AA\uFF1A{{mode}} \u30E2\u30FC\u30C9",
+    normal: "\u30CE\u30FC\u30DE\u30EB",
+    statusDraft: "\u270D \u4E0B\u66F8\u304D",
+    statusEdit: "\u270E \u7DE8\u96C6",
+    statusReview: "\u{1F441} \u30EC\u30D3\u30E5\u30FC",
+    statusNone: "\u2014 \u30E2\u30FC\u30C9"
+  },
+  exportEngine: {
+    epubExported: "EPUB\u3092 {{path}} \u306B\u30A8\u30AF\u30B9\u30DD\u30FC\u30C8\u3057\u307E\u3057\u305F",
+    manuscriptExported: "\u539F\u7A3F\u3092 {{path}} \u306B\u30A8\u30AF\u30B9\u30DD\u30FC\u30C8\u3057\u307E\u3057\u305F",
+    exportedTo: "{{path}} \u306B\u30A8\u30AF\u30B9\u30DD\u30FC\u30C8\u3057\u307E\u3057\u305F",
+    exportedHtmlTo: "HTML\u3092 {{path}} \u306B\u30A8\u30AF\u30B9\u30DD\u30FC\u30C8\u3057\u307E\u3057\u305F",
+    pdfRequiresPandoc: "PDF\u30A8\u30AF\u30B9\u30DD\u30FC\u30C8\u306B\u306Fpandoc\u304C\u5FC5\u8981\u3067\u3059\u3002pandoc\u3092\u30A4\u30F3\u30B9\u30C8\u30FC\u30EB\u3057\u3066\u8A2D\u5B9A\u3067\u30D1\u30B9\u3092\u6307\u5B9A\u3057\u3066\u304F\u3060\u3055\u3044\u3002"
+  },
+  wpClient: {
+    authFailed: "\u8A8D\u8A3C\u306B\u5931\u6557\u3057\u307E\u3057\u305F\u3002\u30E6\u30FC\u30B6\u30FC\u540D\u3068\u30A2\u30D7\u30EA\u30B1\u30FC\u30B7\u30E7\u30F3\u30D1\u30B9\u30EF\u30FC\u30C9\u3092\u78BA\u8A8D\u3057\u3066\u304F\u3060\u3055\u3044\u3002",
+    connectedAs: "\u300C{{site}}\u300D\u306B\u300C{{user}}\u300D\u3068\u3057\u3066\u63A5\u7D9A\u3057\u307E\u3057\u305F",
+    networkError: "\u30CD\u30C3\u30C8\u30EF\u30FC\u30AF\u30A8\u30E9\u30FC\uFF1A{{error}}",
+    httpError: "HTTP {{status}}",
+    fetchCategoriesFailed: "\u30AB\u30C6\u30B4\u30EA\u306E\u53D6\u5F97\u306B\u5931\u6557\u3057\u307E\u3057\u305F\uFF1A{{error}}"
+  },
+  folderSidebar: {
+    displayText: "\u30D5\u30A9\u30EB\u30C0\u30A8\u30AF\u30B9\u30D7\u30ED\u30FC\u30E9\u30FC",
+    back: "\u2190 \u623B\u308B",
+    root: "\u2302 \u30EB\u30FC\u30C8",
+    insertSelection: "\u21A9 \u9078\u629E\u3092\u633F\u5165",
+    searchPlaceholder: "\u540D\u524D\u3068\u30B3\u30F3\u30C6\u30F3\u30C4\u3092\u691C\u7D22\u2026 (Enter)",
+    sort: {
+      foldersAz: "\u30D5\u30A9\u30EB\u30C0 \u2191 A-Z",
+      foldersZa: "\u30D5\u30A9\u30EB\u30C0 \u2191 Z-A",
+      az: "\u540D\u524D A-Z",
+      za: "\u540D\u524D Z-A",
+      modifiedNew: "\u6700\u65B0\u9806",
+      modifiedOld: "\u53E4\u3044\u9806"
+    },
+    noPreview: ".{{ext}} \u30D5\u30A1\u30A4\u30EB\u306E\u30D7\u30EC\u30D3\u30E5\u30FC\u306F\u3042\u308A\u307E\u305B\u3093",
+    openInEditor: "\u30A8\u30C7\u30A3\u30BF\u3067\u958B\u304F",
+    searching: "\u691C\u7D22\u4E2D\u2026",
+    noResults: "\u300C{{query}}\u300D\u306E\u691C\u7D22\u7D50\u679C\u304C\u3042\u308A\u307E\u305B\u3093",
+    emptyFolder: "\u3053\u306E\u30D5\u30A9\u30EB\u30C0\u306F\u7A7A\u3067\u3059",
+    tooltip: {
+      modified: "\u66F4\u65B0\u65E5\u6642",
+      size: "\u30B5\u30A4\u30BA",
+      words: "\u8A9E\u6570",
+      files: "\u30D5\u30A1\u30A4\u30EB",
+      subfolders: "\u30B5\u30D6\u30D5\u30A9\u30EB\u30C0"
+    },
+    pickerPlaceholder: "\u30B5\u30A4\u30C9\u30D0\u30FC\u30A8\u30AF\u30B9\u30D7\u30ED\u30FC\u30E9\u30FC\u3067\u958B\u304F\u30D5\u30A9\u30EB\u30C0\u540D\u3092\u5165\u529B\u2026",
+    vaultRoot: "/\uFF08\u30DC\u30FC\u30EB\u30C8\u30EB\u30FC\u30C8\uFF09"
+  },
+  focusToolbar: {
+    exitTitle: "\u30D5\u30A9\u30FC\u30AB\u30B9\u30E2\u30FC\u30C9\u3092\u7D42\u4E86 (esc)",
+    exitBtn: "\u2715 \u7D42\u4E86",
+    wordCount_one: "{{count}} \u8A9E",
+    wordCount_other: "{{count}} \u8A9E"
+  },
+  compilePreview: {
+    displayText: "\u30B3\u30F3\u30D1\u30A4\u30EB\u6E08\u307F\u539F\u7A3F",
+    jumpToSection: "\u30BB\u30AF\u30B7\u30E7\u30F3\u306B\u30B8\u30E3\u30F3\u30D7...",
+    proceedToExport: "\u30A8\u30AF\u30B9\u30DD\u30FC\u30C8\u306B\u9032\u3080",
+    closePreview: "\u30D7\u30EC\u30D3\u30E5\u30FC\u3092\u9589\u3058\u308B",
+    noContent: "\u30D7\u30EC\u30D3\u30E5\u30FC\u3059\u308B\u30B3\u30F3\u30C6\u30F3\u30C4\u304C\u3042\u308A\u307E\u305B\u3093\u3002\u307E\u305A\u57F7\u7B46\u30D7\u30ED\u30B8\u30A7\u30AF\u30C8\u3092\u958B\u3044\u3066\u304F\u3060\u3055\u3044\u3002"
+  },
+  projectModal: {
+    title: "\u65B0\u898F\u57F7\u7B46\u30D7\u30ED\u30B8\u30A7\u30AF\u30C8",
+    projectTitle: "\u30D7\u30ED\u30B8\u30A7\u30AF\u30C8\u30BF\u30A4\u30C8\u30EB",
+    titlePlaceholder: "\u79C1\u306E\u5C0F\u8AAC",
+    template: "\u30C6\u30F3\u30D7\u30EC\u30FC\u30C8",
+    templateDesc: "\u4E8B\u524D\u8A2D\u5B9A\u3055\u308C\u305F\u30D7\u30ED\u30B8\u30A7\u30AF\u30C8\u69CB\u9020\u3092\u9078\u629E\u3057\u3066\u304F\u3060\u3055\u3044\u3002",
+    templateOption: {
+      blank: "\u7A7A\u767D\uFF08\u30AB\u30B9\u30BF\u30E0\u69CB\u9020\uFF09",
+      book: "\u66F8\u7C4D\uFF08\u30D1\u30FC\u30C4 \u2192 \u7AE0 \u2192 \u30B7\u30FC\u30F3\uFF09",
+      series: "\u8A18\u4E8B\u30B7\u30EA\u30FC\u30BA\uFF08\u30B7\u30EA\u30FC\u30BA \u2192 \u8A18\u4E8B\uFF09",
+      blog: "\u30D6\u30ED\u30B0\u30B3\u30EC\u30AF\u30B7\u30E7\u30F3\uFF08\u65E5\u4ED8/\u30AB\u30C6\u30B4\u30EA\u5225\u306E\u6295\u7A3F\uFF09",
+      journalArticle: "\u5B66\u8853\u8AD6\u6587 \u2014 \u5B66\u8853\u30FB\u5C02\u9580\u8A8C\u3078\u306E\u6295\u7A3F",
+      magazineArticle: "\u96D1\u8A8C\u8A18\u4E8B \u2014 \u7279\u96C6\u3001\u9577\u7DE8\u3001\u307E\u305F\u306F\u30CA\u30E9\u30C6\u30A3\u30D6\u30CE\u30F3\u30D5\u30A3\u30AF\u30B7\u30E7\u30F3"
+    },
+    descriptionLabel: "\u8AAC\u660E\uFF08\u4EFB\u610F\uFF09",
+    descriptionPlaceholder: "\u3053\u306E\u30D7\u30ED\u30B8\u30A7\u30AF\u30C8\u306E\u7C21\u5358\u306A\u8AAC\u660E\u2026",
+    preview: {
+      blank: "\u7A7A\u306E\u30D7\u30ED\u30B8\u30A7\u30AF\u30C8 \u2014 \u72EC\u81EA\u306E\u69CB\u9020\u3092\u69CB\u7BC9\u3057\u307E\u3059\u3002",
+      book: "\u4F5C\u6210\uFF1A\u30D5\u30ED\u30F3\u30C8\u30DE\u30BF\u30FC\u3001\u30D1\u30FC\u30C81/\u7B2C1\u7AE0\u3001\u30D0\u30C3\u30AF\u30DE\u30BF\u30FC\u30D7\u30EC\u30FC\u30B9\u30DB\u30EB\u30C0\u30FC\u3002",
+      series: "\u4F5C\u6210\uFF1A\u30B7\u30EA\u30FC\u30BA\u30D5\u30A9\u30EB\u30C0\u3001\u7B2C1\u8A18\u4E8B\u30D7\u30EC\u30FC\u30B9\u30DB\u30EB\u30C0\u30FC\u3001\u30B7\u30EA\u30FC\u30BA\u30E1\u30BF\u30C7\u30FC\u30BF\u3002",
+      blog: "\u4F5C\u6210\uFF1A\u65E5\u4ED8\u5225\u30D5\u30A9\u30EB\u30C0\u3001\u6700\u521D\u306E\u6295\u7A3F\u30D7\u30EC\u30FC\u30B9\u30DB\u30EB\u30C0\u30FC\u3002",
+      journalArticle: "\u4F5C\u6210\uFF1A\u30BF\u30A4\u30C8\u30EB\u30DA\u30FC\u30B8\u3001\u8981\u65E8\u3001\u30AD\u30FC\u30EF\u30FC\u30C9\u3001\u5E8F\u8AD6\u3001\u6587\u732E\u30EC\u30D3\u30E5\u30FC\u3001\u65B9\u6CD5\u8AD6\u3001\u767A\u898B/\u5206\u6790\u3001\u8003\u5BDF\u3001\u7D50\u8AD6\u3001\u53C2\u8003\u6587\u732E\u3001\u4ED8\u9332\u3002",
+      magazineArticle: "\u4F5C\u6210\uFF1A\u30D4\u30C3\u30C1/\u7167\u4F1A\u30E1\u30E2\u3001\u898B\u51FA\u3057\u3068\u30C7\u30C3\u30AF\u3001\u30EA\u30FC\u30C9\u3001\u30CA\u30C3\u30C8\u30B0\u30E9\u30D5\u3001\u672C\u6587\u3001\u5F15\u7528\u3068\u60C5\u5831\u6E90\u3001\u30AD\u30C3\u30AB\u30FC\u3001\u30D5\u30A1\u30AF\u30C8\u30C1\u30A7\u30C3\u30AF\u30E1\u30E2\u3001\u8457\u8005\u7565\u6B74\u3002\u30E1\u30E2\u30C9\u30AD\u30E5\u30E1\u30F3\u30C8\u306F\u30C7\u30D5\u30A9\u30EB\u30C8\u3067\u30A8\u30AF\u30B9\u30DD\u30FC\u30C8\u304B\u3089\u9664\u5916\u3055\u308C\u307E\u3059\u3002"
+    },
+    createBtn: "\u30D7\u30ED\u30B8\u30A7\u30AF\u30C8\u3092\u4F5C\u6210",
+    creating: "\u4F5C\u6210\u4E2D\u2026",
+    errorNoTitle: "\u30D7\u30ED\u30B8\u30A7\u30AF\u30C8\u30BF\u30A4\u30C8\u30EB\u3092\u5165\u529B\u3057\u3066\u304F\u3060\u3055\u3044\u3002",
+    errorCreate: "\u30D7\u30ED\u30B8\u30A7\u30AF\u30C8\u306E\u4F5C\u6210\u306B\u5931\u6557\u3057\u307E\u3057\u305F\uFF1A{{error}}",
+    created: "\u30D7\u30ED\u30B8\u30A7\u30AF\u30C8\u300C{{title}}\u300D\u304C\u4F5C\u6210\u3055\u308C\u307E\u3057\u305F\uFF01",
+    cancel: "\u30AD\u30E3\u30F3\u30BB\u30EB"
+  },
+  sprintModal: {
+    title: "\u57F7\u7B46\u30B9\u30D7\u30EA\u30F3\u30C8\u3092\u958B\u59CB",
+    durationName: "\u6642\u9593\uFF08\u5206\uFF09",
+    durationDesc: "\u30D7\u30EA\u30BB\u30C3\u30C8\uFF1A10\u300115\u300125\u300130\u300145\u300160",
+    durationCustom: "\u30AB\u30B9\u30BF\u30E0\u2026",
+    durationCustomPlaceholder: "\u30AB\u30B9\u30BF\u30E0\u5206\u6570",
+    wordGoalName: "\u8A9E\u6570\u76EE\u6A19\uFF08\u4EFB\u610F\uFF09",
+    wordGoalDesc: "\u76EE\u6A19\u306A\u3057\u306E\u5834\u5408\u306F0\u306E\u307E\u307E\u306B\u3057\u3066\u304F\u3060\u3055\u3044\u3002",
+    scopeName: "\u30B9\u30B3\u30FC\u30D7",
+    scopeFile: "\u73FE\u5728\u306E\u30D5\u30A1\u30A4\u30EB",
+    scopeProject: "\u30D7\u30ED\u30B8\u30A7\u30AF\u30C8\u5168\u4F53",
+    startBtn: "\u30B9\u30D7\u30EA\u30F3\u30C8\u3092\u958B\u59CB",
+    errorDuration: "\u6709\u52B9\u306A\u6642\u9593\u3092\u8A2D\u5B9A\u3057\u3066\u304F\u3060\u3055\u3044\u3002",
+    cancel: "\u30AD\u30E3\u30F3\u30BB\u30EB"
+  },
+  exportModal: {
+    title: "\u30C9\u30AD\u30E5\u30E1\u30F3\u30C8\u3092\u30A8\u30AF\u30B9\u30DD\u30FC\u30C8",
+    formatName: "\u5F62\u5F0F",
+    format: {
+      md: "Markdown (.md)",
+      html: "HTML",
+      manuscript: "\u539F\u7A3F\uFF08HTML\uFF09",
+      epub: "EPUB (.epub)",
+      pdf: "PDF\uFF08pandoc\u304C\u5FC5\u8981\uFF09",
+      docx: "Word (.docx)\uFF08pandoc\u304C\u5FC5\u8981\uFF09",
+      rtf: "RTF\uFF08pandoc\u304C\u5FC5\u8981\uFF09"
+    },
+    coverImageName: "\u30AB\u30D0\u30FC\u753B\u50CF\u306E\u30D1\u30B9",
+    coverImageDesc: "JPG\u307E\u305F\u306FPNG\u306E\u30AB\u30D0\u30FC\u753B\u50CF\u306EVault\u30D1\u30B9\u3002\u751F\u6210\u3055\u308C\u305F\u30C6\u30AD\u30B9\u30C8\u30AB\u30D0\u30FC\u306B\u306F\u7A7A\u306E\u307E\u307E\u306B\u3057\u3066\u304F\u3060\u3055\u3044\u3002",
+    coverImagePlaceholder: "\u4F8B\uFF1AAssets/cover.jpg",
+    contactInfoName: "\u9023\u7D61\u5148\u60C5\u5831\uFF08\u4EFB\u610F\uFF09",
+    contactInfoDesc: "\u30BF\u30A4\u30C8\u30EB\u30DA\u30FC\u30B8\u306B\u8868\u793A \u2014 \u540D\u524D\u3001\u30E1\u30FC\u30EB\u3001\u307E\u305F\u306F\u4F4F\u6240\u3002",
+    contactInfoPlaceholder: "\u540D\u524D\u3001\u30E1\u30FC\u30EB\u3001\u307E\u305F\u306F\u4F4F\u6240",
+    scopeName: "\u30B9\u30B3\u30FC\u30D7",
+    scopeCurrent: "\u73FE\u5728\u306E\u30C9\u30AD\u30E5\u30E1\u30F3\u30C8",
+    scopeProject: "\u30D7\u30ED\u30B8\u30A7\u30AF\u30C8\u5168\u4F53\uFF08\u30D0\u30A4\u30F3\u30C0\u30FC\u9806\uFF09",
+    includeFrontmatter: "\u30D5\u30ED\u30F3\u30C8\u30DE\u30BF\u30FC\u3092\u542B\u3081\u308B",
+    includeResearch: "\u30EA\u30B5\u30FC\u30C1\u30CE\u30FC\u30C8\u3092\u542B\u3081\u308B",
+    includeTitlesAsHeadings: "\u30C9\u30AD\u30E5\u30E1\u30F3\u30C8\u30BF\u30A4\u30C8\u30EB\u3092\u898B\u51FA\u3057\u3068\u3057\u3066\u542B\u3081\u308B",
+    addTitlePage: "\u30BF\u30A4\u30C8\u30EB\u30DA\u30FC\u30B8\u3092\u8FFD\u52A0",
+    addTitlePageDesc: "\u30D7\u30ED\u30B8\u30A7\u30AF\u30C8\u30BF\u30A4\u30C8\u30EB\u3001\u8457\u8005\u3001\u65E5\u4ED8\u306E\u30BF\u30A4\u30C8\u30EB\u30DA\u30FC\u30B8\u3092\u5148\u982D\u306B\u8FFD\u52A0\u3057\u307E\u3059\u3002",
+    previewBtn: "\u30B3\u30F3\u30D1\u30A4\u30EB\u6E08\u307F\u539F\u7A3F\u3092\u30D7\u30EC\u30D3\u30E5\u30FC",
+    exportBtn: "\u30A8\u30AF\u30B9\u30DD\u30FC\u30C8",
+    exporting: "\u30A8\u30AF\u30B9\u30DD\u30FC\u30C8\u4E2D\u2026",
+    exportFailed: "\u30A8\u30AF\u30B9\u30DD\u30FC\u30C8\u306B\u5931\u6557\u3057\u307E\u3057\u305F\uFF1A{{error}}",
+    cancel: "\u30AD\u30E3\u30F3\u30BB\u30EB"
+  },
+  publishModal: {
+    title: "WordPress\u306B\u516C\u958B",
+    noSites: "WordPress\u30B5\u30A4\u30C8\u304C\u8A2D\u5B9A\u3055\u308C\u3066\u3044\u307E\u305B\u3093\u3002\u8A2D\u5B9A \u2192 WordPress\u3067\u30B5\u30A4\u30C8\u3092\u8FFD\u52A0\u3057\u3066\u304F\u3060\u3055\u3044\u3002",
+    close: "\u9589\u3058\u308B",
+    siteName: "WordPress\u30B5\u30A4\u30C8",
+    postTitleName: "\u6295\u7A3F\u30BF\u30A4\u30C8\u30EB",
+    postStatusName: "\u6295\u7A3F\u30B9\u30C6\u30FC\u30BF\u30B9",
+    postStatus: {
+      draft: "\u4E0B\u66F8\u304D",
+      pending: "\u627F\u8A8D\u5F85\u3061",
+      publish: "\u516C\u958B\u6E08\u307F"
+    },
+    categoryName: "\u30AB\u30C6\u30B4\u30EA",
+    tagsName: "\u30BF\u30B0",
+    tagsDesc: "\u30AB\u30F3\u30DE\u533A\u5207\u308A\u3002",
+    excerptName: "\u629C\u7C8B\uFF08\u4EFB\u610F\uFF09",
+    scheduleName: "\u516C\u958B\u4E88\u7D04\uFF08\u4EFB\u610F\uFF09",
+    scheduleDesc: "\u4ECA\u3059\u3050\u516C\u958B\u3059\u308B\u5834\u5408\u306F\u7A7A\u306E\u307E\u307E\u306B\u3057\u3066\u304F\u3060\u3055\u3044\u3002",
+    schedulePlaceholder: "yyyy-mm-ddThh:mm:ss",
+    existingNotice: "\u26A0 \u3053\u306E\u30C9\u30AD\u30E5\u30E1\u30F3\u30C8\u306F\u4EE5\u524D\u306B\u516C\u958B\u3055\u308C\u3066\u3044\u307E\u3059\uFF08\u6295\u7A3FID\uFF1A{{id}}\uFF09\u3002",
+    updatePost: "\u65E2\u5B58\u306E\u6295\u7A3F\u3092\u66F4\u65B0",
+    newPost: "\u65B0\u3057\u3044\u6295\u7A3F\u3092\u4F5C\u6210",
+    schedule: "\u4E88\u7D04\u6295\u7A3F",
+    publish: "\u516C\u958B",
+    cancel: "\u30AD\u30E3\u30F3\u30BB\u30EB",
+    noSiteSelected: "\u30B5\u30A4\u30C8\u304C\u9078\u629E\u3055\u308C\u3066\u3044\u307E\u305B\u3093\u3002",
+    fileNotFound: "\u30D5\u30A1\u30A4\u30EB\u304C\u898B\u3064\u304B\u308A\u307E\u305B\u3093\u3002",
+    publishFailed: "\u516C\u958B\u306B\u5931\u6557\u3057\u307E\u3057\u305F\uFF1A{{error}}",
+    published: "\u516C\u958B\u6E08\u307F",
+    scheduled: "\u4E88\u7D04\u6E08\u307F",
+    actionNotice: "{{action}}\uFF01\u6295\u7A3F\u3092\u8868\u793A\uFF1A{{url}}"
+  },
+  targetsDashboard: {
+    title: "\u7AE0\u306E\u30BF\u30FC\u30B2\u30C3\u30C8\u30C0\u30C3\u30B7\u30E5\u30DC\u30FC\u30C9",
+    noProject: "\u30D7\u30ED\u30B8\u30A7\u30AF\u30C8\u304C\u9078\u629E\u3055\u308C\u3066\u3044\u307E\u305B\u3093\u3002",
+    filterLabel: "\u30D5\u30A3\u30EB\u30BF\u30FC\uFF1A",
+    allStatuses: "\u3059\u3079\u3066\u306E\u30B9\u30C6\u30FC\u30BF\u30B9",
+    refresh: "\u21BB \u66F4\u65B0",
+    col: {
+      title: "\u30BF\u30A4\u30C8\u30EB",
+      type: "\u30BF\u30A4\u30D7",
+      status: "\u30B9\u30C6\u30FC\u30BF\u30B9",
+      words: "\u8A9E\u6570",
+      goal: "\u76EE\u6A19",
+      progress: "\u9032\u6357",
+      readingTime: "\u8AAD\u4E86\u6642\u9593"
+    },
+    total: "\u5408\u8A08",
+    status: {
+      draft: "\u4E0B\u66F8\u304D",
+      inProgress: "\u9032\u884C\u4E2D",
+      complete: "\u5B8C\u4E86",
+      published: "\u516C\u958B\u6E08\u307F"
+    },
+    typeLabel: {
+      chapter: "\u7AE0",
+      section: "\u30BB\u30AF\u30B7\u30E7\u30F3",
+      article: "\u8A18\u4E8B",
+      note: "\u30CE\u30FC\u30C8",
+      group: "\u30B0\u30EB\u30FC\u30D7",
+      part: "\u30D1\u30FC\u30C8"
+    }
+  },
+  writingDashboard: {
+    title: "\u57F7\u7B46\u30C0\u30C3\u30B7\u30E5\u30DC\u30FC\u30C9",
+    thisSession: "\u3053\u306E\u30BB\u30C3\u30B7\u30E7\u30F3",
+    stat: {
+      wordsWritten: "\u66F8\u3044\u305F\u8A9E\u6570",
+      sprints: "\u30B9\u30D7\u30EA\u30F3\u30C8",
+      minutes: "\u5206",
+      writingStreak: "\u57F7\u7B46\u9023\u7D9A\u65E5\u6570",
+      streakDays_one: "{{count}} \u65E5",
+      streakDays_other: "{{count}} \u65E5",
+      totalWords: "\u7DCF\u8A9E\u6570",
+      goal: "\u76EE\u6A19",
+      progress: "\u9032\u6357",
+      readingTime: "\u8AAD\u4E86\u6642\u9593"
+    },
+    project: "\u30D7\u30ED\u30B8\u30A7\u30AF\u30C8\uFF1A{{title}}",
+    recentSprints: "\u6700\u8FD1\u306E\u30B9\u30D7\u30EA\u30F3\u30C8",
+    noSprints: "\u30B9\u30D7\u30EA\u30F3\u30C8\u304C\u8A18\u9332\u3055\u308C\u3066\u3044\u307E\u305B\u3093\u3002",
+    sprintTable: {
+      date: "\u65E5\u4ED8",
+      duration: "\u6642\u9593",
+      words: "\u8A9E\u6570",
+      wpm: "WPM",
+      goal: "\u76EE\u6A19"
+    },
+    documentWordCounts: "\u30C9\u30AD\u30E5\u30E1\u30F3\u30C8\u306E\u8A9E\u6570",
+    docTable: {
+      document: "\u30C9\u30AD\u30E5\u30E1\u30F3\u30C8",
+      words: "\u8A9E\u6570",
+      readingTime: "\u8AAD\u4E86\u6642\u9593"
+    },
+    close: "\u9589\u3058\u308B"
+  },
+  addToProject: {
+    title: "\u57F7\u7B46\u30D7\u30ED\u30B8\u30A7\u30AF\u30C8\u306B\u8FFD\u52A0",
+    noProjects: "\u57F7\u7B46\u30D7\u30ED\u30B8\u30A7\u30AF\u30C8\u304C\u898B\u3064\u304B\u308A\u307E\u305B\u3093\u3002\u307E\u305A\u30D7\u30ED\u30B8\u30A7\u30AF\u30C8\u3092\u4F5C\u6210\u3057\u3066\u304F\u3060\u3055\u3044\u3002",
+    close: "\u9589\u3058\u308B",
+    file: "\u30D5\u30A1\u30A4\u30EB\uFF1A{{path}}",
+    projectName: "\u57F7\u7B46\u30D7\u30ED\u30B8\u30A7\u30AF\u30C8",
+    projectDesc: "\u3053\u306E\u30D5\u30A1\u30A4\u30EB\u3092\u3069\u306E\u57F7\u7B46\u30D7\u30ED\u30B8\u30A7\u30AF\u30C8\u306B\u8FFD\u52A0\u3057\u307E\u3059\u304B\uFF1F",
+    addBtn: "\u30D7\u30ED\u30B8\u30A7\u30AF\u30C8\u306B\u8FFD\u52A0",
+    cancel: "\u30AD\u30E3\u30F3\u30BB\u30EB"
+  },
+  scanFolder: {
+    title: "\u30D5\u30A1\u30A4\u30EB\u3092\u30D0\u30A4\u30F3\u30C0\u30FC\u306B\u8FFD\u52A0",
+    desc: "\u3053\u306E\u30D7\u30ED\u30B8\u30A7\u30AF\u30C8\u306B\u8FFD\u52A0\u3059\u308B\u30D5\u30A1\u30A4\u30EB\u3092\u9078\u629E\u3057\u3066\u304F\u3060\u3055\u3044\uFF1A",
+    addBtn: "\u9078\u629E\u3057\u305F\u30D5\u30A1\u30A4\u30EB\u3092\u8FFD\u52A0",
+    cancel: "\u30AD\u30E3\u30F3\u30BB\u30EB"
+  },
+  main: {
+    ribbonTitle: "\u30E9\u30A4\u30C6\u30A3\u30F3\u30B0\u30B9\u30BF\u30B8\u30AA\u3092\u958B\u304F",
+    cmd: {
+      openLauncher: "\u30E9\u30F3\u30C1\u30E3\u30FC\u3092\u958B\u304F",
+      openBinder: "\u30D0\u30A4\u30F3\u30C0\u30FC\u3092\u958B\u304F",
+      toggleFocusMode: "\u30D5\u30A9\u30FC\u30AB\u30B9\u30E2\u30FC\u30C9\u3092\u5207\u308A\u66FF\u3048",
+      toggleTypographyMode: "\u30BF\u30A4\u30DD\u30B0\u30E9\u30D5\u30A3\u30E2\u30FC\u30C9\u3092\u5207\u308A\u66FF\u3048",
+      switchDraftMode: "\u4E0B\u66F8\u304D\u30E2\u30FC\u30C9\u306B\u5207\u308A\u66FF\u3048",
+      switchEditMode: "\u7DE8\u96C6\u30E2\u30FC\u30C9\u306B\u5207\u308A\u66FF\u3048",
+      switchReviewMode: "\u30EC\u30D3\u30E5\u30FC\u30E2\u30FC\u30C9\u306B\u5207\u308A\u66FF\u3048",
+      startSprint: "\u57F7\u7B46\u30B9\u30D7\u30EA\u30F3\u30C8\u3092\u958B\u59CB",
+      exportDocument: "\u30C9\u30AD\u30E5\u30E1\u30F3\u30C8\u3092\u30A8\u30AF\u30B9\u30DD\u30FC\u30C8",
+      exportProject: "\u30D7\u30ED\u30B8\u30A7\u30AF\u30C8\u3092\u30A8\u30AF\u30B9\u30DD\u30FC\u30C8",
+      previewManuscript: "\u30B3\u30F3\u30D1\u30A4\u30EB\u6E08\u307F\u539F\u7A3F\u3092\u30D7\u30EC\u30D3\u30E5\u30FC",
+      publishWordPress: "WordPress\u306B\u516C\u958B",
+      newProject: "\u65B0\u898F\u57F7\u7B46\u30D7\u30ED\u30B8\u30A7\u30AF\u30C8",
+      openDashboard: "\u57F7\u7B46\u30C0\u30C3\u30B7\u30E5\u30DC\u30FC\u30C9\u3092\u958B\u304F",
+      openTargetsDashboard: "\u30BF\u30FC\u30B2\u30C3\u30C8\u30C0\u30C3\u30B7\u30E5\u30DC\u30FC\u30C9\u3092\u958B\u304F",
+      setWordCountGoal: "\u8A9E\u6570\u76EE\u6A19\u3092\u8A2D\u5B9A",
+      openWritingLog: "\u57F7\u7B46\u30ED\u30B0\u3092\u958B\u304F",
+      openFolderSidebar: "\u30B5\u30A4\u30C9\u30D0\u30FC\u30A8\u30AF\u30B9\u30D7\u30ED\u30FC\u30E9\u30FC\u3067\u30D5\u30A9\u30EB\u30C0\u3092\u958B\u304F",
+      addFilesToBinder: "\u30D7\u30ED\u30B8\u30A7\u30AF\u30C8\u30D5\u30A9\u30EB\u30C0\u306B\u30B3\u30D4\u30FC\u3055\u308C\u305F\u30D5\u30A1\u30A4\u30EB\u3092\u8FFD\u52A0"
+    },
+    menu: {
+      studioOptions: "\u30E9\u30A4\u30C6\u30A3\u30F3\u30B0\u30B9\u30BF\u30B8\u30AA\u306E\u30AA\u30D7\u30B7\u30E7\u30F3",
+      exportDoc: "\u3053\u306E\u30C9\u30AD\u30E5\u30E1\u30F3\u30C8\u3092\u30A8\u30AF\u30B9\u30DD\u30FC\u30C8",
+      publish: "WordPress\u306B\u516C\u958B",
+      setGoal: "\u8A9E\u6570\u76EE\u6A19\u3092\u8A2D\u5B9A",
+      switchMode: "\u57F7\u7B46\u30E2\u30FC\u30C9\u3092\u5207\u308A\u66FF\u3048 \u2192",
+      typographyFont: "\u30BF\u30A4\u30DD\u30B0\u30E9\u30D5\u30A3\u30D5\u30A9\u30F3\u30C8 \u2192",
+      addToProject: "\u57F7\u7B46\u30D7\u30ED\u30B8\u30A7\u30AF\u30C8\u306B\u8FFD\u52A0",
+      openSidebar: "\u30B5\u30A4\u30C9\u30D0\u30FC\u30A8\u30AF\u30B9\u30D7\u30ED\u30FC\u30E9\u30FC\u3067\u958B\u304F",
+      draftMode: "\u270D \u4E0B\u66F8\u304D\u30E2\u30FC\u30C9",
+      editMode: "\u270E \u7DE8\u96C6\u30E2\u30FC\u30C9",
+      reviewMode: "\u{1F441} \u30EC\u30D3\u30E5\u30FC\u30E2\u30FC\u30C9",
+      normalMode: "\u30CE\u30FC\u30DE\u30EB\uFF08\u30E2\u30FC\u30C9\u306A\u3057\uFF09"
+    },
+    notice: {
+      noMarkdownOpen: "\u73FE\u5728\u958B\u3044\u3066\u3044\u308BMarkdown\u30D5\u30A1\u30A4\u30EB\u304C\u3042\u308A\u307E\u305B\u3093\u3002",
+      addedToProject: "\u300C{{file}}\u300D\u3092 {{project}} \u306B\u8FFD\u52A0\u3057\u307E\u3057\u305F"
+    },
+    statusBar: {
+      projectWords: "{{total}} / {{goal}} \u30D7\u30ED\u30B8\u30A7\u30AF\u30C8\u8A9E\u6570",
+      wordCount: "{{count}} \u8A9E",
+      wordCountGoal: "{{count}} / {{goal}} \u8A9E",
+      delta: "(+{{delta}})",
+      goalBanner: "{{count}} / {{goal}} \u8A9E \u2014 {{pct}}%",
+      dismiss: "\u9589\u3058\u308B"
+    }
+  },
+  sprintSummary: {
+    title: "\u30B9\u30D7\u30EA\u30F3\u30C8\u5B8C\u4E86\uFF01",
+    wordsWritten: "\u66F8\u3044\u305F\u8A9E\u6570",
+    duration: "\u6642\u9593",
+    durationValue: "{{count}} \u5206",
+    wpm: "\u8A9E\u6570/\u5206",
+    goalProgress: "\u76EE\u6A19\u306E\u9032\u6357",
+    close: "\u9589\u3058\u308B"
+  },
+  wordCountGoal: {
+    title: "\u8A9E\u6570\u76EE\u6A19\u3092\u8A2D\u5B9A",
+    name: "\u8A9E\u6570\u76EE\u6A19",
+    desc: "\u3053\u306E\u30C9\u30AD\u30E5\u30E1\u30F3\u30C8\u306E\u76EE\u6A19\u8A9E\u6570\u30020\u306B\u8A2D\u5B9A\u3059\u308B\u3068\u524A\u9664\u3055\u308C\u307E\u3059\u3002",
+    placeholder: "\u4F8B\uFF1A1500",
+    save: "\u4FDD\u5B58",
+    cancel: "\u30AD\u30E3\u30F3\u30BB\u30EB"
+  },
+  statsTracker: {
+    unknownProject: "\u4E0D\u660E\u306A\u30D7\u30ED\u30B8\u30A7\u30AF\u30C8",
+    none: "\u306A\u3057",
+    dailyNote: {
+      heading: "## \u270D\uFE0F \u57F7\u7B46\u30A2\u30AF\u30C6\u30A3\u30D3\u30C6\u30A3",
+      project: "**\u30D7\u30ED\u30B8\u30A7\u30AF\u30C8\uFF1A**",
+      documents: "**\u30C9\u30AD\u30E5\u30E1\u30F3\u30C8\uFF1A**",
+      wordsWritten: "**\u66F8\u3044\u305F\u8A9E\u6570\uFF1A**",
+      sprintsCompleted: "**\u5B8C\u4E86\u3057\u305F\u30B9\u30D7\u30EA\u30F3\u30C8\uFF1A**",
+      sprintEntry: "1 ({{duration}} \u5206)",
+      wpm: "**1\u5206\u3042\u305F\u308A\u306E\u8A9E\u6570\uFF1A**",
+      sessionTotal: "**\u30BB\u30C3\u30B7\u30E7\u30F3\u5408\u8A08\uFF1A**",
+      sessionTotalValue: "{{duration}} \u5206"
+    },
+    readingTime: {
+      minutes: "{{count}} \u5206",
+      hoursMinutes: "{{hours}}\u6642\u9593 {{mins}}\u5206",
+      hours: "{{hours}}\u6642\u9593"
+    }
+  }
+};
+
+// src/i18n/de.json
+var de_default = {
+  settings: {
+    tab: {
+      general: "Allgemein",
+      focus: "Fokusmodus",
+      typography: "Typografie",
+      sprint: "Sprint & Ziele",
+      export: "Exportieren",
+      log: "Schreibprotokoll",
+      wordpress: "WordPress",
+      help: "Anleitung"
+    },
+    general: {
+      openOnStartup: "Beim Start \xF6ffnen",
+      openOnStartupDesc: "Das Schreibstudio-Panel beim Start von Obsidian automatisch \xF6ffnen.",
+      defaultProjectFolder: "Standard-Projektordner",
+      defaultProjectFolderDesc: "Vault-Pfad, in dem Schreibprojekte gespeichert werden.",
+      defaultProjectFolderPlaceholder: "Schreibprojekte",
+      authorName: "Autorenname",
+      authorNameDesc: "Wird in Exporten und Titelseiten verwendet.",
+      authorNamePlaceholder: "Dein Name",
+      defaultDocumentType: "Standard-Dokumenttyp",
+      docType: {
+        chapter: "Kapitel",
+        section: "Abschnitt",
+        article: "Artikel",
+        note: "Notiz"
+      },
+      frontmatterAutoUpdate: "Frontmatter automatisch aktualisieren",
+      frontmatterAutoUpdateDesc: "Wortanzahl und \xC4nderungsdatum beim Speichern automatisch aktualisieren."
+    },
+    focus: {
+      heading: "Fokusmodus",
+      focusUnit: "Fokuseinheit",
+      focusUnitDesc: "Auf Absatz- oder Satzebene hervorheben.",
+      paragraph: "Absatz",
+      sentence: "Satz (Zeile)",
+      dimOpacity: "Abdunkel-Deckkraft (%)",
+      dimOpacityDesc: "Deckkraft von inaktivem Text (10\u201350).",
+      fontSizeOverride: "Schriftgr\xF6\xDFe \xFCberschreiben (px)",
+      fontSizeOverrideDesc: "0 lassen, um die aktuelle Theme-Schriftgr\xF6\xDFe zu verwenden.",
+      autoHideSidebars: "Seitenleisten automatisch ausblenden",
+      typewriterScroll: "Schreibmaschinenscrollen",
+      typewriterScrollDesc: "Aktive Zeile in der Bildschirmmitte halten."
+    },
+    typography: {
+      heading: "Typografiemodus",
+      fontFamily: "Schriftfamilie",
+      font: {
+        mono: "Monospace (iA Writer Mono)",
+        serif: "Serif (iA Writer Duo Serif)",
+        sans: "Sans-serif (iA Writer Quattro)",
+        "cormorant-garamond": "Cormorant garamond",
+        "crimson-text": "Crimson text",
+        "eb-garamond": "Eb garamond",
+        "libre-baskerville": "Libre baskerville",
+        "libre-caslon-text": "Libre caslon text",
+        literata: "Literata",
+        lora: "Lora",
+        inter: "Inter",
+        lato: "Lato",
+        "source-sans-3": "Source sans 3",
+        custom: "Benutzerdefinierter Schriftname\u2026"
+      },
+      customFontName: "Benutzerdefinierter Schriftname",
+      customFontNameDesc: "Schriftname, wenn oben \u201EBenutzerdefiniert\u201C ausgew\xE4hlt ist.",
+      customFontNamePlaceholder: "z.B. Merriweather",
+      maxLineLength: "Maximale Zeilenl\xE4nge (Zeichen)",
+      maxLineLengthDesc: "55\u201380 Zeichen empfohlen.",
+      fontSize: "Schriftgr\xF6\xDFe (px)",
+      lineHeight: "Zeilenh\xF6he",
+      lineHeightDesc: "Standard: 1.7",
+      letterSpacing: "Zeichenabstand",
+      letterSpacingDesc: "CSS letter-spacing-Wert (z.B. \u201Enormal\u201C, \u201E0.02em\u201C).",
+      persistAcrossSessions: "\xDCber Sitzungen beibehalten",
+      persistAcrossSessionsDesc: "Typografiemodus aktiv halten, wenn Obsidian neu gestartet wird."
+    },
+    sprint: {
+      heading: "Sprint & Ziele",
+      defaultDuration: "Standard-Sprintdauer (Minuten)",
+      defaultDailyGoal: "Standard-Tagesziel f\xFCr W\xF6rter",
+      soundNotifications: "Tonbenachrichtigungen",
+      soundNotificationsDesc: "Einen Ton abspielen, wenn der Sprint endet.",
+      historyRetention: "Sprint-Verlauf aufbewahren (Tage)",
+      inlineGoalBanner: "Inline-Zielbanner",
+      inlineGoalBannerDesc: "Wortanzahl-Zielfortschritt unterhalb des Titels anzeigen, wenn ein Dokument ge\xF6ffnet wird."
+    },
+    export: {
+      heading: "Exportieren",
+      defaultFormat: "Standard-Exportformat",
+      format: {
+        md: "Markdown (.md)",
+        html: "HTML",
+        pdf: "PDF",
+        docx: "Word (.docx)",
+        rtf: "RTF"
+      },
+      defaultPaperSize: "Standard-Papiergr\xF6\xDFe",
+      paperSize: {
+        letter: "Letter (US)",
+        a4: "A4"
+      },
+      exportFont: "Exportschrift",
+      exportFontSize: "Exportschriftgr\xF6\xDFe (pt)",
+      pandocPath: "Pandoc-Pfad",
+      pandocPathDesc: "Vollst\xE4ndiger Pfad zur pandoc-Bin\xE4rdatei, falls nicht im Systempfad.",
+      epubHeading: "EPUB",
+      epubLanguage: "EPUB-Sprache",
+      epubLanguageDesc: "BCP 47-Sprachtag (z.B. en, fr, de).",
+      includeCover: "Umschlag einschlie\xDFen",
+      includeCoverDesc: "Eine Text-Umschlagseite generieren, wenn kein Umschlagbild vorhanden ist."
+    },
+    log: {
+      heading: "T\xE4gliches Schreibprotokoll",
+      appendToDailyNote: "An Tagesnotiz anh\xE4ngen",
+      appendToDailyNoteDesc: "Nach jedem Sprint eine Zusammenfassung der Schreibaktivit\xE4t zur heutigen Tagesnotiz hinzuf\xFCgen."
+    },
+    wordpress: {
+      sitesHeading: "WordPress-Seiten",
+      addSite: "+ WordPress-Seite hinzuf\xFCgen",
+      wikilinksHeading: "Wikilink-Standards",
+      defaultWikilinkHandling: "Standard-Wikilinkverarbeitung",
+      wikilinkStrip: "Entfernen (in Klartext umwandeln)",
+      wikilinkConvert: "In URL umwandeln",
+      siteHeading: "Seite: {{nickname}}",
+      siteUnnamed: "Unbenannt",
+      nickname: "Spitzname",
+      siteUrl: "Seiten-URL",
+      username: "Benutzername",
+      appPassword: "Anwendungspasswort",
+      appPasswordDesc: "In WordPress unter Benutzer \u2192 Profil \u2192 Anwendungspassw\xF6rter generiert.",
+      defaultPostStatus: "Standard-Beitragsstatus",
+      postStatus: {
+        draft: "Entwurf",
+        pending: "Zur \xDCberpr\xFCfung ausstehend",
+        publish: "Ver\xF6ffentlicht"
+      },
+      wikilinkHandling: "Wikilinkverarbeitung",
+      wikilinkHandlingStrip: "Entfernen",
+      wikilinkHandlingConvert: "In URL umwandeln",
+      testConnection: "Verbindung testen",
+      testConnectionDesc: "Anmeldeinformationen und Konnektivit\xE4t \xFCberpr\xFCfen.",
+      testing: "Teste\u2026",
+      removeSite: "Seite entfernen",
+      buyMeACoffee: "Kauf mir einen Kaffee"
+    }
+  },
+  binder: {
+    displayText: "Schreibmappe",
+    selectProject: "\u2014 Projekt ausw\xE4hlen \u2014",
+    newProject: "Neues Projekt",
+    addDocument: "+ Dokument",
+    addFiles: "In diesen Ordner kopierte Dateien hinzuf\xFCgen",
+    targetsDashboard: "Ziel-Dashboard",
+    searchPlaceholder: "Dokumente suchen\u2026",
+    noProjectSelected: "Kein Projekt ausgew\xE4hlt. Erstelle oder w\xE4hle ein Schreibprojekt, um loszulegen.",
+    noDocuments: "Noch keine Dokumente. Klicke auf \u201E+ Dokument\u201C, um eines hinzuzuf\xFCgen.",
+    dropToRoot: "\u2193 Hier ablegen, um zur Wurzel zu bef\xF6rdern",
+    selectProjectFirst: "Bitte zuerst ein Projekt ausw\xE4hlen.",
+    cannotFindFile: "Datei nicht gefunden: {{filePath}}. Versuche, das Dokument umzubenennen oder neu zu verkn\xFCpfen.",
+    untitledDocument: "Ohne Titel {{time}}",
+    noNewFiles: "Keine neuen Dateien im Projektordner gefunden.",
+    pctComplete: "{{pct}}% abgeschlossen",
+    copySuffix: "(Kopie)",
+    menu: {
+      openDocument: "Dokument \xF6ffnen",
+      newChildDocument: "Neues untergeordnetes Dokument",
+      setStatusDraft: "Status setzen: Entwurf",
+      setStatusInProgress: "Status setzen: In Bearbeitung",
+      setStatusComplete: "Status setzen: Abgeschlossen",
+      setStatusPublished: "Status setzen: Ver\xF6ffentlicht",
+      duplicate: "Duplizieren",
+      moveToResearch: "In Recherche verschieben",
+      publishToWordPress: "Auf WordPress ver\xF6ffentlichen",
+      delete: "L\xF6schen"
+    },
+    wordCountSuffix: "{{count}}W"
+  },
+  launcher: {
+    displayText: "Schreibstudio",
+    title: "Schreibstudio",
+    settings: "Einstellungen",
+    project: "Projekt",
+    newProject: "+ Neu",
+    noProjectSelected: "Kein Projekt ausgew\xE4hlt.",
+    chooseProject: "\u2014 Projekt ausw\xE4hlen \u2014",
+    wordCount: "{{n}} W\xF6rter",
+    wordGoal: "/ {{n}} Ziel",
+    pctComplete: "{{pct}}% abgeschlossen",
+    openBinder: "\u{1F4D6} Mappe \xF6ffnen",
+    writingMode: "Schreibmodus",
+    mode: {
+      draft: "Entwurf",
+      draftDesc: "Fokus + Typografie an, Seitenleisten ausgeblendet",
+      edit: "Bearbeiten",
+      editDesc: "Mappe ge\xF6ffnet, volle Benutzeroberfl\xE4che sichtbar",
+      review: "\xDCberpr\xFCfen",
+      reviewDesc: "Leseansicht, kein Bearbeiten",
+      clearMode: "\u2715 Modus l\xF6schen"
+    },
+    focusTypography: "Fokus & Typografie",
+    focusMode: "Fokusmodus",
+    typographyMode: "Typografiemodus",
+    on: "EIN",
+    off: "AUS",
+    quickActions: "Schnellaktionen",
+    action: {
+      targetsDashboard: "Ziel-Dashboard",
+      writingDashboard: "Schreib-Dashboard",
+      previewManuscript: "Manuskript vorschau",
+      export: "Exportieren",
+      writingLog: "Schreibprotokoll",
+      publishToWordPress: "Auf WordPress ver\xF6ffentlichen"
+    },
+    openDocumentFirst: "Bitte zuerst ein Dokument \xF6ffnen.",
+    sprintTimer: "Sprint-Timer",
+    pause: "\u23F8 Pause",
+    stop: "\u25A0 Stop",
+    startSprint: "\u23F1 Sprint starten",
+    quickStart: "Schnellstart:",
+    today: "Heute",
+    stat: {
+      words: "W\xF6rter",
+      sprints: "Sprints",
+      minutes: "Minuten",
+      streak: "Serie",
+      streakDays: "{{streak}}T"
+    },
+    sessionWordsTyped: "Sitzung: +{{n}} W\xF6rter getippt",
+    dailyGoal: "Tagesziel: {{written}} / {{goal}} W\xF6rter"
+  },
+  log: {
+    displayText: "Schreibprotokoll",
+    title: "Schreibprotokoll",
+    noProjectSelected: "Kein Projekt ausgew\xE4hlt. \xD6ffne den Launcher und w\xE4hle ein Projekt aus, um deine Schreibhistorie zu sehen.",
+    streak: "\u{1F525} {{streak}}-Tage-Serie",
+    startStreak: "Schreibe heute, um eine Serie zu starten",
+    thisSession: "Diese Sitzung",
+    stat: {
+      session: "Sitzung",
+      sprintWords: "Sprint-W\xF6rter",
+      sprints: "Sprints",
+      minutes: "Minuten"
+    },
+    last30Days: "Letzte 30 Tage",
+    today: "Heute",
+    sprintsCount_one: "\xB7 {{count}} Sprint",
+    sprintsCount_other: "\xB7 {{count}} Sprints"
+  },
+  sprint: {
+    started: "Sprint gestartet: {{minutes}} Minuten",
+    complete: "Sprint abgeschlossen! Tolle Arbeit.",
+    words: "+{{n}} W\xF6rter",
+    header: "Schreib-Sprint",
+    pauseTitle: "Pause/Fortsetzen",
+    stopTitle: "Sprint beenden"
+  },
+  writingModes: {
+    switchedTo: "Schreibstudio: {{mode}}-Modus",
+    normal: "Normal",
+    statusDraft: "\u270D Entwurf",
+    statusEdit: "\u270E Bearbeiten",
+    statusReview: "\u{1F441} \xDCberpr\xFCfen",
+    statusNone: "\u2014 Modus"
+  },
+  exportEngine: {
+    epubExported: "EPUB nach {{path}} exportiert",
+    manuscriptExported: "Manuskript nach {{path}} exportiert",
+    exportedTo: "Nach {{path}} exportiert",
+    exportedHtmlTo: "HTML nach {{path}} exportiert",
+    pdfRequiresPandoc: "PDF-Export erfordert pandoc. Installiere pandoc und setze den Pfad in den Einstellungen."
+  },
+  wpClient: {
+    authFailed: "Authentifizierung fehlgeschlagen. Bitte Benutzername und Anwendungspasswort \xFCberpr\xFCfen.",
+    connectedAs: "Als \u201E{{user}}\u201C mit \u201E{{site}}\u201C verbunden",
+    networkError: "Netzwerkfehler: {{error}}",
+    httpError: "HTTP {{status}}",
+    fetchCategoriesFailed: "Kategorien konnten nicht abgerufen werden: {{error}}"
+  },
+  folderSidebar: {
+    displayText: "Ordner-Explorer",
+    back: "\u2190 Zur\xFCck",
+    root: "\u2302 Stamm",
+    insertSelection: "\u21A9 Auswahl einf\xFCgen",
+    searchPlaceholder: "Namen & Inhalt suchen\u2026 (Enter)",
+    sort: {
+      foldersAz: "Ordner \u2191 A-Z",
+      foldersZa: "Ordner \u2191 Z-A",
+      az: "Name A-Z",
+      za: "Name Z-A",
+      modifiedNew: "Neueste zuerst",
+      modifiedOld: "\xC4lteste zuerst"
+    },
+    noPreview: "Keine Vorschau f\xFCr .{{ext}}-Dateien verf\xFCgbar",
+    openInEditor: "Im Editor \xF6ffnen",
+    searching: "Suche\u2026",
+    noResults: "Keine Ergebnisse f\xFCr \u201E{{query}}\u201C",
+    emptyFolder: "Dieser Ordner ist leer",
+    tooltip: {
+      modified: "Ge\xE4ndert",
+      size: "Gr\xF6\xDFe",
+      words: "W\xF6rter",
+      files: "Dateien",
+      subfolders: "Unterordner"
+    },
+    pickerPlaceholder: "Ordnernamen eingeben, um im Sidebar-Explorer zu \xF6ffnen\u2026",
+    vaultRoot: "/ (Vault-Stamm)"
+  },
+  focusToolbar: {
+    exitTitle: "Fokusmodus beenden (esc)",
+    exitBtn: "\u2715 beenden",
+    wordCount_one: "{{count}} Wort",
+    wordCount_other: "{{count}} W\xF6rter"
+  },
+  compilePreview: {
+    displayText: "Kompiliertes Manuskript",
+    jumpToSection: "Zum Abschnitt springen...",
+    proceedToExport: "Weiter zum Export",
+    closePreview: "Vorschau schlie\xDFen",
+    noContent: "Kein Inhalt zum Anzeigen. \xD6ffne zuerst ein Schreibprojekt."
+  },
+  projectModal: {
+    title: "Neues Schreibprojekt",
+    projectTitle: "Projekttitel",
+    titlePlaceholder: "Mein Roman",
+    template: "Vorlage",
+    templateDesc: "Eine vorkonfigurierte Projektstruktur ausw\xE4hlen.",
+    templateOption: {
+      blank: "Leer (benutzerdefinierte Struktur)",
+      book: "Buch (Teile \u2192 Kapitel \u2192 Szenen)",
+      series: "Artikelserie (Serie \u2192 Artikel)",
+      blog: "Blog-Sammlung (Beitr\xE4ge nach Datum/Kategorie)",
+      journalArticle: "Zeitschriftenartikel \u2014 Einreichung f\xFCr akademische oder Fachzeitschrift",
+      magazineArticle: "Magazinartikel \u2014 Feature, Langform oder narrative Sachprosa"
+    },
+    descriptionLabel: "Beschreibung (optional)",
+    descriptionPlaceholder: "Kurze Beschreibung dieses Projekts\u2026",
+    preview: {
+      blank: "Leeres Projekt \u2014 baue deine eigene Struktur auf.",
+      book: "Erstellt: Vorwort, Teil 1 / Kapitel 1, Nachwort-Platzhalter.",
+      series: "Erstellt: Serienordner, Artikel-1-Platzhalter, Serienmetadaten.",
+      blog: "Erstellt: Datumsorganisierter Ordner, erster Beitrag-Platzhalter.",
+      journalArticle: "Erstellt: Titelseite, Abstract, Schl\xFCsselw\xF6rter, Einleitung, Literaturrecherche, Methodik, Ergebnisse/Analyse, Diskussion, Schlussfolgerung, Literaturverzeichnis, Anh\xE4nge.",
+      magazineArticle: "Erstellt: Pitch/Anfrage-Notizen, \xDCberschrift & Deck, Einleitung, Kernabsatz, Text, Zitate & Quellen, Abschluss, Faktencheck-Notizen, Autorenbiografie. Notizdokumente sind standardm\xE4\xDFig vom Export ausgeschlossen."
+    },
+    createBtn: "Projekt erstellen",
+    creating: "Erstelle\u2026",
+    errorNoTitle: "Bitte einen Projekttitel eingeben.",
+    errorCreate: "Projekt konnte nicht erstellt werden: {{error}}",
+    created: "Projekt \u201E{{title}}\u201C erstellt!",
+    cancel: "Abbrechen"
+  },
+  sprintModal: {
+    title: "Schreib-Sprint starten",
+    durationName: "Dauer (Minuten)",
+    durationDesc: "Voreinstellung: 10, 15, 25, 30, 45, 60",
+    durationCustom: "Benutzerdefiniert\u2026",
+    durationCustomPlaceholder: "Benutzerdefinierte Minuten",
+    wordGoalName: "Wortziel (optional)",
+    wordGoalDesc: "0 lassen f\xFCr kein Ziel.",
+    scopeName: "Bereich",
+    scopeFile: "Aktuelle Datei",
+    scopeProject: "Gesamtes Projekt",
+    startBtn: "Sprint starten",
+    errorDuration: "Bitte eine g\xFCltige Dauer festlegen.",
+    cancel: "Abbrechen"
+  },
+  exportModal: {
+    title: "Dokument exportieren",
+    formatName: "Format",
+    format: {
+      md: "Markdown (.md)",
+      html: "HTML",
+      manuscript: "Manuskript (HTML)",
+      epub: "EPUB (.epub)",
+      pdf: "PDF (erfordert pandoc)",
+      docx: "Word (.docx) (erfordert pandoc)",
+      rtf: "RTF (erfordert pandoc)"
+    },
+    coverImageName: "Cover-Bildpfad",
+    coverImageDesc: "Vault-Pfad zu einem JPG- oder PNG-Cover-Bild. Leer lassen f\xFCr ein generiertes Text-Cover.",
+    coverImagePlaceholder: "z.B. Assets/cover.jpg",
+    contactInfoName: "Kontaktinformationen (optional)",
+    contactInfoDesc: "Erscheint auf der Titelseite \u2014 Name, E-Mail oder Postadresse.",
+    contactInfoPlaceholder: "Name, E-Mail oder Postadresse",
+    scopeName: "Bereich",
+    scopeCurrent: "Aktuelles Dokument",
+    scopeProject: "Gesamtes Projekt (in Mappenreihenfolge)",
+    includeFrontmatter: "Frontmatter einschlie\xDFen",
+    includeResearch: "Recherche-Notizen einschlie\xDFen",
+    includeTitlesAsHeadings: "Dokumenttitel als \xDCberschriften einschlie\xDFen",
+    addTitlePage: "Titelseite hinzuf\xFCgen",
+    addTitlePageDesc: "Eine Titelseite mit Projekttitel, Autor und Datum voranstellen.",
+    previewBtn: "Kompiliertes Manuskript vorschau",
+    exportBtn: "Exportieren",
+    exporting: "Exportiere\u2026",
+    exportFailed: "Export fehlgeschlagen: {{error}}",
+    cancel: "Abbrechen"
+  },
+  publishModal: {
+    title: "Auf WordPress ver\xF6ffentlichen",
+    noSites: "Keine WordPress-Seiten konfiguriert. F\xFCge eine Seite in Einstellungen \u2192 WordPress hinzu.",
+    close: "Schlie\xDFen",
+    siteName: "WordPress-Seite",
+    postTitleName: "Beitragstitel",
+    postStatusName: "Beitragsstatus",
+    postStatus: {
+      draft: "Entwurf",
+      pending: "Zur \xDCberpr\xFCfung ausstehend",
+      publish: "Ver\xF6ffentlicht"
+    },
+    categoryName: "Kategorie",
+    tagsName: "Tags",
+    tagsDesc: "Kommagetrennt.",
+    excerptName: "Auszug (optional)",
+    scheduleName: "Ver\xF6ffentlichung planen (optional)",
+    scheduleDesc: "Leer lassen f\xFCr sofortige Ver\xF6ffentlichung.",
+    schedulePlaceholder: "yyyy-mm-ddThh:mm:ss",
+    existingNotice: "\u26A0 Dieses Dokument wurde bereits ver\xF6ffentlicht (Beitrags-ID: {{id}}).",
+    updatePost: "Vorhandenen Beitrag aktualisieren",
+    newPost: "Neuen Beitrag erstellen",
+    schedule: "Planen",
+    publish: "Ver\xF6ffentlichen",
+    cancel: "Abbrechen",
+    noSiteSelected: "Keine Seite ausgew\xE4hlt.",
+    fileNotFound: "Datei nicht gefunden.",
+    publishFailed: "Ver\xF6ffentlichung fehlgeschlagen: {{error}}",
+    published: "Ver\xF6ffentlicht",
+    scheduled: "Geplant",
+    actionNotice: "{{action}}! Beitrag ansehen: {{url}}"
+  },
+  targetsDashboard: {
+    title: "Kapitel-Ziel-Dashboard",
+    noProject: "Kein Projekt ausgew\xE4hlt.",
+    filterLabel: "Filter: ",
+    allStatuses: "Alle Status",
+    refresh: "\u21BB Aktualisieren",
+    col: {
+      title: "Titel",
+      type: "Typ",
+      status: "Status",
+      words: "W\xF6rter",
+      goal: "Ziel",
+      progress: "Fortschritt",
+      readingTime: "Lesezeit"
+    },
+    total: "Gesamt",
+    status: {
+      draft: "Entwurf",
+      inProgress: "In Bearbeitung",
+      complete: "Abgeschlossen",
+      published: "Ver\xF6ffentlicht"
+    },
+    typeLabel: {
+      chapter: "Kapitel",
+      section: "Abschnitt",
+      article: "Artikel",
+      note: "Notiz",
+      group: "Gruppe",
+      part: "Teil"
+    }
+  },
+  writingDashboard: {
+    title: "Schreib-Dashboard",
+    thisSession: "Diese Sitzung",
+    stat: {
+      wordsWritten: "Geschriebene W\xF6rter",
+      sprints: "Sprints",
+      minutes: "Minuten",
+      writingStreak: "Schreibserie",
+      streakDays_one: "{{count}} Tag",
+      streakDays_other: "{{count}} Tage",
+      totalWords: "Gesamtw\xF6rter",
+      goal: "Ziel",
+      progress: "Fortschritt",
+      readingTime: "Lesezeit"
+    },
+    project: "Projekt: {{title}}",
+    recentSprints: "Letzte Sprints",
+    noSprints: "Noch keine Sprints aufgezeichnet.",
+    sprintTable: {
+      date: "Datum",
+      duration: "Dauer",
+      words: "W\xF6rter",
+      wpm: "WPM",
+      goal: "Ziel"
+    },
+    documentWordCounts: "Dokument-Wortz\xE4hlung",
+    docTable: {
+      document: "Dokument",
+      words: "W\xF6rter",
+      readingTime: "Lesezeit"
+    },
+    close: "Schlie\xDFen"
+  },
+  addToProject: {
+    title: "Zum Schreibprojekt hinzuf\xFCgen",
+    noProjects: "Keine Schreibprojekte gefunden. Erstelle zuerst ein Projekt.",
+    close: "Schlie\xDFen",
+    file: "Datei: {{path}}",
+    projectName: "Schreibprojekt",
+    projectDesc: "Zu welchem Schreibprojekt m\xF6chtest du diese Datei hinzuf\xFCgen?",
+    addBtn: "Zum Projekt hinzuf\xFCgen",
+    cancel: "Abbrechen"
+  },
+  scanFolder: {
+    title: "Dateien zur Mappe hinzuf\xFCgen",
+    desc: "Dateien ausw\xE4hlen, die diesem Projekt hinzugef\xFCgt werden sollen:",
+    addBtn: "Ausgew\xE4hlte Dateien hinzuf\xFCgen",
+    cancel: "Abbrechen"
+  },
+  main: {
+    ribbonTitle: "Schreibstudio \xF6ffnen",
+    cmd: {
+      openLauncher: "Launcher \xF6ffnen",
+      openBinder: "Mappe \xF6ffnen",
+      toggleFocusMode: "Fokusmodus umschalten",
+      toggleTypographyMode: "Typografiemodus umschalten",
+      switchDraftMode: "Zu Entwurfsmodus wechseln",
+      switchEditMode: "Zu Bearbeitungsmodus wechseln",
+      switchReviewMode: "Zu \xDCberpr\xFCfungsmodus wechseln",
+      startSprint: "Schreib-Sprint starten",
+      exportDocument: "Dokument exportieren",
+      exportProject: "Projekt exportieren",
+      previewManuscript: "Kompiliertes Manuskript vorschau",
+      publishWordPress: "Auf WordPress ver\xF6ffentlichen",
+      newProject: "Neues Schreibprojekt",
+      openDashboard: "Schreib-Dashboard \xF6ffnen",
+      openTargetsDashboard: "Ziel-Dashboard \xF6ffnen",
+      setWordCountGoal: "Wortziel festlegen",
+      openWritingLog: "Schreibprotokoll \xF6ffnen",
+      openFolderSidebar: "Ordner im Sidebar-Explorer \xF6ffnen",
+      addFilesToBinder: "In Projektordner kopierte Dateien hinzuf\xFCgen"
+    },
+    menu: {
+      studioOptions: "Schreibstudio-Optionen",
+      exportDoc: "Dieses Dokument exportieren",
+      publish: "Auf WordPress ver\xF6ffentlichen",
+      setGoal: "Wortziel festlegen",
+      switchMode: "Schreibmodus wechseln \u2192",
+      typographyFont: "Typografieschrift \u2192",
+      addToProject: "Zum Schreibprojekt hinzuf\xFCgen",
+      openSidebar: "Im Sidebar-Explorer \xF6ffnen",
+      draftMode: "\u270D Entwurfsmodus",
+      editMode: "\u270E Bearbeitungsmodus",
+      reviewMode: "\u{1F441} \xDCberpr\xFCfungsmodus",
+      normalMode: "Normal (kein Modus)"
+    },
+    notice: {
+      noMarkdownOpen: "Keine Markdown-Datei ist aktuell ge\xF6ffnet.",
+      addedToProject: "\u201E{{file}}\u201C zu {{project}} hinzugef\xFCgt"
+    },
+    statusBar: {
+      projectWords: "{{total}} / {{goal}} Projektw\xF6rter",
+      wordCount: "{{count}} W\xF6rter",
+      wordCountGoal: "{{count}} / {{goal}} W\xF6rter",
+      delta: "(+{{delta}})",
+      goalBanner: "{{count}} / {{goal}} W\xF6rter \u2014 {{pct}}%",
+      dismiss: "Schlie\xDFen"
+    }
+  },
+  sprintSummary: {
+    title: "Sprint abgeschlossen!",
+    wordsWritten: "Geschriebene W\xF6rter",
+    duration: "Dauer",
+    durationValue: "{{count}} Min.",
+    wpm: "W\xF6rter/Minute",
+    goalProgress: "Zielfortschritt",
+    close: "Schlie\xDFen"
+  },
+  wordCountGoal: {
+    title: "Wortziel festlegen",
+    name: "Wortziel",
+    desc: "Ziel-Wortanzahl f\xFCr dieses Dokument. Auf 0 setzen, um es zu entfernen.",
+    placeholder: "z.B. 1500",
+    save: "Speichern",
+    cancel: "Abbrechen"
+  },
+  statsTracker: {
+    unknownProject: "Unbekanntes Projekt",
+    none: "Keine",
+    dailyNote: {
+      heading: "## \u270D\uFE0F Schreibaktivit\xE4t",
+      project: "**Projekt:**",
+      documents: "**Dokumente:**",
+      wordsWritten: "**Geschriebene W\xF6rter:**",
+      sprintsCompleted: "**Abgeschlossene Sprints:**",
+      sprintEntry: "1 ({{duration}} Min.)",
+      wpm: "**W\xF6rter pro Minute:**",
+      sessionTotal: "**Sitzungsgesamt:**",
+      sessionTotalValue: "{{duration}} Minuten"
+    },
+    readingTime: {
+      minutes: "{{count}} Min.",
+      hoursMinutes: "{{hours}}Std. {{mins}}Min.",
+      hours: "{{hours}}Std."
+    }
+  }
+};
+
+// src/i18n/ko.json
+var ko_default = {
+  settings: {
+    tab: {
+      general: "\uC77C\uBC18",
+      focus: "\uC9D1\uC911 \uBAA8\uB4DC",
+      typography: "\uD0C0\uC774\uD3EC\uADF8\uB798\uD53C",
+      sprint: "\uC2A4\uD504\uB9B0\uD2B8 \uBC0F \uBAA9\uD45C",
+      export: "\uB0B4\uBCF4\uB0B4\uAE30",
+      log: "\uAE00\uC4F0\uAE30 \uB85C\uADF8",
+      wordpress: "WordPress",
+      help: "\uC0AC\uC6A9\uBC95"
+    },
+    general: {
+      openOnStartup: "\uC2DC\uC791 \uC2DC \uC5F4\uAE30",
+      openOnStartupDesc: "Obsidian\uC774 \uC2DC\uC791\uB420 \uB54C \uAE00\uC4F0\uAE30 \uC2A4\uD29C\uB514\uC624 \uD328\uB110\uC744 \uC790\uB3D9\uC73C\uB85C \uC5FD\uB2C8\uB2E4.",
+      defaultProjectFolder: "\uAE30\uBCF8 \uD504\uB85C\uC81D\uD2B8 \uD3F4\uB354",
+      defaultProjectFolderDesc: "\uAE00\uC4F0\uAE30 \uD504\uB85C\uC81D\uD2B8\uAC00 \uC800\uC7A5\uB418\uB294 \uBCFC\uD2B8 \uACBD\uB85C.",
+      defaultProjectFolderPlaceholder: "\uAE00\uC4F0\uAE30 \uD504\uB85C\uC81D\uD2B8",
+      authorName: "\uC800\uC790 \uC774\uB984",
+      authorNameDesc: "\uB0B4\uBCF4\uB0B4\uAE30 \uBC0F \uD45C\uC9C0\uC5D0 \uC0AC\uC6A9\uB429\uB2C8\uB2E4.",
+      authorNamePlaceholder: "\uC774\uB984 \uC785\uB825",
+      defaultDocumentType: "\uAE30\uBCF8 \uBB38\uC11C \uC720\uD615",
+      docType: {
+        chapter: "\uCC55\uD130",
+        section: "\uC139\uC158",
+        article: "\uAE30\uC0AC",
+        note: "\uB178\uD2B8"
+      },
+      frontmatterAutoUpdate: "\uD504\uB860\uD2B8\uB9E4\uD130 \uC790\uB3D9 \uC5C5\uB370\uC774\uD2B8",
+      frontmatterAutoUpdateDesc: "\uC800\uC7A5 \uC2DC \uB2E8\uC5B4 \uC218\uC640 \uC218\uC815 \uB0A0\uC9DC\uB97C \uC790\uB3D9\uC73C\uB85C \uC5C5\uB370\uC774\uD2B8\uD569\uB2C8\uB2E4."
+    },
+    focus: {
+      heading: "\uC9D1\uC911 \uBAA8\uB4DC",
+      focusUnit: "\uC9D1\uC911 \uB2E8\uC704",
+      focusUnitDesc: "\uB2E8\uB77D \uB610\uB294 \uBB38\uC7A5 \uC218\uC900\uC5D0\uC11C \uAC15\uC870 \uD45C\uC2DC\uD569\uB2C8\uB2E4.",
+      paragraph: "\uB2E8\uB77D",
+      sentence: "\uBB38\uC7A5 (\uC904)",
+      dimOpacity: "\uC5B4\uB450\uC6B4 \uBD88\uD22C\uBA85\uB3C4 (%)",
+      dimOpacityDesc: "\uBE44\uD65C\uC131 \uD14D\uC2A4\uD2B8\uC758 \uBD88\uD22C\uBA85\uB3C4 (10\u201350).",
+      fontSizeOverride: "\uAE00\uAF34 \uD06C\uAE30 \uC7AC\uC815\uC758 (px)",
+      fontSizeOverrideDesc: "\uD604\uC7AC \uD14C\uB9C8 \uAE00\uAF34 \uD06C\uAE30\uB97C \uC0AC\uC6A9\uD558\uB824\uBA74 0\uC73C\uB85C \uB450\uC138\uC694.",
+      autoHideSidebars: "\uC0AC\uC774\uB4DC\uBC14 \uC790\uB3D9 \uC228\uAE30\uAE30",
+      typewriterScroll: "\uD0C0\uC790\uAE30 \uC2A4\uD06C\uB864",
+      typewriterScrollDesc: "\uD65C\uC131 \uC904\uC744 \uD654\uBA74 \uC911\uC559\uC5D0 \uC720\uC9C0\uD569\uB2C8\uB2E4."
+    },
+    typography: {
+      heading: "\uD0C0\uC774\uD3EC\uADF8\uB798\uD53C \uBAA8\uB4DC",
+      fontFamily: "\uAE00\uAF34 \uD328\uBC00\uB9AC",
+      font: {
+        mono: "\uACE0\uC815\uD3ED (iA Writer Mono)",
+        serif: "\uC138\uB9AC\uD504 (iA Writer Duo Serif)",
+        sans: "\uC0B0\uC138\uB9AC\uD504 (iA Writer Quattro)",
+        "cormorant-garamond": "Cormorant garamond",
+        "crimson-text": "Crimson text",
+        "eb-garamond": "Eb garamond",
+        "libre-baskerville": "Libre baskerville",
+        "libre-caslon-text": "Libre caslon text",
+        literata: "Literata",
+        lora: "Lora",
+        inter: "Inter",
+        lato: "Lato",
+        "source-sans-3": "Source sans 3",
+        custom: "\uC0AC\uC6A9\uC790 \uC815\uC758 \uAE00\uAF34 \uC774\uB984\u2026"
+      },
+      customFontName: "\uC0AC\uC6A9\uC790 \uC815\uC758 \uAE00\uAF34 \uC774\uB984",
+      customFontNameDesc: "\uC704\uC5D0\uC11C '\uC0AC\uC6A9\uC790 \uC815\uC758'\uB97C \uC120\uD0DD\uD55C \uACBD\uC6B0 \uAE00\uAF34 \uC774\uB984.",
+      customFontNamePlaceholder: "\uC608: Merriweather",
+      maxLineLength: "\uCD5C\uB300 \uC904 \uAE38\uC774 (\uBB38\uC790)",
+      maxLineLengthDesc: "55\u201380\uC790 \uAD8C\uC7A5.",
+      fontSize: "\uAE00\uAF34 \uD06C\uAE30 (px)",
+      lineHeight: "\uC904 \uB192\uC774",
+      lineHeightDesc: "\uAE30\uBCF8\uAC12: 1.7",
+      letterSpacing: "\uC790\uAC04",
+      letterSpacingDesc: 'CSS letter-spacing \uAC12 (\uC608: "normal", "0.02em").',
+      persistAcrossSessions: "\uC138\uC158 \uAC04 \uC720\uC9C0",
+      persistAcrossSessionsDesc: "Obsidian\uC744 \uB2E4\uC2DC \uC5F4 \uB54C \uD0C0\uC774\uD3EC\uADF8\uB798\uD53C \uBAA8\uB4DC\uB97C \uD65C\uC131 \uC0C1\uD0DC\uB85C \uC720\uC9C0\uD569\uB2C8\uB2E4."
+    },
+    sprint: {
+      heading: "\uC2A4\uD504\uB9B0\uD2B8 \uBC0F \uBAA9\uD45C",
+      defaultDuration: "\uAE30\uBCF8 \uC2A4\uD504\uB9B0\uD2B8 \uC2DC\uAC04 (\uBD84)",
+      defaultDailyGoal: "\uAE30\uBCF8 \uC77C\uC77C \uB2E8\uC5B4 \uBAA9\uD45C",
+      soundNotifications: "\uC18C\uB9AC \uC54C\uB9BC",
+      soundNotificationsDesc: "\uC2A4\uD504\uB9B0\uD2B8\uAC00 \uB05D\uB0A0 \uB54C \uC18C\uB9AC\uB97C \uC7AC\uC0DD\uD569\uB2C8\uB2E4.",
+      historyRetention: "\uC2A4\uD504\uB9B0\uD2B8 \uAE30\uB85D \uBCF4\uAD00 (\uC77C)",
+      inlineGoalBanner: "\uC778\uB77C\uC778 \uBAA9\uD45C \uBC30\uB108",
+      inlineGoalBannerDesc: "\uBB38\uC11C\uB97C \uC5F4 \uB54C \uC81C\uBAA9 \uC544\uB798\uC5D0 \uB2E8\uC5B4 \uC218 \uBAA9\uD45C \uC9C4\uD589 \uC0C1\uD669\uC744 \uD45C\uC2DC\uD569\uB2C8\uB2E4."
+    },
+    export: {
+      heading: "\uB0B4\uBCF4\uB0B4\uAE30",
+      defaultFormat: "\uAE30\uBCF8 \uB0B4\uBCF4\uB0B4\uAE30 \uD615\uC2DD",
+      format: {
+        md: "Markdown (.md)",
+        html: "HTML",
+        pdf: "PDF",
+        docx: "Word (.docx)",
+        rtf: "RTF"
+      },
+      defaultPaperSize: "\uAE30\uBCF8 \uC6A9\uC9C0 \uD06C\uAE30",
+      paperSize: {
+        letter: "\uB808\uD130 (US)",
+        a4: "A4"
+      },
+      exportFont: "\uB0B4\uBCF4\uB0B4\uAE30 \uAE00\uAF34",
+      exportFontSize: "\uB0B4\uBCF4\uB0B4\uAE30 \uAE00\uAF34 \uD06C\uAE30 (pt)",
+      pandocPath: "Pandoc \uACBD\uB85C",
+      pandocPathDesc: "\uC2DC\uC2A4\uD15C \uACBD\uB85C\uC5D0 \uC5C6\uB294 \uACBD\uC6B0 pandoc \uBC14\uC774\uB108\uB9AC\uC758 \uC804\uCCB4 \uACBD\uB85C.",
+      epubHeading: "EPUB",
+      epubLanguage: "EPUB \uC5B8\uC5B4",
+      epubLanguageDesc: "BCP 47 \uC5B8\uC5B4 \uD0DC\uADF8 (\uC608: en, fr, de).",
+      includeCover: "\uD45C\uC9C0 \uD3EC\uD568",
+      includeCoverDesc: "\uD45C\uC9C0 \uC774\uBBF8\uC9C0\uAC00 \uC5C6\uC744 \uB54C \uD14D\uC2A4\uD2B8 \uD45C\uC9C0 \uD398\uC774\uC9C0\uB97C \uC0DD\uC131\uD569\uB2C8\uB2E4."
+    },
+    log: {
+      heading: "\uC77C\uC77C \uAE00\uC4F0\uAE30 \uB85C\uADF8",
+      appendToDailyNote: "\uC77C\uC77C \uB178\uD2B8\uC5D0 \uCD94\uAC00",
+      appendToDailyNoteDesc: "\uAC01 \uC2A4\uD504\uB9B0\uD2B8 \uD6C4 \uC624\uB298\uC758 \uC77C\uC77C \uB178\uD2B8\uC5D0 \uAE00\uC4F0\uAE30 \uD65C\uB3D9 \uC694\uC57D\uC744 \uCD94\uAC00\uD569\uB2C8\uB2E4."
+    },
+    wordpress: {
+      sitesHeading: "WordPress \uC0AC\uC774\uD2B8",
+      addSite: "+ WordPress \uC0AC\uC774\uD2B8 \uCD94\uAC00",
+      wikilinksHeading: "\uC704\uD0A4\uB9C1\uD06C \uAE30\uBCF8\uAC12",
+      defaultWikilinkHandling: "\uAE30\uBCF8 \uC704\uD0A4\uB9C1\uD06C \uCC98\uB9AC",
+      wikilinkStrip: "\uC81C\uAC70 (\uC77C\uBC18 \uD14D\uC2A4\uD2B8\uB85C \uBCC0\uD658)",
+      wikilinkConvert: "URL\uB85C \uBCC0\uD658",
+      siteHeading: "\uC0AC\uC774\uD2B8: {{nickname}}",
+      siteUnnamed: "\uC774\uB984 \uC5C6\uC74C",
+      nickname: "\uBCC4\uBA85",
+      siteUrl: "\uC0AC\uC774\uD2B8 URL",
+      username: "\uC0AC\uC6A9\uC790 \uC774\uB984",
+      appPassword: "\uC560\uD50C\uB9AC\uCF00\uC774\uC158 \uBE44\uBC00\uBC88\uD638",
+      appPasswordDesc: "WordPress\uC758 \uC0AC\uC6A9\uC790 \u2192 \uD504\uB85C\uD544 \u2192 \uC560\uD50C\uB9AC\uCF00\uC774\uC158 \uBE44\uBC00\uBC88\uD638\uC5D0\uC11C \uC0DD\uC131\uD569\uB2C8\uB2E4.",
+      defaultPostStatus: "\uAE30\uBCF8 \uAC8C\uC2DC\uBB3C \uC0C1\uD0DC",
+      postStatus: {
+        draft: "\uC784\uC2DC\uAE00",
+        pending: "\uAC80\uD1A0 \uB300\uAE30 \uC911",
+        publish: "\uAC8C\uC2DC\uB428"
+      },
+      wikilinkHandling: "\uC704\uD0A4\uB9C1\uD06C \uCC98\uB9AC",
+      wikilinkHandlingStrip: "\uC81C\uAC70",
+      wikilinkHandlingConvert: "URL\uB85C \uBCC0\uD658",
+      testConnection: "\uC5F0\uACB0 \uD14C\uC2A4\uD2B8",
+      testConnectionDesc: "\uC790\uACA9 \uC99D\uBA85\uACFC \uC5F0\uACB0\uC744 \uD655\uC778\uD569\uB2C8\uB2E4.",
+      testing: "\uD14C\uC2A4\uD2B8 \uC911\u2026",
+      removeSite: "\uC0AC\uC774\uD2B8 \uC81C\uAC70",
+      buyMeACoffee: "\uCEE4\uD53C \uD55C \uC794 \uC0AC\uC8FC\uAE30"
+    }
+  },
+  binder: {
+    displayText: "\uAE00\uC4F0\uAE30 \uBC14\uC778\uB354",
+    selectProject: "\u2014 \uD504\uB85C\uC81D\uD2B8 \uC120\uD0DD \u2014",
+    newProject: "\uC0C8 \uD504\uB85C\uC81D\uD2B8",
+    addDocument: "+ \uBB38\uC11C",
+    addFiles: "\uC774 \uD3F4\uB354\uC5D0 \uBCF5\uC0AC\uB41C \uD30C\uC77C \uCD94\uAC00",
+    targetsDashboard: "\uBAA9\uD45C \uB300\uC2DC\uBCF4\uB4DC",
+    searchPlaceholder: "\uBB38\uC11C \uAC80\uC0C9\u2026",
+    noProjectSelected: "\uC120\uD0DD\uB41C \uD504\uB85C\uC81D\uD2B8\uAC00 \uC5C6\uC2B5\uB2C8\uB2E4. \uAE00\uC4F0\uAE30 \uD504\uB85C\uC81D\uD2B8\uB97C \uB9CC\uB4E4\uAC70\uB098 \uC120\uD0DD\uD558\uC5EC \uC2DC\uC791\uD558\uC138\uC694.",
+    noDocuments: '\uC544\uC9C1 \uBB38\uC11C\uAC00 \uC5C6\uC2B5\uB2C8\uB2E4. "+ \uBB38\uC11C"\uB97C \uD074\uB9AD\uD558\uC5EC \uCD94\uAC00\uD558\uC138\uC694.',
+    dropToRoot: "\u2193 \uC5EC\uAE30\uC5D0 \uB193\uC544 \uB8E8\uD2B8\uB85C \uC62C\uB9AC\uAE30",
+    selectProjectFirst: "\uBA3C\uC800 \uD504\uB85C\uC81D\uD2B8\uB97C \uC120\uD0DD\uD558\uC138\uC694.",
+    cannotFindFile: "\uD30C\uC77C\uC744 \uCC3E\uC744 \uC218 \uC5C6\uC2B5\uB2C8\uB2E4: {{filePath}}. \uBB38\uC11C \uC774\uB984 \uBC14\uAFB8\uAE30 \uB610\uB294 \uB2E4\uC2DC \uC5F0\uACB0\uC744 \uC2DC\uB3C4\uD574 \uBCF4\uC138\uC694.",
+    untitledDocument: "\uC81C\uBAA9 \uC5C6\uC74C {{time}}",
+    noNewFiles: "\uD504\uB85C\uC81D\uD2B8 \uD3F4\uB354\uC5D0\uC11C \uC0C8 \uD30C\uC77C\uC744 \uCC3E\uC744 \uC218 \uC5C6\uC2B5\uB2C8\uB2E4.",
+    pctComplete: "{{pct}}% \uC644\uB8CC",
+    copySuffix: "(\uBCF5\uC0AC)",
+    menu: {
+      openDocument: "\uBB38\uC11C \uC5F4\uAE30",
+      newChildDocument: "\uC0C8 \uD558\uC704 \uBB38\uC11C",
+      setStatusDraft: "\uC0C1\uD0DC \uC124\uC815: \uC784\uC2DC\uAE00",
+      setStatusInProgress: "\uC0C1\uD0DC \uC124\uC815: \uC9C4\uD589 \uC911",
+      setStatusComplete: "\uC0C1\uD0DC \uC124\uC815: \uC644\uB8CC",
+      setStatusPublished: "\uC0C1\uD0DC \uC124\uC815: \uAC8C\uC2DC\uB428",
+      duplicate: "\uBCF5\uC81C",
+      moveToResearch: "\uB9AC\uC11C\uCE58\uB85C \uC774\uB3D9",
+      publishToWordPress: "WordPress\uC5D0 \uAC8C\uC2DC",
+      delete: "\uC0AD\uC81C"
+    },
+    wordCountSuffix: "{{count}}\uC790"
+  },
+  launcher: {
+    displayText: "\uAE00\uC4F0\uAE30 \uC2A4\uD29C\uB514\uC624",
+    title: "\uAE00\uC4F0\uAE30 \uC2A4\uD29C\uB514\uC624",
+    settings: "\uC124\uC815",
+    project: "\uD504\uB85C\uC81D\uD2B8",
+    newProject: "+ \uC0C8\uB85C \uB9CC\uB4E4\uAE30",
+    noProjectSelected: "\uC120\uD0DD\uB41C \uD504\uB85C\uC81D\uD2B8\uAC00 \uC5C6\uC2B5\uB2C8\uB2E4.",
+    chooseProject: "\u2014 \uD504\uB85C\uC81D\uD2B8 \uC120\uD0DD \u2014",
+    wordCount: "{{n}} \uB2E8\uC5B4",
+    wordGoal: "/ {{n}} \uBAA9\uD45C",
+    pctComplete: "{{pct}}% \uC644\uB8CC",
+    openBinder: "\u{1F4D6} \uBC14\uC778\uB354 \uC5F4\uAE30",
+    writingMode: "\uAE00\uC4F0\uAE30 \uBAA8\uB4DC",
+    mode: {
+      draft: "\uCD08\uC548",
+      draftDesc: "\uC9D1\uC911 + \uD0C0\uC774\uD3EC\uADF8\uB798\uD53C \uCF1C\uC9D0, \uC0AC\uC774\uB4DC\uBC14 \uC228\uACA8\uC9D0",
+      edit: "\uD3B8\uC9D1",
+      editDesc: "\uBC14\uC778\uB354 \uC5F4\uB9BC, \uC804\uCCB4 UI \uD45C\uC2DC",
+      review: "\uAC80\uD1A0",
+      reviewDesc: "\uC77D\uAE30 \uBCF4\uAE30, \uD3B8\uC9D1 \uC5C6\uC74C",
+      clearMode: "\u2715 \uBAA8\uB4DC \uC9C0\uC6B0\uAE30"
+    },
+    focusTypography: "\uC9D1\uC911 \uBC0F \uD0C0\uC774\uD3EC\uADF8\uB798\uD53C",
+    focusMode: "\uC9D1\uC911 \uBAA8\uB4DC",
+    typographyMode: "\uD0C0\uC774\uD3EC\uADF8\uB798\uD53C \uBAA8\uB4DC",
+    on: "\uCF1C\uC9D0",
+    off: "\uAEBC\uC9D0",
+    quickActions: "\uBE60\uB978 \uC791\uC5C5",
+    action: {
+      targetsDashboard: "\uBAA9\uD45C \uB300\uC2DC\uBCF4\uB4DC",
+      writingDashboard: "\uAE00\uC4F0\uAE30 \uB300\uC2DC\uBCF4\uB4DC",
+      previewManuscript: "\uC6D0\uACE0 \uBBF8\uB9AC\uBCF4\uAE30",
+      export: "\uB0B4\uBCF4\uB0B4\uAE30",
+      writingLog: "\uAE00\uC4F0\uAE30 \uB85C\uADF8",
+      publishToWordPress: "WordPress\uC5D0 \uAC8C\uC2DC"
+    },
+    openDocumentFirst: "\uBA3C\uC800 \uBB38\uC11C\uB97C \uC5EC\uC138\uC694.",
+    sprintTimer: "\uC2A4\uD504\uB9B0\uD2B8 \uD0C0\uC774\uBA38",
+    pause: "\u23F8 \uC77C\uC2DC\uC815\uC9C0",
+    stop: "\u25A0 \uC815\uC9C0",
+    startSprint: "\u23F1 \uC2A4\uD504\uB9B0\uD2B8 \uC2DC\uC791",
+    quickStart: "\uBE60\uB978 \uC2DC\uC791:",
+    today: "\uC624\uB298",
+    stat: {
+      words: "\uB2E8\uC5B4 \uC218",
+      sprints: "\uC2A4\uD504\uB9B0\uD2B8",
+      minutes: "\uBD84",
+      streak: "\uC5F0\uC18D",
+      streakDays: "{{streak}}\uC77C"
+    },
+    sessionWordsTyped: "\uC138\uC158: +{{n}} \uB2E8\uC5B4 \uC785\uB825",
+    dailyGoal: "\uC77C\uC77C \uBAA9\uD45C: {{written}} / {{goal}} \uB2E8\uC5B4"
+  },
+  log: {
+    displayText: "\uAE00\uC4F0\uAE30 \uB85C\uADF8",
+    title: "\uAE00\uC4F0\uAE30 \uB85C\uADF8",
+    noProjectSelected: "\uC120\uD0DD\uB41C \uD504\uB85C\uC81D\uD2B8\uAC00 \uC5C6\uC2B5\uB2C8\uB2E4. \uC2E4\uD589\uAE30\uB97C \uC5F4\uACE0 \uD504\uB85C\uC81D\uD2B8\uB97C \uC120\uD0DD\uD558\uC5EC \uAE00\uC4F0\uAE30 \uAE30\uB85D\uC744 \uD655\uC778\uD558\uC138\uC694.",
+    streak: "\u{1F525} {{streak}}\uC77C \uC5F0\uC18D",
+    startStreak: "\uC624\uB298 \uC4F0\uAE30\uB97C \uC2DC\uC791\uD558\uC5EC \uC5F0\uC18D \uAE30\uB85D\uC744 \uC2DC\uC791\uD558\uC138\uC694",
+    thisSession: "\uC774\uBC88 \uC138\uC158",
+    stat: {
+      session: "\uC138\uC158",
+      sprintWords: "\uC2A4\uD504\uB9B0\uD2B8 \uB2E8\uC5B4 \uC218",
+      sprints: "\uC2A4\uD504\uB9B0\uD2B8",
+      minutes: "\uBD84"
+    },
+    last30Days: "\uCD5C\uADFC 30\uC77C",
+    today: "\uC624\uB298",
+    sprintsCount_one: "\xB7 {{count}} \uC2A4\uD504\uB9B0\uD2B8",
+    sprintsCount_other: "\xB7 {{count}} \uC2A4\uD504\uB9B0\uD2B8"
+  },
+  sprint: {
+    started: "\uC2A4\uD504\uB9B0\uD2B8 \uC2DC\uC791: {{minutes}}\uBD84",
+    complete: "\uC2A4\uD504\uB9B0\uD2B8 \uC644\uB8CC! \uC798\uD558\uC168\uC2B5\uB2C8\uB2E4.",
+    words: "+{{n}} \uB2E8\uC5B4",
+    header: "\uAE00\uC4F0\uAE30 \uC2A4\uD504\uB9B0\uD2B8",
+    pauseTitle: "\uC77C\uC2DC\uC815\uC9C0/\uC7AC\uAC1C",
+    stopTitle: "\uC2A4\uD504\uB9B0\uD2B8 \uC911\uC9C0"
+  },
+  writingModes: {
+    switchedTo: "\uAE00\uC4F0\uAE30 \uC2A4\uD29C\uB514\uC624: {{mode}} \uBAA8\uB4DC",
+    normal: "\uC77C\uBC18",
+    statusDraft: "\u270D \uCD08\uC548",
+    statusEdit: "\u270E \uD3B8\uC9D1",
+    statusReview: "\u{1F441} \uAC80\uD1A0",
+    statusNone: "\u2014 \uBAA8\uB4DC"
+  },
+  exportEngine: {
+    epubExported: "EPUB\uC744 {{path}}\uC5D0 \uB0B4\uBCF4\uB0C8\uC2B5\uB2C8\uB2E4",
+    manuscriptExported: "\uC6D0\uACE0\uB97C {{path}}\uC5D0 \uB0B4\uBCF4\uB0C8\uC2B5\uB2C8\uB2E4",
+    exportedTo: "{{path}}\uC5D0 \uB0B4\uBCF4\uB0C8\uC2B5\uB2C8\uB2E4",
+    exportedHtmlTo: "HTML\uC744 {{path}}\uC5D0 \uB0B4\uBCF4\uB0C8\uC2B5\uB2C8\uB2E4",
+    pdfRequiresPandoc: "PDF \uB0B4\uBCF4\uB0B4\uAE30\uC5D0\uB294 pandoc\uC774 \uD544\uC694\uD569\uB2C8\uB2E4. pandoc\uC744 \uC124\uCE58\uD558\uACE0 \uC124\uC815\uC5D0\uC11C \uACBD\uB85C\uB97C \uC124\uC815\uD558\uC138\uC694."
+  },
+  wpClient: {
+    authFailed: "\uC778\uC99D\uC5D0 \uC2E4\uD328\uD588\uC2B5\uB2C8\uB2E4. \uC0AC\uC6A9\uC790 \uC774\uB984\uACFC \uC560\uD50C\uB9AC\uCF00\uC774\uC158 \uBE44\uBC00\uBC88\uD638\uB97C \uD655\uC778\uD558\uC138\uC694.",
+    connectedAs: '"{{site}}"\uC5D0 "{{user}}"\uB85C \uC5F0\uACB0\uB418\uC5C8\uC2B5\uB2C8\uB2E4',
+    networkError: "\uB124\uD2B8\uC6CC\uD06C \uC624\uB958: {{error}}",
+    httpError: "HTTP {{status}}",
+    fetchCategoriesFailed: "\uCE74\uD14C\uACE0\uB9AC\uB97C \uAC00\uC838\uC624\uC9C0 \uBABB\uD588\uC2B5\uB2C8\uB2E4: {{error}}"
+  },
+  folderSidebar: {
+    displayText: "\uD3F4\uB354 \uD0D0\uC0C9\uAE30",
+    back: "\u2190 \uB4A4\uB85C",
+    root: "\u2302 \uB8E8\uD2B8",
+    insertSelection: "\u21A9 \uC120\uD0DD \uC0BD\uC785",
+    searchPlaceholder: "\uC774\uB984 \uBC0F \uB0B4\uC6A9 \uAC80\uC0C9\u2026 (Enter)",
+    sort: {
+      foldersAz: "\uD3F4\uB354 \u2191 A-Z",
+      foldersZa: "\uD3F4\uB354 \u2191 Z-A",
+      az: "\uC774\uB984 A-Z",
+      za: "\uC774\uB984 Z-A",
+      modifiedNew: "\uCD5C\uC2E0\uC21C",
+      modifiedOld: "\uC624\uB798\uB41C \uC21C"
+    },
+    noPreview: ".{{ext}} \uD30C\uC77C\uC5D0 \uB300\uD55C \uBBF8\uB9AC\uBCF4\uAE30\uB97C \uC0AC\uC6A9\uD560 \uC218 \uC5C6\uC2B5\uB2C8\uB2E4",
+    openInEditor: "\uD3B8\uC9D1\uAE30\uC5D0\uC11C \uC5F4\uAE30",
+    searching: "\uAC80\uC0C9 \uC911\u2026",
+    noResults: '"{{query}}"\uC5D0 \uB300\uD55C \uACB0\uACFC \uC5C6\uC74C',
+    emptyFolder: "\uC774 \uD3F4\uB354\uB294 \uBE44\uC5B4 \uC788\uC2B5\uB2C8\uB2E4",
+    tooltip: {
+      modified: "\uC218\uC815\uB428",
+      size: "\uD06C\uAE30",
+      words: "\uB2E8\uC5B4 \uC218",
+      files: "\uD30C\uC77C",
+      subfolders: "\uD558\uC704 \uD3F4\uB354"
+    },
+    pickerPlaceholder: "\uC0AC\uC774\uB4DC\uBC14 \uD0D0\uC0C9\uAE30\uC5D0\uC11C \uC5F4 \uD3F4\uB354 \uC774\uB984 \uC785\uB825\u2026",
+    vaultRoot: "/ (\uBCFC\uD2B8 \uB8E8\uD2B8)"
+  },
+  focusToolbar: {
+    exitTitle: "\uC9D1\uC911 \uBAA8\uB4DC \uC885\uB8CC (esc)",
+    exitBtn: "\u2715 \uC885\uB8CC",
+    wordCount_one: "{{count}} \uB2E8\uC5B4",
+    wordCount_other: "{{count}} \uB2E8\uC5B4"
+  },
+  compilePreview: {
+    displayText: "\uCEF4\uD30C\uC77C\uB41C \uC6D0\uACE0",
+    jumpToSection: "\uC139\uC158\uC73C\uB85C \uC774\uB3D9...",
+    proceedToExport: "\uB0B4\uBCF4\uB0B4\uAE30 \uC9C4\uD589",
+    closePreview: "\uBBF8\uB9AC\uBCF4\uAE30 \uB2EB\uAE30",
+    noContent: "\uBBF8\uB9AC\uBCFC \uB0B4\uC6A9\uC774 \uC5C6\uC2B5\uB2C8\uB2E4. \uBA3C\uC800 \uAE00\uC4F0\uAE30 \uD504\uB85C\uC81D\uD2B8\uB97C \uC5EC\uC138\uC694."
+  },
+  projectModal: {
+    title: "\uC0C8 \uAE00\uC4F0\uAE30 \uD504\uB85C\uC81D\uD2B8",
+    projectTitle: "\uD504\uB85C\uC81D\uD2B8 \uC81C\uBAA9",
+    titlePlaceholder: "\uB0B4 \uC18C\uC124",
+    template: "\uD15C\uD50C\uB9BF",
+    templateDesc: "\uC0AC\uC804 \uAD6C\uC131\uB41C \uD504\uB85C\uC81D\uD2B8 \uAD6C\uC870\uB97C \uC120\uD0DD\uD558\uC138\uC694.",
+    templateOption: {
+      blank: "\uBE48\uCE78 (\uC0AC\uC6A9\uC790 \uC815\uC758 \uAD6C\uC870)",
+      book: "\uCC45 (\uD30C\uD2B8 \u2192 \uCC55\uD130 \u2192 \uC52C)",
+      series: "\uAE30\uC0AC \uC2DC\uB9AC\uC988 (\uC2DC\uB9AC\uC988 \u2192 \uAE30\uC0AC)",
+      blog: "\uBE14\uB85C\uADF8 \uCEEC\uB809\uC158 (\uB0A0\uC9DC/\uCE74\uD14C\uACE0\uB9AC\uBCC4 \uAC8C\uC2DC\uBB3C)",
+      journalArticle: "\uD559\uC220\uC9C0 \uB17C\uBB38 \u2014 \uD559\uC220 \uB610\uB294 \uC804\uBB38 \uD559\uC220\uC9C0 \uC81C\uCD9C",
+      magazineArticle: "\uC7A1\uC9C0 \uAE30\uC0AC \u2014 \uD2B9\uC9D1, \uC7A5\uD3B8 \uB610\uB294 \uB0B4\uB7EC\uD2F0\uBE0C \uB17C\uD53D\uC158"
+    },
+    descriptionLabel: "\uC124\uBA85 (\uC120\uD0DD\uC0AC\uD56D)",
+    descriptionPlaceholder: "\uC774 \uD504\uB85C\uC81D\uD2B8\uC5D0 \uB300\uD55C \uAC04\uB7B5\uD55C \uC124\uBA85\u2026",
+    preview: {
+      blank: "\uBE48 \uD504\uB85C\uC81D\uD2B8 \u2014 \uC9C1\uC811 \uAD6C\uC870\uB97C \uB9CC\uB4DC\uC138\uC694.",
+      book: "\uC0DD\uC131: \uC55E\uBD80\uBD84, 1\uBD80 / 1\uC7A5, \uB4B7\uBD80\uBD84 \uD50C\uB808\uC774\uC2A4\uD640\uB354.",
+      series: "\uC0DD\uC131: \uC2DC\uB9AC\uC988 \uD3F4\uB354, \uCCAB \uBC88\uC9F8 \uAE30\uC0AC \uD50C\uB808\uC774\uC2A4\uD640\uB354, \uC2DC\uB9AC\uC988 \uBA54\uD0C0\uB370\uC774\uD130.",
+      blog: "\uC0DD\uC131: \uB0A0\uC9DC \uAD6C\uC131 \uD3F4\uB354, \uCCAB \uBC88\uC9F8 \uAC8C\uC2DC\uBB3C \uD50C\uB808\uC774\uC2A4\uD640\uB354.",
+      journalArticle: "\uC0DD\uC131: \uD45C\uC9C0, \uCD08\uB85D, \uD0A4\uC6CC\uB4DC, \uC11C\uB860, \uBB38\uD5CC \uAC80\uD1A0, \uBC29\uBC95\uB860, \uACB0\uACFC/\uBD84\uC11D, \uD1A0\uB860, \uACB0\uB860, \uCC38\uACE0\uBB38\uD5CC, \uBD80\uB85D.",
+      magazineArticle: "\uC0DD\uC131: \uD53C\uCE58/\uBB38\uC758 \uBA54\uBAA8, \uC81C\uBAA9 \uBC0F \uB371, \uB9AC\uB4DC, \uD575\uC2EC \uB2E8\uB77D, \uBCF8\uBB38, \uC778\uC6A9 \uBC0F \uCD9C\uCC98, \uB9C8\uBB34\uB9AC, \uD329\uD2B8 \uCCB4\uD06C \uBA54\uBAA8, \uC800\uC790 \uC57D\uB825. \uBA54\uBAA8 \uBB38\uC11C\uB294 \uAE30\uBCF8\uC801\uC73C\uB85C \uB0B4\uBCF4\uB0B4\uAE30\uC5D0\uC11C \uC81C\uC678\uB429\uB2C8\uB2E4."
+    },
+    createBtn: "\uD504\uB85C\uC81D\uD2B8 \uB9CC\uB4E4\uAE30",
+    creating: "\uB9CC\uB4DC\uB294 \uC911\u2026",
+    errorNoTitle: "\uD504\uB85C\uC81D\uD2B8 \uC81C\uBAA9\uC744 \uC785\uB825\uD558\uC138\uC694.",
+    errorCreate: "\uD504\uB85C\uC81D\uD2B8 \uB9CC\uB4E4\uAE30 \uC2E4\uD328: {{error}}",
+    created: '\uD504\uB85C\uC81D\uD2B8 "{{title}}"\uC774(\uAC00) \uB9CC\uB4E4\uC5B4\uC84C\uC2B5\uB2C8\uB2E4!',
+    cancel: "\uCDE8\uC18C"
+  },
+  sprintModal: {
+    title: "\uAE00\uC4F0\uAE30 \uC2A4\uD504\uB9B0\uD2B8 \uC2DC\uC791",
+    durationName: "\uC2DC\uAC04 (\uBD84)",
+    durationDesc: "\uC0AC\uC804 \uC124\uC815: 10, 15, 25, 30, 45, 60",
+    durationCustom: "\uC0AC\uC6A9\uC790 \uC815\uC758\u2026",
+    durationCustomPlaceholder: "\uC0AC\uC6A9\uC790 \uC815\uC758 \uBD84",
+    wordGoalName: "\uB2E8\uC5B4 \uC218 \uBAA9\uD45C (\uC120\uD0DD\uC0AC\uD56D)",
+    wordGoalDesc: "\uBAA9\uD45C \uC5C6\uC774 0\uC73C\uB85C \uB450\uC138\uC694.",
+    scopeName: "\uBC94\uC704",
+    scopeFile: "\uD604\uC7AC \uD30C\uC77C",
+    scopeProject: "\uC804\uCCB4 \uD504\uB85C\uC81D\uD2B8",
+    startBtn: "\uC2A4\uD504\uB9B0\uD2B8 \uC2DC\uC791",
+    errorDuration: "\uC720\uD6A8\uD55C \uC2DC\uAC04\uC744 \uC124\uC815\uD558\uC138\uC694.",
+    cancel: "\uCDE8\uC18C"
+  },
+  exportModal: {
+    title: "\uBB38\uC11C \uB0B4\uBCF4\uB0B4\uAE30",
+    formatName: "\uD615\uC2DD",
+    format: {
+      md: "Markdown (.md)",
+      html: "HTML",
+      manuscript: "\uC6D0\uACE0 (HTML)",
+      epub: "EPUB (.epub)",
+      pdf: "PDF (pandoc \uD544\uC694)",
+      docx: "Word (.docx) (pandoc \uD544\uC694)",
+      rtf: "RTF (pandoc \uD544\uC694)"
+    },
+    coverImageName: "\uD45C\uC9C0 \uC774\uBBF8\uC9C0 \uACBD\uB85C",
+    coverImageDesc: "JPG \uB610\uB294 PNG \uD45C\uC9C0 \uC774\uBBF8\uC9C0\uC758 \uBCFC\uD2B8 \uACBD\uB85C. \uC0DD\uC131\uB41C \uD14D\uC2A4\uD2B8 \uD45C\uC9C0\uC758 \uACBD\uC6B0 \uBE44\uC6CC \uB450\uC138\uC694.",
+    coverImagePlaceholder: "\uC608: Assets/cover.jpg",
+    contactInfoName: "\uC5F0\uB77D\uCC98 \uC815\uBCF4 (\uC120\uD0DD\uC0AC\uD56D)",
+    contactInfoDesc: "\uD45C\uC9C0\uC5D0 \uD45C\uC2DC \u2014 \uC774\uB984, \uC774\uBA54\uC77C \uB610\uB294 \uC8FC\uC18C.",
+    contactInfoPlaceholder: "\uC774\uB984, \uC774\uBA54\uC77C \uB610\uB294 \uC8FC\uC18C",
+    scopeName: "\uBC94\uC704",
+    scopeCurrent: "\uD604\uC7AC \uBB38\uC11C",
+    scopeProject: "\uC804\uCCB4 \uD504\uB85C\uC81D\uD2B8 (\uBC14\uC778\uB354 \uC21C\uC11C\uB85C)",
+    includeFrontmatter: "\uD504\uB860\uD2B8\uB9E4\uD130 \uD3EC\uD568",
+    includeResearch: "\uB9AC\uC11C\uCE58 \uB178\uD2B8 \uD3EC\uD568",
+    includeTitlesAsHeadings: "\uBB38\uC11C \uC81C\uBAA9\uC744 \uC81C\uBAA9\uC73C\uB85C \uD3EC\uD568",
+    addTitlePage: "\uD45C\uC9C0 \uCD94\uAC00",
+    addTitlePageDesc: "\uD504\uB85C\uC81D\uD2B8 \uC81C\uBAA9, \uC800\uC790 \uBC0F \uB0A0\uC9DC\uAC00 \uC788\uB294 \uD45C\uC9C0\uB97C \uC55E\uC5D0 \uCD94\uAC00\uD569\uB2C8\uB2E4.",
+    previewBtn: "\uCEF4\uD30C\uC77C\uB41C \uC6D0\uACE0 \uBBF8\uB9AC\uBCF4\uAE30",
+    exportBtn: "\uB0B4\uBCF4\uB0B4\uAE30",
+    exporting: "\uB0B4\uBCF4\uB0B4\uB294 \uC911\u2026",
+    exportFailed: "\uB0B4\uBCF4\uB0B4\uAE30 \uC2E4\uD328: {{error}}",
+    cancel: "\uCDE8\uC18C"
+  },
+  publishModal: {
+    title: "WordPress\uC5D0 \uAC8C\uC2DC",
+    noSites: "WordPress \uC0AC\uC774\uD2B8\uAC00 \uAD6C\uC131\uB418\uC9C0 \uC54A\uC558\uC2B5\uB2C8\uB2E4. \uC124\uC815 \u2192 WordPress\uC5D0\uC11C \uC0AC\uC774\uD2B8\uB97C \uCD94\uAC00\uD558\uC138\uC694.",
+    close: "\uB2EB\uAE30",
+    siteName: "WordPress \uC0AC\uC774\uD2B8",
+    postTitleName: "\uAC8C\uC2DC\uBB3C \uC81C\uBAA9",
+    postStatusName: "\uAC8C\uC2DC\uBB3C \uC0C1\uD0DC",
+    postStatus: {
+      draft: "\uC784\uC2DC\uAE00",
+      pending: "\uAC80\uD1A0 \uB300\uAE30 \uC911",
+      publish: "\uAC8C\uC2DC\uB428"
+    },
+    categoryName: "\uCE74\uD14C\uACE0\uB9AC",
+    tagsName: "\uD0DC\uADF8",
+    tagsDesc: "\uC27C\uD45C\uB85C \uAD6C\uBD84.",
+    excerptName: "\uBC1C\uCDCC (\uC120\uD0DD\uC0AC\uD56D)",
+    scheduleName: "\uAC8C\uC2DC \uC608\uC57D (\uC120\uD0DD\uC0AC\uD56D)",
+    scheduleDesc: "\uC989\uC2DC \uAC8C\uC2DC\uD558\uB824\uBA74 \uBE44\uC6CC \uB450\uC138\uC694.",
+    schedulePlaceholder: "yyyy-mm-ddThh:mm:ss",
+    existingNotice: "\u26A0 \uC774 \uBB38\uC11C\uB294 \uC774\uC804\uC5D0 \uAC8C\uC2DC\uB418\uC5C8\uC2B5\uB2C8\uB2E4 (\uAC8C\uC2DC\uBB3C ID: {{id}}).",
+    updatePost: "\uAE30\uC874 \uAC8C\uC2DC\uBB3C \uC5C5\uB370\uC774\uD2B8",
+    newPost: "\uC0C8 \uAC8C\uC2DC\uBB3C \uB9CC\uB4E4\uAE30",
+    schedule: "\uC608\uC57D",
+    publish: "\uAC8C\uC2DC",
+    cancel: "\uCDE8\uC18C",
+    noSiteSelected: "\uC120\uD0DD\uB41C \uC0AC\uC774\uD2B8\uAC00 \uC5C6\uC2B5\uB2C8\uB2E4.",
+    fileNotFound: "\uD30C\uC77C\uC744 \uCC3E\uC744 \uC218 \uC5C6\uC2B5\uB2C8\uB2E4.",
+    publishFailed: "\uAC8C\uC2DC \uC2E4\uD328: {{error}}",
+    published: "\uAC8C\uC2DC\uB428",
+    scheduled: "\uC608\uC57D\uB428",
+    actionNotice: "{{action}}! \uAC8C\uC2DC\uBB3C \uBCF4\uAE30: {{url}}"
+  },
+  targetsDashboard: {
+    title: "\uCC55\uD130 \uBAA9\uD45C \uB300\uC2DC\uBCF4\uB4DC",
+    noProject: "\uC120\uD0DD\uB41C \uD504\uB85C\uC81D\uD2B8\uAC00 \uC5C6\uC2B5\uB2C8\uB2E4.",
+    filterLabel: "\uD544\uD130: ",
+    allStatuses: "\uBAA8\uB4E0 \uC0C1\uD0DC",
+    refresh: "\u21BB \uC0C8\uB85C \uACE0\uCE68",
+    col: {
+      title: "\uC81C\uBAA9",
+      type: "\uC720\uD615",
+      status: "\uC0C1\uD0DC",
+      words: "\uB2E8\uC5B4 \uC218",
+      goal: "\uBAA9\uD45C",
+      progress: "\uC9C4\uD589 \uC0C1\uD669",
+      readingTime: "\uC77D\uAE30 \uC2DC\uAC04"
+    },
+    total: "\uD569\uACC4",
+    status: {
+      draft: "\uC784\uC2DC\uAE00",
+      inProgress: "\uC9C4\uD589 \uC911",
+      complete: "\uC644\uB8CC",
+      published: "\uAC8C\uC2DC\uB428"
+    },
+    typeLabel: {
+      chapter: "\uCC55\uD130",
+      section: "\uC139\uC158",
+      article: "\uAE30\uC0AC",
+      note: "\uB178\uD2B8",
+      group: "\uADF8\uB8F9",
+      part: "\uD30C\uD2B8"
+    }
+  },
+  writingDashboard: {
+    title: "\uAE00\uC4F0\uAE30 \uB300\uC2DC\uBCF4\uB4DC",
+    thisSession: "\uC774\uBC88 \uC138\uC158",
+    stat: {
+      wordsWritten: "\uC791\uC131\uD55C \uB2E8\uC5B4 \uC218",
+      sprints: "\uC2A4\uD504\uB9B0\uD2B8",
+      minutes: "\uBD84",
+      writingStreak: "\uAE00\uC4F0\uAE30 \uC5F0\uC18D",
+      streakDays_one: "{{count}}\uC77C",
+      streakDays_other: "{{count}}\uC77C",
+      totalWords: "\uCD1D \uB2E8\uC5B4 \uC218",
+      goal: "\uBAA9\uD45C",
+      progress: "\uC9C4\uD589 \uC0C1\uD669",
+      readingTime: "\uC77D\uAE30 \uC2DC\uAC04"
+    },
+    project: "\uD504\uB85C\uC81D\uD2B8: {{title}}",
+    recentSprints: "\uCD5C\uADFC \uC2A4\uD504\uB9B0\uD2B8",
+    noSprints: "\uC544\uC9C1 \uAE30\uB85D\uB41C \uC2A4\uD504\uB9B0\uD2B8\uAC00 \uC5C6\uC2B5\uB2C8\uB2E4.",
+    sprintTable: {
+      date: "\uB0A0\uC9DC",
+      duration: "\uC2DC\uAC04",
+      words: "\uB2E8\uC5B4 \uC218",
+      wpm: "WPM",
+      goal: "\uBAA9\uD45C"
+    },
+    documentWordCounts: "\uBB38\uC11C \uB2E8\uC5B4 \uC218",
+    docTable: {
+      document: "\uBB38\uC11C",
+      words: "\uB2E8\uC5B4 \uC218",
+      readingTime: "\uC77D\uAE30 \uC2DC\uAC04"
+    },
+    close: "\uB2EB\uAE30"
+  },
+  addToProject: {
+    title: "\uAE00\uC4F0\uAE30 \uD504\uB85C\uC81D\uD2B8\uC5D0 \uCD94\uAC00",
+    noProjects: "\uAE00\uC4F0\uAE30 \uD504\uB85C\uC81D\uD2B8\uB97C \uCC3E\uC744 \uC218 \uC5C6\uC2B5\uB2C8\uB2E4. \uBA3C\uC800 \uD504\uB85C\uC81D\uD2B8\uB97C \uB9CC\uB4DC\uC138\uC694.",
+    close: "\uB2EB\uAE30",
+    file: "\uD30C\uC77C: {{path}}",
+    projectName: "\uAE00\uC4F0\uAE30 \uD504\uB85C\uC81D\uD2B8",
+    projectDesc: "\uC774 \uD30C\uC77C\uC744 \uC5B4\uB290 \uAE00\uC4F0\uAE30 \uD504\uB85C\uC81D\uD2B8\uC5D0 \uCD94\uAC00\uD558\uC2DC\uACA0\uC2B5\uB2C8\uAE4C?",
+    addBtn: "\uD504\uB85C\uC81D\uD2B8\uC5D0 \uCD94\uAC00",
+    cancel: "\uCDE8\uC18C"
+  },
+  scanFolder: {
+    title: "\uBC14\uC778\uB354\uC5D0 \uD30C\uC77C \uCD94\uAC00",
+    desc: "\uC774 \uD504\uB85C\uC81D\uD2B8\uC5D0 \uCD94\uAC00\uD560 \uD30C\uC77C\uC744 \uC120\uD0DD\uD558\uC138\uC694:",
+    addBtn: "\uC120\uD0DD\uD55C \uD30C\uC77C \uCD94\uAC00",
+    cancel: "\uCDE8\uC18C"
+  },
+  main: {
+    ribbonTitle: "\uAE00\uC4F0\uAE30 \uC2A4\uD29C\uB514\uC624 \uC5F4\uAE30",
+    cmd: {
+      openLauncher: "\uC2E4\uD589\uAE30 \uC5F4\uAE30",
+      openBinder: "\uBC14\uC778\uB354 \uC5F4\uAE30",
+      toggleFocusMode: "\uC9D1\uC911 \uBAA8\uB4DC \uC804\uD658",
+      toggleTypographyMode: "\uD0C0\uC774\uD3EC\uADF8\uB798\uD53C \uBAA8\uB4DC \uC804\uD658",
+      switchDraftMode: "\uCD08\uC548 \uBAA8\uB4DC\uB85C \uC804\uD658",
+      switchEditMode: "\uD3B8\uC9D1 \uBAA8\uB4DC\uB85C \uC804\uD658",
+      switchReviewMode: "\uAC80\uD1A0 \uBAA8\uB4DC\uB85C \uC804\uD658",
+      startSprint: "\uAE00\uC4F0\uAE30 \uC2A4\uD504\uB9B0\uD2B8 \uC2DC\uC791",
+      exportDocument: "\uBB38\uC11C \uB0B4\uBCF4\uB0B4\uAE30",
+      exportProject: "\uD504\uB85C\uC81D\uD2B8 \uB0B4\uBCF4\uB0B4\uAE30",
+      previewManuscript: "\uCEF4\uD30C\uC77C\uB41C \uC6D0\uACE0 \uBBF8\uB9AC\uBCF4\uAE30",
+      publishWordPress: "WordPress\uC5D0 \uAC8C\uC2DC",
+      newProject: "\uC0C8 \uAE00\uC4F0\uAE30 \uD504\uB85C\uC81D\uD2B8",
+      openDashboard: "\uAE00\uC4F0\uAE30 \uB300\uC2DC\uBCF4\uB4DC \uC5F4\uAE30",
+      openTargetsDashboard: "\uBAA9\uD45C \uB300\uC2DC\uBCF4\uB4DC \uC5F4\uAE30",
+      setWordCountGoal: "\uB2E8\uC5B4 \uC218 \uBAA9\uD45C \uC124\uC815",
+      openWritingLog: "\uAE00\uC4F0\uAE30 \uB85C\uADF8 \uC5F4\uAE30",
+      openFolderSidebar: "\uC0AC\uC774\uB4DC\uBC14 \uD0D0\uC0C9\uAE30\uC5D0\uC11C \uD3F4\uB354 \uC5F4\uAE30",
+      addFilesToBinder: "\uD504\uB85C\uC81D\uD2B8 \uD3F4\uB354\uC5D0 \uBCF5\uC0AC\uB41C \uD30C\uC77C \uCD94\uAC00"
+    },
+    menu: {
+      studioOptions: "\uAE00\uC4F0\uAE30 \uC2A4\uD29C\uB514\uC624 \uC635\uC158",
+      exportDoc: "\uC774 \uBB38\uC11C \uB0B4\uBCF4\uB0B4\uAE30",
+      publish: "WordPress\uC5D0 \uAC8C\uC2DC",
+      setGoal: "\uB2E8\uC5B4 \uC218 \uBAA9\uD45C \uC124\uC815",
+      switchMode: "\uAE00\uC4F0\uAE30 \uBAA8\uB4DC \uC804\uD658 \u2192",
+      typographyFont: "\uD0C0\uC774\uD3EC\uADF8\uB798\uD53C \uAE00\uAF34 \u2192",
+      addToProject: "\uAE00\uC4F0\uAE30 \uD504\uB85C\uC81D\uD2B8\uC5D0 \uCD94\uAC00",
+      openSidebar: "\uC0AC\uC774\uB4DC\uBC14 \uD0D0\uC0C9\uAE30\uC5D0\uC11C \uC5F4\uAE30",
+      draftMode: "\u270D \uCD08\uC548 \uBAA8\uB4DC",
+      editMode: "\u270E \uD3B8\uC9D1 \uBAA8\uB4DC",
+      reviewMode: "\u{1F441} \uAC80\uD1A0 \uBAA8\uB4DC",
+      normalMode: "\uC77C\uBC18 (\uBAA8\uB4DC \uC5C6\uC74C)"
+    },
+    notice: {
+      noMarkdownOpen: "\uD604\uC7AC \uC5F4\uB824 \uC788\uB294 Markdown \uD30C\uC77C\uC774 \uC5C6\uC2B5\uB2C8\uB2E4.",
+      addedToProject: '"{{file}}"\uC744(\uB97C) {{project}}\uC5D0 \uCD94\uAC00\uD588\uC2B5\uB2C8\uB2E4'
+    },
+    statusBar: {
+      projectWords: "{{total}} / {{goal}} \uD504\uB85C\uC81D\uD2B8 \uB2E8\uC5B4",
+      wordCount: "{{count}} \uB2E8\uC5B4",
+      wordCountGoal: "{{count}} / {{goal}} \uB2E8\uC5B4",
+      delta: "(+{{delta}})",
+      goalBanner: "{{count}} / {{goal}} \uB2E8\uC5B4 \u2014 {{pct}}%",
+      dismiss: "\uB2EB\uAE30"
+    }
+  },
+  sprintSummary: {
+    title: "\uC2A4\uD504\uB9B0\uD2B8 \uC644\uB8CC!",
+    wordsWritten: "\uC791\uC131\uD55C \uB2E8\uC5B4 \uC218",
+    duration: "\uC2DC\uAC04",
+    durationValue: "{{count}}\uBD84",
+    wpm: "\uB2E8\uC5B4/\uBD84",
+    goalProgress: "\uBAA9\uD45C \uC9C4\uD589 \uC0C1\uD669",
+    close: "\uB2EB\uAE30"
+  },
+  wordCountGoal: {
+    title: "\uB2E8\uC5B4 \uC218 \uBAA9\uD45C \uC124\uC815",
+    name: "\uB2E8\uC5B4 \uC218 \uBAA9\uD45C",
+    desc: "\uC774 \uBB38\uC11C\uC758 \uBAA9\uD45C \uB2E8\uC5B4 \uC218. \uC81C\uAC70\uD558\uB824\uBA74 0\uC73C\uB85C \uC124\uC815\uD558\uC138\uC694.",
+    placeholder: "\uC608: 1500",
+    save: "\uC800\uC7A5",
+    cancel: "\uCDE8\uC18C"
+  },
+  statsTracker: {
+    unknownProject: "\uC54C \uC218 \uC5C6\uB294 \uD504\uB85C\uC81D\uD2B8",
+    none: "\uC5C6\uC74C",
+    dailyNote: {
+      heading: "## \u270D\uFE0F \uAE00\uC4F0\uAE30 \uD65C\uB3D9",
+      project: "**\uD504\uB85C\uC81D\uD2B8:**",
+      documents: "**\uBB38\uC11C:**",
+      wordsWritten: "**\uC791\uC131\uD55C \uB2E8\uC5B4 \uC218:**",
+      sprintsCompleted: "**\uC644\uB8CC\uB41C \uC2A4\uD504\uB9B0\uD2B8:**",
+      sprintEntry: "1 ({{duration}}\uBD84)",
+      wpm: "**\uBD84\uB2F9 \uB2E8\uC5B4 \uC218:**",
+      sessionTotal: "**\uC138\uC158 \uD569\uACC4:**",
+      sessionTotalValue: "{{duration}}\uBD84"
+    },
+    readingTime: {
+      minutes: "{{count}}\uBD84",
+      hoursMinutes: "{{hours}}\uC2DC\uAC04 {{mins}}\uBD84",
+      hours: "{{hours}}\uC2DC\uAC04"
+    }
+  }
+};
+
 // src/i18n.ts
 function initI18n() {
   const lang = (0, import_obsidian.getLanguage)();
@@ -7617,7 +9551,10 @@ function initI18n() {
       fr: { translation: fr_default },
       bn: { translation: bn_default },
       "pt-BR": { translation: pt_BR_default },
-      ru: { translation: ru_default }
+      ru: { translation: ru_default },
+      ja: { translation: ja_default },
+      de: { translation: de_default },
+      ko: { translation: ko_default }
     },
     interpolation: { escapeValue: false }
   });
@@ -7702,6 +9639,20 @@ var ProjectModal = class extends import_obsidian2.Modal {
 
 // modals/TargetsDashboardModal.ts
 var import_obsidian3 = require("obsidian");
+var STATUS_KEY = {
+  draft: "targetsDashboard.status.draft",
+  "in-progress": "targetsDashboard.status.inProgress",
+  complete: "targetsDashboard.status.complete",
+  published: "targetsDashboard.status.published"
+};
+var TYPE_KEY = {
+  chapter: "targetsDashboard.typeLabel.chapter",
+  section: "targetsDashboard.typeLabel.section",
+  article: "targetsDashboard.typeLabel.article",
+  note: "targetsDashboard.typeLabel.note",
+  group: "targetsDashboard.typeLabel.group",
+  part: "targetsDashboard.typeLabel.part"
+};
 var TargetsDashboardModal = class extends import_obsidian3.Modal {
   constructor(app, plugin) {
     super(app);
@@ -7726,7 +9677,7 @@ var TargetsDashboardModal = class extends import_obsidian3.Modal {
     filterRow.createEl("label", { text: t2("targetsDashboard.filterLabel") });
     const statusSel = filterRow.createEl("select");
     ["all", "draft", "in-progress", "complete", "published"].forEach((s) => {
-      const opt = statusSel.createEl("option", { text: s === "all" ? t2("targetsDashboard.allStatuses") : STATUS_LABELS[s] || s });
+      const opt = statusSel.createEl("option", { text: s === "all" ? t2("targetsDashboard.allStatuses") : t2(STATUS_KEY[s]) });
       opt.value = s;
     });
     statusSel.value = this.statusFilter;
@@ -7762,6 +9713,7 @@ var TargetsDashboardModal = class extends import_obsidian3.Modal {
     }
   }
   renderTable(container) {
+    var _a2;
     const existing = container.querySelector(".ws-dashboard-table-wrap");
     if (existing) existing.remove();
     const wrap = container.createDiv("ws-dashboard-table-wrap");
@@ -7847,10 +9799,10 @@ var TargetsDashboardModal = class extends import_obsidian3.Modal {
           this.close();
         }
       };
-      tr.createEl("td", { text: stat.item.type });
+      tr.createEl("td", { text: t2((_a2 = TYPE_KEY[stat.item.type]) != null ? _a2 : stat.item.type) });
       const statusTd = tr.createEl("td");
       const badge = statusTd.createSpan("ws-status-badge");
-      badge.textContent = STATUS_LABELS[stat.item.status];
+      badge.textContent = t2(STATUS_KEY[stat.item.status]);
       badge.setCssProps({ "--ws-status-color": STATUS_COLORS[stat.item.status] });
       tr.createEl("td", { text: String(stat.wordCount) });
       const goalTd = tr.createEl("td");
@@ -8135,6 +10087,12 @@ var ScanFolderModal = class extends import_obsidian5.Modal {
 };
 
 // src/BinderView.ts
+var STATUS_DOT_KEY = {
+  draft: "targetsDashboard.status.draft",
+  "in-progress": "targetsDashboard.status.inProgress",
+  complete: "targetsDashboard.status.complete",
+  published: "targetsDashboard.status.published"
+};
 var BINDER_VIEW_TYPE = "writing-studio-binder";
 var BinderView = class extends import_obsidian6.ItemView {
   constructor(leaf, plugin) {
@@ -8285,7 +10243,7 @@ var BinderView = class extends import_obsidian6.ItemView {
       icon.textContent = this.getTypeIcon(item.type);
       const dot = row.createSpan("ws-binder-status-dot");
       dot.setCssProps({ "--ws-status-color": STATUS_COLORS[item.status] });
-      dot.title = STATUS_LABELS[item.status];
+      dot.title = t2(STATUS_DOT_KEY[item.status]);
       const titleEl = row.createSpan("ws-binder-title");
       const liveFile = this.app.vault.getAbstractFileByPath(item.filePath);
       const displayTitle = liveFile instanceof import_obsidian6.TFile ? liveFile.basename : item.title;
@@ -8376,7 +10334,7 @@ var BinderView = class extends import_obsidian6.ItemView {
       el.textContent = `${wc}/${goal}`;
       el.title = t2("binder.pctComplete", { pct });
     } else {
-      el.textContent = `${wc}w`;
+      el.textContent = t2("binder.wordCountSuffix", { count: wc });
     }
   }
   // Called by the plugin's debounced word-count updater on every file change.
@@ -8391,7 +10349,7 @@ var BinderView = class extends import_obsidian6.ItemView {
       el.textContent = `${wc}/${goal}`;
       el.title = t2("binder.pctComplete", { pct });
     } else {
-      el.textContent = `${wc}w`;
+      el.textContent = t2("binder.wordCountSuffix", { count: wc });
     }
   }
   getTypeIcon(type) {

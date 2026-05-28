@@ -173,7 +173,8 @@
       "moveToResearch": "গবেষণায় সরান",
       "publishToWordPress": "WordPress-এ প্রকাশ করুন",
       "delete": "মুছুন"
-    }
+    },
+    "wordCountSuffix": "{{count}}শ"
   },
   "launcher": {
     "displayText": "লেখার স্টুডিও",
@@ -443,7 +444,21 @@
       "progress": "অগ্রগতি",
       "readingTime": "পড়ার সময়"
     },
-    "total": "মোট"
+    "total": "মোট",
+    "status": {
+      "draft": "খসড়া",
+      "inProgress": "চলমান",
+      "complete": "সম্পূর্ণ",
+      "published": "প্রকাশিত"
+    },
+    "typeLabel": {
+      "chapter": "অধ্যায়",
+      "section": "বিভাগ",
+      "article": "নিবন্ধ",
+      "note": "নোট",
+      "group": "গ্রুপ",
+      "part": "অংশ"
+    }
   },
   "writingDashboard": {
     "title": "লেখার ড্যাশবোর্ড",

@@ -1,6 +1,6 @@
 {
   "name": "obsidian-writing-studio",
-  "version": "2.2.3",
+  "version": "2.3.0",
   "description": "Obsidian Writing Studio Plugin",
   "main": "main.js",
   "scripts": {

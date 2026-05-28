@@ -173,7 +173,8 @@
       "moveToResearch": "نقل إلى البحث",
       "publishToWordPress": "نشر على WordPress",
       "delete": "حذف"
-    }
+    },
+    "wordCountSuffix": "{{count}}ك"
   },
   "launcher": {
     "displayText": "استوديو الكتابة",
@@ -450,7 +451,21 @@
       "progress": "التقدم",
       "readingTime": "وقت القراءة"
     },
-    "total": "المجموع"
+    "total": "المجموع",
+    "status": {
+      "draft": "مسودة",
+      "inProgress": "قيد التقدم",
+      "complete": "مكتمل",
+      "published": "منشور"
+    },
+    "typeLabel": {
+      "chapter": "فصل",
+      "section": "قسم",
+      "article": "مقالة",
+      "note": "ملاحظة",
+      "group": "مجموعة",
+      "part": "جزء"
+    }
   },
   "writingDashboard": {
     "title": "لوحة الكتابة",
