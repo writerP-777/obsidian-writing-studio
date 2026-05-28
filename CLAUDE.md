@@ -102,6 +102,14 @@ npm run build     # production build
 
 npm run lint      # run before every commit — catches ReviewBot issues
 
+## Context Window Management — Non-Negotiable
+Monitor context window usage throughout every session using /status.
+At 60% usage: finish the current subtask and do not begin a new one.
+At 70% usage: tell Don immediately — "Context is at 70% — recommend running /end-session."
+At 75% usage: stop all work and prompt Don to run /end-session before proceeding.
+Never allow auto-compaction to trigger. Auto-compaction destroys session integrity
+and prevents the end-of-session routine from running cleanly.
+
 ## Agent skills
 
 ### Issue tracker
