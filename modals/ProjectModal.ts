@@ -1,6 +1,7 @@
 import { App, Modal, Setting, Notice } from 'obsidian';
 import type WritingStudioPlugin from '../main';
 import { ProjectType } from '../models/Project';
+import { t } from '../src/i18n';
 
 export class ProjectModal extends Modal {
   private plugin: WritingStudioPlugin;
@@ -19,27 +20,27 @@ export class ProjectModal extends Modal {
     const { contentEl } = this;
     contentEl.empty();
     contentEl.addClass('ws-project-modal');
-    contentEl.createEl('h2', { text: 'New writing project' });
+    contentEl.createEl('h2', { text: t('projectModal.title') });
 
     // Declared early so the dropdown onChange closure can reference it; assigned below.
     let previewEl!: HTMLElement;
 
     new Setting(contentEl)
-      .setName('Project title')
-      .addText(t => t
-        .setPlaceholder('My novel')
+      .setName(t('projectModal.projectTitle'))
+      .addText(tx => tx
+        .setPlaceholder(t('projectModal.titlePlaceholder'))
         .onChange(v => { this.title = v; }));
 
     new Setting(contentEl)
-      .setName('Template')
-      .setDesc('Choose a pre-configured project structure.')
+      .setName(t('projectModal.template'))
+      .setDesc(t('projectModal.templateDesc'))
       .addDropdown(d => d
-        .addOption('blank', 'Blank (custom structure)')
-        .addOption('book', 'Book (parts → chapters → scenes)')
-        .addOption('series', 'Article series (series → articles)')
-        .addOption('blog', 'Blog collection (posts by date/category)')
-        .addOption('journal-article', 'Journal article — academic or professional journal submission')
-        .addOption('magazine-article', 'Magazine article — feature, long-form, or narrative nonfiction')
+        .addOption('blank', t('projectModal.templateOption.blank'))
+        .addOption('book', t('projectModal.templateOption.book'))
+        .addOption('series', t('projectModal.templateOption.series'))
+        .addOption('blog', t('projectModal.templateOption.blog'))
+        .addOption('journal-article', t('projectModal.templateOption.journalArticle'))
+        .addOption('magazine-article', t('projectModal.templateOption.magazineArticle'))
         .setValue(this.type)
         .onChange(v => {
           this.type = v as ProjectType;
@@ -47,9 +48,9 @@ export class ProjectModal extends Modal {
         }));
 
     new Setting(contentEl)
-      .setName('Description (optional)')
-      .addTextArea(t => t
-        .setPlaceholder('Brief description of this project…')
+      .setName(t('projectModal.descriptionLabel'))
+      .addTextArea(tx => tx
+        .setPlaceholder(t('projectModal.descriptionPlaceholder'))
         .onChange(v => { this.description = v; }));
 
     previewEl = contentEl.createDiv('ws-template-preview');
@@ -57,14 +58,14 @@ export class ProjectModal extends Modal {
 
     const btnRow = contentEl.createDiv('ws-modal-btn-row');
 
-    const createBtn = btnRow.createEl('button', { cls: 'mod-cta', text: 'Create project' });
+    const createBtn = btnRow.createEl('button', { cls: 'mod-cta', text: t('projectModal.createBtn') });
     createBtn.onclick = async () => {
       if (!this.title.trim()) {
-        new Notice('Please enter a project title.');
+        new Notice(t('projectModal.errorNoTitle'));
         return;
       }
       createBtn.disabled = true;
-      createBtn.textContent = 'Creating…';
+      createBtn.textContent = t('projectModal.creating');
       try {
         const project = await this.plugin.projectManager.createProject(
           this.title.trim(),
@@ -73,29 +74,29 @@ export class ProjectModal extends Modal {
           this.description
         );
         await this.plugin.projectManager.setActiveProject(project.id);
-        new Notice(`Project "${project.title}" created!`);
+        new Notice(t('projectModal.created', { title: project.title }));
         this.close();
         this.onDone();
       } catch (e) {
-        new Notice(`Failed to create project: ${e instanceof Error ? e.message : String(e)}`);
+        new Notice(t('projectModal.errorCreate', { error: e instanceof Error ? e.message : String(e) }));
         createBtn.disabled = false;
-        createBtn.textContent = 'Create project';
+        createBtn.textContent = t('projectModal.createBtn');
       }
     };
 
-    const cancelBtn = btnRow.createEl('button', { text: 'Cancel' });
+    const cancelBtn = btnRow.createEl('button', { text: t('projectModal.cancel') });
     cancelBtn.onclick = () => this.close();
   }
 
   private updateTemplatePreview(el: HTMLElement, type: ProjectType): void {
     el.empty();
     const previews: Record<ProjectType, string> = {
-      blank: 'Empty project — build your own structure.',
-      book: 'Creates: Front Matter, Part 1 / Chapter 1, Back Matter placeholder.',
-      series: 'Creates: Series folder, Article 1 placeholder, series metadata.',
-      blog: 'Creates: date-organized folder, first post placeholder.',
-      'journal-article': 'Creates: Title Page, Abstract, Keywords, Introduction, Literature Review, Methodology, Findings / Analysis, Discussion, Conclusion, References, Appendices.',
-      'magazine-article': 'Creates: Pitch / Query Notes, Headline & Deck, Lede, Nut Graf, Body, Quotes & Sources, Kicker, Fact-Check Notes, Author Bio. Notes documents excluded from export by default.',
+      blank: t('projectModal.preview.blank'),
+      book: t('projectModal.preview.book'),
+      series: t('projectModal.preview.series'),
+      blog: t('projectModal.preview.blog'),
+      'journal-article': t('projectModal.preview.journalArticle'),
+      'magazine-article': t('projectModal.preview.magazineArticle'),
     };
     el.createEl('p', { text: previews[type], cls: 'ws-template-desc' });
   }

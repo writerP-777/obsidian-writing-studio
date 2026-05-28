@@ -4,7 +4,7 @@
 
 # Obsidian Writing Studio
 
-**Version 2.2.3** · Desktop only
+**Version 2.3.0** · Desktop only
 
 ![GitHub all releases](https://img.shields.io/github/downloads/writerP-777/obsidian-writing-studio/total)
 [![OpenSSF Best Practices](https://www.bestpractices.dev/projects/12832/badge)](https://www.bestpractices.dev/projects/12832)
@@ -17,9 +17,45 @@ Writing Studio turns Obsidian into a dedicated environment for serious nonfictio
   </a>
 </p>
 
+## Contents
+
+- [Features](#features)
+- [Language support](#language-support)
+- [Your Project](#your-project)
+- [Your Writing Environment](#your-writing-environment)
+- [Tracking Your Progress](#tracking-your-progress)
+- [Getting Your Work Out](#getting-your-work-out)
+- [Supporting Tools](#supporting-tools)
+- [Context Menus](#context-menus)
+- [Commands Reference](#commands-reference)
+- [Settings Overview](#settings-overview)
+- [Ribbon Icon](#ribbon-icon)
+- [Installation](#installation)
+- [Requirements](#requirements)
+- [Reporting a Bug](#reporting-a-bug)
+- [Security](#security)
+
 ---
 
 ## Features
+
+## Language support
+
+Writing Studio is available in the following languages in addition to English:
+
+- Arabic
+- Chinese (Simplified)
+- French
+- German
+- Japanese
+- Korean
+- Portuguese (Brazil)
+- Russian
+- Spanish
+
+**To change the language:** Open **Settings → General** in Obsidian, scroll to **Language**, and select your preferred language from the list. Restart Obsidian for the change to take effect. Writing Studio will display in the selected language if it is supported.
+
+**Found a translation error or missing text?** Please open an issue on GitHub — [Submit a bug report or enhancement request](https://github.com/writerP-777/obsidian-writing-studio/issues/new) — and include the language, the location in the plugin where the text appears, and what it currently says. We will address it in the next release.
 
 ### Writing Studio Launcher
 

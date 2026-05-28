@@ -1,6 +1,7 @@
 import { App, Notice } from 'obsidian';
 import type WritingStudioPlugin from '../main';
 import { WritingModeType, WRITING_MODE_CONFIGS } from '../models/WritingMode';
+import { t } from './i18n';
 
 export class WritingModes {
   private plugin: WritingStudioPlugin;
@@ -62,8 +63,8 @@ export class WritingModes {
     this.plugin.settings.currentWritingMode = mode;
     await this.plugin.saveSettings();
 
-    const modeLabel = mode === 'none' ? 'Normal' : mode.charAt(0).toUpperCase() + mode.slice(1);
-    new Notice(`Writing Studio: ${modeLabel} mode`);
+    const modeLabel = mode === 'none' ? t('writingModes.normal') : t(`launcher.mode.${mode}`);
+    new Notice(t('writingModes.switchedTo', { mode: modeLabel }));
   }
 
   private collapseSidebars(): void {
@@ -90,10 +91,10 @@ export class WritingModes {
   private updateStatusBar(): void {
     if (!this.statusBarEl) return;
     const labels: Record<WritingModeType, string> = {
-      draft: '✍ draft',
-      edit: '✎ edit',
-      review: '👁 review',
-      none: '— mode',
+      draft: t('writingModes.statusDraft'),
+      edit: t('writingModes.statusEdit'),
+      review: t('writingModes.statusReview'),
+      none: t('writingModes.statusNone'),
     };
     this.statusBarEl.textContent = labels[this.currentMode];
     this.statusBarEl.toggleClass('ws-status-mode--active', this.currentMode !== 'none');

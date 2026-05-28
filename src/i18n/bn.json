@@ -173,6 +173,427 @@
       "moveToResearch": "গবেষণায় সরান",
       "publishToWordPress": "WordPress-এ প্রকাশ করুন",
       "delete": "মুছুন"
+    },
+    "wordCountSuffix": "{{count}}শ"
+  },
+  "launcher": {
+    "displayText": "লেখার স্টুডিও",
+    "title": "লেখার স্টুডিও",
+    "settings": "সেটিংস",
+    "project": "প্রকল্প",
+    "newProject": "+ নতুন",
+    "noProjectSelected": "কোনো প্রকল্প নির্বাচন করা হয়নি।",
+    "chooseProject": "— প্রকল্প বেছে নিন —",
+    "wordCount": "{{n}} শব্দ",
+    "wordGoal": "/ {{n}} লক্ষ্য",
+    "pctComplete": "{{pct}}% সম্পন্ন",
+    "openBinder": "📖 বাইন্ডার খুলুন",
+    "writingMode": "লেখার মোড",
+    "mode": {
+      "draft": "খসড়া",
+      "draftDesc": "ফোকাস + টাইপোগ্রাফি চালু, সাইডবার লুকানো",
+      "edit": "সম্পাদনা",
+      "editDesc": "বাইন্ডার খোলা, সম্পূর্ণ UI দৃশ্যমান",
+      "review": "পর্যালোচনা",
+      "reviewDesc": "পাঠ দৃশ্য, কোনো সম্পাদনা নেই",
+      "clearMode": "✕ মোড সাফ করুন"
+    },
+    "focusTypography": "ফোকাস ও টাইপোগ্রাফি",
+    "focusMode": "ফোকাস মোড",
+    "typographyMode": "টাইপোগ্রাফি মোড",
+    "on": "চালু",
+    "off": "বন্ধ",
+    "quickActions": "দ্রুত কার্যক্রম",
+    "action": {
+      "targetsDashboard": "লক্ষ্য ড্যাশবোর্ড",
+      "writingDashboard": "লেখার ড্যাশবোর্ড",
+      "previewManuscript": "পাণ্ডুলিপি পূর্বরূপ",
+      "export": "রপ্তানি",
+      "writingLog": "লেখার লগ",
+      "publishToWordPress": "WordPress-এ প্রকাশ করুন"
+    },
+    "openDocumentFirst": "আগে একটি নথি খুলুন।",
+    "sprintTimer": "স্প্রিন্ট টাইমার",
+    "pause": "⏸ বিরতি",
+    "stop": "■ থামান",
+    "startSprint": "⏱ স্প্রিন্ট শুরু করুন",
+    "quickStart": "দ্রুত শুরু:",
+    "today": "আজ",
+    "stat": {
+      "words": "শব্দ",
+      "sprints": "স্প্রিন্ট",
+      "minutes": "মিনিট",
+      "streak": "ধারা",
+      "streakDays": "{{streak}}দি"
+    },
+    "sessionWordsTyped": "সেশন: +{{n}} শব্দ টাইপ করা হয়েছে",
+    "dailyGoal": "দৈনিক লক্ষ্য: {{written}} / {{goal}} শব্দ"
+  },
+  "log": {
+    "displayText": "লেখার লগ",
+    "title": "লেখার লগ",
+    "noProjectSelected": "কোনো প্রকল্প নির্বাচন করা হয়নি। ইতিহাস দেখতে লঞ্চার খুলুন এবং একটি প্রকল্প নির্বাচন করুন।",
+    "streak": "🔥 {{streak}}-দিনের ধারা",
+    "startStreak": "ধারা শুরু করতে আজ লিখুন",
+    "thisSession": "এই সেশন",
+    "stat": {
+      "session": "সেশন",
+      "sprintWords": "স্প্রিন্ট শব্দ",
+      "sprints": "স্প্রিন্ট",
+      "minutes": "মিনিট"
+    },
+    "last30Days": "শেষ ৩০ দিন",
+    "today": "আজ",
+    "sprintsCount_one": "· {{count}} স্প্রিন্ট",
+    "sprintsCount_other": "· {{count}} স্প্রিন্ট"
+  },
+  "sprint": {
+    "started": "লেখার স্প্রিন্ট শুরু হয়েছে: {{minutes}} মিনিট",
+    "complete": "স্প্রিন্ট সম্পন্ন! দারুণ কাজ।",
+    "words": "+{{n}} শব্দ",
+    "header": "লেখার স্প্রিন্ট",
+    "pauseTitle": "বিরতি/পুনরায় শুরু",
+    "stopTitle": "স্প্রিন্ট থামান"
+  },
+  "writingModes": {
+    "switchedTo": "রাইটিং স্টুডিও: {{mode}} মোড",
+    "normal": "সাধারণ",
+    "statusDraft": "✍ খসড়া",
+    "statusEdit": "✎ সম্পাদনা",
+    "statusReview": "👁 পর্যালোচনা",
+    "statusNone": "— মোড"
+  },
+  "exportEngine": {
+    "epubExported": "EPUB {{path}}-এ রপ্তানি করা হয়েছে",
+    "manuscriptExported": "পাণ্ডুলিপি {{path}}-এ রপ্তানি করা হয়েছে",
+    "exportedTo": "{{path}}-এ রপ্তানি করা হয়েছে",
+    "exportedHtmlTo": "HTML {{path}}-এ রপ্তানি করা হয়েছে",
+    "pdfRequiresPandoc": "PDF রপ্তানির জন্য pandoc প্রয়োজন। pandoc ইনস্টল করুন এবং সেটিংসে পাথ সেট করুন।"
+  },
+  "wpClient": {
+    "authFailed": "প্রমাণীকরণ ব্যর্থ। ব্যবহারকারীর নাম ও অ্যাপ্লিকেশন পাসওয়ার্ড যাচাই করুন।",
+    "connectedAs": "\"{{site}}\"-এ \"{{user}}\" হিসেবে সংযুক্ত",
+    "networkError": "নেটওয়ার্ক ত্রুটি: {{error}}",
+    "httpError": "HTTP {{status}}",
+    "fetchCategoriesFailed": "বিভাগ আনতে ব্যর্থ: {{error}}"
+  },
+  "folderSidebar": {
+    "displayText": "ফোল্ডার এক্সপ্লোরার",
+    "back": "← পিছনে",
+    "root": "⌂ মূল",
+    "insertSelection": "↩ নির্বাচন সন্নিবেশ করুন",
+    "searchPlaceholder": "নাম ও বিষয়বস্তু খুঁজুন… (Enter)",
+    "sort": {
+      "foldersAz": "ফোল্ডার ↑ A-Z",
+      "foldersZa": "ফোল্ডার ↑ Z-A",
+      "az": "নাম A-Z",
+      "za": "নাম Z-A",
+      "modifiedNew": "সর্বশেষ আগে",
+      "modifiedOld": "সবচেয়ে পুরানো আগে"
+    },
+    "noPreview": ".{{ext}} ফাইলের জন্য কোনো পূর্বরূপ নেই",
+    "openInEditor": "সম্পাদকে খুলুন",
+    "searching": "খোঁজা হচ্ছে…",
+    "noResults": "\"{{query}}\" এর জন্য কোনো ফলাফল নেই",
+    "emptyFolder": "এই ফোল্ডারটি খালি",
+    "tooltip": {
+      "modified": "পরিবর্তিত",
+      "size": "আকার",
+      "words": "শব্দ",
+      "files": "ফাইল",
+      "subfolders": "সাবফোল্ডার"
+    },
+    "pickerPlaceholder": "সাইডবার এক্সপ্লোরারে খুলতে ফোল্ডারের নাম লিখুন…",
+    "vaultRoot": "/ (ভল্ট মূল)"
+  },
+  "focusToolbar": {
+    "exitTitle": "ফোকাস মোড থেকে বের হন (esc)",
+    "exitBtn": "✕ বের হন",
+    "wordCount_one": "{{count}} শব্দ",
+    "wordCount_other": "{{count}} শব্দ"
+  },
+  "compilePreview": {
+    "displayText": "সংকলিত পাণ্ডুলিপি",
+    "jumpToSection": "বিভাগে যান...",
+    "proceedToExport": "রপ্তানিতে এগিয়ে যান",
+    "closePreview": "পূর্বরূপ বন্ধ করুন",
+    "noContent": "পূর্বরূপের জন্য কোনো বিষয়বস্তু নেই। প্রথমে একটি লেখার প্রকল্প খুলুন।"
+  },
+  "projectModal": {
+    "title": "নতুন লেখার প্রকল্প",
+    "projectTitle": "প্রকল্পের শিরোনাম",
+    "titlePlaceholder": "আমার উপন্যাস",
+    "template": "টেমপ্লেট",
+    "templateDesc": "পূর্ব-কনফিগার করা প্রকল্প কাঠামো বেছে নিন।",
+    "templateOption": {
+      "blank": "ফাঁকা (কাস্টম কাঠামো)",
+      "book": "বই (অংশ → অধ্যায় → দৃশ্য)",
+      "series": "নিবন্ধ সিরিজ (সিরিজ → নিবন্ধ)",
+      "blog": "ব্লগ সংগ্রহ (তারিখ/বিভাগ অনুযায়ী পোস্ট)",
+      "journalArticle": "জার্নাল নিবন্ধ — একাডেমিক বা পেশাদার জার্নালে জমা",
+      "magazineArticle": "ম্যাগাজিন নিবন্ধ — ফিচার, দীর্ঘ-ফর্ম বা আখ্যানমূলক নন-ফিকশন"
+    },
+    "descriptionLabel": "বিবরণ (ঐচ্ছিক)",
+    "descriptionPlaceholder": "এই প্রকল্পের সংক্ষিপ্ত বিবরণ…",
+    "preview": {
+      "blank": "ফাঁকা প্রকল্প — নিজের কাঠামো তৈরি করুন।",
+      "book": "তৈরি করে: সামনের উপাদান, অংশ ১ / অধ্যায় ১, পেছনের উপাদান।",
+      "series": "তৈরি করে: সিরিজ ফোল্ডার, নিবন্ধ ১ স্থানধারক, সিরিজ মেটাডেটা।",
+      "blog": "তৈরি করে: তারিখ-সংগঠিত ফোল্ডার, প্রথম পোস্ট স্থানধারক।",
+      "journalArticle": "তৈরি করে: শিরোনাম পৃষ্ঠা, সারসংক্ষেপ, মূল শব্দ, ভূমিকা, সাহিত্য পর্যালোচনা, পদ্ধতিতত্ত্ব, ফলাফল/বিশ্লেষণ, আলোচনা, উপসংহার, তথ্যসূত্র, পরিশিষ্ট।",
+      "magazineArticle": "তৈরি করে: পিচ/কোয়েরি নোট, শিরোনাম ও সাবটাইটেল, লিড, মূল অনুচ্ছেদ, বডি, উদ্ধৃতি ও উৎস, পরিসমাপ্তি, তথ্য-যাচাই নোট, লেখক পরিচিতি। নোট নথি ডিফল্টভাবে রপ্তানি থেকে বাদ।"
+    },
+    "createBtn": "প্রকল্প তৈরি করুন",
+    "creating": "তৈরি হচ্ছে…",
+    "errorNoTitle": "অনুগ্রহ করে প্রকল্পের শিরোনাম লিখুন।",
+    "errorCreate": "প্রকল্প তৈরিতে ব্যর্থ: {{error}}",
+    "created": "প্রকল্প \"{{title}}\" তৈরি হয়েছে!",
+    "cancel": "বাতিল"
+  },
+  "sprintModal": {
+    "title": "লেখার স্প্রিন্ট শুরু করুন",
+    "durationName": "সময়কাল (মিনিট)",
+    "durationDesc": "প্রিসেট: ১০, ১৫, ২৫, ৩০, ৪৫, ৬০",
+    "durationCustom": "কাস্টম…",
+    "durationCustomPlaceholder": "কাস্টম মিনিট",
+    "wordGoalName": "শব্দ গণনা লক্ষ্য (ঐচ্ছিক)",
+    "wordGoalDesc": "কোনো লক্ষ্য না থাকলে ০ রাখুন।",
+    "scopeName": "পরিধি",
+    "scopeFile": "বর্তমান ফাইল",
+    "scopeProject": "পুরো প্রকল্প",
+    "startBtn": "স্প্রিন্ট শুরু করুন",
+    "errorDuration": "অনুগ্রহ করে একটি বৈধ সময়কাল সেট করুন।",
+    "cancel": "বাতিল"
+  },
+  "exportModal": {
+    "title": "নথি রপ্তানি করুন",
+    "formatName": "ফরম্যাট",
+    "format": {
+      "md": "Markdown (.md)",
+      "html": "HTML",
+      "manuscript": "পাণ্ডুলিপি (HTML)",
+      "epub": "EPUB (.epub)",
+      "pdf": "PDF (pandoc প্রয়োজন)",
+      "docx": "Word (.docx) (pandoc প্রয়োজন)",
+      "rtf": "RTF (pandoc প্রয়োজন)"
+    },
+    "coverImageName": "প্রচ্ছদ ছবির পথ",
+    "coverImageDesc": "JPG বা PNG প্রচ্ছদ ছবির Vault পথ। টেক্সট প্রচ্ছদ তৈরির জন্য ফাঁকা রাখুন।",
+    "coverImagePlaceholder": "যেমন Assets/cover.jpg",
+    "contactInfoName": "যোগাযোগের তথ্য (ঐচ্ছিক)",
+    "contactInfoDesc": "শিরোনাম পৃষ্ঠায় প্রদর্শিত — নাম, ইমেইল বা ডাক ঠিকানা।",
+    "contactInfoPlaceholder": "নাম, ইমেইল বা ডাক ঠিকানা",
+    "scopeName": "পরিধি",
+    "scopeCurrent": "বর্তমান নথি",
+    "scopeProject": "পুরো প্রকল্প (বাইন্ডার ক্রমে)",
+    "includeFrontmatter": "ফ্রন্টম্যাটার অন্তর্ভুক্ত করুন",
+    "includeResearch": "গবেষণা নোট অন্তর্ভুক্ত করুন",
+    "includeTitlesAsHeadings": "নথির শিরোনাম হেডিং হিসেবে অন্তর্ভুক্ত করুন",
+    "addTitlePage": "শিরোনাম পৃষ্ঠা যোগ করুন",
+    "addTitlePageDesc": "প্রকল্পের শিরোনাম, লেখক ও তারিখ সহ শিরোনাম পৃষ্ঠা যোগ করুন।",
+    "previewBtn": "সংকলিত পাণ্ডুলিপির পূর্বরূপ",
+    "exportBtn": "রপ্তানি",
+    "exporting": "রপ্তানি হচ্ছে…",
+    "exportFailed": "রপ্তানি ব্যর্থ: {{error}}",
+    "cancel": "বাতিল"
+  },
+  "publishModal": {
+    "title": "WordPress-এ প্রকাশ করুন",
+    "noSites": "কোনো WordPress সাইট কনফিগার করা নেই। সেটিংস → WordPress-এ সাইট যোগ করুন।",
+    "close": "বন্ধ করুন",
+    "siteName": "WordPress সাইট",
+    "postTitleName": "পোস্টের শিরোনাম",
+    "postStatusName": "পোস্টের অবস্থা",
+    "postStatus": {
+      "draft": "খসড়া",
+      "pending": "পর্যালোচনার অপেক্ষায়",
+      "publish": "প্রকাশিত"
+    },
+    "categoryName": "বিভাগ",
+    "tagsName": "ট্যাগ",
+    "tagsDesc": "কমা দিয়ে আলাদা।",
+    "excerptName": "অংশ (ঐচ্ছিক)",
+    "scheduleName": "প্রকাশনা নির্ধারণ করুন (ঐচ্ছিক)",
+    "scheduleDesc": "তাৎক্ষণিক প্রকাশের জন্য ফাঁকা রাখুন।",
+    "schedulePlaceholder": "yyyy-mm-ddThh:mm:ss",
+    "existingNotice": "⚠ এই নথিটি আগে প্রকাশিত হয়েছিল (পোস্ট ID: {{id}})।",
+    "updatePost": "বিদ্যমান পোস্ট আপডেট করুন",
+    "newPost": "নতুন পোস্ট তৈরি করুন",
+    "schedule": "নির্ধারণ করুন",
+    "publish": "প্রকাশ করুন",
+    "cancel": "বাতিল",
+    "noSiteSelected": "কোনো সাইট নির্বাচিত নয়।",
+    "fileNotFound": "ফাইল পাওয়া যায়নি।",
+    "publishFailed": "প্রকাশনা ব্যর্থ: {{error}}",
+    "published": "প্রকাশিত",
+    "scheduled": "নির্ধারিত",
+    "actionNotice": "{{action}}! পোস্ট দেখুন: {{url}}"
+  },
+  "targetsDashboard": {
+    "title": "অধ্যায় লক্ষ্য ড্যাশবোর্ড",
+    "noProject": "কোনো প্রকল্প নির্বাচিত নয়।",
+    "filterLabel": "ফিল্টার: ",
+    "allStatuses": "সব অবস্থা",
+    "refresh": "↻ রিফ্রেশ",
+    "col": {
+      "title": "শিরোনাম",
+      "type": "ধরন",
+      "status": "অবস্থা",
+      "words": "শব্দ",
+      "goal": "লক্ষ্য",
+      "progress": "অগ্রগতি",
+      "readingTime": "পড়ার সময়"
+    },
+    "total": "মোট",
+    "status": {
+      "draft": "খসড়া",
+      "inProgress": "চলমান",
+      "complete": "সম্পূর্ণ",
+      "published": "প্রকাশিত"
+    },
+    "typeLabel": {
+      "chapter": "অধ্যায়",
+      "section": "বিভাগ",
+      "article": "নিবন্ধ",
+      "note": "নোট",
+      "group": "গ্রুপ",
+      "part": "অংশ"
+    }
+  },
+  "writingDashboard": {
+    "title": "লেখার ড্যাশবোর্ড",
+    "thisSession": "এই সেশন",
+    "stat": {
+      "wordsWritten": "লেখা শব্দ",
+      "sprints": "স্প্রিন্ট",
+      "minutes": "মিনিট",
+      "writingStreak": "লেখার ধারাবাহিকতা",
+      "streakDays_one": "{{count}} দিন",
+      "streakDays_other": "{{count}} দিন",
+      "totalWords": "মোট শব্দ",
+      "goal": "লক্ষ্য",
+      "progress": "অগ্রগতি",
+      "readingTime": "পড়ার সময়"
+    },
+    "project": "প্রকল্প: {{title}}",
+    "recentSprints": "সাম্প্রতিক স্প্রিন্ট",
+    "noSprints": "এখনো কোনো স্প্রিন্ট রেকর্ড নেই।",
+    "sprintTable": {
+      "date": "তারিখ",
+      "duration": "সময়কাল",
+      "words": "শব্দ",
+      "wpm": "শব্দ/মিনিট",
+      "goal": "লক্ষ্য"
+    },
+    "documentWordCounts": "নথির শব্দ গণনা",
+    "docTable": {
+      "document": "নথি",
+      "words": "শব্দ",
+      "readingTime": "পড়ার সময়"
+    },
+    "close": "বন্ধ করুন"
+  },
+  "addToProject": {
+    "title": "লেখার প্রকল্পে যোগ করুন",
+    "noProjects": "কোনো লেখার প্রকল্প পাওয়া যায়নি। আগে একটি প্রকল্প তৈরি করুন।",
+    "close": "বন্ধ করুন",
+    "file": "ফাইল: {{path}}",
+    "projectName": "লেখার প্রকল্প",
+    "projectDesc": "আপনি কোন লেখার প্রকল্পে এই ফাইলটি যোগ করতে চান?",
+    "addBtn": "প্রকল্পে যোগ করুন",
+    "cancel": "বাতিল"
+  },
+  "scanFolder": {
+    "title": "বাইন্ডারে ফাইল যোগ করুন",
+    "desc": "এই প্রকল্পে যোগ করার জন্য ফাইল নির্বাচন করুন:",
+    "addBtn": "নির্বাচিত ফাইল যোগ করুন",
+    "cancel": "বাতিল"
+  },
+  "main": {
+    "ribbonTitle": "রাইটিং স্টুডিও খুলুন",
+    "cmd": {
+      "openLauncher": "লঞ্চার খুলুন",
+      "openBinder": "বাইন্ডার খুলুন",
+      "toggleFocusMode": "ফোকাস মোড চালু/বন্ধ করুন",
+      "toggleTypographyMode": "টাইপোগ্রাফি মোড চালু/বন্ধ করুন",
+      "switchDraftMode": "ড্রাফট মোডে যান",
+      "switchEditMode": "এডিট মোডে যান",
+      "switchReviewMode": "রিভিউ মোডে যান",
+      "startSprint": "রাইটিং স্প্রিন্ট শুরু করুন",
+      "exportDocument": "ডকুমেন্ট রপ্তানি করুন",
+      "exportProject": "প্রজেক্ট রপ্তানি করুন",
+      "previewManuscript": "সংকলিত পাণ্ডুলিপির পূর্বরূপ দেখুন",
+      "publishWordPress": "WordPress-এ প্রকাশ করুন",
+      "newProject": "নতুন রাইটিং প্রজেক্ট",
+      "openDashboard": "রাইটিং ড্যাশবোর্ড খুলুন",
+      "openTargetsDashboard": "টার্গেট ড্যাশবোর্ড খুলুন",
+      "setWordCountGoal": "শব্দ সংখ্যার লক্ষ্য নির্ধারণ করুন",
+      "openWritingLog": "রাইটিং লগ খুলুন",
+      "openFolderSidebar": "সাইডবার এক্সপ্লোরারে ফোল্ডার খুলুন",
+      "addFilesToBinder": "প্রজেক্ট ফোল্ডারে কপি করা ফাইল যোগ করুন"
+    },
+    "menu": {
+      "studioOptions": "রাইটিং স্টুডিও বিকল্প",
+      "exportDoc": "এই ডকুমেন্ট রপ্তানি করুন",
+      "publish": "WordPress-এ প্রকাশ করুন",
+      "setGoal": "শব্দ সংখ্যার লক্ষ্য নির্ধারণ করুন",
+      "switchMode": "রাইটিং মোড পরিবর্তন করুন →",
+      "typographyFont": "টাইপোগ্রাফি ফন্ট →",
+      "addToProject": "রাইটিং প্রজেক্টে যোগ করুন",
+      "openSidebar": "সাইডবার এক্সপ্লোরারে খুলুন",
+      "draftMode": "✍ ড্রাফট মোড",
+      "editMode": "✎ এডিট মোড",
+      "reviewMode": "👁 রিভিউ মোড",
+      "normalMode": "স্বাভাবিক (কোনো মোড নেই)"
+    },
+    "notice": {
+      "noMarkdownOpen": "বর্তমানে কোনো Markdown ফাইল খোলা নেই।",
+      "addedToProject": "\"{{file}}\" {{project}}-এ যোগ করা হয়েছে"
+    },
+    "statusBar": {
+      "projectWords": "{{total}} / {{goal}} প্রজেক্ট শব্দ",
+      "wordCount": "{{count}} শব্দ",
+      "wordCountGoal": "{{count}} / {{goal}} শব্দ",
+      "delta": "(+{{delta}})",
+      "goalBanner": "{{count}} / {{goal}} শব্দ — {{pct}}%",
+      "dismiss": "বন্ধ করুন"
+    }
+  },
+  "sprintSummary": {
+    "title": "স্প্রিন্ট সম্পন্ন!",
+    "wordsWritten": "লেখা শব্দ",
+    "duration": "সময়কাল",
+    "durationValue": "{{count}} মিনিট",
+    "wpm": "শব্দ/মিনিট",
+    "goalProgress": "লক্ষ্য অগ্রগতি",
+    "close": "বন্ধ করুন"
+  },
+  "wordCountGoal": {
+    "title": "শব্দ সংখ্যার লক্ষ্য নির্ধারণ করুন",
+    "name": "শব্দ সংখ্যার লক্ষ্য",
+    "desc": "এই ডকুমেন্টের লক্ষ্য শব্দ সংখ্যা। সরাতে 0 সেট করুন।",
+    "placeholder": "যেমন: 1500",
+    "save": "সংরক্ষণ করুন",
+    "cancel": "বাতিল করুন"
+  },
+  "statsTracker": {
+    "unknownProject": "অজানা প্রজেক্ট",
+    "none": "কোনোটি নেই",
+    "dailyNote": {
+      "heading": "## ✍️ লেখার কার্যক্রম",
+      "project": "**প্রজেক্ট:**",
+      "documents": "**ডকুমেন্ট:**",
+      "wordsWritten": "**লেখা শব্দ:**",
+      "sprintsCompleted": "**সম্পন্ন স্প্রিন্ট:**",
+      "sprintEntry": "1 ({{duration}} মিনিট)",
+      "wpm": "**প্রতি মিনিটে শব্দ:**",
+      "sessionTotal": "**সেশন মোট:**",
+      "sessionTotalValue": "{{duration}} মিনিট"
+    },
+    "readingTime": {
+      "minutes": "{{count}} মি.",
+      "hoursMinutes": "{{hours}} ঘ. {{mins}} মি.",
+      "hours": "{{hours}} ঘ."
     }
   }
 }

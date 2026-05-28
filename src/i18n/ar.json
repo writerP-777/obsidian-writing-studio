@@ -173,6 +173,438 @@
       "moveToResearch": "نقل إلى البحث",
       "publishToWordPress": "نشر على WordPress",
       "delete": "حذف"
+    },
+    "wordCountSuffix": "{{count}}ك"
+  },
+  "launcher": {
+    "displayText": "استوديو الكتابة",
+    "title": "استوديو الكتابة",
+    "settings": "الإعدادات",
+    "project": "المشروع",
+    "newProject": "+ جديد",
+    "noProjectSelected": "لم يتم اختيار مشروع.",
+    "chooseProject": "— اختر مشروعاً —",
+    "wordCount": "{{n}} كلمة",
+    "wordGoal": "/ {{n}} هدف",
+    "pctComplete": "{{pct}}% مكتمل",
+    "openBinder": "📖 فتح الملف",
+    "writingMode": "وضع الكتابة",
+    "mode": {
+      "draft": "مسودة",
+      "draftDesc": "التركيز والطباعة مفعّلان، الشريط الجانبي مخفي",
+      "edit": "تحرير",
+      "editDesc": "الملف مفتوح، واجهة المستخدم كاملة",
+      "review": "مراجعة",
+      "reviewDesc": "وضع القراءة، لا تحرير",
+      "clearMode": "✕ مسح الوضع"
+    },
+    "focusTypography": "التركيز والطباعة",
+    "focusMode": "وضع التركيز",
+    "typographyMode": "وضع الطباعة",
+    "on": "تشغيل",
+    "off": "إيقاف",
+    "quickActions": "الإجراءات السريعة",
+    "action": {
+      "targetsDashboard": "لوحة الأهداف",
+      "writingDashboard": "لوحة الكتابة",
+      "previewManuscript": "معاينة المخطوطة",
+      "export": "تصدير",
+      "writingLog": "سجل الكتابة",
+      "publishToWordPress": "نشر على WordPress"
+    },
+    "openDocumentFirst": "افتح مستنداً أولاً.",
+    "sprintTimer": "مؤقت السباق",
+    "pause": "⏸ إيقاف مؤقت",
+    "stop": "■ إيقاف",
+    "startSprint": "⏱ بدء السباق",
+    "quickStart": "بدء سريع:",
+    "today": "اليوم",
+    "stat": {
+      "words": "الكلمات",
+      "sprints": "السباقات",
+      "minutes": "الدقائق",
+      "streak": "التسلسل",
+      "streakDays": "{{streak}}ي"
+    },
+    "sessionWordsTyped": "الجلسة: +{{n}} كلمة مكتوبة",
+    "dailyGoal": "الهدف اليومي: {{written}} / {{goal}} كلمة"
+  },
+  "log": {
+    "displayText": "سجل الكتابة",
+    "title": "سجل الكتابة",
+    "noProjectSelected": "لم يتم اختيار مشروع. افتح القاذف واختر مشروعاً لرؤية تاريخ كتابتك.",
+    "streak": "🔥 تسلسل {{streak}} أيام",
+    "startStreak": "اكتب اليوم لبدء تسلسل",
+    "thisSession": "هذه الجلسة",
+    "stat": {
+      "session": "الجلسة",
+      "sprintWords": "كلمات السباق",
+      "sprints": "السباقات",
+      "minutes": "الدقائق"
+    },
+    "last30Days": "آخر 30 يوماً",
+    "today": "اليوم",
+    "sprintsCount_one": "· {{count}} سباق",
+    "sprintsCount_two": "· {{count}} سباقان",
+    "sprintsCount_few": "· {{count}} سباقات",
+    "sprintsCount_many": "· {{count}} سباقاً",
+    "sprintsCount_other": "· {{count}} سباق"
+  },
+  "sprint": {
+    "started": "بدأ السباق: {{minutes}} دقائق",
+    "complete": "اكتمل السباق! عمل رائع.",
+    "words": "+{{n}} كلمة",
+    "header": "سباق الكتابة",
+    "pauseTitle": "إيقاف مؤقت/استئناف",
+    "stopTitle": "إيقاف السباق"
+  },
+  "writingModes": {
+    "switchedTo": "استوديو الكتابة: وضع {{mode}}",
+    "normal": "عادي",
+    "statusDraft": "✍ مسودة",
+    "statusEdit": "✎ تحرير",
+    "statusReview": "👁 مراجعة",
+    "statusNone": "— وضع"
+  },
+  "exportEngine": {
+    "epubExported": "تم تصدير EPUB إلى {{path}}",
+    "manuscriptExported": "تم تصدير المخطوطة إلى {{path}}",
+    "exportedTo": "تم التصدير إلى {{path}}",
+    "exportedHtmlTo": "تم تصدير HTML إلى {{path}}",
+    "pdfRequiresPandoc": "يتطلب تصدير PDF تثبيت pandoc. ثبّت pandoc وحدد المسار في الإعدادات."
+  },
+  "wpClient": {
+    "authFailed": "فشل التحقق. تحقق من اسم المستخدم وكلمة مرور التطبيق.",
+    "connectedAs": "متصل بـ \"{{site}}\" بوصفك \"{{user}}\"",
+    "networkError": "خطأ في الشبكة: {{error}}",
+    "httpError": "HTTP {{status}}",
+    "fetchCategoriesFailed": "فشل جلب الفئات: {{error}}"
+  },
+  "folderSidebar": {
+    "displayText": "مستكشف المجلدات",
+    "back": "→ رجوع",
+    "root": "⌂ الجذر",
+    "insertSelection": "↩ إدراج التحديد",
+    "searchPlaceholder": "ابحث في الأسماء والمحتوى… (Enter)",
+    "sort": {
+      "foldersAz": "المجلدات ↑ أ-ي",
+      "foldersZa": "المجلدات ↑ ي-أ",
+      "az": "الاسم أ-ي",
+      "za": "الاسم ي-أ",
+      "modifiedNew": "الأحدث أولاً",
+      "modifiedOld": "الأقدم أولاً"
+    },
+    "noPreview": "لا معاينة لملفات .{{ext}}",
+    "openInEditor": "فتح في المحرر",
+    "searching": "جارٍ البحث…",
+    "noResults": "لا نتائج لـ \"{{query}}\"",
+    "emptyFolder": "هذا المجلد فارغ",
+    "tooltip": {
+      "modified": "تاريخ التعديل",
+      "size": "الحجم",
+      "words": "الكلمات",
+      "files": "الملفات",
+      "subfolders": "المجلدات الفرعية"
+    },
+    "pickerPlaceholder": "اكتب اسم مجلد لفتحه في مستكشف الشريط الجانبي…",
+    "vaultRoot": "/ (جذر المخزن)"
+  },
+  "focusToolbar": {
+    "exitTitle": "الخروج من وضع التركيز (esc)",
+    "exitBtn": "✕ خروج",
+    "wordCount_zero": "لا كلمات",
+    "wordCount_one": "{{count}} كلمة",
+    "wordCount_two": "{{count}} كلمتان",
+    "wordCount_few": "{{count}} كلمات",
+    "wordCount_many": "{{count}} كلمة",
+    "wordCount_other": "{{count}} كلمة"
+  },
+  "compilePreview": {
+    "displayText": "المخطوطة المجمعة",
+    "jumpToSection": "الانتقال إلى القسم...",
+    "proceedToExport": "المتابعة للتصدير",
+    "closePreview": "إغلاق المعاينة",
+    "noContent": "لا محتوى للمعاينة. افتح مشروع كتابة أولاً."
+  },
+  "projectModal": {
+    "title": "مشروع كتابة جديد",
+    "projectTitle": "عنوان المشروع",
+    "titlePlaceholder": "روايتي",
+    "template": "قالب",
+    "templateDesc": "اختر هيكل مشروع مُعدًّا مسبقًا.",
+    "templateOption": {
+      "blank": "فارغ (هيكل مخصص)",
+      "book": "كتاب (أجزاء → فصول → مشاهد)",
+      "series": "سلسلة مقالات (سلسلة → مقالات)",
+      "blog": "مجموعة مدونة (مشاركات حسب التاريخ/الفئة)",
+      "journalArticle": "مقال أكاديمي — تقديم لمجلة أكاديمية أو مهنية",
+      "magazineArticle": "مقال مجلة — تقرير أو طويل الشكل أو غير خيالي سردي"
+    },
+    "descriptionLabel": "وصف (اختياري)",
+    "descriptionPlaceholder": "وصف موجز لهذا المشروع…",
+    "preview": {
+      "blank": "مشروع فارغ — ابنِ هيكلك الخاص.",
+      "book": "ينشئ: مقدمة، الجزء 1 / الفصل 1، ملحق نهائي.",
+      "series": "ينشئ: مجلد السلسلة، عنصر نائب للمقال 1، بيانات وصفية للسلسلة.",
+      "blog": "ينشئ: مجلد منظم بالتاريخ، عنصر نائب للمشاركة الأولى.",
+      "journalArticle": "ينشئ: صفحة العنوان، الملخص، الكلمات المفتاحية، المقدمة، مراجعة الأدبيات، المنهجية، النتائج/التحليل، النقاش، الخاتمة، المراجع، الملاحق.",
+      "magazineArticle": "ينشئ: ملاحظات الاقتراح/الاستفسار، العنوان الرئيسي والفرعي، المقدمة، الفقرة المحورية، المتن، الاقتباسات والمصادر، الخاتمة، ملاحظات التحقق، نبذة المؤلف. مستندات الملاحظات مستبعدة من التصدير افتراضيًا."
+    },
+    "createBtn": "إنشاء مشروع",
+    "creating": "جارٍ الإنشاء…",
+    "errorNoTitle": "يُرجى إدخال عنوان للمشروع.",
+    "errorCreate": "فشل إنشاء المشروع: {{error}}",
+    "created": "تم إنشاء المشروع «{{title}}»!",
+    "cancel": "إلغاء"
+  },
+  "sprintModal": {
+    "title": "بدء سباق الكتابة",
+    "durationName": "المدة (بالدقائق)",
+    "durationDesc": "الإعدادات المسبقة: 10، 15، 25، 30، 45، 60",
+    "durationCustom": "مخصص…",
+    "durationCustomPlaceholder": "دقائق مخصصة",
+    "wordGoalName": "هدف عدد الكلمات (اختياري)",
+    "wordGoalDesc": "اترك 0 لعدم وضع هدف.",
+    "scopeName": "النطاق",
+    "scopeFile": "الملف الحالي",
+    "scopeProject": "المشروع بالكامل",
+    "startBtn": "بدء السباق",
+    "errorDuration": "يُرجى تحديد مدة صالحة.",
+    "cancel": "إلغاء"
+  },
+  "exportModal": {
+    "title": "تصدير المستند",
+    "formatName": "الصيغة",
+    "format": {
+      "md": "Markdown (.md)",
+      "html": "HTML",
+      "manuscript": "مخطوطة (HTML)",
+      "epub": "EPUB (.epub)",
+      "pdf": "PDF (يتطلب pandoc)",
+      "docx": "Word (.docx) (يتطلب pandoc)",
+      "rtf": "RTF (يتطلب pandoc)"
+    },
+    "coverImageName": "مسار صورة الغلاف",
+    "coverImageDesc": "مسار vault لصورة غلاف JPG أو PNG. اتركه فارغًا لإنشاء غلاف نصي.",
+    "coverImagePlaceholder": "مثال: Assets/cover.jpg",
+    "contactInfoName": "معلومات الاتصال (اختياري)",
+    "contactInfoDesc": "تظهر في صفحة العنوان — الاسم أو البريد الإلكتروني أو العنوان البريدي.",
+    "contactInfoPlaceholder": "الاسم أو البريد الإلكتروني أو العنوان البريدي",
+    "scopeName": "النطاق",
+    "scopeCurrent": "المستند الحالي",
+    "scopeProject": "المشروع بالكامل (بترتيب الموثق)",
+    "includeFrontmatter": "تضمين البيانات الأمامية",
+    "includeResearch": "تضمين ملاحظات البحث",
+    "includeTitlesAsHeadings": "تضمين عناوين المستندات كعناوين",
+    "addTitlePage": "إضافة صفحة عنوان",
+    "addTitlePageDesc": "إضافة صفحة عنوان تحتوي على عنوان المشروع والمؤلف والتاريخ.",
+    "previewBtn": "معاينة المخطوطة المجمعة",
+    "exportBtn": "تصدير",
+    "exporting": "جارٍ التصدير…",
+    "exportFailed": "فشل التصدير: {{error}}",
+    "cancel": "إلغاء"
+  },
+  "publishModal": {
+    "title": "نشر إلى WordPress",
+    "noSites": "لا توجد مواقع WordPress مُهيَّأة. أضف موقعًا في الإعدادات → WordPress.",
+    "close": "إغلاق",
+    "siteName": "موقع WordPress",
+    "postTitleName": "عنوان المنشور",
+    "postStatusName": "حالة المنشور",
+    "postStatus": {
+      "draft": "مسودة",
+      "pending": "في انتظار المراجعة",
+      "publish": "منشور"
+    },
+    "categoryName": "الفئة",
+    "tagsName": "الوسوم",
+    "tagsDesc": "مفصولة بفواصل.",
+    "excerptName": "مقتطف (اختياري)",
+    "scheduleName": "جدولة النشر (اختياري)",
+    "scheduleDesc": "اتركه فارغًا للنشر الفوري.",
+    "schedulePlaceholder": "yyyy-mm-ddThh:mm:ss",
+    "existingNotice": "⚠ تم نشر هذا المستند سابقًا (معرّف المنشور: {{id}}).",
+    "updatePost": "تحديث المنشور الحالي",
+    "newPost": "إنشاء منشور جديد",
+    "schedule": "جدولة",
+    "publish": "نشر",
+    "cancel": "إلغاء",
+    "noSiteSelected": "لم يتم اختيار موقع.",
+    "fileNotFound": "الملف غير موجود.",
+    "publishFailed": "فشل النشر: {{error}}",
+    "published": "تم النشر",
+    "scheduled": "مجدوَل",
+    "actionNotice": "{{action}}! عرض المنشور: {{url}}"
+  },
+  "targetsDashboard": {
+    "title": "لوحة أهداف الفصول",
+    "noProject": "لم يُحدَّد مشروع.",
+    "filterLabel": "تصفية: ",
+    "allStatuses": "جميع الحالات",
+    "refresh": "↻ تحديث",
+    "col": {
+      "title": "العنوان",
+      "type": "النوع",
+      "status": "الحالة",
+      "words": "الكلمات",
+      "goal": "الهدف",
+      "progress": "التقدم",
+      "readingTime": "وقت القراءة"
+    },
+    "total": "المجموع",
+    "status": {
+      "draft": "مسودة",
+      "inProgress": "قيد التقدم",
+      "complete": "مكتمل",
+      "published": "منشور"
+    },
+    "typeLabel": {
+      "chapter": "فصل",
+      "section": "قسم",
+      "article": "مقالة",
+      "note": "ملاحظة",
+      "group": "مجموعة",
+      "part": "جزء"
+    }
+  },
+  "writingDashboard": {
+    "title": "لوحة الكتابة",
+    "thisSession": "هذه الجلسة",
+    "stat": {
+      "wordsWritten": "الكلمات المكتوبة",
+      "sprints": "السباقات",
+      "minutes": "الدقائق",
+      "writingStreak": "سلسلة الكتابة",
+      "streakDays_zero": "لا أيام",
+      "streakDays_one": "{{count}} يوم",
+      "streakDays_two": "{{count}} يومان",
+      "streakDays_few": "{{count}} أيام",
+      "streakDays_many": "{{count}} يومًا",
+      "streakDays_other": "{{count}} يوم",
+      "totalWords": "إجمالي الكلمات",
+      "goal": "الهدف",
+      "progress": "التقدم",
+      "readingTime": "وقت القراءة"
+    },
+    "project": "المشروع: {{title}}",
+    "recentSprints": "السباقات الأخيرة",
+    "noSprints": "لا سباقات مسجّلة بعد.",
+    "sprintTable": {
+      "date": "التاريخ",
+      "duration": "المدة",
+      "words": "الكلمات",
+      "wpm": "ك/د",
+      "goal": "الهدف"
+    },
+    "documentWordCounts": "عدد كلمات المستندات",
+    "docTable": {
+      "document": "المستند",
+      "words": "الكلمات",
+      "readingTime": "وقت القراءة"
+    },
+    "close": "إغلاق"
+  },
+  "addToProject": {
+    "title": "إضافة إلى مشروع كتابة",
+    "noProjects": "لم يُعثر على مشاريع كتابة. أنشئ مشروعًا أولاً.",
+    "close": "إغلاق",
+    "file": "الملف: {{path}}",
+    "projectName": "مشروع الكتابة",
+    "projectDesc": "إلى أي مشروع كتابة تريد إضافة هذا الملف؟",
+    "addBtn": "إضافة إلى المشروع",
+    "cancel": "إلغاء"
+  },
+  "scanFolder": {
+    "title": "إضافة ملفات إلى الموثق",
+    "desc": "حدد الملفات لإضافتها إلى هذا المشروع:",
+    "addBtn": "إضافة الملفات المحددة",
+    "cancel": "إلغاء"
+  },
+  "main": {
+    "ribbonTitle": "فتح استوديو الكتابة",
+    "cmd": {
+      "openLauncher": "فتح المشغّل",
+      "openBinder": "فتح المجمّع",
+      "toggleFocusMode": "تبديل وضع التركيز",
+      "toggleTypographyMode": "تبديل وضع الطباعة",
+      "switchDraftMode": "التبديل إلى وضع المسودة",
+      "switchEditMode": "التبديل إلى وضع التحرير",
+      "switchReviewMode": "التبديل إلى وضع المراجعة",
+      "startSprint": "بدء جلسة الكتابة",
+      "exportDocument": "تصدير المستند",
+      "exportProject": "تصدير المشروع",
+      "previewManuscript": "معاينة المخطوطة المجمّعة",
+      "publishWordPress": "النشر على WordPress",
+      "newProject": "مشروع كتابة جديد",
+      "openDashboard": "فتح لوحة الكتابة",
+      "openTargetsDashboard": "فتح لوحة الأهداف",
+      "setWordCountGoal": "تعيين هدف عدد الكلمات",
+      "openWritingLog": "فتح سجل الكتابة",
+      "openFolderSidebar": "فتح المجلد في المستكشف الجانبي",
+      "addFilesToBinder": "إضافة الملفات المنسوخة إلى مجلد المشروع"
+    },
+    "menu": {
+      "studioOptions": "خيارات استوديو الكتابة",
+      "exportDoc": "تصدير هذا المستند",
+      "publish": "النشر على WordPress",
+      "setGoal": "تعيين هدف عدد الكلمات",
+      "switchMode": "تبديل وضع الكتابة →",
+      "typographyFont": "خط الطباعة →",
+      "addToProject": "إضافة إلى مشروع الكتابة",
+      "openSidebar": "فتح في المستكشف الجانبي",
+      "draftMode": "✍ وضع المسودة",
+      "editMode": "✎ وضع التحرير",
+      "reviewMode": "👁 وضع المراجعة",
+      "normalMode": "عادي (بلا وضع)"
+    },
+    "notice": {
+      "noMarkdownOpen": "لا يوجد ملف Markdown مفتوح حالياً.",
+      "addedToProject": "تمت إضافة «{{file}}» إلى {{project}}"
+    },
+    "statusBar": {
+      "projectWords": "{{total}} / {{goal}} كلمة في المشروع",
+      "wordCount": "{{count}} كلمة",
+      "wordCountGoal": "{{count}} / {{goal}} كلمة",
+      "delta": "(+{{delta}})",
+      "goalBanner": "{{count}} / {{goal}} كلمة — {{pct}}%",
+      "dismiss": "إغلاق"
+    }
+  },
+  "sprintSummary": {
+    "title": "اكتملت الجلسة!",
+    "wordsWritten": "الكلمات المكتوبة",
+    "duration": "المدة",
+    "durationValue": "{{count}} دقيقة",
+    "wpm": "كلمة/دقيقة",
+    "goalProgress": "تقدّم الهدف",
+    "close": "إغلاق"
+  },
+  "wordCountGoal": {
+    "title": "تعيين هدف عدد الكلمات",
+    "name": "هدف عدد الكلمات",
+    "desc": "عدد الكلمات المستهدف لهذا المستند. اضبط على 0 للإزالة.",
+    "placeholder": "مثال: 1500",
+    "save": "حفظ",
+    "cancel": "إلغاء"
+  },
+  "statsTracker": {
+    "unknownProject": "مشروع غير معروف",
+    "none": "لا شيء",
+    "dailyNote": {
+      "heading": "## ✍️ نشاط الكتابة",
+      "project": "**المشروع:**",
+      "documents": "**المستندات:**",
+      "wordsWritten": "**الكلمات المكتوبة:**",
+      "sprintsCompleted": "**الجلسات المكتملة:**",
+      "sprintEntry": "1 ({{duration}} دقيقة)",
+      "wpm": "**كلمات في الدقيقة:**",
+      "sessionTotal": "**إجمالي الجلسة:**",
+      "sessionTotalValue": "{{duration}} دقيقة"
+    },
+    "readingTime": {
+      "minutes": "{{count}} د",
+      "hoursMinutes": "{{hours}} س {{mins}} د",
+      "hours": "{{hours}} س"
     }
   }
 }

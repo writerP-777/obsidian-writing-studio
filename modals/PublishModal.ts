@@ -1,6 +1,7 @@
 import { App, Modal, Setting, Notice, TFile } from 'obsidian';
 import type WritingStudioPlugin from '../main';
 import { WordPressSite, WPCategory, WPPostStatus } from '../models/WordPressSite';
+import { t } from '../src/i18n';
 
 export class PublishModal extends Modal {
   private plugin: WritingStudioPlugin;
@@ -25,15 +26,15 @@ export class PublishModal extends Modal {
     const { contentEl } = this;
     contentEl.empty();
     contentEl.addClass('ws-publish-modal');
-    contentEl.createEl('h2', { text: 'Publish to WordPress' });
+    contentEl.createEl('h2', { text: t('publishModal.title') });
 
     const sites = this.plugin.settings.wordPressSites;
     if (sites.length === 0) {
       contentEl.createEl('p', {
-        text: 'No WordPress sites configured. Add a site in settings → WordPress.',
+        text: t('publishModal.noSites'),
         cls: 'ws-empty-state',
       });
-      contentEl.createEl('button', { text: 'Close' }).onclick = () => this.close();
+      contentEl.createEl('button', { text: t('publishModal.close') }).onclick = () => this.close();
       return;
     }
 
@@ -42,7 +43,7 @@ export class PublishModal extends Modal {
 
     // Site selector
     new Setting(contentEl)
-      .setName('WordPress site')
+      .setName(t('publishModal.siteName'))
       .addDropdown(d => {
         sites.forEach(s => { d.addOption(s.id, s.nickname || s.url); });
         if (this.selectedSiteId) d.setValue(this.selectedSiteId);
@@ -58,18 +59,18 @@ export class PublishModal extends Modal {
 
     // Title
     new Setting(contentEl)
-      .setName('Post title')
-      .addText(t => t
+      .setName(t('publishModal.postTitleName'))
+      .addText(tx => tx
         .setValue(this.postTitle)
         .onChange(v => { this.postTitle = v; }));
 
     // Status
     new Setting(contentEl)
-      .setName('Post status')
+      .setName(t('publishModal.postStatusName'))
       .addDropdown(d => d
-        .addOption('draft', 'Draft')
-        .addOption('pending', 'Pending review')
-        .addOption('publish', 'Published')
+        .addOption('draft', t('publishModal.postStatus.draft'))
+        .addOption('pending', t('publishModal.postStatus.pending'))
+        .addOption('publish', t('publishModal.postStatus.publish'))
         .setValue(this.postStatus)
         .onChange(v => { this.postStatus = v as WPPostStatus; }));
 
@@ -81,7 +82,7 @@ export class PublishModal extends Modal {
 
     // Category selector
     if (this.categories.length > 0) {
-      new Setting(contentEl).setName('Category');
+      new Setting(contentEl).setName(t('publishModal.categoryName'));
 
       const catList = contentEl.createDiv('ws-publish-categories');
       for (const cat of this.categories) {
@@ -101,38 +102,38 @@ export class PublishModal extends Modal {
 
     // Tags
     new Setting(contentEl)
-      .setName('Tags')
-      .setDesc('Comma-separated.')
-      .addText(t => t
+      .setName(t('publishModal.tagsName'))
+      .setDesc(t('publishModal.tagsDesc'))
+      .addText(tx => tx
         .setValue(this.tags.join(', '))
         .onChange(v => { this.tags = v.split(',').map(s => s.trim()).filter(Boolean); }));
 
     // Excerpt
     new Setting(contentEl)
-      .setName('Excerpt (optional)')
-      .addTextArea(t => t
+      .setName(t('publishModal.excerptName'))
+      .addTextArea(tx => tx
         .setValue(this.excerpt)
         .onChange(v => { this.excerpt = v; }));
 
     // Scheduled date
     new Setting(contentEl)
-      .setName('Schedule publication (optional)')
-      .setDesc('Leave empty to publish immediately.')
-      .addText(t => t
-        .setPlaceholder('yyyy-mm-ddThh:mm:ss')
+      .setName(t('publishModal.scheduleName'))
+      .setDesc(t('publishModal.scheduleDesc'))
+      .addText(tx => tx
+        .setPlaceholder(t('publishModal.schedulePlaceholder'))
         .setValue(this.scheduledDate)
         .onChange(v => { this.scheduledDate = v; }));
 
     // Existing post notice
     if (this.existingPostId) {
       const noticeEl = contentEl.createDiv('ws-publish-existing-notice');
-      noticeEl.createSpan({ text: `⚠ This document was previously published (Post ID: ${this.existingPostId}).` });
+      noticeEl.createSpan({ text: t('publishModal.existingNotice', { id: this.existingPostId }) });
 
       const choiceRow = noticeEl.createDiv('ws-publish-choice');
-      const updateBtn = choiceRow.createEl('button', { text: 'Update existing post', cls: 'mod-cta' });
+      const updateBtn = choiceRow.createEl('button', { text: t('publishModal.updatePost'), cls: 'mod-cta' });
       updateBtn.onclick = () => { void this.doPublish(true); };
 
-      const newBtn = choiceRow.createEl('button', { text: 'Create new post' });
+      const newBtn = choiceRow.createEl('button', { text: t('publishModal.newPost') });
       newBtn.onclick = () => { void this.doPublish(false); };
     }
 
@@ -141,12 +142,12 @@ export class PublishModal extends Modal {
     if (!this.existingPostId) {
       const publishBtn = btnRow.createEl('button', {
         cls: 'mod-cta',
-        text: this.scheduledDate ? 'Schedule' : 'Publish',
+        text: this.scheduledDate ? t('publishModal.schedule') : t('publishModal.publish'),
       });
       publishBtn.onclick = () => { void this.doPublish(false); };
     }
 
-    const cancelBtn = btnRow.createEl('button', { text: 'Cancel' });
+    const cancelBtn = btnRow.createEl('button', { text: t('publishModal.cancel') });
     cancelBtn.onclick = () => this.close();
   }
 
@@ -166,7 +167,7 @@ export class PublishModal extends Modal {
       if (fm['wp-post-id']) this.existingPostId = Number(fm['wp-post-id']);
       if (fm['wp-status']) this.postStatus = fm['wp-status'] as WPPostStatus;
       if (fm['tags'] && Array.isArray(fm['tags'])) {
-        this.tags = (fm['tags'] as string[]).filter(t => t !== 'writing-studio');
+        this.tags = (fm['tags'] as string[]).filter(tag => tag !== 'writing-studio');
       }
       if (fm['wp-site']) {
         const site = this.plugin.settings.wordPressSites.find(s => s.nickname === fm['wp-site']);
@@ -187,10 +188,10 @@ export class PublishModal extends Modal {
 
   private async doPublish(updateExisting: boolean): Promise<void> {
     const site = this.getSite();
-    if (!site) { new Notice('No site selected.'); return; }
+    if (!site) { new Notice(t('publishModal.noSiteSelected')); return; }
 
     const file = this.app.vault.getAbstractFileByPath(this.filePath);
-    if (!(file instanceof TFile)) { new Notice('File not found.'); return; }
+    if (!(file instanceof TFile)) { new Notice(t('publishModal.fileNotFound')); return; }
 
     try {
       const rawContent = await this.app.vault.read(file);
@@ -219,11 +220,11 @@ export class PublishModal extends Modal {
         });
       });
 
-      const action = this.scheduledDate ? 'Scheduled' : 'Published';
-      new Notice(`${action}! View post: ${result.url}`, 10000);
+      const action = this.scheduledDate ? t('publishModal.scheduled') : t('publishModal.published');
+      new Notice(t('publishModal.actionNotice', { action, url: result.url }), 10000);
       this.close();
     } catch (e) {
-      new Notice(`Publish failed: ${e instanceof Error ? e.message : String(e)}`);
+      new Notice(t('publishModal.publishFailed', { error: e instanceof Error ? e.message : String(e) }));
     }
   }
 

@@ -3,6 +3,7 @@ import { exec } from 'child_process';
 import { promisify } from 'util';
 import type WritingStudioPlugin from '../main';
 import { EpubEngine, EpubChapter } from './EpubEngine';
+import { t } from './i18n';
 
 interface FileSystemAdapter {
   getFullPath?(vaultPath: string): string;
@@ -218,7 +219,7 @@ export class ExportEngine {
       chapters,
     }, outputPath);
 
-    new Notice(`EPUB exported to ${outputPath}`);
+    new Notice(t('exportEngine.epubExported', { path: outputPath }));
     return outputPath;
   }
 
@@ -380,13 +381,13 @@ ${bodyHtml}
 </html>`;
 
     await this.writeFile(outputPath, fullHtml);
-    new Notice(`Manuscript exported to ${outputPath}`);
+    new Notice(t('exportEngine.manuscriptExported', { path: outputPath }));
     return outputPath;
   }
 
   private async exportMarkdown(content: string, outputPath: string): Promise<string> {
     await this.writeFile(outputPath, content);
-    new Notice(`Exported to ${outputPath}`);
+    new Notice(t('exportEngine.exportedTo', { path: outputPath }));
     return outputPath;
   }
 
@@ -417,7 +418,7 @@ ${this.markdownToHtml(content)}
 </body>
 </html>`;
     await this.writeFile(outputPath, html);
-    new Notice(`Exported HTML to ${outputPath}`);
+    new Notice(t('exportEngine.exportedHtmlTo', { path: outputPath }));
     return outputPath;
   }
 
@@ -451,7 +452,7 @@ ${this.markdownToHtml(content)}
       }
 
       await execAsync(`${pandocPath} ${args.join(' ')}`);
-      new Notice(`Exported to ${outputPath}`);
+      new Notice(t('exportEngine.exportedTo', { path: outputPath }));
       return outputPath;
     } catch (e) {
       throw new Error(`Pandoc export failed: ${e instanceof Error ? e.message : String(e)}\nEnsure pandoc is installed.`);
@@ -465,7 +466,7 @@ ${this.markdownToHtml(content)}
     try {
       return await this.exportPandoc(content, outputPath, opts);
     } catch (e) {
-      new Notice('PDF export requires pandoc. Install pandoc and set path in settings.');
+      new Notice(t('exportEngine.pdfRequiresPandoc'));
       throw e; // preserve the original pandoc error for the Export modal to display
     }
   }

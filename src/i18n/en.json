@@ -173,6 +173,427 @@
       "moveToResearch": "Move to research",
       "publishToWordPress": "Publish to WordPress",
       "delete": "Delete"
+    },
+    "wordCountSuffix": "{{count}}w"
+  },
+  "launcher": {
+    "displayText": "Writing studio",
+    "title": "Writing Studio",
+    "settings": "Settings",
+    "project": "Project",
+    "newProject": "+ new",
+    "noProjectSelected": "No project selected.",
+    "chooseProject": "— choose project —",
+    "wordCount": "{{n}} words",
+    "wordGoal": "/ {{n}} goal",
+    "pctComplete": "{{pct}}% complete",
+    "openBinder": "📖 Open binder",
+    "writingMode": "Writing mode",
+    "mode": {
+      "draft": "Draft",
+      "draftDesc": "Focus + typography on, sidebars hidden",
+      "edit": "Edit",
+      "editDesc": "Binder open, full UI visible",
+      "review": "Review",
+      "reviewDesc": "Reading view, no editing",
+      "clearMode": "✕ Clear mode"
+    },
+    "focusTypography": "Focus & typography",
+    "focusMode": "Focus mode",
+    "typographyMode": "Typography mode",
+    "on": "ON",
+    "off": "OFF",
+    "quickActions": "Quick actions",
+    "action": {
+      "targetsDashboard": "Targets dashboard",
+      "writingDashboard": "Writing dashboard",
+      "previewManuscript": "Preview manuscript",
+      "export": "Export",
+      "writingLog": "Writing log",
+      "publishToWordPress": "Publish to WordPress"
+    },
+    "openDocumentFirst": "Open a document first.",
+    "sprintTimer": "Sprint timer",
+    "pause": "⏸ Pause",
+    "stop": "■ Stop",
+    "startSprint": "⏱ Start sprint",
+    "quickStart": "Quick start:",
+    "today": "Today",
+    "stat": {
+      "words": "Words",
+      "sprints": "Sprints",
+      "minutes": "Minutes",
+      "streak": "Streak",
+      "streakDays": "{{streak}}d"
+    },
+    "sessionWordsTyped": "Session: +{{n}} words typed",
+    "dailyGoal": "Daily goal: {{written}} / {{goal}} words"
+  },
+  "log": {
+    "displayText": "Writing log",
+    "title": "Writing log",
+    "noProjectSelected": "No project selected. Open the launcher and select a project to see your writing history.",
+    "streak": "🔥 {{streak}}-day streak",
+    "startStreak": "Write today to start a streak",
+    "thisSession": "This session",
+    "stat": {
+      "session": "Session",
+      "sprintWords": "Sprint words",
+      "sprints": "Sprints",
+      "minutes": "Minutes"
+    },
+    "last30Days": "Last 30 days",
+    "today": "Today",
+    "sprintsCount_one": "· {{count}} sprint",
+    "sprintsCount_other": "· {{count}} sprints"
+  },
+  "sprint": {
+    "started": "Sprint started: {{minutes}} minutes",
+    "complete": "Sprint complete! Great work.",
+    "words": "+{{n}} words",
+    "header": "Writing sprint",
+    "pauseTitle": "Pause/resume",
+    "stopTitle": "Stop sprint"
+  },
+  "writingModes": {
+    "switchedTo": "Writing studio: {{mode}} mode",
+    "normal": "Normal",
+    "statusDraft": "✍ draft",
+    "statusEdit": "✎ edit",
+    "statusReview": "👁 review",
+    "statusNone": "— mode"
+  },
+  "exportEngine": {
+    "epubExported": "EPUB exported to {{path}}",
+    "manuscriptExported": "Manuscript exported to {{path}}",
+    "exportedTo": "Exported to {{path}}",
+    "exportedHtmlTo": "Exported HTML to {{path}}",
+    "pdfRequiresPandoc": "PDF export requires pandoc. Install pandoc and set path in settings."
+  },
+  "wpClient": {
+    "authFailed": "Authentication failed. Check username and application password.",
+    "connectedAs": "Connected as \"{{user}}\" to \"{{site}}\"",
+    "networkError": "Network error: {{error}}",
+    "httpError": "HTTP {{status}}",
+    "fetchCategoriesFailed": "Failed to fetch categories: {{error}}"
+  },
+  "folderSidebar": {
+    "displayText": "Folder explorer",
+    "back": "← Back",
+    "root": "⌂ Root",
+    "insertSelection": "↩ Insert selection",
+    "searchPlaceholder": "Search names & content… (Enter)",
+    "sort": {
+      "foldersAz": "Folders ↑ A-Z",
+      "foldersZa": "Folders ↑ Z-A",
+      "az": "Name A-Z",
+      "za": "Name Z-A",
+      "modifiedNew": "Newest first",
+      "modifiedOld": "Oldest first"
+    },
+    "noPreview": "No preview available for .{{ext}} files",
+    "openInEditor": "Open in editor",
+    "searching": "Searching…",
+    "noResults": "No results for \"{{query}}\"",
+    "emptyFolder": "This folder is empty",
+    "tooltip": {
+      "modified": "Modified",
+      "size": "Size",
+      "words": "Words",
+      "files": "Files",
+      "subfolders": "Subfolders"
+    },
+    "pickerPlaceholder": "Type a folder name to open in sidebar explorer…",
+    "vaultRoot": "/ (vault root)"
+  },
+  "focusToolbar": {
+    "exitTitle": "Exit focus mode (esc)",
+    "exitBtn": "✕ exit",
+    "wordCount_one": "{{count}} word",
+    "wordCount_other": "{{count}} words"
+  },
+  "compilePreview": {
+    "displayText": "Compiled manuscript",
+    "jumpToSection": "Jump to section...",
+    "proceedToExport": "Proceed to export",
+    "closePreview": "Close preview",
+    "noContent": "No content to preview. Open a writing project first."
+  },
+  "projectModal": {
+    "title": "New writing project",
+    "projectTitle": "Project title",
+    "titlePlaceholder": "My novel",
+    "template": "Template",
+    "templateDesc": "Choose a pre-configured project structure.",
+    "templateOption": {
+      "blank": "Blank (custom structure)",
+      "book": "Book (parts → chapters → scenes)",
+      "series": "Article series (series → articles)",
+      "blog": "Blog collection (posts by date/category)",
+      "journalArticle": "Journal article — academic or professional journal submission",
+      "magazineArticle": "Magazine article — feature, long-form, or narrative nonfiction"
+    },
+    "descriptionLabel": "Description (optional)",
+    "descriptionPlaceholder": "Brief description of this project…",
+    "preview": {
+      "blank": "Empty project — build your own structure.",
+      "book": "Creates: Front Matter, Part 1 / Chapter 1, Back Matter placeholder.",
+      "series": "Creates: Series folder, Article 1 placeholder, series metadata.",
+      "blog": "Creates: date-organized folder, first post placeholder.",
+      "journalArticle": "Creates: Title Page, Abstract, Keywords, Introduction, Literature Review, Methodology, Findings / Analysis, Discussion, Conclusion, References, Appendices.",
+      "magazineArticle": "Creates: Pitch / Query Notes, Headline & Deck, Lede, Nut Graf, Body, Quotes & Sources, Kicker, Fact-Check Notes, Author Bio. Notes documents excluded from export by default."
+    },
+    "createBtn": "Create project",
+    "creating": "Creating…",
+    "errorNoTitle": "Please enter a project title.",
+    "errorCreate": "Failed to create project: {{error}}",
+    "created": "Project \"{{title}}\" created!",
+    "cancel": "Cancel"
+  },
+  "sprintModal": {
+    "title": "Start writing sprint",
+    "durationName": "Duration (minutes)",
+    "durationDesc": "Preset: 10, 15, 25, 30, 45, 60",
+    "durationCustom": "Custom…",
+    "durationCustomPlaceholder": "Custom minutes",
+    "wordGoalName": "Word count goal (optional)",
+    "wordGoalDesc": "Leave 0 for no goal.",
+    "scopeName": "Scope",
+    "scopeFile": "Current file",
+    "scopeProject": "Entire project",
+    "startBtn": "Start sprint",
+    "errorDuration": "Please set a valid duration.",
+    "cancel": "Cancel"
+  },
+  "exportModal": {
+    "title": "Export document",
+    "formatName": "Format",
+    "format": {
+      "md": "Markdown (.md)",
+      "html": "HTML",
+      "manuscript": "Manuscript (HTML)",
+      "epub": "EPUB (.epub)",
+      "pdf": "PDF (requires pandoc)",
+      "docx": "Word (.docx) (requires pandoc)",
+      "rtf": "RTF (requires pandoc)"
+    },
+    "coverImageName": "Cover image path",
+    "coverImageDesc": "Vault path to a JPG or PNG cover image. Leave empty for a generated text cover.",
+    "coverImagePlaceholder": "e.g. Assets/cover.jpg",
+    "contactInfoName": "Contact info (optional)",
+    "contactInfoDesc": "Appears on the title page — name, email, or mailing address.",
+    "contactInfoPlaceholder": "Name, email, or mailing address",
+    "scopeName": "Scope",
+    "scopeCurrent": "Current document",
+    "scopeProject": "Entire project (in binder order)",
+    "includeFrontmatter": "Include frontmatter",
+    "includeResearch": "Include research notes",
+    "includeTitlesAsHeadings": "Include document titles as headings",
+    "addTitlePage": "Add title page",
+    "addTitlePageDesc": "Prepend a title page with project title, author, and date.",
+    "previewBtn": "Preview compiled manuscript",
+    "exportBtn": "Export",
+    "exporting": "Exporting…",
+    "exportFailed": "Export failed: {{error}}",
+    "cancel": "Cancel"
+  },
+  "publishModal": {
+    "title": "Publish to WordPress",
+    "noSites": "No WordPress sites configured. Add a site in settings → WordPress.",
+    "close": "Close",
+    "siteName": "WordPress site",
+    "postTitleName": "Post title",
+    "postStatusName": "Post status",
+    "postStatus": {
+      "draft": "Draft",
+      "pending": "Pending review",
+      "publish": "Published"
+    },
+    "categoryName": "Category",
+    "tagsName": "Tags",
+    "tagsDesc": "Comma-separated.",
+    "excerptName": "Excerpt (optional)",
+    "scheduleName": "Schedule publication (optional)",
+    "scheduleDesc": "Leave empty to publish immediately.",
+    "schedulePlaceholder": "yyyy-mm-ddThh:mm:ss",
+    "existingNotice": "⚠ This document was previously published (Post ID: {{id}}).",
+    "updatePost": "Update existing post",
+    "newPost": "Create new post",
+    "schedule": "Schedule",
+    "publish": "Publish",
+    "cancel": "Cancel",
+    "noSiteSelected": "No site selected.",
+    "fileNotFound": "File not found.",
+    "publishFailed": "Publish failed: {{error}}",
+    "published": "Published",
+    "scheduled": "Scheduled",
+    "actionNotice": "{{action}}! View post: {{url}}"
+  },
+  "targetsDashboard": {
+    "title": "Chapter targets dashboard",
+    "noProject": "No project selected.",
+    "filterLabel": "Filter: ",
+    "allStatuses": "All statuses",
+    "refresh": "↻ Refresh",
+    "col": {
+      "title": "Title",
+      "type": "Type",
+      "status": "Status",
+      "words": "Words",
+      "goal": "Goal",
+      "progress": "Progress",
+      "readingTime": "Reading time"
+    },
+    "total": "Total",
+    "status": {
+      "draft": "Draft",
+      "inProgress": "In Progress",
+      "complete": "Complete",
+      "published": "Published"
+    },
+    "typeLabel": {
+      "chapter": "Chapter",
+      "section": "Section",
+      "article": "Article",
+      "note": "Note",
+      "group": "Group",
+      "part": "Part"
+    }
+  },
+  "writingDashboard": {
+    "title": "Writing dashboard",
+    "thisSession": "This session",
+    "stat": {
+      "wordsWritten": "Words written",
+      "sprints": "Sprints",
+      "minutes": "Minutes",
+      "writingStreak": "Writing streak",
+      "streakDays_one": "{{count}} day",
+      "streakDays_other": "{{count}} days",
+      "totalWords": "Total words",
+      "goal": "Goal",
+      "progress": "Progress",
+      "readingTime": "Reading time"
+    },
+    "project": "Project: {{title}}",
+    "recentSprints": "Recent sprints",
+    "noSprints": "No sprints recorded yet.",
+    "sprintTable": {
+      "date": "Date",
+      "duration": "Duration",
+      "words": "Words",
+      "wpm": "WPM",
+      "goal": "Goal"
+    },
+    "documentWordCounts": "Document word counts",
+    "docTable": {
+      "document": "Document",
+      "words": "Words",
+      "readingTime": "Reading time"
+    },
+    "close": "Close"
+  },
+  "addToProject": {
+    "title": "Add to writing project",
+    "noProjects": "No writing projects found. Create a project first.",
+    "close": "Close",
+    "file": "File: {{path}}",
+    "projectName": "Writing project",
+    "projectDesc": "What writing project do you wish to add this file to?",
+    "addBtn": "Add to project",
+    "cancel": "Cancel"
+  },
+  "scanFolder": {
+    "title": "Add files to binder",
+    "desc": "Select the files to add to this project:",
+    "addBtn": "Add selected files",
+    "cancel": "Cancel"
+  },
+  "main": {
+    "ribbonTitle": "Open writing studio",
+    "cmd": {
+      "openLauncher": "Open launcher",
+      "openBinder": "Open binder",
+      "toggleFocusMode": "Toggle focus mode",
+      "toggleTypographyMode": "Toggle typography mode",
+      "switchDraftMode": "Switch to draft mode",
+      "switchEditMode": "Switch to edit mode",
+      "switchReviewMode": "Switch to review mode",
+      "startSprint": "Start writing sprint",
+      "exportDocument": "Export document",
+      "exportProject": "Export project",
+      "previewManuscript": "Preview compiled manuscript",
+      "publishWordPress": "Publish to WordPress",
+      "newProject": "New writing project",
+      "openDashboard": "Open writing dashboard",
+      "openTargetsDashboard": "Open targets dashboard",
+      "setWordCountGoal": "Set word count goal",
+      "openWritingLog": "Open writing log",
+      "openFolderSidebar": "Open folder in sidebar explorer",
+      "addFilesToBinder": "Add files copied to project folder"
+    },
+    "menu": {
+      "studioOptions": "Writing studio options",
+      "exportDoc": "Export this document",
+      "publish": "Publish to WordPress",
+      "setGoal": "Set word count goal",
+      "switchMode": "Switch writing mode →",
+      "typographyFont": "Typography font →",
+      "addToProject": "Add to writing project",
+      "openSidebar": "Open in sidebar explorer",
+      "draftMode": "✍ Draft mode",
+      "editMode": "✎ Edit mode",
+      "reviewMode": "👁 Review mode",
+      "normalMode": "Normal (no mode)"
+    },
+    "notice": {
+      "noMarkdownOpen": "No Markdown file is currently open.",
+      "addedToProject": "Added \"{{file}}\" to {{project}}"
+    },
+    "statusBar": {
+      "projectWords": "{{total}} / {{goal}} project words",
+      "wordCount": "{{count}} words",
+      "wordCountGoal": "{{count}} / {{goal}} words",
+      "delta": "(+{{delta}})",
+      "goalBanner": "{{count}} / {{goal}} words — {{pct}}%",
+      "dismiss": "Dismiss"
+    }
+  },
+  "sprintSummary": {
+    "title": "Sprint complete!",
+    "wordsWritten": "Words written",
+    "duration": "Duration",
+    "durationValue": "{{count}} min",
+    "wpm": "Words/minute",
+    "goalProgress": "Goal progress",
+    "close": "Close"
+  },
+  "wordCountGoal": {
+    "title": "Set word count goal",
+    "name": "Word count goal",
+    "desc": "Target word count for this document. Set to 0 to remove.",
+    "placeholder": "E.g. 1500",
+    "save": "Save",
+    "cancel": "Cancel"
+  },
+  "statsTracker": {
+    "unknownProject": "Unknown project",
+    "none": "None",
+    "dailyNote": {
+      "heading": "## ✍️ Writing Activity",
+      "project": "**Project:**",
+      "documents": "**Documents:**",
+      "wordsWritten": "**Words Written:**",
+      "sprintsCompleted": "**Sprints Completed:**",
+      "sprintEntry": "1 ({{duration}} min)",
+      "wpm": "**Words per Minute:**",
+      "sessionTotal": "**Session Total:**",
+      "sessionTotalValue": "{{duration}} minutes"
+    },
+    "readingTime": {
+      "minutes": "{{count}} min",
+      "hoursMinutes": "{{hours}}h {{mins}}m",
+      "hours": "{{hours}}h"
     }
   }
 }

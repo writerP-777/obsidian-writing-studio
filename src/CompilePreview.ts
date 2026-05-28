@@ -2,6 +2,7 @@ import { ItemView, WorkspaceLeaf, MarkdownRenderer } from 'obsidian';
 import type WritingStudioPlugin from '../main';
 import { ExportOptions } from './ExportEngine';
 import { ExportModal } from '../modals/ExportModal';
+import { t } from './i18n';
 
 export const COMPILE_PREVIEW_VIEW_TYPE = 'writing-studio-compile-preview';
 
@@ -20,7 +21,7 @@ export class CompilePreviewView extends ItemView {
   }
 
   getDisplayText(): string {
-    return 'Compiled manuscript';
+    return t('compilePreview.displayText');
   }
 
   getIcon(): string {
@@ -72,7 +73,7 @@ export class CompilePreviewView extends ItemView {
     const toolbar = container.createDiv('ws-compile-toolbar');
 
     const jumpSel = toolbar.createEl('select', { cls: 'ws-compile-jump' });
-    const defaultOpt = jumpSel.createEl('option', { text: 'Jump to section...' });
+    const defaultOpt = jumpSel.createEl('option', { text: t('compilePreview.jumpToSection') });
     defaultOpt.value = '';
     for (const item of this.jumpItems) {
       const opt = jumpSel.createEl('option', { text: item.title });
@@ -87,7 +88,7 @@ export class CompilePreviewView extends ItemView {
 
     const exportBtn = toolbar.createEl('button', {
       cls: 'ws-compile-export-btn mod-cta',
-      text: 'Proceed to export',
+      text: t('compilePreview.proceedToExport'),
     });
     exportBtn.onclick = () => {
       new ExportModal(this.app, this.plugin).open();
@@ -95,7 +96,7 @@ export class CompilePreviewView extends ItemView {
 
     const closeBtn = toolbar.createEl('button', {
       cls: 'ws-compile-close-btn',
-      text: 'Close preview',
+      text: t('compilePreview.closePreview'),
     });
     closeBtn.onclick = () => {
       this.leaf.detach();
@@ -106,7 +107,7 @@ export class CompilePreviewView extends ItemView {
 
     if (!this.content) {
       contentDiv.createEl('p', {
-        text: 'No content to preview. Open a writing project first.',
+        text: t('compilePreview.noContent'),
         cls: 'ws-empty-state',
       });
       return;

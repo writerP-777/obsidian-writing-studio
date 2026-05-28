@@ -1,5 +1,6 @@
 import { Notice, requestUrl } from 'obsidian';
 import { WordPressSite, WPCategory, WPPublishResult, WPPostStatus } from '../models/WordPressSite';
+import { t } from './i18n';
 
 interface WPApiUser { name: string }
 interface WPApiSite { name?: string }
@@ -46,10 +47,10 @@ export class WordPressClient {
       });
 
       if (resp.status === 401) {
-        return { success: false, message: 'Authentication failed. Check username and application password.' };
+        return { success: false, message: t('wpClient.authFailed') };
       }
       if (resp.status < 200 || resp.status >= 300) {
-        return { success: false, message: `HTTP ${resp.status}` };
+        return { success: false, message: t('wpClient.httpError', { status: resp.status }) };
       }
 
       const data = resp.json as WPApiUser;
@@ -68,12 +69,12 @@ export class WordPressClient {
       return {
         success: true,
         siteName,
-        message: `Connected as "${data.name}" to "${siteName}"`,
+        message: t('wpClient.connectedAs', { user: data.name, site: siteName }),
       };
     } catch (e) {
       return {
         success: false,
-        message: `Network error: ${e instanceof Error ? e.message : String(e)}`,
+        message: t('wpClient.networkError', { error: e instanceof Error ? e.message : String(e) }),
       };
     }
   }
@@ -94,7 +95,7 @@ export class WordPressClient {
         count: c.count,
       }));
     } catch (e) {
-      new Notice(`Failed to fetch categories: ${e instanceof Error ? e.message : String(e)}`);
+      new Notice(t('wpClient.fetchCategoriesFailed', { error: e instanceof Error ? e.message : String(e) }));
       return [];
     }
   }

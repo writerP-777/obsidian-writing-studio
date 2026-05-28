@@ -173,6 +173,433 @@
       "moveToResearch": "Переместить в исследования",
       "publishToWordPress": "Опубликовать в WordPress",
       "delete": "Удалить"
+    },
+    "wordCountSuffix": "{{count}}сл"
+  },
+  "launcher": {
+    "displayText": "Студия письма",
+    "title": "Студия письма",
+    "settings": "Настройки",
+    "project": "Проект",
+    "newProject": "+ новый",
+    "noProjectSelected": "Проект не выбран.",
+    "chooseProject": "— выберите проект —",
+    "wordCount": "{{n}} слов",
+    "wordGoal": "/ {{n}} цель",
+    "pctComplete": "{{pct}}% завершено",
+    "openBinder": "📖 Открыть папку",
+    "writingMode": "Режим письма",
+    "mode": {
+      "draft": "Черновик",
+      "draftDesc": "Фокус + типографика включены, боковые панели скрыты",
+      "edit": "Редактирование",
+      "editDesc": "Папка открыта, полный интерфейс виден",
+      "review": "Рецензирование",
+      "reviewDesc": "Режим чтения, без редактирования",
+      "clearMode": "✕ Сбросить режим"
+    },
+    "focusTypography": "Фокус и типографика",
+    "focusMode": "Режим фокуса",
+    "typographyMode": "Режим типографики",
+    "on": "ВКЛ",
+    "off": "ВЫКЛ",
+    "quickActions": "Быстрые действия",
+    "action": {
+      "targetsDashboard": "Панель целей",
+      "writingDashboard": "Панель письма",
+      "previewManuscript": "Предпросмотр рукописи",
+      "export": "Экспорт",
+      "writingLog": "Журнал письма",
+      "publishToWordPress": "Опубликовать в WordPress"
+    },
+    "openDocumentFirst": "Сначала откройте документ.",
+    "sprintTimer": "Таймер спринта",
+    "pause": "⏸ Пауза",
+    "stop": "■ Стоп",
+    "startSprint": "⏱ Начать спринт",
+    "quickStart": "Быстрый старт:",
+    "today": "Сегодня",
+    "stat": {
+      "words": "Слова",
+      "sprints": "Спринты",
+      "minutes": "Минуты",
+      "streak": "Серия",
+      "streakDays": "{{streak}}д"
+    },
+    "sessionWordsTyped": "Сеанс: +{{n}} написанных слов",
+    "dailyGoal": "Дневная цель: {{written}} / {{goal}} слов"
+  },
+  "log": {
+    "displayText": "Журнал письма",
+    "title": "Журнал письма",
+    "noProjectSelected": "Проект не выбран. Откройте лаунчер и выберите проект для просмотра истории.",
+    "streak": "🔥 Серия {{streak}} дней",
+    "startStreak": "Напишите сегодня, чтобы начать серию",
+    "thisSession": "Этот сеанс",
+    "stat": {
+      "session": "Сеанс",
+      "sprintWords": "Слова спринта",
+      "sprints": "Спринты",
+      "minutes": "Минуты"
+    },
+    "last30Days": "Последние 30 дней",
+    "today": "Сегодня",
+    "sprintsCount_one": "· {{count}} спринт",
+    "sprintsCount_few": "· {{count}} спринта",
+    "sprintsCount_many": "· {{count}} спринтов",
+    "sprintsCount_other": "· {{count}} спринтов"
+  },
+  "sprint": {
+    "started": "Спринт начат: {{minutes}} минут",
+    "complete": "Спринт завершён! Отличная работа.",
+    "words": "+{{n}} слов",
+    "header": "Спринт написания",
+    "pauseTitle": "Пауза/продолжить",
+    "stopTitle": "Остановить спринт"
+  },
+  "writingModes": {
+    "switchedTo": "Студия письма: режим {{mode}}",
+    "normal": "Обычный",
+    "statusDraft": "✍ черновик",
+    "statusEdit": "✎ редактирование",
+    "statusReview": "👁 рецензия",
+    "statusNone": "— режим"
+  },
+  "exportEngine": {
+    "epubExported": "EPUB экспортирован в {{path}}",
+    "manuscriptExported": "Рукопись экспортирована в {{path}}",
+    "exportedTo": "Экспортировано в {{path}}",
+    "exportedHtmlTo": "HTML экспортирован в {{path}}",
+    "pdfRequiresPandoc": "Для экспорта в PDF требуется pandoc. Установите pandoc и укажите путь в настройках."
+  },
+  "wpClient": {
+    "authFailed": "Ошибка аутентификации. Проверьте имя пользователя и пароль приложения.",
+    "connectedAs": "Подключено как «{{user}}» к «{{site}}»",
+    "networkError": "Ошибка сети: {{error}}",
+    "httpError": "HTTP {{status}}",
+    "fetchCategoriesFailed": "Не удалось получить категории: {{error}}"
+  },
+  "folderSidebar": {
+    "displayText": "Файловый проводник",
+    "back": "← Назад",
+    "root": "⌂ Корень",
+    "insertSelection": "↩ Вставить выделенное",
+    "searchPlaceholder": "Поиск имён и содержимого… (Enter)",
+    "sort": {
+      "foldersAz": "Папки ↑ А-Я",
+      "foldersZa": "Папки ↑ Я-А",
+      "az": "Имя А-Я",
+      "za": "Имя Я-А",
+      "modifiedNew": "Новые сначала",
+      "modifiedOld": "Старые сначала"
+    },
+    "noPreview": "Нет предпросмотра для файлов .{{ext}}",
+    "openInEditor": "Открыть в редакторе",
+    "searching": "Поиск…",
+    "noResults": "Нет результатов для «{{query}}»",
+    "emptyFolder": "Папка пуста",
+    "tooltip": {
+      "modified": "Изменён",
+      "size": "Размер",
+      "words": "Слова",
+      "files": "Файлы",
+      "subfolders": "Подпапки"
+    },
+    "pickerPlaceholder": "Введите название папки для открытия в боковом проводнике…",
+    "vaultRoot": "/ (корень хранилища)"
+  },
+  "focusToolbar": {
+    "exitTitle": "Выйти из режима фокуса (esc)",
+    "exitBtn": "✕ выйти",
+    "wordCount_one": "{{count}} слово",
+    "wordCount_few": "{{count}} слова",
+    "wordCount_many": "{{count}} слов",
+    "wordCount_other": "{{count}} слова"
+  },
+  "compilePreview": {
+    "displayText": "Собранная рукопись",
+    "jumpToSection": "Перейти к разделу...",
+    "proceedToExport": "Перейти к экспорту",
+    "closePreview": "Закрыть предпросмотр",
+    "noContent": "Нет содержимого для предпросмотра. Сначала откройте письменный проект."
+  },
+  "projectModal": {
+    "title": "Новый письменный проект",
+    "projectTitle": "Название проекта",
+    "titlePlaceholder": "Мой роман",
+    "template": "Шаблон",
+    "templateDesc": "Выберите преднастроенную структуру проекта.",
+    "templateOption": {
+      "blank": "Пустой (произвольная структура)",
+      "book": "Книга (части → главы → сцены)",
+      "series": "Серия статей (серия → статьи)",
+      "blog": "Коллекция блога (публикации по дате/категории)",
+      "journalArticle": "Научная статья — подача в академический или профессиональный журнал",
+      "magazineArticle": "Журнальная статья — репортаж, лонгрид или нарративная документалистика"
+    },
+    "descriptionLabel": "Описание (необязательно)",
+    "descriptionPlaceholder": "Краткое описание этого проекта…",
+    "preview": {
+      "blank": "Пустой проект — создайте собственную структуру.",
+      "book": "Создаёт: вступительные материалы, Часть 1 / Глава 1, заключительные материалы.",
+      "series": "Создаёт: папку серии, заглушку для Статьи 1, метаданные серии.",
+      "blog": "Создаёт: папку, организованную по датам, заглушку для первой публикации.",
+      "journalArticle": "Создаёт: титульную страницу, аннотацию, ключевые слова, введение, обзор литературы, методологию, результаты/анализ, обсуждение, заключение, список литературы, приложения.",
+      "magazineArticle": "Создаёт: заметки предложения/запроса, заголовок и подзаголовок, лид, основной абзац, тело, цитаты и источники, концовку, примечания по проверке фактов, биографию автора. Документы с заметками по умолчанию исключены из экспорта."
+    },
+    "createBtn": "Создать проект",
+    "creating": "Создание…",
+    "errorNoTitle": "Введите название проекта.",
+    "errorCreate": "Не удалось создать проект: {{error}}",
+    "created": "Проект «{{title}}» создан!",
+    "cancel": "Отмена"
+  },
+  "sprintModal": {
+    "title": "Начать спринт написания",
+    "durationName": "Длительность (минуты)",
+    "durationDesc": "Предустановки: 10, 15, 25, 30, 45, 60",
+    "durationCustom": "Произвольно…",
+    "durationCustomPlaceholder": "Свои минуты",
+    "wordGoalName": "Цель по словам (необязательно)",
+    "wordGoalDesc": "Оставьте 0, если цели нет.",
+    "scopeName": "Область",
+    "scopeFile": "Текущий файл",
+    "scopeProject": "Весь проект",
+    "startBtn": "Начать спринт",
+    "errorDuration": "Укажите допустимую длительность.",
+    "cancel": "Отмена"
+  },
+  "exportModal": {
+    "title": "Экспорт документа",
+    "formatName": "Формат",
+    "format": {
+      "md": "Markdown (.md)",
+      "html": "HTML",
+      "manuscript": "Рукопись (HTML)",
+      "epub": "EPUB (.epub)",
+      "pdf": "PDF (требуется pandoc)",
+      "docx": "Word (.docx) (требуется pandoc)",
+      "rtf": "RTF (требуется pandoc)"
+    },
+    "coverImageName": "Путь к обложке",
+    "coverImageDesc": "Путь в хранилище к изображению JPG или PNG. Оставьте пустым для текстовой обложки.",
+    "coverImagePlaceholder": "напр. Assets/cover.jpg",
+    "contactInfoName": "Контактная информация (необязательно)",
+    "contactInfoDesc": "Отображается на титульной странице — имя, e-mail или почтовый адрес.",
+    "contactInfoPlaceholder": "Имя, e-mail или почтовый адрес",
+    "scopeName": "Область",
+    "scopeCurrent": "Текущий документ",
+    "scopeProject": "Весь проект (в порядке бандера)",
+    "includeFrontmatter": "Включить метаданные",
+    "includeResearch": "Включить исследовательские заметки",
+    "includeTitlesAsHeadings": "Включить заголовки документов как заголовки",
+    "addTitlePage": "Добавить титульную страницу",
+    "addTitlePageDesc": "Добавляет титульную страницу с названием проекта, автором и датой.",
+    "previewBtn": "Просмотр собранной рукописи",
+    "exportBtn": "Экспорт",
+    "exporting": "Экспорт…",
+    "exportFailed": "Ошибка экспорта: {{error}}",
+    "cancel": "Отмена"
+  },
+  "publishModal": {
+    "title": "Опубликовать в WordPress",
+    "noSites": "Нет настроенных сайтов WordPress. Добавьте сайт в Настройках → WordPress.",
+    "close": "Закрыть",
+    "siteName": "Сайт WordPress",
+    "postTitleName": "Заголовок записи",
+    "postStatusName": "Статус записи",
+    "postStatus": {
+      "draft": "Черновик",
+      "pending": "На рассмотрении",
+      "publish": "Опубликовано"
+    },
+    "categoryName": "Категория",
+    "tagsName": "Метки",
+    "tagsDesc": "Через запятую.",
+    "excerptName": "Отрывок (необязательно)",
+    "scheduleName": "Запланировать публикацию (необязательно)",
+    "scheduleDesc": "Оставьте пустым для немедленной публикации.",
+    "schedulePlaceholder": "гггг-мм-ддTчч:мм:сс",
+    "existingNotice": "⚠ Этот документ уже был опубликован (ID записи: {{id}}).",
+    "updatePost": "Обновить существующую запись",
+    "newPost": "Создать новую запись",
+    "schedule": "Запланировать",
+    "publish": "Опубликовать",
+    "cancel": "Отмена",
+    "noSiteSelected": "Сайт не выбран.",
+    "fileNotFound": "Файл не найден.",
+    "publishFailed": "Ошибка публикации: {{error}}",
+    "published": "Опубликовано",
+    "scheduled": "Запланировано",
+    "actionNotice": "{{action}}! Посмотреть запись: {{url}}"
+  },
+  "targetsDashboard": {
+    "title": "Панель целей по главам",
+    "noProject": "Проект не выбран.",
+    "filterLabel": "Фильтр: ",
+    "allStatuses": "Все статусы",
+    "refresh": "↻ Обновить",
+    "col": {
+      "title": "Название",
+      "type": "Тип",
+      "status": "Статус",
+      "words": "Слова",
+      "goal": "Цель",
+      "progress": "Прогресс",
+      "readingTime": "Время чтения"
+    },
+    "total": "Итого",
+    "status": {
+      "draft": "Черновик",
+      "inProgress": "В процессе",
+      "complete": "Завершено",
+      "published": "Опубликовано"
+    },
+    "typeLabel": {
+      "chapter": "Глава",
+      "section": "Раздел",
+      "article": "Статья",
+      "note": "Заметка",
+      "group": "Группа",
+      "part": "Часть"
+    }
+  },
+  "writingDashboard": {
+    "title": "Панель написания",
+    "thisSession": "Эта сессия",
+    "stat": {
+      "wordsWritten": "Написано слов",
+      "sprints": "Спринты",
+      "minutes": "Минуты",
+      "writingStreak": "Серия написания",
+      "streakDays_one": "{{count}} день",
+      "streakDays_few": "{{count}} дня",
+      "streakDays_many": "{{count}} дней",
+      "streakDays_other": "{{count}} дня",
+      "totalWords": "Всего слов",
+      "goal": "Цель",
+      "progress": "Прогресс",
+      "readingTime": "Время чтения"
+    },
+    "project": "Проект: {{title}}",
+    "recentSprints": "Недавние спринты",
+    "noSprints": "Спринты ещё не записаны.",
+    "sprintTable": {
+      "date": "Дата",
+      "duration": "Длительность",
+      "words": "Слова",
+      "wpm": "Сл/мин",
+      "goal": "Цель"
+    },
+    "documentWordCounts": "Количество слов по документам",
+    "docTable": {
+      "document": "Документ",
+      "words": "Слова",
+      "readingTime": "Время чтения"
+    },
+    "close": "Закрыть"
+  },
+  "addToProject": {
+    "title": "Добавить в письменный проект",
+    "noProjects": "Письменные проекты не найдены. Сначала создайте проект.",
+    "close": "Закрыть",
+    "file": "Файл: {{path}}",
+    "projectName": "Письменный проект",
+    "projectDesc": "В какой письменный проект добавить этот файл?",
+    "addBtn": "Добавить в проект",
+    "cancel": "Отмена"
+  },
+  "scanFolder": {
+    "title": "Добавить файлы в бандер",
+    "desc": "Выберите файлы для добавления в этот проект:",
+    "addBtn": "Добавить выбранные файлы",
+    "cancel": "Отмена"
+  },
+  "main": {
+    "ribbonTitle": "Открыть Writing Studio",
+    "cmd": {
+      "openLauncher": "Открыть панель запуска",
+      "openBinder": "Открыть папку",
+      "toggleFocusMode": "Переключить режим фокуса",
+      "toggleTypographyMode": "Переключить режим типографики",
+      "switchDraftMode": "Переключиться в режим черновика",
+      "switchEditMode": "Переключиться в режим редактирования",
+      "switchReviewMode": "Переключиться в режим проверки",
+      "startSprint": "Начать спринт по письму",
+      "exportDocument": "Экспортировать документ",
+      "exportProject": "Экспортировать проект",
+      "previewManuscript": "Предварительный просмотр рукописи",
+      "publishWordPress": "Опубликовать в WordPress",
+      "newProject": "Новый проект по письму",
+      "openDashboard": "Открыть панель письма",
+      "openTargetsDashboard": "Открыть панель целей",
+      "setWordCountGoal": "Установить цель по количеству слов",
+      "openWritingLog": "Открыть журнал письма",
+      "openFolderSidebar": "Открыть папку в боковом обозревателе",
+      "addFilesToBinder": "Добавить файлы, скопированные в папку проекта"
+    },
+    "menu": {
+      "studioOptions": "Параметры Writing Studio",
+      "exportDoc": "Экспортировать этот документ",
+      "publish": "Опубликовать в WordPress",
+      "setGoal": "Установить цель по словам",
+      "switchMode": "Переключить режим письма →",
+      "typographyFont": "Шрифт типографики →",
+      "addToProject": "Добавить в проект",
+      "openSidebar": "Открыть в боковом обозревателе",
+      "draftMode": "✍ Режим черновика",
+      "editMode": "✎ Режим редактирования",
+      "reviewMode": "👁 Режим проверки",
+      "normalMode": "Обычный (без режима)"
+    },
+    "notice": {
+      "noMarkdownOpen": "В данный момент не открыт ни один Markdown-файл.",
+      "addedToProject": "«{{file}}» добавлен в {{project}}"
+    },
+    "statusBar": {
+      "projectWords": "{{total}} / {{goal}} слов в проекте",
+      "wordCount": "{{count}} слов",
+      "wordCountGoal": "{{count}} / {{goal}} слов",
+      "delta": "(+{{delta}})",
+      "goalBanner": "{{count}} / {{goal}} слов — {{pct}}%",
+      "dismiss": "Закрыть"
+    }
+  },
+  "sprintSummary": {
+    "title": "Спринт завершён!",
+    "wordsWritten": "Написано слов",
+    "duration": "Продолжительность",
+    "durationValue": "{{count}} мин",
+    "wpm": "Слов/мин",
+    "goalProgress": "Прогресс цели",
+    "close": "Закрыть"
+  },
+  "wordCountGoal": {
+    "title": "Установить цель по количеству слов",
+    "name": "Цель по количеству слов",
+    "desc": "Целевое количество слов для этого документа. Установите 0 для удаления.",
+    "placeholder": "Напр. 1500",
+    "save": "Сохранить",
+    "cancel": "Отмена"
+  },
+  "statsTracker": {
+    "unknownProject": "Неизвестный проект",
+    "none": "Нет",
+    "dailyNote": {
+      "heading": "## ✍️ Писательская активность",
+      "project": "**Проект:**",
+      "documents": "**Документы:**",
+      "wordsWritten": "**Написано слов:**",
+      "sprintsCompleted": "**Завершено спринтов:**",
+      "sprintEntry": "1 ({{duration}} мин)",
+      "wpm": "**Слов в минуту:**",
+      "sessionTotal": "**Итого за сессию:**",
+      "sessionTotalValue": "{{duration}} минут"
+    },
+    "readingTime": {
+      "minutes": "{{count}} мин",
+      "hoursMinutes": "{{hours}} ч {{mins}} мин",
+      "hours": "{{hours}} ч"
     }
   }
 }

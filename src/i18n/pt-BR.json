@@ -173,6 +173,427 @@
       "moveToResearch": "Mover para pesquisa",
       "publishToWordPress": "Publicar no WordPress",
       "delete": "Excluir"
+    },
+    "wordCountSuffix": "{{count}}p"
+  },
+  "launcher": {
+    "displayText": "Estúdio de escrita",
+    "title": "Estúdio de escrita",
+    "settings": "Configurações",
+    "project": "Projeto",
+    "newProject": "+ novo",
+    "noProjectSelected": "Nenhum projeto selecionado.",
+    "chooseProject": "— escolha um projeto —",
+    "wordCount": "{{n}} palavras",
+    "wordGoal": "/ {{n}} objetivo",
+    "pctComplete": "{{pct}}% concluído",
+    "openBinder": "📖 Abrir pasta",
+    "writingMode": "Modo de escrita",
+    "mode": {
+      "draft": "Rascunho",
+      "draftDesc": "Foco + tipografia ativos, barras laterais ocultas",
+      "edit": "Editar",
+      "editDesc": "Pasta aberta, interface completa visível",
+      "review": "Revisar",
+      "reviewDesc": "Modo leitura, sem edição",
+      "clearMode": "✕ Limpar modo"
+    },
+    "focusTypography": "Foco e tipografia",
+    "focusMode": "Modo foco",
+    "typographyMode": "Modo tipografia",
+    "on": "SIM",
+    "off": "NÃO",
+    "quickActions": "Ações rápidas",
+    "action": {
+      "targetsDashboard": "Painel de metas",
+      "writingDashboard": "Painel de escrita",
+      "previewManuscript": "Visualizar manuscrito",
+      "export": "Exportar",
+      "writingLog": "Diário de escrita",
+      "publishToWordPress": "Publicar no WordPress"
+    },
+    "openDocumentFirst": "Abra um documento primeiro.",
+    "sprintTimer": "Cronômetro de sprint",
+    "pause": "⏸ Pausar",
+    "stop": "■ Parar",
+    "startSprint": "⏱ Iniciar sprint",
+    "quickStart": "Início rápido:",
+    "today": "Hoje",
+    "stat": {
+      "words": "Palavras",
+      "sprints": "Sprints",
+      "minutes": "Minutos",
+      "streak": "Sequência",
+      "streakDays": "{{streak}}d"
+    },
+    "sessionWordsTyped": "Sessão: +{{n}} palavras digitadas",
+    "dailyGoal": "Meta diária: {{written}} / {{goal}} palavras"
+  },
+  "log": {
+    "displayText": "Diário de escrita",
+    "title": "Diário de escrita",
+    "noProjectSelected": "Nenhum projeto selecionado. Abra o lançador e selecione um projeto para ver seu histórico.",
+    "streak": "🔥 Sequência de {{streak}} dias",
+    "startStreak": "Escreva hoje para começar uma sequência",
+    "thisSession": "Esta sessão",
+    "stat": {
+      "session": "Sessão",
+      "sprintWords": "Palavras de sprint",
+      "sprints": "Sprints",
+      "minutes": "Minutos"
+    },
+    "last30Days": "Últimos 30 dias",
+    "today": "Hoje",
+    "sprintsCount_one": "· {{count}} sprint",
+    "sprintsCount_other": "· {{count}} sprints"
+  },
+  "sprint": {
+    "started": "Sprint iniciado: {{minutes}} minutos",
+    "complete": "Sprint concluído! Ótimo trabalho.",
+    "words": "+{{n}} palavras",
+    "header": "Sprint de escrita",
+    "pauseTitle": "Pausar/retomar",
+    "stopTitle": "Parar sprint"
+  },
+  "writingModes": {
+    "switchedTo": "Estúdio de escrita: modo {{mode}}",
+    "normal": "Normal",
+    "statusDraft": "✍ rascunho",
+    "statusEdit": "✎ editar",
+    "statusReview": "👁 revisar",
+    "statusNone": "— modo"
+  },
+  "exportEngine": {
+    "epubExported": "EPUB exportado para {{path}}",
+    "manuscriptExported": "Manuscrito exportado para {{path}}",
+    "exportedTo": "Exportado para {{path}}",
+    "exportedHtmlTo": "HTML exportado para {{path}}",
+    "pdfRequiresPandoc": "A exportação para PDF requer pandoc. Instale o pandoc e defina o caminho nas configurações."
+  },
+  "wpClient": {
+    "authFailed": "Falha na autenticação. Verifique o nome de usuário e a senha de aplicativo.",
+    "connectedAs": "Conectado como \"{{user}}\" em \"{{site}}\"",
+    "networkError": "Erro de rede: {{error}}",
+    "httpError": "HTTP {{status}}",
+    "fetchCategoriesFailed": "Falha ao buscar categorias: {{error}}"
+  },
+  "folderSidebar": {
+    "displayText": "Explorador de pastas",
+    "back": "← Voltar",
+    "root": "⌂ Raiz",
+    "insertSelection": "↩ Inserir seleção",
+    "searchPlaceholder": "Pesquisar nomes e conteúdo… (Enter)",
+    "sort": {
+      "foldersAz": "Pastas ↑ A-Z",
+      "foldersZa": "Pastas ↑ Z-A",
+      "az": "Nome A-Z",
+      "za": "Nome Z-A",
+      "modifiedNew": "Mais recente primeiro",
+      "modifiedOld": "Mais antigo primeiro"
+    },
+    "noPreview": "Sem visualização para arquivos .{{ext}}",
+    "openInEditor": "Abrir no editor",
+    "searching": "Pesquisando…",
+    "noResults": "Sem resultados para \"{{query}}\"",
+    "emptyFolder": "Esta pasta está vazia",
+    "tooltip": {
+      "modified": "Modificado",
+      "size": "Tamanho",
+      "words": "Palavras",
+      "files": "Arquivos",
+      "subfolders": "Subpastas"
+    },
+    "pickerPlaceholder": "Digite um nome de pasta para abrir no explorador lateral…",
+    "vaultRoot": "/ (raiz do vault)"
+  },
+  "focusToolbar": {
+    "exitTitle": "Sair do modo foco (esc)",
+    "exitBtn": "✕ sair",
+    "wordCount_one": "{{count}} palavra",
+    "wordCount_other": "{{count}} palavras"
+  },
+  "compilePreview": {
+    "displayText": "Manuscrito compilado",
+    "jumpToSection": "Ir para seção...",
+    "proceedToExport": "Prosseguir para exportar",
+    "closePreview": "Fechar visualização",
+    "noContent": "Sem conteúdo para visualizar. Abra um projeto de escrita primeiro."
+  },
+  "projectModal": {
+    "title": "Novo projeto de escrita",
+    "projectTitle": "Título do projeto",
+    "titlePlaceholder": "Meu romance",
+    "template": "Modelo",
+    "templateDesc": "Escolha uma estrutura de projeto pré-configurada.",
+    "templateOption": {
+      "blank": "Em branco (estrutura personalizada)",
+      "book": "Livro (partes → capítulos → cenas)",
+      "series": "Série de artigos (série → artigos)",
+      "blog": "Coleção de blog (publicações por data/categoria)",
+      "journalArticle": "Artigo de periódico — envio para periódico acadêmico ou profissional",
+      "magazineArticle": "Artigo de revista — reportagem, longa duração ou não ficção narrativa"
+    },
+    "descriptionLabel": "Descrição (opcional)",
+    "descriptionPlaceholder": "Breve descrição deste projeto…",
+    "preview": {
+      "blank": "Projeto vazio — construa sua própria estrutura.",
+      "book": "Cria: páginas iniciais, Parte 1 / Capítulo 1, páginas finais.",
+      "series": "Cria: pasta da série, espaço reservado para o Artigo 1, metadados da série.",
+      "blog": "Cria: pasta organizada por data, espaço reservado para a primeira publicação.",
+      "journalArticle": "Cria: página de título, resumo, palavras-chave, introdução, revisão de literatura, metodologia, resultados/análise, discussão, conclusão, referências, apêndices.",
+      "magazineArticle": "Cria: notas de proposta/consulta, título e subtítulo, abertura, parágrafo central, corpo, citações e fontes, fechamento, notas de verificação de fatos, biografia do autor. Documentos de notas excluídos da exportação por padrão."
+    },
+    "createBtn": "Criar projeto",
+    "creating": "Criando…",
+    "errorNoTitle": "Por favor, insira um título para o projeto.",
+    "errorCreate": "Falha ao criar o projeto: {{error}}",
+    "created": "Projeto \"{{title}}\" criado!",
+    "cancel": "Cancelar"
+  },
+  "sprintModal": {
+    "title": "Iniciar sprint de escrita",
+    "durationName": "Duração (minutos)",
+    "durationDesc": "Predefinido: 10, 15, 25, 30, 45, 60",
+    "durationCustom": "Personalizado…",
+    "durationCustomPlaceholder": "Minutos personalizados",
+    "wordGoalName": "Meta de palavras (opcional)",
+    "wordGoalDesc": "Deixe 0 para nenhuma meta.",
+    "scopeName": "Escopo",
+    "scopeFile": "Arquivo atual",
+    "scopeProject": "Projeto inteiro",
+    "startBtn": "Iniciar sprint",
+    "errorDuration": "Por favor, defina uma duração válida.",
+    "cancel": "Cancelar"
+  },
+  "exportModal": {
+    "title": "Exportar documento",
+    "formatName": "Formato",
+    "format": {
+      "md": "Markdown (.md)",
+      "html": "HTML",
+      "manuscript": "Manuscrito (HTML)",
+      "epub": "EPUB (.epub)",
+      "pdf": "PDF (requer pandoc)",
+      "docx": "Word (.docx) (requer pandoc)",
+      "rtf": "RTF (requer pandoc)"
+    },
+    "coverImageName": "Caminho da imagem de capa",
+    "coverImageDesc": "Caminho no vault para uma imagem JPG ou PNG. Deixe vazio para uma capa de texto gerada.",
+    "coverImagePlaceholder": "ex. Assets/cover.jpg",
+    "contactInfoName": "Informações de contato (opcional)",
+    "contactInfoDesc": "Aparece na página de título — nome, e-mail ou endereço postal.",
+    "contactInfoPlaceholder": "Nome, e-mail ou endereço postal",
+    "scopeName": "Escopo",
+    "scopeCurrent": "Documento atual",
+    "scopeProject": "Projeto inteiro (na ordem do binder)",
+    "includeFrontmatter": "Incluir metadados",
+    "includeResearch": "Incluir notas de pesquisa",
+    "includeTitlesAsHeadings": "Incluir títulos de documentos como títulos",
+    "addTitlePage": "Adicionar página de título",
+    "addTitlePageDesc": "Adiciona uma página de título com o título do projeto, autor e data.",
+    "previewBtn": "Visualizar manuscrito compilado",
+    "exportBtn": "Exportar",
+    "exporting": "Exportando…",
+    "exportFailed": "Falha na exportação: {{error}}",
+    "cancel": "Cancelar"
+  },
+  "publishModal": {
+    "title": "Publicar no WordPress",
+    "noSites": "Nenhum site WordPress configurado. Adicione um site em Configurações → WordPress.",
+    "close": "Fechar",
+    "siteName": "Site WordPress",
+    "postTitleName": "Título do post",
+    "postStatusName": "Status do post",
+    "postStatus": {
+      "draft": "Rascunho",
+      "pending": "Aguardando revisão",
+      "publish": "Publicado"
+    },
+    "categoryName": "Categoria",
+    "tagsName": "Tags",
+    "tagsDesc": "Separadas por vírgulas.",
+    "excerptName": "Trecho (opcional)",
+    "scheduleName": "Agendar publicação (opcional)",
+    "scheduleDesc": "Deixe vazio para publicar imediatamente.",
+    "schedulePlaceholder": "aaaa-mm-ddThh:mm:ss",
+    "existingNotice": "⚠ Este documento foi publicado anteriormente (ID do post: {{id}}).",
+    "updatePost": "Atualizar post existente",
+    "newPost": "Criar novo post",
+    "schedule": "Agendar",
+    "publish": "Publicar",
+    "cancel": "Cancelar",
+    "noSiteSelected": "Nenhum site selecionado.",
+    "fileNotFound": "Arquivo não encontrado.",
+    "publishFailed": "Falha na publicação: {{error}}",
+    "published": "Publicado",
+    "scheduled": "Agendado",
+    "actionNotice": "{{action}}! Ver post: {{url}}"
+  },
+  "targetsDashboard": {
+    "title": "Painel de metas por capítulo",
+    "noProject": "Nenhum projeto selecionado.",
+    "filterLabel": "Filtrar: ",
+    "allStatuses": "Todos os status",
+    "refresh": "↻ Atualizar",
+    "col": {
+      "title": "Título",
+      "type": "Tipo",
+      "status": "Status",
+      "words": "Palavras",
+      "goal": "Meta",
+      "progress": "Progresso",
+      "readingTime": "Tempo de leitura"
+    },
+    "total": "Total",
+    "status": {
+      "draft": "Rascunho",
+      "inProgress": "Em progresso",
+      "complete": "Completo",
+      "published": "Publicado"
+    },
+    "typeLabel": {
+      "chapter": "Capítulo",
+      "section": "Seção",
+      "article": "Artigo",
+      "note": "Nota",
+      "group": "Grupo",
+      "part": "Parte"
+    }
+  },
+  "writingDashboard": {
+    "title": "Painel de escrita",
+    "thisSession": "Esta sessão",
+    "stat": {
+      "wordsWritten": "Palavras escritas",
+      "sprints": "Sprints",
+      "minutes": "Minutos",
+      "writingStreak": "Sequência de escrita",
+      "streakDays_one": "{{count}} dia",
+      "streakDays_other": "{{count}} dias",
+      "totalWords": "Total de palavras",
+      "goal": "Meta",
+      "progress": "Progresso",
+      "readingTime": "Tempo de leitura"
+    },
+    "project": "Projeto: {{title}}",
+    "recentSprints": "Sprints recentes",
+    "noSprints": "Nenhum sprint registrado ainda.",
+    "sprintTable": {
+      "date": "Data",
+      "duration": "Duração",
+      "words": "Palavras",
+      "wpm": "PPM",
+      "goal": "Meta"
+    },
+    "documentWordCounts": "Contagem de palavras por documento",
+    "docTable": {
+      "document": "Documento",
+      "words": "Palavras",
+      "readingTime": "Tempo de leitura"
+    },
+    "close": "Fechar"
+  },
+  "addToProject": {
+    "title": "Adicionar a projeto de escrita",
+    "noProjects": "Nenhum projeto de escrita encontrado. Crie um projeto primeiro.",
+    "close": "Fechar",
+    "file": "Arquivo: {{path}}",
+    "projectName": "Projeto de escrita",
+    "projectDesc": "A qual projeto de escrita você deseja adicionar este arquivo?",
+    "addBtn": "Adicionar ao projeto",
+    "cancel": "Cancelar"
+  },
+  "scanFolder": {
+    "title": "Adicionar arquivos ao binder",
+    "desc": "Selecione os arquivos para adicionar a este projeto:",
+    "addBtn": "Adicionar arquivos selecionados",
+    "cancel": "Cancelar"
+  },
+  "main": {
+    "ribbonTitle": "Abrir Writing Studio",
+    "cmd": {
+      "openLauncher": "Abrir o lançador",
+      "openBinder": "Abrir o fichário",
+      "toggleFocusMode": "Alternar modo foco",
+      "toggleTypographyMode": "Alternar modo tipografia",
+      "switchDraftMode": "Mudar para modo rascunho",
+      "switchEditMode": "Mudar para modo edição",
+      "switchReviewMode": "Mudar para modo revisão",
+      "startSprint": "Iniciar sprint de escrita",
+      "exportDocument": "Exportar documento",
+      "exportProject": "Exportar projeto",
+      "previewManuscript": "Visualizar manuscrito compilado",
+      "publishWordPress": "Publicar no WordPress",
+      "newProject": "Novo projeto de escrita",
+      "openDashboard": "Abrir painel de escrita",
+      "openTargetsDashboard": "Abrir painel de metas",
+      "setWordCountGoal": "Definir meta de contagem de palavras",
+      "openWritingLog": "Abrir registro de escrita",
+      "openFolderSidebar": "Abrir pasta no explorador lateral",
+      "addFilesToBinder": "Adicionar arquivos copiados à pasta do projeto"
+    },
+    "menu": {
+      "studioOptions": "Opções do Writing Studio",
+      "exportDoc": "Exportar este documento",
+      "publish": "Publicar no WordPress",
+      "setGoal": "Definir meta de palavras",
+      "switchMode": "Mudar modo de escrita →",
+      "typographyFont": "Fonte tipográfica →",
+      "addToProject": "Adicionar ao projeto de escrita",
+      "openSidebar": "Abrir no explorador lateral",
+      "draftMode": "✍ Modo rascunho",
+      "editMode": "✎ Modo edição",
+      "reviewMode": "👁 Modo revisão",
+      "normalMode": "Normal (sem modo)"
+    },
+    "notice": {
+      "noMarkdownOpen": "Nenhum arquivo Markdown está aberto no momento.",
+      "addedToProject": "\"{{file}}\" adicionado a {{project}}"
+    },
+    "statusBar": {
+      "projectWords": "{{total}} / {{goal}} palavras do projeto",
+      "wordCount": "{{count}} palavras",
+      "wordCountGoal": "{{count}} / {{goal}} palavras",
+      "delta": "(+{{delta}})",
+      "goalBanner": "{{count}} / {{goal}} palavras — {{pct}}%",
+      "dismiss": "Fechar"
+    }
+  },
+  "sprintSummary": {
+    "title": "Sprint concluído!",
+    "wordsWritten": "Palavras escritas",
+    "duration": "Duração",
+    "durationValue": "{{count}} min",
+    "wpm": "Palavras/minuto",
+    "goalProgress": "Progresso da meta",
+    "close": "Fechar"
+  },
+  "wordCountGoal": {
+    "title": "Definir meta de contagem de palavras",
+    "name": "Meta de contagem de palavras",
+    "desc": "Contagem de palavras alvo para este documento. Defina como 0 para remover.",
+    "placeholder": "Ex.: 1500",
+    "save": "Salvar",
+    "cancel": "Cancelar"
+  },
+  "statsTracker": {
+    "unknownProject": "Projeto desconhecido",
+    "none": "Nenhum",
+    "dailyNote": {
+      "heading": "## ✍️ Atividade de escrita",
+      "project": "**Projeto:**",
+      "documents": "**Documentos:**",
+      "wordsWritten": "**Palavras escritas:**",
+      "sprintsCompleted": "**Sprints concluídos:**",
+      "sprintEntry": "1 ({{duration}} min)",
+      "wpm": "**Palavras por minuto:**",
+      "sessionTotal": "**Total da sessão:**",
+      "sessionTotalValue": "{{duration}} minutos"
+    },
+    "readingTime": {
+      "minutes": "{{count}} min",
+      "hoursMinutes": "{{hours}}h {{mins}}m",
+      "hours": "{{hours}}h"
     }
   }
 }

@@ -1,6 +1,7 @@
 import { App, Modal, Setting } from 'obsidian';
 import type WritingStudioPlugin from '../main';
 import type { TFile } from 'obsidian';
+import { t } from '../src/i18n';
 
 export class AddToProjectModal extends Modal {
   private plugin: WritingStudioPlugin;
@@ -19,24 +20,24 @@ export class AddToProjectModal extends Modal {
     const { contentEl } = this;
     contentEl.empty();
     contentEl.addClass('ws-add-to-project-modal');
-    contentEl.createEl('h2', { text: 'Add to writing project' });
+    contentEl.createEl('h2', { text: t('addToProject.title') });
 
     const projects = this.plugin.projectManager.getProjects();
 
     if (projects.length === 0) {
-      contentEl.createEl('p', { text: 'No writing projects found. Create a project first.', cls: 'ws-empty-state' });
-      const closeBtn = contentEl.createEl('button', { text: 'Close' });
+      contentEl.createEl('p', { text: t('addToProject.noProjects'), cls: 'ws-empty-state' });
+      const closeBtn = contentEl.createEl('button', { text: t('addToProject.close') });
       closeBtn.onclick = () => this.close();
       return;
     }
 
     this.selectedProjectId = projects[0].id;
 
-    contentEl.createEl('p', { text: `File: ${this.file.path}`, cls: 'ws-add-to-project-path' });
+    contentEl.createEl('p', { text: t('addToProject.file', { path: this.file.path }), cls: 'ws-add-to-project-path' });
 
     new Setting(contentEl)
-      .setName('Writing project')
-      .setDesc('What writing project do you wish to add this file to?')
+      .setName(t('addToProject.projectName'))
+      .setDesc(t('addToProject.projectDesc'))
       .addDropdown(d => {
         projects.forEach(p => { d.addOption(p.id, p.title); });
         d.setValue(this.selectedProjectId);
@@ -45,13 +46,13 @@ export class AddToProjectModal extends Modal {
 
     const btnRow = contentEl.createDiv('ws-modal-btn-row');
 
-    const addBtn = btnRow.createEl('button', { cls: 'mod-cta', text: 'Add to project' });
+    const addBtn = btnRow.createEl('button', { cls: 'mod-cta', text: t('addToProject.addBtn') });
     addBtn.onclick = () => {
       void this.onConfirm(this.selectedProjectId);
       this.close();
     };
 
-    const cancelBtn = btnRow.createEl('button', { text: 'Cancel' });
+    const cancelBtn = btnRow.createEl('button', { text: t('addToProject.cancel') });
     cancelBtn.onclick = () => this.close();
   }
 

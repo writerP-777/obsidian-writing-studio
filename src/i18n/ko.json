@@ -1,0 +1,599 @@
+{
+  "settings": {
+    "tab": {
+      "general": "일반",
+      "focus": "집중 모드",
+      "typography": "타이포그래피",
+      "sprint": "스프린트 및 목표",
+      "export": "내보내기",
+      "log": "글쓰기 로그",
+      "wordpress": "WordPress",
+      "help": "사용법"
+    },
+    "general": {
+      "openOnStartup": "시작 시 열기",
+      "openOnStartupDesc": "Obsidian이 시작될 때 글쓰기 스튜디오 패널을 자동으로 엽니다.",
+      "defaultProjectFolder": "기본 프로젝트 폴더",
+      "defaultProjectFolderDesc": "글쓰기 프로젝트가 저장되는 볼트 경로.",
+      "defaultProjectFolderPlaceholder": "글쓰기 프로젝트",
+      "authorName": "저자 이름",
+      "authorNameDesc": "내보내기 및 표지에 사용됩니다.",
+      "authorNamePlaceholder": "이름 입력",
+      "defaultDocumentType": "기본 문서 유형",
+      "docType": {
+        "chapter": "챕터",
+        "section": "섹션",
+        "article": "기사",
+        "note": "노트"
+      },
+      "frontmatterAutoUpdate": "프론트매터 자동 업데이트",
+      "frontmatterAutoUpdateDesc": "저장 시 단어 수와 수정 날짜를 자동으로 업데이트합니다."
+    },
+    "focus": {
+      "heading": "집중 모드",
+      "focusUnit": "집중 단위",
+      "focusUnitDesc": "단락 또는 문장 수준에서 강조 표시합니다.",
+      "paragraph": "단락",
+      "sentence": "문장 (줄)",
+      "dimOpacity": "어두운 불투명도 (%)",
+      "dimOpacityDesc": "비활성 텍스트의 불투명도 (10–50).",
+      "fontSizeOverride": "글꼴 크기 재정의 (px)",
+      "fontSizeOverrideDesc": "현재 테마 글꼴 크기를 사용하려면 0으로 두세요.",
+      "autoHideSidebars": "사이드바 자동 숨기기",
+      "typewriterScroll": "타자기 스크롤",
+      "typewriterScrollDesc": "활성 줄을 화면 중앙에 유지합니다."
+    },
+    "typography": {
+      "heading": "타이포그래피 모드",
+      "fontFamily": "글꼴 패밀리",
+      "font": {
+        "mono": "고정폭 (iA Writer Mono)",
+        "serif": "세리프 (iA Writer Duo Serif)",
+        "sans": "산세리프 (iA Writer Quattro)",
+        "cormorant-garamond": "Cormorant garamond",
+        "crimson-text": "Crimson text",
+        "eb-garamond": "Eb garamond",
+        "libre-baskerville": "Libre baskerville",
+        "libre-caslon-text": "Libre caslon text",
+        "literata": "Literata",
+        "lora": "Lora",
+        "inter": "Inter",
+        "lato": "Lato",
+        "source-sans-3": "Source sans 3",
+        "custom": "사용자 정의 글꼴 이름…"
+      },
+      "customFontName": "사용자 정의 글꼴 이름",
+      "customFontNameDesc": "위에서 '사용자 정의'를 선택한 경우 글꼴 이름.",
+      "customFontNamePlaceholder": "예: Merriweather",
+      "maxLineLength": "최대 줄 길이 (문자)",
+      "maxLineLengthDesc": "55–80자 권장.",
+      "fontSize": "글꼴 크기 (px)",
+      "lineHeight": "줄 높이",
+      "lineHeightDesc": "기본값: 1.7",
+      "letterSpacing": "자간",
+      "letterSpacingDesc": "CSS letter-spacing 값 (예: \"normal\", \"0.02em\").",
+      "persistAcrossSessions": "세션 간 유지",
+      "persistAcrossSessionsDesc": "Obsidian을 다시 열 때 타이포그래피 모드를 활성 상태로 유지합니다."
+    },
+    "sprint": {
+      "heading": "스프린트 및 목표",
+      "defaultDuration": "기본 스프린트 시간 (분)",
+      "defaultDailyGoal": "기본 일일 단어 목표",
+      "soundNotifications": "소리 알림",
+      "soundNotificationsDesc": "스프린트가 끝날 때 소리를 재생합니다.",
+      "historyRetention": "스프린트 기록 보관 (일)",
+      "inlineGoalBanner": "인라인 목표 배너",
+      "inlineGoalBannerDesc": "문서를 열 때 제목 아래에 단어 수 목표 진행 상황을 표시합니다."
+    },
+    "export": {
+      "heading": "내보내기",
+      "defaultFormat": "기본 내보내기 형식",
+      "format": {
+        "md": "Markdown (.md)",
+        "html": "HTML",
+        "pdf": "PDF",
+        "docx": "Word (.docx)",
+        "rtf": "RTF"
+      },
+      "defaultPaperSize": "기본 용지 크기",
+      "paperSize": {
+        "letter": "레터 (US)",
+        "a4": "A4"
+      },
+      "exportFont": "내보내기 글꼴",
+      "exportFontSize": "내보내기 글꼴 크기 (pt)",
+      "pandocPath": "Pandoc 경로",
+      "pandocPathDesc": "시스템 경로에 없는 경우 pandoc 바이너리의 전체 경로.",
+      "epubHeading": "EPUB",
+      "epubLanguage": "EPUB 언어",
+      "epubLanguageDesc": "BCP 47 언어 태그 (예: en, fr, de).",
+      "includeCover": "표지 포함",
+      "includeCoverDesc": "표지 이미지가 없을 때 텍스트 표지 페이지를 생성합니다."
+    },
+    "log": {
+      "heading": "일일 글쓰기 로그",
+      "appendToDailyNote": "일일 노트에 추가",
+      "appendToDailyNoteDesc": "각 스프린트 후 오늘의 일일 노트에 글쓰기 활동 요약을 추가합니다."
+    },
+    "wordpress": {
+      "sitesHeading": "WordPress 사이트",
+      "addSite": "+ WordPress 사이트 추가",
+      "wikilinksHeading": "위키링크 기본값",
+      "defaultWikilinkHandling": "기본 위키링크 처리",
+      "wikilinkStrip": "제거 (일반 텍스트로 변환)",
+      "wikilinkConvert": "URL로 변환",
+      "siteHeading": "사이트: {{nickname}}",
+      "siteUnnamed": "이름 없음",
+      "nickname": "별명",
+      "siteUrl": "사이트 URL",
+      "username": "사용자 이름",
+      "appPassword": "애플리케이션 비밀번호",
+      "appPasswordDesc": "WordPress의 사용자 → 프로필 → 애플리케이션 비밀번호에서 생성합니다.",
+      "defaultPostStatus": "기본 게시물 상태",
+      "postStatus": {
+        "draft": "임시글",
+        "pending": "검토 대기 중",
+        "publish": "게시됨"
+      },
+      "wikilinkHandling": "위키링크 처리",
+      "wikilinkHandlingStrip": "제거",
+      "wikilinkHandlingConvert": "URL로 변환",
+      "testConnection": "연결 테스트",
+      "testConnectionDesc": "자격 증명과 연결을 확인합니다.",
+      "testing": "테스트 중…",
+      "removeSite": "사이트 제거",
+      "buyMeACoffee": "커피 한 잔 사주기"
+    }
+  },
+  "binder": {
+    "displayText": "글쓰기 바인더",
+    "selectProject": "— 프로젝트 선택 —",
+    "newProject": "새 프로젝트",
+    "addDocument": "+ 문서",
+    "addFiles": "이 폴더에 복사된 파일 추가",
+    "targetsDashboard": "목표 대시보드",
+    "searchPlaceholder": "문서 검색…",
+    "noProjectSelected": "선택된 프로젝트가 없습니다. 글쓰기 프로젝트를 만들거나 선택하여 시작하세요.",
+    "noDocuments": "아직 문서가 없습니다. \"+ 문서\"를 클릭하여 추가하세요.",
+    "dropToRoot": "↓ 여기에 놓아 루트로 올리기",
+    "selectProjectFirst": "먼저 프로젝트를 선택하세요.",
+    "cannotFindFile": "파일을 찾을 수 없습니다: {{filePath}}. 문서 이름 바꾸기 또는 다시 연결을 시도해 보세요.",
+    "untitledDocument": "제목 없음 {{time}}",
+    "noNewFiles": "프로젝트 폴더에서 새 파일을 찾을 수 없습니다.",
+    "pctComplete": "{{pct}}% 완료",
+    "copySuffix": "(복사)",
+    "menu": {
+      "openDocument": "문서 열기",
+      "newChildDocument": "새 하위 문서",
+      "setStatusDraft": "상태 설정: 임시글",
+      "setStatusInProgress": "상태 설정: 진행 중",
+      "setStatusComplete": "상태 설정: 완료",
+      "setStatusPublished": "상태 설정: 게시됨",
+      "duplicate": "복제",
+      "moveToResearch": "리서치로 이동",
+      "publishToWordPress": "WordPress에 게시",
+      "delete": "삭제"
+    },
+    "wordCountSuffix": "{{count}}자"
+  },
+  "launcher": {
+    "displayText": "글쓰기 스튜디오",
+    "title": "글쓰기 스튜디오",
+    "settings": "설정",
+    "project": "프로젝트",
+    "newProject": "+ 새로 만들기",
+    "noProjectSelected": "선택된 프로젝트가 없습니다.",
+    "chooseProject": "— 프로젝트 선택 —",
+    "wordCount": "{{n}} 단어",
+    "wordGoal": "/ {{n}} 목표",
+    "pctComplete": "{{pct}}% 완료",
+    "openBinder": "📖 바인더 열기",
+    "writingMode": "글쓰기 모드",
+    "mode": {
+      "draft": "초안",
+      "draftDesc": "집중 + 타이포그래피 켜짐, 사이드바 숨겨짐",
+      "edit": "편집",
+      "editDesc": "바인더 열림, 전체 UI 표시",
+      "review": "검토",
+      "reviewDesc": "읽기 보기, 편집 없음",
+      "clearMode": "✕ 모드 지우기"
+    },
+    "focusTypography": "집중 및 타이포그래피",
+    "focusMode": "집중 모드",
+    "typographyMode": "타이포그래피 모드",
+    "on": "켜짐",
+    "off": "꺼짐",
+    "quickActions": "빠른 작업",
+    "action": {
+      "targetsDashboard": "목표 대시보드",
+      "writingDashboard": "글쓰기 대시보드",
+      "previewManuscript": "원고 미리보기",
+      "export": "내보내기",
+      "writingLog": "글쓰기 로그",
+      "publishToWordPress": "WordPress에 게시"
+    },
+    "openDocumentFirst": "먼저 문서를 여세요.",
+    "sprintTimer": "스프린트 타이머",
+    "pause": "⏸ 일시정지",
+    "stop": "■ 정지",
+    "startSprint": "⏱ 스프린트 시작",
+    "quickStart": "빠른 시작:",
+    "today": "오늘",
+    "stat": {
+      "words": "단어 수",
+      "sprints": "스프린트",
+      "minutes": "분",
+      "streak": "연속",
+      "streakDays": "{{streak}}일"
+    },
+    "sessionWordsTyped": "세션: +{{n}} 단어 입력",
+    "dailyGoal": "일일 목표: {{written}} / {{goal}} 단어"
+  },
+  "log": {
+    "displayText": "글쓰기 로그",
+    "title": "글쓰기 로그",
+    "noProjectSelected": "선택된 프로젝트가 없습니다. 실행기를 열고 프로젝트를 선택하여 글쓰기 기록을 확인하세요.",
+    "streak": "🔥 {{streak}}일 연속",
+    "startStreak": "오늘 쓰기를 시작하여 연속 기록을 시작하세요",
+    "thisSession": "이번 세션",
+    "stat": {
+      "session": "세션",
+      "sprintWords": "스프린트 단어 수",
+      "sprints": "스프린트",
+      "minutes": "분"
+    },
+    "last30Days": "최근 30일",
+    "today": "오늘",
+    "sprintsCount_one": "· {{count}} 스프린트",
+    "sprintsCount_other": "· {{count}} 스프린트"
+  },
+  "sprint": {
+    "started": "스프린트 시작: {{minutes}}분",
+    "complete": "스프린트 완료! 잘하셨습니다.",
+    "words": "+{{n}} 단어",
+    "header": "글쓰기 스프린트",
+    "pauseTitle": "일시정지/재개",
+    "stopTitle": "스프린트 중지"
+  },
+  "writingModes": {
+    "switchedTo": "글쓰기 스튜디오: {{mode}} 모드",
+    "normal": "일반",
+    "statusDraft": "✍ 초안",
+    "statusEdit": "✎ 편집",
+    "statusReview": "👁 검토",
+    "statusNone": "— 모드"
+  },
+  "exportEngine": {
+    "epubExported": "EPUB을 {{path}}에 내보냈습니다",
+    "manuscriptExported": "원고를 {{path}}에 내보냈습니다",
+    "exportedTo": "{{path}}에 내보냈습니다",
+    "exportedHtmlTo": "HTML을 {{path}}에 내보냈습니다",
+    "pdfRequiresPandoc": "PDF 내보내기에는 pandoc이 필요합니다. pandoc을 설치하고 설정에서 경로를 설정하세요."
+  },
+  "wpClient": {
+    "authFailed": "인증에 실패했습니다. 사용자 이름과 애플리케이션 비밀번호를 확인하세요.",
+    "connectedAs": "\"{{site}}\"에 \"{{user}}\"로 연결되었습니다",
+    "networkError": "네트워크 오류: {{error}}",
+    "httpError": "HTTP {{status}}",
+    "fetchCategoriesFailed": "카테고리를 가져오지 못했습니다: {{error}}"
+  },
+  "folderSidebar": {
+    "displayText": "폴더 탐색기",
+    "back": "← 뒤로",
+    "root": "⌂ 루트",
+    "insertSelection": "↩ 선택 삽입",
+    "searchPlaceholder": "이름 및 내용 검색… (Enter)",
+    "sort": {
+      "foldersAz": "폴더 ↑ A-Z",
+      "foldersZa": "폴더 ↑ Z-A",
+      "az": "이름 A-Z",
+      "za": "이름 Z-A",
+      "modifiedNew": "최신순",
+      "modifiedOld": "오래된 순"
+    },
+    "noPreview": ".{{ext}} 파일에 대한 미리보기를 사용할 수 없습니다",
+    "openInEditor": "편집기에서 열기",
+    "searching": "검색 중…",
+    "noResults": "\"{{query}}\"에 대한 결과 없음",
+    "emptyFolder": "이 폴더는 비어 있습니다",
+    "tooltip": {
+      "modified": "수정됨",
+      "size": "크기",
+      "words": "단어 수",
+      "files": "파일",
+      "subfolders": "하위 폴더"
+    },
+    "pickerPlaceholder": "사이드바 탐색기에서 열 폴더 이름 입력…",
+    "vaultRoot": "/ (볼트 루트)"
+  },
+  "focusToolbar": {
+    "exitTitle": "집중 모드 종료 (esc)",
+    "exitBtn": "✕ 종료",
+    "wordCount_one": "{{count}} 단어",
+    "wordCount_other": "{{count}} 단어"
+  },
+  "compilePreview": {
+    "displayText": "컴파일된 원고",
+    "jumpToSection": "섹션으로 이동...",
+    "proceedToExport": "내보내기 진행",
+    "closePreview": "미리보기 닫기",
+    "noContent": "미리볼 내용이 없습니다. 먼저 글쓰기 프로젝트를 여세요."
+  },
+  "projectModal": {
+    "title": "새 글쓰기 프로젝트",
+    "projectTitle": "프로젝트 제목",
+    "titlePlaceholder": "내 소설",
+    "template": "템플릿",
+    "templateDesc": "사전 구성된 프로젝트 구조를 선택하세요.",
+    "templateOption": {
+      "blank": "빈칸 (사용자 정의 구조)",
+      "book": "책 (파트 → 챕터 → 씬)",
+      "series": "기사 시리즈 (시리즈 → 기사)",
+      "blog": "블로그 컬렉션 (날짜/카테고리별 게시물)",
+      "journalArticle": "학술지 논문 — 학술 또는 전문 학술지 제출",
+      "magazineArticle": "잡지 기사 — 특집, 장편 또는 내러티브 논픽션"
+    },
+    "descriptionLabel": "설명 (선택사항)",
+    "descriptionPlaceholder": "이 프로젝트에 대한 간략한 설명…",
+    "preview": {
+      "blank": "빈 프로젝트 — 직접 구조를 만드세요.",
+      "book": "생성: 앞부분, 1부 / 1장, 뒷부분 플레이스홀더.",
+      "series": "생성: 시리즈 폴더, 첫 번째 기사 플레이스홀더, 시리즈 메타데이터.",
+      "blog": "생성: 날짜 구성 폴더, 첫 번째 게시물 플레이스홀더.",
+      "journalArticle": "생성: 표지, 초록, 키워드, 서론, 문헌 검토, 방법론, 결과/분석, 토론, 결론, 참고문헌, 부록.",
+      "magazineArticle": "생성: 피치/문의 메모, 제목 및 덱, 리드, 핵심 단락, 본문, 인용 및 출처, 마무리, 팩트 체크 메모, 저자 약력. 메모 문서는 기본적으로 내보내기에서 제외됩니다."
+    },
+    "createBtn": "프로젝트 만들기",
+    "creating": "만드는 중…",
+    "errorNoTitle": "프로젝트 제목을 입력하세요.",
+    "errorCreate": "프로젝트 만들기 실패: {{error}}",
+    "created": "프로젝트 \"{{title}}\"이(가) 만들어졌습니다!",
+    "cancel": "취소"
+  },
+  "sprintModal": {
+    "title": "글쓰기 스프린트 시작",
+    "durationName": "시간 (분)",
+    "durationDesc": "사전 설정: 10, 15, 25, 30, 45, 60",
+    "durationCustom": "사용자 정의…",
+    "durationCustomPlaceholder": "사용자 정의 분",
+    "wordGoalName": "단어 수 목표 (선택사항)",
+    "wordGoalDesc": "목표 없이 0으로 두세요.",
+    "scopeName": "범위",
+    "scopeFile": "현재 파일",
+    "scopeProject": "전체 프로젝트",
+    "startBtn": "스프린트 시작",
+    "errorDuration": "유효한 시간을 설정하세요.",
+    "cancel": "취소"
+  },
+  "exportModal": {
+    "title": "문서 내보내기",
+    "formatName": "형식",
+    "format": {
+      "md": "Markdown (.md)",
+      "html": "HTML",
+      "manuscript": "원고 (HTML)",
+      "epub": "EPUB (.epub)",
+      "pdf": "PDF (pandoc 필요)",
+      "docx": "Word (.docx) (pandoc 필요)",
+      "rtf": "RTF (pandoc 필요)"
+    },
+    "coverImageName": "표지 이미지 경로",
+    "coverImageDesc": "JPG 또는 PNG 표지 이미지의 볼트 경로. 생성된 텍스트 표지의 경우 비워 두세요.",
+    "coverImagePlaceholder": "예: Assets/cover.jpg",
+    "contactInfoName": "연락처 정보 (선택사항)",
+    "contactInfoDesc": "표지에 표시 — 이름, 이메일 또는 주소.",
+    "contactInfoPlaceholder": "이름, 이메일 또는 주소",
+    "scopeName": "범위",
+    "scopeCurrent": "현재 문서",
+    "scopeProject": "전체 프로젝트 (바인더 순서로)",
+    "includeFrontmatter": "프론트매터 포함",
+    "includeResearch": "리서치 노트 포함",
+    "includeTitlesAsHeadings": "문서 제목을 제목으로 포함",
+    "addTitlePage": "표지 추가",
+    "addTitlePageDesc": "프로젝트 제목, 저자 및 날짜가 있는 표지를 앞에 추가합니다.",
+    "previewBtn": "컴파일된 원고 미리보기",
+    "exportBtn": "내보내기",
+    "exporting": "내보내는 중…",
+    "exportFailed": "내보내기 실패: {{error}}",
+    "cancel": "취소"
+  },
+  "publishModal": {
+    "title": "WordPress에 게시",
+    "noSites": "WordPress 사이트가 구성되지 않았습니다. 설정 → WordPress에서 사이트를 추가하세요.",
+    "close": "닫기",
+    "siteName": "WordPress 사이트",
+    "postTitleName": "게시물 제목",
+    "postStatusName": "게시물 상태",
+    "postStatus": {
+      "draft": "임시글",
+      "pending": "검토 대기 중",
+      "publish": "게시됨"
+    },
+    "categoryName": "카테고리",
+    "tagsName": "태그",
+    "tagsDesc": "쉼표로 구분.",
+    "excerptName": "발췌 (선택사항)",
+    "scheduleName": "게시 예약 (선택사항)",
+    "scheduleDesc": "즉시 게시하려면 비워 두세요.",
+    "schedulePlaceholder": "yyyy-mm-ddThh:mm:ss",
+    "existingNotice": "⚠ 이 문서는 이전에 게시되었습니다 (게시물 ID: {{id}}).",
+    "updatePost": "기존 게시물 업데이트",
+    "newPost": "새 게시물 만들기",
+    "schedule": "예약",
+    "publish": "게시",
+    "cancel": "취소",
+    "noSiteSelected": "선택된 사이트가 없습니다.",
+    "fileNotFound": "파일을 찾을 수 없습니다.",
+    "publishFailed": "게시 실패: {{error}}",
+    "published": "게시됨",
+    "scheduled": "예약됨",
+    "actionNotice": "{{action}}! 게시물 보기: {{url}}"
+  },
+  "targetsDashboard": {
+    "title": "챕터 목표 대시보드",
+    "noProject": "선택된 프로젝트가 없습니다.",
+    "filterLabel": "필터: ",
+    "allStatuses": "모든 상태",
+    "refresh": "↻ 새로 고침",
+    "col": {
+      "title": "제목",
+      "type": "유형",
+      "status": "상태",
+      "words": "단어 수",
+      "goal": "목표",
+      "progress": "진행 상황",
+      "readingTime": "읽기 시간"
+    },
+    "total": "합계",
+    "status": {
+      "draft": "임시글",
+      "inProgress": "진행 중",
+      "complete": "완료",
+      "published": "게시됨"
+    },
+    "typeLabel": {
+      "chapter": "챕터",
+      "section": "섹션",
+      "article": "기사",
+      "note": "노트",
+      "group": "그룹",
+      "part": "파트"
+    }
+  },
+  "writingDashboard": {
+    "title": "글쓰기 대시보드",
+    "thisSession": "이번 세션",
+    "stat": {
+      "wordsWritten": "작성한 단어 수",
+      "sprints": "스프린트",
+      "minutes": "분",
+      "writingStreak": "글쓰기 연속",
+      "streakDays_one": "{{count}}일",
+      "streakDays_other": "{{count}}일",
+      "totalWords": "총 단어 수",
+      "goal": "목표",
+      "progress": "진행 상황",
+      "readingTime": "읽기 시간"
+    },
+    "project": "프로젝트: {{title}}",
+    "recentSprints": "최근 스프린트",
+    "noSprints": "아직 기록된 스프린트가 없습니다.",
+    "sprintTable": {
+      "date": "날짜",
+      "duration": "시간",
+      "words": "단어 수",
+      "wpm": "WPM",
+      "goal": "목표"
+    },
+    "documentWordCounts": "문서 단어 수",
+    "docTable": {
+      "document": "문서",
+      "words": "단어 수",
+      "readingTime": "읽기 시간"
+    },
+    "close": "닫기"
+  },
+  "addToProject": {
+    "title": "글쓰기 프로젝트에 추가",
+    "noProjects": "글쓰기 프로젝트를 찾을 수 없습니다. 먼저 프로젝트를 만드세요.",
+    "close": "닫기",
+    "file": "파일: {{path}}",
+    "projectName": "글쓰기 프로젝트",
+    "projectDesc": "이 파일을 어느 글쓰기 프로젝트에 추가하시겠습니까?",
+    "addBtn": "프로젝트에 추가",
+    "cancel": "취소"
+  },
+  "scanFolder": {
+    "title": "바인더에 파일 추가",
+    "desc": "이 프로젝트에 추가할 파일을 선택하세요:",
+    "addBtn": "선택한 파일 추가",
+    "cancel": "취소"
+  },
+  "main": {
+    "ribbonTitle": "글쓰기 스튜디오 열기",
+    "cmd": {
+      "openLauncher": "실행기 열기",
+      "openBinder": "바인더 열기",
+      "toggleFocusMode": "집중 모드 전환",
+      "toggleTypographyMode": "타이포그래피 모드 전환",
+      "switchDraftMode": "초안 모드로 전환",
+      "switchEditMode": "편집 모드로 전환",
+      "switchReviewMode": "검토 모드로 전환",
+      "startSprint": "글쓰기 스프린트 시작",
+      "exportDocument": "문서 내보내기",
+      "exportProject": "프로젝트 내보내기",
+      "previewManuscript": "컴파일된 원고 미리보기",
+      "publishWordPress": "WordPress에 게시",
+      "newProject": "새 글쓰기 프로젝트",
+      "openDashboard": "글쓰기 대시보드 열기",
+      "openTargetsDashboard": "목표 대시보드 열기",
+      "setWordCountGoal": "단어 수 목표 설정",
+      "openWritingLog": "글쓰기 로그 열기",
+      "openFolderSidebar": "사이드바 탐색기에서 폴더 열기",
+      "addFilesToBinder": "프로젝트 폴더에 복사된 파일 추가"
+    },
+    "menu": {
+      "studioOptions": "글쓰기 스튜디오 옵션",
+      "exportDoc": "이 문서 내보내기",
+      "publish": "WordPress에 게시",
+      "setGoal": "단어 수 목표 설정",
+      "switchMode": "글쓰기 모드 전환 →",
+      "typographyFont": "타이포그래피 글꼴 →",
+      "addToProject": "글쓰기 프로젝트에 추가",
+      "openSidebar": "사이드바 탐색기에서 열기",
+      "draftMode": "✍ 초안 모드",
+      "editMode": "✎ 편집 모드",
+      "reviewMode": "👁 검토 모드",
+      "normalMode": "일반 (모드 없음)"
+    },
+    "notice": {
+      "noMarkdownOpen": "현재 열려 있는 Markdown 파일이 없습니다.",
+      "addedToProject": "\"{{file}}\"을(를) {{project}}에 추가했습니다"
+    },
+    "statusBar": {
+      "projectWords": "{{total}} / {{goal}} 프로젝트 단어",
+      "wordCount": "{{count}} 단어",
+      "wordCountGoal": "{{count}} / {{goal}} 단어",
+      "delta": "(+{{delta}})",
+      "goalBanner": "{{count}} / {{goal}} 단어 — {{pct}}%",
+      "dismiss": "닫기"
+    }
+  },
+  "sprintSummary": {
+    "title": "스프린트 완료!",
+    "wordsWritten": "작성한 단어 수",
+    "duration": "시간",
+    "durationValue": "{{count}}분",
+    "wpm": "단어/분",
+    "goalProgress": "목표 진행 상황",
+    "close": "닫기"
+  },
+  "wordCountGoal": {
+    "title": "단어 수 목표 설정",
+    "name": "단어 수 목표",
+    "desc": "이 문서의 목표 단어 수. 제거하려면 0으로 설정하세요.",
+    "placeholder": "예: 1500",
+    "save": "저장",
+    "cancel": "취소"
+  },
+  "statsTracker": {
+    "unknownProject": "알 수 없는 프로젝트",
+    "none": "없음",
+    "dailyNote": {
+      "heading": "## ✍️ 글쓰기 활동",
+      "project": "**프로젝트:**",
+      "documents": "**문서:**",
+      "wordsWritten": "**작성한 단어 수:**",
+      "sprintsCompleted": "**완료된 스프린트:**",
+      "sprintEntry": "1 ({{duration}}분)",
+      "wpm": "**분당 단어 수:**",
+      "sessionTotal": "**세션 합계:**",
+      "sessionTotalValue": "{{duration}}분"
+    },
+    "readingTime": {
+      "minutes": "{{count}}분",
+      "hoursMinutes": "{{hours}}시간 {{mins}}분",
+      "hours": "{{hours}}시간"
+    }
+  }
+}

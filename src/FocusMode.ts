@@ -3,6 +3,7 @@ import { Extension } from '@codemirror/state';
 import { Decoration, DecorationSet, EditorView, ViewPlugin, ViewUpdate } from '@codemirror/view';
 import { RangeSetBuilder } from '@codemirror/state';
 import type WritingStudioPlugin from '../main';
+import { t } from './i18n';
 
 const FOCUS_CLASS = 'writing-studio-focus-mode';
 const FOCUS_PARA_CLASS = 'cm-ws-focus-para';
@@ -89,9 +90,9 @@ export class FocusMode {
   private showToolbar(): void {
     this.hideToolbar();
     const toolbar = createDiv({ cls: 'ws-focus-toolbar' });
-    toolbar.createSpan({ cls: 'ws-focus-wordcount', text: '0 words' });
+    toolbar.createSpan({ cls: 'ws-focus-wordcount', text: t('focusToolbar.wordCount', { count: 0 }) });
     toolbar.createSpan({ cls: 'ws-focus-sprint-time ws-hidden' });
-    const exitBtn = toolbar.createEl('button', { cls: 'ws-focus-exit', title: 'Exit focus mode (esc)', text: '✕ exit' });
+    const exitBtn = toolbar.createEl('button', { cls: 'ws-focus-exit', title: t('focusToolbar.exitTitle'), text: t('focusToolbar.exitBtn') });
     exitBtn.onclick = () => this.disable();
 
     activeDocument.body.appendChild(toolbar);
@@ -111,7 +112,7 @@ export class FocusMode {
     const el = this.toolbar.querySelector('.ws-focus-wordcount');
     if (el) {
       const n = count ?? this.getCurrentWordCount();
-      el.textContent = `${n} word${n === 1 ? '' : 's'}`;
+      el.textContent = t('focusToolbar.wordCount', { count: n });
     }
   }
 
