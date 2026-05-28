@@ -173,7 +173,8 @@
       "moveToResearch": "移至研究",
       "publishToWordPress": "发布到 WordPress",
       "delete": "删除"
-    }
+    },
+    "wordCountSuffix": "{{count}}字"
   },
   "launcher": {
     "displayText": "写作工作室",
@@ -243,6 +244,7 @@
     },
     "last30Days": "最近30天",
     "today": "今天",
+    "sprintsCount_one": "· {{count}} 次冲刺",
     "sprintsCount_other": "· {{count}} 次冲刺"
   },
   "sprint": {
@@ -307,6 +309,7 @@
   "focusToolbar": {
     "exitTitle": "退出专注模式 (esc)",
     "exitBtn": "✕ 退出",
+    "wordCount_one": "{{count}} 个字",
     "wordCount_other": "{{count}} 个字"
   },
   "compilePreview": {
@@ -441,7 +444,21 @@
       "progress": "进度",
       "readingTime": "阅读时间"
     },
-    "total": "合计"
+    "total": "合计",
+    "status": {
+      "draft": "草稿",
+      "inProgress": "进行中",
+      "complete": "完成",
+      "published": "已发布"
+    },
+    "typeLabel": {
+      "chapter": "章节",
+      "section": "部分",
+      "article": "文章",
+      "note": "备注",
+      "group": "组",
+      "part": "篇"
+    }
   },
   "writingDashboard": {
     "title": "写作仪表板",

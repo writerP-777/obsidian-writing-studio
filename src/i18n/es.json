@@ -173,7 +173,8 @@
       "moveToResearch": "Mover a investigación",
       "publishToWordPress": "Publicar en WordPress",
       "delete": "Eliminar"
-    }
+    },
+    "wordCountSuffix": "{{count}}p"
   },
   "launcher": {
     "displayText": "Estudio de escritura",
@@ -443,7 +444,21 @@
       "progress": "Progreso",
       "readingTime": "Tiempo de lectura"
     },
-    "total": "Total"
+    "total": "Total",
+    "status": {
+      "draft": "Borrador",
+      "inProgress": "En progreso",
+      "complete": "Completo",
+      "published": "Publicado"
+    },
+    "typeLabel": {
+      "chapter": "Capítulo",
+      "section": "Sección",
+      "article": "Artículo",
+      "note": "Nota",
+      "group": "Grupo",
+      "part": "Parte"
+    }
   },
   "writingDashboard": {
     "title": "Panel de escritura",

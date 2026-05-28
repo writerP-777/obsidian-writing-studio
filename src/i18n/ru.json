@@ -173,7 +173,8 @@
       "moveToResearch": "Переместить в исследования",
       "publishToWordPress": "Опубликовать в WordPress",
       "delete": "Удалить"
-    }
+    },
+    "wordCountSuffix": "{{count}}сл"
   },
   "launcher": {
     "displayText": "Студия письма",
@@ -447,7 +448,21 @@
       "progress": "Прогресс",
       "readingTime": "Время чтения"
     },
-    "total": "Итого"
+    "total": "Итого",
+    "status": {
+      "draft": "Черновик",
+      "inProgress": "В процессе",
+      "complete": "Завершено",
+      "published": "Опубликовано"
+    },
+    "typeLabel": {
+      "chapter": "Глава",
+      "section": "Раздел",
+      "article": "Статья",
+      "note": "Заметка",
+      "group": "Группа",
+      "part": "Часть"
+    }
   },
   "writingDashboard": {
     "title": "Панель написания",

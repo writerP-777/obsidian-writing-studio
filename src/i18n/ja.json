@@ -1,0 +1,599 @@
+{
+  "settings": {
+    "tab": {
+      "general": "一般",
+      "focus": "フォーカスモード",
+      "typography": "タイポグラフィ",
+      "sprint": "スプリントと目標",
+      "export": "エクスポート",
+      "log": "執筆ログ",
+      "wordpress": "WordPress",
+      "help": "使い方"
+    },
+    "general": {
+      "openOnStartup": "起動時に開く",
+      "openOnStartupDesc": "Obsidianの起動時に自動でライティングスタジオパネルを開きます。",
+      "defaultProjectFolder": "デフォルトのプロジェクトフォルダ",
+      "defaultProjectFolderDesc": "執筆プロジェクトを保存するVaultのパス。",
+      "defaultProjectFolderPlaceholder": "執筆プロジェクト",
+      "authorName": "著者名",
+      "authorNameDesc": "エクスポートとタイトルページに使用されます。",
+      "authorNamePlaceholder": "お名前",
+      "defaultDocumentType": "デフォルトのドキュメントタイプ",
+      "docType": {
+        "chapter": "章",
+        "section": "セクション",
+        "article": "記事",
+        "note": "ノート"
+      },
+      "frontmatterAutoUpdate": "フロントマター自動更新",
+      "frontmatterAutoUpdateDesc": "保存時に語数と更新日を自動的に更新します。"
+    },
+    "focus": {
+      "heading": "フォーカスモード",
+      "focusUnit": "フォーカス単位",
+      "focusUnitDesc": "段落または文レベルでハイライトします。",
+      "paragraph": "段落",
+      "sentence": "文（行）",
+      "dimOpacity": "暗転の不透明度（%）",
+      "dimOpacityDesc": "非アクティブテキストの不透明度（10〜50）。",
+      "fontSizeOverride": "フォントサイズオーバーライド（px）",
+      "fontSizeOverrideDesc": "0のままにするとテーマのフォントサイズを使用します。",
+      "autoHideSidebars": "サイドバーの自動非表示",
+      "typewriterScroll": "タイプライタースクロール",
+      "typewriterScrollDesc": "アクティブな行を画面の中央に保ちます。"
+    },
+    "typography": {
+      "heading": "タイポグラフィモード",
+      "fontFamily": "フォントファミリー",
+      "font": {
+        "mono": "等幅（iA Writer Mono）",
+        "serif": "セリフ（iA Writer Duo Serif）",
+        "sans": "サンセリフ（iA Writer Quattro）",
+        "cormorant-garamond": "Cormorant garamond",
+        "crimson-text": "Crimson text",
+        "eb-garamond": "Eb garamond",
+        "libre-baskerville": "Libre baskerville",
+        "libre-caslon-text": "Libre caslon text",
+        "literata": "Literata",
+        "lora": "Lora",
+        "inter": "Inter",
+        "lato": "Lato",
+        "source-sans-3": "Source sans 3",
+        "custom": "カスタムフォント名…"
+      },
+      "customFontName": "カスタムフォント名",
+      "customFontNameDesc": "上で「カスタム」を選択した場合のフォント名。",
+      "customFontNamePlaceholder": "例：Merriweather",
+      "maxLineLength": "最大行長（文字）",
+      "maxLineLengthDesc": "55〜80文字推奨。",
+      "fontSize": "フォントサイズ（px）",
+      "lineHeight": "行の高さ",
+      "lineHeightDesc": "デフォルト：1.7",
+      "letterSpacing": "文字間隔",
+      "letterSpacingDesc": "CSSのletter-spacing値（例：「normal」、「0.02em」）。",
+      "persistAcrossSessions": "セッション間で保持",
+      "persistAcrossSessionsDesc": "Obsidianを再起動してもタイポグラフィモードを維持します。"
+    },
+    "sprint": {
+      "heading": "スプリントと目標",
+      "defaultDuration": "デフォルトのスプリント時間（分）",
+      "defaultDailyGoal": "デフォルトの1日の語数目標",
+      "soundNotifications": "サウンド通知",
+      "soundNotificationsDesc": "スプリント終了時に音を鳴らします。",
+      "historyRetention": "スプリント履歴の保持期間（日）",
+      "inlineGoalBanner": "インライン目標バナー",
+      "inlineGoalBannerDesc": "ドキュメントを開いたときにタイトルの下に語数目標の進捗を表示します。"
+    },
+    "export": {
+      "heading": "エクスポート",
+      "defaultFormat": "デフォルトのエクスポート形式",
+      "format": {
+        "md": "Markdown (.md)",
+        "html": "HTML",
+        "pdf": "PDF",
+        "docx": "Word (.docx)",
+        "rtf": "RTF"
+      },
+      "defaultPaperSize": "デフォルトの用紙サイズ",
+      "paperSize": {
+        "letter": "レター（US）",
+        "a4": "A4"
+      },
+      "exportFont": "エクスポートフォント",
+      "exportFontSize": "エクスポートフォントサイズ（pt）",
+      "pandocPath": "Pandocのパス",
+      "pandocPathDesc": "システムパスにない場合はpandocバイナリのフルパスを指定してください。",
+      "epubHeading": "EPUB",
+      "epubLanguage": "EPUB言語",
+      "epubLanguageDesc": "BCP 47言語タグ（例：en、fr、de）。",
+      "includeCover": "カバーを含める",
+      "includeCoverDesc": "カバー画像がない場合、テキストカバーページを自動生成します。"
+    },
+    "log": {
+      "heading": "毎日の執筆ログ",
+      "appendToDailyNote": "デイリーノートに追記",
+      "appendToDailyNoteDesc": "各スプリント後に今日のデイリーノートに執筆活動サマリーを追加します。"
+    },
+    "wordpress": {
+      "sitesHeading": "WordPressサイト",
+      "addSite": "+ WordPressサイトを追加",
+      "wikilinksHeading": "ウィキリンクのデフォルト",
+      "defaultWikilinkHandling": "デフォルトのウィキリンク処理",
+      "wikilinkStrip": "ストリップ（プレーンテキストに変換）",
+      "wikilinkConvert": "URLに変換",
+      "siteHeading": "サイト：{{nickname}}",
+      "siteUnnamed": "未命名",
+      "nickname": "ニックネーム",
+      "siteUrl": "サイトURL",
+      "username": "ユーザー名",
+      "appPassword": "アプリケーションパスワード",
+      "appPasswordDesc": "WordPressの「ユーザー → プロフィール → アプリケーションパスワード」で生成します。",
+      "defaultPostStatus": "デフォルトの投稿ステータス",
+      "postStatus": {
+        "draft": "下書き",
+        "pending": "承認待ち",
+        "publish": "公開済み"
+      },
+      "wikilinkHandling": "ウィキリンク処理",
+      "wikilinkHandlingStrip": "ストリップ",
+      "wikilinkHandlingConvert": "URLに変換",
+      "testConnection": "接続テスト",
+      "testConnectionDesc": "認証情報と接続性を確認します。",
+      "testing": "テスト中…",
+      "removeSite": "サイトを削除",
+      "buyMeACoffee": "コーヒーをおごる"
+    }
+  },
+  "binder": {
+    "displayText": "執筆バインダー",
+    "selectProject": "— プロジェクトを選択 —",
+    "newProject": "新規プロジェクト",
+    "addDocument": "+ ドキュメント",
+    "addFiles": "このフォルダにコピーされたファイルを追加",
+    "targetsDashboard": "ターゲットダッシュボード",
+    "searchPlaceholder": "ドキュメントを検索…",
+    "noProjectSelected": "プロジェクトが選択されていません。執筆プロジェクトを作成または選択して開始してください。",
+    "noDocuments": "ドキュメントがありません。「+ ドキュメント」をクリックして追加してください。",
+    "dropToRoot": "↓ ここにドロップしてルートに昇格",
+    "selectProjectFirst": "まずプロジェクトを選択してください。",
+    "cannotFindFile": "ファイルが見つかりません：{{filePath}}。ドキュメントの名前変更または再リンクをお試しください。",
+    "untitledDocument": "無題 {{time}}",
+    "noNewFiles": "プロジェクトフォルダに新しいファイルが見つかりませんでした。",
+    "pctComplete": "{{pct}}% 完了",
+    "copySuffix": "（コピー）",
+    "menu": {
+      "openDocument": "ドキュメントを開く",
+      "newChildDocument": "子ドキュメントを新規作成",
+      "setStatusDraft": "ステータスを設定：下書き",
+      "setStatusInProgress": "ステータスを設定：進行中",
+      "setStatusComplete": "ステータスを設定：完了",
+      "setStatusPublished": "ステータスを設定：公開済み",
+      "duplicate": "複製",
+      "moveToResearch": "リサーチに移動",
+      "publishToWordPress": "WordPressに公開",
+      "delete": "削除"
+    },
+    "wordCountSuffix": "{{count}}語"
+  },
+  "launcher": {
+    "displayText": "ライティングスタジオ",
+    "title": "ライティングスタジオ",
+    "settings": "設定",
+    "project": "プロジェクト",
+    "newProject": "＋新規",
+    "noProjectSelected": "プロジェクトが選択されていません。",
+    "chooseProject": "— プロジェクトを選択 —",
+    "wordCount": "{{n}} 語",
+    "wordGoal": "/ {{n}} 目標",
+    "pctComplete": "{{pct}}% 完了",
+    "openBinder": "📖 バインダーを開く",
+    "writingMode": "執筆モード",
+    "mode": {
+      "draft": "下書き",
+      "draftDesc": "フォーカス＋タイポグラフィON、サイドバー非表示",
+      "edit": "編集",
+      "editDesc": "バインダーを開き、フルUIを表示",
+      "review": "レビュー",
+      "reviewDesc": "閲覧モード、編集不可",
+      "clearMode": "✕ モードをクリア"
+    },
+    "focusTypography": "フォーカスとタイポグラフィ",
+    "focusMode": "フォーカスモード",
+    "typographyMode": "タイポグラフィモード",
+    "on": "ON",
+    "off": "OFF",
+    "quickActions": "クイックアクション",
+    "action": {
+      "targetsDashboard": "ターゲットダッシュボード",
+      "writingDashboard": "執筆ダッシュボード",
+      "previewManuscript": "原稿をプレビュー",
+      "export": "エクスポート",
+      "writingLog": "執筆ログ",
+      "publishToWordPress": "WordPressに公開"
+    },
+    "openDocumentFirst": "最初にドキュメントを開いてください。",
+    "sprintTimer": "スプリントタイマー",
+    "pause": "⏸ 一時停止",
+    "stop": "■ 停止",
+    "startSprint": "⏱ スプリント開始",
+    "quickStart": "クイックスタート：",
+    "today": "今日",
+    "stat": {
+      "words": "語数",
+      "sprints": "スプリント",
+      "minutes": "分",
+      "streak": "連続",
+      "streakDays": "{{streak}}日"
+    },
+    "sessionWordsTyped": "セッション：+{{n}} 語",
+    "dailyGoal": "1日の目標：{{written}} / {{goal}} 語"
+  },
+  "log": {
+    "displayText": "執筆ログ",
+    "title": "執筆ログ",
+    "noProjectSelected": "プロジェクトが選択されていません。ランチャーを開いてプロジェクトを選択すると執筆履歴が表示されます。",
+    "streak": "🔥 {{streak}}日連続",
+    "startStreak": "今日書いて連続記録を始めましょう",
+    "thisSession": "このセッション",
+    "stat": {
+      "session": "セッション",
+      "sprintWords": "スプリント語数",
+      "sprints": "スプリント",
+      "minutes": "分"
+    },
+    "last30Days": "過去30日",
+    "today": "今日",
+    "sprintsCount_one": "· {{count}} スプリント",
+    "sprintsCount_other": "· {{count}} スプリント"
+  },
+  "sprint": {
+    "started": "スプリント開始：{{minutes}} 分",
+    "complete": "スプリント完了！お疲れさまでした。",
+    "words": "+{{n}} 語",
+    "header": "執筆スプリント",
+    "pauseTitle": "一時停止/再開",
+    "stopTitle": "スプリント停止"
+  },
+  "writingModes": {
+    "switchedTo": "ライティングスタジオ：{{mode}} モード",
+    "normal": "ノーマル",
+    "statusDraft": "✍ 下書き",
+    "statusEdit": "✎ 編集",
+    "statusReview": "👁 レビュー",
+    "statusNone": "— モード"
+  },
+  "exportEngine": {
+    "epubExported": "EPUBを {{path}} にエクスポートしました",
+    "manuscriptExported": "原稿を {{path}} にエクスポートしました",
+    "exportedTo": "{{path}} にエクスポートしました",
+    "exportedHtmlTo": "HTMLを {{path}} にエクスポートしました",
+    "pdfRequiresPandoc": "PDFエクスポートにはpandocが必要です。pandocをインストールして設定でパスを指定してください。"
+  },
+  "wpClient": {
+    "authFailed": "認証に失敗しました。ユーザー名とアプリケーションパスワードを確認してください。",
+    "connectedAs": "「{{site}}」に「{{user}}」として接続しました",
+    "networkError": "ネットワークエラー：{{error}}",
+    "httpError": "HTTP {{status}}",
+    "fetchCategoriesFailed": "カテゴリの取得に失敗しました：{{error}}"
+  },
+  "folderSidebar": {
+    "displayText": "フォルダエクスプローラー",
+    "back": "← 戻る",
+    "root": "⌂ ルート",
+    "insertSelection": "↩ 選択を挿入",
+    "searchPlaceholder": "名前とコンテンツを検索… (Enter)",
+    "sort": {
+      "foldersAz": "フォルダ ↑ A-Z",
+      "foldersZa": "フォルダ ↑ Z-A",
+      "az": "名前 A-Z",
+      "za": "名前 Z-A",
+      "modifiedNew": "最新順",
+      "modifiedOld": "古い順"
+    },
+    "noPreview": ".{{ext}} ファイルのプレビューはありません",
+    "openInEditor": "エディタで開く",
+    "searching": "検索中…",
+    "noResults": "「{{query}}」の検索結果がありません",
+    "emptyFolder": "このフォルダは空です",
+    "tooltip": {
+      "modified": "更新日時",
+      "size": "サイズ",
+      "words": "語数",
+      "files": "ファイル",
+      "subfolders": "サブフォルダ"
+    },
+    "pickerPlaceholder": "サイドバーエクスプローラーで開くフォルダ名を入力…",
+    "vaultRoot": "/（ボールトルート）"
+  },
+  "focusToolbar": {
+    "exitTitle": "フォーカスモードを終了 (esc)",
+    "exitBtn": "✕ 終了",
+    "wordCount_one": "{{count}} 語",
+    "wordCount_other": "{{count}} 語"
+  },
+  "compilePreview": {
+    "displayText": "コンパイル済み原稿",
+    "jumpToSection": "セクションにジャンプ...",
+    "proceedToExport": "エクスポートに進む",
+    "closePreview": "プレビューを閉じる",
+    "noContent": "プレビューするコンテンツがありません。まず執筆プロジェクトを開いてください。"
+  },
+  "projectModal": {
+    "title": "新規執筆プロジェクト",
+    "projectTitle": "プロジェクトタイトル",
+    "titlePlaceholder": "私の小説",
+    "template": "テンプレート",
+    "templateDesc": "事前設定されたプロジェクト構造を選択してください。",
+    "templateOption": {
+      "blank": "空白（カスタム構造）",
+      "book": "書籍（パーツ → 章 → シーン）",
+      "series": "記事シリーズ（シリーズ → 記事）",
+      "blog": "ブログコレクション（日付/カテゴリ別の投稿）",
+      "journalArticle": "学術論文 — 学術・専門誌への投稿",
+      "magazineArticle": "雑誌記事 — 特集、長編、またはナラティブノンフィクション"
+    },
+    "descriptionLabel": "説明（任意）",
+    "descriptionPlaceholder": "このプロジェクトの簡単な説明…",
+    "preview": {
+      "blank": "空のプロジェクト — 独自の構造を構築します。",
+      "book": "作成：フロントマター、パート1/第1章、バックマタープレースホルダー。",
+      "series": "作成：シリーズフォルダ、第1記事プレースホルダー、シリーズメタデータ。",
+      "blog": "作成：日付別フォルダ、最初の投稿プレースホルダー。",
+      "journalArticle": "作成：タイトルページ、要旨、キーワード、序論、文献レビュー、方法論、発見/分析、考察、結論、参考文献、付録。",
+      "magazineArticle": "作成：ピッチ/照会メモ、見出しとデック、リード、ナットグラフ、本文、引用と情報源、キッカー、ファクトチェックメモ、著者略歴。メモドキュメントはデフォルトでエクスポートから除外されます。"
+    },
+    "createBtn": "プロジェクトを作成",
+    "creating": "作成中…",
+    "errorNoTitle": "プロジェクトタイトルを入力してください。",
+    "errorCreate": "プロジェクトの作成に失敗しました：{{error}}",
+    "created": "プロジェクト「{{title}}」が作成されました！",
+    "cancel": "キャンセル"
+  },
+  "sprintModal": {
+    "title": "執筆スプリントを開始",
+    "durationName": "時間（分）",
+    "durationDesc": "プリセット：10、15、25、30、45、60",
+    "durationCustom": "カスタム…",
+    "durationCustomPlaceholder": "カスタム分数",
+    "wordGoalName": "語数目標（任意）",
+    "wordGoalDesc": "目標なしの場合は0のままにしてください。",
+    "scopeName": "スコープ",
+    "scopeFile": "現在のファイル",
+    "scopeProject": "プロジェクト全体",
+    "startBtn": "スプリントを開始",
+    "errorDuration": "有効な時間を設定してください。",
+    "cancel": "キャンセル"
+  },
+  "exportModal": {
+    "title": "ドキュメントをエクスポート",
+    "formatName": "形式",
+    "format": {
+      "md": "Markdown (.md)",
+      "html": "HTML",
+      "manuscript": "原稿（HTML）",
+      "epub": "EPUB (.epub)",
+      "pdf": "PDF（pandocが必要）",
+      "docx": "Word (.docx)（pandocが必要）",
+      "rtf": "RTF（pandocが必要）"
+    },
+    "coverImageName": "カバー画像のパス",
+    "coverImageDesc": "JPGまたはPNGのカバー画像のVaultパス。生成されたテキストカバーには空のままにしてください。",
+    "coverImagePlaceholder": "例：Assets/cover.jpg",
+    "contactInfoName": "連絡先情報（任意）",
+    "contactInfoDesc": "タイトルページに表示 — 名前、メール、または住所。",
+    "contactInfoPlaceholder": "名前、メール、または住所",
+    "scopeName": "スコープ",
+    "scopeCurrent": "現在のドキュメント",
+    "scopeProject": "プロジェクト全体（バインダー順）",
+    "includeFrontmatter": "フロントマターを含める",
+    "includeResearch": "リサーチノートを含める",
+    "includeTitlesAsHeadings": "ドキュメントタイトルを見出しとして含める",
+    "addTitlePage": "タイトルページを追加",
+    "addTitlePageDesc": "プロジェクトタイトル、著者、日付のタイトルページを先頭に追加します。",
+    "previewBtn": "コンパイル済み原稿をプレビュー",
+    "exportBtn": "エクスポート",
+    "exporting": "エクスポート中…",
+    "exportFailed": "エクスポートに失敗しました：{{error}}",
+    "cancel": "キャンセル"
+  },
+  "publishModal": {
+    "title": "WordPressに公開",
+    "noSites": "WordPressサイトが設定されていません。設定 → WordPressでサイトを追加してください。",
+    "close": "閉じる",
+    "siteName": "WordPressサイト",
+    "postTitleName": "投稿タイトル",
+    "postStatusName": "投稿ステータス",
+    "postStatus": {
+      "draft": "下書き",
+      "pending": "承認待ち",
+      "publish": "公開済み"
+    },
+    "categoryName": "カテゴリ",
+    "tagsName": "タグ",
+    "tagsDesc": "カンマ区切り。",
+    "excerptName": "抜粋（任意）",
+    "scheduleName": "公開予約（任意）",
+    "scheduleDesc": "今すぐ公開する場合は空のままにしてください。",
+    "schedulePlaceholder": "yyyy-mm-ddThh:mm:ss",
+    "existingNotice": "⚠ このドキュメントは以前に公開されています（投稿ID：{{id}}）。",
+    "updatePost": "既存の投稿を更新",
+    "newPost": "新しい投稿を作成",
+    "schedule": "予約投稿",
+    "publish": "公開",
+    "cancel": "キャンセル",
+    "noSiteSelected": "サイトが選択されていません。",
+    "fileNotFound": "ファイルが見つかりません。",
+    "publishFailed": "公開に失敗しました：{{error}}",
+    "published": "公開済み",
+    "scheduled": "予約済み",
+    "actionNotice": "{{action}}！投稿を表示：{{url}}"
+  },
+  "targetsDashboard": {
+    "title": "章のターゲットダッシュボード",
+    "noProject": "プロジェクトが選択されていません。",
+    "filterLabel": "フィルター：",
+    "allStatuses": "すべてのステータス",
+    "refresh": "↻ 更新",
+    "col": {
+      "title": "タイトル",
+      "type": "タイプ",
+      "status": "ステータス",
+      "words": "語数",
+      "goal": "目標",
+      "progress": "進捗",
+      "readingTime": "読了時間"
+    },
+    "total": "合計",
+    "status": {
+      "draft": "下書き",
+      "inProgress": "進行中",
+      "complete": "完了",
+      "published": "公開済み"
+    },
+    "typeLabel": {
+      "chapter": "章",
+      "section": "セクション",
+      "article": "記事",
+      "note": "ノート",
+      "group": "グループ",
+      "part": "パート"
+    }
+  },
+  "writingDashboard": {
+    "title": "執筆ダッシュボード",
+    "thisSession": "このセッション",
+    "stat": {
+      "wordsWritten": "書いた語数",
+      "sprints": "スプリント",
+      "minutes": "分",
+      "writingStreak": "執筆連続日数",
+      "streakDays_one": "{{count}} 日",
+      "streakDays_other": "{{count}} 日",
+      "totalWords": "総語数",
+      "goal": "目標",
+      "progress": "進捗",
+      "readingTime": "読了時間"
+    },
+    "project": "プロジェクト：{{title}}",
+    "recentSprints": "最近のスプリント",
+    "noSprints": "スプリントが記録されていません。",
+    "sprintTable": {
+      "date": "日付",
+      "duration": "時間",
+      "words": "語数",
+      "wpm": "WPM",
+      "goal": "目標"
+    },
+    "documentWordCounts": "ドキュメントの語数",
+    "docTable": {
+      "document": "ドキュメント",
+      "words": "語数",
+      "readingTime": "読了時間"
+    },
+    "close": "閉じる"
+  },
+  "addToProject": {
+    "title": "執筆プロジェクトに追加",
+    "noProjects": "執筆プロジェクトが見つかりません。まずプロジェクトを作成してください。",
+    "close": "閉じる",
+    "file": "ファイル：{{path}}",
+    "projectName": "執筆プロジェクト",
+    "projectDesc": "このファイルをどの執筆プロジェクトに追加しますか？",
+    "addBtn": "プロジェクトに追加",
+    "cancel": "キャンセル"
+  },
+  "scanFolder": {
+    "title": "ファイルをバインダーに追加",
+    "desc": "このプロジェクトに追加するファイルを選択してください：",
+    "addBtn": "選択したファイルを追加",
+    "cancel": "キャンセル"
+  },
+  "main": {
+    "ribbonTitle": "ライティングスタジオを開く",
+    "cmd": {
+      "openLauncher": "ランチャーを開く",
+      "openBinder": "バインダーを開く",
+      "toggleFocusMode": "フォーカスモードを切り替え",
+      "toggleTypographyMode": "タイポグラフィモードを切り替え",
+      "switchDraftMode": "下書きモードに切り替え",
+      "switchEditMode": "編集モードに切り替え",
+      "switchReviewMode": "レビューモードに切り替え",
+      "startSprint": "執筆スプリントを開始",
+      "exportDocument": "ドキュメントをエクスポート",
+      "exportProject": "プロジェクトをエクスポート",
+      "previewManuscript": "コンパイル済み原稿をプレビュー",
+      "publishWordPress": "WordPressに公開",
+      "newProject": "新規執筆プロジェクト",
+      "openDashboard": "執筆ダッシュボードを開く",
+      "openTargetsDashboard": "ターゲットダッシュボードを開く",
+      "setWordCountGoal": "語数目標を設定",
+      "openWritingLog": "執筆ログを開く",
+      "openFolderSidebar": "サイドバーエクスプローラーでフォルダを開く",
+      "addFilesToBinder": "プロジェクトフォルダにコピーされたファイルを追加"
+    },
+    "menu": {
+      "studioOptions": "ライティングスタジオのオプション",
+      "exportDoc": "このドキュメントをエクスポート",
+      "publish": "WordPressに公開",
+      "setGoal": "語数目標を設定",
+      "switchMode": "執筆モードを切り替え →",
+      "typographyFont": "タイポグラフィフォント →",
+      "addToProject": "執筆プロジェクトに追加",
+      "openSidebar": "サイドバーエクスプローラーで開く",
+      "draftMode": "✍ 下書きモード",
+      "editMode": "✎ 編集モード",
+      "reviewMode": "👁 レビューモード",
+      "normalMode": "ノーマル（モードなし）"
+    },
+    "notice": {
+      "noMarkdownOpen": "現在開いているMarkdownファイルがありません。",
+      "addedToProject": "「{{file}}」を {{project}} に追加しました"
+    },
+    "statusBar": {
+      "projectWords": "{{total}} / {{goal}} プロジェクト語数",
+      "wordCount": "{{count}} 語",
+      "wordCountGoal": "{{count}} / {{goal}} 語",
+      "delta": "(+{{delta}})",
+      "goalBanner": "{{count}} / {{goal}} 語 — {{pct}}%",
+      "dismiss": "閉じる"
+    }
+  },
+  "sprintSummary": {
+    "title": "スプリント完了！",
+    "wordsWritten": "書いた語数",
+    "duration": "時間",
+    "durationValue": "{{count}} 分",
+    "wpm": "語数/分",
+    "goalProgress": "目標の進捗",
+    "close": "閉じる"
+  },
+  "wordCountGoal": {
+    "title": "語数目標を設定",
+    "name": "語数目標",
+    "desc": "このドキュメントの目標語数。0に設定すると削除されます。",
+    "placeholder": "例：1500",
+    "save": "保存",
+    "cancel": "キャンセル"
+  },
+  "statsTracker": {
+    "unknownProject": "不明なプロジェクト",
+    "none": "なし",
+    "dailyNote": {
+      "heading": "## ✍️ 執筆アクティビティ",
+      "project": "**プロジェクト：**",
+      "documents": "**ドキュメント：**",
+      "wordsWritten": "**書いた語数：**",
+      "sprintsCompleted": "**完了したスプリント：**",
+      "sprintEntry": "1 ({{duration}} 分)",
+      "wpm": "**1分あたりの語数：**",
+      "sessionTotal": "**セッション合計：**",
+      "sessionTotalValue": "{{duration}} 分"
+    },
+    "readingTime": {
+      "minutes": "{{count}} 分",
+      "hoursMinutes": "{{hours}}時間 {{mins}}分",
+      "hours": "{{hours}}時間"
+    }
+  }
+}

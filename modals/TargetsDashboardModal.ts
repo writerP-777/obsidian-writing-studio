@@ -1,6 +1,22 @@
 import { App, Modal, TFile } from 'obsidian';
 import type WritingStudioPlugin from '../main';
-import { BinderItem, STATUS_COLORS, STATUS_LABELS, DocumentStatus } from '../models/BinderItem';
+import { BinderItem, STATUS_COLORS, DocumentStatus } from '../models/BinderItem';
+
+const STATUS_KEY: Record<DocumentStatus, string> = {
+  draft: 'targetsDashboard.status.draft',
+  'in-progress': 'targetsDashboard.status.inProgress',
+  complete: 'targetsDashboard.status.complete',
+  published: 'targetsDashboard.status.published',
+};
+
+const TYPE_KEY: Record<string, string> = {
+  chapter: 'targetsDashboard.typeLabel.chapter',
+  section: 'targetsDashboard.typeLabel.section',
+  article: 'targetsDashboard.typeLabel.article',
+  note: 'targetsDashboard.typeLabel.note',
+  group: 'targetsDashboard.typeLabel.group',
+  part: 'targetsDashboard.typeLabel.part',
+};
 import { t } from '../src/i18n';
 
 interface DocStats {
@@ -41,7 +57,7 @@ export class TargetsDashboardModal extends Modal {
     filterRow.createEl('label', { text: t('targetsDashboard.filterLabel') });
     const statusSel = filterRow.createEl('select');
     ['all', 'draft', 'in-progress', 'complete', 'published'].forEach(s => {
-      const opt = statusSel.createEl('option', { text: s === 'all' ? t('targetsDashboard.allStatuses') : STATUS_LABELS[s as DocumentStatus] || s });
+      const opt = statusSel.createEl('option', { text: s === 'all' ? t('targetsDashboard.allStatuses') : t(STATUS_KEY[s as DocumentStatus]) });
       opt.value = s;
     });
     statusSel.value = this.statusFilter;
@@ -156,11 +172,11 @@ export class TargetsDashboardModal extends Modal {
         }
       };
 
-      tr.createEl('td', { text: stat.item.type });
+      tr.createEl('td', { text: t(TYPE_KEY[stat.item.type] ?? stat.item.type) });
 
       const statusTd = tr.createEl('td');
       const badge = statusTd.createSpan('ws-status-badge');
-      badge.textContent = STATUS_LABELS[stat.item.status];
+      badge.textContent = t(STATUS_KEY[stat.item.status]);
       badge.setCssProps({ '--ws-status-color': STATUS_COLORS[stat.item.status] });
 
       tr.createEl('td', { text: String(stat.wordCount) });

@@ -173,7 +173,8 @@
       "moveToResearch": "Move to research",
       "publishToWordPress": "Publish to WordPress",
       "delete": "Delete"
-    }
+    },
+    "wordCountSuffix": "{{count}}w"
   },
   "launcher": {
     "displayText": "Writing studio",
@@ -443,7 +444,21 @@
       "progress": "Progress",
       "readingTime": "Reading time"
     },
-    "total": "Total"
+    "total": "Total",
+    "status": {
+      "draft": "Draft",
+      "inProgress": "In Progress",
+      "complete": "Complete",
+      "published": "Published"
+    },
+    "typeLabel": {
+      "chapter": "Chapter",
+      "section": "Section",
+      "article": "Article",
+      "note": "Note",
+      "group": "Group",
+      "part": "Part"
+    }
   },
   "writingDashboard": {
     "title": "Writing dashboard",

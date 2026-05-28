@@ -10,6 +10,9 @@ import fr from './i18n/fr.json';
 import bn from './i18n/bn.json';
 import ptBR from './i18n/pt-BR.json';
 import ru from './i18n/ru.json';
+import ja from './i18n/ja.json';
+import de from './i18n/de.json';
+import ko from './i18n/ko.json';
 
 export function initI18n(): void {
   const lang = getLanguage();
@@ -26,6 +29,9 @@ export function initI18n(): void {
       bn: { translation: bn },
       'pt-BR': { translation: ptBR },
       ru: { translation: ru },
+      ja: { translation: ja },
+      de: { translation: de },
+      ko: { translation: ko },
     },
     interpolation: { escapeValue: false },
   });

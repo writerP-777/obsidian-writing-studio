@@ -173,7 +173,8 @@
       "moveToResearch": "शोध में ले जाएं",
       "publishToWordPress": "WordPress पर प्रकाशित करें",
       "delete": "हटाएं"
-    }
+    },
+    "wordCountSuffix": "{{count}}श"
   },
   "launcher": {
     "displayText": "राइटिंग स्टूडियो",
@@ -443,7 +444,21 @@
       "progress": "प्रगति",
       "readingTime": "पढ़ने का समय"
     },
-    "total": "कुल"
+    "total": "कुल",
+    "status": {
+      "draft": "मसौदा",
+      "inProgress": "प्रगति में",
+      "complete": "पूर्ण",
+      "published": "प्रकाशित"
+    },
+    "typeLabel": {
+      "chapter": "अध्याय",
+      "section": "खंड",
+      "article": "लेख",
+      "note": "नोट",
+      "group": "समूह",
+      "part": "भाग"
+    }
   },
   "writingDashboard": {
     "title": "लेखन डैशबोर्ड",

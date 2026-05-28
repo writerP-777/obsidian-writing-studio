@@ -173,7 +173,8 @@
       "moveToResearch": "Déplacer vers la recherche",
       "publishToWordPress": "Publier sur WordPress",
       "delete": "Supprimer"
-    }
+    },
+    "wordCountSuffix": "{{count}}m"
   },
   "launcher": {
     "displayText": "Studio d'écriture",
@@ -443,7 +444,21 @@
       "progress": "Progression",
       "readingTime": "Temps de lecture"
     },
-    "total": "Total"
+    "total": "Total",
+    "status": {
+      "draft": "Brouillon",
+      "inProgress": "En cours",
+      "complete": "Terminé",
+      "published": "Publié"
+    },
+    "typeLabel": {
+      "chapter": "Chapitre",
+      "section": "Section",
+      "article": "Article",
+      "note": "Note",
+      "group": "Groupe",
+      "part": "Partie"
+    }
   },
   "writingDashboard": {
     "title": "Tableau de bord d'écriture",
