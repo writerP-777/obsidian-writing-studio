@@ -4,6 +4,13 @@ All notable changes to Writing Studio are documented here.
 
 ---
 
+## [2.3.1]
+
+### Fixed
+- **Folder sidebar explorer:** "Open in sidebar explorer" context menu item on folders now reliably opens the sidebar panel. Previously, the command silently did nothing when the right sidebar was collapsed or empty (`getRightLeaf(false)` returned `null`). Now uses `ensureSideLeaf` (Obsidian 1.7.2+), which always creates or reveals the right sidebar leaf.
+
+---
+
 ## [Unreleased]
 
 ---

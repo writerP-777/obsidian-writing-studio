@@ -4,12 +4,12 @@
 
 # Obsidian Writing Studio
 
-**Version 2.3.0** · Desktop only
+**Version 2.3.1** · Desktop only
 
 ![GitHub all releases](https://img.shields.io/github/downloads/writerP-777/obsidian-writing-studio/total)
 [![OpenSSF Best Practices](https://www.bestpractices.dev/projects/12832/badge)](https://www.bestpractices.dev/projects/12832)
 
-Writing Studio turns Obsidian into a dedicated environment for serious nonfiction work — from your first research notes to a finished, exported manuscript. It bundles a project binder, writing modes, focus and typography tools, sprint timer, progress tracking, manuscript export, and WordPress publishing into a single plugin.
+Writing Studio turns Obsidian into a dedicated environment for serious nonfiction work — from your first research notes to a finished, exported manuscript. It bundles a project binder, writing modes, focus and typography tools, sprint timer, progress tracking, manuscript export, and WordPress publishing into a single plugin. A built-in sidebar file explorer lets you browse, preview, and pull content from anywhere in your vault without leaving your draft.
 
 <p align="center">
   <a href="https://buymeacoffee.com/writerp777">
