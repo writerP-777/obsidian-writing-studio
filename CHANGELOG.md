@@ -4,6 +4,13 @@ All notable changes to Writing Studio are documented here.
 
 ---
 
+## [2.3.2]
+
+### Fixed
+- Re-release of 2.3.1 to resolve a stale-tag caching issue that prevented the update from appearing in Obsidian's plugin update checker. No code changes from 2.3.1.
+
+---
+
 ## [2.3.1]
 
 ### Fixed
