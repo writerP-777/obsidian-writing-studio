@@ -548,26 +548,15 @@ export default class WritingStudioPlugin extends Plugin {
   }
 
   async openFolder(folder: TFolder): Promise<void> {
-    const leaves = this.app.workspace.getLeavesOfType(FOLDER_SIDEBAR_VIEW_TYPE);
-
-    if (leaves.length > 0) {
-      const leaf = leaves[0];
-      const view = leaf.view as unknown as FolderSidebarView;
-      if (view.rootFolder?.path === folder.path) {
-        void this.app.workspace.revealLeaf(leaf);
-        return;
-      }
+    const leaf = await this.app.workspace.ensureSideLeaf(
+      FOLDER_SIDEBAR_VIEW_TYPE,
+      'right',
+      { active: true, reveal: true }
+    );
+    const view = leaf.view as unknown as FolderSidebarView;
+    if (view.rootFolder?.path !== folder.path) {
       view.setRootFolder(folder);
-      void this.app.workspace.revealLeaf(leaf);
-      return;
     }
-
-    const leaf = this.app.workspace.getRightLeaf(false);
-    if (!leaf) return;
-
-    await leaf.setViewState({ type: FOLDER_SIDEBAR_VIEW_TYPE, active: true });
-    (leaf.view as unknown as FolderSidebarView).setRootFolder(folder);
-    void this.app.workspace.revealLeaf(leaf);
   }
 
   async openWritingLog(): Promise<void> {
