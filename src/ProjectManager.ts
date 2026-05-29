@@ -151,6 +151,7 @@ export class ProjectManager {
     if (!project) return;
     const path = normalizePath(`${project.folderPath}/_binder.json`);
     await this.writeJson(path, binder);
+    this.plugin.statsTracker.invalidateWordCountCache();
   }
 
   async addDocumentToBinder(
