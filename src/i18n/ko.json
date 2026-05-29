@@ -216,8 +216,8 @@
     "sprintTimer": "스프린트 타이머",
     "pause": "⏸ 일시정지",
     "stop": "■ 정지",
-    "startSprint": "⏱ 스프린트 시작",
-    "quickStart": "빠른 시작:",
+    "startSprint": "⏱ 스프린트 설정",
+    "quickStart": "빠른 스프린트 옵션",
     "today": "오늘",
     "stat": {
       "words": "단어 수",
@@ -227,7 +227,8 @@
       "streakDays": "{{streak}}일"
     },
     "sessionWordsTyped": "세션: +{{n}} 단어 입력",
-    "dailyGoal": "일일 목표: {{written}} / {{goal}} 단어"
+    "dailyGoal": "일일 목표: {{written}} / {{goal}} 단어",
+    "sprintInProgress": "스프린트 진행 중"
   },
   "log": {
     "displayText": "글쓰기 로그",
@@ -252,8 +253,10 @@
     "complete": "스프린트 완료! 잘하셨습니다.",
     "words": "+{{n}} 단어",
     "header": "글쓰기 스프린트",
-    "pauseTitle": "일시정지/재개",
-    "stopTitle": "스프린트 중지"
+    "pauseTitle": "스프린트 일시정지",
+    "stopTitle": "스프린트 중지",
+    "startTitle": "스프린트 시작",
+    "resumeTitle": "스프린트 재개"
   },
   "writingModes": {
     "switchedTo": "글쓰기 스튜디오: {{mode}} 모드",
@@ -351,7 +354,7 @@
     "cancel": "취소"
   },
   "sprintModal": {
-    "title": "글쓰기 스프린트 시작",
+    "setupTitle": "스프린트 설정",
     "durationName": "시간 (분)",
     "durationDesc": "사전 설정: 10, 15, 25, 30, 45, 60",
     "durationCustom": "사용자 정의…",
@@ -361,7 +364,7 @@
     "scopeName": "범위",
     "scopeFile": "현재 파일",
     "scopeProject": "전체 프로젝트",
-    "startBtn": "스프린트 시작",
+    "startBtn": "스프린트 타이머 시작",
     "errorDuration": "유효한 시간을 설정하세요.",
     "cancel": "취소"
   },

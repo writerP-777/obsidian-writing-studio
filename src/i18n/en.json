@@ -216,8 +216,9 @@
     "sprintTimer": "Sprint timer",
     "pause": "⏸ Pause",
     "stop": "■ Stop",
-    "startSprint": "⏱ Start sprint",
-    "quickStart": "Quick start:",
+    "startSprint": "⏱ Set up sprint",
+    "quickStart": "Quick sprint options",
+    "sprintInProgress": "Sprint in progress",
     "today": "Today",
     "stat": {
       "words": "Words",
@@ -252,7 +253,9 @@
     "complete": "Sprint complete! Great work.",
     "words": "+{{n}} words",
     "header": "Writing sprint",
-    "pauseTitle": "Pause/resume",
+    "startTitle": "Start sprint",
+    "pauseTitle": "Pause sprint",
+    "resumeTitle": "Resume sprint",
     "stopTitle": "Stop sprint"
   },
   "writingModes": {
@@ -351,7 +354,7 @@
     "cancel": "Cancel"
   },
   "sprintModal": {
-    "title": "Start writing sprint",
+    "setupTitle": "Set up sprint",
     "durationName": "Duration (minutes)",
     "durationDesc": "Preset: 10, 15, 25, 30, 45, 60",
     "durationCustom": "Custom…",
@@ -361,7 +364,7 @@
     "scopeName": "Scope",
     "scopeFile": "Current file",
     "scopeProject": "Entire project",
-    "startBtn": "Start sprint",
+    "startBtn": "Launch sprint timer",
     "errorDuration": "Please set a valid duration.",
     "cancel": "Cancel"
   },

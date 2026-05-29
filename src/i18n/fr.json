@@ -216,8 +216,8 @@
     "sprintTimer": "Minuteur de sprint",
     "pause": "⏸ Pause",
     "stop": "■ Arrêter",
-    "startSprint": "⏱ Démarrer un sprint",
-    "quickStart": "Démarrage rapide :",
+    "startSprint": "⏱ Configurer un sprint",
+    "quickStart": "Options de sprint rapide",
     "today": "Aujourd'hui",
     "stat": {
       "words": "Mots",
@@ -227,7 +227,8 @@
       "streakDays": "{{streak}}j"
     },
     "sessionWordsTyped": "Session : +{{n}} mots écrits",
-    "dailyGoal": "Objectif quotidien : {{written}} / {{goal}} mots"
+    "dailyGoal": "Objectif quotidien : {{written}} / {{goal}} mots",
+    "sprintInProgress": "Sprint en cours"
   },
   "log": {
     "displayText": "Journal d'écriture",
@@ -252,8 +253,10 @@
     "complete": "Sprint terminé ! Excellent travail.",
     "words": "+{{n}} mots",
     "header": "Sprint d'écriture",
-    "pauseTitle": "Pause/reprendre",
-    "stopTitle": "Arrêter le sprint"
+    "pauseTitle": "Mettre le sprint en pause",
+    "stopTitle": "Arrêter le sprint",
+    "startTitle": "Démarrer le sprint",
+    "resumeTitle": "Reprendre le sprint"
   },
   "writingModes": {
     "switchedTo": "Studio d'écriture : mode {{mode}}",
@@ -351,7 +354,7 @@
     "cancel": "Annuler"
   },
   "sprintModal": {
-    "title": "Démarrer un sprint d'écriture",
+    "setupTitle": "Configurer un sprint",
     "durationName": "Durée (minutes)",
     "durationDesc": "Préréglages : 10, 15, 25, 30, 45, 60",
     "durationCustom": "Personnalisé…",
@@ -361,7 +364,7 @@
     "scopeName": "Portée",
     "scopeFile": "Fichier actuel",
     "scopeProject": "Projet entier",
-    "startBtn": "Démarrer le sprint",
+    "startBtn": "Lancer le minuteur de sprint",
     "errorDuration": "Veuillez définir une durée valide.",
     "cancel": "Annuler"
   },

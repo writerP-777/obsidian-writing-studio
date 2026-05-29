@@ -304,7 +304,8 @@ body.writing-studio-typography .markdown-reading-view .markdown-preview-section 
   position: fixed;
   bottom: 24px;
   right: 24px;
-  z-index: 1000;
+  /* Above all Obsidian UI layers, modals, and Focus Mode toolbar */
+  z-index: 10000;
   background: var(--background-primary);
   border: 1px solid var(--background-modifier-border);
   border-radius: 10px;
@@ -314,6 +315,14 @@ body.writing-studio-typography .markdown-reading-view .markdown-preview-section 
   text-align: center;
 }
 
+/* Dragged position overrides the default bottom/right anchor */
+.ws-sprint-floating--dragged {
+  right: auto;
+  bottom: auto;
+  left: var(--ws-float-x, auto);
+  top: var(--ws-float-y, auto);
+}
+
 .ws-sprint-header {
   font-size: 11px;
   font-weight: 600;
@@ -321,6 +330,24 @@ body.writing-studio-typography .markdown-reading-view .markdown-preview-section 
   letter-spacing: 0.08em;
   color: var(--text-muted);
   margin-bottom: 6px;
+}
+
+.ws-sprint-header.ws-draggable {
+  cursor: grab;
+  user-select: none;
+}
+
+.ws-sprint-header.ws-draggable::before {
+  content: '⠿';
+  display: inline-block;
+  margin-right: 6px;
+  opacity: 0.45;
+  font-size: 13px;
+  line-height: 1;
+}
+
+.ws-sprint-header.ws-dragging {
+  cursor: grabbing;
 }
 
 .ws-sprint-time {

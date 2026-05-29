@@ -210,7 +210,7 @@ export class LauncherView extends ItemView {
       {
         label: t('launcher.typographyMode'),
         isOn: () => this.plugin.typographyMode.isActive(),
-        toggle: () => { this.plugin.typographyMode.toggle(); void this.render(); },
+        toggle: () => { void this.plugin.typographyMode.toggle(); void this.render(); },
       },
     ];
 
@@ -297,32 +297,23 @@ export class LauncherView extends ItemView {
     card.createDiv({ text: t('launcher.sprintTimer'), cls: 'ws-launcher-card-label' });
 
     if (this.plugin.sprintTimer.isActive()) {
-      const timeEl = card.createDiv('ws-launcher-sprint-time');
-      timeEl.textContent = this.plugin.sprintTimer.getFormattedRemaining();
+      card.createDiv({ text: t('launcher.sprintInProgress'), cls: 'ws-launcher-sprint-status' });
+      return;
+    }
 
-      const ctrlRow = card.createDiv('ws-launcher-sprint-ctrls');
+    const startBtn = card.createEl('button', { cls: 'ws-launcher-action-btn mod-cta', text: t('launcher.startSprint') });
+    startBtn.onclick = () => {
+      new SprintModal(this.app, this.plugin).open();
+    };
 
-      const pauseBtn = ctrlRow.createEl('button', { cls: 'ws-launcher-action-btn', text: t('launcher.pause') });
-      pauseBtn.onclick = () => { this.plugin.sprintTimer.pause(); void this.render(); };
-
-      const stopBtn = ctrlRow.createEl('button', { cls: 'ws-launcher-action-btn ws-launcher-stop-btn', text: t('launcher.stop') });
-      stopBtn.onclick = () => { this.plugin.sprintTimer.stop(); void this.render(); };
-    } else {
-      const startBtn = card.createEl('button', { cls: 'ws-launcher-action-btn mod-cta', text: t('launcher.startSprint') });
-      startBtn.onclick = () => {
-        new SprintModal(this.app, this.plugin).open();
+    const presets = card.createDiv('ws-launcher-sprint-presets');
+    presets.createSpan({ text: t('launcher.quickStart'), cls: 'ws-launcher-preset-label' });
+    for (const mins of [10, 15, 25]) {
+      const btn = presets.createEl('button', { cls: 'ws-launcher-preset-btn', text: `${mins}m` });
+      btn.onclick = () => {
+        this.plugin.sprintTimer.setup(mins);
+        void this.render();
       };
-
-      // Quick-start preset buttons
-      const presets = card.createDiv('ws-launcher-sprint-presets');
-      presets.createSpan({ text: t('launcher.quickStart'), cls: 'ws-launcher-preset-label' });
-      for (const mins of [10, 15, 25]) {
-        const btn = presets.createEl('button', { cls: 'ws-launcher-preset-btn', text: `${mins}m` });
-        btn.onclick = () => {
-          this.plugin.sprintTimer.start(mins);
-          void this.render();
-        };
-      }
     }
   }
 

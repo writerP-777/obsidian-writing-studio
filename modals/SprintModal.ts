@@ -19,7 +19,7 @@ export class SprintModal extends Modal {
     const { contentEl } = this;
     contentEl.empty();
     contentEl.addClass('ws-sprint-modal');
-    contentEl.createEl('h2', { text: t('sprintModal.title') });
+    contentEl.createEl('h2', { text: t('sprintModal.setupTitle') });
 
     new Setting(contentEl)
       .setName(t('sprintModal.durationName'))
@@ -64,7 +64,7 @@ export class SprintModal extends Modal {
         new Notice(t('sprintModal.errorDuration'));
         return;
       }
-      this.plugin.sprintTimer.start(this.duration, this.wordGoal || undefined, this.sprintScope);
+      this.plugin.sprintTimer.setup(this.duration, this.wordGoal || undefined, this.sprintScope);
       this.close();
     };
 

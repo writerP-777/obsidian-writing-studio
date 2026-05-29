@@ -4,7 +4,7 @@
 
 # Obsidian Writing Studio
 
-**Version 2.3.2** · Desktop only
+**Version 2.4.0** · Desktop only
 
 ![GitHub all releases](https://img.shields.io/github/downloads/writerP-777/obsidian-writing-studio/total)
 [![OpenSSF Best Practices](https://www.bestpractices.dev/projects/12832/badge)](https://www.bestpractices.dev/projects/12832)
@@ -69,7 +69,7 @@ By default it opens automatically when Obsidian loads. To disable this, turn off
 - Active project name, total word count, and progress toward your project word count goal
 - Writing mode selector (Draft / Edit / Review)
 - Focus Mode and Typography Mode toggles
-- Sprint timer with quick-start presets (10 m, 15 m, 25 m)
+- Sprint timer with "Set up sprint" button and Quick Sprint Options presets (10 m, 15 m, 25 m)
 - Today card showing words written, sprints completed, session word count, and streak
 - Quick-action buttons: Targets Dashboard, Writing Dashboard, Preview manuscript, Export, Writing Log, Publish to WordPress
 
@@ -219,14 +219,36 @@ Typography Mode applies a consistent, reader-friendly text treatment to the edit
 
 #### Writing Sprint Timer
 
-The Sprint Timer runs a timed writing session. A countdown appears in the status bar and in a floating overlay. When the sprint ends, a summary modal shows words written, duration, and words-per-minute. The session is logged to sprint history and optionally appended to your Daily Note.
+The Sprint Timer runs a timed writing session. When a sprint is active, a floating overlay displays the countdown and gives you full control — without requiring you to stay on the dashboard.
 
-**To start a sprint:** Use the command **Start writing sprint** from the command palette, assign a hotkey in Settings → Hotkeys, or use the sprint quick-start buttons in the Launcher panel.
+**To set up a sprint:**
 
-The sprint modal lets you set:
+- Click **Set up sprint** in the Launcher panel to open the sprint configuration modal.
+- Or click one of the **Quick Sprint Options** preset buttons (10 m, 15 m, 25 m) in the Launcher panel to load a duration directly.
+
+Either path opens the floating overlay in a ready state — the timer does not start until you press ▶ on the overlay itself. This gives you time to navigate to your draft or open the Binder before the clock begins.
+
+**Sprint configuration modal:**
+
+The modal lets you set:
+
 - Duration (preset or custom, in minutes)
 - Word count goal for the session
 - Scope (current file or entire project)
+
+Click **Launch sprint timer** to open the overlay in ready state.
+
+**Using the floating overlay:**
+
+| Control | Action |
+|---------|--------|
+| ▶ | Start or resume the sprint |
+| ⏸ | Pause the sprint |
+| ■ | Stop and end the sprint |
+
+The overlay is draggable — click and drag the header to reposition it anywhere on screen. It stays on top regardless of writing mode or Focus Mode. The current countdown is also shown in the Obsidian status bar (`⏱ MM:SS`) and, when Focus Mode is active, in the focus toolbar.
+
+When the sprint ends, a summary modal shows words written, duration, and words-per-minute. The session is logged to sprint history and optionally appended to your Daily Note.
 
 **Settings (Settings → Sprint & goals):**
 
@@ -358,6 +380,10 @@ Publish your finished draft directly to WordPress without leaving Obsidian. The 
 |---------|-------------|
 | Default post status | Draft · Pending Review · Published |
 | Wikilink handling | **Strip** removes `[[...]]` syntax, leaving plain text · **Convert** turns wikilinks into URLs |
+
+**Preserving your credentials across updates**
+
+Writing Studio stores your WordPress site credentials in your vault's `.obsidian/plugins/writing-studio/data.json` file. Obsidian's in-app update process does not touch this file — your credentials are preserved automatically. However, if you uninstall and reinstall the plugin manually, or if a vault sync conflict overwrites `data.json`, credentials will be lost and will need to be re-entered. To avoid this, always use Obsidian's built-in Update button rather than uninstalling manually.
 
 ---
 

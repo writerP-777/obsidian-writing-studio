@@ -216,8 +216,8 @@
     "sprintTimer": "स्प्रिंट टाइमर",
     "pause": "⏸ रोकें",
     "stop": "■ बंद करें",
-    "startSprint": "⏱ स्प्रिंट शुरू करें",
-    "quickStart": "त्वरित शुरुआत:",
+    "startSprint": "⏱ स्प्रिंट सेट अप करें",
+    "quickStart": "त्वरित स्प्रिंट विकल्प",
     "today": "आज",
     "stat": {
       "words": "शब्द",
@@ -227,7 +227,8 @@
       "streakDays": "{{streak}}दि"
     },
     "sessionWordsTyped": "सत्र: +{{n}} शब्द लिखे",
-    "dailyGoal": "दैनिक लक्ष्य: {{written}} / {{goal}} शब्द"
+    "dailyGoal": "दैनिक लक्ष्य: {{written}} / {{goal}} शब्द",
+    "sprintInProgress": "स्प्रिंट जारी है"
   },
   "log": {
     "displayText": "लेखन लॉग",
@@ -252,8 +253,10 @@
     "complete": "स्प्रिंट पूरा! शानदार काम।",
     "words": "+{{n}} शब्द",
     "header": "लेखन स्प्रिंट",
-    "pauseTitle": "रोकें/जारी रखें",
-    "stopTitle": "स्प्रिंट रोकें"
+    "pauseTitle": "स्प्रिंट रोकें",
+    "stopTitle": "स्प्रिंट बंद करें",
+    "startTitle": "स्प्रिंट शुरू करें",
+    "resumeTitle": "स्प्रिंट जारी रखें"
   },
   "writingModes": {
     "switchedTo": "राइटिंग स्टूडियो: {{mode}} मोड",
@@ -351,7 +354,7 @@
     "cancel": "रद्द करें"
   },
   "sprintModal": {
-    "title": "लेखन स्प्रिंट शुरू करें",
+    "setupTitle": "स्प्रिंट सेट अप करें",
     "durationName": "अवधि (मिनट)",
     "durationDesc": "प्रीसेट: 10, 15, 25, 30, 45, 60",
     "durationCustom": "कस्टम…",
@@ -361,7 +364,7 @@
     "scopeName": "दायरा",
     "scopeFile": "वर्तमान फ़ाइल",
     "scopeProject": "पूरी परियोजना",
-    "startBtn": "स्प्रिंट शुरू करें",
+    "startBtn": "स्प्रिंट टाइमर शुरू करें",
     "errorDuration": "कृपया एक वैध अवधि सेट करें।",
     "cancel": "रद्द करें"
   },

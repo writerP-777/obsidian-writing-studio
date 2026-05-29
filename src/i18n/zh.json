@@ -216,8 +216,8 @@
     "sprintTimer": "冲刺计时器",
     "pause": "⏸ 暂停",
     "stop": "■ 停止",
-    "startSprint": "⏱ 开始冲刺",
-    "quickStart": "快速开始：",
+    "startSprint": "⏱ 设置冲刺",
+    "quickStart": "快速冲刺选项",
     "today": "今日",
     "stat": {
       "words": "字数",
@@ -227,7 +227,8 @@
       "streakDays": "{{streak}}天"
     },
     "sessionWordsTyped": "本次：+{{n}} 字",
-    "dailyGoal": "每日目标：{{written}} / {{goal}} 字"
+    "dailyGoal": "每日目标：{{written}} / {{goal}} 字",
+    "sprintInProgress": "冲刺进行中"
   },
   "log": {
     "displayText": "写作日志",
@@ -252,8 +253,10 @@
     "complete": "冲刺完成！干得好。",
     "words": "+{{n}} 个字",
     "header": "写作冲刺",
-    "pauseTitle": "暂停/继续",
-    "stopTitle": "停止冲刺"
+    "pauseTitle": "暂停冲刺",
+    "stopTitle": "停止冲刺",
+    "startTitle": "开始冲刺",
+    "resumeTitle": "继续冲刺"
   },
   "writingModes": {
     "switchedTo": "写作工作室：{{mode}} 模式",
@@ -351,7 +354,7 @@
     "cancel": "取消"
   },
   "sprintModal": {
-    "title": "开始写作冲刺",
+    "setupTitle": "设置冲刺",
     "durationName": "时长（分钟）",
     "durationDesc": "预设：10、15、25、30、45、60",
     "durationCustom": "自定义…",
@@ -361,7 +364,7 @@
     "scopeName": "范围",
     "scopeFile": "当前文件",
     "scopeProject": "整个项目",
-    "startBtn": "开始冲刺",
+    "startBtn": "启动冲刺计时器",
     "errorDuration": "请设置有效的时长。",
     "cancel": "取消"
   },

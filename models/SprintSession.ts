@@ -14,6 +14,7 @@ export interface SprintSession {
 export interface SprintState {
   active: boolean;
   paused: boolean;
+  ready: boolean; // true = overlay open but user has not yet pressed Start
   startTime: number;
   pausedAt: number;
   totalPausedMs: number;

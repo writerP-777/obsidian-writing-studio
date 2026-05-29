@@ -216,8 +216,8 @@
     "sprintTimer": "Таймер спринта",
     "pause": "⏸ Пауза",
     "stop": "■ Стоп",
-    "startSprint": "⏱ Начать спринт",
-    "quickStart": "Быстрый старт:",
+    "startSprint": "⏱ Настроить спринт",
+    "quickStart": "Быстрые варианты спринта",
     "today": "Сегодня",
     "stat": {
       "words": "Слова",
@@ -227,7 +227,8 @@
       "streakDays": "{{streak}}д"
     },
     "sessionWordsTyped": "Сеанс: +{{n}} написанных слов",
-    "dailyGoal": "Дневная цель: {{written}} / {{goal}} слов"
+    "dailyGoal": "Дневная цель: {{written}} / {{goal}} слов",
+    "sprintInProgress": "Спринт идёт"
   },
   "log": {
     "displayText": "Журнал письма",
@@ -254,8 +255,10 @@
     "complete": "Спринт завершён! Отличная работа.",
     "words": "+{{n}} слов",
     "header": "Спринт написания",
-    "pauseTitle": "Пауза/продолжить",
-    "stopTitle": "Остановить спринт"
+    "pauseTitle": "Приостановить спринт",
+    "stopTitle": "Остановить спринт",
+    "startTitle": "Начать спринт",
+    "resumeTitle": "Возобновить спринт"
   },
   "writingModes": {
     "switchedTo": "Студия письма: режим {{mode}}",
@@ -355,7 +358,7 @@
     "cancel": "Отмена"
   },
   "sprintModal": {
-    "title": "Начать спринт написания",
+    "setupTitle": "Настроить спринт",
     "durationName": "Длительность (минуты)",
     "durationDesc": "Предустановки: 10, 15, 25, 30, 45, 60",
     "durationCustom": "Произвольно…",
@@ -365,7 +368,7 @@
     "scopeName": "Область",
     "scopeFile": "Текущий файл",
     "scopeProject": "Весь проект",
-    "startBtn": "Начать спринт",
+    "startBtn": "Запустить таймер спринта",
     "errorDuration": "Укажите допустимую длительность.",
     "cancel": "Отмена"
   },

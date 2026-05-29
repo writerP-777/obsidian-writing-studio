@@ -240,7 +240,7 @@ export default class WritingStudioPlugin extends Plugin {
     this.addCommand({
       id: 'toggle-typography-mode',
       name: t('main.cmd.toggleTypographyMode'),
-      callback: () => this.typographyMode.toggle(),
+      callback: () => { void this.typographyMode.toggle(); },
     });
 
     this.addCommand({
@@ -456,6 +456,9 @@ export default class WritingStudioPlugin extends Plugin {
   async loadSettings(): Promise<void> {
     const saved = (await this.loadData()) as Partial<WritingStudioSettings>;
     this.settings = { ...DEFAULT_SETTINGS, ...saved };
+    if (!Array.isArray(this.settings.wordPressSites)) {
+      this.settings.wordPressSites = [];
+    }
   }
 
   async saveSettings(): Promise<void> {
