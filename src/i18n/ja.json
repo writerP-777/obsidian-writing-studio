@@ -216,8 +216,8 @@
     "sprintTimer": "スプリントタイマー",
     "pause": "⏸ 一時停止",
     "stop": "■ 停止",
-    "startSprint": "⏱ スプリント開始",
-    "quickStart": "クイックスタート：",
+    "startSprint": "⏱ スプリントを設定",
+    "quickStart": "クイックスプリント",
     "today": "今日",
     "stat": {
       "words": "語数",
@@ -227,7 +227,8 @@
       "streakDays": "{{streak}}日"
     },
     "sessionWordsTyped": "セッション：+{{n}} 語",
-    "dailyGoal": "1日の目標：{{written}} / {{goal}} 語"
+    "dailyGoal": "1日の目標：{{written}} / {{goal}} 語",
+    "sprintInProgress": "スプリント実行中"
   },
   "log": {
     "displayText": "執筆ログ",
@@ -252,8 +253,10 @@
     "complete": "スプリント完了！お疲れさまでした。",
     "words": "+{{n}} 語",
     "header": "執筆スプリント",
-    "pauseTitle": "一時停止/再開",
-    "stopTitle": "スプリント停止"
+    "pauseTitle": "スプリントを一時停止",
+    "stopTitle": "スプリント停止",
+    "startTitle": "スプリントを開始",
+    "resumeTitle": "スプリントを再開"
   },
   "writingModes": {
     "switchedTo": "ライティングスタジオ：{{mode}} モード",
@@ -351,7 +354,7 @@
     "cancel": "キャンセル"
   },
   "sprintModal": {
-    "title": "執筆スプリントを開始",
+    "setupTitle": "スプリントを設定",
     "durationName": "時間（分）",
     "durationDesc": "プリセット：10、15、25、30、45、60",
     "durationCustom": "カスタム…",
@@ -361,7 +364,7 @@
     "scopeName": "スコープ",
     "scopeFile": "現在のファイル",
     "scopeProject": "プロジェクト全体",
-    "startBtn": "スプリントを開始",
+    "startBtn": "スプリントタイマーを起動",
     "errorDuration": "有効な時間を設定してください。",
     "cancel": "キャンセル"
   },

@@ -4,6 +4,28 @@ All notable changes to Writing Studio are documented here.
 
 ---
 
+## [2.4.0]
+
+### Added
+- **Sprint timer overlay redesign:** the floating overlay now opens in a ready/paused state. The countdown does not begin until the writer presses ▶ on the overlay itself, giving time to navigate to the draft or open the Binder before the clock starts.
+- **Draggable overlay:** the overlay header is now draggable. Click and drag to reposition the overlay anywhere on screen. A ⠿ grip indicator marks the drag target at a glance.
+- **Three-state overlay button:** the play/pause button now shows three distinct states — Start (▶, ready state), Resume (▶, paused), and Pause (⏸, running) — each with an accurate tooltip.
+- **"Set up sprint" flow in Launcher:** the sprint card now shows a **Set up sprint** button that opens the configuration modal, alongside **Quick sprint options** preset buttons (10 m, 15 m, 25 m). A "Sprint in progress" message replaces the card when a sprint is active.
+
+### Fixed
+- **WordPress credentials race condition:** settings-save calls in the Typography Mode module are now properly sequential, closing a startup race that could cause credentials to be discarded on plugin load.
+- **Overlay z-index:** the floating overlay now sits above all Obsidian UI layers, modals, and the Focus Mode toolbar.
+- Stopping a sprint from ready state (before ▶ is ever pressed) no longer records a session in sprint history.
+
+### Changed
+- Sprint modal button renamed from **Start sprint** to **Launch sprint timer** to accurately reflect that clicking opens the overlay in ready state rather than immediately starting the countdown.
+- The Launcher sprint card is no longer a duplicate control surface while a sprint is active — the floating overlay is the sole control surface once a sprint is running.
+
+### i18n
+- Updated `launcher.startSprint`, `launcher.quickStart`, `launcher.sprintInProgress`, `sprintModal.setupTitle`, `sprintModal.startBtn`, `sprint.startTitle`, `sprint.resumeTitle`, and `sprint.pauseTitle` across all 11 supported locales (Arabic, Bengali, German, Spanish, French, Hindi, Japanese, Korean, Portuguese (Brazil), Russian, Chinese Simplified).
+
+---
+
 ## [2.3.2]
 
 ### Fixed

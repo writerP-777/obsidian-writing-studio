@@ -216,8 +216,8 @@
     "sprintTimer": "Sprint-Timer",
     "pause": "⏸ Pause",
     "stop": "■ Stop",
-    "startSprint": "⏱ Sprint starten",
-    "quickStart": "Schnellstart:",
+    "startSprint": "⏱ Sprint einrichten",
+    "quickStart": "Schnelle Sprint-Optionen",
     "today": "Heute",
     "stat": {
       "words": "Wörter",
@@ -227,7 +227,8 @@
       "streakDays": "{{streak}}T"
     },
     "sessionWordsTyped": "Sitzung: +{{n}} Wörter getippt",
-    "dailyGoal": "Tagesziel: {{written}} / {{goal}} Wörter"
+    "dailyGoal": "Tagesziel: {{written}} / {{goal}} Wörter",
+    "sprintInProgress": "Sprint läuft"
   },
   "log": {
     "displayText": "Schreibprotokoll",
@@ -252,8 +253,10 @@
     "complete": "Sprint abgeschlossen! Tolle Arbeit.",
     "words": "+{{n}} Wörter",
     "header": "Schreib-Sprint",
-    "pauseTitle": "Pause/Fortsetzen",
-    "stopTitle": "Sprint beenden"
+    "pauseTitle": "Sprint pausieren",
+    "stopTitle": "Sprint beenden",
+    "startTitle": "Sprint starten",
+    "resumeTitle": "Sprint fortsetzen"
   },
   "writingModes": {
     "switchedTo": "Schreibstudio: {{mode}}-Modus",
@@ -351,7 +354,7 @@
     "cancel": "Abbrechen"
   },
   "sprintModal": {
-    "title": "Schreib-Sprint starten",
+    "setupTitle": "Sprint einrichten",
     "durationName": "Dauer (Minuten)",
     "durationDesc": "Voreinstellung: 10, 15, 25, 30, 45, 60",
     "durationCustom": "Benutzerdefiniert…",
@@ -361,7 +364,7 @@
     "scopeName": "Bereich",
     "scopeFile": "Aktuelle Datei",
     "scopeProject": "Gesamtes Projekt",
-    "startBtn": "Sprint starten",
+    "startBtn": "Sprint-Timer starten",
     "errorDuration": "Bitte eine gültige Dauer festlegen.",
     "cancel": "Abbrechen"
   },

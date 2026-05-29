@@ -23,7 +23,7 @@ export class TypographyMode {
   constructor(plugin: WritingStudioPlugin) {
     this.plugin = plugin;
     if (plugin.settings.typographyModeActive && plugin.settings.persistTypography) {
-      this.enable();
+      void this.enable();
     }
   }
 
@@ -31,31 +31,31 @@ export class TypographyMode {
     return this.active;
   }
 
-  toggle(): void {
+  async toggle(): Promise<void> {
     if (this.active) {
-      this.disable();
+      await this.disable();
     } else {
-      this.enable();
+      await this.enable();
     }
   }
 
-  enable(): void {
+  async enable(): Promise<void> {
     this.active = true;
     this.applyCustomProperties();
     activeDocument.body.classList.add('writing-studio-typography');
     if (this.plugin.settings.persistTypography) {
       this.plugin.settings.typographyModeActive = true;
-      void this.plugin.saveSettings();
+      await this.plugin.saveSettings();
     }
   }
 
-  disable(): void {
+  async disable(): Promise<void> {
     this.active = false;
     this.removeCustomProperties();
     activeDocument.body.classList.remove('writing-studio-typography');
     if (this.plugin.settings.persistTypography) {
       this.plugin.settings.typographyModeActive = false;
-      void this.plugin.saveSettings();
+      await this.plugin.saveSettings();
     }
   }
 
@@ -99,6 +99,6 @@ export class TypographyMode {
   }
 
   destroy(): void {
-    this.disable();
+    void this.disable();
   }
 }

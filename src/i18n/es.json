@@ -216,8 +216,8 @@
     "sprintTimer": "Temporizador de sprint",
     "pause": "⏸ Pausar",
     "stop": "■ Detener",
-    "startSprint": "⏱ Iniciar sprint",
-    "quickStart": "Inicio rápido:",
+    "startSprint": "⏱ Configurar sprint",
+    "quickStart": "Opciones de sprint rápido",
     "today": "Hoy",
     "stat": {
       "words": "Palabras",
@@ -227,7 +227,8 @@
       "streakDays": "{{streak}}d"
     },
     "sessionWordsTyped": "Sesión: +{{n}} palabras escritas",
-    "dailyGoal": "Meta diaria: {{written}} / {{goal}} palabras"
+    "dailyGoal": "Meta diaria: {{written}} / {{goal}} palabras",
+    "sprintInProgress": "Sprint en curso"
   },
   "log": {
     "displayText": "Registro de escritura",
@@ -252,8 +253,10 @@
     "complete": "¡Sprint completado! Excelente trabajo.",
     "words": "+{{n}} palabras",
     "header": "Sprint de escritura",
-    "pauseTitle": "Pausar/reanudar",
-    "stopTitle": "Detener sprint"
+    "pauseTitle": "Pausar sprint",
+    "stopTitle": "Detener sprint",
+    "startTitle": "Iniciar sprint",
+    "resumeTitle": "Reanudar sprint"
   },
   "writingModes": {
     "switchedTo": "Estudio de escritura: modo {{mode}}",
@@ -351,7 +354,7 @@
     "cancel": "Cancelar"
   },
   "sprintModal": {
-    "title": "Iniciar sprint de escritura",
+    "setupTitle": "Configurar sprint",
     "durationName": "Duración (minutos)",
     "durationDesc": "Preestablecido: 10, 15, 25, 30, 45, 60",
     "durationCustom": "Personalizado…",
@@ -361,7 +364,7 @@
     "scopeName": "Alcance",
     "scopeFile": "Archivo actual",
     "scopeProject": "Proyecto completo",
-    "startBtn": "Iniciar sprint",
+    "startBtn": "Iniciar temporizador de sprint",
     "errorDuration": "Por favor, establece una duración válida.",
     "cancel": "Cancelar"
   },

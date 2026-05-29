@@ -30,14 +30,17 @@ export class SprintTimer {
     return this.state !== null && this.state.active;
   }
 
-  start(durationMinutes: number, wordCountGoal?: number, projectScope: 'file' | 'project' = 'file'): void {
+  // Opens overlay in paused/ready state — called by SprintModal and preset buttons.
+  // The clock does not run until the user presses Start on the overlay itself.
+  setup(durationMinutes: number, wordCountGoal?: number, projectScope: 'file' | 'project' = 'file'): void {
     if (this.state?.active) this.stop();
 
     this.state = {
       active: true,
-      paused: false,
+      paused: true,
+      ready: true,
       startTime: Date.now(),
-      pausedAt: 0,
+      pausedAt: Date.now(),
       totalPausedMs: 0,
       durationMinutes,
       wordCountGoal,
@@ -46,8 +49,7 @@ export class SprintTimer {
     };
 
     this.showFloating();
-    this.startInterval();
-    new Notice(t('sprint.started', { minutes: durationMinutes }));
+    this.updateDisplay();
   }
 
   pause(): void {
@@ -60,20 +62,26 @@ export class SprintTimer {
 
   resume(): void {
     if (!this.state || !this.state.active || !this.state.paused) return;
+    const wasReady = this.state.ready;
     this.state.totalPausedMs += Date.now() - this.state.pausedAt;
     this.state.paused = false;
+    this.state.ready = false;
     this.startInterval();
     this.updateDisplay();
+    if (wasReady) {
+      new Notice(t('sprint.started', { minutes: this.state.durationMinutes }));
+    }
   }
 
   stop(): void {
     if (!this.state) return;
+    const wasReady = this.state.ready;
     this.stopInterval();
-    const session = this.buildSession();
+    const session = wasReady ? null : this.buildSession();
     this.state = null;
     this.hideFloating();
     if (this.statusBarEl) this.statusBarEl.addClass('ws-hidden');
-    if (this.onComplete) void this.onComplete(session);
+    if (!wasReady && session && this.onComplete) void this.onComplete(session);
   }
 
   private buildSession(): SprintSession {
@@ -163,17 +171,30 @@ export class SprintTimer {
 
   private updateDisplay(): void {
     const time = this.getFormattedRemaining();
-    const paused = this.state?.paused ? ' ⏸' : '';
+    const paused = this.state?.paused && !this.state?.ready ? ' ⏸' : '';
     const label = `⏱ ${time}${paused}`;
 
     if (this.floatingEl) {
       const timeEl = this.floatingEl.querySelector('.ws-sprint-time');
       if (timeEl) timeEl.textContent = time;
+
       const wc = this.getCurrentWordCount() - (this.state?.startWordCount || 0);
       const wcEl = this.floatingEl.querySelector('.ws-sprint-wc');
       if (wcEl) wcEl.textContent = t('sprint.words', { n: Math.max(0, wc) });
+
       const pauseBtn = this.floatingEl.querySelector('.ws-sprint-pause') as HTMLButtonElement;
-      if (pauseBtn) pauseBtn.textContent = this.state?.paused ? '▶' : '⏸';
+      if (pauseBtn) {
+        if (this.state?.ready) {
+          pauseBtn.textContent = '▶';
+          pauseBtn.title = t('sprint.startTitle');
+        } else if (this.state?.paused) {
+          pauseBtn.textContent = '▶';
+          pauseBtn.title = t('sprint.resumeTitle');
+        } else {
+          pauseBtn.textContent = '⏸';
+          pauseBtn.title = t('sprint.pauseTitle');
+        }
+      }
     }
 
     if (this.statusBarEl) {
@@ -181,7 +202,6 @@ export class SprintTimer {
       this.statusBarEl.removeClass('ws-hidden');
     }
 
-    // Update focus toolbar
     this.plugin.focusMode.updateToolbarSprintTime(label);
   }
 
@@ -191,9 +211,18 @@ export class SprintTimer {
     el.createDiv({ cls: 'ws-sprint-header', text: t('sprint.header') });
     el.createDiv({ cls: 'ws-sprint-time', text: '00:00' });
     el.createDiv({ cls: 'ws-sprint-wc', text: t('sprint.words', { n: 0 }) });
+
     const controls = el.createDiv({ cls: 'ws-sprint-controls' });
-    const pauseBtn = controls.createEl('button', { cls: 'ws-sprint-pause', title: t('sprint.pauseTitle'), text: '⏸' });
-    const stopBtn = controls.createEl('button', { cls: 'ws-sprint-stop', title: t('sprint.stopTitle'), text: '■' });
+    const pauseBtn = controls.createEl('button', {
+      cls: 'ws-sprint-pause',
+      title: t('sprint.startTitle'),
+      text: '▶',
+    });
+    const stopBtn = controls.createEl('button', {
+      cls: 'ws-sprint-stop',
+      title: t('sprint.stopTitle'),
+      text: '■',
+    });
 
     pauseBtn.onclick = () => {
       if (this.state?.paused) this.resume();
@@ -204,7 +233,42 @@ export class SprintTimer {
 
     activeDocument.body.appendChild(el);
     this.floatingEl = el;
-    this.updateDisplay();
+    this.makeDraggable(el);
+  }
+
+  private makeDraggable(el: HTMLElement): void {
+    const header = el.querySelector('.ws-sprint-header') as HTMLElement;
+    if (!header) return;
+    header.addClass('ws-draggable');
+
+    let startX = 0, startY = 0, startLeft = 0, startTop = 0;
+
+    const onMove = (e: MouseEvent) => {
+      const dx = e.clientX - startX;
+      const dy = e.clientY - startY;
+      const left = Math.max(0, Math.min(activeWindow.innerWidth - el.offsetWidth, startLeft + dx));
+      const top = Math.max(0, Math.min(activeWindow.innerHeight - el.offsetHeight, startTop + dy));
+      el.addClass('ws-sprint-floating--dragged');
+      el.setCssProps({ '--ws-float-x': `${left}px`, '--ws-float-y': `${top}px` });
+    };
+
+    const onUp = () => {
+      activeDocument.removeEventListener('mousemove', onMove);
+      activeDocument.removeEventListener('mouseup', onUp);
+      header.removeClass('ws-dragging');
+    };
+
+    header.addEventListener('mousedown', (e: MouseEvent) => {
+      const rect = el.getBoundingClientRect();
+      startX = e.clientX;
+      startY = e.clientY;
+      startLeft = rect.left;
+      startTop = rect.top;
+      header.addClass('ws-dragging');
+      activeDocument.addEventListener('mousemove', onMove);
+      activeDocument.addEventListener('mouseup', onUp);
+      e.preventDefault();
+    });
   }
 
   private hideFloating(): void {

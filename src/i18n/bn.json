@@ -216,8 +216,8 @@
     "sprintTimer": "স্প্রিন্ট টাইমার",
     "pause": "⏸ বিরতি",
     "stop": "■ থামান",
-    "startSprint": "⏱ স্প্রিন্ট শুরু করুন",
-    "quickStart": "দ্রুত শুরু:",
+    "startSprint": "⏱ স্প্রিন্ট সেট আপ করুন",
+    "quickStart": "দ্রুত স্প্রিন্ট বিকল্প",
     "today": "আজ",
     "stat": {
       "words": "শব্দ",
@@ -227,7 +227,8 @@
       "streakDays": "{{streak}}দি"
     },
     "sessionWordsTyped": "সেশন: +{{n}} শব্দ টাইপ করা হয়েছে",
-    "dailyGoal": "দৈনিক লক্ষ্য: {{written}} / {{goal}} শব্দ"
+    "dailyGoal": "দৈনিক লক্ষ্য: {{written}} / {{goal}} শব্দ",
+    "sprintInProgress": "স্প্রিন্ট চলছে"
   },
   "log": {
     "displayText": "লেখার লগ",
@@ -252,8 +253,10 @@
     "complete": "স্প্রিন্ট সম্পন্ন! দারুণ কাজ।",
     "words": "+{{n}} শব্দ",
     "header": "লেখার স্প্রিন্ট",
-    "pauseTitle": "বিরতি/পুনরায় শুরু",
-    "stopTitle": "স্প্রিন্ট থামান"
+    "pauseTitle": "স্প্রিন্ট বিরতি দিন",
+    "stopTitle": "স্প্রিন্ট থামান",
+    "startTitle": "স্প্রিন্ট শুরু করুন",
+    "resumeTitle": "স্প্রিন্ট পুনরায় শুরু করুন"
   },
   "writingModes": {
     "switchedTo": "রাইটিং স্টুডিও: {{mode}} মোড",
@@ -351,7 +354,7 @@
     "cancel": "বাতিল"
   },
   "sprintModal": {
-    "title": "লেখার স্প্রিন্ট শুরু করুন",
+    "setupTitle": "স্প্রিন্ট সেট আপ করুন",
     "durationName": "সময়কাল (মিনিট)",
     "durationDesc": "প্রিসেট: ১০, ১৫, ২৫, ৩০, ৪৫, ৬০",
     "durationCustom": "কাস্টম…",
@@ -361,7 +364,7 @@
     "scopeName": "পরিধি",
     "scopeFile": "বর্তমান ফাইল",
     "scopeProject": "পুরো প্রকল্প",
-    "startBtn": "স্প্রিন্ট শুরু করুন",
+    "startBtn": "স্প্রিন্ট টাইমার চালু করুন",
     "errorDuration": "অনুগ্রহ করে একটি বৈধ সময়কাল সেট করুন।",
     "cancel": "বাতিল"
   },

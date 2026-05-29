@@ -216,8 +216,8 @@
     "sprintTimer": "مؤقت السباق",
     "pause": "⏸ إيقاف مؤقت",
     "stop": "■ إيقاف",
-    "startSprint": "⏱ بدء السباق",
-    "quickStart": "بدء سريع:",
+    "startSprint": "⏱ إعداد السباق",
+    "quickStart": "خيارات السباق السريع",
     "today": "اليوم",
     "stat": {
       "words": "الكلمات",
@@ -227,7 +227,8 @@
       "streakDays": "{{streak}}ي"
     },
     "sessionWordsTyped": "الجلسة: +{{n}} كلمة مكتوبة",
-    "dailyGoal": "الهدف اليومي: {{written}} / {{goal}} كلمة"
+    "dailyGoal": "الهدف اليومي: {{written}} / {{goal}} كلمة",
+    "sprintInProgress": "السباق جارٍ"
   },
   "log": {
     "displayText": "سجل الكتابة",
@@ -255,8 +256,10 @@
     "complete": "اكتمل السباق! عمل رائع.",
     "words": "+{{n}} كلمة",
     "header": "سباق الكتابة",
-    "pauseTitle": "إيقاف مؤقت/استئناف",
-    "stopTitle": "إيقاف السباق"
+    "pauseTitle": "إيقاف السباق مؤقتًا",
+    "stopTitle": "إيقاف السباق",
+    "startTitle": "بدء السباق",
+    "resumeTitle": "استئناف السباق"
   },
   "writingModes": {
     "switchedTo": "استوديو الكتابة: وضع {{mode}}",
@@ -358,7 +361,7 @@
     "cancel": "إلغاء"
   },
   "sprintModal": {
-    "title": "بدء سباق الكتابة",
+    "setupTitle": "إعداد السباق",
     "durationName": "المدة (بالدقائق)",
     "durationDesc": "الإعدادات المسبقة: 10، 15، 25، 30، 45، 60",
     "durationCustom": "مخصص…",
@@ -368,7 +371,7 @@
     "scopeName": "النطاق",
     "scopeFile": "الملف الحالي",
     "scopeProject": "المشروع بالكامل",
-    "startBtn": "بدء السباق",
+    "startBtn": "تشغيل مؤقت السباق",
     "errorDuration": "يُرجى تحديد مدة صالحة.",
     "cancel": "إلغاء"
   },

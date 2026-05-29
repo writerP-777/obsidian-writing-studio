@@ -2526,8 +2526,9 @@ var en_default = {
     sprintTimer: "Sprint timer",
     pause: "\u23F8 Pause",
     stop: "\u25A0 Stop",
-    startSprint: "\u23F1 Start sprint",
-    quickStart: "Quick start:",
+    startSprint: "\u23F1 Set up sprint",
+    quickStart: "Quick sprint options",
+    sprintInProgress: "Sprint in progress",
     today: "Today",
     stat: {
       words: "Words",
@@ -2562,7 +2563,9 @@ var en_default = {
     complete: "Sprint complete! Great work.",
     words: "+{{n}} words",
     header: "Writing sprint",
-    pauseTitle: "Pause/resume",
+    startTitle: "Start sprint",
+    pauseTitle: "Pause sprint",
+    resumeTitle: "Resume sprint",
     stopTitle: "Stop sprint"
   },
   writingModes: {
@@ -2661,7 +2664,7 @@ var en_default = {
     cancel: "Cancel"
   },
   sprintModal: {
-    title: "Start writing sprint",
+    setupTitle: "Set up sprint",
     durationName: "Duration (minutes)",
     durationDesc: "Preset: 10, 15, 25, 30, 45, 60",
     durationCustom: "Custom\u2026",
@@ -2671,7 +2674,7 @@ var en_default = {
     scopeName: "Scope",
     scopeFile: "Current file",
     scopeProject: "Entire project",
-    startBtn: "Start sprint",
+    startBtn: "Launch sprint timer",
     errorDuration: "Please set a valid duration.",
     cancel: "Cancel"
   },
@@ -3127,8 +3130,8 @@ var zh_default = {
     sprintTimer: "\u51B2\u523A\u8BA1\u65F6\u5668",
     pause: "\u23F8 \u6682\u505C",
     stop: "\u25A0 \u505C\u6B62",
-    startSprint: "\u23F1 \u5F00\u59CB\u51B2\u523A",
-    quickStart: "\u5FEB\u901F\u5F00\u59CB\uFF1A",
+    startSprint: "\u23F1 \u8BBE\u7F6E\u51B2\u523A",
+    quickStart: "\u5FEB\u901F\u51B2\u523A\u9009\u9879",
     today: "\u4ECA\u65E5",
     stat: {
       words: "\u5B57\u6570",
@@ -3138,7 +3141,8 @@ var zh_default = {
       streakDays: "{{streak}}\u5929"
     },
     sessionWordsTyped: "\u672C\u6B21\uFF1A+{{n}} \u5B57",
-    dailyGoal: "\u6BCF\u65E5\u76EE\u6807\uFF1A{{written}} / {{goal}} \u5B57"
+    dailyGoal: "\u6BCF\u65E5\u76EE\u6807\uFF1A{{written}} / {{goal}} \u5B57",
+    sprintInProgress: "\u51B2\u523A\u8FDB\u884C\u4E2D"
   },
   log: {
     displayText: "\u5199\u4F5C\u65E5\u5FD7",
@@ -3163,8 +3167,10 @@ var zh_default = {
     complete: "\u51B2\u523A\u5B8C\u6210\uFF01\u5E72\u5F97\u597D\u3002",
     words: "+{{n}} \u4E2A\u5B57",
     header: "\u5199\u4F5C\u51B2\u523A",
-    pauseTitle: "\u6682\u505C/\u7EE7\u7EED",
-    stopTitle: "\u505C\u6B62\u51B2\u523A"
+    pauseTitle: "\u6682\u505C\u51B2\u523A",
+    stopTitle: "\u505C\u6B62\u51B2\u523A",
+    startTitle: "\u5F00\u59CB\u51B2\u523A",
+    resumeTitle: "\u7EE7\u7EED\u51B2\u523A"
   },
   writingModes: {
     switchedTo: "\u5199\u4F5C\u5DE5\u4F5C\u5BA4\uFF1A{{mode}} \u6A21\u5F0F",
@@ -3262,7 +3268,7 @@ var zh_default = {
     cancel: "\u53D6\u6D88"
   },
   sprintModal: {
-    title: "\u5F00\u59CB\u5199\u4F5C\u51B2\u523A",
+    setupTitle: "\u8BBE\u7F6E\u51B2\u523A",
     durationName: "\u65F6\u957F\uFF08\u5206\u949F\uFF09",
     durationDesc: "\u9884\u8BBE\uFF1A10\u300115\u300125\u300130\u300145\u300160",
     durationCustom: "\u81EA\u5B9A\u4E49\u2026",
@@ -3272,7 +3278,7 @@ var zh_default = {
     scopeName: "\u8303\u56F4",
     scopeFile: "\u5F53\u524D\u6587\u4EF6",
     scopeProject: "\u6574\u4E2A\u9879\u76EE",
-    startBtn: "\u5F00\u59CB\u51B2\u523A",
+    startBtn: "\u542F\u52A8\u51B2\u523A\u8BA1\u65F6\u5668",
     errorDuration: "\u8BF7\u8BBE\u7F6E\u6709\u6548\u7684\u65F6\u957F\u3002",
     cancel: "\u53D6\u6D88"
   },
@@ -3728,8 +3734,8 @@ var hi_default = {
     sprintTimer: "\u0938\u094D\u092A\u094D\u0930\u093F\u0902\u091F \u091F\u093E\u0907\u092E\u0930",
     pause: "\u23F8 \u0930\u094B\u0915\u0947\u0902",
     stop: "\u25A0 \u092C\u0902\u0926 \u0915\u0930\u0947\u0902",
-    startSprint: "\u23F1 \u0938\u094D\u092A\u094D\u0930\u093F\u0902\u091F \u0936\u0941\u0930\u0942 \u0915\u0930\u0947\u0902",
-    quickStart: "\u0924\u094D\u0935\u0930\u093F\u0924 \u0936\u0941\u0930\u0941\u0906\u0924:",
+    startSprint: "\u23F1 \u0938\u094D\u092A\u094D\u0930\u093F\u0902\u091F \u0938\u0947\u091F \u0905\u092A \u0915\u0930\u0947\u0902",
+    quickStart: "\u0924\u094D\u0935\u0930\u093F\u0924 \u0938\u094D\u092A\u094D\u0930\u093F\u0902\u091F \u0935\u093F\u0915\u0932\u094D\u092A",
     today: "\u0906\u091C",
     stat: {
       words: "\u0936\u092C\u094D\u0926",
@@ -3739,7 +3745,8 @@ var hi_default = {
       streakDays: "{{streak}}\u0926\u093F"
     },
     sessionWordsTyped: "\u0938\u0924\u094D\u0930: +{{n}} \u0936\u092C\u094D\u0926 \u0932\u093F\u0916\u0947",
-    dailyGoal: "\u0926\u0948\u0928\u093F\u0915 \u0932\u0915\u094D\u0937\u094D\u092F: {{written}} / {{goal}} \u0936\u092C\u094D\u0926"
+    dailyGoal: "\u0926\u0948\u0928\u093F\u0915 \u0932\u0915\u094D\u0937\u094D\u092F: {{written}} / {{goal}} \u0936\u092C\u094D\u0926",
+    sprintInProgress: "\u0938\u094D\u092A\u094D\u0930\u093F\u0902\u091F \u091C\u093E\u0930\u0940 \u0939\u0948"
   },
   log: {
     displayText: "\u0932\u0947\u0916\u0928 \u0932\u0949\u0917",
@@ -3764,8 +3771,10 @@ var hi_default = {
     complete: "\u0938\u094D\u092A\u094D\u0930\u093F\u0902\u091F \u092A\u0942\u0930\u093E! \u0936\u093E\u0928\u0926\u093E\u0930 \u0915\u093E\u092E\u0964",
     words: "+{{n}} \u0936\u092C\u094D\u0926",
     header: "\u0932\u0947\u0916\u0928 \u0938\u094D\u092A\u094D\u0930\u093F\u0902\u091F",
-    pauseTitle: "\u0930\u094B\u0915\u0947\u0902/\u091C\u093E\u0930\u0940 \u0930\u0916\u0947\u0902",
-    stopTitle: "\u0938\u094D\u092A\u094D\u0930\u093F\u0902\u091F \u0930\u094B\u0915\u0947\u0902"
+    pauseTitle: "\u0938\u094D\u092A\u094D\u0930\u093F\u0902\u091F \u0930\u094B\u0915\u0947\u0902",
+    stopTitle: "\u0938\u094D\u092A\u094D\u0930\u093F\u0902\u091F \u092C\u0902\u0926 \u0915\u0930\u0947\u0902",
+    startTitle: "\u0938\u094D\u092A\u094D\u0930\u093F\u0902\u091F \u0936\u0941\u0930\u0942 \u0915\u0930\u0947\u0902",
+    resumeTitle: "\u0938\u094D\u092A\u094D\u0930\u093F\u0902\u091F \u091C\u093E\u0930\u0940 \u0930\u0916\u0947\u0902"
   },
   writingModes: {
     switchedTo: "\u0930\u093E\u0907\u091F\u093F\u0902\u0917 \u0938\u094D\u091F\u0942\u0921\u093F\u092F\u094B: {{mode}} \u092E\u094B\u0921",
@@ -3863,7 +3872,7 @@ var hi_default = {
     cancel: "\u0930\u0926\u094D\u0926 \u0915\u0930\u0947\u0902"
   },
   sprintModal: {
-    title: "\u0932\u0947\u0916\u0928 \u0938\u094D\u092A\u094D\u0930\u093F\u0902\u091F \u0936\u0941\u0930\u0942 \u0915\u0930\u0947\u0902",
+    setupTitle: "\u0938\u094D\u092A\u094D\u0930\u093F\u0902\u091F \u0938\u0947\u091F \u0905\u092A \u0915\u0930\u0947\u0902",
     durationName: "\u0905\u0935\u0927\u093F (\u092E\u093F\u0928\u091F)",
     durationDesc: "\u092A\u094D\u0930\u0940\u0938\u0947\u091F: 10, 15, 25, 30, 45, 60",
     durationCustom: "\u0915\u0938\u094D\u091F\u092E\u2026",
@@ -3873,7 +3882,7 @@ var hi_default = {
     scopeName: "\u0926\u093E\u092F\u0930\u093E",
     scopeFile: "\u0935\u0930\u094D\u0924\u092E\u093E\u0928 \u092B\u093C\u093E\u0907\u0932",
     scopeProject: "\u092A\u0942\u0930\u0940 \u092A\u0930\u093F\u092F\u094B\u091C\u0928\u093E",
-    startBtn: "\u0938\u094D\u092A\u094D\u0930\u093F\u0902\u091F \u0936\u0941\u0930\u0942 \u0915\u0930\u0947\u0902",
+    startBtn: "\u0938\u094D\u092A\u094D\u0930\u093F\u0902\u091F \u091F\u093E\u0907\u092E\u0930 \u0936\u0941\u0930\u0942 \u0915\u0930\u0947\u0902",
     errorDuration: "\u0915\u0943\u092A\u092F\u093E \u090F\u0915 \u0935\u0948\u0927 \u0905\u0935\u0927\u093F \u0938\u0947\u091F \u0915\u0930\u0947\u0902\u0964",
     cancel: "\u0930\u0926\u094D\u0926 \u0915\u0930\u0947\u0902"
   },
@@ -4329,8 +4338,8 @@ var es_default = {
     sprintTimer: "Temporizador de sprint",
     pause: "\u23F8 Pausar",
     stop: "\u25A0 Detener",
-    startSprint: "\u23F1 Iniciar sprint",
-    quickStart: "Inicio r\xE1pido:",
+    startSprint: "\u23F1 Configurar sprint",
+    quickStart: "Opciones de sprint r\xE1pido",
     today: "Hoy",
     stat: {
       words: "Palabras",
@@ -4340,7 +4349,8 @@ var es_default = {
       streakDays: "{{streak}}d"
     },
     sessionWordsTyped: "Sesi\xF3n: +{{n}} palabras escritas",
-    dailyGoal: "Meta diaria: {{written}} / {{goal}} palabras"
+    dailyGoal: "Meta diaria: {{written}} / {{goal}} palabras",
+    sprintInProgress: "Sprint en curso"
   },
   log: {
     displayText: "Registro de escritura",
@@ -4365,8 +4375,10 @@ var es_default = {
     complete: "\xA1Sprint completado! Excelente trabajo.",
     words: "+{{n}} palabras",
     header: "Sprint de escritura",
-    pauseTitle: "Pausar/reanudar",
-    stopTitle: "Detener sprint"
+    pauseTitle: "Pausar sprint",
+    stopTitle: "Detener sprint",
+    startTitle: "Iniciar sprint",
+    resumeTitle: "Reanudar sprint"
   },
   writingModes: {
     switchedTo: "Estudio de escritura: modo {{mode}}",
@@ -4464,7 +4476,7 @@ var es_default = {
     cancel: "Cancelar"
   },
   sprintModal: {
-    title: "Iniciar sprint de escritura",
+    setupTitle: "Configurar sprint",
     durationName: "Duraci\xF3n (minutos)",
     durationDesc: "Preestablecido: 10, 15, 25, 30, 45, 60",
     durationCustom: "Personalizado\u2026",
@@ -4474,7 +4486,7 @@ var es_default = {
     scopeName: "Alcance",
     scopeFile: "Archivo actual",
     scopeProject: "Proyecto completo",
-    startBtn: "Iniciar sprint",
+    startBtn: "Iniciar temporizador de sprint",
     errorDuration: "Por favor, establece una duraci\xF3n v\xE1lida.",
     cancel: "Cancelar"
   },
@@ -4930,8 +4942,8 @@ var ar_default = {
     sprintTimer: "\u0645\u0624\u0642\u062A \u0627\u0644\u0633\u0628\u0627\u0642",
     pause: "\u23F8 \u0625\u064A\u0642\u0627\u0641 \u0645\u0624\u0642\u062A",
     stop: "\u25A0 \u0625\u064A\u0642\u0627\u0641",
-    startSprint: "\u23F1 \u0628\u062F\u0621 \u0627\u0644\u0633\u0628\u0627\u0642",
-    quickStart: "\u0628\u062F\u0621 \u0633\u0631\u064A\u0639:",
+    startSprint: "\u23F1 \u0625\u0639\u062F\u0627\u062F \u0627\u0644\u0633\u0628\u0627\u0642",
+    quickStart: "\u062E\u064A\u0627\u0631\u0627\u062A \u0627\u0644\u0633\u0628\u0627\u0642 \u0627\u0644\u0633\u0631\u064A\u0639",
     today: "\u0627\u0644\u064A\u0648\u0645",
     stat: {
       words: "\u0627\u0644\u0643\u0644\u0645\u0627\u062A",
@@ -4941,7 +4953,8 @@ var ar_default = {
       streakDays: "{{streak}}\u064A"
     },
     sessionWordsTyped: "\u0627\u0644\u062C\u0644\u0633\u0629: +{{n}} \u0643\u0644\u0645\u0629 \u0645\u0643\u062A\u0648\u0628\u0629",
-    dailyGoal: "\u0627\u0644\u0647\u062F\u0641 \u0627\u0644\u064A\u0648\u0645\u064A: {{written}} / {{goal}} \u0643\u0644\u0645\u0629"
+    dailyGoal: "\u0627\u0644\u0647\u062F\u0641 \u0627\u0644\u064A\u0648\u0645\u064A: {{written}} / {{goal}} \u0643\u0644\u0645\u0629",
+    sprintInProgress: "\u0627\u0644\u0633\u0628\u0627\u0642 \u062C\u0627\u0631\u064D"
   },
   log: {
     displayText: "\u0633\u062C\u0644 \u0627\u0644\u0643\u062A\u0627\u0628\u0629",
@@ -4969,8 +4982,10 @@ var ar_default = {
     complete: "\u0627\u0643\u062A\u0645\u0644 \u0627\u0644\u0633\u0628\u0627\u0642! \u0639\u0645\u0644 \u0631\u0627\u0626\u0639.",
     words: "+{{n}} \u0643\u0644\u0645\u0629",
     header: "\u0633\u0628\u0627\u0642 \u0627\u0644\u0643\u062A\u0627\u0628\u0629",
-    pauseTitle: "\u0625\u064A\u0642\u0627\u0641 \u0645\u0624\u0642\u062A/\u0627\u0633\u062A\u0626\u0646\u0627\u0641",
-    stopTitle: "\u0625\u064A\u0642\u0627\u0641 \u0627\u0644\u0633\u0628\u0627\u0642"
+    pauseTitle: "\u0625\u064A\u0642\u0627\u0641 \u0627\u0644\u0633\u0628\u0627\u0642 \u0645\u0624\u0642\u062A\u064B\u0627",
+    stopTitle: "\u0625\u064A\u0642\u0627\u0641 \u0627\u0644\u0633\u0628\u0627\u0642",
+    startTitle: "\u0628\u062F\u0621 \u0627\u0644\u0633\u0628\u0627\u0642",
+    resumeTitle: "\u0627\u0633\u062A\u0626\u0646\u0627\u0641 \u0627\u0644\u0633\u0628\u0627\u0642"
   },
   writingModes: {
     switchedTo: "\u0627\u0633\u062A\u0648\u062F\u064A\u0648 \u0627\u0644\u0643\u062A\u0627\u0628\u0629: \u0648\u0636\u0639 {{mode}}",
@@ -5072,7 +5087,7 @@ var ar_default = {
     cancel: "\u0625\u0644\u063A\u0627\u0621"
   },
   sprintModal: {
-    title: "\u0628\u062F\u0621 \u0633\u0628\u0627\u0642 \u0627\u0644\u0643\u062A\u0627\u0628\u0629",
+    setupTitle: "\u0625\u0639\u062F\u0627\u062F \u0627\u0644\u0633\u0628\u0627\u0642",
     durationName: "\u0627\u0644\u0645\u062F\u0629 (\u0628\u0627\u0644\u062F\u0642\u0627\u0626\u0642)",
     durationDesc: "\u0627\u0644\u0625\u0639\u062F\u0627\u062F\u0627\u062A \u0627\u0644\u0645\u0633\u0628\u0642\u0629: 10\u060C 15\u060C 25\u060C 30\u060C 45\u060C 60",
     durationCustom: "\u0645\u062E\u0635\u0635\u2026",
@@ -5082,7 +5097,7 @@ var ar_default = {
     scopeName: "\u0627\u0644\u0646\u0637\u0627\u0642",
     scopeFile: "\u0627\u0644\u0645\u0644\u0641 \u0627\u0644\u062D\u0627\u0644\u064A",
     scopeProject: "\u0627\u0644\u0645\u0634\u0631\u0648\u0639 \u0628\u0627\u0644\u0643\u0627\u0645\u0644",
-    startBtn: "\u0628\u062F\u0621 \u0627\u0644\u0633\u0628\u0627\u0642",
+    startBtn: "\u062A\u0634\u063A\u064A\u0644 \u0645\u0624\u0642\u062A \u0627\u0644\u0633\u0628\u0627\u0642",
     errorDuration: "\u064A\u064F\u0631\u062C\u0649 \u062A\u062D\u062F\u064A\u062F \u0645\u062F\u0629 \u0635\u0627\u0644\u062D\u0629.",
     cancel: "\u0625\u0644\u063A\u0627\u0621"
   },
@@ -5542,8 +5557,8 @@ var fr_default = {
     sprintTimer: "Minuteur de sprint",
     pause: "\u23F8 Pause",
     stop: "\u25A0 Arr\xEAter",
-    startSprint: "\u23F1 D\xE9marrer un sprint",
-    quickStart: "D\xE9marrage rapide :",
+    startSprint: "\u23F1 Configurer un sprint",
+    quickStart: "Options de sprint rapide",
     today: "Aujourd'hui",
     stat: {
       words: "Mots",
@@ -5553,7 +5568,8 @@ var fr_default = {
       streakDays: "{{streak}}j"
     },
     sessionWordsTyped: "Session : +{{n}} mots \xE9crits",
-    dailyGoal: "Objectif quotidien : {{written}} / {{goal}} mots"
+    dailyGoal: "Objectif quotidien : {{written}} / {{goal}} mots",
+    sprintInProgress: "Sprint en cours"
   },
   log: {
     displayText: "Journal d'\xE9criture",
@@ -5578,8 +5594,10 @@ var fr_default = {
     complete: "Sprint termin\xE9 ! Excellent travail.",
     words: "+{{n}} mots",
     header: "Sprint d'\xE9criture",
-    pauseTitle: "Pause/reprendre",
-    stopTitle: "Arr\xEAter le sprint"
+    pauseTitle: "Mettre le sprint en pause",
+    stopTitle: "Arr\xEAter le sprint",
+    startTitle: "D\xE9marrer le sprint",
+    resumeTitle: "Reprendre le sprint"
   },
   writingModes: {
     switchedTo: "Studio d'\xE9criture : mode {{mode}}",
@@ -5677,7 +5695,7 @@ var fr_default = {
     cancel: "Annuler"
   },
   sprintModal: {
-    title: "D\xE9marrer un sprint d'\xE9criture",
+    setupTitle: "Configurer un sprint",
     durationName: "Dur\xE9e (minutes)",
     durationDesc: "Pr\xE9r\xE9glages : 10, 15, 25, 30, 45, 60",
     durationCustom: "Personnalis\xE9\u2026",
@@ -5687,7 +5705,7 @@ var fr_default = {
     scopeName: "Port\xE9e",
     scopeFile: "Fichier actuel",
     scopeProject: "Projet entier",
-    startBtn: "D\xE9marrer le sprint",
+    startBtn: "Lancer le minuteur de sprint",
     errorDuration: "Veuillez d\xE9finir une dur\xE9e valide.",
     cancel: "Annuler"
   },
@@ -6143,8 +6161,8 @@ var bn_default = {
     sprintTimer: "\u09B8\u09CD\u09AA\u09CD\u09B0\u09BF\u09A8\u09CD\u099F \u099F\u09BE\u0987\u09AE\u09BE\u09B0",
     pause: "\u23F8 \u09AC\u09BF\u09B0\u09A4\u09BF",
     stop: "\u25A0 \u09A5\u09BE\u09AE\u09BE\u09A8",
-    startSprint: "\u23F1 \u09B8\u09CD\u09AA\u09CD\u09B0\u09BF\u09A8\u09CD\u099F \u09B6\u09C1\u09B0\u09C1 \u0995\u09B0\u09C1\u09A8",
-    quickStart: "\u09A6\u09CD\u09B0\u09C1\u09A4 \u09B6\u09C1\u09B0\u09C1:",
+    startSprint: "\u23F1 \u09B8\u09CD\u09AA\u09CD\u09B0\u09BF\u09A8\u09CD\u099F \u09B8\u09C7\u099F \u0986\u09AA \u0995\u09B0\u09C1\u09A8",
+    quickStart: "\u09A6\u09CD\u09B0\u09C1\u09A4 \u09B8\u09CD\u09AA\u09CD\u09B0\u09BF\u09A8\u09CD\u099F \u09AC\u09BF\u0995\u09B2\u09CD\u09AA",
     today: "\u0986\u099C",
     stat: {
       words: "\u09B6\u09AC\u09CD\u09A6",
@@ -6154,7 +6172,8 @@ var bn_default = {
       streakDays: "{{streak}}\u09A6\u09BF"
     },
     sessionWordsTyped: "\u09B8\u09C7\u09B6\u09A8: +{{n}} \u09B6\u09AC\u09CD\u09A6 \u099F\u09BE\u0987\u09AA \u0995\u09B0\u09BE \u09B9\u09AF\u09BC\u09C7\u099B\u09C7",
-    dailyGoal: "\u09A6\u09C8\u09A8\u09BF\u0995 \u09B2\u0995\u09CD\u09B7\u09CD\u09AF: {{written}} / {{goal}} \u09B6\u09AC\u09CD\u09A6"
+    dailyGoal: "\u09A6\u09C8\u09A8\u09BF\u0995 \u09B2\u0995\u09CD\u09B7\u09CD\u09AF: {{written}} / {{goal}} \u09B6\u09AC\u09CD\u09A6",
+    sprintInProgress: "\u09B8\u09CD\u09AA\u09CD\u09B0\u09BF\u09A8\u09CD\u099F \u099A\u09B2\u099B\u09C7"
   },
   log: {
     displayText: "\u09B2\u09C7\u0996\u09BE\u09B0 \u09B2\u0997",
@@ -6179,8 +6198,10 @@ var bn_default = {
     complete: "\u09B8\u09CD\u09AA\u09CD\u09B0\u09BF\u09A8\u09CD\u099F \u09B8\u09AE\u09CD\u09AA\u09A8\u09CD\u09A8! \u09A6\u09BE\u09B0\u09C1\u09A3 \u0995\u09BE\u099C\u0964",
     words: "+{{n}} \u09B6\u09AC\u09CD\u09A6",
     header: "\u09B2\u09C7\u0996\u09BE\u09B0 \u09B8\u09CD\u09AA\u09CD\u09B0\u09BF\u09A8\u09CD\u099F",
-    pauseTitle: "\u09AC\u09BF\u09B0\u09A4\u09BF/\u09AA\u09C1\u09A8\u09B0\u09BE\u09AF\u09BC \u09B6\u09C1\u09B0\u09C1",
-    stopTitle: "\u09B8\u09CD\u09AA\u09CD\u09B0\u09BF\u09A8\u09CD\u099F \u09A5\u09BE\u09AE\u09BE\u09A8"
+    pauseTitle: "\u09B8\u09CD\u09AA\u09CD\u09B0\u09BF\u09A8\u09CD\u099F \u09AC\u09BF\u09B0\u09A4\u09BF \u09A6\u09BF\u09A8",
+    stopTitle: "\u09B8\u09CD\u09AA\u09CD\u09B0\u09BF\u09A8\u09CD\u099F \u09A5\u09BE\u09AE\u09BE\u09A8",
+    startTitle: "\u09B8\u09CD\u09AA\u09CD\u09B0\u09BF\u09A8\u09CD\u099F \u09B6\u09C1\u09B0\u09C1 \u0995\u09B0\u09C1\u09A8",
+    resumeTitle: "\u09B8\u09CD\u09AA\u09CD\u09B0\u09BF\u09A8\u09CD\u099F \u09AA\u09C1\u09A8\u09B0\u09BE\u09AF\u09BC \u09B6\u09C1\u09B0\u09C1 \u0995\u09B0\u09C1\u09A8"
   },
   writingModes: {
     switchedTo: "\u09B0\u09BE\u0987\u099F\u09BF\u0982 \u09B8\u09CD\u099F\u09C1\u09A1\u09BF\u0993: {{mode}} \u09AE\u09CB\u09A1",
@@ -6278,7 +6299,7 @@ var bn_default = {
     cancel: "\u09AC\u09BE\u09A4\u09BF\u09B2"
   },
   sprintModal: {
-    title: "\u09B2\u09C7\u0996\u09BE\u09B0 \u09B8\u09CD\u09AA\u09CD\u09B0\u09BF\u09A8\u09CD\u099F \u09B6\u09C1\u09B0\u09C1 \u0995\u09B0\u09C1\u09A8",
+    setupTitle: "\u09B8\u09CD\u09AA\u09CD\u09B0\u09BF\u09A8\u09CD\u099F \u09B8\u09C7\u099F \u0986\u09AA \u0995\u09B0\u09C1\u09A8",
     durationName: "\u09B8\u09AE\u09AF\u09BC\u0995\u09BE\u09B2 (\u09AE\u09BF\u09A8\u09BF\u099F)",
     durationDesc: "\u09AA\u09CD\u09B0\u09BF\u09B8\u09C7\u099F: \u09E7\u09E6, \u09E7\u09EB, \u09E8\u09EB, \u09E9\u09E6, \u09EA\u09EB, \u09EC\u09E6",
     durationCustom: "\u0995\u09BE\u09B8\u09CD\u099F\u09AE\u2026",
@@ -6288,7 +6309,7 @@ var bn_default = {
     scopeName: "\u09AA\u09B0\u09BF\u09A7\u09BF",
     scopeFile: "\u09AC\u09B0\u09CD\u09A4\u09AE\u09BE\u09A8 \u09AB\u09BE\u0987\u09B2",
     scopeProject: "\u09AA\u09C1\u09B0\u09CB \u09AA\u09CD\u09B0\u0995\u09B2\u09CD\u09AA",
-    startBtn: "\u09B8\u09CD\u09AA\u09CD\u09B0\u09BF\u09A8\u09CD\u099F \u09B6\u09C1\u09B0\u09C1 \u0995\u09B0\u09C1\u09A8",
+    startBtn: "\u09B8\u09CD\u09AA\u09CD\u09B0\u09BF\u09A8\u09CD\u099F \u099F\u09BE\u0987\u09AE\u09BE\u09B0 \u099A\u09BE\u09B2\u09C1 \u0995\u09B0\u09C1\u09A8",
     errorDuration: "\u0985\u09A8\u09C1\u0997\u09CD\u09B0\u09B9 \u0995\u09B0\u09C7 \u098F\u0995\u099F\u09BF \u09AC\u09C8\u09A7 \u09B8\u09AE\u09AF\u09BC\u0995\u09BE\u09B2 \u09B8\u09C7\u099F \u0995\u09B0\u09C1\u09A8\u0964",
     cancel: "\u09AC\u09BE\u09A4\u09BF\u09B2"
   },
@@ -6744,8 +6765,8 @@ var pt_BR_default = {
     sprintTimer: "Cron\xF4metro de sprint",
     pause: "\u23F8 Pausar",
     stop: "\u25A0 Parar",
-    startSprint: "\u23F1 Iniciar sprint",
-    quickStart: "In\xEDcio r\xE1pido:",
+    startSprint: "\u23F1 Configurar sprint",
+    quickStart: "Op\xE7\xF5es r\xE1pidas de sprint",
     today: "Hoje",
     stat: {
       words: "Palavras",
@@ -6755,7 +6776,8 @@ var pt_BR_default = {
       streakDays: "{{streak}}d"
     },
     sessionWordsTyped: "Sess\xE3o: +{{n}} palavras digitadas",
-    dailyGoal: "Meta di\xE1ria: {{written}} / {{goal}} palavras"
+    dailyGoal: "Meta di\xE1ria: {{written}} / {{goal}} palavras",
+    sprintInProgress: "Sprint em andamento"
   },
   log: {
     displayText: "Di\xE1rio de escrita",
@@ -6780,8 +6802,10 @@ var pt_BR_default = {
     complete: "Sprint conclu\xEDdo! \xD3timo trabalho.",
     words: "+{{n}} palavras",
     header: "Sprint de escrita",
-    pauseTitle: "Pausar/retomar",
-    stopTitle: "Parar sprint"
+    pauseTitle: "Pausar sprint",
+    stopTitle: "Parar sprint",
+    startTitle: "Iniciar sprint",
+    resumeTitle: "Retomar sprint"
   },
   writingModes: {
     switchedTo: "Est\xFAdio de escrita: modo {{mode}}",
@@ -6879,7 +6903,7 @@ var pt_BR_default = {
     cancel: "Cancelar"
   },
   sprintModal: {
-    title: "Iniciar sprint de escrita",
+    setupTitle: "Configurar sprint",
     durationName: "Dura\xE7\xE3o (minutos)",
     durationDesc: "Predefinido: 10, 15, 25, 30, 45, 60",
     durationCustom: "Personalizado\u2026",
@@ -6889,7 +6913,7 @@ var pt_BR_default = {
     scopeName: "Escopo",
     scopeFile: "Arquivo atual",
     scopeProject: "Projeto inteiro",
-    startBtn: "Iniciar sprint",
+    startBtn: "Iniciar cron\xF4metro de sprint",
     errorDuration: "Por favor, defina uma dura\xE7\xE3o v\xE1lida.",
     cancel: "Cancelar"
   },
@@ -7345,8 +7369,8 @@ var ru_default = {
     sprintTimer: "\u0422\u0430\u0439\u043C\u0435\u0440 \u0441\u043F\u0440\u0438\u043D\u0442\u0430",
     pause: "\u23F8 \u041F\u0430\u0443\u0437\u0430",
     stop: "\u25A0 \u0421\u0442\u043E\u043F",
-    startSprint: "\u23F1 \u041D\u0430\u0447\u0430\u0442\u044C \u0441\u043F\u0440\u0438\u043D\u0442",
-    quickStart: "\u0411\u044B\u0441\u0442\u0440\u044B\u0439 \u0441\u0442\u0430\u0440\u0442:",
+    startSprint: "\u23F1 \u041D\u0430\u0441\u0442\u0440\u043E\u0438\u0442\u044C \u0441\u043F\u0440\u0438\u043D\u0442",
+    quickStart: "\u0411\u044B\u0441\u0442\u0440\u044B\u0435 \u0432\u0430\u0440\u0438\u0430\u043D\u0442\u044B \u0441\u043F\u0440\u0438\u043D\u0442\u0430",
     today: "\u0421\u0435\u0433\u043E\u0434\u043D\u044F",
     stat: {
       words: "\u0421\u043B\u043E\u0432\u0430",
@@ -7356,7 +7380,8 @@ var ru_default = {
       streakDays: "{{streak}}\u0434"
     },
     sessionWordsTyped: "\u0421\u0435\u0430\u043D\u0441: +{{n}} \u043D\u0430\u043F\u0438\u0441\u0430\u043D\u043D\u044B\u0445 \u0441\u043B\u043E\u0432",
-    dailyGoal: "\u0414\u043D\u0435\u0432\u043D\u0430\u044F \u0446\u0435\u043B\u044C: {{written}} / {{goal}} \u0441\u043B\u043E\u0432"
+    dailyGoal: "\u0414\u043D\u0435\u0432\u043D\u0430\u044F \u0446\u0435\u043B\u044C: {{written}} / {{goal}} \u0441\u043B\u043E\u0432",
+    sprintInProgress: "\u0421\u043F\u0440\u0438\u043D\u0442 \u0438\u0434\u0451\u0442"
   },
   log: {
     displayText: "\u0416\u0443\u0440\u043D\u0430\u043B \u043F\u0438\u0441\u044C\u043C\u0430",
@@ -7383,8 +7408,10 @@ var ru_default = {
     complete: "\u0421\u043F\u0440\u0438\u043D\u0442 \u0437\u0430\u0432\u0435\u0440\u0448\u0451\u043D! \u041E\u0442\u043B\u0438\u0447\u043D\u0430\u044F \u0440\u0430\u0431\u043E\u0442\u0430.",
     words: "+{{n}} \u0441\u043B\u043E\u0432",
     header: "\u0421\u043F\u0440\u0438\u043D\u0442 \u043D\u0430\u043F\u0438\u0441\u0430\u043D\u0438\u044F",
-    pauseTitle: "\u041F\u0430\u0443\u0437\u0430/\u043F\u0440\u043E\u0434\u043E\u043B\u0436\u0438\u0442\u044C",
-    stopTitle: "\u041E\u0441\u0442\u0430\u043D\u043E\u0432\u0438\u0442\u044C \u0441\u043F\u0440\u0438\u043D\u0442"
+    pauseTitle: "\u041F\u0440\u0438\u043E\u0441\u0442\u0430\u043D\u043E\u0432\u0438\u0442\u044C \u0441\u043F\u0440\u0438\u043D\u0442",
+    stopTitle: "\u041E\u0441\u0442\u0430\u043D\u043E\u0432\u0438\u0442\u044C \u0441\u043F\u0440\u0438\u043D\u0442",
+    startTitle: "\u041D\u0430\u0447\u0430\u0442\u044C \u0441\u043F\u0440\u0438\u043D\u0442",
+    resumeTitle: "\u0412\u043E\u0437\u043E\u0431\u043D\u043E\u0432\u0438\u0442\u044C \u0441\u043F\u0440\u0438\u043D\u0442"
   },
   writingModes: {
     switchedTo: "\u0421\u0442\u0443\u0434\u0438\u044F \u043F\u0438\u0441\u044C\u043C\u0430: \u0440\u0435\u0436\u0438\u043C {{mode}}",
@@ -7484,7 +7511,7 @@ var ru_default = {
     cancel: "\u041E\u0442\u043C\u0435\u043D\u0430"
   },
   sprintModal: {
-    title: "\u041D\u0430\u0447\u0430\u0442\u044C \u0441\u043F\u0440\u0438\u043D\u0442 \u043D\u0430\u043F\u0438\u0441\u0430\u043D\u0438\u044F",
+    setupTitle: "\u041D\u0430\u0441\u0442\u0440\u043E\u0438\u0442\u044C \u0441\u043F\u0440\u0438\u043D\u0442",
     durationName: "\u0414\u043B\u0438\u0442\u0435\u043B\u044C\u043D\u043E\u0441\u0442\u044C (\u043C\u0438\u043D\u0443\u0442\u044B)",
     durationDesc: "\u041F\u0440\u0435\u0434\u0443\u0441\u0442\u0430\u043D\u043E\u0432\u043A\u0438: 10, 15, 25, 30, 45, 60",
     durationCustom: "\u041F\u0440\u043E\u0438\u0437\u0432\u043E\u043B\u044C\u043D\u043E\u2026",
@@ -7494,7 +7521,7 @@ var ru_default = {
     scopeName: "\u041E\u0431\u043B\u0430\u0441\u0442\u044C",
     scopeFile: "\u0422\u0435\u043A\u0443\u0449\u0438\u0439 \u0444\u0430\u0439\u043B",
     scopeProject: "\u0412\u0435\u0441\u044C \u043F\u0440\u043E\u0435\u043A\u0442",
-    startBtn: "\u041D\u0430\u0447\u0430\u0442\u044C \u0441\u043F\u0440\u0438\u043D\u0442",
+    startBtn: "\u0417\u0430\u043F\u0443\u0441\u0442\u0438\u0442\u044C \u0442\u0430\u0439\u043C\u0435\u0440 \u0441\u043F\u0440\u0438\u043D\u0442\u0430",
     errorDuration: "\u0423\u043A\u0430\u0436\u0438\u0442\u0435 \u0434\u043E\u043F\u0443\u0441\u0442\u0438\u043C\u0443\u044E \u0434\u043B\u0438\u0442\u0435\u043B\u044C\u043D\u043E\u0441\u0442\u044C.",
     cancel: "\u041E\u0442\u043C\u0435\u043D\u0430"
   },
@@ -7952,8 +7979,8 @@ var ja_default = {
     sprintTimer: "\u30B9\u30D7\u30EA\u30F3\u30C8\u30BF\u30A4\u30DE\u30FC",
     pause: "\u23F8 \u4E00\u6642\u505C\u6B62",
     stop: "\u25A0 \u505C\u6B62",
-    startSprint: "\u23F1 \u30B9\u30D7\u30EA\u30F3\u30C8\u958B\u59CB",
-    quickStart: "\u30AF\u30A4\u30C3\u30AF\u30B9\u30BF\u30FC\u30C8\uFF1A",
+    startSprint: "\u23F1 \u30B9\u30D7\u30EA\u30F3\u30C8\u3092\u8A2D\u5B9A",
+    quickStart: "\u30AF\u30A4\u30C3\u30AF\u30B9\u30D7\u30EA\u30F3\u30C8",
     today: "\u4ECA\u65E5",
     stat: {
       words: "\u8A9E\u6570",
@@ -7963,7 +7990,8 @@ var ja_default = {
       streakDays: "{{streak}}\u65E5"
     },
     sessionWordsTyped: "\u30BB\u30C3\u30B7\u30E7\u30F3\uFF1A+{{n}} \u8A9E",
-    dailyGoal: "1\u65E5\u306E\u76EE\u6A19\uFF1A{{written}} / {{goal}} \u8A9E"
+    dailyGoal: "1\u65E5\u306E\u76EE\u6A19\uFF1A{{written}} / {{goal}} \u8A9E",
+    sprintInProgress: "\u30B9\u30D7\u30EA\u30F3\u30C8\u5B9F\u884C\u4E2D"
   },
   log: {
     displayText: "\u57F7\u7B46\u30ED\u30B0",
@@ -7988,8 +8016,10 @@ var ja_default = {
     complete: "\u30B9\u30D7\u30EA\u30F3\u30C8\u5B8C\u4E86\uFF01\u304A\u75B2\u308C\u3055\u307E\u3067\u3057\u305F\u3002",
     words: "+{{n}} \u8A9E",
     header: "\u57F7\u7B46\u30B9\u30D7\u30EA\u30F3\u30C8",
-    pauseTitle: "\u4E00\u6642\u505C\u6B62/\u518D\u958B",
-    stopTitle: "\u30B9\u30D7\u30EA\u30F3\u30C8\u505C\u6B62"
+    pauseTitle: "\u30B9\u30D7\u30EA\u30F3\u30C8\u3092\u4E00\u6642\u505C\u6B62",
+    stopTitle: "\u30B9\u30D7\u30EA\u30F3\u30C8\u505C\u6B62",
+    startTitle: "\u30B9\u30D7\u30EA\u30F3\u30C8\u3092\u958B\u59CB",
+    resumeTitle: "\u30B9\u30D7\u30EA\u30F3\u30C8\u3092\u518D\u958B"
   },
   writingModes: {
     switchedTo: "\u30E9\u30A4\u30C6\u30A3\u30F3\u30B0\u30B9\u30BF\u30B8\u30AA\uFF1A{{mode}} \u30E2\u30FC\u30C9",
@@ -8087,7 +8117,7 @@ var ja_default = {
     cancel: "\u30AD\u30E3\u30F3\u30BB\u30EB"
   },
   sprintModal: {
-    title: "\u57F7\u7B46\u30B9\u30D7\u30EA\u30F3\u30C8\u3092\u958B\u59CB",
+    setupTitle: "\u30B9\u30D7\u30EA\u30F3\u30C8\u3092\u8A2D\u5B9A",
     durationName: "\u6642\u9593\uFF08\u5206\uFF09",
     durationDesc: "\u30D7\u30EA\u30BB\u30C3\u30C8\uFF1A10\u300115\u300125\u300130\u300145\u300160",
     durationCustom: "\u30AB\u30B9\u30BF\u30E0\u2026",
@@ -8097,7 +8127,7 @@ var ja_default = {
     scopeName: "\u30B9\u30B3\u30FC\u30D7",
     scopeFile: "\u73FE\u5728\u306E\u30D5\u30A1\u30A4\u30EB",
     scopeProject: "\u30D7\u30ED\u30B8\u30A7\u30AF\u30C8\u5168\u4F53",
-    startBtn: "\u30B9\u30D7\u30EA\u30F3\u30C8\u3092\u958B\u59CB",
+    startBtn: "\u30B9\u30D7\u30EA\u30F3\u30C8\u30BF\u30A4\u30DE\u30FC\u3092\u8D77\u52D5",
     errorDuration: "\u6709\u52B9\u306A\u6642\u9593\u3092\u8A2D\u5B9A\u3057\u3066\u304F\u3060\u3055\u3044\u3002",
     cancel: "\u30AD\u30E3\u30F3\u30BB\u30EB"
   },
@@ -8553,8 +8583,8 @@ var de_default = {
     sprintTimer: "Sprint-Timer",
     pause: "\u23F8 Pause",
     stop: "\u25A0 Stop",
-    startSprint: "\u23F1 Sprint starten",
-    quickStart: "Schnellstart:",
+    startSprint: "\u23F1 Sprint einrichten",
+    quickStart: "Schnelle Sprint-Optionen",
     today: "Heute",
     stat: {
       words: "W\xF6rter",
@@ -8564,7 +8594,8 @@ var de_default = {
       streakDays: "{{streak}}T"
     },
     sessionWordsTyped: "Sitzung: +{{n}} W\xF6rter getippt",
-    dailyGoal: "Tagesziel: {{written}} / {{goal}} W\xF6rter"
+    dailyGoal: "Tagesziel: {{written}} / {{goal}} W\xF6rter",
+    sprintInProgress: "Sprint l\xE4uft"
   },
   log: {
     displayText: "Schreibprotokoll",
@@ -8589,8 +8620,10 @@ var de_default = {
     complete: "Sprint abgeschlossen! Tolle Arbeit.",
     words: "+{{n}} W\xF6rter",
     header: "Schreib-Sprint",
-    pauseTitle: "Pause/Fortsetzen",
-    stopTitle: "Sprint beenden"
+    pauseTitle: "Sprint pausieren",
+    stopTitle: "Sprint beenden",
+    startTitle: "Sprint starten",
+    resumeTitle: "Sprint fortsetzen"
   },
   writingModes: {
     switchedTo: "Schreibstudio: {{mode}}-Modus",
@@ -8688,7 +8721,7 @@ var de_default = {
     cancel: "Abbrechen"
   },
   sprintModal: {
-    title: "Schreib-Sprint starten",
+    setupTitle: "Sprint einrichten",
     durationName: "Dauer (Minuten)",
     durationDesc: "Voreinstellung: 10, 15, 25, 30, 45, 60",
     durationCustom: "Benutzerdefiniert\u2026",
@@ -8698,7 +8731,7 @@ var de_default = {
     scopeName: "Bereich",
     scopeFile: "Aktuelle Datei",
     scopeProject: "Gesamtes Projekt",
-    startBtn: "Sprint starten",
+    startBtn: "Sprint-Timer starten",
     errorDuration: "Bitte eine g\xFCltige Dauer festlegen.",
     cancel: "Abbrechen"
   },
@@ -9154,8 +9187,8 @@ var ko_default = {
     sprintTimer: "\uC2A4\uD504\uB9B0\uD2B8 \uD0C0\uC774\uBA38",
     pause: "\u23F8 \uC77C\uC2DC\uC815\uC9C0",
     stop: "\u25A0 \uC815\uC9C0",
-    startSprint: "\u23F1 \uC2A4\uD504\uB9B0\uD2B8 \uC2DC\uC791",
-    quickStart: "\uBE60\uB978 \uC2DC\uC791:",
+    startSprint: "\u23F1 \uC2A4\uD504\uB9B0\uD2B8 \uC124\uC815",
+    quickStart: "\uBE60\uB978 \uC2A4\uD504\uB9B0\uD2B8 \uC635\uC158",
     today: "\uC624\uB298",
     stat: {
       words: "\uB2E8\uC5B4 \uC218",
@@ -9165,7 +9198,8 @@ var ko_default = {
       streakDays: "{{streak}}\uC77C"
     },
     sessionWordsTyped: "\uC138\uC158: +{{n}} \uB2E8\uC5B4 \uC785\uB825",
-    dailyGoal: "\uC77C\uC77C \uBAA9\uD45C: {{written}} / {{goal}} \uB2E8\uC5B4"
+    dailyGoal: "\uC77C\uC77C \uBAA9\uD45C: {{written}} / {{goal}} \uB2E8\uC5B4",
+    sprintInProgress: "\uC2A4\uD504\uB9B0\uD2B8 \uC9C4\uD589 \uC911"
   },
   log: {
     displayText: "\uAE00\uC4F0\uAE30 \uB85C\uADF8",
@@ -9190,8 +9224,10 @@ var ko_default = {
     complete: "\uC2A4\uD504\uB9B0\uD2B8 \uC644\uB8CC! \uC798\uD558\uC168\uC2B5\uB2C8\uB2E4.",
     words: "+{{n}} \uB2E8\uC5B4",
     header: "\uAE00\uC4F0\uAE30 \uC2A4\uD504\uB9B0\uD2B8",
-    pauseTitle: "\uC77C\uC2DC\uC815\uC9C0/\uC7AC\uAC1C",
-    stopTitle: "\uC2A4\uD504\uB9B0\uD2B8 \uC911\uC9C0"
+    pauseTitle: "\uC2A4\uD504\uB9B0\uD2B8 \uC77C\uC2DC\uC815\uC9C0",
+    stopTitle: "\uC2A4\uD504\uB9B0\uD2B8 \uC911\uC9C0",
+    startTitle: "\uC2A4\uD504\uB9B0\uD2B8 \uC2DC\uC791",
+    resumeTitle: "\uC2A4\uD504\uB9B0\uD2B8 \uC7AC\uAC1C"
   },
   writingModes: {
     switchedTo: "\uAE00\uC4F0\uAE30 \uC2A4\uD29C\uB514\uC624: {{mode}} \uBAA8\uB4DC",
@@ -9289,7 +9325,7 @@ var ko_default = {
     cancel: "\uCDE8\uC18C"
   },
   sprintModal: {
-    title: "\uAE00\uC4F0\uAE30 \uC2A4\uD504\uB9B0\uD2B8 \uC2DC\uC791",
+    setupTitle: "\uC2A4\uD504\uB9B0\uD2B8 \uC124\uC815",
     durationName: "\uC2DC\uAC04 (\uBD84)",
     durationDesc: "\uC0AC\uC804 \uC124\uC815: 10, 15, 25, 30, 45, 60",
     durationCustom: "\uC0AC\uC6A9\uC790 \uC815\uC758\u2026",
@@ -9299,7 +9335,7 @@ var ko_default = {
     scopeName: "\uBC94\uC704",
     scopeFile: "\uD604\uC7AC \uD30C\uC77C",
     scopeProject: "\uC804\uCCB4 \uD504\uB85C\uC81D\uD2B8",
-    startBtn: "\uC2A4\uD504\uB9B0\uD2B8 \uC2DC\uC791",
+    startBtn: "\uC2A4\uD504\uB9B0\uD2B8 \uD0C0\uC774\uBA38 \uC2DC\uC791",
     errorDuration: "\uC720\uD6A8\uD55C \uC2DC\uAC04\uC744 \uC124\uC815\uD558\uC138\uC694.",
     cancel: "\uCDE8\uC18C"
   },
@@ -11019,7 +11055,7 @@ var SprintModal = class extends import_obsidian10.Modal {
     const { contentEl } = this;
     contentEl.empty();
     contentEl.addClass("ws-sprint-modal");
-    contentEl.createEl("h2", { text: t2("sprintModal.title") });
+    contentEl.createEl("h2", { text: t2("sprintModal.setupTitle") });
     new import_obsidian10.Setting(contentEl).setName(t2("sprintModal.durationName")).setDesc(t2("sprintModal.durationDesc")).addDropdown((d) => {
       [10, 15, 25, 30, 45, 60].forEach((m) => {
         d.addOption(String(m), `${m} min`);
@@ -11049,7 +11085,7 @@ var SprintModal = class extends import_obsidian10.Modal {
         new import_obsidian10.Notice(t2("sprintModal.errorDuration"));
         return;
       }
-      this.plugin.sprintTimer.start(this.duration, this.wordGoal || void 0, this.sprintScope);
+      this.plugin.sprintTimer.setup(this.duration, this.wordGoal || void 0, this.sprintScope);
       this.close();
     };
     const cancelBtn = btnRow.createEl("button", { text: t2("sprintModal.cancel") });
@@ -11237,7 +11273,7 @@ var LauncherView = class extends import_obsidian11.ItemView {
         label: t2("launcher.typographyMode"),
         isOn: () => this.plugin.typographyMode.isActive(),
         toggle: () => {
-          this.plugin.typographyMode.toggle();
+          void this.plugin.typographyMode.toggle();
           void this.render();
         }
       }
@@ -11321,33 +11357,21 @@ var LauncherView = class extends import_obsidian11.ItemView {
     const card = root.createDiv("ws-launcher-card");
     card.createDiv({ text: t2("launcher.sprintTimer"), cls: "ws-launcher-card-label" });
     if (this.plugin.sprintTimer.isActive()) {
-      const timeEl = card.createDiv("ws-launcher-sprint-time");
-      timeEl.textContent = this.plugin.sprintTimer.getFormattedRemaining();
-      const ctrlRow = card.createDiv("ws-launcher-sprint-ctrls");
-      const pauseBtn = ctrlRow.createEl("button", { cls: "ws-launcher-action-btn", text: t2("launcher.pause") });
-      pauseBtn.onclick = () => {
-        this.plugin.sprintTimer.pause();
+      card.createDiv({ text: t2("launcher.sprintInProgress"), cls: "ws-launcher-sprint-status" });
+      return;
+    }
+    const startBtn = card.createEl("button", { cls: "ws-launcher-action-btn mod-cta", text: t2("launcher.startSprint") });
+    startBtn.onclick = () => {
+      new SprintModal(this.app, this.plugin).open();
+    };
+    const presets = card.createDiv("ws-launcher-sprint-presets");
+    presets.createSpan({ text: t2("launcher.quickStart"), cls: "ws-launcher-preset-label" });
+    for (const mins of [10, 15, 25]) {
+      const btn = presets.createEl("button", { cls: "ws-launcher-preset-btn", text: `${mins}m` });
+      btn.onclick = () => {
+        this.plugin.sprintTimer.setup(mins);
         void this.render();
       };
-      const stopBtn = ctrlRow.createEl("button", { cls: "ws-launcher-action-btn ws-launcher-stop-btn", text: t2("launcher.stop") });
-      stopBtn.onclick = () => {
-        this.plugin.sprintTimer.stop();
-        void this.render();
-      };
-    } else {
-      const startBtn = card.createEl("button", { cls: "ws-launcher-action-btn mod-cta", text: t2("launcher.startSprint") });
-      startBtn.onclick = () => {
-        new SprintModal(this.app, this.plugin).open();
-      };
-      const presets = card.createDiv("ws-launcher-sprint-presets");
-      presets.createSpan({ text: t2("launcher.quickStart"), cls: "ws-launcher-preset-label" });
-      for (const mins of [10, 15, 25]) {
-        const btn = presets.createEl("button", { cls: "ws-launcher-preset-btn", text: `${mins}m` });
-        btn.onclick = () => {
-          this.plugin.sprintTimer.start(mins);
-          void this.render();
-        };
-      }
     }
   }
   // ── Today Card ───────────────────────────────────────────────────
@@ -11594,35 +11618,35 @@ var TypographyMode = class {
     this.active = false;
     this.plugin = plugin;
     if (plugin.settings.typographyModeActive && plugin.settings.persistTypography) {
-      this.enable();
+      void this.enable();
     }
   }
   isActive() {
     return this.active;
   }
-  toggle() {
+  async toggle() {
     if (this.active) {
-      this.disable();
+      await this.disable();
     } else {
-      this.enable();
+      await this.enable();
     }
   }
-  enable() {
+  async enable() {
     this.active = true;
     this.applyCustomProperties();
     activeDocument.body.classList.add("writing-studio-typography");
     if (this.plugin.settings.persistTypography) {
       this.plugin.settings.typographyModeActive = true;
-      void this.plugin.saveSettings();
+      await this.plugin.saveSettings();
     }
   }
-  disable() {
+  async disable() {
     this.active = false;
     this.removeCustomProperties();
     activeDocument.body.classList.remove("writing-studio-typography");
     if (this.plugin.settings.persistTypography) {
       this.plugin.settings.typographyModeActive = false;
-      void this.plugin.saveSettings();
+      await this.plugin.saveSettings();
     }
   }
   applyCustomProperties() {
@@ -11658,7 +11682,7 @@ var TypographyMode = class {
     }
   }
   destroy() {
-    this.disable();
+    void this.disable();
   }
 };
 
@@ -11722,9 +11746,9 @@ var WritingModes = class {
       this.plugin.focusMode.disable();
     }
     if (config.typographyMode && !this.plugin.typographyMode.isActive()) {
-      this.plugin.typographyMode.enable();
+      await this.plugin.typographyMode.enable();
     } else if (!config.typographyMode && this.plugin.typographyMode.isActive()) {
-      this.plugin.typographyMode.disable();
+      await this.plugin.typographyMode.disable();
     }
     if (config.binderOpen) {
       await this.plugin.openBinder();
@@ -11807,14 +11831,17 @@ var SprintTimer = class {
   isActive() {
     return this.state !== null && this.state.active;
   }
-  start(durationMinutes, wordCountGoal, projectScope = "file") {
+  // Opens overlay in paused/ready state — called by SprintModal and preset buttons.
+  // The clock does not run until the user presses Start on the overlay itself.
+  setup(durationMinutes, wordCountGoal, projectScope = "file") {
     var _a2;
     if ((_a2 = this.state) == null ? void 0 : _a2.active) this.stop();
     this.state = {
       active: true,
-      paused: false,
+      paused: true,
+      ready: true,
       startTime: Date.now(),
-      pausedAt: 0,
+      pausedAt: Date.now(),
       totalPausedMs: 0,
       durationMinutes,
       wordCountGoal,
@@ -11822,8 +11849,7 @@ var SprintTimer = class {
       projectScope
     };
     this.showFloating();
-    this.startInterval();
-    new import_obsidian14.Notice(t2("sprint.started", { minutes: durationMinutes }));
+    this.updateDisplay();
   }
   pause() {
     if (!this.state || !this.state.active || this.state.paused) return;
@@ -11834,19 +11860,25 @@ var SprintTimer = class {
   }
   resume() {
     if (!this.state || !this.state.active || !this.state.paused) return;
+    const wasReady = this.state.ready;
     this.state.totalPausedMs += Date.now() - this.state.pausedAt;
     this.state.paused = false;
+    this.state.ready = false;
     this.startInterval();
     this.updateDisplay();
+    if (wasReady) {
+      new import_obsidian14.Notice(t2("sprint.started", { minutes: this.state.durationMinutes }));
+    }
   }
   stop() {
     if (!this.state) return;
+    const wasReady = this.state.ready;
     this.stopInterval();
-    const session = this.buildSession();
+    const session = wasReady ? null : this.buildSession();
     this.state = null;
     this.hideFloating();
     if (this.statusBarEl) this.statusBarEl.addClass("ws-hidden");
-    if (this.onComplete) void this.onComplete(session);
+    if (!wasReady && session && this.onComplete) void this.onComplete(session);
   }
   buildSession() {
     const s = this.state;
@@ -11925,18 +11957,29 @@ var SprintTimer = class {
     }
   }
   updateDisplay() {
-    var _a2, _b2, _c;
+    var _a2, _b2, _c, _d, _e;
     const time = this.getFormattedRemaining();
-    const paused = ((_a2 = this.state) == null ? void 0 : _a2.paused) ? " \u23F8" : "";
+    const paused = ((_a2 = this.state) == null ? void 0 : _a2.paused) && !((_b2 = this.state) == null ? void 0 : _b2.ready) ? " \u23F8" : "";
     const label = `\u23F1 ${time}${paused}`;
     if (this.floatingEl) {
       const timeEl = this.floatingEl.querySelector(".ws-sprint-time");
       if (timeEl) timeEl.textContent = time;
-      const wc = this.getCurrentWordCount() - (((_b2 = this.state) == null ? void 0 : _b2.startWordCount) || 0);
+      const wc = this.getCurrentWordCount() - (((_c = this.state) == null ? void 0 : _c.startWordCount) || 0);
       const wcEl = this.floatingEl.querySelector(".ws-sprint-wc");
       if (wcEl) wcEl.textContent = t2("sprint.words", { n: Math.max(0, wc) });
       const pauseBtn = this.floatingEl.querySelector(".ws-sprint-pause");
-      if (pauseBtn) pauseBtn.textContent = ((_c = this.state) == null ? void 0 : _c.paused) ? "\u25B6" : "\u23F8";
+      if (pauseBtn) {
+        if ((_d = this.state) == null ? void 0 : _d.ready) {
+          pauseBtn.textContent = "\u25B6";
+          pauseBtn.title = t2("sprint.startTitle");
+        } else if ((_e = this.state) == null ? void 0 : _e.paused) {
+          pauseBtn.textContent = "\u25B6";
+          pauseBtn.title = t2("sprint.resumeTitle");
+        } else {
+          pauseBtn.textContent = "\u23F8";
+          pauseBtn.title = t2("sprint.pauseTitle");
+        }
+      }
     }
     if (this.statusBarEl) {
       this.statusBarEl.textContent = label;
@@ -11951,8 +11994,16 @@ var SprintTimer = class {
     el.createDiv({ cls: "ws-sprint-time", text: "00:00" });
     el.createDiv({ cls: "ws-sprint-wc", text: t2("sprint.words", { n: 0 }) });
     const controls = el.createDiv({ cls: "ws-sprint-controls" });
-    const pauseBtn = controls.createEl("button", { cls: "ws-sprint-pause", title: t2("sprint.pauseTitle"), text: "\u23F8" });
-    const stopBtn = controls.createEl("button", { cls: "ws-sprint-stop", title: t2("sprint.stopTitle"), text: "\u25A0" });
+    const pauseBtn = controls.createEl("button", {
+      cls: "ws-sprint-pause",
+      title: t2("sprint.startTitle"),
+      text: "\u25B6"
+    });
+    const stopBtn = controls.createEl("button", {
+      cls: "ws-sprint-stop",
+      title: t2("sprint.stopTitle"),
+      text: "\u25A0"
+    });
     pauseBtn.onclick = () => {
       var _a2;
       if ((_a2 = this.state) == null ? void 0 : _a2.paused) this.resume();
@@ -11961,7 +12012,37 @@ var SprintTimer = class {
     stopBtn.onclick = () => this.stop();
     activeDocument.body.appendChild(el);
     this.floatingEl = el;
-    this.updateDisplay();
+    this.makeDraggable(el);
+  }
+  makeDraggable(el) {
+    const header = el.querySelector(".ws-sprint-header");
+    if (!header) return;
+    header.addClass("ws-draggable");
+    let startX = 0, startY = 0, startLeft = 0, startTop = 0;
+    const onMove = (e) => {
+      const dx = e.clientX - startX;
+      const dy = e.clientY - startY;
+      const left = Math.max(0, Math.min(activeWindow.innerWidth - el.offsetWidth, startLeft + dx));
+      const top = Math.max(0, Math.min(activeWindow.innerHeight - el.offsetHeight, startTop + dy));
+      el.addClass("ws-sprint-floating--dragged");
+      el.setCssProps({ "--ws-float-x": `${left}px`, "--ws-float-y": `${top}px` });
+    };
+    const onUp = () => {
+      activeDocument.removeEventListener("mousemove", onMove);
+      activeDocument.removeEventListener("mouseup", onUp);
+      header.removeClass("ws-dragging");
+    };
+    header.addEventListener("mousedown", (e) => {
+      const rect = el.getBoundingClientRect();
+      startX = e.clientX;
+      startY = e.clientY;
+      startLeft = rect.left;
+      startTop = rect.top;
+      header.addClass("ws-dragging");
+      activeDocument.addEventListener("mousemove", onMove);
+      activeDocument.addEventListener("mouseup", onUp);
+      e.preventDefault();
+    });
   }
   hideFloating() {
     if (this.floatingEl) {
@@ -14727,7 +14808,7 @@ ${fm}
 var import_obsidian25 = require("obsidian");
 
 // README.md
-var README_default = '<p align="center">\n  <img src="assets/logo.png" width="120" alt="Writing Studio logo">\n</p>\n\n# Obsidian Writing Studio\n\n**Version 2.3.2** \xB7 Desktop only\n\n![GitHub all releases](https://img.shields.io/github/downloads/writerP-777/obsidian-writing-studio/total)\n[![OpenSSF Best Practices](https://www.bestpractices.dev/projects/12832/badge)](https://www.bestpractices.dev/projects/12832)\n\nWriting Studio turns Obsidian into a dedicated environment for serious nonfiction work \u2014 from your first research notes to a finished, exported manuscript. It bundles a project binder, writing modes, focus and typography tools, sprint timer, progress tracking, manuscript export, and WordPress publishing into a single plugin. A built-in sidebar file explorer lets you browse, preview, and pull content from anywhere in your vault without leaving your draft.\n\n<p align="center">\n  <a href="https://buymeacoffee.com/writerp777">\n    <img src="https://img.buymeacoffee.com/button-api/?text=Buy%20me%20a%20coffee&slug=writerp777&button_colour=c9a84c&font_colour=000000&font_family=Georgia&outline_colour=000000&coffee_colour=ffffff" alt="Buy me a coffee" height="40">\n  </a>\n</p>\n\n## Contents\n\n- [Features](#features)\n- [Language support](#language-support)\n- [Your Project](#your-project)\n- [Your Writing Environment](#your-writing-environment)\n- [Tracking Your Progress](#tracking-your-progress)\n- [Getting Your Work Out](#getting-your-work-out)\n- [Supporting Tools](#supporting-tools)\n- [Context Menus](#context-menus)\n- [Commands Reference](#commands-reference)\n- [Settings Overview](#settings-overview)\n- [Ribbon Icon](#ribbon-icon)\n- [Installation](#installation)\n- [Requirements](#requirements)\n- [Reporting a Bug](#reporting-a-bug)\n- [Security](#security)\n\n---\n\n## Features\n\n## Language support\n\nWriting Studio is available in the following languages in addition to English:\n\n- Arabic\n- Chinese (Simplified)\n- French\n- German\n- Japanese\n- Korean\n- Portuguese (Brazil)\n- Russian\n- Spanish\n\n**To change the language:** Open **Settings \u2192 General** in Obsidian, scroll to **Language**, and select your preferred language from the list. Restart Obsidian for the change to take effect. Writing Studio will display in the selected language if it is supported.\n\n**Found a translation error or missing text?** Please open an issue on GitHub \u2014 [Submit a bug report or enhancement request](https://github.com/writerP-777/obsidian-writing-studio/issues/new) \u2014 and include the language, the location in the plugin where the text appears, and what it currently says. We will address it in the next release.\n\n### Writing Studio Launcher\n\nThe Launcher is your home base in Writing Studio \u2014 a sidebar panel that shows your active project, progress toward your goals, and one-click access to every major feature.\n\nBy default it opens automatically when Obsidian loads. To disable this, turn off **Open on startup** in **Settings \u2192 General**.\n\n**To open manually:** Click the feather ribbon icon, or assign a hotkey to **Open launcher** in Settings \u2192 Hotkeys.\n\n**The Launcher includes:**\n- Active project name, total word count, and progress toward your project word count goal\n- Writing mode selector (Draft / Edit / Review)\n- Focus Mode and Typography Mode toggles\n- Sprint timer with quick-start presets (10 m, 15 m, 25 m)\n- Today card showing words written, sprints completed, session word count, and streak\n- Quick-action buttons: Targets Dashboard, Writing Dashboard, Preview manuscript, Export, Writing Log, Publish to WordPress\n\n---\n\n### Your Project\n\n#### Project Manager\n\nProjects group a set of documents (binder items) and act as the scope for export, statistics, and the word count goal banner.\n\n**To create a project:** Use the command **New writing project** from the command palette, or click **+ New** in the Launcher panel.\n\n**To switch projects:** Use the Launcher panel or the project selector at the top of the Binder panel.\n\nEach project stores:\n- Title, type, author, and description\n- Ordered binder with chapters, sections, articles, and notes\n- Per-item word count goals, statuses, and export flags\n- Optional total word count goal (shown in the Launcher and status bar)\n\n**Project templates available at creation:**\n\n| Template | Structure created |\n|----------|------------------|\n| Blank | Empty \u2014 build your own structure |\n| Book | Front Matter, Part 1 / Chapter 1, Back Matter |\n| Article series | Series folder, Article 1 placeholder, series metadata |\n| Blog collection | Date-organized folder, first post placeholder |\n| Journal article | Title Page, Abstract, Keywords, Introduction, Literature Review, Methodology, Findings / Analysis, Discussion, Conclusion, References, Appendices |\n| Magazine article | Pitch / Query Notes, Headline & Deck, Lede, Nut Graf, Body, Quotes & Sources, Kicker, Fact-Check Notes, Author Bio |\n\n---\n\n#### Writing Binder\n\nKeeping a book-length manuscript organized means knowing at a glance which chapters are drafted, which are in progress, and how each contributes to your total word count. The Binder is a sidebar panel that shows all of that for your active project.\n\nEach document shows its title, type (Chapter, Section, Article, Note), status (Draft, In Progress, Complete), and live word count. Documents can be reordered by drag-and-drop and toggled in or out of export.\n\n**To open:** Use the command **Open binder** from the command palette, or assign a hotkey in Settings \u2192 Hotkeys.\n\n**Adding a file to a project:**\n1. Right-click any Markdown file in the file explorer and choose **Add to writing project** under **Writing studio options**.\n2. A modal appears with a dropdown listing all your writing projects.\n3. Select the target project and click **Add to project**.\n\n**Adding files copied directly to the project folder:**\n\nIf you copied or moved files into the project folder outside of Obsidian and they do not appear in the binder, use the **Add files copied to this folder** button in the binder toolbar (immediately to the right of the **+ document** button). The plugin scans the project folder, lists any files not yet in the binder, and lets you select which ones to add before making any changes.\n\n---\n\n#### Compile Preview\n\nThe Compile Preview opens a split pane showing all binder documents for the active project concatenated in order, rendered as a finished manuscript.\n\n**To open:** Use the command **Preview compiled manuscript** from the command palette, or click the **Preview manuscript** button in the Launcher panel.\n\n---\n\n### Your Writing Environment\n\n#### Writing Modes\n\nThree modes shape how the editor behaves. The current mode is always shown in the status bar. Click the mode pill in the status bar to switch modes.\n\n| Mode | Purpose |\n|------|---------|\n| **Draft** | Distraction-free drafting; spell-check and formatting hints suppressed |\n| **Edit** | Revision pass; full editor tooling active |\n| **Review** | Read-only style; ideal for a final proofread |\n| **None** | Normal Obsidian behavior |\n\n**To switch modes:**\n- Click the mode indicator in the status bar.\n- Right-click inside the editor, then choose **Switch writing mode \u2192** under **Writing studio options**.\n- Assign hotkeys to **Switch to draft mode / Edit mode / Review mode** in Settings \u2192 Hotkeys.\n- Use the Writing Studio Launcher panel.\n\nThe active mode persists across Obsidian restarts.\n\n---\n\n#### Focus Mode\n\nFocus Mode dims everything in the editor except the paragraph or sentence you are currently writing, reducing visual noise and keeping attention on the active thought.\n\n**To toggle:** Assign a hotkey to **Toggle focus mode** in Settings \u2192 Hotkeys, or use the toggle in the Launcher panel. Press `Escape` to exit.\n\n**Settings (Settings \u2192 Focus mode):**\n\n| Setting | Description |\n|---------|-------------|\n| Focus unit | Highlight at the **paragraph** or **sentence (line)** level |\n| Dim opacity | How opaque the dimmed text appears (10\u201350%) |\n| Font size override | Override the editor font size while focused; 0 = use theme default |\n| Auto-hide sidebars | Collapse left and right sidebars when Focus Mode activates |\n| Typewriter scroll | Keep the active line vertically centered as you type |\n\n---\n\n#### Typography Mode\n\nTypography Mode applies a consistent, reader-friendly text treatment to the editor: a curated font, constrained line length, controlled line height, and optional letter spacing.\n\n**To toggle:** Assign a hotkey to **Toggle typography mode** in Settings \u2192 Hotkeys, or use the toggle in the Launcher panel.\n\n**To change the font while Typography Mode is active:** Right-click inside the editor and choose **Typography font \u2192** under **Writing studio options**. A font picker menu appears with all available fonts; the active font is shown with a checkmark. Selecting a font applies it immediately and saves the setting.\n\n> **Note on fonts:** Typography fonts are loaded from Google Fonts and require an internet connection the first time each font is used. After the initial load they are cached and work offline.\n\n**Settings (Settings \u2192 Typography):**\n\n| Setting | Description |\n|---------|-------------|\n| Font family | Choose from the curated font list or enter a custom font name |\n| Custom font name | Used when **Custom font name\u2026** is selected above |\n| Max line length | Characters per line (55\u201380); constrains the editor column width |\n| Font size | Editor font size in pixels |\n| Line height | Multiplier; default 1.7 |\n| Letter spacing | CSS `letter-spacing` value (e.g. `normal`, `0.02em`) |\n| Persist across sessions | Keep Typography Mode active when Obsidian reopens |\n\n**Available fonts:**\n\n| Option | Font |\n|--------|------|\n| Monospaced | iA Writer Mono (falls back to Roboto Mono / Courier New) |\n| Serif | iA Writer Duo Serif (falls back to Georgia) |\n| Sans-serif | iA Writer Quattro (falls back to system sans-serif) |\n| Cormorant Garamond | Elegant display serif |\n| Crimson Text | Classic book serif |\n| EB Garamond | Traditional Garamond revival |\n| Libre Baskerville | Readable web serif |\n| Libre Caslon Text | Clean slab serif |\n| Literata | Designed for long-form reading |\n| Lora | Contemporary calligraphic serif |\n| Inter | Modern humanist sans-serif |\n| Lato | Friendly rounded sans-serif |\n| Source Sans 3 | Clean UI sans-serif |\n| Custom font name\u2026 | Use any font installed on your system |\n\n---\n\n### Tracking Your Progress\n\n#### Writing Sprint Timer\n\nThe Sprint Timer runs a timed writing session. A countdown appears in the status bar and in a floating overlay. When the sprint ends, a summary modal shows words written, duration, and words-per-minute. The session is logged to sprint history and optionally appended to your Daily Note.\n\n**To start a sprint:** Use the command **Start writing sprint** from the command palette, assign a hotkey in Settings \u2192 Hotkeys, or use the sprint quick-start buttons in the Launcher panel.\n\nThe sprint modal lets you set:\n- Duration (preset or custom, in minutes)\n- Word count goal for the session\n- Scope (current file or entire project)\n\n**Settings (Settings \u2192 Sprint & goals):**\n\n| Setting | Description |\n|---------|-------------|\n| Default sprint duration | Starting value in the sprint modal (minutes) |\n| Default daily word goal | Target used in the Writing Dashboard and Launcher |\n| Sound notifications | Play a tone when the sprint ends |\n| Sprint history retention | Days to keep sprint records before purging |\n| Inline goal banner | Show a progress bar below the editor toolbar when a document has a word count goal set |\n\n---\n\n#### Word Count Goal\n\nA per-document word count goal can be set and tracked inline.\n\n**To set a goal:**\n- Use the command **Set word count goal** from the command palette.\n- Right-click inside the editor and choose **Set word count goal** under **Writing studio options**.\n\nWhen a goal is set and **Inline goal banner** is enabled, a progress bar appears below the editor toolbar showing current words, goal, and percentage. It updates in real time as you type.\n\n---\n\n#### Session Word Count\n\nThe status bar shows a `(+N)` delta next to the current file\'s word count, indicating how many words you have added since opening that file this session. The Launcher\'s **Today** card also shows a cumulative session total across all files opened during the current Obsidian session. Both counts reset when Obsidian restarts.\n\n---\n\n#### Project Word Count Goal\n\nWhen an active project has a total word count goal set, a dedicated status bar item shows `{current} / {goal} project words`. This updates automatically as you write. Set a project goal in the Project modal when creating or editing a project.\n\n---\n\n#### Writing Dashboard\n\nThe Writing Dashboard shows session statistics (words written, sprints completed, time), sprint history, daily progress toward your goal, and per-project word counts with reading time.\n\n**To open:** Use the command **Open writing dashboard** from the command palette, or click the **Writing dashboard** button in the Launcher panel.\n\n---\n\n#### Targets Dashboard\n\nThe Targets Dashboard lets you assign word count goals to individual documents in the active project\'s binder and track progress across the whole project at a glance. Goals can be edited inline in the table. Rows are sortable and filterable by status.\n\n**To open:** Use the command **Open targets dashboard**, click the **Targets dashboard** button in the Launcher panel, or assign a hotkey in Settings \u2192 Hotkeys.\n\n---\n\n#### Daily Writing Log\n\nThe Writing Log is a sidebar panel that shows your writing history at a glance.\n\n**To open:** Use the command **Open writing log** from the command palette, or click the **Writing log** button in the Launcher panel.\n\n**The Writing Log shows:**\n- Current streak (days in a row with at least one sprint)\n- This session: total session words, sprint words, sprints completed, and minutes written\n- Last 30 days: a bar chart with one row per day showing word count, sprints completed, and a visual bar proportional to the day\'s output\n\nWhen **Append to daily note** is enabled (Settings \u2192 Writing log), a summary of each completed sprint is also appended to today\'s Daily Note.\n\n---\n\n### Getting Your Work Out\n\n#### Export Engine\n\nWhen your draft is ready, the Export Engine converts it to a finished file in your chosen format \u2014 no reformatting required.\n\n**Supported formats:** Manuscript (HTML) \xB7 PDF \xB7 Word (.docx) \xB7 RTF \xB7 HTML \xB7 Markdown \xB7 EPUB\n\n**To export:**\n- Right-click inside the editor and choose **Export this document** under **Writing studio options**.\n- Use the command **Export document** from the command palette.\n- Click the **Export** button in the Launcher panel.\n- Assign a hotkey to **Export document** in Settings \u2192 Hotkeys.\n\n**Manuscript format**\n\nThe Manuscript format produces a self-contained HTML file formatted to industry-standard manuscript conventions:\n- Courier New 12 pt, double-spaced, 1-inch margins\n- Title page with project title, author name, approximate word count, and optional contact information\n- Chapter headings in uppercase, page-break before each\n- Scene breaks rendered as `\xB7 \xB7 \xB7`\n\nNo external tools are required for manuscript export.\n\n**Settings (Settings \u2192 Export):**\n\n| Setting | Description |\n|---------|-------------|\n| Default export format | Pre-selected format in the export modal |\n| Default paper size | Letter (US) or A4 |\n| Export font | Font name used in PDF/DOCX output (e.g. `Georgia`) |\n| Export font size | Point size for PDF/DOCX output |\n| Pandoc path | Full path to the `pandoc` binary if it is not on your system PATH |\n| EPUB language | BCP 47 language tag (e.g. `en`, `fr`, `de`) |\n| EPUB include cover | Generate a text cover page when no cover image is provided |\n\n> **Requirement:** Pandoc must be installed for PDF, DOCX, RTF, HTML, and EPUB export. Download from [pandoc.org](https://pandoc.org/installing.html). For PDF export, a LaTeX distribution (e.g. TeX Live or MiKTeX) is also required. Manuscript (HTML) export does not require Pandoc.\n\n---\n\n#### WordPress Publishing\n\nPublish your finished draft directly to WordPress without leaving Obsidian. The modal lets you choose the target site, set the post title, status, categories, tags, excerpt, and an optional scheduled publication date.\n\n**To publish:**\n- Right-click inside the editor and choose **Publish to WordPress** under **Writing studio options**.\n- Use the command **Publish to wordpress** from the command palette.\n- Click the **Publish to WordPress** button in the Launcher panel.\n- Assign a hotkey to **Publish to wordpress** in Settings \u2192 Hotkeys.\n\n**Setting up a site (Settings \u2192 WordPress):**\n\n1. Click **+ add WordPress site**.\n2. Enter a nickname, the site URL (e.g. `https://yourblog.com`), and your WordPress username.\n3. Generate an application password in WordPress under **Users \u2192 Profile \u2192 Application passwords** and paste it into the **Application password** field.\n4. Click **Test connection** to verify.\n\n**Per-site options:**\n\n| Setting | Description |\n|---------|-------------|\n| Default post status | Draft \xB7 Pending Review \xB7 Published |\n| Wikilink handling | **Strip** removes `[[...]]` syntax, leaving plain text \xB7 **Convert** turns wikilinks into URLs |\n\n---\n\n### Supporting Tools\n\n#### Folder Sidebar Explorer\n\nThe Folder Sidebar Explorer opens a navigable folder tree in a sidebar panel. You can browse subfolders, search by name or file content, sort the listing, preview files inline, and insert copied text directly into the active editor.\n\n**To open:**\n- Use the command **Open folder in sidebar explorer** from the command palette.\n- Right-click any folder in the file explorer and choose **Open in sidebar explorer** under **Writing studio options**.\n- Assign a hotkey in Settings \u2192 Hotkeys.\n\n**Browsing and navigation:**\n\n| Feature | How to use |\n|---------|-----------|\n| Browse into a subfolder | Click the folder |\n| Preview a Markdown file | Click the file \u2014 renders inline |\n| Preview an image | Click the file \u2014 displayed inline |\n| Preview audio | Click the file \u2014 player appears inline |\n| Other file types | Click the file \u2014 an **Open in editor** button appears |\n| Go back | Click **\u2190 back**, or press `Backspace` when the list has keyboard focus |\n| Return to root folder | Click **\u2302 root** |\n| Keyboard navigation | Tab to focus the list, then `\u2191` / `\u2193` to move, `Enter` to open, `Backspace` to go back |\n| Breadcrumb navigation | Click any segment in the breadcrumb trail to jump directly to that folder |\n\n**Search:**\n\nA search bar appears at the top of the folder list. Type your query and press **Enter** to run the search.\n\n- Searches **both folder/file names and file contents** (`.md` and `.txt` files).\n- Frontmatter is excluded from content search to avoid false positives from YAML fields.\n- Name matches show the matched term highlighted in the result title.\n- Content matches show a text snippet around the match with the term highlighted, plus a **CONTENT** badge to distinguish them from name matches.\n- Results always search from the root folder you set, regardless of which subfolder you are currently browsing.\n- Click **\xD7** to clear the search and return to the normal folder view.\n\n**Sort:**\n\nA sort dropdown sits next to the search bar. Options:\n\n| Option | Description |\n|--------|-------------|\n| Folders \u2191 A-Z | Folders first, then files, both alphabetical (default) |\n| Folders \u2191 Z-A | Folders first, then files, both reverse-alphabetical |\n| Name A-Z | All items alphabetical, folders and files mixed |\n| Name Z-A | All items reverse-alphabetical, mixed |\n| Newest first | Sort by last-modified date, newest at top |\n| Oldest first | Sort by last-modified date, oldest at top |\n\n**Copy content to the editor:**\n\nWhen a Markdown file is open in preview mode, its text is selectable. To insert a passage into the active editor:\n\n1. Select the text you want in the preview pane.\n2. Click the **\u21A9 insert selection** button in the nav bar.\n3. The selected text is inserted at the cursor position in the active editor.\n\nThe preview is read-only \u2014 you cannot edit the file from the sidebar.\n\n**Hover tooltips:**\n\nHover over any file or folder in the list to see an information card:\n\n| Item type | Information shown |\n|-----------|------------------|\n| Markdown / text file | Last modified date and time \xB7 File size \xB7 Word count (frontmatter excluded) |\n| Image / audio / other file | Last modified date and time \xB7 File size |\n| Folder | Total file count \xB7 Subfolder count |\n\nThe word count updates asynchronously from Obsidian\'s file cache and appears within a moment of hover.\n\n---\n\n#### Frontmatter Manager\n\nWriting Studio automatically manages YAML frontmatter in your documents when **Frontmatter auto-update** is enabled. On every save it updates:\n\n- `word-count` \u2014 current word count\n- `modified` \u2014 last-modified date\n\nThe `word-count-goal` frontmatter field is read by the inline goal banner and the Word Count Goal modal.\n\n---\n\n## Context Menus\n\nWriting Studio adds items to Obsidian\'s right-click context menus. All Writing Studio items are grouped together under the heading **Writing studio options** to distinguish them from other plugins and Obsidian\'s built-in options.\n\n### Right-click inside an open document (editor menu)\n\n| Option | Action |\n|--------|--------|\n| Export this document | Open the export modal for the current file |\n| Publish to WordPress | Open the WordPress publish modal for the current file |\n| Set word count goal | Set a word count target for the current document |\n| Switch writing mode \u2192 | Open a mode-switcher menu (Draft / Edit / Review / None) |\n| Typography font \u2192 | Open a font picker menu to change the typography font (visible only when Typography Mode is active) |\n\n### Right-click a Markdown file in the file explorer\n\n| Option | Action |\n|--------|--------|\n| Add to writing project | Open a project picker and add the file to the selected project |\n\n### Right-click a folder in the file explorer\n\n| Option | Action |\n|--------|--------|\n| Open in sidebar explorer | Open the folder in the Folder Sidebar Explorer panel |\n\n---\n\n## Commands Reference\n\nNo default hotkeys are assigned. All commands can be given a hotkey in **Settings \u2192 Hotkeys**.\n\n| Command | Description |\n|---------|-------------|\n| Open launcher | Open the launcher sidebar panel |\n| Open binder | Open the writing binder sidebar panel |\n| Open writing log | Open the daily writing log panel |\n| Toggle focus mode | Enable or disable focus mode |\n| Toggle typography mode | Enable or disable typography mode |\n| Switch to draft mode | Activate draft writing mode |\n| Switch to edit mode | Activate edit writing mode |\n| Switch to review mode | Activate review writing mode |\n| Start writing sprint | Open the sprint timer modal |\n| Export document | Export the current document |\n| Export project | Export the full project |\n| Preview compiled manuscript | Open the compile preview pane |\n| Publish to wordpress | Publish the current document to WordPress |\n| New writing project | Create a new writing project |\n| Open writing dashboard | Open the statistics dashboard |\n| Open targets dashboard | Open the word count targets panel |\n| Set word count goal | Set a per-document word count goal |\n| Open folder in sidebar explorer | Search and open a vault folder in the sidebar |\n| Add files copied to project folder | Scan the active project folder for files not in the binder and import selected files |\n\n---\n\n## Settings Overview\n\nOpen via **Settings \u2192 Writing Studio**.\n\n| Tab | What it controls |\n|-----|-----------------|\n| General | Open on startup, default project folder, author name, document type, frontmatter auto-update |\n| Focus mode | Focus unit, dim opacity, font override, sidebar behavior, typewriter scroll |\n| Typography | Font family, custom font name, line length, font size, line height, letter spacing, persistence |\n| Sprint & goals | Sprint duration, daily goal, sound notifications, history retention, inline banner |\n| Export | Format, paper size, font, font size, Pandoc path, EPUB language, EPUB cover |\n| Writing log | Append sprint summaries to Daily Note |\n| WordPress | Site credentials, default post status, wikilink handling |\n\n---\n\n## Ribbon Icon\n\nWriting Studio adds a single icon to the Obsidian ribbon.\n\n| Icon | Action |\n|------|--------|\n| Feather | Open the Writing Studio Launcher panel |\n\nAll other features are accessible from the Launcher panel, the command palette, context menus, or assigned hotkeys.\n\n---\n\n## Installation\n\n1. Download `main.js`, `manifest.json`, and `styles.css` from the latest [GitHub release](../../releases/latest).\n2. Create the folder `<vault>/.obsidian/plugins/obsidian-writing-studio/` if it does not exist.\n3. Copy the three files into that folder.\n4. In Obsidian, go to **Settings \u2192 Community Plugins**, find **Writing Studio**, and enable it.\n\n> **Building from source:** Clone the repository, run `npm install`, then `npm run build`. Copy the three output files as above.\n\n---\n\n## Requirements\n\nMost features work out of the box. A few require additional software for specific functions, noted below.\n\n| Requirement | When needed |\n|-------------|-------------|\n| Obsidian 1.7.2 or later | Always |\n| Desktop (Windows, macOS, Linux) | Always \u2014 this plugin does not run on mobile |\n| Internet connection | First use of each Typography Mode font (cached after that) |\n| [Pandoc](https://pandoc.org/installing.html) | Export to PDF, DOCX, RTF, HTML, EPUB |\n| LaTeX (TeX Live / MiKTeX) | Export to PDF only |\n| WordPress 5.6+ with REST API enabled | WordPress publishing |\n| WordPress Application Password | WordPress publishing |\n\n---\n\n## Reporting a Bug\n\nIf something isn\'t working, please open an issue on GitHub:\n\n**[Submit a bug report](https://github.com/writerP-777/obsidian-writing-studio/issues/new)**\n\nInclude the following when you report:\n\n- Writing Studio version (visible in **Settings \u2192 Community Plugins**)\n- Obsidian version (visible in **Settings \u2192 About**)\n- Operating system (Windows / macOS / Linux) and version\n- What you expected to happen\n- What actually happened, and any steps to reproduce it\n\nFeature requests are welcome in the same place \u2014 please label them as **[Feature Request]** in the issue title.\n\n---\n\n## Security\n\n[![CodeQL](https://github.com/writerP-777/obsidian-writing-studio/actions/workflows/codeql.yml/badge.svg)](https://github.com/writerP-777/obsidian-writing-studio/actions/workflows/codeql.yml)\n[![OpenSSF Scorecard](https://api.securityscorecards.dev/projects/github.com/writerP-777/obsidian-writing-studio/badge)](https://securityscorecards.dev/viewer/?uri=github.com/writerP-777/obsidian-writing-studio)\n[![OpenSSF Baseline](https://www.bestpractices.dev/projects/12832/baseline)](https://www.bestpractices.dev/projects/12832)\n[![ESLint](https://github.com/writerP-777/obsidian-writing-studio/actions/workflows/eslint.yml/badge.svg)](https://github.com/writerP-777/obsidian-writing-studio/actions/workflows/eslint.yml)\n[![ORCID](https://img.shields.io/badge/ORCID-0009--0009--8598--2069-brightgreen?logo=orcid&logoColor=white)](https://orcid.org/0009-0009-8598-2069)\n\nEvery push and pull request is scanned automatically:\n\n| Tool | What it checks |\n|------|----------------|\n| **CodeQL** | Static analysis for security vulnerabilities (XSS, injection, unsafe patterns) in TypeScript/JavaScript source |\n| **OpenSSF Scorecard** | Supply-chain security posture: dependency hygiene, branch protection, signed releases, and more |\n| **ESLint** (`eslint-plugin-obsidianmd`) | Obsidian plugin guideline compliance \u2014 fails on any warning or error |\n\nResults are published to the **Security** tab of this repository (GitHub code scanning).\n\nFor local development, a pre-commit hook runs ESLint (blocking) and a pre-push hook runs a full CodeQL scan (blocks the push if any HIGH or CRITICAL findings are present). Install the [CodeQL CLI](https://github.com/github/codeql-cli-binaries/releases) to enable local scanning (`winget install GitHub.CodeQL` on Windows).\n';
+var README_default = '<p align="center">\r\n  <img src="assets/logo.png" width="120" alt="Writing Studio logo">\r\n</p>\r\n\r\n# Obsidian Writing Studio\r\n\r\n**Version 2.4.0** \xB7 Desktop only\r\n\r\n![GitHub all releases](https://img.shields.io/github/downloads/writerP-777/obsidian-writing-studio/total)\r\n[![OpenSSF Best Practices](https://www.bestpractices.dev/projects/12832/badge)](https://www.bestpractices.dev/projects/12832)\r\n\r\nWriting Studio turns Obsidian into a dedicated environment for serious nonfiction work \u2014 from your first research notes to a finished, exported manuscript. It bundles a project binder, writing modes, focus and typography tools, sprint timer, progress tracking, manuscript export, and WordPress publishing into a single plugin. A built-in sidebar file explorer lets you browse, preview, and pull content from anywhere in your vault without leaving your draft.\r\n\r\n<p align="center">\r\n  <a href="https://buymeacoffee.com/writerp777">\r\n    <img src="https://img.buymeacoffee.com/button-api/?text=Buy%20me%20a%20coffee&slug=writerp777&button_colour=c9a84c&font_colour=000000&font_family=Georgia&outline_colour=000000&coffee_colour=ffffff" alt="Buy me a coffee" height="40">\r\n  </a>\r\n</p>\r\n\r\n## Contents\r\n\r\n- [Features](#features)\r\n- [Language support](#language-support)\r\n- [Your Project](#your-project)\r\n- [Your Writing Environment](#your-writing-environment)\r\n- [Tracking Your Progress](#tracking-your-progress)\r\n- [Getting Your Work Out](#getting-your-work-out)\r\n- [Supporting Tools](#supporting-tools)\r\n- [Context Menus](#context-menus)\r\n- [Commands Reference](#commands-reference)\r\n- [Settings Overview](#settings-overview)\r\n- [Ribbon Icon](#ribbon-icon)\r\n- [Installation](#installation)\r\n- [Requirements](#requirements)\r\n- [Reporting a Bug](#reporting-a-bug)\r\n- [Security](#security)\r\n\r\n---\r\n\r\n## Features\r\n\r\n## Language support\r\n\r\nWriting Studio is available in the following languages in addition to English:\r\n\r\n- Arabic\r\n- Chinese (Simplified)\r\n- French\r\n- German\r\n- Japanese\r\n- Korean\r\n- Portuguese (Brazil)\r\n- Russian\r\n- Spanish\r\n\r\n**To change the language:** Open **Settings \u2192 General** in Obsidian, scroll to **Language**, and select your preferred language from the list. Restart Obsidian for the change to take effect. Writing Studio will display in the selected language if it is supported.\r\n\r\n**Found a translation error or missing text?** Please open an issue on GitHub \u2014 [Submit a bug report or enhancement request](https://github.com/writerP-777/obsidian-writing-studio/issues/new) \u2014 and include the language, the location in the plugin where the text appears, and what it currently says. We will address it in the next release.\r\n\r\n### Writing Studio Launcher\r\n\r\nThe Launcher is your home base in Writing Studio \u2014 a sidebar panel that shows your active project, progress toward your goals, and one-click access to every major feature.\r\n\r\nBy default it opens automatically when Obsidian loads. To disable this, turn off **Open on startup** in **Settings \u2192 General**.\r\n\r\n**To open manually:** Click the feather ribbon icon, or assign a hotkey to **Open launcher** in Settings \u2192 Hotkeys.\r\n\r\n**The Launcher includes:**\r\n- Active project name, total word count, and progress toward your project word count goal\r\n- Writing mode selector (Draft / Edit / Review)\r\n- Focus Mode and Typography Mode toggles\r\n- Sprint timer with "Set up sprint" button and Quick Sprint Options presets (10 m, 15 m, 25 m)\r\n- Today card showing words written, sprints completed, session word count, and streak\r\n- Quick-action buttons: Targets Dashboard, Writing Dashboard, Preview manuscript, Export, Writing Log, Publish to WordPress\r\n\r\n---\r\n\r\n### Your Project\r\n\r\n#### Project Manager\r\n\r\nProjects group a set of documents (binder items) and act as the scope for export, statistics, and the word count goal banner.\r\n\r\n**To create a project:** Use the command **New writing project** from the command palette, or click **+ New** in the Launcher panel.\r\n\r\n**To switch projects:** Use the Launcher panel or the project selector at the top of the Binder panel.\r\n\r\nEach project stores:\r\n- Title, type, author, and description\r\n- Ordered binder with chapters, sections, articles, and notes\r\n- Per-item word count goals, statuses, and export flags\r\n- Optional total word count goal (shown in the Launcher and status bar)\r\n\r\n**Project templates available at creation:**\r\n\r\n| Template | Structure created |\r\n|----------|------------------|\r\n| Blank | Empty \u2014 build your own structure |\r\n| Book | Front Matter, Part 1 / Chapter 1, Back Matter |\r\n| Article series | Series folder, Article 1 placeholder, series metadata |\r\n| Blog collection | Date-organized folder, first post placeholder |\r\n| Journal article | Title Page, Abstract, Keywords, Introduction, Literature Review, Methodology, Findings / Analysis, Discussion, Conclusion, References, Appendices |\r\n| Magazine article | Pitch / Query Notes, Headline & Deck, Lede, Nut Graf, Body, Quotes & Sources, Kicker, Fact-Check Notes, Author Bio |\r\n\r\n---\r\n\r\n#### Writing Binder\r\n\r\nKeeping a book-length manuscript organized means knowing at a glance which chapters are drafted, which are in progress, and how each contributes to your total word count. The Binder is a sidebar panel that shows all of that for your active project.\r\n\r\nEach document shows its title, type (Chapter, Section, Article, Note), status (Draft, In Progress, Complete), and live word count. Documents can be reordered by drag-and-drop and toggled in or out of export.\r\n\r\n**To open:** Use the command **Open binder** from the command palette, or assign a hotkey in Settings \u2192 Hotkeys.\r\n\r\n**Adding a file to a project:**\r\n1. Right-click any Markdown file in the file explorer and choose **Add to writing project** under **Writing studio options**.\r\n2. A modal appears with a dropdown listing all your writing projects.\r\n3. Select the target project and click **Add to project**.\r\n\r\n**Adding files copied directly to the project folder:**\r\n\r\nIf you copied or moved files into the project folder outside of Obsidian and they do not appear in the binder, use the **Add files copied to this folder** button in the binder toolbar (immediately to the right of the **+ document** button). The plugin scans the project folder, lists any files not yet in the binder, and lets you select which ones to add before making any changes.\r\n\r\n---\r\n\r\n#### Compile Preview\r\n\r\nThe Compile Preview opens a split pane showing all binder documents for the active project concatenated in order, rendered as a finished manuscript.\r\n\r\n**To open:** Use the command **Preview compiled manuscript** from the command palette, or click the **Preview manuscript** button in the Launcher panel.\r\n\r\n---\r\n\r\n### Your Writing Environment\r\n\r\n#### Writing Modes\r\n\r\nThree modes shape how the editor behaves. The current mode is always shown in the status bar. Click the mode pill in the status bar to switch modes.\r\n\r\n| Mode | Purpose |\r\n|------|---------|\r\n| **Draft** | Distraction-free drafting; spell-check and formatting hints suppressed |\r\n| **Edit** | Revision pass; full editor tooling active |\r\n| **Review** | Read-only style; ideal for a final proofread |\r\n| **None** | Normal Obsidian behavior |\r\n\r\n**To switch modes:**\r\n- Click the mode indicator in the status bar.\r\n- Right-click inside the editor, then choose **Switch writing mode \u2192** under **Writing studio options**.\r\n- Assign hotkeys to **Switch to draft mode / Edit mode / Review mode** in Settings \u2192 Hotkeys.\r\n- Use the Writing Studio Launcher panel.\r\n\r\nThe active mode persists across Obsidian restarts.\r\n\r\n---\r\n\r\n#### Focus Mode\r\n\r\nFocus Mode dims everything in the editor except the paragraph or sentence you are currently writing, reducing visual noise and keeping attention on the active thought.\r\n\r\n**To toggle:** Assign a hotkey to **Toggle focus mode** in Settings \u2192 Hotkeys, or use the toggle in the Launcher panel. Press `Escape` to exit.\r\n\r\n**Settings (Settings \u2192 Focus mode):**\r\n\r\n| Setting | Description |\r\n|---------|-------------|\r\n| Focus unit | Highlight at the **paragraph** or **sentence (line)** level |\r\n| Dim opacity | How opaque the dimmed text appears (10\u201350%) |\r\n| Font size override | Override the editor font size while focused; 0 = use theme default |\r\n| Auto-hide sidebars | Collapse left and right sidebars when Focus Mode activates |\r\n| Typewriter scroll | Keep the active line vertically centered as you type |\r\n\r\n---\r\n\r\n#### Typography Mode\r\n\r\nTypography Mode applies a consistent, reader-friendly text treatment to the editor: a curated font, constrained line length, controlled line height, and optional letter spacing.\r\n\r\n**To toggle:** Assign a hotkey to **Toggle typography mode** in Settings \u2192 Hotkeys, or use the toggle in the Launcher panel.\r\n\r\n**To change the font while Typography Mode is active:** Right-click inside the editor and choose **Typography font \u2192** under **Writing studio options**. A font picker menu appears with all available fonts; the active font is shown with a checkmark. Selecting a font applies it immediately and saves the setting.\r\n\r\n> **Note on fonts:** Typography fonts are loaded from Google Fonts and require an internet connection the first time each font is used. After the initial load they are cached and work offline.\r\n\r\n**Settings (Settings \u2192 Typography):**\r\n\r\n| Setting | Description |\r\n|---------|-------------|\r\n| Font family | Choose from the curated font list or enter a custom font name |\r\n| Custom font name | Used when **Custom font name\u2026** is selected above |\r\n| Max line length | Characters per line (55\u201380); constrains the editor column width |\r\n| Font size | Editor font size in pixels |\r\n| Line height | Multiplier; default 1.7 |\r\n| Letter spacing | CSS `letter-spacing` value (e.g. `normal`, `0.02em`) |\r\n| Persist across sessions | Keep Typography Mode active when Obsidian reopens |\r\n\r\n**Available fonts:**\r\n\r\n| Option | Font |\r\n|--------|------|\r\n| Monospaced | iA Writer Mono (falls back to Roboto Mono / Courier New) |\r\n| Serif | iA Writer Duo Serif (falls back to Georgia) |\r\n| Sans-serif | iA Writer Quattro (falls back to system sans-serif) |\r\n| Cormorant Garamond | Elegant display serif |\r\n| Crimson Text | Classic book serif |\r\n| EB Garamond | Traditional Garamond revival |\r\n| Libre Baskerville | Readable web serif |\r\n| Libre Caslon Text | Clean slab serif |\r\n| Literata | Designed for long-form reading |\r\n| Lora | Contemporary calligraphic serif |\r\n| Inter | Modern humanist sans-serif |\r\n| Lato | Friendly rounded sans-serif |\r\n| Source Sans 3 | Clean UI sans-serif |\r\n| Custom font name\u2026 | Use any font installed on your system |\r\n\r\n---\r\n\r\n### Tracking Your Progress\r\n\r\n#### Writing Sprint Timer\r\n\r\nThe Sprint Timer runs a timed writing session. When a sprint is active, a floating overlay displays the countdown and gives you full control \u2014 without requiring you to stay on the dashboard.\r\n\r\n**To set up a sprint:**\r\n\r\n- Click **Set up sprint** in the Launcher panel to open the sprint configuration modal.\r\n- Or click one of the **Quick Sprint Options** preset buttons (10 m, 15 m, 25 m) in the Launcher panel to load a duration directly.\r\n\r\nEither path opens the floating overlay in a ready state \u2014 the timer does not start until you press \u25B6 on the overlay itself. This gives you time to navigate to your draft or open the Binder before the clock begins.\r\n\r\n**Sprint configuration modal:**\r\n\r\nThe modal lets you set:\r\n\r\n- Duration (preset or custom, in minutes)\r\n- Word count goal for the session\r\n- Scope (current file or entire project)\r\n\r\nClick **Launch sprint timer** to open the overlay in ready state.\r\n\r\n**Using the floating overlay:**\r\n\r\n| Control | Action |\r\n|---------|--------|\r\n| \u25B6 | Start or resume the sprint |\r\n| \u23F8 | Pause the sprint |\r\n| \u25A0 | Stop and end the sprint |\r\n\r\nThe overlay is draggable \u2014 click and drag the header to reposition it anywhere on screen. It stays on top regardless of writing mode or Focus Mode. The current countdown is also shown in the Obsidian status bar (`\u23F1 MM:SS`) and, when Focus Mode is active, in the focus toolbar.\r\n\r\nWhen the sprint ends, a summary modal shows words written, duration, and words-per-minute. The session is logged to sprint history and optionally appended to your Daily Note.\r\n\r\n**Settings (Settings \u2192 Sprint & goals):**\r\n\r\n| Setting | Description |\r\n|---------|-------------|\r\n| Default sprint duration | Starting value in the sprint modal (minutes) |\r\n| Default daily word goal | Target used in the Writing Dashboard and Launcher |\r\n| Sound notifications | Play a tone when the sprint ends |\r\n| Sprint history retention | Days to keep sprint records before purging |\r\n| Inline goal banner | Show a progress bar below the editor toolbar when a document has a word count goal set |\r\n\r\n---\r\n\r\n#### Word Count Goal\r\n\r\nA per-document word count goal can be set and tracked inline.\r\n\r\n**To set a goal:**\r\n- Use the command **Set word count goal** from the command palette.\r\n- Right-click inside the editor and choose **Set word count goal** under **Writing studio options**.\r\n\r\nWhen a goal is set and **Inline goal banner** is enabled, a progress bar appears below the editor toolbar showing current words, goal, and percentage. It updates in real time as you type.\r\n\r\n---\r\n\r\n#### Session Word Count\r\n\r\nThe status bar shows a `(+N)` delta next to the current file\'s word count, indicating how many words you have added since opening that file this session. The Launcher\'s **Today** card also shows a cumulative session total across all files opened during the current Obsidian session. Both counts reset when Obsidian restarts.\r\n\r\n---\r\n\r\n#### Project Word Count Goal\r\n\r\nWhen an active project has a total word count goal set, a dedicated status bar item shows `{current} / {goal} project words`. This updates automatically as you write. Set a project goal in the Project modal when creating or editing a project.\r\n\r\n---\r\n\r\n#### Writing Dashboard\r\n\r\nThe Writing Dashboard shows session statistics (words written, sprints completed, time), sprint history, daily progress toward your goal, and per-project word counts with reading time.\r\n\r\n**To open:** Use the command **Open writing dashboard** from the command palette, or click the **Writing dashboard** button in the Launcher panel.\r\n\r\n---\r\n\r\n#### Targets Dashboard\r\n\r\nThe Targets Dashboard lets you assign word count goals to individual documents in the active project\'s binder and track progress across the whole project at a glance. Goals can be edited inline in the table. Rows are sortable and filterable by status.\r\n\r\n**To open:** Use the command **Open targets dashboard**, click the **Targets dashboard** button in the Launcher panel, or assign a hotkey in Settings \u2192 Hotkeys.\r\n\r\n---\r\n\r\n#### Daily Writing Log\r\n\r\nThe Writing Log is a sidebar panel that shows your writing history at a glance.\r\n\r\n**To open:** Use the command **Open writing log** from the command palette, or click the **Writing log** button in the Launcher panel.\r\n\r\n**The Writing Log shows:**\r\n- Current streak (days in a row with at least one sprint)\r\n- This session: total session words, sprint words, sprints completed, and minutes written\r\n- Last 30 days: a bar chart with one row per day showing word count, sprints completed, and a visual bar proportional to the day\'s output\r\n\r\nWhen **Append to daily note** is enabled (Settings \u2192 Writing log), a summary of each completed sprint is also appended to today\'s Daily Note.\r\n\r\n---\r\n\r\n### Getting Your Work Out\r\n\r\n#### Export Engine\r\n\r\nWhen your draft is ready, the Export Engine converts it to a finished file in your chosen format \u2014 no reformatting required.\r\n\r\n**Supported formats:** Manuscript (HTML) \xB7 PDF \xB7 Word (.docx) \xB7 RTF \xB7 HTML \xB7 Markdown \xB7 EPUB\r\n\r\n**To export:**\r\n- Right-click inside the editor and choose **Export this document** under **Writing studio options**.\r\n- Use the command **Export document** from the command palette.\r\n- Click the **Export** button in the Launcher panel.\r\n- Assign a hotkey to **Export document** in Settings \u2192 Hotkeys.\r\n\r\n**Manuscript format**\r\n\r\nThe Manuscript format produces a self-contained HTML file formatted to industry-standard manuscript conventions:\r\n- Courier New 12 pt, double-spaced, 1-inch margins\r\n- Title page with project title, author name, approximate word count, and optional contact information\r\n- Chapter headings in uppercase, page-break before each\r\n- Scene breaks rendered as `\xB7 \xB7 \xB7`\r\n\r\nNo external tools are required for manuscript export.\r\n\r\n**Settings (Settings \u2192 Export):**\r\n\r\n| Setting | Description |\r\n|---------|-------------|\r\n| Default export format | Pre-selected format in the export modal |\r\n| Default paper size | Letter (US) or A4 |\r\n| Export font | Font name used in PDF/DOCX output (e.g. `Georgia`) |\r\n| Export font size | Point size for PDF/DOCX output |\r\n| Pandoc path | Full path to the `pandoc` binary if it is not on your system PATH |\r\n| EPUB language | BCP 47 language tag (e.g. `en`, `fr`, `de`) |\r\n| EPUB include cover | Generate a text cover page when no cover image is provided |\r\n\r\n> **Requirement:** Pandoc must be installed for PDF, DOCX, RTF, HTML, and EPUB export. Download from [pandoc.org](https://pandoc.org/installing.html). For PDF export, a LaTeX distribution (e.g. TeX Live or MiKTeX) is also required. Manuscript (HTML) export does not require Pandoc.\r\n\r\n---\r\n\r\n#### WordPress Publishing\r\n\r\nPublish your finished draft directly to WordPress without leaving Obsidian. The modal lets you choose the target site, set the post title, status, categories, tags, excerpt, and an optional scheduled publication date.\r\n\r\n**To publish:**\r\n- Right-click inside the editor and choose **Publish to WordPress** under **Writing studio options**.\r\n- Use the command **Publish to wordpress** from the command palette.\r\n- Click the **Publish to WordPress** button in the Launcher panel.\r\n- Assign a hotkey to **Publish to wordpress** in Settings \u2192 Hotkeys.\r\n\r\n**Setting up a site (Settings \u2192 WordPress):**\r\n\r\n1. Click **+ add WordPress site**.\r\n2. Enter a nickname, the site URL (e.g. `https://yourblog.com`), and your WordPress username.\r\n3. Generate an application password in WordPress under **Users \u2192 Profile \u2192 Application passwords** and paste it into the **Application password** field.\r\n4. Click **Test connection** to verify.\r\n\r\n**Per-site options:**\r\n\r\n| Setting | Description |\r\n|---------|-------------|\r\n| Default post status | Draft \xB7 Pending Review \xB7 Published |\r\n| Wikilink handling | **Strip** removes `[[...]]` syntax, leaving plain text \xB7 **Convert** turns wikilinks into URLs |\r\n\r\n**Preserving your credentials across updates**\r\n\r\nWriting Studio stores your WordPress site credentials in your vault\'s `.obsidian/plugins/writing-studio/data.json` file. Obsidian\'s in-app update process does not touch this file \u2014 your credentials are preserved automatically. However, if you uninstall and reinstall the plugin manually, or if a vault sync conflict overwrites `data.json`, credentials will be lost and will need to be re-entered. To avoid this, always use Obsidian\'s built-in Update button rather than uninstalling manually.\r\n\r\n---\r\n\r\n### Supporting Tools\r\n\r\n#### Folder Sidebar Explorer\r\n\r\nThe Folder Sidebar Explorer opens a navigable folder tree in a sidebar panel. You can browse subfolders, search by name or file content, sort the listing, preview files inline, and insert copied text directly into the active editor.\r\n\r\n**To open:**\r\n- Use the command **Open folder in sidebar explorer** from the command palette.\r\n- Right-click any folder in the file explorer and choose **Open in sidebar explorer** under **Writing studio options**.\r\n- Assign a hotkey in Settings \u2192 Hotkeys.\r\n\r\n**Browsing and navigation:**\r\n\r\n| Feature | How to use |\r\n|---------|-----------|\r\n| Browse into a subfolder | Click the folder |\r\n| Preview a Markdown file | Click the file \u2014 renders inline |\r\n| Preview an image | Click the file \u2014 displayed inline |\r\n| Preview audio | Click the file \u2014 player appears inline |\r\n| Other file types | Click the file \u2014 an **Open in editor** button appears |\r\n| Go back | Click **\u2190 back**, or press `Backspace` when the list has keyboard focus |\r\n| Return to root folder | Click **\u2302 root** |\r\n| Keyboard navigation | Tab to focus the list, then `\u2191` / `\u2193` to move, `Enter` to open, `Backspace` to go back |\r\n| Breadcrumb navigation | Click any segment in the breadcrumb trail to jump directly to that folder |\r\n\r\n**Search:**\r\n\r\nA search bar appears at the top of the folder list. Type your query and press **Enter** to run the search.\r\n\r\n- Searches **both folder/file names and file contents** (`.md` and `.txt` files).\r\n- Frontmatter is excluded from content search to avoid false positives from YAML fields.\r\n- Name matches show the matched term highlighted in the result title.\r\n- Content matches show a text snippet around the match with the term highlighted, plus a **CONTENT** badge to distinguish them from name matches.\r\n- Results always search from the root folder you set, regardless of which subfolder you are currently browsing.\r\n- Click **\xD7** to clear the search and return to the normal folder view.\r\n\r\n**Sort:**\r\n\r\nA sort dropdown sits next to the search bar. Options:\r\n\r\n| Option | Description |\r\n|--------|-------------|\r\n| Folders \u2191 A-Z | Folders first, then files, both alphabetical (default) |\r\n| Folders \u2191 Z-A | Folders first, then files, both reverse-alphabetical |\r\n| Name A-Z | All items alphabetical, folders and files mixed |\r\n| Name Z-A | All items reverse-alphabetical, mixed |\r\n| Newest first | Sort by last-modified date, newest at top |\r\n| Oldest first | Sort by last-modified date, oldest at top |\r\n\r\n**Copy content to the editor:**\r\n\r\nWhen a Markdown file is open in preview mode, its text is selectable. To insert a passage into the active editor:\r\n\r\n1. Select the text you want in the preview pane.\r\n2. Click the **\u21A9 insert selection** button in the nav bar.\r\n3. The selected text is inserted at the cursor position in the active editor.\r\n\r\nThe preview is read-only \u2014 you cannot edit the file from the sidebar.\r\n\r\n**Hover tooltips:**\r\n\r\nHover over any file or folder in the list to see an information card:\r\n\r\n| Item type | Information shown |\r\n|-----------|------------------|\r\n| Markdown / text file | Last modified date and time \xB7 File size \xB7 Word count (frontmatter excluded) |\r\n| Image / audio / other file | Last modified date and time \xB7 File size |\r\n| Folder | Total file count \xB7 Subfolder count |\r\n\r\nThe word count updates asynchronously from Obsidian\'s file cache and appears within a moment of hover.\r\n\r\n---\r\n\r\n#### Frontmatter Manager\r\n\r\nWriting Studio automatically manages YAML frontmatter in your documents when **Frontmatter auto-update** is enabled. On every save it updates:\r\n\r\n- `word-count` \u2014 current word count\r\n- `modified` \u2014 last-modified date\r\n\r\nThe `word-count-goal` frontmatter field is read by the inline goal banner and the Word Count Goal modal.\r\n\r\n---\r\n\r\n## Context Menus\r\n\r\nWriting Studio adds items to Obsidian\'s right-click context menus. All Writing Studio items are grouped together under the heading **Writing studio options** to distinguish them from other plugins and Obsidian\'s built-in options.\r\n\r\n### Right-click inside an open document (editor menu)\r\n\r\n| Option | Action |\r\n|--------|--------|\r\n| Export this document | Open the export modal for the current file |\r\n| Publish to WordPress | Open the WordPress publish modal for the current file |\r\n| Set word count goal | Set a word count target for the current document |\r\n| Switch writing mode \u2192 | Open a mode-switcher menu (Draft / Edit / Review / None) |\r\n| Typography font \u2192 | Open a font picker menu to change the typography font (visible only when Typography Mode is active) |\r\n\r\n### Right-click a Markdown file in the file explorer\r\n\r\n| Option | Action |\r\n|--------|--------|\r\n| Add to writing project | Open a project picker and add the file to the selected project |\r\n\r\n### Right-click a folder in the file explorer\r\n\r\n| Option | Action |\r\n|--------|--------|\r\n| Open in sidebar explorer | Open the folder in the Folder Sidebar Explorer panel |\r\n\r\n---\r\n\r\n## Commands Reference\r\n\r\nNo default hotkeys are assigned. All commands can be given a hotkey in **Settings \u2192 Hotkeys**.\r\n\r\n| Command | Description |\r\n|---------|-------------|\r\n| Open launcher | Open the launcher sidebar panel |\r\n| Open binder | Open the writing binder sidebar panel |\r\n| Open writing log | Open the daily writing log panel |\r\n| Toggle focus mode | Enable or disable focus mode |\r\n| Toggle typography mode | Enable or disable typography mode |\r\n| Switch to draft mode | Activate draft writing mode |\r\n| Switch to edit mode | Activate edit writing mode |\r\n| Switch to review mode | Activate review writing mode |\r\n| Start writing sprint | Open the sprint timer modal |\r\n| Export document | Export the current document |\r\n| Export project | Export the full project |\r\n| Preview compiled manuscript | Open the compile preview pane |\r\n| Publish to wordpress | Publish the current document to WordPress |\r\n| New writing project | Create a new writing project |\r\n| Open writing dashboard | Open the statistics dashboard |\r\n| Open targets dashboard | Open the word count targets panel |\r\n| Set word count goal | Set a per-document word count goal |\r\n| Open folder in sidebar explorer | Search and open a vault folder in the sidebar |\r\n| Add files copied to project folder | Scan the active project folder for files not in the binder and import selected files |\r\n\r\n---\r\n\r\n## Settings Overview\r\n\r\nOpen via **Settings \u2192 Writing Studio**.\r\n\r\n| Tab | What it controls |\r\n|-----|-----------------|\r\n| General | Open on startup, default project folder, author name, document type, frontmatter auto-update |\r\n| Focus mode | Focus unit, dim opacity, font override, sidebar behavior, typewriter scroll |\r\n| Typography | Font family, custom font name, line length, font size, line height, letter spacing, persistence |\r\n| Sprint & goals | Sprint duration, daily goal, sound notifications, history retention, inline banner |\r\n| Export | Format, paper size, font, font size, Pandoc path, EPUB language, EPUB cover |\r\n| Writing log | Append sprint summaries to Daily Note |\r\n| WordPress | Site credentials, default post status, wikilink handling |\r\n\r\n---\r\n\r\n## Ribbon Icon\r\n\r\nWriting Studio adds a single icon to the Obsidian ribbon.\r\n\r\n| Icon | Action |\r\n|------|--------|\r\n| Feather | Open the Writing Studio Launcher panel |\r\n\r\nAll other features are accessible from the Launcher panel, the command palette, context menus, or assigned hotkeys.\r\n\r\n---\r\n\r\n## Installation\r\n\r\n1. Download `main.js`, `manifest.json`, and `styles.css` from the latest [GitHub release](../../releases/latest).\r\n2. Create the folder `<vault>/.obsidian/plugins/obsidian-writing-studio/` if it does not exist.\r\n3. Copy the three files into that folder.\r\n4. In Obsidian, go to **Settings \u2192 Community Plugins**, find **Writing Studio**, and enable it.\r\n\r\n> **Building from source:** Clone the repository, run `npm install`, then `npm run build`. Copy the three output files as above.\r\n\r\n---\r\n\r\n## Requirements\r\n\r\nMost features work out of the box. A few require additional software for specific functions, noted below.\r\n\r\n| Requirement | When needed |\r\n|-------------|-------------|\r\n| Obsidian 1.7.2 or later | Always |\r\n| Desktop (Windows, macOS, Linux) | Always \u2014 this plugin does not run on mobile |\r\n| Internet connection | First use of each Typography Mode font (cached after that) |\r\n| [Pandoc](https://pandoc.org/installing.html) | Export to PDF, DOCX, RTF, HTML, EPUB |\r\n| LaTeX (TeX Live / MiKTeX) | Export to PDF only |\r\n| WordPress 5.6+ with REST API enabled | WordPress publishing |\r\n| WordPress Application Password | WordPress publishing |\r\n\r\n---\r\n\r\n## Reporting a Bug\r\n\r\nIf something isn\'t working, please open an issue on GitHub:\r\n\r\n**[Submit a bug report](https://github.com/writerP-777/obsidian-writing-studio/issues/new)**\r\n\r\nInclude the following when you report:\r\n\r\n- Writing Studio version (visible in **Settings \u2192 Community Plugins**)\r\n- Obsidian version (visible in **Settings \u2192 About**)\r\n- Operating system (Windows / macOS / Linux) and version\r\n- What you expected to happen\r\n- What actually happened, and any steps to reproduce it\r\n\r\nFeature requests are welcome in the same place \u2014 please label them as **[Feature Request]** in the issue title.\r\n\r\n---\r\n\r\n## Security\r\n\r\n[![CodeQL](https://github.com/writerP-777/obsidian-writing-studio/actions/workflows/codeql.yml/badge.svg)](https://github.com/writerP-777/obsidian-writing-studio/actions/workflows/codeql.yml)\r\n[![OpenSSF Scorecard](https://api.securityscorecards.dev/projects/github.com/writerP-777/obsidian-writing-studio/badge)](https://securityscorecards.dev/viewer/?uri=github.com/writerP-777/obsidian-writing-studio)\r\n[![OpenSSF Baseline](https://www.bestpractices.dev/projects/12832/baseline)](https://www.bestpractices.dev/projects/12832)\r\n[![ESLint](https://github.com/writerP-777/obsidian-writing-studio/actions/workflows/eslint.yml/badge.svg)](https://github.com/writerP-777/obsidian-writing-studio/actions/workflows/eslint.yml)\r\n[![ORCID](https://img.shields.io/badge/ORCID-0009--0009--8598--2069-brightgreen?logo=orcid&logoColor=white)](https://orcid.org/0009-0009-8598-2069)\r\n\r\nEvery push and pull request is scanned automatically:\r\n\r\n| Tool | What it checks |\r\n|------|----------------|\r\n| **CodeQL** | Static analysis for security vulnerabilities (XSS, injection, unsafe patterns) in TypeScript/JavaScript source |\r\n| **OpenSSF Scorecard** | Supply-chain security posture: dependency hygiene, branch protection, signed releases, and more |\r\n| **ESLint** (`eslint-plugin-obsidianmd`) | Obsidian plugin guideline compliance \u2014 fails on any warning or error |\r\n\r\nResults are published to the **Security** tab of this repository (GitHub code scanning).\r\n\r\nFor local development, a pre-commit hook runs ESLint (blocking) and a pre-push hook runs a full CodeQL scan (blocks the push if any HIGH or CRITICAL findings are present). Install the [CodeQL CLI](https://github.com/github/codeql-cli-binaries/releases) to enable local scanning (`winget install GitHub.CodeQL` on Windows).\r\n';
 
 // src/HelpContent.ts
 var featuresIndex = README_default.indexOf("\n## Features");
@@ -16044,7 +16125,9 @@ var WritingStudioPlugin = class extends import_obsidian29.Plugin {
     this.addCommand({
       id: "toggle-typography-mode",
       name: t2("main.cmd.toggleTypographyMode"),
-      callback: () => this.typographyMode.toggle()
+      callback: () => {
+        void this.typographyMode.toggle();
+      }
     });
     this.addCommand({
       id: "switch-draft-mode",
@@ -16233,6 +16316,9 @@ var WritingStudioPlugin = class extends import_obsidian29.Plugin {
   async loadSettings() {
     const saved = await this.loadData();
     this.settings = { ...DEFAULT_SETTINGS, ...saved };
+    if (!Array.isArray(this.settings.wordPressSites)) {
+      this.settings.wordPressSites = [];
+    }
   }
   async saveSettings() {
     await this.saveData(this.settings);

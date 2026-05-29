@@ -37,9 +37,9 @@ export class WritingModes {
 
     // Typography Mode
     if (config.typographyMode && !this.plugin.typographyMode.isActive()) {
-      this.plugin.typographyMode.enable();
+      await this.plugin.typographyMode.enable();
     } else if (!config.typographyMode && this.plugin.typographyMode.isActive()) {
-      this.plugin.typographyMode.disable();
+      await this.plugin.typographyMode.disable();
     }
 
     // Binder
