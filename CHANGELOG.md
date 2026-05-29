@@ -4,6 +4,13 @@ All notable changes to Writing Studio are documented here.
 
 ---
 
+## [2.4.1]
+
+### Fixed
+- **Settings panel blank with Lazy Plugin Loader:** When Writing Studio was loaded via the Lazy Plugin Loader community plugin, the Settings panel rendered blank. The cause was a deferred-initialization incompatibility introduced in v2.4.0. Fixed by ensuring the settings tab registration is robust against delayed plugin startup. Users of Lazy Plugin Loader no longer need to disable it or add Writing Studio to an exclusion list.
+
+---
+
 ## [2.4.0]
 
 ### Added

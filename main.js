@@ -9573,9 +9573,9 @@ var ko_default = {
 };
 
 // src/i18n.ts
-function initI18n() {
+async function initI18n() {
   const lang = (0, import_obsidian.getLanguage)();
-  void instance.init({
+  await instance.init({
     lng: lang,
     fallbackLng: "en",
     resources: {
@@ -16065,7 +16065,7 @@ var WritingStudioPlugin = class extends import_obsidian29.Plugin {
     this.currentBannerGoal = 0;
   }
   async onload() {
-    initI18n();
+    await initI18n();
     await this.loadSettings();
     this.registerIcons();
     this.fmManager = new FrontmatterManager(this);

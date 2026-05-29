@@ -162,7 +162,7 @@ export default class WritingStudioPlugin extends Plugin {
   private currentBannerGoal = 0;
 
   async onload(): Promise<void> {
-    initI18n();
+    await initI18n();
     await this.loadSettings();
 
     // Register custom icons

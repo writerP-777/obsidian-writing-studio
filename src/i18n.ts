@@ -14,9 +14,9 @@ import ja from './i18n/ja.json';
 import de from './i18n/de.json';
 import ko from './i18n/ko.json';
 
-export function initI18n(): void {
+export async function initI18n(): Promise<void> {
   const lang = getLanguage();
-  void i18next.init({
+  await i18next.init({
     lng: lang,
     fallbackLng: 'en',
     resources: {
