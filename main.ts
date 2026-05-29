@@ -158,6 +158,7 @@ export default class WritingStudioPlugin extends Plugin {
   private statusBarProjectGoal!: HTMLElement;
   private wordCountUpdateTimer: number | null = null;
   private projectGoalUpdateTimer: number | null = null;
+  private launcherRefreshTimer: number | null = null;
   private bannerGeneration = 0;
   private currentBannerGoal = 0;
 
@@ -395,6 +396,7 @@ export default class WritingStudioPlugin extends Plugin {
           this.fmManager.scheduleUpdate(file);
           this.scheduleWordCountUpdate();
           this.scheduleProjectGoalUpdate();
+          this.statsTracker.invalidateWordCountCache();
         }
       })
     );
@@ -414,7 +416,7 @@ export default class WritingStudioPlugin extends Plugin {
       this.app.workspace.on('active-leaf-change', () => {
         this.updateWordCount();
         void this.showInlineGoalBanner();
-        void this.refreshLauncher();
+        this.scheduleLauncherRefresh();
         void this.updateProjectGoalBar();
       })
     );
@@ -446,6 +448,10 @@ export default class WritingStudioPlugin extends Plugin {
 
     if (this.projectGoalUpdateTimer) {
       window.clearTimeout(this.projectGoalUpdateTimer);
+    }
+
+    if (this.launcherRefreshTimer) {
+      window.clearTimeout(this.launcherRefreshTimer);
     }
 
     // Remove inline goal banners
@@ -663,6 +669,11 @@ export default class WritingStudioPlugin extends Plugin {
       await this.refreshBinder();
       new Notice(t('main.notice.addedToProject', { file: file.basename, project: project.title }));
     }).open();
+  }
+
+  private scheduleLauncherRefresh(): void {
+    if (this.launcherRefreshTimer) window.clearTimeout(this.launcherRefreshTimer);
+    this.launcherRefreshTimer = window.setTimeout(() => { void this.refreshLauncher(); }, 300);
   }
 
   private scheduleWordCountUpdate(): void {

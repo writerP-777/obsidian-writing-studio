@@ -4,6 +4,13 @@ All notable changes to Writing Studio are documented here.
 
 ---
 
+## [2.4.4]
+
+### Fixed
+- **Persistent startup delays and UI freezing under Lazy Plugin Loader:** When other plugins configured with LPL delays loaded after startup, each one triggered an `active-leaf-change` event. With no debounce, every event caused a full Launcher re-render that called `getTotalWordCount()` — which reads every file in the active project from disk sequentially. On a project with many chapters, a burst of plugin-load events saturated the vault I/O queue, freezing the Settings panel and sidebar views for up to 1–2 minutes. Fixed with two changes: (1) `refreshLauncher()` calls from `active-leaf-change` are now debounced with a 300 ms timer, collapsing rapid bursts into a single render; (2) `getTotalWordCount()` caches its result per active project and only re-reads from disk when a file is modified or the binder is saved, making subsequent renders instant.
+
+---
+
 ## [2.4.3]
 
 ### Fixed

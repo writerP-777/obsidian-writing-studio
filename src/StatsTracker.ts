@@ -24,6 +24,8 @@ export class StatsTracker {
   private sessionStats: DailyStats;
   private sessionBaselines = new Map<string, number>();
   private sessionCurrents  = new Map<string, number>();
+  private cachedTotalWordCount: number | null = null;
+  private cachedWordCountProjectId: string | null = null;
 
   constructor(plugin: WritingStudioPlugin) {
     this.plugin = plugin;
@@ -129,9 +131,17 @@ ${t('statsTracker.dailyNote.heading')}
     return { ...this.sessionStats };
   }
 
+  invalidateWordCountCache(): void {
+    this.cachedTotalWordCount = null;
+  }
+
   async getTotalWordCount(): Promise<number> {
     const project = this.plugin.projectManager.getActiveProject();
     if (!project) return 0;
+
+    if (this.cachedTotalWordCount !== null && this.cachedWordCountProjectId === project.id) {
+      return this.cachedTotalWordCount;
+    }
 
     const binder = await this.plugin.projectManager.loadBinder(project);
     const items = this.plugin.projectManager.flattenBinder(binder.items);
@@ -145,6 +155,8 @@ ${t('statsTracker.dailyNote.heading')}
       }
     }
 
+    this.cachedTotalWordCount = total;
+    this.cachedWordCountProjectId = project.id;
     return total;
   }
 
