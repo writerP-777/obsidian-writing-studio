@@ -4,6 +4,14 @@ All notable changes to Writing Studio are documented here.
 
 ---
 
+## [2.4.2]
+
+### Fixed
+- **Launcher panel stale render under Lazy Plugin Loader (first run):** On the first Obsidian startup after configuring Lazy Plugin Loader, the workspace restore calls `LauncherView.onOpen()` before `projectManager.initialize()` has run, leaving the panel showing "no project selected." `openLauncher()` then found the existing leaf and revealed it without re-rendering, so the stale state persisted whenever `active-leaf-change` did not fire (e.g. the launcher was already the active sidebar leaf). Fixed by calling `refreshLauncher()` in the existing-leaf branch of `openLauncher()`, matching the pattern already used in `openBinder()`.
+- **Launcher and Binder fail to open on subsequent Lazy Plugin Loader starts:** On all runs after the first, the plugin loads after LPL's configurable delay, at which point `workspace.onLayoutReady` fires synchronously inside `onload()`. The async callback yielded at `await projectManager.initialize()`, and the microtask continuation called `getLeftLeaf(false)` while empty/placeholder leaves from the previous session were still mid-cleanup in the workspace's leaf management cycle, causing `getLeftLeaf` to return `null` and the panel to silently not open. Fixed by wrapping the `onLayoutReady` body in `window.setTimeout(fn, 0)`, moving execution to the macro-task queue so all pending workspace leaf work completes before a leaf is requested.
+
+---
+
 ## [2.4.1]
 
 ### Fixed
