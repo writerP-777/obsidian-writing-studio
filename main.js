@@ -16291,16 +16291,12 @@ var WritingStudioPlugin = class extends import_obsidian29.Plugin {
       })
     );
     this.addSettingTab(new WritingStudioSettingsTab(this.app, this));
-    this.app.workspace.onLayoutReady(() => {
-      window.setTimeout(() => {
-        void (async () => {
-          await this.projectManager.initialize();
-          if (this.settings.openOnStartup) await this.openLauncher();
-          if (this.settings.currentWritingMode && this.settings.currentWritingMode !== "none") {
-            this.writingModes.restore();
-          }
-        })();
-      }, 0);
+    this.app.workspace.onLayoutReady(async () => {
+      await this.projectManager.initialize();
+      if (this.settings.openOnStartup) await this.openLauncher();
+      if (this.settings.currentWritingMode && this.settings.currentWritingMode !== "none") {
+        this.writingModes.restore();
+      }
     });
   }
   onunload() {

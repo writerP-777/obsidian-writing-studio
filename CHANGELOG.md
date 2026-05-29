@@ -4,6 +4,13 @@ All notable changes to Writing Studio are documented here.
 
 ---
 
+## [2.4.3]
+
+### Fixed
+- **Startup delay regression introduced in v2.4.2:** The `window.setTimeout(fn, 0)` wrapper added to the `onLayoutReady` callback caused a noticeable delay on every startup — in normal load the callback is fired from the `layout-ready` event, and `setTimeout(0)` pushed all initialization work to the back of the macro-task queue, behind every other plugin's `layout-ready` handler. Removed the `setTimeout` wrapper; the `async` callback pattern is restored. The Lazy Plugin Loader stale-render fix from v2.4.2 (`refreshLauncher()` in the existing-leaf branch of `openLauncher()`) is unaffected and remains in place.
+
+---
+
 ## [2.4.2]
 
 ### Fixed

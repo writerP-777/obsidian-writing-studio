@@ -422,20 +422,13 @@ export default class WritingStudioPlugin extends Plugin {
     // Settings tab
     this.addSettingTab(new WritingStudioSettingsTab(this.app, this));
 
-    // Initialize project manager and open launcher once vault is fully indexed.
-    // setTimeout(0) yields to the macro-task queue; guards against Lazy Plugin Loader
-    // causing onLayoutReady to fire synchronously inside onload(), which leaves
-    // workspace.leftSplit unsettled when getLeftLeaf(false) is called.
-    this.app.workspace.onLayoutReady(() => {
-      window.setTimeout(() => {
-        void (async () => {
-          await this.projectManager.initialize();
-          if (this.settings.openOnStartup) await this.openLauncher();
-          if (this.settings.currentWritingMode && this.settings.currentWritingMode !== 'none') {
-            this.writingModes.restore();
-          }
-        })();
-      }, 0);
+    // Initialize project manager and open launcher once vault is fully indexed
+    this.app.workspace.onLayoutReady(async () => {
+      await this.projectManager.initialize();
+      if (this.settings.openOnStartup) await this.openLauncher();
+      if (this.settings.currentWritingMode && this.settings.currentWritingMode !== 'none') {
+        this.writingModes.restore();
+      }
     });
 
   }
