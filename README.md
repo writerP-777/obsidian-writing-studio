@@ -2,7 +2,7 @@
   <img src="assets/logo.png" width="120" alt="Writing Studio logo">
 </p>
 
-# Obsidian Writing Studio
+# Writing Studio
 
 **Version 2.4.4** · Desktop only
 
