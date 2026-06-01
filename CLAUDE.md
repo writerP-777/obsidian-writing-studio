@@ -72,13 +72,9 @@ These are enforced automatically. Never violate them:
 
 
 
-\## Manifest Requirements
-
-\- version must match GitHub release tag exactly (no "v" prefix)
-
-\- id, name, description must exactly match community-plugins.json entry
-
-\- minAppVersion must be kept current
+## Manifest Rules
+- id, name, and description must exactly match the community-plugins.json entry
+- minAppVersion must be kept current
 
 
 
@@ -93,6 +89,15 @@ Attach these as individual binary files to the GitHub Release — NOT in a zip:
 \- styles.css (if used)
 
 
+
+## Release Preflight
+
+Before tagging any release, run `/release-check <version>`. Do not tag until all items pass:
+
+1. CHANGELOG.md contains a `## [version]` heading matching the tag exactly
+2. The tag contains no v prefix (correct: `2.4.5`, wrong: `v2.4.5`)
+3. `npm run lint` passes with 0 errors and 0 warnings
+4. manifest.json version field matches the tag exactly
 
 \## Commands
 
@@ -131,4 +136,17 @@ At the end of every session, always invoke `/end-session` before stopping.
 If the session appears to be wrapping up (user says "done", "that's it", "bye", "stop", "exit", or goes quiet after completing a task), proactively suggest running `/end-session`.
 
 Session notes are saved to: `C:\Users\donpu\Vaults\Pucik Notes\Obsidian Writing Studio\`
+
+## Acceptance Criteria Protocol
+
+Before beginning any non-trivial task — defined as any task that touches more than one file, introduces a new setting, or changes behavior a user would notice — write a short acceptance criteria block and surface it to Don for approval before writing any code. When in doubt whether a task qualifies, apply the protocol.
+
+Use this template:
+  Done when: [what is verifiably true when the work is finished]
+  Stop if:   [conditions that halt the work]
+  Out of scope: [explicit exclusions, if any]
+
+Work does not begin until Don gives an affirmative response. Displaying the block and continuing is not sufficient.
+
+If a Cowork direction brief already includes acceptance criteria, use those instead of generating new ones.
 
