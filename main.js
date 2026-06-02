@@ -14200,10 +14200,11 @@ ${_MagazineArticleTemplate.hint(hintText)}
 };
 
 // src/ProjectManager.ts
-var ProjectManager = class {
+var _ProjectManager = class _ProjectManager {
   constructor(plugin) {
     this.projects = /* @__PURE__ */ new Map();
     this.activeProjectId = null;
+    this.binderCache = /* @__PURE__ */ new Map();
     this.plugin = plugin;
     this.app = plugin.app;
   }
@@ -14219,11 +14220,8 @@ var ProjectManager = class {
     if (!rootFolder) return;
     const folder = this.app.vault.getAbstractFileByPath((0, import_obsidian23.normalizePath)(rootFolder));
     if (!(folder instanceof import_obsidian23.TFolder)) return;
-    for (const child of folder.children) {
-      if (child instanceof import_obsidian23.TFolder) {
-        await this.loadProject(child.path);
-      }
-    }
+    const subfolders = folder.children.filter((c) => c instanceof import_obsidian23.TFolder);
+    await Promise.all(subfolders.map((f) => this.loadProject(f.path)));
   }
   async loadProject(folderPath) {
     const projectFilePath = (0, import_obsidian23.normalizePath)(`${folderPath}/_project.json`);
@@ -14299,6 +14297,8 @@ var ProjectManager = class {
     this.projects.set(project.id, project);
   }
   async loadBinder(project) {
+    const cached = this.binderCache.get(project.id);
+    if (cached && Date.now() < cached.expiresAt) return cached.data;
     const path = (0, import_obsidian23.normalizePath)(`${project.folderPath}/_binder.json`);
     const file = this.app.vault.getAbstractFileByPath(path);
     if (!(file instanceof import_obsidian23.TFile)) {
@@ -14306,7 +14306,9 @@ var ProjectManager = class {
     }
     try {
       const content = await this.app.vault.read(file);
-      return JSON.parse(content);
+      const data = JSON.parse(content);
+      this.binderCache.set(project.id, { data, expiresAt: Date.now() + _ProjectManager.BINDER_CACHE_TTL_MS });
+      return data;
     } catch (e) {
       return { version: "2.0", projectId: project.id, items: [] };
     }
@@ -14314,6 +14316,7 @@ var ProjectManager = class {
   async saveBinder(binder) {
     const project = this.projects.get(binder.projectId);
     if (!project) return;
+    this.binderCache.delete(binder.projectId);
     const path = (0, import_obsidian23.normalizePath)(`${project.folderPath}/_binder.json`);
     await this.writeJson(path, binder);
     this.plugin.statsTracker.invalidateWordCountCache();
@@ -14472,6 +14475,8 @@ tags: [writing-studio]
     return result;
   }
 };
+_ProjectManager.BINDER_CACHE_TTL_MS = 500;
+var ProjectManager = _ProjectManager;
 
 // src/StatsTracker.ts
 var import_obsidian24 = require("obsidian");
@@ -16075,6 +16080,7 @@ var WritingStudioPlugin = class extends import_obsidian29.Plugin {
     this.launcherRefreshTimer = null;
     this.bannerGeneration = 0;
     this.currentBannerGoal = 0;
+    this.isReady = false;
   }
   async onload() {
     await initI18n();
@@ -16297,10 +16303,10 @@ var WritingStudioPlugin = class extends import_obsidian29.Plugin {
     );
     this.registerEvent(
       this.app.workspace.on("active-leaf-change", () => {
+        if (!this.isReady) return;
         void this.updateWordCount();
         void this.showInlineGoalBanner();
         this.scheduleLauncherRefresh();
-        void this.updateProjectGoalBar();
       })
     );
     this.addSettingTab(new WritingStudioSettingsTab(this.app, this));
@@ -16324,6 +16330,8 @@ var WritingStudioPlugin = class extends import_obsidian29.Plugin {
           });
         }
       }
+      this.isReady = true;
+      void this.updateProjectGoalBar();
     });
   }
   onunload() {

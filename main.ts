@@ -182,6 +182,7 @@ export default class WritingStudioPlugin extends Plugin {
   private bannerGeneration = 0;
   private currentBannerGoal = 0;
   private nnFolderMenuDispose: (() => void) | undefined;
+  private isReady = false;
 
   async onload(): Promise<void> {
     await initI18n();
@@ -435,10 +436,10 @@ export default class WritingStudioPlugin extends Plugin {
     // Word count update when active leaf changes
     this.registerEvent(
       this.app.workspace.on('active-leaf-change', () => {
+        if (!this.isReady) return;
         void this.updateWordCount();
         void this.showInlineGoalBanner();
         this.scheduleLauncherRefresh();
-        void this.updateProjectGoalBar();
       })
     );
 
@@ -466,6 +467,11 @@ export default class WritingStudioPlugin extends Plugin {
           });
         }
       }
+
+      // Plugin is fully ready — allow active-leaf-change handlers to fire and
+      // do an initial project goal bar render now that projects are loaded.
+      this.isReady = true;
+      void this.updateProjectGoalBar();
     });
 
   }

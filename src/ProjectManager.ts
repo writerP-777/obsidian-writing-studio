@@ -14,6 +14,8 @@ export class ProjectManager {
   private app: App;
   private projects = new Map<string, WritingProject>();
   private activeProjectId: string | null = null;
+  private binderCache = new Map<string, { data: BinderData; expiresAt: number }>();
+  private static readonly BINDER_CACHE_TTL_MS = 500;
 
   constructor(plugin: WritingStudioPlugin) {
     this.plugin = plugin;
@@ -35,11 +37,8 @@ export class ProjectManager {
     const folder = this.app.vault.getAbstractFileByPath(normalizePath(rootFolder));
     if (!(folder instanceof TFolder)) return;
 
-    for (const child of folder.children) {
-      if (child instanceof TFolder) {
-        await this.loadProject(child.path);
-      }
-    }
+    const subfolders = folder.children.filter((c): c is TFolder => c instanceof TFolder);
+    await Promise.all(subfolders.map(f => this.loadProject(f.path)));
   }
 
   async loadProject(folderPath: string): Promise<WritingProject | null> {
@@ -133,6 +132,9 @@ export class ProjectManager {
   }
 
   async loadBinder(project: WritingProject): Promise<BinderData> {
+    const cached = this.binderCache.get(project.id);
+    if (cached && Date.now() < cached.expiresAt) return cached.data;
+
     const path = normalizePath(`${project.folderPath}/_binder.json`);
     const file = this.app.vault.getAbstractFileByPath(path);
     if (!(file instanceof TFile)) {
@@ -140,7 +142,9 @@ export class ProjectManager {
     }
     try {
       const content = await this.app.vault.read(file);
-      return JSON.parse(content) as BinderData;
+      const data = JSON.parse(content) as BinderData;
+      this.binderCache.set(project.id, { data, expiresAt: Date.now() + ProjectManager.BINDER_CACHE_TTL_MS });
+      return data;
     } catch {
       return { version: '2.0', projectId: project.id, items: [] };
     }
@@ -149,6 +153,7 @@ export class ProjectManager {
   async saveBinder(binder: BinderData): Promise<void> {
     const project = this.projects.get(binder.projectId);
     if (!project) return;
+    this.binderCache.delete(binder.projectId);
     const path = normalizePath(`${project.folderPath}/_binder.json`);
     await this.writeJson(path, binder);
     this.plugin.statsTracker.invalidateWordCountCache();
