@@ -182,6 +182,7 @@ export default class WritingStudioPlugin extends Plugin {
   private bannerGeneration = 0;
   private currentBannerGoal = 0;
   private nnFolderMenuDispose: (() => void) | undefined;
+  private isReady = false;
 
   async onload(): Promise<void> {
     await initI18n();
@@ -435,10 +436,10 @@ export default class WritingStudioPlugin extends Plugin {
     // Word count update when active leaf changes
     this.registerEvent(
       this.app.workspace.on('active-leaf-change', () => {
-        this.updateWordCount();
+        if (!this.isReady) return;
+        void this.updateWordCount();
         void this.showInlineGoalBanner();
         this.scheduleLauncherRefresh();
-        void this.updateProjectGoalBar();
       })
     );
 
@@ -466,6 +467,11 @@ export default class WritingStudioPlugin extends Plugin {
           });
         }
       }
+
+      // Plugin is fully ready — allow active-leaf-change handlers to fire and
+      // do an initial project goal bar render now that projects are loaded.
+      this.isReady = true;
+      void this.updateProjectGoalBar();
     });
 
   }
@@ -715,11 +721,11 @@ export default class WritingStudioPlugin extends Plugin {
   private scheduleWordCountUpdate(): void {
     if (this.wordCountUpdateTimer) window.clearTimeout(this.wordCountUpdateTimer);
     this.wordCountUpdateTimer = window.setTimeout(() => {
-      this.updateWordCount();
+      void this.updateWordCount();
     }, 1000);
   }
 
-  private updateWordCount(): void {
+  private async updateWordCount(): Promise<void> {
     const leaf = this.app.workspace.getMostRecentLeaf();
     if (!leaf) { this.statusBarWordCount.textContent = ''; return; }
 
@@ -740,9 +746,21 @@ export default class WritingStudioPlugin extends Plugin {
       sessionDelta = this.statsTracker.getSessionDelta(file.path);
     }
 
-    // Status bar: read goal from frontmatter (acceptable for status bar only)
-    const fm = this.fmManager.parseFrontmatter(content);
-    const fmGoal = fm?.['word-count-goal'] as number | undefined;
+    // Status bar goal: binder-first (authoritative), frontmatter fallback for files not in any binder.
+    let fmGoal: number | undefined;
+    if (file) {
+      const project = this.projectManager.getActiveProject();
+      if (project) {
+        const binder = await this.projectManager.loadBinder(project);
+        const flat = this.projectManager.flattenBinder(binder.items);
+        const item = flat.find(i => i.filePath === file.path);
+        if (item?.wordCountGoal && item.wordCountGoal > 0) fmGoal = item.wordCountGoal;
+      }
+    }
+    if (!fmGoal || fmGoal <= 0) {
+      const fm = this.fmManager.parseFrontmatter(content);
+      fmGoal = fm?.['word-count-goal'] as number | undefined;
+    }
     const delta = sessionDelta > 0 ? ` ${t('main.statusBar.delta', { delta: sessionDelta })}` : '';
     if (fmGoal && fmGoal > 0) {
       this.statusBarWordCount.textContent = t('main.statusBar.wordCountGoal', { count: wc, goal: fmGoal }) + delta;
