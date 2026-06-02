@@ -4,6 +4,13 @@ All notable changes to Writing Studio are documented here.
 
 ---
 
+## [2.4.5]
+
+### Added
+- **Notebook Navigator integration:** "Open in sidebar explorer" now appears in Notebook Navigator's folder context menus when Notebook Navigator is installed. Uses NN's public menu API (`registerFolderMenu`); completely inert when NN is not installed. Native Obsidian file explorer context menus are unchanged.
+
+---
+
 ## [2.4.4]
 
 ### Fixed

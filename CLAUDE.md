@@ -92,12 +92,27 @@ Attach these as individual binary files to the GitHub Release — NOT in a zip:
 
 ## Release Preflight
 
-Before tagging any release, run `/release-check <version>`. Do not tag until all items pass:
+Before tagging any release, run `/release-check <version>`. Do not tag until all nine checks pass:
 
 1. CHANGELOG.md contains a `## [version]` heading matching the tag exactly
 2. The tag contains no v prefix (correct: `2.4.5`, wrong: `v2.4.5`)
 3. `npm run lint` passes with 0 errors and 0 warnings
-4. manifest.json version field matches the tag exactly
+4. `npm test` passes with 0 failures
+5. manifest.json version field matches the tag exactly
+6. package.json version field matches the tag exactly
+7. versions.json top entry key matches the tag exactly
+8. README.md contains `**Version X.Y.Z**` matching the tag
+9. Current branch is named `release/X.Y.Z`
+
+## Post-release Checklist
+
+After pushing the tag and creating the GitHub Release, verify before closing out:
+
+1. **Tag live:** `git ls-remote --tags origin X.Y.Z` — must return the tag SHA
+2. **Assets uploaded:** `gh api repos/writerP-777/obsidian-writing-studio/releases/latest --jq '{tag,assets:[.assets[]|{name,size,state}]}'` — all three assets (`main.js`, `manifest.json`, `styles.css`) must show `"state":"uploaded"` with non-zero sizes
+3. **Manifest correct:** download `manifest.json` from the release and confirm the `version` field matches the tag
+4. **Issues closed:** comment on and close every GitHub issue resolved by this release
+5. **SECURITY.md:** if this was a minor or major version bump, update the supported versions table
 
 \## Commands
 
