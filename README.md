@@ -418,6 +418,7 @@ The Folder Sidebar Explorer opens a navigable folder tree in a sidebar panel. Yo
 **To open:**
 - Use the command **Open folder in sidebar explorer** from the command palette.
 - Right-click any folder in the file explorer and choose **Open in sidebar explorer** under **Writing studio options**.
+- Right-click any folder in [Notebook Navigator](https://github.com/johansan/notebook-navigator) and choose **Open in sidebar explorer** (requires Notebook Navigator to be installed).
 - Assign a hotkey in Settings → Hotkeys.
 
 **Browsing and navigation:**
