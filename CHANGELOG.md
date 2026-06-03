@@ -4,6 +4,17 @@ All notable changes to Writing Studio are documented here.
 
 ---
 
+## [2.5.0]
+
+### Fixed
+- **Status bar word count goal:** Goals set via the Targets Dashboard (stored in the binder) now appear correctly in the status bar. Previously the status bar read only from frontmatter, which the Targets Dashboard never writes to, so dashboard-managed goals were invisible in the status bar.
+- **Startup stuttering and UI delays:** Rewrote the plugin's startup sequence to suppress `active-leaf-change` handlers until the vault is fully ready, move the project word count bar update out of the hot event path, cache binder reads with a 500 ms TTL, and parallelize project loading. Resolves freezes and stutter on startup regardless of load order.
+
+### Security
+- Bumped dev dependency `brace-expansion` 5.0.5 → 5.0.6 (GHSA-jxxr-4gwj-5jf2, DoS via large numeric range). Dev toolchain only — no impact on plugin users.
+
+---
+
 ## [2.4.5]
 
 ### Added
