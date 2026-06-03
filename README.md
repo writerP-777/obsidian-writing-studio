@@ -12,6 +12,12 @@
 Writing Studio turns Obsidian into a dedicated environment for serious nonfiction work — from your first research notes to a finished, exported manuscript. It bundles a project binder, writing modes, focus and typography tools, sprint timer, progress tracking, manuscript export, and WordPress publishing into a single plugin. A built-in sidebar file explorer lets you browse, preview, and pull content from anywhere in your vault without leaving your draft.
 
 <p align="center">
+  <img src="assets/sidebar-explorer-screenshot.png" alt="Writing Studio with the Launcher panel open on the left, an active draft in the center, and the Folder Sidebar Explorer open to a research folder on the right" width="900">
+  <br>
+  <em>Writing Studio in use — Launcher (left), active draft with word count goal banner (center), Folder Sidebar Explorer open to a research folder (right).</em>
+</p>
+
+<p align="center">
   <a href="https://buymeacoffee.com/writerp777">
     <img src="https://img.buymeacoffee.com/button-api/?text=Buy%20me%20a%20coffee&slug=writerp777&button_colour=c9a84c&font_colour=000000&font_family=Georgia&outline_colour=000000&coffee_colour=ffffff" alt="Buy me a coffee" height="40">
   </a>
@@ -21,6 +27,8 @@ Writing Studio turns Obsidian into a dedicated environment for serious nonfictio
 
 - [Features](#features)
 - [Language support](#language-support)
+- [Writing Studio Launcher](#writing-studio-launcher)
+- [Folder Sidebar Explorer](#folder-sidebar-explorer)
 - [Your Project](#your-project)
 - [Your Writing Environment](#your-writing-environment)
 - [Tracking Your Progress](#tracking-your-progress)
@@ -94,6 +102,81 @@ By default it opens automatically when Obsidian loads. To disable this, turn off
 - Sprint timer with "Set up sprint" button and Quick Sprint Options presets (10 m, 15 m, 25 m)
 - Today card showing words written, sprints completed, session word count, and streak
 - Quick-action buttons: Targets Dashboard, Writing Dashboard, Preview manuscript, Export, Writing Log, Publish to WordPress
+
+---
+
+### Folder Sidebar Explorer
+
+The Folder Sidebar Explorer opens any vault folder in a right-sidebar panel, letting you browse reference material, research notes, or any folder outside your active project without leaving your draft. Unlike the Binder — which is scoped to your writing project — the sidebar explorer works with any folder in your vault.
+
+**To open:**
+- Use the command **Open folder in sidebar explorer** from the command palette — a folder picker appears so you can choose which folder to explore.
+- Right-click any folder in the file explorer and choose **Open in sidebar explorer** under **Writing studio options**.
+- Right-click any folder in [Notebook Navigator](https://github.com/johansan/notebook-navigator) and choose **Open in sidebar explorer** (requires Notebook Navigator to be installed).
+- Assign a hotkey in Settings → Hotkeys.
+
+The panel opens in the **right sidebar**. The folder you open becomes the **root folder** for that session — the breadcrumb trail, the ⌂ root button, and search all operate relative to it.
+
+**Browsing and navigation:**
+
+| Feature | How to use |
+|---------|-----------|
+| Browse into a subfolder | Click the folder |
+| Preview a Markdown file | Click the file — the folder listing is replaced by a rendered preview inside the panel |
+| Preview an image | Click the file — displayed inline |
+| Preview audio | Click the file — player appears inline |
+| Other file types | Click the file — an **Open in editor** button appears |
+| Go back | Click **← back**, or press `Backspace` when the list has keyboard focus |
+| Return to root folder | Click **⌂ root** to jump back to the folder you originally opened |
+| Keyboard navigation | Tab to focus the list, then `↑` / `↓` to move, `Enter` to open, `Backspace` to go back |
+| Breadcrumb navigation | Click any segment in the breadcrumb trail to jump directly to that folder |
+
+**Search:**
+
+A search bar appears at the top of the folder list. Type your query and press **Enter** to run the search.
+
+- Searches **both folder/file names and file contents** (`.md` and `.txt` files).
+- Frontmatter is excluded from content search to avoid false positives from YAML fields.
+- Name matches show the matched term highlighted in the result title.
+- Content matches show a text snippet around the match with the term highlighted, plus a **CONTENT** badge to distinguish them from name matches.
+- Results always search from the root folder, regardless of which subfolder you are currently browsing.
+- Click **×** to clear the search and return to the normal folder view.
+
+**Sort:**
+
+A sort dropdown sits next to the search bar. Options:
+
+| Option | Description |
+|--------|-------------|
+| Folders ↑ A-Z | Folders first, then files, both alphabetical (default) |
+| Folders ↑ Z-A | Folders first, then files, both reverse-alphabetical |
+| Name A-Z | All items alphabetical, folders and files mixed |
+| Name Z-A | All items reverse-alphabetical, mixed |
+| Newest first | Sort by last-modified date, newest at top |
+| Oldest first | Sort by last-modified date, oldest at top |
+
+**Copy content to the editor:**
+
+When a Markdown file is open in preview mode (after clicking it in the file list), its text is selectable. To insert a passage into the active editor:
+
+1. Click a file in the list — the panel switches to preview mode showing the rendered file.
+2. Select the text you want in the preview pane.
+3. Click the **↩ insert selection** button in the nav bar.
+4. The selected text is inserted at the cursor position in the active editor.
+
+The preview is read-only — you cannot edit the file from the sidebar.
+
+**Hover tooltips:**
+
+Hover over any file or folder in the list to see an information card:
+
+| Item type | Information shown |
+|-----------|------------------|
+| Markdown / text file | Last modified date and time · File size · Word count (frontmatter excluded) |
+| Image / audio / other file | Last modified date and time · File size |
+| Folder | Total file count · Subfolder count |
+
+The word count updates asynchronously from Obsidian's file cache and appears within a moment of hover.
 
 ---
 
@@ -410,87 +493,6 @@ Writing Studio stores your WordPress site credentials in your vault's `.obsidian
 ---
 
 ### Supporting Tools
-
-#### Folder Sidebar Explorer
-
-The Folder Sidebar Explorer opens any vault folder in a right-sidebar panel, letting you browse reference material, research notes, or any folder outside your active project without leaving your draft. Unlike the Binder — which is scoped to your writing project — the sidebar explorer works with any folder in your vault.
-
-<p align="center">
-  <img src="assets/sidebar-explorer-screenshot.png" alt="Writing Studio with the Folder Sidebar Explorer open to a research folder alongside an active draft" width="900">
-  <br>
-  <em>The Folder Sidebar Explorer (right) open to a research folder while a draft is active in the editor. The Writing Studio Launcher is visible on the left.</em>
-</p>
-
-**To open:**
-- Use the command **Open folder in sidebar explorer** from the command palette — a folder picker appears so you can choose which folder to explore.
-- Right-click any folder in the file explorer and choose **Open in sidebar explorer** under **Writing studio options**.
-- Right-click any folder in [Notebook Navigator](https://github.com/johansan/notebook-navigator) and choose **Open in sidebar explorer** (requires Notebook Navigator to be installed).
-- Assign a hotkey in Settings → Hotkeys.
-
-The panel opens in the **right sidebar**. The folder you open becomes the **root folder** for that session — the breadcrumb trail, the ⌂ root button, and search all operate relative to it.
-
-**Browsing and navigation:**
-
-| Feature | How to use |
-|---------|-----------|
-| Browse into a subfolder | Click the folder |
-| Preview a Markdown file | Click the file — the folder listing is replaced by a rendered preview inside the panel |
-| Preview an image | Click the file — displayed inline |
-| Preview audio | Click the file — player appears inline |
-| Other file types | Click the file — an **Open in editor** button appears |
-| Go back | Click **← back**, or press `Backspace` when the list has keyboard focus |
-| Return to root folder | Click **⌂ root** to jump back to the folder you originally opened |
-| Keyboard navigation | Tab to focus the list, then `↑` / `↓` to move, `Enter` to open, `Backspace` to go back |
-| Breadcrumb navigation | Click any segment in the breadcrumb trail to jump directly to that folder |
-
-**Search:**
-
-A search bar appears at the top of the folder list. Type your query and press **Enter** to run the search.
-
-- Searches **both folder/file names and file contents** (`.md` and `.txt` files).
-- Frontmatter is excluded from content search to avoid false positives from YAML fields.
-- Name matches show the matched term highlighted in the result title.
-- Content matches show a text snippet around the match with the term highlighted, plus a **CONTENT** badge to distinguish them from name matches.
-- Results always search from the root folder you set, regardless of which subfolder you are currently browsing.
-- Click **×** to clear the search and return to the normal folder view.
-
-**Sort:**
-
-A sort dropdown sits next to the search bar. Options:
-
-| Option | Description |
-|--------|-------------|
-| Folders ↑ A-Z | Folders first, then files, both alphabetical (default) |
-| Folders ↑ Z-A | Folders first, then files, both reverse-alphabetical |
-| Name A-Z | All items alphabetical, folders and files mixed |
-| Name Z-A | All items reverse-alphabetical, mixed |
-| Newest first | Sort by last-modified date, newest at top |
-| Oldest first | Sort by last-modified date, oldest at top |
-
-**Copy content to the editor:**
-
-When a Markdown file is open in preview mode (after clicking it in the file list), its text is selectable. To insert a passage into the active editor:
-
-1. Click a file in the list — the panel switches to preview mode showing the rendered file.
-2. Select the text you want in the preview pane.
-3. Click the **↩ insert selection** button in the nav bar.
-4. The selected text is inserted at the cursor position in the active editor.
-
-The preview is read-only — you cannot edit the file from the sidebar.
-
-**Hover tooltips:**
-
-Hover over any file or folder in the list to see an information card:
-
-| Item type | Information shown |
-|-----------|------------------|
-| Markdown / text file | Last modified date and time · File size · Word count (frontmatter excluded) |
-| Image / audio / other file | Last modified date and time · File size |
-| Folder | Total file count · Subfolder count |
-
-The word count updates asynchronously from Obsidian's file cache and appears within a moment of hover.
-
----
 
 #### Frontmatter Manager
 
