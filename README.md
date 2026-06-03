@@ -413,25 +413,33 @@ Writing Studio stores your WordPress site credentials in your vault's `.obsidian
 
 #### Folder Sidebar Explorer
 
-The Folder Sidebar Explorer opens a navigable folder tree in a sidebar panel. You can browse subfolders, search by name or file content, sort the listing, preview files inline, and insert copied text directly into the active editor.
+The Folder Sidebar Explorer opens any vault folder in a right-sidebar panel, letting you browse reference material, research notes, or any folder outside your active project without leaving your draft. Unlike the Binder — which is scoped to your writing project — the sidebar explorer works with any folder in your vault.
+
+<p align="center">
+  <img src="assets/sidebar-explorer-screenshot.png" alt="Writing Studio with the Folder Sidebar Explorer open to a research folder alongside an active draft" width="900">
+  <br>
+  <em>The Folder Sidebar Explorer (right) open to a research folder while a draft is active in the editor. The Writing Studio Launcher is visible on the left.</em>
+</p>
 
 **To open:**
-- Use the command **Open folder in sidebar explorer** from the command palette.
+- Use the command **Open folder in sidebar explorer** from the command palette — a folder picker appears so you can choose which folder to explore.
 - Right-click any folder in the file explorer and choose **Open in sidebar explorer** under **Writing studio options**.
 - Right-click any folder in [Notebook Navigator](https://github.com/johansan/notebook-navigator) and choose **Open in sidebar explorer** (requires Notebook Navigator to be installed).
 - Assign a hotkey in Settings → Hotkeys.
+
+The panel opens in the **right sidebar**. The folder you open becomes the **root folder** for that session — the breadcrumb trail, the ⌂ root button, and search all operate relative to it.
 
 **Browsing and navigation:**
 
 | Feature | How to use |
 |---------|-----------|
 | Browse into a subfolder | Click the folder |
-| Preview a Markdown file | Click the file — renders inline |
+| Preview a Markdown file | Click the file — the folder listing is replaced by a rendered preview inside the panel |
 | Preview an image | Click the file — displayed inline |
 | Preview audio | Click the file — player appears inline |
 | Other file types | Click the file — an **Open in editor** button appears |
 | Go back | Click **← back**, or press `Backspace` when the list has keyboard focus |
-| Return to root folder | Click **⌂ root** |
+| Return to root folder | Click **⌂ root** to jump back to the folder you originally opened |
 | Keyboard navigation | Tab to focus the list, then `↑` / `↓` to move, `Enter` to open, `Backspace` to go back |
 | Breadcrumb navigation | Click any segment in the breadcrumb trail to jump directly to that folder |
 
@@ -461,11 +469,12 @@ A sort dropdown sits next to the search bar. Options:
 
 **Copy content to the editor:**
 
-When a Markdown file is open in preview mode, its text is selectable. To insert a passage into the active editor:
+When a Markdown file is open in preview mode (after clicking it in the file list), its text is selectable. To insert a passage into the active editor:
 
-1. Select the text you want in the preview pane.
-2. Click the **↩ insert selection** button in the nav bar.
-3. The selected text is inserted at the cursor position in the active editor.
+1. Click a file in the list — the panel switches to preview mode showing the rendered file.
+2. Select the text you want in the preview pane.
+3. Click the **↩ insert selection** button in the nav bar.
+4. The selected text is inserted at the cursor position in the active editor.
 
 The preview is read-only — you cannot edit the file from the sidebar.
 
