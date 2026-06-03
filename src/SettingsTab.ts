@@ -470,7 +470,6 @@ export class WritingStudioSettingsTab extends PluginSettingTab {
     new Setting(siteEl)
       .addButton(b => b
         .setButtonText(t('settings.wordpress.removeSite'))
-        // eslint-disable-next-line @typescript-eslint/no-deprecated -- setDestructive() requires 1.13.0; setWarning() is the compatible fallback for minAppVersion 1.8.7
         .setWarning()
         .onClick(async () => {
           this.plugin.settings.wordPressSites.splice(index, 1);
