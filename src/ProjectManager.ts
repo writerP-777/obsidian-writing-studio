@@ -14,8 +14,7 @@ export class ProjectManager {
   private app: App;
   private projects = new Map<string, WritingProject>();
   private activeProjectId: string | null = null;
-  private binderCache = new Map<string, { data: BinderData; expiresAt: number }>();
-  private static readonly BINDER_CACHE_TTL_MS = 500;
+  private binderCache = new Map<string, BinderData>();
 
   constructor(plugin: WritingStudioPlugin) {
     this.plugin = plugin;
@@ -133,7 +132,7 @@ export class ProjectManager {
 
   async loadBinder(project: WritingProject): Promise<BinderData> {
     const cached = this.binderCache.get(project.id);
-    if (cached && Date.now() < cached.expiresAt) return cached.data;
+    if (cached) return cached;
 
     const path = normalizePath(`${project.folderPath}/_binder.json`);
     const file = this.app.vault.getAbstractFileByPath(path);
@@ -143,7 +142,7 @@ export class ProjectManager {
     try {
       const content = await this.app.vault.read(file);
       const data = JSON.parse(content) as BinderData;
-      this.binderCache.set(project.id, { data, expiresAt: Date.now() + ProjectManager.BINDER_CACHE_TTL_MS });
+      this.binderCache.set(project.id, data);
       return data;
     } catch {
       return { version: '2.0', projectId: project.id, items: [] };
@@ -342,5 +341,27 @@ tags: [writing-studio]
       }
     }
     return result;
+  }
+
+  private findBinderItemByPath(items: BinderItem[], filePath: string): BinderItem | undefined {
+    for (const item of items) {
+      if (item.filePath === filePath) return item;
+      if (item.children) {
+        const found = this.findBinderItemByPath(item.children, filePath);
+        if (found) return found;
+      }
+    }
+    return undefined;
+  }
+
+  async getWordCountGoalForFile(file: TFile): Promise<number | undefined> {
+    const project = this.getActiveProject();
+    if (project) {
+      const binder = await this.loadBinder(project);
+      const item = this.findBinderItemByPath(binder.items, file.path);
+      if (item?.wordCountGoal && item.wordCountGoal > 0) return item.wordCountGoal;
+    }
+    const cache = this.app.metadataCache.getFileCache(file);
+    return cache?.frontmatter?.['word-count-goal'] as number | undefined;
   }
 }

@@ -746,21 +746,7 @@ export default class WritingStudioPlugin extends Plugin {
       sessionDelta = this.statsTracker.getSessionDelta(file.path);
     }
 
-    // Status bar goal: binder-first (authoritative), frontmatter fallback for files not in any binder.
-    let fmGoal: number | undefined;
-    if (file) {
-      const project = this.projectManager.getActiveProject();
-      if (project) {
-        const binder = await this.projectManager.loadBinder(project);
-        const flat = this.projectManager.flattenBinder(binder.items);
-        const item = flat.find(i => i.filePath === file.path);
-        if (item?.wordCountGoal && item.wordCountGoal > 0) fmGoal = item.wordCountGoal;
-      }
-    }
-    if (!fmGoal || fmGoal <= 0) {
-      const fm = this.fmManager.parseFrontmatter(content);
-      fmGoal = fm?.['word-count-goal'] as number | undefined;
-    }
+    const fmGoal = file ? await this.projectManager.getWordCountGoalForFile(file) : undefined;
     const delta = sessionDelta > 0 ? ` ${t('main.statusBar.delta', { delta: sessionDelta })}` : '';
     if (fmGoal && fmGoal > 0) {
       this.statusBarWordCount.textContent = t('main.statusBar.wordCountGoal', { count: wc, goal: fmGoal }) + delta;
@@ -810,24 +796,8 @@ export default class WritingStudioPlugin extends Plugin {
     const file = view.file;
     if (!file) return;
 
-    // Primary goal source: BinderItem.wordCountGoal — the value the Targets Dashboard
-    // and Binder both write to and display. The frontmatter field word-count-goal is a
-    // separate store that the Targets Dashboard never touches, so reading frontmatter
-    // alone produces the wrong value when goals are managed via the dashboard.
-    let goal: number | undefined;
-    const project = this.projectManager.getActiveProject();
-    if (project) {
-      const binder = await this.projectManager.loadBinder(project);
-      if (gen !== this.bannerGeneration) return;
-      const flat = this.projectManager.flattenBinder(binder.items);
-      const item = flat.find(i => i.filePath === file.path);
-      goal = item?.wordCountGoal;
-    }
-    // Frontmatter fallback for files not tracked in any binder.
-    if (!goal || goal <= 0) {
-      const cache = this.app.metadataCache.getFileCache(file);
-      goal = cache?.frontmatter?.['word-count-goal'] as number | undefined;
-    }
+    const goal = await this.projectManager.getWordCountGoalForFile(file);
+    if (gen !== this.bannerGeneration) return;
     if (!goal || goal <= 0) return;
 
     // Store so updateBannerWordCount() can refresh the bar without an async lookup.
