@@ -14,10 +14,11 @@ export class ExportModal extends Modal {
   private coverImagePath = '';
   private authorContact = '';
 
-  constructor(app: App, plugin: WritingStudioPlugin) {
+  constructor(app: App, plugin: WritingStudioPlugin, initialScope: ExportScope = 'current') {
     super(app);
     this.plugin = plugin;
     this.format = plugin.settings.defaultExportFormat;
+    this.exportScope = initialScope;
   }
 
   onOpen(): void {

@@ -271,7 +271,8 @@
     "manuscriptExported": "原稿を {{path}} にエクスポートしました",
     "exportedTo": "{{path}} にエクスポートしました",
     "exportedHtmlTo": "HTMLを {{path}} にエクスポートしました",
-    "pdfRequiresPandoc": "PDFエクスポートにはpandocが必要です。pandocをインストールして設定でパスを指定してください。"
+    "pdfRequiresPandoc": "PDFエクスポートにはpandocが必要です。pandocをインストールして設定でパスを指定してください。",
+    "noActiveDocument": "開いているドキュメントがありません。ファイルを開くか、エクスポート範囲を「プロジェクト全体」に変更してください。"
   },
   "wpClient": {
     "authFailed": "認証に失敗しました。ユーザー名とアプリケーションパスワードを確認してください。",

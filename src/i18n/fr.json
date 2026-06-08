@@ -271,7 +271,8 @@
     "manuscriptExported": "Manuscrit exporté vers {{path}}",
     "exportedTo": "Exporté vers {{path}}",
     "exportedHtmlTo": "HTML exporté vers {{path}}",
-    "pdfRequiresPandoc": "L'export PDF nécessite pandoc. Installez pandoc et définissez le chemin dans les paramètres."
+    "pdfRequiresPandoc": "L'export PDF nécessite pandoc. Installez pandoc et définissez le chemin dans les paramètres.",
+    "noActiveDocument": "Aucun document ouvert. Ouvrez un fichier ou changez la portée d'export en « Projet entier »."
   },
   "wpClient": {
     "authFailed": "Échec de l'authentification. Vérifiez le nom d'utilisateur et le mot de passe de l'application.",

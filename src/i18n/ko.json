@@ -271,7 +271,8 @@
     "manuscriptExported": "원고를 {{path}}에 내보냈습니다",
     "exportedTo": "{{path}}에 내보냈습니다",
     "exportedHtmlTo": "HTML을 {{path}}에 내보냈습니다",
-    "pdfRequiresPandoc": "PDF 내보내기에는 pandoc이 필요합니다. pandoc을 설치하고 설정에서 경로를 설정하세요."
+    "pdfRequiresPandoc": "PDF 내보내기에는 pandoc이 필요합니다. pandoc을 설치하고 설정에서 경로를 설정하세요.",
+    "noActiveDocument": "열린 문서가 없습니다. 파일을 열거나 내보내기 범위를 '전체 프로젝트'로 변경하세요."
   },
   "wpClient": {
     "authFailed": "인증에 실패했습니다. 사용자 이름과 애플리케이션 비밀번호를 확인하세요.",

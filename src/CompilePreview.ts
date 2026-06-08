@@ -91,7 +91,7 @@ export class CompilePreviewView extends ItemView {
       text: t('compilePreview.proceedToExport'),
     });
     exportBtn.onclick = () => {
-      new ExportModal(this.app, this.plugin).open();
+      new ExportModal(this.app, this.plugin, 'project').open();
     };
 
     const closeBtn = toolbar.createEl('button', {
