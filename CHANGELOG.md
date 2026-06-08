@@ -4,6 +4,13 @@ All notable changes to Writing Studio are documented here.
 
 ---
 
+## [2.5.1]
+
+### Fixed
+- **Export from project views:** Exporting from the Launcher, Compile Preview "Proceed to export" button, or the "Export project" command now correctly defaults to "Entire project" scope. Previously these entry points defaulted to "Current document", which could produce a file containing only the title page when no document was actively focused in the editor. If "Current document" scope is selected with no document open, the export now aborts with a clear notice instead of silently writing a title-page-only file.
+
+---
+
 ## [2.5.0]
 
 ### Fixed
