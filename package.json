@@ -40,6 +40,6 @@
   "license": "MIT",
   "dependencies": {
     "fflate": "^0.8.3",
-    "i18next": "^26.3.0"
+    "i18next": "^26.3.1"
   }
 }
