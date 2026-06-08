@@ -21,7 +21,7 @@
     "@codemirror/state": "6.5.0",
     "@codemirror/view": "6.38.6",
     "@types/jest": "^30.0.0",
-    "@types/node": "^25.9.1",
+    "@types/node": "^25.9.2",
     "esbuild": "0.28.0",
     "eslint-plugin-obsidianmd": "^0.3.0",
     "jest": "^30.4.2",
