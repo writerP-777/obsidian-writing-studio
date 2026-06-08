@@ -178,15 +178,16 @@ export class ExportEngine {
       const leaf = this.app.workspace.getMostRecentLeaf();
       const view = leaf?.view;
       const file = view instanceof MarkdownView ? view.file : null;
-      if (file instanceof TFile) {
-        let content = await this.app.vault.read(file);
-        if (!opts.includeFrontmatter) {
-          content = content.replace(/^---\n[\s\S]*?\n---\n?/, '');
-        }
-        content = this.preprocessObsidianMarkdown(content.trim());
-        const htmlContent = this.htmlToXhtml(this.markdownToHtml(content));
-        chapters.push({ id: 'chapter-1', title: file.basename, htmlContent });
+      if (!(file instanceof TFile)) {
+        throw new Error(t('exportEngine.noActiveDocument'));
       }
+      let content = await this.app.vault.read(file);
+      if (!opts.includeFrontmatter) {
+        content = content.replace(/^---\n[\s\S]*?\n---\n?/, '');
+      }
+      content = this.preprocessObsidianMarkdown(content.trim());
+      const htmlContent = this.htmlToXhtml(this.markdownToHtml(content));
+      chapters.push({ id: 'chapter-1', title: file.basename, htmlContent });
     } else if (opts.scope === 'project' && project) {
       const binder = await this.plugin.projectManager.loadBinder(project);
       const flatItems = this.plugin.projectManager.flattenBinder(binder.items);
@@ -254,9 +255,10 @@ export class ExportEngine {
       const leaf = this.app.workspace.getMostRecentLeaf();
       const view = leaf?.view;
       const file = view instanceof MarkdownView ? view.file : null;
-      if (file instanceof TFile) {
-        parts.push(await this.processFile(file, opts));
+      if (!(file instanceof TFile)) {
+        throw new Error(t('exportEngine.noActiveDocument'));
       }
+      parts.push(await this.processFile(file, opts));
     } else if (opts.scope === 'project' && project) {
       const binder = await this.plugin.projectManager.loadBinder(project);
       const flatItems = this.plugin.projectManager.flattenBinder(binder.items);

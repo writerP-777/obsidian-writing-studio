@@ -274,7 +274,8 @@
     "manuscriptExported": "تم تصدير المخطوطة إلى {{path}}",
     "exportedTo": "تم التصدير إلى {{path}}",
     "exportedHtmlTo": "تم تصدير HTML إلى {{path}}",
-    "pdfRequiresPandoc": "يتطلب تصدير PDF تثبيت pandoc. ثبّت pandoc وحدد المسار في الإعدادات."
+    "pdfRequiresPandoc": "يتطلب تصدير PDF تثبيت pandoc. ثبّت pandoc وحدد المسار في الإعدادات.",
+    "noActiveDocument": "لا يوجد مستند مفتوح. افتح ملفاً أو غيّر نطاق التصدير إلى «المشروع بأكمله»."
   },
   "wpClient": {
     "authFailed": "فشل التحقق. تحقق من اسم المستخدم وكلمة مرور التطبيق.",

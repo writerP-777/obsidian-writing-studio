@@ -271,7 +271,8 @@
     "manuscriptExported": "पांडुलिपि {{path}} पर निर्यात की",
     "exportedTo": "{{path}} पर निर्यात किया",
     "exportedHtmlTo": "HTML {{path}} पर निर्यात किया",
-    "pdfRequiresPandoc": "PDF निर्यात के लिए pandoc चाहिए। pandoc इंस्टॉल करें और सेटिंग में पाथ सेट करें।"
+    "pdfRequiresPandoc": "PDF निर्यात के लिए pandoc चाहिए। pandoc इंस्टॉल करें और सेटिंग में पाथ सेट करें।",
+    "noActiveDocument": "कोई दस्तावेज़ नहीं खुला है। कोई फ़ाइल खोलें या निर्यात का दायरा «पूरा प्रोजेक्ट» में बदलें।"
   },
   "wpClient": {
     "authFailed": "प्रमाणीकरण विफल। उपयोगकर्ता नाम और एप्लिकेशन पासवर्ड जांचें।",

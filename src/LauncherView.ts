@@ -256,7 +256,7 @@ export class LauncherView extends ItemView {
         icon: 'download',
         label: t('launcher.action.export'),
         action: () => {
-          new ExportModal(this.app, this.plugin).open();
+          new ExportModal(this.app, this.plugin, 'project').open();
         },
       },
       {
