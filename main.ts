@@ -299,7 +299,7 @@ export default class WritingStudioPlugin extends Plugin {
     this.addCommand({
       id: 'export-project',
       name: t('main.cmd.exportProject'),
-      callback: () => new ExportModal(this.app, this).open(),
+      callback: () => new ExportModal(this.app, this, 'project').open(),
     });
 
     this.addCommand({

@@ -271,7 +271,8 @@
     "manuscriptExported": "稿件已导出到 {{path}}",
     "exportedTo": "已导出到 {{path}}",
     "exportedHtmlTo": "HTML 已导出到 {{path}}",
-    "pdfRequiresPandoc": "PDF 导出需要 pandoc。请安装 pandoc 并在设置中设置路径。"
+    "pdfRequiresPandoc": "PDF 导出需要 pandoc。请安装 pandoc 并在设置中设置路径。",
+    "noActiveDocument": "没有打开的文档。请打开文件，或将导出范围切换为「整个项目」。"
   },
   "wpClient": {
     "authFailed": "身份验证失败。请检查用户名和应用程序密码。",
