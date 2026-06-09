@@ -13,6 +13,7 @@ Check each item below and report PASS or FAIL. Do not tag until all nine pass.
 7. **versions.json top entry** — Read versions.json and confirm the first key in the object equals `$ARGUMENTS` exactly.
 8. **README.md version badge** — Read README.md and confirm it contains `**Version $ARGUMENTS**`.
 9. **Branch name** — Run `git branch --show-current` and confirm the current branch is `release/$ARGUMENTS`.
+10. **No eslint-disable for no-deprecated** — Run `grep -rn "eslint-disable.*no-deprecated" src/ modals/ main.ts` — must return no matches.
 
 **SECURITY.md note:** If this is a minor or major version bump (e.g. 2.4.x → 2.5.0 or 3.0.0), remind Don to update the supported versions table in SECURITY.md before tagging.
 
@@ -29,6 +30,7 @@ Report results as a table:
 | versions.json top entry | PASS/FAIL | actual first key if mismatched |
 | README.md version badge | PASS/FAIL | actual line if mismatched |
 | Branch name | PASS/FAIL | actual branch name if wrong |
+| No eslint-disable no-deprecated | PASS/FAIL | list any matching lines if found |
 
-If all nine pass: state "Release preflight passed — safe to tag $ARGUMENTS."
+If all ten pass: state "Release preflight passed — safe to tag $ARGUMENTS."
 If any fail: state "Release preflight FAILED — do not tag until all items pass." List exactly what needs fixing.

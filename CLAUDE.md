@@ -70,6 +70,8 @@ These are enforced automatically. Never violate them:
 
 10\. Description in manifest.json must end with . ? ! or )
 
+11\. NEVER use eslint-disable to suppress `@typescript-eslint/no-deprecated` — fix the deprecated API usage instead
+
 
 
 ## Manifest Rules
