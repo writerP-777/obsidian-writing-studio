@@ -4,6 +4,13 @@ All notable changes to Writing Studio are documented here.
 
 ---
 
+## [2.5.2]
+
+### Fixed
+- **WordPress settings:** Replaced deprecated `.setWarning()` button API with direct CSS class application (`mod-warning`), resolving an Obsidian community plugin scan error. Visually and functionally identical.
+
+---
+
 ## [2.5.1]
 
 ### Fixed
