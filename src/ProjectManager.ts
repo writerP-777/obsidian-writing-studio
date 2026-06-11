@@ -1,6 +1,7 @@
 import { App, Notice, TFolder, TFile, normalizePath } from 'obsidian';
 import type WritingStudioPlugin from '../main';
 import { t } from './i18n';
+import { localDateString } from './dates';
 import { WritingProject, ProjectType } from '../models/Project';
 import { BinderData, BinderItem } from '../models/BinderItem';
 import { SprintSession } from '../models/SprintSession';
@@ -80,7 +81,7 @@ export class ProjectManager {
     await this.ensureFolder(normalizePath(`${folderPath}/Research`));
     await this.ensureFolder(normalizePath(`${folderPath}/Exports`));
 
-    const now = new Date().toISOString().split('T')[0];
+    const now = localDateString();
     const project: WritingProject = {
       id,
       title,
@@ -132,7 +133,7 @@ export class ProjectManager {
   }
 
   async saveProject(project: WritingProject): Promise<void> {
-    project.modified = new Date().toISOString().split('T')[0];
+    project.modified = localDateString();
     const path = normalizePath(`${project.folderPath}/_project.json`);
     await this.writeJson(path, project);
     this.projects.set(project.id, project);
@@ -182,7 +183,7 @@ export class ProjectManager {
     parentId?: string
   ): Promise<BinderItem> {
     const binder = await this.loadBinder(project);
-    const now = new Date().toISOString().split('T')[0];
+    const now = localDateString();
     const baseName = title.replace(/[\\/:*?"<>|]/g, '-');
     let filePath = normalizePath(`${project.folderPath}/Chapters/${baseName}.md`);
     for (let n = 2; this.app.vault.getAbstractFileByPath(filePath); n++) {

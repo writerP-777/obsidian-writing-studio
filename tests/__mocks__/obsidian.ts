@@ -17,6 +17,13 @@ export class TFolder {
   }
 }
 
+export function moment(input?: Date | string): { format(fmt?: string): string } {
+  const d = input !== undefined ? new Date(input) : new Date();
+  const pad = (n: number) => String(n).padStart(2, '0');
+  // Local date regardless of requested format — sufficient for tests
+  return { format: () => `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}` };
+}
+
 export class MarkdownView {}
 
 export class WorkspaceLeaf {}

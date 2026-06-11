@@ -1,6 +1,7 @@
 import { App, TFile, normalizePath } from 'obsidian';
 import type WritingStudioPlugin from '../main';
 import { t } from './i18n';
+import { localDateString, moment } from './dates';
 import { SprintSession } from '../models/SprintSession';
 
 interface DailyStats {
@@ -35,7 +36,7 @@ export class StatsTracker {
 
   private newDailyStats(): DailyStats {
     return {
-      date: new Date().toISOString().split('T')[0],
+      date: localDateString(),
       wordsWritten: 0,
       sprintsCompleted: 0,
       totalMinutes: 0,
@@ -44,6 +45,11 @@ export class StatsTracker {
   }
 
   recordSprint(session: SprintSession): void {
+    // Roll the session stats over when the local day has changed since
+    // plugin load — sessions spanning midnight accrued to the old day
+    if (this.sessionStats.date !== localDateString()) {
+      this.sessionStats = this.newDailyStats();
+    }
     this.sessionStats.wordsWritten += session.wordsWritten;
     this.sessionStats.sprintsCompleted++;
     this.sessionStats.totalMinutes += session.duration;
@@ -60,8 +66,7 @@ export class StatsTracker {
   }
 
   private async appendToDailyNote(session: SprintSession): Promise<void> {
-    const today = new Date().toISOString().split('T')[0];
-    const dailyNotePath = this.getDailyNotePath(today);
+    const dailyNotePath = this.getDailyNotePath();
 
     const project = this.plugin.projectManager.getActiveProject();
     const projectName = project?.title || t('statsTracker.unknownProject');
@@ -78,31 +83,33 @@ ${t('statsTracker.dailyNote.heading')}
 - ${t('statsTracker.dailyNote.sessionTotal')} ${t('statsTracker.dailyNote.sessionTotalValue', { duration: session.duration })}
 `;
 
-    let dailyFile = this.app.vault.getAbstractFileByPath(dailyNotePath);
+    const dailyFile = this.app.vault.getAbstractFileByPath(dailyNotePath);
 
     if (dailyFile instanceof TFile) {
-      const content = await this.app.vault.read(dailyFile);
-      await this.app.vault.modify(dailyFile, content + '\n' + entry);
-    } else {
-      // Fall back to writing-log.json
-      const activeProject = this.plugin.projectManager.getActiveProject();
-      if (activeProject) {
-        await this.plugin.projectManager.logSprintSession(activeProject, session);
-      }
+      // Atomic append — read-then-modify could clobber concurrent edits
+      await this.app.vault.append(dailyFile, '\n' + entry);
+      return;
+    }
+    try {
+      // Documented behavior is "appended to your Daily Note" — create it if
+      // it doesn't exist yet. The session is already in _writing-log.json
+      // (main.ts logs every sprint), so no JSON fallback is needed here;
+      // the old fallback double-logged the session.
+      await this.app.vault.create(dailyNotePath, entry);
+    } catch {
+      // Parent folder missing or path invalid — the JSON log still has it
     }
   }
 
-  private getDailyNotePath(date: string): string {
-    // Try to get daily notes folder from Obsidian daily notes config
-    type AppInternal = App & { internalPlugins?: { plugins?: Record<string, { instance?: { options?: { folder?: string } } }> } };
-    const dailyNotesPlugin = (this.app as AppInternal).internalPlugins?.plugins?.['daily-notes'];
-    const folder = dailyNotesPlugin?.instance?.options?.folder || '';
-    // Use the date as-is (ISO format) since we can't easily format with moment here
-    const fileName = date;
-    if (folder) {
-      return normalizePath(`${folder}/${fileName}.md`);
-    }
-    return normalizePath(`${fileName}.md`);
+  private getDailyNotePath(): string {
+    // Read folder AND date format from the daily-notes core plugin options,
+    // formatting with moment (it ships with Obsidian) — the old hardcoded
+    // ISO filename silently missed every non-default daily-note format
+    type AppInternal = App & { internalPlugins?: { plugins?: Record<string, { instance?: { options?: { folder?: string; format?: string } } }> } };
+    const options = (this.app as AppInternal).internalPlugins?.plugins?.['daily-notes']?.instance?.options;
+    const fileName = moment().format(options?.format || 'YYYY-MM-DD');
+    const folder = options?.folder || '';
+    return normalizePath(folder ? `${folder}/${fileName}.md` : `${fileName}.md`);
   }
 
   updateFileWordCount(path: string, wordCount: number): void {
@@ -178,7 +185,8 @@ ${t('statsTracker.dailyNote.heading')}
     if (project) {
       const log = await this.plugin.projectManager.getWritingLog(project);
       for (const session of log) {
-        const date = session.date.split('T')[0];
+        // session.date is a UTC instant — group by its local calendar day
+        const date = localDateString(session.date);
         const existing = byDate.get(date);
         if (existing) {
           existing.wordsWritten += session.wordsWritten;
@@ -200,7 +208,7 @@ ${t('statsTracker.dailyNote.heading')}
     for (let i = days - 1; i >= 0; i--) {
       const d = new Date(today);
       d.setDate(d.getDate() - i);
-      const dateStr = d.toISOString().split('T')[0];
+      const dateStr = localDateString(d);
       result.push(byDate.get(dateStr) ?? {
         date: dateStr,
         wordsWritten: 0,
@@ -218,14 +226,14 @@ ${t('statsTracker.dailyNote.heading')}
     const log = await this.plugin.projectManager.getWritingLog(project);
     if (log.length === 0) return 0;
 
-    const dates = new Set(log.map(s => s.date.split('T')[0]));
+    const dates = new Set(log.map(s => localDateString(s.date)));
     let streak = 0;
     const today = new Date();
 
     for (let i = 0; i < 365; i++) {
       const d = new Date(today);
       d.setDate(d.getDate() - i);
-      const dateStr = d.toISOString().split('T')[0];
+      const dateStr = localDateString(d);
       if (dates.has(dateStr)) {
         streak++;
       } else if (i > 0) {

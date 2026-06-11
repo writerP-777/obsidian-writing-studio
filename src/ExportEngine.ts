@@ -4,6 +4,7 @@ import { promisify } from 'util';
 import type WritingStudioPlugin from '../main';
 import { EpubEngine, EpubChapter } from './EpubEngine';
 import { t } from './i18n';
+import { localDateString } from './dates';
 
 interface FileSystemAdapter {
   getFullPath?(vaultPath: string): string;
@@ -170,7 +171,7 @@ export class ExportEngine {
     const title = project?.title || 'Untitled';
     const author = project?.author || this.plugin.settings.authorName || '';
     const language = this.plugin.settings.epubLanguage || 'en';
-    const date = new Date().toISOString().split('T')[0];
+    const date = localDateString();
 
     const chapters: EpubChapter[] = [];
 

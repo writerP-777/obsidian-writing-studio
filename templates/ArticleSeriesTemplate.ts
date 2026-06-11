@@ -1,10 +1,11 @@
 import { App, normalizePath } from 'obsidian';
+import { localDateString } from '../src/dates';
 import { WritingProject } from '../models/Project';
 import { BinderData, BinderItem } from '../models/BinderItem';
 
 export class ArticleSeriesTemplate {
   static async apply(app: App, project: WritingProject): Promise<BinderData> {
-    const now = new Date().toISOString().split('T')[0];
+    const now = localDateString();
     const chaptersPath = normalizePath(`${project.folderPath}/Chapters`);
 
     const seriesMetaFile = normalizePath(`${chaptersPath}/Series Overview.md`);

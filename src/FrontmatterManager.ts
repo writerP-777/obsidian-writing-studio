@@ -1,5 +1,6 @@
 import { App, TFile, normalizePath } from 'obsidian';
 import { WPPostMeta } from '../models/WordPressSite';
+import { localDateString } from './dates';
 import type WritingStudioPlugin from '../main';
 
 export class FrontmatterManager {
@@ -50,7 +51,7 @@ export class FrontmatterManager {
     try {
       const content = await this.app.vault.read(file);
       const wordCount = this.countWords(content);
-      const now = new Date().toISOString().split('T')[0];
+      const now = localDateString();
 
       await this.app.fileManager.processFrontMatter(file, (fm: Record<string, unknown>) => {
         fm['word-count'] = wordCount;
