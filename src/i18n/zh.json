@@ -175,7 +175,14 @@
       "delete": "删除"
     },
     "wordCountSuffix": "{{count}}字",
-    "fileNotFound": "文件已不存在：{{path}}"
+    "fileNotFound": "文件已不存在：{{path}}",
+    "deleteConfirm": {
+      "title": "删除文档",
+      "message": "要将“{{title}}”从活页夹中移除并将其文件移至回收站吗？活页夹条目（状态、字数目标、位置）无法恢复。",
+      "delete": "删除",
+      "cancel": "取消"
+    },
+    "noMatches": "没有与“{{query}}”匹配的文档。"
   },
   "launcher": {
     "displayText": "写作工作室",
@@ -315,7 +322,9 @@
     },
     "pickerPlaceholder": "输入文件夹名称以在侧边栏浏览器中打开…",
     "vaultRoot": "/ (仓库根目录)",
-    "previewError": "无法读取此文件。"
+    "previewError": "无法读取此文件。",
+    "noFolder": "未选择文件夹。",
+    "chooseFolder": "选择文件夹"
   },
   "focusToolbar": {
     "exitTitle": "退出专注模式 (esc)",
@@ -328,7 +337,8 @@
     "jumpToSection": "跳转到章节...",
     "proceedToExport": "进行导出",
     "closePreview": "关闭预览",
-    "noContent": "无内容可预览。请先打开写作项目。"
+    "noContent": "无内容可预览。请先打开写作项目。",
+    "loadCompilation": "加载已编译稿件"
   },
   "projectManager": {
     "errorFolderExists": "项目文件夹中已存在名为“{{folder}}”的文件夹。请选择其他标题。",

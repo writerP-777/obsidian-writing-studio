@@ -13,8 +13,10 @@ import { ProjectModal } from '../modals/ProjectModal';
 import { TargetsDashboardModal } from '../modals/TargetsDashboardModal';
 import { PublishModal } from '../modals/PublishModal';
 import { ScanFolderModal } from '../modals/ScanFolderModal';
+import { ConfirmModal } from '../modals/ConfirmModal';
 import { t } from './i18n';
 import { safeHandler } from './safeHandler';
+import { computeBinderFilter, BinderFilterResult } from './binderFilter';
 
 export const BINDER_VIEW_TYPE = 'writing-studio-binder';
 
@@ -27,6 +29,11 @@ export class BinderView extends ItemView {
   private dragOverEl: HTMLElement | null = null;
   // Maps filePath → live DOM element so word counts can be patched without re-render.
   private wcElements = new Map<string, { el: HTMLElement; item: BinderItem }>();
+  private searchQuery = '';
+  private listEl: HTMLElement | null = null;
+  // Non-null while a search is active — computed from the data model so
+  // matches inside collapsed groups are found and their ancestors expanded.
+  private filterSets: BinderFilterResult | null = null;
 
   constructor(leaf: WorkspaceLeaf, plugin: WritingStudioPlugin) {
     super(leaf);
@@ -145,16 +152,28 @@ export class BinderView extends ItemView {
       new TargetsDashboardModal(this.app, this.plugin).open();
     };
 
-    // Search
+    // Search — re-renders only the list so the input keeps focus while typing
     const searchInput = header.createEl('input', {
       cls: 'ws-binder-search',
       type: 'text',
       placeholder: t('binder.searchPlaceholder'),
     });
-    searchInput.oninput = () => this.filterItems(searchInput.value, container);
+    searchInput.value = this.searchQuery;
+    searchInput.oninput = () => {
+      this.searchQuery = searchInput.value;
+      this.renderList();
+    };
 
     // Document list
-    const listEl = container.createDiv('ws-binder-list');
+    this.listEl = container.createDiv('ws-binder-list');
+    this.renderList();
+  }
+
+  private renderList(): void {
+    const listEl = this.listEl;
+    if (!listEl) return;
+    listEl.empty();
+    this.wcElements.clear();
 
     if (!this.activeProject) {
       const empty = listEl.createDiv('ws-binder-empty');
@@ -165,6 +184,15 @@ export class BinderView extends ItemView {
     if (this.binderItems.length === 0) {
       const empty = listEl.createDiv('ws-binder-empty');
       empty.textContent = t('binder.noDocuments');
+      return;
+    }
+
+    const query = this.searchQuery.trim();
+    this.filterSets = query ? computeBinderFilter(this.binderItems, query) : null;
+
+    if (this.filterSets && this.filterSets.visible.size === 0) {
+      const empty = listEl.createDiv('ws-binder-empty');
+      empty.textContent = t('binder.noMatches', { query });
       return;
     }
 
@@ -187,6 +215,13 @@ export class BinderView extends ItemView {
 
   private renderItems(container: HTMLElement, items: BinderItem[], depth: number): void {
     for (const item of items) {
+      const filter = this.filterSets;
+      if (filter && !filter.visible.has(item.id)) continue;
+      // During a search, ancestors of matches render expanded even if collapsed
+      const isExpanded = filter
+        ? filter.expanded.has(item.id) || !item.collapsed
+        : !item.collapsed;
+
       const row = container.createDiv({ cls: `ws-binder-item ws-binder-depth-${depth}` });
       row.setAttribute('data-item-id', item.id);
       row.setAttribute('draggable', 'true');
@@ -199,7 +234,7 @@ export class BinderView extends ItemView {
       // Collapse toggle for groups
       if (item.children?.length) {
         const toggle = row.createSpan('ws-binder-toggle');
-        toggle.textContent = item.collapsed ? '▶' : '▼';
+        toggle.textContent = isExpanded ? '▼' : '▶';
         toggle.onclick = (e) => {
           e.stopPropagation();
           item.collapsed = !item.collapsed;
@@ -298,7 +333,7 @@ export class BinderView extends ItemView {
       };
 
       // Render children
-      if (item.children?.length && !item.collapsed) {
+      if (item.children?.length && isExpanded) {
         this.renderItems(container, item.children, depth + 1);
       }
     }
@@ -422,7 +457,7 @@ export class BinderView extends ItemView {
       new PublishModal(this.app, this.plugin, item.filePath).open();
     }));
     menu.addSeparator();
-    menu.addItem(i => i.setTitle(t('binder.menu.delete')).setIcon('trash').onClick(safeHandler(() => this.deleteItem(item))));
+    menu.addItem(i => i.setTitle(t('binder.menu.delete')).setIcon('trash').onClick(() => this.deleteItem(item)));
 
     menu.showAtMouseEvent(e);
   }
@@ -489,14 +524,26 @@ export class BinderView extends ItemView {
     await this.refresh();
   }
 
-  private async deleteItem(item: BinderItem): Promise<void> {
-    if (!this.activeProject) return;
-    const file = this.app.vault.getAbstractFileByPath(item.filePath);
-    if (file instanceof TFile) {
-      await this.app.fileManager.trashFile(file);
-    }
-    await this.plugin.projectManager.removeItemFromBinder(this.activeProject, item.id);
-    await this.refresh();
+  private deleteItem(item: BinderItem): void {
+    const project = this.activeProject;
+    if (!project) return;
+    // The file is recoverable from the trash, but the binder entry (status,
+    // goal, position) is not — confirm before destroying it
+    new ConfirmModal(
+      this.app,
+      t('binder.deleteConfirm.title'),
+      t('binder.deleteConfirm.message', { title: item.title }),
+      t('binder.deleteConfirm.delete'),
+      t('binder.deleteConfirm.cancel'),
+      async () => {
+        const file = this.app.vault.getAbstractFileByPath(item.filePath);
+        if (file instanceof TFile) {
+          await this.app.fileManager.trashFile(file);
+        }
+        await this.plugin.projectManager.removeItemFromBinder(project, item.id);
+        await this.refresh();
+      }
+    ).open();
   }
 
   private clearDropIndicators(el: HTMLElement): void {
@@ -609,15 +656,6 @@ export class BinderView extends ItemView {
       }
     }
     return order;
-  }
-
-  private filterItems(query: string, container: HTMLElement): void {
-    const q = query.toLowerCase();
-    const rows = container.querySelectorAll<HTMLElement>('.ws-binder-item');
-    rows.forEach((row) => {
-      const title = row.querySelector('.ws-binder-title')?.textContent?.toLowerCase() || '';
-      row.toggleClass('ws-hidden', !(!q || title.includes(q)));
-    });
   }
 
   async scanProjectFolder(): Promise<void> {

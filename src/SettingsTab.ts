@@ -14,8 +14,23 @@ export class WritingStudioSettingsTab extends PluginSettingTab {
     this.plugin = plugin;
   }
 
+  // The help tab's MarkdownRenderer component must be unloaded whenever its
+  // DOM is emptied (tab switch) or the dialog closes — display() alone left
+  // it loaded indefinitely.
+  private unloadHelpComponent(): void {
+    if (this.helpComponent) {
+      this.helpComponent.unload();
+      this.helpComponent = null;
+    }
+  }
+
+  hide(): void {
+    this.unloadHelpComponent();
+    super.hide();
+  }
+
   display(): void {
-    if (this.helpComponent) { this.helpComponent.unload(); this.helpComponent = null; }
+    this.unloadHelpComponent();
     const { containerEl } = this;
     containerEl.empty();
     containerEl.addClass('ws-settings');
@@ -41,6 +56,7 @@ export class WritingStudioSettingsTab extends PluginSettingTab {
         text: tab.label,
       });
       btn.onclick = () => {
+        this.unloadHelpComponent();
         this.activeTab = tab.id;
         tabBar.querySelectorAll('.ws-settings-tab').forEach(b => b.removeClass('is-active'));
         btn.addClass('is-active');

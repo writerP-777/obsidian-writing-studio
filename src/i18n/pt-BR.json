@@ -175,7 +175,14 @@
       "delete": "Excluir"
     },
     "wordCountSuffix": "{{count}}p",
-    "fileNotFound": "O arquivo não existe mais: {{path}}"
+    "fileNotFound": "O arquivo não existe mais: {{path}}",
+    "deleteConfirm": {
+      "title": "Excluir documento",
+      "message": "Remover \"{{title}}\" da pasta de escrita e mover seu arquivo para a lixeira? A entrada da pasta (status, meta de palavras, posição) não pode ser restaurada.",
+      "delete": "Excluir",
+      "cancel": "Cancelar"
+    },
+    "noMatches": "Nenhum documento corresponde a \"{{query}}\"."
   },
   "launcher": {
     "displayText": "Estúdio de escrita",
@@ -315,7 +322,9 @@
     },
     "pickerPlaceholder": "Digite um nome de pasta para abrir no explorador lateral…",
     "vaultRoot": "/ (raiz do vault)",
-    "previewError": "Não foi possível ler este arquivo."
+    "previewError": "Não foi possível ler este arquivo.",
+    "noFolder": "Nenhuma pasta selecionada.",
+    "chooseFolder": "Escolher pasta"
   },
   "focusToolbar": {
     "exitTitle": "Sair do modo foco (esc)",
@@ -328,7 +337,8 @@
     "jumpToSection": "Ir para seção...",
     "proceedToExport": "Prosseguir para exportar",
     "closePreview": "Fechar visualização",
-    "noContent": "Sem conteúdo para visualizar. Abra um projeto de escrita primeiro."
+    "noContent": "Sem conteúdo para visualizar. Abra um projeto de escrita primeiro.",
+    "loadCompilation": "Carregar o manuscrito compilado"
   },
   "projectManager": {
     "errorFolderExists": "Já existe uma pasta chamada \"{{folder}}\" na sua pasta de projetos. Escolha um título diferente.",

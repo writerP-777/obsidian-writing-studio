@@ -5,6 +5,7 @@ import {
   MarkdownView,
   TFolder,
   TFile,
+  ViewStateResult,
   WorkspaceLeaf,
   setIcon,
 } from 'obsidian';
@@ -55,13 +56,32 @@ export class FolderSidebarView extends ItemView {
   getIcon(): string { return 'folder'; }
 
   onOpen(): Promise<void> {
-    (this.containerEl.children[1] as HTMLElement).empty();
+    this.render();
     return Promise.resolve();
   }
 
   onClose(): Promise<void> {
     this.hideTooltip();
     return Promise.resolve();
+  }
+
+  // Persist the root folder in view state — without this, a workspace-restored
+  // leaf came back with rootFolder = null and rendered as a dead, empty panel.
+  getState(): Record<string, unknown> {
+    return { rootFolderPath: this.rootFolder?.path ?? null };
+  }
+
+  async setState(state: unknown, result: ViewStateResult): Promise<void> {
+    await super.setState(state, result);
+    const path = (state as { rootFolderPath?: unknown } | null)?.rootFolderPath;
+    if (typeof path === 'string' && path !== this.rootFolder?.path) {
+      const folder = this.app.vault.getAbstractFileByPath(path);
+      if (folder instanceof TFolder) {
+        this.setRootFolder(folder);
+        return;
+      }
+    }
+    this.render();
   }
 
   // ── Public API ────────────────────────────────────────────────────────────
@@ -74,15 +94,19 @@ export class FolderSidebarView extends ItemView {
     this.searchQuery = '';
     this.searchResults = null;
     this.render();
+    this.app.workspace.requestSaveLayout();
   }
 
   // ── Helpers ───────────────────────────────────────────────────────────────
 
   private getMainEditor() {
-    // activeEditor is null when the sidebar (an ItemView) is focused — fall back
-    // to scanning all open MarkdownView leaves so insertion still works.
+    // activeEditor is null when the sidebar (an ItemView) is focused — prefer
+    // the most recently active main-area leaf; the first leaf returned by
+    // getLeavesOfType() may be a different pane than the one the user wrote in
     const active = this.app.workspace.activeEditor?.editor;
     if (active) return active;
+    const recent = this.app.workspace.getMostRecentLeaf(this.app.workspace.rootSplit);
+    if (recent?.view instanceof MarkdownView) return recent.view.editor;
     for (const leaf of this.app.workspace.getLeavesOfType('markdown')) {
       const view = leaf.view;
       if (view instanceof MarkdownView) return view.editor;
@@ -489,7 +513,20 @@ export class FolderSidebarView extends ItemView {
 
     const current = this.currentFolder;
     const root = this.rootFolder;
-    if (!current || !root) return;
+    if (!current || !root) {
+      // No folder yet (fresh leaf, or restored state pointed at a deleted
+      // folder) — offer a picker instead of a blank panel
+      const empty = container.createDiv({ cls: 'ws-folder-empty-state' });
+      empty.createDiv({ cls: 'ws-folder-empty', text: t('folderSidebar.noFolder') });
+      const chooseBtn = empty.createEl('button', {
+        cls: 'ws-folder-nav-btn',
+        text: t('folderSidebar.chooseFolder'),
+      });
+      chooseBtn.addEventListener('click', () => {
+        new FolderPickerModal(this.app, (folder) => this.setRootFolder(folder)).open();
+      });
+      return;
+    }
 
     const canGoBack = this.currentFile !== null || this.historyStack.length > 0;
 

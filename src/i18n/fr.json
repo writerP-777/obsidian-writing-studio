@@ -175,7 +175,14 @@
       "delete": "Supprimer"
     },
     "wordCountSuffix": "{{count}}m",
-    "fileNotFound": "Le fichier n'existe plus : {{path}}"
+    "fileNotFound": "Le fichier n'existe plus : {{path}}",
+    "deleteConfirm": {
+      "title": "Supprimer le document",
+      "message": "Retirer « {{title}} » du classeur et déplacer son fichier vers la corbeille ? L’entrée du classeur (statut, objectif de mots, position) ne peut pas être restaurée.",
+      "delete": "Supprimer",
+      "cancel": "Annuler"
+    },
+    "noMatches": "Aucun document ne correspond à « {{query}} »."
   },
   "launcher": {
     "displayText": "Studio d'écriture",
@@ -315,7 +322,9 @@
     },
     "pickerPlaceholder": "Saisissez un nom de dossier pour l'ouvrir dans l'explorateur latéral…",
     "vaultRoot": "/ (racine du coffre)",
-    "previewError": "Impossible de lire ce fichier."
+    "previewError": "Impossible de lire ce fichier.",
+    "noFolder": "Aucun dossier sélectionné.",
+    "chooseFolder": "Choisir un dossier"
   },
   "focusToolbar": {
     "exitTitle": "Quitter le mode focus (esc)",
@@ -328,7 +337,8 @@
     "jumpToSection": "Aller à la section...",
     "proceedToExport": "Procéder à l'export",
     "closePreview": "Fermer l'aperçu",
-    "noContent": "Aucun contenu à prévisualiser. Ouvrez d'abord un projet d'écriture."
+    "noContent": "Aucun contenu à prévisualiser. Ouvrez d'abord un projet d'écriture.",
+    "loadCompilation": "Charger le manuscrit compilé"
   },
   "projectManager": {
     "errorFolderExists": "Un dossier nommé \"{{folder}}\" existe déjà dans votre dossier de projets. Choisissez un autre titre.",
