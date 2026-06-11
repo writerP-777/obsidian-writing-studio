@@ -11653,7 +11653,7 @@ var FocusMode = class {
   }
   applyDimOpacity() {
     const opacity = (this.plugin.settings.dimOpacity || 20) / 100;
-    activeDocument.documentElement.style.setProperty("--ws-focus-dim-opacity", String(opacity));
+    activeDocument.documentElement.setCssProps({ "--ws-focus-dim-opacity": String(opacity) });
   }
   hideSidebars() {
     const left = this.app.workspace.leftSplit;
@@ -11851,14 +11851,15 @@ var TypographyMode = class {
     const lineHeight = settings.lineHeight || 1.7;
     const letterSpacing = settings.letterSpacing || "normal";
     const halfWidthCh = `${maxChars / 2}ch`;
-    const root = activeDocument.documentElement;
-    root.style.setProperty("--ws-typo-font", fontStack);
-    root.style.setProperty("--ws-typo-size", `${fontSize}px`);
-    root.style.setProperty("--ws-typo-lh", String(lineHeight));
-    root.style.setProperty("--ws-typo-ls", letterSpacing);
-    root.style.setProperty("--ws-typo-pad-left", `max(1.5rem, calc(50% - ${halfWidthCh}))`);
-    root.style.setProperty("--ws-typo-pad-right", `max(1.5rem, calc(50% - ${halfWidthCh}))`);
-    root.style.setProperty("--ws-typo-max-width", `${maxChars}ch`);
+    activeDocument.documentElement.setCssProps({
+      "--ws-typo-font": fontStack,
+      "--ws-typo-size": `${fontSize}px`,
+      "--ws-typo-lh": String(lineHeight),
+      "--ws-typo-ls": letterSpacing,
+      "--ws-typo-pad-left": `max(1.5rem, calc(50% - ${halfWidthCh}))`,
+      "--ws-typo-pad-right": `max(1.5rem, calc(50% - ${halfWidthCh}))`,
+      "--ws-typo-max-width": `${maxChars}ch`
+    });
   }
   removeCustomProperties() {
     const root = activeDocument.documentElement;
@@ -15257,7 +15258,7 @@ var WritingStudioSettingsTab = class extends import_obsidian28.PluginSettingTab 
     new import_obsidian28.Setting(el).setName(t2("settings.focus.dimOpacity")).setDesc(t2("settings.focus.dimOpacityDesc")).addSlider((s) => s.setLimits(10, 50, 5).setValue(this.plugin.settings.dimOpacity).setDynamicTooltip().onChange(async (v) => {
       this.plugin.settings.dimOpacity = v;
       await this.plugin.saveSettings();
-      activeDocument.documentElement.style.setProperty("--ws-focus-dim-opacity", String(v / 100));
+      this.plugin.focusMode.applyDimOpacity();
     }));
     new import_obsidian28.Setting(el).setName(t2("settings.focus.fontSizeOverride")).setDesc(t2("settings.focus.fontSizeOverrideDesc")).addText((text) => text.setValue(String(this.plugin.settings.focusFontSize || 0)).onChange(async (v) => {
       this.plugin.settings.focusFontSize = parseInt(v) || 0;
@@ -15706,8 +15707,10 @@ var FolderSidebarView = class extends import_obsidian29.ItemView {
     if (top + tipH > vh) top = rect.top - tipH - 6;
     if (left + tipW > vw) left = vw - tipW - 8;
     if (left < 8) left = 8;
-    tip.style.top = `${Math.round(top)}px`;
-    tip.style.left = `${Math.round(left)}px`;
+    tip.setCssProps({
+      "--ws-tip-top": `${Math.round(top)}px`,
+      "--ws-tip-left": `${Math.round(left)}px`
+    });
     tip.createDiv({ cls: "ws-tooltip-name", text: item.name });
     tip.createDiv({ cls: "ws-tooltip-divider" });
     if (item instanceof import_obsidian29.TFile) {

@@ -279,8 +279,10 @@ export class FolderSidebarView extends ItemView {
     if (left + tipW > vw) left = vw - tipW - 8;       // clamp to right edge
     if (left < 8) left = 8;                            // clamp to left edge
 
-    tip.style.top  = `${Math.round(top)}px`;
-    tip.style.left = `${Math.round(left)}px`;
+    tip.setCssProps({
+      '--ws-tip-top': `${Math.round(top)}px`,
+      '--ws-tip-left': `${Math.round(left)}px`,
+    });
 
     // Name
     tip.createDiv({ cls: 'ws-tooltip-name', text: item.name });
