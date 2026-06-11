@@ -1,5 +1,5 @@
 import { App, TFile } from 'obsidian';
-import { zipSync, type Zippable } from 'fflate';
+import { zip, type AsyncZippable } from 'fflate';
 import type WritingStudioPlugin from '../main';
 import { t } from './i18n';
 
@@ -37,7 +37,7 @@ export class EpubEngine {
 
     // Entries are written in insertion order — mimetype MUST be first and
     // stored uncompressed (level 0) per the EPUB OCF spec.
-    const entries: Zippable = {};
+    const entries: AsyncZippable = {};
     entries['mimetype'] = [Buffer.from('application/epub+zip'), { level: 0 }];
     entries['META-INF/container.xml'] = [Buffer.from(this.containerXml()), { level: 6 }];
 
@@ -68,7 +68,11 @@ export class EpubEngine {
     entries['OEBPS/toc.ncx'] = [Buffer.from(this.tocNcx(uid, opts.title, opts.author, opts.chapters)), { level: 6 }];
     entries['OEBPS/content.opf'] = [Buffer.from(this.contentOpf(uid, opts, modified, coverImageFile, coverImageMime)), { level: 6 }];
 
-    const compressed = zipSync(entries) as unknown as Uint8Array;
+    // Async zip compresses in worker threads — zipSync froze the UI for the
+    // whole compression of a large manuscript with a cover image
+    const compressed = await new Promise<Uint8Array>((resolve, reject) => {
+      zip(entries, (err, data: Uint8Array) => { if (err) reject(err); else resolve(data); });
+    });
     const data = new ArrayBuffer(compressed.byteLength);
     new Uint8Array(data).set(compressed);
     const existing = this.app.vault.getAbstractFileByPath(outputVaultPath);

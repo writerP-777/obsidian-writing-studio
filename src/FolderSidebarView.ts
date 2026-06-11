@@ -10,6 +10,7 @@ import {
   setIcon,
 } from 'obsidian';
 import { t } from './i18n';
+import { countWords } from './words';
 
 type SortMode = 'folders-az' | 'folders-za' | 'az' | 'za' | 'modified-new' | 'modified-old';
 type MatchType = 'name' | 'content';
@@ -329,10 +330,9 @@ export class FolderSidebarView extends ItemView {
         const wordRow = this.addTooltipRow(tip, t('folderSidebar.tooltip.words'), '…');
         try {
           const text = await this.app.vault.cachedRead(item);
-          const body2 = this.stripFrontmatter(text);
-          const words = body2.trim().length > 0
-            ? body2.trim().split(/\s+/).length
-            : 0;
+          // Shared counter — a raw whitespace split here disagreed with the
+          // binder and manuscript counts for the same file
+          const words = countWords(text);
           if (this.tooltipEl === tip) {
             const val = wordRow.querySelector('.ws-tooltip-value');
             if (val) val.textContent = words.toLocaleString();

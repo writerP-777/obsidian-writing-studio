@@ -10558,7 +10558,8 @@ var BinderView = class extends import_obsidian9.ItemView {
     this.dragSource = null;
     this.dropZone = null;
     this.dragOverEl = null;
-    // Maps filePath → live DOM element so word counts can be patched without re-render.
+    // Maps filePath → live DOM elements so word counts can be patched without
+    // re-render. One file can back several binder items, hence the array.
     this.wcElements = /* @__PURE__ */ new Map();
     this.searchQuery = "";
     this.listEl = null;
@@ -10716,7 +10717,7 @@ var BinderView = class extends import_obsidian9.ItemView {
     };
   }
   renderItems(container, items, depth) {
-    var _a2, _b2;
+    var _a2, _b2, _c;
     for (const item of items) {
       const filter = this.filterSets;
       if (filter && !filter.visible.has(item.id)) continue;
@@ -10748,11 +10749,24 @@ var BinderView = class extends import_obsidian9.ItemView {
       titleEl.textContent = item.title;
       titleEl.contentEditable = "false";
       const wcEl = row.createSpan("ws-binder-wc");
-      this.wcElements.set(item.filePath, { el: wcEl, item });
+      const wcEntries = (_b2 = this.wcElements.get(item.filePath)) != null ? _b2 : [];
+      wcEntries.push({ el: wcEl, item });
+      this.wcElements.set(item.filePath, wcEntries);
       void this.loadWordCount(item, wcEl);
-      row.onclick = () => this.openDocument(item);
+      let clickTimer = null;
+      row.onclick = () => {
+        if (clickTimer !== null) return;
+        clickTimer = window.setTimeout(() => {
+          clickTimer = null;
+          void this.openDocument(item);
+        }, 250);
+      };
       titleEl.ondblclick = (e) => {
         e.stopPropagation();
+        if (clickTimer !== null) {
+          window.clearTimeout(clickTimer);
+          clickTimer = null;
+        }
         this.startRename(titleEl, item);
       };
       row.oncontextmenu = (e) => {
@@ -10809,7 +10823,7 @@ var BinderView = class extends import_obsidian9.ItemView {
         else if (zone === "after") await this.moveItemAfter(this.dragSource, item.id);
         else await this.moveItemInto(this.dragSource, item.id);
       };
-      if (((_b2 = item.children) == null ? void 0 : _b2.length) && isExpanded) {
+      if (((_c = item.children) == null ? void 0 : _c.length) && isExpanded) {
         this.renderItems(container, item.children, depth + 1);
       }
     }
@@ -10834,16 +10848,17 @@ var BinderView = class extends import_obsidian9.ItemView {
   // Called by the plugin's debounced word-count updater on every file change.
   // Patches only the relevant DOM span — no binder re-render needed.
   updateWordCount(filePath, wc) {
-    const entry = this.wcElements.get(filePath);
-    if (!entry) return;
-    const { el, item } = entry;
-    const goal = item.wordCountGoal;
-    if (goal && goal > 0) {
-      const pct = Math.min(100, Math.round(wc / goal * 100));
-      el.textContent = `${wc}/${goal}`;
-      el.title = t2("binder.pctComplete", { pct });
-    } else {
-      el.textContent = t2("binder.wordCountSuffix", { count: wc });
+    const entries = this.wcElements.get(filePath);
+    if (!entries) return;
+    for (const { el, item } of entries) {
+      const goal = item.wordCountGoal;
+      if (goal && goal > 0) {
+        const pct = Math.min(100, Math.round(wc / goal * 100));
+        el.textContent = `${wc}/${goal}`;
+        el.title = t2("binder.pctComplete", { pct });
+      } else {
+        el.textContent = t2("binder.wordCountSuffix", { count: wc });
+      }
     }
   }
   getTypeIcon(type) {
@@ -10952,17 +10967,19 @@ var BinderView = class extends import_obsidian9.ItemView {
     if (!this.activeProject) return;
     if (item.type === "group" || item.type === "part") return;
     const newTitle = `${item.title} ${t2("binder.copySuffix")}`;
+    const srcFile = this.app.vault.getAbstractFileByPath(item.filePath);
+    const content = srcFile instanceof import_obsidian9.TFile ? await this.app.vault.read(srcFile) : void 0;
     const newItem = await this.plugin.projectManager.addDocumentToBinder(
       this.activeProject,
       newTitle,
-      item.type
+      item.type,
+      void 0,
+      content
     );
-    const srcFile = this.app.vault.getAbstractFileByPath(item.filePath);
-    const dstFile = this.app.vault.getAbstractFileByPath(newItem.filePath);
-    if (srcFile instanceof import_obsidian9.TFile && dstFile instanceof import_obsidian9.TFile) {
-      const content = await this.app.vault.read(srcFile);
-      await this.app.vault.modify(dstFile, content);
-    }
+    newItem.status = item.status;
+    newItem.wordCountGoal = item.wordCountGoal;
+    newItem.includeInExport = item.includeInExport;
+    await this.saveBinder();
     await this.refresh();
   }
   async moveToResearch(item) {
@@ -12698,6 +12715,24 @@ var import_util = require("util");
 var import_obsidian18 = require("obsidian");
 
 // node_modules/fflate/esm/browser.js
+var ch2 = {};
+var wk = (function(c, id, msg, transfer, cb) {
+  var w = new Worker(ch2[id] || (ch2[id] = URL.createObjectURL(new Blob([
+    c + ';addEventListener("error",function(e){e=e.error;postMessage({$e$:[e.message,e.code,e.stack]})})'
+  ], { type: "text/javascript" }))));
+  w.onmessage = function(e) {
+    var d = e.data, ed = d.$e$;
+    if (ed) {
+      var err2 = new Error(ed[0]);
+      err2["code"] = ed[1];
+      err2.stack = ed[2];
+      cb(err2, null);
+    } else
+      cb(null, d);
+  };
+  w.postMessage(msg, transfer);
+  return w;
+});
 var u8 = Uint8Array;
 var u16 = Uint16Array;
 var i32 = Int32Array;
@@ -13241,10 +13276,82 @@ var mrg = function(a, b) {
     o[k] = b[k];
   return o;
 };
+var wcln = function(fn, fnStr, td2) {
+  var dt = fn();
+  var st = fn.toString();
+  var ks = st.slice(st.indexOf("[") + 1, st.lastIndexOf("]")).replace(/\s+/g, "").split(",");
+  for (var i = 0; i < dt.length; ++i) {
+    var v = dt[i], k = ks[i];
+    if (typeof v == "function") {
+      fnStr += ";" + k + "=";
+      var st_1 = v.toString();
+      if (v.prototype) {
+        if (st_1.indexOf("[native code]") != -1) {
+          var spInd = st_1.indexOf(" ", 8) + 1;
+          fnStr += st_1.slice(spInd, st_1.indexOf("(", spInd));
+        } else {
+          fnStr += st_1;
+          for (var t3 in v.prototype)
+            fnStr += ";" + k + ".prototype." + t3 + "=" + v.prototype[t3].toString();
+        }
+      } else
+        fnStr += st_1;
+    } else
+      td2[k] = v;
+  }
+  return fnStr;
+};
+var ch = [];
+var cbfs = function(v) {
+  var tl = [];
+  for (var k in v) {
+    if (v[k].buffer) {
+      tl.push((v[k] = new v[k].constructor(v[k])).buffer);
+    }
+  }
+  return tl;
+};
+var wrkr = function(fns, init2, id, cb) {
+  if (!ch[id]) {
+    var fnStr = "", td_1 = {}, m = fns.length - 1;
+    for (var i = 0; i < m; ++i)
+      fnStr = wcln(fns[i], fnStr, td_1);
+    ch[id] = { c: wcln(fns[m], fnStr, td_1), e: td_1 };
+  }
+  var td2 = mrg({}, ch[id].e);
+  return wk(ch[id].c + ";onmessage=function(e){for(var k in e.data)self[k]=e.data[k];onmessage=" + init2.toString() + "}", id, td2, cbfs(td2), cb);
+};
+var bDflt = function() {
+  return [u8, u16, i32, fleb, fdeb, clim, revfl, revfd, flm, flt, fdm, fdt, rev, deo, et, hMap, wbits, wbits16, hTree, ln, lc, clen, wfblk, wblk, shft, slc, dflt, dopt, deflateSync, pbf];
+};
+var pbf = function(msg) {
+  return postMessage(msg, [msg.buffer]);
+};
+var cbify = function(dat, opts, fns, init2, id, cb) {
+  var w = wrkr(fns, init2, id, function(err2, dat2) {
+    w.terminate();
+    cb(err2, dat2);
+  });
+  w.postMessage([dat, opts], opts.consume ? [dat.buffer] : []);
+  return function() {
+    w.terminate();
+  };
+};
 var wbytes = function(d, b, v) {
   for (; v; ++b)
     d[b] = v, v >>>= 8;
 };
+function deflate(data, opts, cb) {
+  if (!cb)
+    cb = opts, opts = {};
+  if (typeof cb != "function")
+    err(7);
+  return cbify(data, opts, [
+    bDflt
+  ], function(ev) {
+    return pbf(deflateSync(ev.data[0], ev.data[1]));
+  }, 0, cb);
+}
 function deflateSync(data, opts) {
   return dopt(data, opts || {}, 0, 0);
 }
@@ -13360,49 +13467,101 @@ var wzf = function(o, b, c, d, e) {
   wbytes(o, b + 12, d);
   wbytes(o, b + 16, e);
 };
-function zipSync(data, opts) {
-  if (!opts)
-    opts = {};
+function zip(data, opts, cb) {
+  if (!cb)
+    cb = opts, opts = {};
+  if (typeof cb != "function")
+    err(7);
   var r = {};
-  var files = [];
   fltn(data, "", r, opts);
-  var o = 0;
-  var tot = 0;
-  for (var fn in r) {
+  var k = Object.keys(r);
+  var lft = k.length, o = 0, tot = 0;
+  var slft = lft, files = new Array(lft);
+  var term = [];
+  var tAll = function() {
+    for (var i2 = 0; i2 < term.length; ++i2)
+      term[i2]();
+  };
+  var cbd = function(a, b) {
+    mt(function() {
+      cb(a, b);
+    });
+  };
+  mt(function() {
+    cbd = cb;
+  });
+  var cbf = function() {
+    var out = new u8(tot + 22), oe = o, cdl = tot - o;
+    tot = 0;
+    for (var i2 = 0; i2 < slft; ++i2) {
+      var f = files[i2];
+      try {
+        var l = f.c.length;
+        wzh(out, tot, f, f.f, f.u, l);
+        var badd = 30 + f.f.length + exfl(f.extra);
+        var loc = tot + badd;
+        out.set(f.c, loc);
+        wzh(out, o, f, f.f, f.u, l, tot, f.m), o += 16 + badd + (f.m ? f.m.length : 0), tot = loc + l;
+      } catch (e) {
+        return cbd(e, null);
+      }
+    }
+    wzf(out, o, files.length, cdl, oe);
+    cbd(null, out);
+  };
+  if (!lft)
+    cbf();
+  var _loop_1 = function(i2) {
+    var fn = k[i2];
     var _a2 = r[fn], file = _a2[0], p = _a2[1];
-    var compression = p.level == 0 ? 0 : 8;
+    var c = crc(), size = file.length;
+    c.p(file);
     var f = strToU8(fn), s = f.length;
     var com = p.comment, m = com && strToU8(com), ms = m && m.length;
     var exl = exfl(p.extra);
+    var compression = p.level == 0 ? 0 : 8;
+    var cbl = function(e, d) {
+      if (e) {
+        tAll();
+        cbd(e, null);
+      } else {
+        var l = d.length;
+        files[i2] = mrg(p, {
+          size,
+          crc: c.d(),
+          c: d,
+          f,
+          m,
+          u: s != fn.length || m && com.length != ms,
+          compression
+        });
+        o += 30 + s + exl + l;
+        tot += 76 + 2 * (s + exl) + (ms || 0) + l;
+        if (!--lft)
+          cbf();
+      }
+    };
     if (s > 65535)
-      err(11);
-    var d = compression ? deflateSync(file, p) : file, l = d.length;
-    var c = crc();
-    c.p(file);
-    files.push(mrg(p, {
-      size: file.length,
-      crc: c.d(),
-      c: d,
-      f,
-      m,
-      u: s != fn.length || m && com.length != ms,
-      o,
-      compression
-    }));
-    o += 30 + s + exl + l;
-    tot += 76 + 2 * (s + exl) + (ms || 0) + l;
+      cbl(err(11, 0, 1), null);
+    if (!compression)
+      cbl(null, file);
+    else if (size < 16e4) {
+      try {
+        cbl(null, deflateSync(file, p));
+      } catch (e) {
+        cbl(e, null);
+      }
+    } else
+      term.push(deflate(file, p, cbl));
+  };
+  for (var i = 0; i < slft; ++i) {
+    _loop_1(i);
   }
-  var out = new u8(tot + 22), oe = o, cdl = tot - o;
-  for (var i = 0; i < files.length; ++i) {
-    var f = files[i];
-    wzh(out, f.o, f, f.f, f.u, f.c.length);
-    var badd = 30 + f.f.length + exfl(f.extra);
-    out.set(f.c, f.o + badd);
-    wzh(out, o, f, f.f, f.u, f.c.length, f.o, f.m), o += 16 + badd + (f.m ? f.m.length : 0);
-  }
-  wzf(out, o, files.length, cdl, oe);
-  return out;
+  return tAll;
 }
+var mt = typeof queueMicrotask == "function" ? queueMicrotask : typeof setTimeout == "function" ? setTimeout : function(fn) {
+  fn();
+};
 
 // src/EpubEngine.ts
 var EpubEngine = class {
@@ -13434,13 +13593,18 @@ var EpubEngine = class {
     }
     entries["OEBPS/cover.xhtml"] = [Buffer.from(coverImageFile ? this.coverImageXhtml(coverImageFile) : this.coverTextXhtml(opts.title, opts.author)), { level: 6 }];
     entries["OEBPS/style.css"] = [Buffer.from(this.stylesheet()), { level: 6 }];
-    for (const ch of opts.chapters) {
-      entries[`OEBPS/${ch.id}.xhtml`] = [Buffer.from(this.chapterXhtml(ch.title, ch.htmlContent)), { level: 6 }];
+    for (const ch3 of opts.chapters) {
+      entries[`OEBPS/${ch3.id}.xhtml`] = [Buffer.from(this.chapterXhtml(ch3.title, ch3.htmlContent)), { level: 6 }];
     }
     entries["OEBPS/nav.xhtml"] = [Buffer.from(this.navXhtml(opts.title, opts.chapters)), { level: 6 }];
     entries["OEBPS/toc.ncx"] = [Buffer.from(this.tocNcx(uid, opts.title, opts.author, opts.chapters)), { level: 6 }];
     entries["OEBPS/content.opf"] = [Buffer.from(this.contentOpf(uid, opts, modified, coverImageFile, coverImageMime)), { level: 6 }];
-    const compressed = zipSync(entries);
+    const compressed = await new Promise((resolve, reject) => {
+      zip(entries, (err2, data2) => {
+        if (err2) reject(err2);
+        else resolve(data2);
+      });
+    });
     const data = new ArrayBuffer(compressed.byteLength);
     new Uint8Array(data).set(compressed);
     const existing = this.app.vault.getAbstractFileByPath(outputVaultPath);
@@ -13482,12 +13646,12 @@ var EpubEngine = class {
         `<item id="cover-image" href="${coverFile}" media-type="${coverMime}" properties="cover-image"/>`
       );
     }
-    for (const ch of opts.chapters) {
-      manifestItems.push(`<item id="${ch.id}" href="${ch.id}.xhtml" media-type="application/xhtml+xml"/>`);
+    for (const ch3 of opts.chapters) {
+      manifestItems.push(`<item id="${ch3.id}" href="${ch3.id}.xhtml" media-type="application/xhtml+xml"/>`);
     }
     const spineItems = [
       `<itemref idref="cover-page"/>`,
-      ...opts.chapters.map((ch) => `<itemref idref="${ch.id}"/>`)
+      ...opts.chapters.map((ch3) => `<itemref idref="${ch3.id}"/>`)
     ];
     return `<?xml version="1.0" encoding="UTF-8"?>
 <package xmlns="http://www.idpf.org/2007/opf" version="3.0"
@@ -13511,7 +13675,7 @@ var EpubEngine = class {
   navXhtml(title, chapters) {
     const items = [
       `<li><a href="cover.xhtml">${t2("epub.cover")}</a></li>`,
-      ...chapters.map((ch) => `<li><a href="${ch.id}.xhtml">${this.x(ch.title)}</a></li>`)
+      ...chapters.map((ch3) => `<li><a href="${ch3.id}.xhtml">${this.x(ch3.title)}</a></li>`)
     ].join("\n      ");
     return `<?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE html>
@@ -13540,9 +13704,9 @@ var EpubEngine = class {
       <content src="cover.xhtml"/>
     </navPoint>`;
     const chapterPoints = chapters.map(
-      (ch) => `<navPoint id="${ch.id}" playOrder="${order++}">
-      <navLabel><text>${this.x(ch.title)}</text></navLabel>
-      <content src="${ch.id}.xhtml"/>
+      (ch3) => `<navPoint id="${ch3.id}" playOrder="${order++}">
+      <navLabel><text>${this.x(ch3.title)}</text></navLabel>
+      <content src="${ch3.id}.xhtml"/>
     </navPoint>`
     ).join("\n    ");
     return `<?xml version="1.0" encoding="UTF-8"?>
@@ -14283,19 +14447,28 @@ var WordPressClient = class {
   }
   async getCategories(site) {
     try {
-      const resp = await (0, import_obsidian20.requestUrl)({
-        url: this.apiUrl(site, "categories?per_page=100"),
-        method: "GET",
-        headers: this.authHeaders(site),
-        throw: false
-      });
-      if (resp.status < 200 || resp.status >= 300) throw new Error(`HTTP ${resp.status}`);
-      return resp.json.map((c) => ({
-        id: c.id,
-        name: c.name,
-        slug: c.slug,
-        count: c.count
-      }));
+      const all = [];
+      for (let page = 1; page <= 20; page++) {
+        const resp = await (0, import_obsidian20.requestUrl)({
+          url: this.apiUrl(site, `categories?per_page=100&page=${page}`),
+          method: "GET",
+          headers: this.authHeaders(site),
+          throw: false
+        });
+        if (resp.status < 200 || resp.status >= 300) {
+          if (page > 1) break;
+          throw new Error(`HTTP ${resp.status}`);
+        }
+        const batch = resp.json.map((c) => ({
+          id: c.id,
+          name: c.name,
+          slug: c.slug,
+          count: c.count
+        }));
+        all.push(...batch);
+        if (batch.length < 100) break;
+      }
+      return all;
     } catch (e) {
       new import_obsidian20.Notice(t2("wpClient.fetchCategoriesFailed", { error: e instanceof Error ? e.message : String(e) }));
       return [];
@@ -14897,7 +15070,7 @@ var ProjectManager = class {
   }
   async createProject(title, type, author, description) {
     const rootFolder = this.plugin.settings.defaultProjectFolder || "Writing Projects";
-    const id = `project-${Date.now()}`;
+    const id = this.uniqueId("project");
     const folderName = title.replace(/[\\/:*?"<>|]/g, "-");
     const folderPath = (0, import_obsidian26.normalizePath)(`${rootFolder}/${folderName}`);
     if (this.app.vault.getAbstractFileByPath(folderPath)) {
@@ -14982,15 +15155,19 @@ var ProjectManager = class {
       return { version: "2.0", projectId: project.id, items: [] };
     }
   }
+  // Same-millisecond creations produced identical Date.now() IDs
+  uniqueId(prefix) {
+    return `${prefix}-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
+  }
   async saveBinder(binder) {
     const project = this.projects.get(binder.projectId);
     if (!project) return;
-    this.binderCache.delete(binder.projectId);
+    this.binderCache.set(binder.projectId, binder);
     const path = (0, import_obsidian26.normalizePath)(`${project.folderPath}/_binder.json`);
     await this.writeJson(path, binder);
     this.plugin.statsTracker.invalidateWordCountCache();
   }
-  async addDocumentToBinder(project, title, type, parentId) {
+  async addDocumentToBinder(project, title, type, parentId, content) {
     const binder = await this.loadBinder(project);
     const now = localDateString();
     const baseName = title.replace(/[\\/:*?"<>|]/g, "-");
@@ -14999,7 +15176,7 @@ var ProjectManager = class {
       filePath = (0, import_obsidian26.normalizePath)(`${project.folderPath}/Chapters/${baseName} ${n}.md`);
     }
     const item = {
-      id: `item-${Date.now()}`,
+      id: this.uniqueId("item"),
       title,
       filePath,
       type,
@@ -15008,7 +15185,7 @@ var ProjectManager = class {
       includeInExport: true
     };
     const frontmatter = this.buildDocFrontmatter(title, type, item.order, now);
-    await this.app.vault.create(filePath, frontmatter + "\n\n");
+    await this.app.vault.create(filePath, content != null ? content : frontmatter + "\n\n");
     if (parentId) {
       const parent = this.findItem(binder.items, parentId);
       if (parent) {
@@ -15036,12 +15213,12 @@ modified: ${date}
 tags: [writing-studio]
 ---`;
   }
+  // Max + 1, not length + 1 — after drag reordering, sibling counts no longer
+  // track the highest assigned order, so length-based values could collide
   getNextOrder(items, parentId) {
-    if (parentId) {
-      const parent = this.findItem(items, parentId);
-      return (parent == null ? void 0 : parent.children) ? parent.children.length + 1 : 1;
-    }
-    return items.length + 1;
+    var _a2, _b2;
+    const siblings = parentId ? (_b2 = (_a2 = this.findItem(items, parentId)) == null ? void 0 : _a2.children) != null ? _b2 : [] : items;
+    return siblings.reduce((max, i) => Math.max(max, i.order), 0) + 1;
   }
   findItem(items, id) {
     for (const item of items) {
@@ -15167,7 +15344,9 @@ tags: [writing-studio]
       if ((item == null ? void 0 : item.wordCountGoal) && item.wordCountGoal > 0) return item.wordCountGoal;
     }
     const cache = this.app.metadataCache.getFileCache(file);
-    return (_a2 = cache == null ? void 0 : cache.frontmatter) == null ? void 0 : _a2["word-count-goal"];
+    const raw = (_a2 = cache == null ? void 0 : cache.frontmatter) == null ? void 0 : _a2["word-count-goal"];
+    const goal = Number(raw);
+    return Number.isFinite(goal) && goal > 0 ? goal : void 0;
   }
 };
 
@@ -15365,21 +15544,29 @@ ${t2("statsTracker.dailyNote.heading")}
 
 // src/FrontmatterManager.ts
 var import_obsidian28 = require("obsidian");
+
+// src/words.ts
+function countWords(content) {
+  const body = content.replace(/^---\r?\n[\s\S]*?\r?\n---\r?\n?/, "");
+  const stripped = body.replace(/```[\s\S]*?```/g, "").replace(/`[^`]*`/g, "").replace(/!\[.*?\]\(.*?\)/g, "").replace(/\[.*?\]\(.*?\)/g, "").replace(/#{1,6}\s/g, "").replace(/[*_~`]/g, "").replace(/\n/g, " ").trim();
+  if (!stripped) return 0;
+  return stripped.split(/\s+/).filter((w) => w.length > 0).length;
+}
+
+// src/FrontmatterManager.ts
 var FrontmatterManager = class {
   constructor(plugin) {
     this.pendingUpdates = /* @__PURE__ */ new Map();
     this.writingFiles = /* @__PURE__ */ new Set();
-    this.lastPluginWrite = /* @__PURE__ */ new Map();
+    this.suppressNextModify = /* @__PURE__ */ new Set();
     this.plugin = plugin;
     this.app = plugin.app;
   }
   scheduleUpdate(file) {
-    var _a2;
     if (!this.plugin.settings.frontmatterAutoUpdate) return;
     if (!this.isWritingProjectFile(file)) return;
     if (this.writingFiles.has(file.path)) return;
-    const lastWrite = (_a2 = this.lastPluginWrite.get(file.path)) != null ? _a2 : 0;
-    if (Date.now() - lastWrite < 2e3) return;
+    if (this.suppressNextModify.delete(file.path)) return;
     const existing = this.pendingUpdates.get(file.path);
     if (existing) window.clearTimeout(existing);
     const timer = window.setTimeout(() => {
@@ -15404,7 +15591,8 @@ var FrontmatterManager = class {
         fm["word-count"] = wordCount;
         fm["modified"] = now;
       });
-      this.lastPluginWrite.set(file.path, Date.now());
+      this.suppressNextModify.add(file.path);
+      window.setTimeout(() => this.suppressNextModify.delete(file.path), 2e3);
     } catch (e) {
     } finally {
       window.setTimeout(() => this.writingFiles.delete(file.path), 500);
@@ -15429,10 +15617,7 @@ ${fm}
 ---`);
   }
   countWords(content) {
-    const body = content.replace(/^---\n[\s\S]*?\n---\n?/, "");
-    const stripped = body.replace(/```[\s\S]*?```/g, "").replace(/`[^`]*`/g, "").replace(/!\[.*?\]\(.*?\)/g, "").replace(/\[.*?\]\(.*?\)/g, "").replace(/#{1,6}\s/g, "").replace(/[*_~`]/g, "").replace(/\n/g, " ").trim();
-    if (!stripped) return 0;
-    return stripped.split(/\s+/).filter((w) => w.length > 0).length;
+    return countWords(content);
   }
   buildFrontmatter(fields) {
     const lines = ["---"];
@@ -15643,7 +15828,9 @@ var WritingStudioSettingsTab = class extends import_obsidian29.PluginSettingTab 
       this.plugin.focusMode.applyDimOpacity();
     }));
     new import_obsidian29.Setting(el).setName(t2("settings.focus.fontSizeOverride")).setDesc(t2("settings.focus.fontSizeOverrideDesc")).addText((text) => text.setValue(String(this.plugin.settings.focusFontSize || 0)).onChange(async (v) => {
-      this.plugin.settings.focusFontSize = parseInt(v) || 0;
+      const n = Number(v.trim());
+      if (!Number.isInteger(n) || n !== 0 && (n < 8 || n > 72)) return;
+      this.plugin.settings.focusFontSize = n;
       await this.plugin.saveSettings();
       this.plugin.focusMode.applyFontSize();
     }));
@@ -15689,7 +15876,9 @@ var WritingStudioSettingsTab = class extends import_obsidian29.PluginSettingTab 
       await this.plugin.saveSettings();
     }));
     new import_obsidian29.Setting(el).setName(t2("settings.typography.fontSize")).addText((text) => text.setValue(String(this.plugin.settings.typographyFontSize)).onChange(async (v) => {
-      this.plugin.settings.typographyFontSize = parseInt(v) || 18;
+      const n = Number(v.trim());
+      if (!Number.isInteger(n) || n < 8 || n > 72) return;
+      this.plugin.settings.typographyFontSize = n;
       await this.plugin.saveSettings();
     }));
     new import_obsidian29.Setting(el).setName(t2("settings.typography.lineHeight")).setDesc(t2("settings.typography.lineHeightDesc")).addText((text) => text.setValue(String(this.plugin.settings.lineHeight)).onChange(async (v) => {
@@ -15708,11 +15897,15 @@ var WritingStudioSettingsTab = class extends import_obsidian29.PluginSettingTab 
   renderSprint(el) {
     new import_obsidian29.Setting(el).setName(t2("settings.sprint.heading")).setHeading();
     new import_obsidian29.Setting(el).setName(t2("settings.sprint.defaultDuration")).addText((text) => text.setValue(String(this.plugin.settings.defaultSprintDuration)).onChange(async (v) => {
-      this.plugin.settings.defaultSprintDuration = parseInt(v) || 25;
+      const n = Number(v.trim());
+      if (!Number.isInteger(n) || n < 1 || n > 600) return;
+      this.plugin.settings.defaultSprintDuration = n;
       await this.plugin.saveSettings();
     }));
     new import_obsidian29.Setting(el).setName(t2("settings.sprint.defaultDailyGoal")).addText((text) => text.setValue(String(this.plugin.settings.defaultDailyWordGoal)).onChange(async (v) => {
-      this.plugin.settings.defaultDailyWordGoal = parseInt(v) || 0;
+      const n = Number(v.trim());
+      if (!Number.isInteger(n) || n < 0 || n > 1e6) return;
+      this.plugin.settings.defaultDailyWordGoal = n;
       await this.plugin.saveSettings();
     }));
     new import_obsidian29.Setting(el).setName(t2("settings.sprint.soundNotifications")).setDesc(t2("settings.sprint.soundNotificationsDesc")).addToggle((toggle) => toggle.setValue(this.plugin.settings.soundNotifications).onChange(async (v) => {
@@ -15720,7 +15913,9 @@ var WritingStudioSettingsTab = class extends import_obsidian29.PluginSettingTab 
       await this.plugin.saveSettings();
     }));
     new import_obsidian29.Setting(el).setName(t2("settings.sprint.historyRetention")).addText((text) => text.setValue(String(this.plugin.settings.sprintHistoryRetention)).onChange(async (v) => {
-      this.plugin.settings.sprintHistoryRetention = parseInt(v) || 90;
+      const n = Number(v.trim());
+      if (!Number.isInteger(n) || n < 1 || n > 3650) return;
+      this.plugin.settings.sprintHistoryRetention = n;
       await this.plugin.saveSettings();
     }));
     new import_obsidian29.Setting(el).setName(t2("settings.sprint.inlineGoalBanner")).setDesc(t2("settings.sprint.inlineGoalBannerDesc")).addToggle((toggle) => toggle.setValue(this.plugin.settings.inlineGoalBanner).onChange(async (v) => {
@@ -15743,7 +15938,9 @@ var WritingStudioSettingsTab = class extends import_obsidian29.PluginSettingTab 
       await this.plugin.saveSettings();
     }));
     new import_obsidian29.Setting(el).setName(t2("settings.export.exportFontSize")).addText((text) => text.setValue(String(this.plugin.settings.defaultExportFontSize)).onChange(async (v) => {
-      this.plugin.settings.defaultExportFontSize = parseInt(v) || 12;
+      const n = Number(v.trim());
+      if (!Number.isInteger(n) || n < 6 || n > 72) return;
+      this.plugin.settings.defaultExportFontSize = n;
       await this.plugin.saveSettings();
     }));
     new import_obsidian29.Setting(el).setName(t2("settings.export.pandocPath")).setDesc(t2("settings.export.pandocPathDesc")).addText((text) => text.setPlaceholder("Pandoc").setValue(this.plugin.settings.pandocPath).onChange(async (v) => {
@@ -16132,8 +16329,7 @@ var FolderSidebarView = class extends import_obsidian30.ItemView {
         const wordRow = this.addTooltipRow(tip, t2("folderSidebar.tooltip.words"), "\u2026");
         try {
           const text = await this.app.vault.cachedRead(item);
-          const body2 = this.stripFrontmatter(text);
-          const words = body2.trim().length > 0 ? body2.trim().split(/\s+/).length : 0;
+          const words = countWords(text);
           if (this.tooltipEl === tip) {
             const val = wordRow.querySelector(".ws-tooltip-value");
             if (val) val.textContent = words.toLocaleString();

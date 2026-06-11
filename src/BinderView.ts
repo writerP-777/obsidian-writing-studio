@@ -27,8 +27,9 @@ export class BinderView extends ItemView {
   private dragSource: string | null = null;
   private dropZone: 'before' | 'into' | 'after' | null = null;
   private dragOverEl: HTMLElement | null = null;
-  // Maps filePath → live DOM element so word counts can be patched without re-render.
-  private wcElements = new Map<string, { el: HTMLElement; item: BinderItem }>();
+  // Maps filePath → live DOM elements so word counts can be patched without
+  // re-render. One file can back several binder items, hence the array.
+  private wcElements = new Map<string, Array<{ el: HTMLElement; item: BinderItem }>>();
   private searchQuery = '';
   private listEl: HTMLElement | null = null;
   // Non-null while a search is active — computed from the data model so
@@ -261,15 +262,29 @@ export class BinderView extends ItemView {
 
       // Word count
       const wcEl = row.createSpan('ws-binder-wc');
-      this.wcElements.set(item.filePath, { el: wcEl, item });
+      const wcEntries = this.wcElements.get(item.filePath) ?? [];
+      wcEntries.push({ el: wcEl, item });
+      this.wcElements.set(item.filePath, wcEntries);
       void this.loadWordCount(item, wcEl);
 
-      // Click to open
-      row.onclick = () => this.openDocument(item);
+      // Click to open — slightly delayed so the first click of a rename
+      // double-click does not navigate away before editing starts
+      let clickTimer: number | null = null;
+      row.onclick = () => {
+        if (clickTimer !== null) return;
+        clickTimer = window.setTimeout(() => {
+          clickTimer = null;
+          void this.openDocument(item);
+        }, 250);
+      };
 
       // Double click to rename
       titleEl.ondblclick = (e) => {
         e.stopPropagation();
+        if (clickTimer !== null) {
+          window.clearTimeout(clickTimer);
+          clickTimer = null;
+        }
         this.startRename(titleEl, item);
       };
 
@@ -361,16 +376,17 @@ export class BinderView extends ItemView {
   // Called by the plugin's debounced word-count updater on every file change.
   // Patches only the relevant DOM span — no binder re-render needed.
   updateWordCount(filePath: string, wc: number): void {
-    const entry = this.wcElements.get(filePath);
-    if (!entry) return;
-    const { el, item } = entry;
-    const goal = item.wordCountGoal;
-    if (goal && goal > 0) {
-      const pct = Math.min(100, Math.round((wc / goal) * 100));
-      el.textContent = `${wc}/${goal}`;
-      el.title = t('binder.pctComplete', { pct });
-    } else {
-      el.textContent = t('binder.wordCountSuffix', { count: wc });
+    const entries = this.wcElements.get(filePath);
+    if (!entries) return;
+    for (const { el, item } of entries) {
+      const goal = item.wordCountGoal;
+      if (goal && goal > 0) {
+        const pct = Math.min(100, Math.round((wc / goal) * 100));
+        el.textContent = `${wc}/${goal}`;
+        el.title = t('binder.pctComplete', { pct });
+      } else {
+        el.textContent = t('binder.wordCountSuffix', { count: wc });
+      }
     }
   }
 
@@ -484,19 +500,27 @@ export class BinderView extends ItemView {
     if (!this.activeProject) return;
     if (item.type === 'group' || item.type === 'part') return;
     const newTitle = `${item.title} ${t('binder.copySuffix')}`;
+
+    // Pass the source content in so the file is written once
+    const srcFile = this.app.vault.getAbstractFileByPath(item.filePath);
+    const content = srcFile instanceof TFile
+      ? await this.app.vault.read(srcFile)
+      : undefined;
+
     const newItem = await this.plugin.projectManager.addDocumentToBinder(
       this.activeProject,
       newTitle,
-      item.type
+      item.type,
+      undefined,
+      content
     );
 
-    // Copy content
-    const srcFile = this.app.vault.getAbstractFileByPath(item.filePath);
-    const dstFile = this.app.vault.getAbstractFileByPath(newItem.filePath);
-    if (srcFile instanceof TFile && dstFile instanceof TFile) {
-      const content = await this.app.vault.read(srcFile);
-      await this.app.vault.modify(dstFile, content);
-    }
+    // Carry over metadata — a duplicate previously reset status, word count
+    // goal, and export inclusion to defaults
+    newItem.status = item.status;
+    newItem.wordCountGoal = item.wordCountGoal;
+    newItem.includeInExport = item.includeInExport;
+    await this.saveBinder();
 
     await this.refresh();
   }

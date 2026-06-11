@@ -1,6 +1,7 @@
 import { App, TFile, normalizePath } from 'obsidian';
 import { WPPostMeta } from '../models/WordPressSite';
 import { localDateString } from './dates';
+import { countWords } from './words';
 import type WritingStudioPlugin from '../main';
 
 export class FrontmatterManager {
@@ -8,7 +9,7 @@ export class FrontmatterManager {
   private app: App;
   private pendingUpdates = new Map<string, number>();
   private writingFiles = new Set<string>();
-  private lastPluginWrite = new Map<string, number>();
+  private suppressNextModify = new Set<string>();
 
   constructor(plugin: WritingStudioPlugin) {
     this.plugin = plugin;
@@ -21,10 +22,9 @@ export class FrontmatterManager {
     if (this.writingFiles.has(file.path)) return;
 
     // Guard against the modify event fired by processFrontMatter itself.
-    // The event arrives after the finally block clears writingFiles, so we
-    // track the write timestamp and ignore modify events within 2 seconds.
-    const lastWrite = this.lastPluginWrite.get(file.path) ?? 0;
-    if (Date.now() - lastWrite < 2000) return;
+    // One-shot: consume the flag and skip exactly one event — a fixed time
+    // window also swallowed real user edits made right after a plugin write.
+    if (this.suppressNextModify.delete(file.path)) return;
 
     const existing = this.pendingUpdates.get(file.path);
     if (existing) window.clearTimeout(existing);
@@ -58,9 +58,11 @@ export class FrontmatterManager {
         fm['modified'] = now;
       });
 
-      // Record write time AFTER processFrontMatter so the timestamp-based guard
-      // in scheduleUpdate blocks the modify event that processFrontMatter fires.
-      this.lastPluginWrite.set(file.path, Date.now());
+      // Arm the one-shot guard AFTER processFrontMatter so it blocks the modify
+      // event that write fires; clear it eventually in case no event arrives
+      // (processFrontMatter skips the write when nothing changed)
+      this.suppressNextModify.add(file.path);
+      window.setTimeout(() => this.suppressNextModify.delete(file.path), 2000);
     } catch {
       // File may have been deleted or locked
     } finally {
@@ -89,21 +91,7 @@ export class FrontmatterManager {
   }
 
   countWords(content: string): number {
-    // Strip frontmatter
-    const body = content.replace(/^---\n[\s\S]*?\n---\n?/, '');
-    // Strip markdown syntax
-    const stripped = body
-      .replace(/```[\s\S]*?```/g, '')
-      .replace(/`[^`]*`/g, '')
-      .replace(/!\[.*?\]\(.*?\)/g, '')
-      .replace(/\[.*?\]\(.*?\)/g, '')
-      .replace(/#{1,6}\s/g, '')
-      .replace(/[*_~`]/g, '')
-      .replace(/\n/g, ' ')
-      .trim();
-
-    if (!stripped) return 0;
-    return stripped.split(/\s+/).filter(w => w.length > 0).length;
+    return countWords(content);
   }
 
   buildFrontmatter(fields: Record<string, unknown>): string {
