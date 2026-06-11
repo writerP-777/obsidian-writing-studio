@@ -4,6 +4,54 @@ All notable changes to Writing Studio are documented here.
 
 ---
 
+## [2.6.0]
+
+Consolidated release covering all 15 fix units from the June 2026 full code audit (issues #104–#118, PRs #119–#133). The automated test suite grew from 53 to 105 tests.
+
+### Fixed — critical
+- **Project creation data loss:** Creating a project with the same name as an existing one no longer silently overwrites the existing project's `_project.json` and `_binder.json` — it now refuses with a clear error.
+- **Mode persistence never worked:** Typography mode and writing mode "persist across restarts" now function — the plugin's own shutdown code was erasing the saved state on every Obsidian exit.
+- **Sprint accounting:** Word counts are correct when switching documents mid-sprint, and the "entire project" sprint scope option now actually does something.
+- **PDF export:** Uses pandoc's default LaTeX engine as the README documents (previously hardcoded to wkhtmltopdf); pandoc paths containing spaces no longer break exports.
+- **Focus mode font size:** The setting existed in the UI and README but was connected to nothing — it now works.
+
+### Fixed — cross-cutting
+- **Local dates everywhere:** All "what day is it" logic now uses the local clock instead of UTC. Evening writing sessions in the Americas no longer land on tomorrow's date — streaks, the Today card, and daily-note entries are correct.
+- **Errors surface:** Failed vault operations (rename, move, delete) show a notice instead of silently doing nothing.
+- **Performance:** The launcher no longer rebuilds itself every ten seconds (dropdowns stay open); searches cannot show stale results; disk-heavy paths use cached reads.
+- **Export correctness:** One shared Markdown converter with table and image support across HTML, EPUB, manuscript, and WordPress output; no more empty EPUBs, phantom chapter splits from horizontal rules, or mangled lists and code blocks in WordPress publishing.
+- **One word count:** The binder, status bar, folder sidebar tooltip, and manuscript title page now agree on the same word count for the same file.
+
+### Fixed — UI behavior
+- Deleting a binder document asks for confirmation before trashing the file and removing the binder entry.
+- Binder search finds documents inside collapsed groups and expands them while searching.
+- "Insert selection" in the folder sidebar inserts into the most recently active editor, not an arbitrary pane.
+- Folder sidebar and compile preview panels survive workspace restore instead of coming back permanently blank.
+- Jump-to-section in the compile preview works for non-Latin chapter titles (Chinese, Japanese, Korean, Russian, Arabic).
+- The settings help tab no longer leaks a renderer component on tab switch or dialog close.
+
+### Fixed — behavioral minors
+- EPUB compression runs off the UI thread — large books no longer freeze Obsidian during export.
+- Binder edits made from different views can no longer overwrite each other.
+- Duplicating a document keeps its status, word count goal, and export inclusion.
+- Numeric settings fields validate input instead of silently coercing junk; live-applied font sizes no longer flash intermediate keystroke values.
+- The WordPress publish modal lists all categories on sites with more than 100.
+- Renaming a binder item via double-click no longer navigates away on the first click.
+
+### Added
+- "Move up" / "Move down" in the binder context menu — a keyboard-accessible alternative to drag-and-drop reordering.
+- ARIA listbox/option roles in the folder sidebar for screen readers.
+- Manuscript and EPUB options in the default export format setting.
+- Empty folder sidebar and compile preview panels offer "Choose folder" / "Load compilation" buttons.
+
+### Changed
+- Frontmatter writes go exclusively through Obsidian's `processFrontMatter` API (hand-rolled YAML writer removed).
+- In-app help is trimmed to feature content — no more GitHub-only links and images that break inside Obsidian.
+- EPUB covers get correct MIME types for `.webp` and `.gif` images.
+- Custom typography font names are sanitized before being applied as CSS.
+
+---
+
 ## [2.5.2]
 
 ### Fixed
