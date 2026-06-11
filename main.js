@@ -10312,10 +10312,28 @@ var BinderView = class extends import_obsidian8.ItemView {
     if (this.activeProject) {
       const binder = await this.plugin.projectManager.loadBinder(this.activeProject);
       this.binderItems = binder.items;
+      await this.syncDriftedTitles();
     } else {
       this.binderItems = [];
     }
     this.render();
+  }
+  // Align binder titles with live filenames once per refresh — doing this
+  // during render() fired a concurrent saveBinder() per drifted row
+  async syncDriftedTitles() {
+    let drifted = false;
+    const walk = (items) => {
+      for (const item of items) {
+        const live = this.app.vault.getAbstractFileByPath(item.filePath);
+        if (live instanceof import_obsidian8.TFile && item.title !== live.basename) {
+          item.title = live.basename;
+          drifted = true;
+        }
+        if (item.children) walk(item.children);
+      }
+    };
+    walk(this.binderItems);
+    if (drifted) await this.saveBinder();
   }
   render() {
     var _a2;
@@ -10434,14 +10452,8 @@ var BinderView = class extends import_obsidian8.ItemView {
       dot.setCssProps({ "--ws-status-color": STATUS_COLORS[item.status] });
       dot.title = t2(STATUS_DOT_KEY[item.status]);
       const titleEl = row.createSpan("ws-binder-title");
-      const liveFile = this.app.vault.getAbstractFileByPath(item.filePath);
-      const displayTitle = liveFile instanceof import_obsidian8.TFile ? liveFile.basename : item.title;
-      titleEl.textContent = displayTitle;
+      titleEl.textContent = item.title;
       titleEl.contentEditable = "false";
-      if (liveFile instanceof import_obsidian8.TFile && item.title !== liveFile.basename) {
-        item.title = liveFile.basename;
-        void this.saveBinder();
-      }
       const wcEl = row.createSpan("ws-binder-wc");
       this.wcElements.set(item.filePath, { el: wcEl, item });
       void this.loadWordCount(item, wcEl);
@@ -10515,7 +10527,7 @@ var BinderView = class extends import_obsidian8.ItemView {
       el.textContent = "0W";
       return;
     }
-    const content = await this.app.vault.read(file);
+    const content = await this.app.vault.cachedRead(file);
     const wc = this.plugin.fmManager.countWords(content);
     const goal = item.wordCountGoal;
     if (goal) {
@@ -11249,6 +11261,8 @@ var LauncherView = class extends import_obsidian13.ItemView {
   constructor(leaf, plugin) {
     super(leaf);
     this.refreshTimer = null;
+    this.todayVals = [];
+    this.renderedSprintActive = false;
     this.plugin = plugin;
   }
   getViewType() {
@@ -11263,8 +11277,25 @@ var LauncherView = class extends import_obsidian13.ItemView {
   async onOpen() {
     await this.render();
     this.refreshTimer = window.setInterval(() => {
-      void this.render();
+      void this.tickRefresh();
     }, 1e4);
+  }
+  async tickRefresh() {
+    const sprintActive = this.plugin.sprintTimer.isActive();
+    if (sprintActive !== this.renderedSprintActive) {
+      await this.render();
+      return;
+    }
+    await this.patchTodayCard();
+  }
+  async patchTodayCard() {
+    if (this.todayVals.length < 4) return;
+    const stats = this.plugin.statsTracker.getSessionStats();
+    const streak = await this.plugin.statsTracker.getStreak();
+    this.todayVals[0].textContent = stats.wordsWritten.toLocaleString();
+    this.todayVals[1].textContent = String(stats.sprintsCompleted);
+    this.todayVals[2].textContent = String(stats.totalMinutes);
+    this.todayVals[3].textContent = t2("launcher.stat.streakDays", { streak });
   }
   onClose() {
     if (this.refreshTimer !== null) {
@@ -11279,6 +11310,8 @@ var LauncherView = class extends import_obsidian13.ItemView {
   async render() {
     const root = this.containerEl.children[1];
     root.empty();
+    this.todayVals = [];
+    this.renderedSprintActive = this.plugin.sprintTimer.isActive();
     root.addClass("ws-launcher");
     this.renderHeader(root);
     await this.renderProjectCard(root);
@@ -11538,7 +11571,7 @@ var LauncherView = class extends import_obsidian13.ItemView {
     ];
     for (const [label, value] of items) {
       const stat = grid.createDiv("ws-launcher-today-stat");
-      stat.createDiv({ text: value, cls: "ws-launcher-today-val" });
+      this.todayVals.push(stat.createDiv({ text: value, cls: "ws-launcher-today-val" }));
       stat.createDiv({ text: label, cls: "ws-launcher-today-label" });
     }
     if (sessionWords > 0) {
@@ -14774,6 +14807,7 @@ var StatsTracker = class {
     this.sessionCurrents = /* @__PURE__ */ new Map();
     this.cachedTotalWordCount = null;
     this.cachedWordCountProjectId = null;
+    this.cachedStreak = null;
     this.plugin = plugin;
     this.app = plugin.app;
     this.sessionStats = this.newDailyStats();
@@ -14791,6 +14825,7 @@ var StatsTracker = class {
     if (this.sessionStats.date !== localDateString()) {
       this.sessionStats = this.newDailyStats();
     }
+    this.cachedStreak = null;
     this.sessionStats.wordsWritten += session.wordsWritten;
     this.sessionStats.sprintsCompleted++;
     this.sessionStats.totalMinutes += session.duration;
@@ -14873,14 +14908,13 @@ ${t2("statsTracker.dailyNote.heading")}
     }
     const binder = await this.plugin.projectManager.loadBinder(project);
     const items = this.plugin.projectManager.flattenBinder(binder.items);
-    let total = 0;
-    for (const item of items) {
+    const counts = await Promise.all(items.map(async (item) => {
       const file = this.app.vault.getAbstractFileByPath(item.filePath);
-      if (file instanceof import_obsidian26.TFile) {
-        const content = await this.app.vault.read(file);
-        total += this.plugin.fmManager.countWords(content);
-      }
-    }
+      if (!(file instanceof import_obsidian26.TFile)) return 0;
+      const content = await this.app.vault.cachedRead(file);
+      return this.plugin.fmManager.countWords(content);
+    }));
+    const total = counts.reduce((sum, n) => sum + n, 0);
     this.cachedTotalWordCount = total;
     this.cachedWordCountProjectId = project.id;
     return total;
@@ -14934,6 +14968,9 @@ ${t2("statsTracker.dailyNote.heading")}
   async getStreak() {
     const project = this.plugin.projectManager.getActiveProject();
     if (!project) return 0;
+    if (this.cachedStreak && this.cachedStreak.projectId === project.id) {
+      return this.cachedStreak.value;
+    }
     const log = await this.plugin.projectManager.getWritingLog(project);
     if (log.length === 0) return 0;
     const dates = new Set(log.map((s) => localDateString(s.date)));
@@ -14949,6 +14986,7 @@ ${t2("statsTracker.dailyNote.heading")}
         break;
       }
     }
+    this.cachedStreak = { projectId: project.id, value: streak };
     return streak;
   }
 };
@@ -15468,6 +15506,7 @@ var FolderSidebarView = class extends import_obsidian29.ItemView {
      * array = completed results (may be empty)
      */
     this.searchResults = null;
+    this.searchToken = 0;
   }
   getViewType() {
     return FOLDER_SIDEBAR_VIEW_TYPE;
@@ -15623,17 +15662,19 @@ var FolderSidebarView = class extends import_obsidian29.ItemView {
     const textFiles = allItems.filter(
       (item) => item instanceof import_obsidian29.TFile && ["md", "txt"].includes(item.extension.toLowerCase()) && !nameMatched.has(item)
     );
-    for (const file of textFiles) {
+    const contentMatches = await Promise.all(textFiles.map(async (file) => {
       try {
-        const raw = await this.app.vault.read(file);
+        const raw = await this.app.vault.cachedRead(file);
         const body = this.stripFrontmatter(raw);
         const idx = body.toLowerCase().indexOf(q);
-        if (idx !== -1) {
-          const snippet = this.extractSnippet(body, idx, q.length);
-          results.push({ item: file, matchType: "content", snippet });
-        }
+        if (idx === -1) return null;
+        return { item: file, matchType: "content", snippet: this.extractSnippet(body, idx, q.length) };
       } catch (e) {
+        return null;
       }
+    }));
+    for (const match of contentMatches) {
+      if (match) results.push(match);
     }
     return results;
   }
@@ -15931,6 +15972,7 @@ var FolderSidebarView = class extends import_obsidian29.ItemView {
     }
     const executeSearch = async () => {
       const query = searchInput.value.trim();
+      const token = ++this.searchToken;
       if (!query) {
         this.searchQuery = "";
         this.searchResults = null;
@@ -15940,7 +15982,9 @@ var FolderSidebarView = class extends import_obsidian29.ItemView {
       this.searchQuery = query;
       this.searchResults = null;
       this.render();
-      this.searchResults = await this.performSearch(query);
+      const results = await this.performSearch(query);
+      if (token !== this.searchToken) return;
+      this.searchResults = results;
       this.render();
     };
     searchInput.addEventListener("keydown", (e) => {
@@ -15971,7 +16015,7 @@ var FolderSidebarView = class extends import_obsidian29.ItemView {
     const ext = file.extension.toLowerCase();
     if (ext === "md") {
       try {
-        const text = await this.app.vault.read(file);
+        const text = await this.app.vault.cachedRead(file);
         await import_obsidian29.MarkdownRenderer.render(this.app, text, content, file.path, this);
         if (this.searchQuery) this.highlightTextInElement(content, this.searchQuery);
       } catch (e) {

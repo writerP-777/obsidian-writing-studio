@@ -38,6 +38,7 @@ export class FolderSidebarView extends ItemView {
    * array = completed results (may be empty)
    */
   private searchResults: SearchResult[] | null = null;
+  private searchToken = 0;
 
   constructor(leaf: WorkspaceLeaf) {
     super(leaf);
@@ -223,18 +224,21 @@ export class FolderSidebarView extends ItemView {
         !nameMatched.has(item)
     );
 
-    for (const file of textFiles) {
+    // Batched cachedRead instead of a serial vault.read per file — a vault-root
+    // scope previously meant one sequential disk read per file per search
+    const contentMatches = await Promise.all(textFiles.map(async (file) => {
       try {
-        const raw = await this.app.vault.read(file);
+        const raw = await this.app.vault.cachedRead(file);
         const body = this.stripFrontmatter(raw);
         const idx = body.toLowerCase().indexOf(q);
-        if (idx !== -1) {
-          const snippet = this.extractSnippet(body, idx, q.length);
-          results.push({ item: file, matchType: 'content', snippet });
-        }
+        if (idx === -1) return null;
+        return { item: file, matchType: 'content' as const, snippet: this.extractSnippet(body, idx, q.length) };
       } catch {
-        // skip unreadable files
+        return null; // skip unreadable files
       }
+    }));
+    for (const match of contentMatches) {
+      if (match) results.push(match);
     }
 
     return results;
@@ -597,6 +601,7 @@ export class FolderSidebarView extends ItemView {
 
     const executeSearch = async () => {
       const query = searchInput.value.trim();
+      const token = ++this.searchToken;
       if (!query) {
         this.searchQuery = '';
         this.searchResults = null;
@@ -606,7 +611,10 @@ export class FolderSidebarView extends ItemView {
       this.searchQuery = query;
       this.searchResults = null;   // null = in progress → shows "Searching…"
       this.render();
-      this.searchResults = await this.performSearch(query);
+      const results = await this.performSearch(query);
+      // A newer search started while this one was reading — drop stale results
+      if (token !== this.searchToken) return;
+      this.searchResults = results;
       this.render();               // show completed results
     };
 
@@ -645,7 +653,7 @@ export class FolderSidebarView extends ItemView {
 
     if (ext === 'md') {
       try {
-        const text = await this.app.vault.read(file);
+        const text = await this.app.vault.cachedRead(file);
         await MarkdownRenderer.render(this.app, text, content, file.path, this);
         if (this.searchQuery) this.highlightTextInElement(content, this.searchQuery);
       } catch {
