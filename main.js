@@ -13242,7 +13242,7 @@ em { font-style: italic; }
 };
 
 // src/ExportEngine.ts
-var execAsync = (0, import_util.promisify)(import_child_process.exec);
+var execFileAsync = (0, import_util.promisify)(import_child_process.execFile);
 var MANUSCRIPT_CSS = `
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body {
@@ -13583,28 +13583,21 @@ ${this.markdownToHtml(content)}
       await this.writeFile(tempMdPath, content);
       const absOutput = this.getAbsPath(outputPath);
       const absInput = this.getAbsPath(tempMdPath);
-      const isPdf = outputPath.endsWith(".pdf");
-      const args = [
-        `"${absInput}"`,
-        `--from markdown`,
-        `-o "${absOutput}"`
-      ];
-      if (isPdf) {
-        args.push("--pdf-engine=wkhtmltopdf");
-      }
+      const args = [absInput, "--from", "markdown", "-o", absOutput];
       if (opts.font) {
         const safeFont = opts.font.replace(/["'`\\$]/g, "");
-        args.push(`-V mainfont="${safeFont}"`);
+        args.push("-V", `mainfont=${safeFont}`);
       }
-      await execAsync(`${pandocPath} ${args.join(" ")}`);
+      await execFileAsync(pandocPath, args);
       new import_obsidian16.Notice(t2("exportEngine.exportedTo", { path: outputPath }));
       return outputPath;
     } catch (e) {
       throw new Error(`Pandoc export failed: ${e instanceof Error ? e.message : String(e)}
 Ensure pandoc is installed.`);
     } finally {
-      const tmpFile = this.app.vault.getAbstractFileByPath(tempMdPath);
-      if (tmpFile instanceof import_obsidian16.TFile) await this.app.fileManager.trashFile(tmpFile);
+      if (this.app.vault.getAbstractFileByPath(tempMdPath) instanceof import_obsidian16.TFile) {
+        await this.app.vault.adapter.remove(tempMdPath);
+      }
     }
   }
   async exportPdf(content, outputPath, opts) {
