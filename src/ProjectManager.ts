@@ -65,7 +65,7 @@ export class ProjectManager {
     description: string
   ): Promise<WritingProject> {
     const rootFolder = this.plugin.settings.defaultProjectFolder || 'Writing Projects';
-    const id = `project-${Date.now()}`;
+    const id = this.uniqueId('project');
     const folderName = title.replace(/[\\/:*?"<>|]/g, '-');
     const folderPath = normalizePath(`${rootFolder}/${folderName}`);
 
@@ -167,10 +167,18 @@ export class ProjectManager {
     }
   }
 
+  // Same-millisecond creations produced identical Date.now() IDs
+  private uniqueId(prefix: string): string {
+    return `${prefix}-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
+  }
+
   async saveBinder(binder: BinderData): Promise<void> {
     const project = this.projects.get(binder.projectId);
     if (!project) return;
-    this.binderCache.delete(binder.projectId);
+    // Keep the cache pointing at the saved object so every surface keeps
+    // sharing one BinderData — deleting the entry forced a disk re-read that
+    // created diverging copies and a last-writer-wins race between views
+    this.binderCache.set(binder.projectId, binder);
     const path = normalizePath(`${project.folderPath}/_binder.json`);
     await this.writeJson(path, binder);
     this.plugin.statsTracker.invalidateWordCountCache();
@@ -180,7 +188,8 @@ export class ProjectManager {
     project: WritingProject,
     title: string,
     type: 'chapter' | 'section' | 'article' | 'note',
-    parentId?: string
+    parentId?: string,
+    content?: string
   ): Promise<BinderItem> {
     const binder = await this.loadBinder(project);
     const now = localDateString();
@@ -191,7 +200,7 @@ export class ProjectManager {
     }
 
     const item: BinderItem = {
-      id: `item-${Date.now()}`,
+      id: this.uniqueId('item'),
       title,
       filePath,
       type,
@@ -200,8 +209,10 @@ export class ProjectManager {
       includeInExport: true,
     };
 
+    // Callers that already have the full document body (duplicate) pass it in
+    // so the file is written once instead of template-then-overwrite
     const frontmatter = this.buildDocFrontmatter(title, type, item.order, now);
-    await this.app.vault.create(filePath, frontmatter + '\n\n');
+    await this.app.vault.create(filePath, content ?? frontmatter + '\n\n');
 
     if (parentId) {
       const parent = this.findItem(binder.items, parentId);
@@ -233,12 +244,13 @@ tags: [writing-studio]
 ---`;
   }
 
+  // Max + 1, not length + 1 — after drag reordering, sibling counts no longer
+  // track the highest assigned order, so length-based values could collide
   private getNextOrder(items: BinderItem[], parentId?: string): number {
-    if (parentId) {
-      const parent = this.findItem(items, parentId);
-      return parent?.children ? parent.children.length + 1 : 1;
-    }
-    return items.length + 1;
+    const siblings = parentId
+      ? this.findItem(items, parentId)?.children ?? []
+      : items;
+    return siblings.reduce((max, i) => Math.max(max, i.order), 0) + 1;
   }
 
   findItem(items: BinderItem[], id: string): BinderItem | null {
@@ -385,7 +397,11 @@ tags: [writing-studio]
       const item = this.findBinderItemByPath(binder.items, file.path);
       if (item?.wordCountGoal && item.wordCountGoal > 0) return item.wordCountGoal;
     }
+    // Frontmatter is user-typed — a string "500" passes the type cast and
+    // produces NaN math downstream, so validate before returning
     const cache = this.app.metadataCache.getFileCache(file);
-    return cache?.frontmatter?.['word-count-goal'] as number | undefined;
+    const raw: unknown = cache?.frontmatter?.['word-count-goal'];
+    const goal = Number(raw);
+    return Number.isFinite(goal) && goal > 0 ? goal : undefined;
   }
 }

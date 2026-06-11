@@ -82,19 +82,31 @@ export class WordPressClient {
 
   async getCategories(site: WordPressSite): Promise<WPCategory[]> {
     try {
-      const resp = await requestUrl({
-        url: this.apiUrl(site, 'categories?per_page=100'),
-        method: 'GET',
-        headers: this.authHeaders(site),
-        throw: false,
-      });
-      if (resp.status < 200 || resp.status >= 300) throw new Error(`HTTP ${resp.status}`);
-      return (resp.json as WPApiCategory[]).map(c => ({
-        id: c.id,
-        name: c.name,
-        slug: c.slug,
-        count: c.count,
-      }));
+      // WP caps per_page at 100 — page until a short page arrives so sites
+      // with more categories are no longer silently truncated
+      const all: WPCategory[] = [];
+      for (let page = 1; page <= 20; page++) {
+        const resp = await requestUrl({
+          url: this.apiUrl(site, `categories?per_page=100&page=${page}`),
+          method: 'GET',
+          headers: this.authHeaders(site),
+          throw: false,
+        });
+        if (resp.status < 200 || resp.status >= 300) {
+          // Requesting one page past the end returns 400 — not an error here
+          if (page > 1) break;
+          throw new Error(`HTTP ${resp.status}`);
+        }
+        const batch = (resp.json as WPApiCategory[]).map(c => ({
+          id: c.id,
+          name: c.name,
+          slug: c.slug,
+          count: c.count,
+        }));
+        all.push(...batch);
+        if (batch.length < 100) break;
+      }
+      return all;
     } catch (e) {
       new Notice(t('wpClient.fetchCategoriesFailed', { error: e instanceof Error ? e.message : String(e) }));
       return [];

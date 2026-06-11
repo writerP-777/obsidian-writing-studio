@@ -161,7 +161,12 @@ export class WritingStudioSettingsTab extends PluginSettingTab {
       .addText(text => text
         .setValue(String(this.plugin.settings.focusFontSize || 0))
         .onChange(async v => {
-          this.plugin.settings.focusFontSize = parseInt(v) || 0;
+          // 0 clears the override; otherwise require a sane size — applied
+          // live, so intermediate keystrokes ("1" while typing "16") and
+          // junk input must not reach the editor
+          const n = Number(v.trim());
+          if (!Number.isInteger(n) || (n !== 0 && (n < 8 || n > 72))) return;
+          this.plugin.settings.focusFontSize = n;
           await this.plugin.saveSettings();
           this.plugin.focusMode.applyFontSize();
         }));
@@ -230,7 +235,9 @@ export class WritingStudioSettingsTab extends PluginSettingTab {
       .addText(text => text
         .setValue(String(this.plugin.settings.typographyFontSize))
         .onChange(async v => {
-          this.plugin.settings.typographyFontSize = parseInt(v) || 18;
+          const n = Number(v.trim());
+          if (!Number.isInteger(n) || n < 8 || n > 72) return;
+          this.plugin.settings.typographyFontSize = n;
           await this.plugin.saveSettings();
         }));
 
@@ -267,7 +274,9 @@ export class WritingStudioSettingsTab extends PluginSettingTab {
       .addText(text => text
         .setValue(String(this.plugin.settings.defaultSprintDuration))
         .onChange(async v => {
-          this.plugin.settings.defaultSprintDuration = parseInt(v) || 25;
+          const n = Number(v.trim());
+          if (!Number.isInteger(n) || n < 1 || n > 600) return;
+          this.plugin.settings.defaultSprintDuration = n;
           await this.plugin.saveSettings();
         }));
 
@@ -276,7 +285,9 @@ export class WritingStudioSettingsTab extends PluginSettingTab {
       .addText(text => text
         .setValue(String(this.plugin.settings.defaultDailyWordGoal))
         .onChange(async v => {
-          this.plugin.settings.defaultDailyWordGoal = parseInt(v) || 0;
+          const n = Number(v.trim());
+          if (!Number.isInteger(n) || n < 0 || n > 1000000) return;
+          this.plugin.settings.defaultDailyWordGoal = n;
           await this.plugin.saveSettings();
         }));
 
@@ -292,7 +303,9 @@ export class WritingStudioSettingsTab extends PluginSettingTab {
       .addText(text => text
         .setValue(String(this.plugin.settings.sprintHistoryRetention))
         .onChange(async v => {
-          this.plugin.settings.sprintHistoryRetention = parseInt(v) || 90;
+          const n = Number(v.trim());
+          if (!Number.isInteger(n) || n < 1 || n > 3650) return;
+          this.plugin.settings.sprintHistoryRetention = n;
           await this.plugin.saveSettings();
         }));
 
@@ -338,7 +351,9 @@ export class WritingStudioSettingsTab extends PluginSettingTab {
       .addText(text => text
         .setValue(String(this.plugin.settings.defaultExportFontSize))
         .onChange(async v => {
-          this.plugin.settings.defaultExportFontSize = parseInt(v) || 12;
+          const n = Number(v.trim());
+          if (!Number.isInteger(n) || n < 6 || n > 72) return;
+          this.plugin.settings.defaultExportFontSize = n;
           await this.plugin.saveSettings();
         }));
 
