@@ -1567,6 +1567,8 @@ body .ws-launcher select {
 /* ── Hover info tooltip ──────────────────────────────────────────── */
 .ws-info-tooltip {
   position: fixed;
+  top: var(--ws-tip-top, 0);
+  left: var(--ws-tip-left, 0);
   z-index: 9999;
   max-width: 280px;
   background: var(--background-primary);

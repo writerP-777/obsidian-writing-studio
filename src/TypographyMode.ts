@@ -71,14 +71,15 @@ export class TypographyMode {
     const letterSpacing = settings.letterSpacing || 'normal';
     const halfWidthCh = `${maxChars / 2}ch`;
 
-    const root = activeDocument.documentElement;
-    root.style.setProperty('--ws-typo-font', fontStack);
-    root.style.setProperty('--ws-typo-size', `${fontSize}px`);
-    root.style.setProperty('--ws-typo-lh', String(lineHeight));
-    root.style.setProperty('--ws-typo-ls', letterSpacing);
-    root.style.setProperty('--ws-typo-pad-left', `max(1.5rem, calc(50% - ${halfWidthCh}))`);
-    root.style.setProperty('--ws-typo-pad-right', `max(1.5rem, calc(50% - ${halfWidthCh}))`);
-    root.style.setProperty('--ws-typo-max-width', `${maxChars}ch`);
+    activeDocument.documentElement.setCssProps({
+      '--ws-typo-font': fontStack,
+      '--ws-typo-size': `${fontSize}px`,
+      '--ws-typo-lh': String(lineHeight),
+      '--ws-typo-ls': letterSpacing,
+      '--ws-typo-pad-left': `max(1.5rem, calc(50% - ${halfWidthCh}))`,
+      '--ws-typo-pad-right': `max(1.5rem, calc(50% - ${halfWidthCh}))`,
+      '--ws-typo-max-width': `${maxChars}ch`,
+    });
   }
 
   private removeCustomProperties(): void {

@@ -136,7 +136,7 @@ export class WritingStudioSettingsTab extends PluginSettingTab {
         .onChange(async v => {
           this.plugin.settings.dimOpacity = v;
           await this.plugin.saveSettings();
-          activeDocument.documentElement.style.setProperty('--ws-focus-dim-opacity', String(v / 100));
+          this.plugin.focusMode.applyDimOpacity();
         }));
 
     new Setting(el)

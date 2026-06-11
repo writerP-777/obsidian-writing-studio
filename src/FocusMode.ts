@@ -72,9 +72,9 @@ export class FocusMode {
     }
   }
 
-  private applyDimOpacity(): void {
+  applyDimOpacity(): void {
     const opacity = (this.plugin.settings.dimOpacity || 20) / 100;
-    activeDocument.documentElement.style.setProperty('--ws-focus-dim-opacity', String(opacity));
+    activeDocument.documentElement.setCssProps({ '--ws-focus-dim-opacity': String(opacity) });
   }
 
   private hideSidebars(): void {

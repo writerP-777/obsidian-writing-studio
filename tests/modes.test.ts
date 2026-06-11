@@ -5,7 +5,10 @@ import { Notice } from 'obsidian';
 // TypographyMode touches the Obsidian `activeDocument` global; fake it for node
 const fakeActiveDocument = {
   body: { classList: { add: jest.fn(), remove: jest.fn() } },
-  documentElement: { style: { setProperty: jest.fn(), removeProperty: jest.fn() } },
+  documentElement: {
+    style: { setProperty: jest.fn(), removeProperty: jest.fn() },
+    setCssProps: jest.fn(),
+  },
 };
 (globalThis as { activeDocument?: unknown }).activeDocument = fakeActiveDocument;
 
