@@ -177,9 +177,11 @@ export class FolderSidebarView extends ItemView {
   /** Remove YAML frontmatter so it doesn't generate false positives in content search. */
   private stripFrontmatter(text: string): string {
     if (!text.startsWith('---')) return text;
-    const end = text.indexOf('\n---', 3);
-    if (end === -1) return text;
-    return text.slice(end + 4);
+    // Tolerate CRLF files — an LF-only search missed their closing fence,
+    // leaking frontmatter into search results and word counts
+    const match = /\r?\n---\r?\n?/.exec(text.slice(3));
+    if (!match || match.index === undefined) return text;
+    return text.slice(3 + match.index + match[0].length);
   }
 
   /** Extract ~120 chars of context around a match for the sidebar snippet. */

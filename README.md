@@ -442,7 +442,7 @@ The Manuscript format produces a self-contained HTML file formatted to industry-
 - Courier New 12 pt, double-spaced, 1-inch margins
 - Title page with project title, author name, approximate word count, and optional contact information
 - Chapter headings in uppercase, page-break before each
-- Scene breaks rendered as `· · ·`
+- Scene breaks rendered as `#` (the standard manuscript convention)
 
 No external tools are required for manuscript export.
 

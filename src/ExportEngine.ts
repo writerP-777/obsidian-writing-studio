@@ -1,4 +1,4 @@
-import { App, MarkdownView, TFile, normalizePath, Notice } from 'obsidian';
+import { App, MarkdownView, TFile, getLanguage, normalizePath, Notice } from 'obsidian';
 import { execFile } from 'child_process';
 import { promisify } from 'util';
 import type WritingStudioPlugin from '../main';
@@ -117,6 +117,11 @@ const MANUSCRIPT_CSS = `
   }
 `;
 
+// Section separator sentinel — a literal '---' join collided with horizontal
+// rules inside user documents, creating phantom section splits. Null bytes
+// cannot occur in prose typed in an editor.
+const SECTION_BREAK = '\n\n\u0000WS-SECTION-BREAK\u0000\n\n';
+
 export class ExportEngine {
   private plugin: WritingStudioPlugin;
   private app: App;
@@ -124,6 +129,11 @@ export class ExportEngine {
   constructor(plugin: WritingStudioPlugin) {
     this.plugin = plugin;
     this.app = plugin.app;
+  }
+
+  // Resolve section sentinels to a markdown hr for text-based outputs
+  toMarkdown(compiled: string): string {
+    return compiled.split(SECTION_BREAK).join('\n\n---\n\n');
   }
 
   async export(opts: ExportOptions): Promise<string> {
@@ -147,7 +157,7 @@ export class ExportEngine {
       return this.exportManuscript(opts, `${baseFile}.html`);
     }
 
-    const compiled = await this.compileContent(opts, project?.folderPath);
+    const compiled = this.toMarkdown(await this.compileContent(opts));
 
     switch (opts.format) {
       case 'md':
@@ -185,7 +195,7 @@ export class ExportEngine {
       }
       let content = await this.app.vault.read(file);
       if (!opts.includeFrontmatter) {
-        content = content.replace(/^---\n[\s\S]*?\n---\n?/, '');
+        content = content.replace(/^---\r?\n[\s\S]*?\r?\n---\r?\n?/, '');
       }
       content = this.preprocessObsidianMarkdown(content.trim());
       const htmlContent = this.htmlToXhtml(markdownToHtml(content));
@@ -202,7 +212,7 @@ export class ExportEngine {
         if (!(file instanceof TFile)) continue;
         let content = await this.app.vault.read(file);
         if (!opts.includeFrontmatter) {
-          content = content.replace(/^---\n[\s\S]*?\n---\n?/, '');
+          content = content.replace(/^---\r?\n[\s\S]*?\r?\n---\r?\n?/, '');
         }
         content = this.preprocessObsidianMarkdown(content.trim());
         if (opts.includeTitlesAsHeadings) {
@@ -211,6 +221,12 @@ export class ExportEngine {
         const htmlContent = this.htmlToXhtml(markdownToHtml(content));
         chapters.push({ id: `chapter-${idx++}`, title: item.title, htmlContent });
       }
+    }
+
+    if (chapters.length === 0) {
+      // 'selected' scope, or 'project' with no active project, previously
+      // fell through and built a valid EPUB containing only a cover
+      throw new Error(t('exportEngine.noActiveDocument'));
     }
 
     await new EpubEngine(this.plugin).build({
@@ -244,13 +260,13 @@ export class ExportEngine {
       .replace(/<img([^>]*)(?<!\/)>/g, '<img$1/>');
   }
 
-  async compileContent(opts: ExportOptions, _projectFolderPath?: string): Promise<string> {
+  async compileContent(opts: ExportOptions): Promise<string> {
     const parts: string[] = [];
     const project = this.plugin.projectManager.getActiveProject();
 
     if (opts.addTitlePage && project) {
       const today = new Date().toLocaleDateString();
-      parts.push(`# ${project.title}\n\nBy ${project.author || this.plugin.settings.authorName}\n\n${today}`);
+      parts.push(`# ${project.title}\n\n${t('exportEngine.byAuthor', { author: project.author || this.plugin.settings.authorName })}\n\n${today}`);
     }
 
     if (opts.scope === 'current') {
@@ -300,13 +316,13 @@ export class ExportEngine {
     // Using join (not repeated push+join) avoids a trailing separator on the
     // last document and eliminates the double blank lines that came from
     // pushing '\n\n---\n\n' as a separate array element then joining with '\n\n'.
-    return parts.join('\n\n---\n\n');
+    return parts.join(SECTION_BREAK);
   }
 
   private async processFile(file: TFile, opts: ExportOptions): Promise<string> {
     let content = await this.app.vault.read(file);
     if (!opts.includeFrontmatter) {
-      content = content.replace(/^---\n[\s\S]*?\n---\n?/, '');
+      content = content.replace(/^---\r?\n[\s\S]*?\r?\n---\r?\n?/, '');
     }
     return content.trim();
   }
@@ -320,7 +336,7 @@ export class ExportEngine {
     const compiled = await this.compileContent({ ...opts, addTitlePage: false });
 
     // Split on section separators (added by compileContent between documents)
-    const sections = compiled.split(/\n\n---\n\n/);
+    const sections = compiled.split(SECTION_BREAK);
 
     const htmlSections: string[] = [];
     for (const section of sections) {
@@ -346,7 +362,7 @@ export class ExportEngine {
 
     const bodyHtml = htmlSections.join('\n');
 
-    const wordCount = this.plugin.fmManager.countWords(compiled);
+    const wordCount = this.plugin.fmManager.countWords(sections.join('\n\n'));
     const roundedWc = Math.round(wordCount / 100) * 100;
     const contactLines = (opts.authorContact || '').trim();
     const contactHtml = contactLines
@@ -359,17 +375,17 @@ export class ExportEngine {
       <p>${this.escapeHtml(author)}</p>
       ${contactHtml}
     </div>
-    <div class="ws-ms-wc">Approx. ${roundedWc.toLocaleString()} words</div>
+    <div class="ws-ms-wc">${t('exportEngine.approxWords', { n: roundedWc.toLocaleString() })}</div>
   </div>
   <div class="ws-ms-title-center">
     <p class="ws-ms-doc-title">${this.escapeHtml(title).toUpperCase()}</p>
-    <p class="ws-ms-byline">by</p>
+    <p class="ws-ms-byline">${t('exportEngine.byline')}</p>
     <p class="ws-ms-author-byline">${this.escapeHtml(author)}</p>
   </div>
 </div>`;
 
     const fullHtml = `<!DOCTYPE html>
-<html lang="en">
+<html lang="${getLanguage()}">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -399,7 +415,7 @@ ${bodyHtml}
     const font = opts.font || 'Georgia';
     const fontSize = opts.fontSize || 16;
     const html = `<!DOCTYPE html>
-<html lang="en">
+<html lang="${getLanguage()}">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">

@@ -277,7 +277,10 @@
     "exportedTo": "تم التصدير إلى {{path}}",
     "exportedHtmlTo": "تم تصدير HTML إلى {{path}}",
     "pdfRequiresPandoc": "يتطلب تصدير PDF تثبيت pandoc. ثبّت pandoc وحدد المسار في الإعدادات.",
-    "noActiveDocument": "لا يوجد مستند مفتوح. افتح ملفاً أو غيّر نطاق التصدير إلى «المشروع بأكمله»."
+    "noActiveDocument": "لا يوجد مستند مفتوح. افتح ملفاً أو غيّر نطاق التصدير إلى «المشروع بأكمله».",
+    "byAuthor": "بقلم {{author}}",
+    "approxWords": "حوالي {{n}} كلمة",
+    "byline": "بقلم"
   },
   "wpClient": {
     "authFailed": "فشل التحقق. تحقق من اسم المستخدم وكلمة مرور التطبيق.",
@@ -620,5 +623,9 @@
       "hoursMinutes": "{{hours}} س {{mins}} د",
       "hours": "{{hours}} س"
     }
+  },
+  "epub": {
+    "toc": "جدول المحتويات",
+    "cover": "الغلاف"
   }
 }

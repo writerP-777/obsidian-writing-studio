@@ -274,7 +274,10 @@
     "exportedTo": "{{path}}에 내보냈습니다",
     "exportedHtmlTo": "HTML을 {{path}}에 내보냈습니다",
     "pdfRequiresPandoc": "PDF 내보내기에는 pandoc이 필요합니다. pandoc을 설치하고 설정에서 경로를 설정하세요.",
-    "noActiveDocument": "열린 문서가 없습니다. 파일을 열거나 내보내기 범위를 '전체 프로젝트'로 변경하세요."
+    "noActiveDocument": "열린 문서가 없습니다. 파일을 열거나 내보내기 범위를 '전체 프로젝트'로 변경하세요.",
+    "byAuthor": "저자: {{author}}",
+    "approxWords": "약 {{n}} 단어",
+    "byline": "저자"
   },
   "wpClient": {
     "authFailed": "인증에 실패했습니다. 사용자 이름과 애플리케이션 비밀번호를 확인하세요.",
@@ -609,5 +612,9 @@
       "hoursMinutes": "{{hours}}시간 {{mins}}분",
       "hours": "{{hours}}시간"
     }
+  },
+  "epub": {
+    "toc": "목차",
+    "cover": "표지"
   }
 }

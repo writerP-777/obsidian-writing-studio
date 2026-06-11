@@ -274,7 +274,10 @@
     "exportedTo": "Exported to {{path}}",
     "exportedHtmlTo": "Exported HTML to {{path}}",
     "pdfRequiresPandoc": "PDF export requires pandoc. Install pandoc and set path in settings.",
-    "noActiveDocument": "No document is open. Open a file or switch the export scope to \"Entire project\"."
+    "noActiveDocument": "No document is open. Open a file or switch the export scope to \"Entire project\".",
+    "byAuthor": "By {{author}}",
+    "approxWords": "Approx. {{n}} words",
+    "byline": "by"
   },
   "wpClient": {
     "authFailed": "Authentication failed. Check username and application password.",
@@ -609,5 +612,9 @@
       "hoursMinutes": "{{hours}}h {{mins}}m",
       "hours": "{{hours}}h"
     }
+  },
+  "epub": {
+    "toc": "Table of contents",
+    "cover": "Cover"
   }
 }

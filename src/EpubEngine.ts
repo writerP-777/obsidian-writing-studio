@@ -1,6 +1,7 @@
 import { App, TFile } from 'obsidian';
 import { zipSync, type Zippable } from 'fflate';
 import type WritingStudioPlugin from '../main';
+import { t } from './i18n';
 
 export interface EpubChapter {
   id: string;
@@ -20,6 +21,9 @@ export interface EpubBuildOptions {
 export class EpubEngine {
   private app: App;
   private plugin: WritingStudioPlugin;
+  // Configured book language — every chapter's xml:lang previously
+  // hardcoded "en", contradicting the language declared in content.opf
+  private lang = 'en';
 
   constructor(plugin: WritingStudioPlugin) {
     this.plugin = plugin;
@@ -27,6 +31,7 @@ export class EpubEngine {
   }
 
   async build(opts: EpubBuildOptions, outputVaultPath: string): Promise<void> {
+    this.lang = opts.language || 'en';
     const uid = `urn:uuid:${this.uuid()}`;
     const modified = new Date().toISOString().replace(/\.\d{3}Z$/, 'Z');
 
@@ -152,21 +157,21 @@ export class EpubEngine {
 
   private navXhtml(title: string, chapters: EpubChapter[]): string {
     const items = [
-      `<li><a href="cover.xhtml">Cover</a></li>`,
+      `<li><a href="cover.xhtml">${t('epub.cover')}</a></li>`,
       ...chapters.map(ch => `<li><a href="${ch.id}.xhtml">${this.x(ch.title)}</a></li>`),
     ].join('\n      ');
 
     return `<?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:epub="http://www.idpf.org/2007/ops" xml:lang="en">
+      xmlns:epub="http://www.idpf.org/2007/ops" xml:lang="${this.lang}">
 <head>
   <meta charset="UTF-8"/>
   <title>${this.x(title)}</title>
 </head>
 <body>
   <nav epub:type="toc" id="toc">
-    <h1>Table of Contents</h1>
+    <h1>${t('epub.toc')}</h1>
     <ol>
       ${items}
     </ol>
@@ -180,7 +185,7 @@ export class EpubEngine {
   private tocNcx(uid: string, title: string, author: string, chapters: EpubChapter[]): string {
     let order = 1;
     const coverPoint = `<navPoint id="cover-page" playOrder="${order++}">
-      <navLabel><text>Cover</text></navLabel>
+      <navLabel><text>${this.x(t('epub.cover'))}</text></navLabel>
       <content src="cover.xhtml"/>
     </navPoint>`;
     const chapterPoints = chapters.map(ch =>
@@ -210,7 +215,7 @@ export class EpubEngine {
   private chapterXhtml(title: string, body: string): string {
     return `<?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="${this.lang}">
 <head>
   <meta charset="UTF-8"/>
   <title>${this.x(title)}</title>
@@ -225,17 +230,17 @@ ${body}
   private coverImageXhtml(filename: string): string {
     return `<?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="${this.lang}">
 <head>
   <meta charset="UTF-8"/>
-  <title>Cover</title>
+  <title>${this.x(t('epub.cover'))}</title>
   <style type="text/css">
     body { margin: 0; padding: 0; }
     img  { width: 100%; height: 100vh; object-fit: cover; display: block; }
   </style>
 </head>
 <body>
-  <img src="${filename}" alt="Cover"/>
+  <img src="${filename}" alt="${this.x(t('epub.cover'))}"/>
 </body>
 </html>`;
   }
@@ -243,10 +248,10 @@ ${body}
   private coverTextXhtml(title: string, author: string): string {
     return `<?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="${this.lang}">
 <head>
   <meta charset="UTF-8"/>
-  <title>Cover</title>
+  <title>${this.x(t('epub.cover'))}</title>
   <style type="text/css">
     body {
       margin: 0;
