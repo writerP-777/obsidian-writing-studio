@@ -5,6 +5,7 @@ import type WritingStudioPlugin from '../main';
 import { EpubEngine, EpubChapter } from './EpubEngine';
 import { t } from './i18n';
 import { localDateString } from './dates';
+import { markdownToHtml } from './markdown';
 
 interface FileSystemAdapter {
   getFullPath?(vaultPath: string): string;
@@ -187,7 +188,7 @@ export class ExportEngine {
         content = content.replace(/^---\n[\s\S]*?\n---\n?/, '');
       }
       content = this.preprocessObsidianMarkdown(content.trim());
-      const htmlContent = this.htmlToXhtml(this.markdownToHtml(content));
+      const htmlContent = this.htmlToXhtml(markdownToHtml(content));
       chapters.push({ id: 'chapter-1', title: file.basename, htmlContent });
     } else if (opts.scope === 'project' && project) {
       const binder = await this.plugin.projectManager.loadBinder(project);
@@ -207,7 +208,7 @@ export class ExportEngine {
         if (opts.includeTitlesAsHeadings) {
           content = content.replace(/^# [^\n]*\n+/, '').trim();
         }
-        const htmlContent = this.htmlToXhtml(this.markdownToHtml(content));
+        const htmlContent = this.htmlToXhtml(markdownToHtml(content));
         chapters.push({ id: `chapter-${idx++}`, title: item.title, htmlContent });
       }
     }
@@ -332,7 +333,7 @@ export class ExportEngine {
 
       md = this.preprocessObsidianMarkdown(md);
 
-      let html = this.markdownToHtml(md);
+      let html = markdownToHtml(md);
 
       // Restore scene breaks and uppercase chapter headings
       html = html.replace(/<p>__SCENE_BREAK__<\/p>/g, '<p class="ws-ms-scene">#</p>');
@@ -417,7 +418,7 @@ ${bodyHtml}
   </style>
 </head>
 <body>
-${this.markdownToHtml(content)}
+${markdownToHtml(content)}
 </body>
 </html>`;
     await this.writeFile(outputPath, html);
@@ -493,124 +494,4 @@ ${this.markdownToHtml(content)}
     return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
   }
 
-  // Converts inline markdown spans (bold, italic, links) within a text node.
-  private inlineMarkdown(text: string): string {
-    return text
-      .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
-      .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
-      .replace(/\*(.+?)\*/g, '<em>$1</em>')
-      .replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2">$1</a>');
-  }
-
-  // Block-level markdown → HTML converter. Handles headings, paragraphs,
-  // unordered lists, ordered lists, blockquotes, fenced code blocks, and hrs.
-  private markdownToHtml(md: string): string {
-    const blocks: string[] = [];
-    const paragraphLines: string[] = [];
-    const listItems: string[] = [];
-    let listType: 'ul' | 'ol' | null = null;
-    const blockquoteLines: string[] = [];
-    let inCodeFence = false;
-    const codeLines: string[] = [];
-    let codeLang = '';
-
-    const flushParagraph = () => {
-      const text = paragraphLines.join(' ').trim();
-      if (text) blocks.push(`<p>${text}</p>`);
-      paragraphLines.length = 0;
-    };
-
-    const flushList = () => {
-      if (!listType) return;
-      const tag = listType;
-      blocks.push(`<${tag}>\n${listItems.map(i => `  <li>${i}</li>`).join('\n')}\n</${tag}>`);
-      listItems.length = 0;
-      listType = null;
-    };
-
-    const flushBlockquote = () => {
-      if (blockquoteLines.length === 0) return;
-      const inner = blockquoteLines.join(' ').trim();
-      blocks.push(`<blockquote><p>${inner}</p></blockquote>`);
-      blockquoteLines.length = 0;
-    };
-
-    for (const line of md.split('\n')) {
-      // Fenced code block open / close
-      if (/^```/.test(line)) {
-        if (!inCodeFence) {
-          flushParagraph(); flushList(); flushBlockquote();
-          inCodeFence = true;
-          codeLang = line.slice(3).trim();
-        } else {
-          const escaped = codeLines.join('\n')
-            .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-          const langAttr = codeLang ? ` class="language-${codeLang}"` : '';
-          blocks.push(`<pre><code${langAttr}>${escaped}</code></pre>`);
-          codeLines.length = 0;
-          codeLang = '';
-          inCodeFence = false;
-        }
-        continue;
-      }
-      if (inCodeFence) { codeLines.push(line); continue; }
-
-      // Horizontal rule
-      if (/^---+$/.test(line)) {
-        flushParagraph(); flushList(); flushBlockquote();
-        blocks.push('<hr>');
-        continue;
-      }
-
-      // ATX headings
-      const hm = line.match(/^(#{1,6})\s+(.+)$/);
-      if (hm) {
-        flushParagraph(); flushList(); flushBlockquote();
-        const lvl = hm[1].length;
-        blocks.push(`<h${lvl}>${this.inlineMarkdown(hm[2])}</h${lvl}>`);
-        continue;
-      }
-
-      // Unordered list item (-, *, +)
-      const ulm = line.match(/^[-*+]\s+(.+)$/);
-      if (ulm) {
-        flushParagraph(); flushBlockquote();
-        if (listType === 'ol') flushList();
-        listType = 'ul';
-        listItems.push(this.inlineMarkdown(ulm[1]));
-        continue;
-      }
-
-      // Ordered list item (1. 2. etc.)
-      const olm = line.match(/^\d+\.\s+(.+)$/);
-      if (olm) {
-        flushParagraph(); flushBlockquote();
-        if (listType === 'ul') flushList();
-        listType = 'ol';
-        listItems.push(this.inlineMarkdown(olm[1]));
-        continue;
-      }
-
-      // Blockquote
-      const bqm = line.match(/^>\s?(.*)$/);
-      if (bqm) {
-        flushParagraph(); flushList();
-        blockquoteLines.push(this.inlineMarkdown(bqm[1]));
-        continue;
-      }
-
-      // Blank line — close any open block
-      if (line.trim() === '') {
-        flushParagraph(); flushList(); flushBlockquote();
-        continue;
-      }
-
-      // Regular paragraph line — close any open list/blockquote first
-      flushList(); flushBlockquote();
-      paragraphLines.push(this.inlineMarkdown(line));
-    }
-
-    flushParagraph(); flushList(); flushBlockquote();
-    return blocks.join('\n');
-  }
 }

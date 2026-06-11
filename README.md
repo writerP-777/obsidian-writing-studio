@@ -459,6 +459,8 @@ No external tools are required for manuscript export.
 | EPUB include cover | Generate a text cover page when no cover image is provided |
 
 > **Requirement:** Pandoc must be installed for PDF, DOCX, RTF, HTML, and EPUB export. Download from [pandoc.org](https://pandoc.org/installing.html). For PDF export, a LaTeX distribution (e.g. TeX Live or MiKTeX) is also required. Manuscript (HTML) export does not require Pandoc.
+>
+> **Formatting note:** the built-in converter used for HTML, Manuscript, and EPUB output supports headings, paragraphs, lists, blockquotes, fenced code blocks, tables, images, and links. Nested lists, setext (underline-style) headings, and footnotes are not converted — use a Pandoc format (PDF, DOCX, RTF) if your manuscript depends on them.
 
 ---
 

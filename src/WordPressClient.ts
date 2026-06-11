@@ -1,4 +1,5 @@
 import { Notice, requestUrl } from 'obsidian';
+import { markdownToHtml } from './markdown';
 import { WordPressSite, WPCategory, WPPublishResult, WPPostStatus } from '../models/WordPressSite';
 import { t } from './i18n';
 
@@ -186,41 +187,23 @@ export class WordPressClient {
   }
 
   convertMarkdownToHtml(markdown: string, site: WordPressSite): string {
-    let html = markdown;
+    let md = markdown;
 
-    // Strip frontmatter
-    html = html.replace(/^---\n[\s\S]*?\n---\n?/, '');
+    // Strip frontmatter (CRLF-tolerant)
+    md = md.replace(/^---\r?\n[\s\S]*?\r?\n---\r?\n?/, '');
 
-    // Handle wikilinks
+    // Resolve wikilinks at the markdown level, then let the shared converter
+    // handle them — the old converter mangled lists and code blocks
     if (site.wikilinkHandling === 'strip') {
-      html = html.replace(/\[\[([^\]|]+)(\|[^\]]+)?\]\]/g, (_: string, link: string, alias: string | undefined) => alias ? alias.slice(1) : link);
+      md = md.replace(/\[\[([^\]|]+)(\|[^\]]+)?\]\]/g, (_: string, link: string, alias: string | undefined) => alias ? alias.slice(1) : link);
     } else {
-      html = html.replace(/\[\[([^\]|]+)(\|[^\]]+)?\]\]/g, (_: string, link: string, alias: string | undefined) => {
+      md = md.replace(/\[\[([^\]|]+)(\|[^\]]+)?\]\]/g, (_: string, link: string, alias: string | undefined) => {
         const text = alias ? alias.slice(1) : link;
         const slug = link.toLowerCase().replace(/\s+/g, '-');
-        return `<a href="${slug}">${text}</a>`;
+        return `[${text}](${slug})`;
       });
     }
 
-    // Basic Markdown → HTML conversion
-    html = html
-      .replace(/^#{6}\s(.+)$/gm, '<h6>$1</h6>')
-      .replace(/^#{5}\s(.+)$/gm, '<h5>$1</h5>')
-      .replace(/^#{4}\s(.+)$/gm, '<h4>$1</h4>')
-      .replace(/^#{3}\s(.+)$/gm, '<h3>$1</h3>')
-      .replace(/^#{2}\s(.+)$/gm, '<h2>$1</h2>')
-      .replace(/^#{1}\s(.+)$/gm, '<h1>$1</h1>')
-      .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
-      .replace(/\*(.+?)\*/g, '<em>$1</em>')
-      .replace(/`(.+?)`/g, '<code>$1</code>')
-      .replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2">$1</a>')
-      .replace(/^---$/gm, '<hr>')
-      .replace(/\n\n/g, '</p><p>')
-      .replace(/^(?!<[h1-6]|<p|<ul|<ol|<hr|<blockquote)(.+)$/gm, '$1');
-
-    html = '<p>' + html + '</p>';
-    html = html.replace(/<p><\/p>/g, '');
-
-    return html;
+    return markdownToHtml(md);
   }
 }
