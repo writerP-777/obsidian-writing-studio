@@ -271,7 +271,7 @@ Focus Mode dims everything in the editor except the paragraph or sentence you ar
 |---------|-------------|
 | Focus unit | Highlight at the **paragraph** or **sentence (line)** level |
 | Dim opacity | How opaque the dimmed text appears (10–50%) |
-| Font size override | Override the editor font size while focused; 0 = use theme default |
+| Font size override | Override the editor font size while focused; 0 = use theme default. Takes precedence over Typography Mode's font size while Focus Mode is active |
 | Auto-hide sidebars | Collapse left and right sidebars when Focus Mode activates |
 | Typewriter scroll | Keep the active line vertically centered as you type |
 

@@ -147,6 +147,7 @@ export class WritingStudioSettingsTab extends PluginSettingTab {
         .onChange(async v => {
           this.plugin.settings.focusFontSize = parseInt(v) || 0;
           await this.plugin.saveSettings();
+          this.plugin.focusMode.applyFontSize();
         }));
 
     new Setting(el)

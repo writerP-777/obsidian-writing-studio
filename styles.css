@@ -31,6 +31,13 @@
   opacity: 1;
 }
 
+/* Focus font size override — double class outranks typography mode's
+   body.writing-studio-typography .cm-content rule, so the explicit focus
+   override wins while both modes are active */
+body.ws-focus-fontsize.writing-studio-focus-mode .cm-content {
+  font-size: var(--ws-focus-font-size);
+}
+
 /* Focus floating toolbar */
 .ws-focus-toolbar {
   position: fixed;
