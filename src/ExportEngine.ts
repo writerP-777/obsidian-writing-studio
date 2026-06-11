@@ -1,4 +1,4 @@
-import { App, MarkdownView, TFile, getLanguage, normalizePath, Notice } from 'obsidian';
+import { App, FileSystemAdapter, MarkdownView, TFile, getLanguage, normalizePath, Notice } from 'obsidian';
 import { execFile } from 'child_process';
 import { promisify } from 'util';
 import type WritingStudioPlugin from '../main';
@@ -6,10 +6,6 @@ import { EpubEngine, EpubChapter } from './EpubEngine';
 import { t } from './i18n';
 import { localDateString } from './dates';
 import { markdownToHtml } from './markdown';
-
-interface FileSystemAdapter {
-  getFullPath?(vaultPath: string): string;
-}
 
 const execFileAsync = promisify(execFile);
 
@@ -496,8 +492,8 @@ ${markdownToHtml(content)}
   }
 
   private getAbsPath(vaultPath: string): string {
-    const adapter = this.app.vault.adapter as unknown as FileSystemAdapter;
-    return adapter.getFullPath ? adapter.getFullPath(vaultPath) : vaultPath;
+    const adapter = this.app.vault.adapter;
+    return adapter instanceof FileSystemAdapter ? adapter.getFullPath(vaultPath) : vaultPath;
   }
 
   private async ensureFolder(path: string): Promise<void> {

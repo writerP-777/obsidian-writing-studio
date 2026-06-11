@@ -48,9 +48,18 @@ export class EpubEngine {
       const vaultFile = this.app.vault.getAbstractFileByPath(opts.coverImagePath);
       if (vaultFile instanceof TFile) {
         const raw = await this.app.vault.readBinary(vaultFile);
-        const isPng = opts.coverImagePath.toLowerCase().endsWith('.png');
-        coverImageMime = isPng ? 'image/png' : 'image/jpeg';
-        coverImageFile = isPng ? 'cover.png' : 'cover.jpg';
+        // MIME by actual extension — labeling a .webp/.gif as image/jpeg
+        // produced covers some readers reject
+        const mimeByExt: Record<string, string> = {
+          png: 'image/png',
+          webp: 'image/webp',
+          gif: 'image/gif',
+          jpg: 'image/jpeg',
+          jpeg: 'image/jpeg',
+        };
+        const ext = vaultFile.extension.toLowerCase();
+        coverImageMime = mimeByExt[ext] ?? 'image/jpeg';
+        coverImageFile = `cover.${ext === 'jpeg' ? 'jpg' : ext || 'jpg'}`;
         entries[`OEBPS/${coverImageFile}`] = [new Uint8Array(raw), { level: 6 }];
       }
     }

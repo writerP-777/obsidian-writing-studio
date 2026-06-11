@@ -142,7 +142,8 @@
       "testConnectionDesc": "Проверить учётные данные и подключение.",
       "testing": "Проверка…",
       "removeSite": "Удалить сайт",
-      "buyMeACoffee": "Купи мне кофе"
+      "buyMeACoffee": "Купи мне кофе",
+      "newSiteName": "Новый сайт"
     }
   },
   "binder": {
@@ -172,7 +173,9 @@
       "duplicate": "Дублировать",
       "moveToResearch": "Переместить в исследования",
       "publishToWordPress": "Опубликовать в WordPress",
-      "delete": "Удалить"
+      "delete": "Удалить",
+      "moveUp": "Переместить вверх",
+      "moveDown": "Переместить вниз"
     },
     "wordCountSuffix": "{{count}}сл",
     "fileNotFound": "Файл больше не существует: {{path}}",
@@ -347,7 +350,8 @@
   "projectManager": {
     "errorFolderExists": "Папка с именем \"{{folder}}\" уже существует в папке проектов. Выберите другое название.",
     "corruptBinder": "Не удалось прочитать файл _binder.json проекта \"{{project}}\". Резервная копия сохранена как _binder.json.bak в папке проекта.",
-    "corruptProject": "Файл проекта в \"{{folder}}\" повреждён, и проект не удалось загрузить."
+    "corruptProject": "Файл проекта в \"{{folder}}\" повреждён, и проект не удалось загрузить.",
+    "corruptLog": "Не удалось прочитать журнал записи для {{project}} — будет создан новый журнал."
   },
   "projectModal": {
     "title": "Новый письменный проект",

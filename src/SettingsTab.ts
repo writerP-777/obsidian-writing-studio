@@ -1,5 +1,6 @@
 import { App, Component, MarkdownRenderer, PluginSettingTab, Setting } from 'obsidian';
 import type WritingStudioPlugin from '../main';
+import type { ExportFormat } from './ExportEngine';
 import { WordPressSite, WPPostStatus } from '../models/WordPressSite';
 import { HELP_CONTENT } from './HelpContent';
 import { t } from './i18n';
@@ -325,11 +326,13 @@ export class WritingStudioSettingsTab extends PluginSettingTab {
       .addDropdown(d => d
         .addOption('md', t('settings.export.format.md'))
         .addOption('html', t('settings.export.format.html'))
+        .addOption('manuscript', t('exportModal.format.manuscript'))
+        .addOption('epub', t('exportModal.format.epub'))
         .addOption('pdf', t('settings.export.format.pdf'))
         .addOption('docx', t('settings.export.format.docx'))
         .addOption('rtf', t('settings.export.format.rtf'))
         .setValue(this.plugin.settings.defaultExportFormat)
-        .onChange(async v => { this.plugin.settings.defaultExportFormat = v as 'pdf' | 'docx' | 'rtf' | 'md' | 'html'; await this.plugin.saveSettings(); }));
+        .onChange(async v => { this.plugin.settings.defaultExportFormat = v as ExportFormat; await this.plugin.saveSettings(); }));
 
     new Setting(el)
       .setName(t('settings.export.defaultPaperSize'))
@@ -410,7 +413,7 @@ export class WritingStudioSettingsTab extends PluginSettingTab {
         .onClick(async () => {
           this.plugin.settings.wordPressSites.push({
             id: `site-${Date.now()}`,
-            nickname: 'New Site',
+            nickname: t('settings.wordpress.newSiteName'),
             url: '',
             username: '',
             appPassword: '',

@@ -293,24 +293,6 @@ export class FolderSidebarView extends ItemView {
     const tip = this.app.workspace.containerEl.createDiv({ cls: 'ws-info-tooltip' });
     this.tooltipEl = tip;
 
-    // Position below the item by default; clamp so it stays inside the viewport
-    const vw = window.innerWidth;
-    const vh = window.innerHeight;
-    const tipW = 280; // matches max-width in CSS
-    const tipH = 120; // rough height estimate
-
-    let top  = rect.bottom + 6;
-    let left = rect.left;
-
-    if (top + tipH > vh) top = rect.top - tipH - 6;  // flip above
-    if (left + tipW > vw) left = vw - tipW - 8;       // clamp to right edge
-    if (left < 8) left = 8;                            // clamp to left edge
-
-    tip.setCssProps({
-      '--ws-tip-top': `${Math.round(top)}px`,
-      '--ws-tip-left': `${Math.round(left)}px`,
-    });
-
     // Name
     tip.createDiv({ cls: 'ws-tooltip-name', text: item.name });
     tip.createDiv({ cls: 'ws-tooltip-divider' });
@@ -326,8 +308,11 @@ export class FolderSidebarView extends ItemView {
       this.addTooltipRow(tip, t('folderSidebar.tooltip.size'), this.formatFileSize(item.stat.size));
 
       // Word count — async; show placeholder then update in-place
-      if (['md', 'txt'].includes(item.extension.toLowerCase())) {
-        const wordRow = this.addTooltipRow(tip, t('folderSidebar.tooltip.words'), '…');
+      const isText = ['md', 'txt'].includes(item.extension.toLowerCase());
+      const wordRow = isText ? this.addTooltipRow(tip, t('folderSidebar.tooltip.words'), '…') : null;
+      this.positionTooltip(tip, rect);
+
+      if (wordRow) {
         try {
           const text = await this.app.vault.cachedRead(item);
           // Shared counter — a raw whitespace split here disagreed with the
@@ -354,7 +339,29 @@ export class FolderSidebarView extends ItemView {
       if (folderCount > 0) {
         this.addTooltipRow(tip, t('folderSidebar.tooltip.subfolders'), folderCount.toLocaleString());
       }
+      this.positionTooltip(tip, rect);
     }
+  }
+
+  private positionTooltip(tip: HTMLElement, anchorRect: DOMRect): void {
+    const vw = window.innerWidth;
+    const vh = window.innerHeight;
+    const tipW = 280; // matches max-width in CSS
+    // Measure the rendered tooltip instead of a hardcoded estimate — tall
+    // tooltips previously overflowed the viewport bottom
+    const tipH = tip.offsetHeight || 120;
+
+    let top  = anchorRect.bottom + 6;
+    let left = anchorRect.left;
+
+    if (top + tipH > vh) top = anchorRect.top - tipH - 6;  // flip above
+    if (left + tipW > vw) left = vw - tipW - 8;             // clamp to right edge
+    if (left < 8) left = 8;                                  // clamp to left edge
+
+    tip.setCssProps({
+      '--ws-tip-top': `${Math.round(top)}px`,
+      '--ws-tip-left': `${Math.round(left)}px`,
+    });
   }
 
   private addTooltipRow(container: HTMLElement, label: string, value: string): HTMLElement {
@@ -437,75 +444,45 @@ export class FolderSidebarView extends ItemView {
 
   // ── Sort helpers ──────────────────────────────────────────────────────────
 
-  private sortItems(items: (TFolder | TFile)[]): (TFolder | TFile)[] {
-    return [...items].sort((a, b) => {
-      const aIsFolder = a instanceof TFolder;
-      const bIsFolder = b instanceof TFolder;
+  // One comparator for both the folder listing and search results — the two
+  // sort methods previously duplicated this switch block
+  private compareEntries(a: TFolder | TFile, b: TFolder | TFile): number {
+    const aIsFolder = a instanceof TFolder;
+    const bIsFolder = b instanceof TFolder;
+    const mtime = (x: TFolder | TFile): number => (x instanceof TFile ? x.stat.mtime : 0);
 
-      switch (this.sortMode) {
-        case 'folders-az':
-          if (aIsFolder && !bIsFolder) return -1;
-          if (!aIsFolder && bIsFolder) return 1;
-          return a.name.localeCompare(b.name);
-        case 'folders-za':
-          if (aIsFolder && !bIsFolder) return -1;
-          if (!aIsFolder && bIsFolder) return 1;
-          return b.name.localeCompare(a.name);
-        case 'az':
-          return a.name.localeCompare(b.name);
-        case 'za':
-          return b.name.localeCompare(a.name);
-        case 'modified-new': {
-          const aMtime = a instanceof TFile ? a.stat.mtime : 0;
-          const bMtime = b instanceof TFile ? b.stat.mtime : 0;
-          return bMtime - aMtime;
-        }
-        case 'modified-old': {
-          const aMtime = a instanceof TFile ? a.stat.mtime : 0;
-          const bMtime = b instanceof TFile ? b.stat.mtime : 0;
-          return aMtime - bMtime;
-        }
-      }
-    });
+    switch (this.sortMode) {
+      case 'folders-az':
+        if (aIsFolder !== bIsFolder) return aIsFolder ? -1 : 1;
+        return a.name.localeCompare(b.name);
+      case 'folders-za':
+        if (aIsFolder !== bIsFolder) return aIsFolder ? -1 : 1;
+        return b.name.localeCompare(a.name);
+      case 'az':
+        return a.name.localeCompare(b.name);
+      case 'za':
+        return b.name.localeCompare(a.name);
+      case 'modified-new':
+        return mtime(b) - mtime(a);
+      case 'modified-old':
+        return mtime(a) - mtime(b);
+    }
+  }
+
+  private sortItems(items: (TFolder | TFile)[]): (TFolder | TFile)[] {
+    return [...items].sort((a, b) => this.compareEntries(a, b));
   }
 
   private sortResults(results: SearchResult[]): SearchResult[] {
-    return [...results].sort((a, b) => {
-      const aItem = a.item, bItem = b.item;
-      const aIsFolder = aItem instanceof TFolder;
-      const bIsFolder = bItem instanceof TFolder;
-
-      switch (this.sortMode) {
-        case 'folders-az':
-          if (aIsFolder && !bIsFolder) return -1;
-          if (!aIsFolder && bIsFolder) return 1;
-          return aItem.name.localeCompare(bItem.name);
-        case 'folders-za':
-          if (aIsFolder && !bIsFolder) return -1;
-          if (!aIsFolder && bIsFolder) return 1;
-          return bItem.name.localeCompare(aItem.name);
-        case 'az':
-          return aItem.name.localeCompare(bItem.name);
-        case 'za':
-          return bItem.name.localeCompare(aItem.name);
-        case 'modified-new': {
-          const aMtime = aItem instanceof TFile ? aItem.stat.mtime : 0;
-          const bMtime = bItem instanceof TFile ? bItem.stat.mtime : 0;
-          return bMtime - aMtime;
-        }
-        case 'modified-old': {
-          const aMtime = aItem instanceof TFile ? aItem.stat.mtime : 0;
-          const bMtime = bItem instanceof TFile ? bItem.stat.mtime : 0;
-          return aMtime - bMtime;
-        }
-      }
-    });
+    return [...results].sort((a, b) => this.compareEntries(a.item, b.item));
   }
 
   // ── Render ────────────────────────────────────────────────────────────────
 
   render(): void {
-    (this.leaf as WorkspaceLeaf & { updateHeader(): void }).updateHeader();
+    // updateHeader is undocumented — call it optionally so a future API
+    // change degrades to a stale tab title instead of a crash
+    (this.leaf as WorkspaceLeaf & { updateHeader?: () => void }).updateHeader?.();
 
     const container = this.containerEl.children[1] as HTMLElement;
     container.empty();
@@ -725,6 +702,7 @@ export class FolderSidebarView extends ItemView {
   private renderFolderContents(container: HTMLElement, current: TFolder): void {
     const list = container.createDiv({ cls: 'ws-folder-list' });
     list.setAttribute('tabindex', '0');
+    list.setAttribute('role', 'listbox');
 
     const query = this.searchQuery.trim();
 
@@ -753,6 +731,8 @@ export class FolderSidebarView extends ItemView {
       for (const result of sorted) {
         const { item, matchType, snippet } = result;
         const itemEl = list.createDiv({ cls: 'ws-folder-item ws-folder-item--column' });
+        itemEl.setAttribute('role', 'option');
+        itemEl.setAttribute('aria-selected', 'false');
 
         // Icon + label row
         const topRow = itemEl.createDiv({ cls: 'ws-folder-item-row' });
@@ -842,6 +822,8 @@ export class FolderSidebarView extends ItemView {
 
     for (const child of sorted) {
       const item = list.createDiv({ cls: 'ws-folder-item' });
+      item.setAttribute('role', 'option');
+      item.setAttribute('aria-selected', 'false');
 
       const iconEl = item.createSpan({ cls: 'ws-folder-item-icon' });
 
@@ -895,6 +877,7 @@ export class FolderSidebarView extends ItemView {
 export function applyFocus(items: HTMLElement[], index: number): void {
   items.forEach((item, i) => {
     item.toggleClass('is-keyboard-focused', i === index);
+    item.setAttribute('aria-selected', String(i === index));
     if (i === index) item.scrollIntoView({ block: 'nearest' });
   });
 }

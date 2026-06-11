@@ -142,7 +142,8 @@
       "testConnectionDesc": "क्रेडेंशियल और कनेक्टिविटी सत्यापित करें।",
       "testing": "परीक्षण हो रहा है…",
       "removeSite": "साइट हटाएं",
-      "buyMeACoffee": "मुझे कॉफी खरीदें"
+      "buyMeACoffee": "मुझे कॉफी खरीदें",
+      "newSiteName": "नई साइट"
     }
   },
   "binder": {
@@ -172,7 +173,9 @@
       "duplicate": "डुप्लिकेट",
       "moveToResearch": "शोध में ले जाएं",
       "publishToWordPress": "WordPress पर प्रकाशित करें",
-      "delete": "हटाएं"
+      "delete": "हटाएं",
+      "moveUp": "ऊपर ले जाएं",
+      "moveDown": "नीचे ले जाएं"
     },
     "wordCountSuffix": "{{count}}श",
     "fileNotFound": "फ़ाइल अब मौजूद नहीं है: {{path}}",
@@ -343,7 +346,8 @@
   "projectManager": {
     "errorFolderExists": "आपके प्रोजेक्ट फ़ोल्डर में \"{{folder}}\" नाम का फ़ोल्डर पहले से मौजूद है। कोई दूसरा शीर्षक चुनें।",
     "corruptBinder": "\"{{project}}\" की _binder.json फ़ाइल पढ़ी नहीं जा सकी। बैकअप प्रोजेक्ट फ़ोल्डर में _binder.json.bak के रूप में सहेजा गया।",
-    "corruptProject": "\"{{folder}}\" की प्रोजेक्ट फ़ाइल दूषित है और प्रोजेक्ट लोड नहीं हो सका।"
+    "corruptProject": "\"{{folder}}\" की प्रोजेक्ट फ़ाइल दूषित है और प्रोजेक्ट लोड नहीं हो सका।",
+    "corruptLog": "{{project}} का लेखन लॉग पढ़ा नहीं जा सका — नया लॉग शुरू किया जा रहा है।"
   },
   "projectModal": {
     "title": "नई लेखन परियोजना",

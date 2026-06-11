@@ -142,7 +142,8 @@
       "testConnectionDesc": "Vérifier les identifiants et la connectivité.",
       "testing": "Test en cours…",
       "removeSite": "Supprimer le site",
-      "buyMeACoffee": "Offrez-moi un café"
+      "buyMeACoffee": "Offrez-moi un café",
+      "newSiteName": "Nouveau site"
     }
   },
   "binder": {
@@ -172,7 +173,9 @@
       "duplicate": "Dupliquer",
       "moveToResearch": "Déplacer vers la recherche",
       "publishToWordPress": "Publier sur WordPress",
-      "delete": "Supprimer"
+      "delete": "Supprimer",
+      "moveUp": "Monter",
+      "moveDown": "Descendre"
     },
     "wordCountSuffix": "{{count}}m",
     "fileNotFound": "Le fichier n'existe plus : {{path}}",
@@ -343,7 +346,8 @@
   "projectManager": {
     "errorFolderExists": "Un dossier nommé \"{{folder}}\" existe déjà dans votre dossier de projets. Choisissez un autre titre.",
     "corruptBinder": "Le fichier _binder.json de \"{{project}}\" n'a pas pu être lu. Une sauvegarde a été enregistrée sous _binder.json.bak dans le dossier du projet.",
-    "corruptProject": "Le fichier de projet dans \"{{folder}}\" est corrompu et le projet n'a pas pu être chargé."
+    "corruptProject": "Le fichier de projet dans \"{{folder}}\" est corrompu et le projet n'a pas pu être chargé.",
+    "corruptLog": "Impossible de lire le journal d’écriture de {{project}} — un nouveau journal va être créé."
   },
   "projectModal": {
     "title": "Nouveau projet d'écriture",

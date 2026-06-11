@@ -142,7 +142,8 @@
       "testConnectionDesc": "Anmeldeinformationen und Konnektivität überprüfen.",
       "testing": "Teste…",
       "removeSite": "Seite entfernen",
-      "buyMeACoffee": "Kauf mir einen Kaffee"
+      "buyMeACoffee": "Kauf mir einen Kaffee",
+      "newSiteName": "Neue Website"
     }
   },
   "binder": {
@@ -172,7 +173,9 @@
       "duplicate": "Duplizieren",
       "moveToResearch": "In Recherche verschieben",
       "publishToWordPress": "Auf WordPress veröffentlichen",
-      "delete": "Löschen"
+      "delete": "Löschen",
+      "moveUp": "Nach oben verschieben",
+      "moveDown": "Nach unten verschieben"
     },
     "wordCountSuffix": "{{count}}W",
     "fileNotFound": "Die Datei existiert nicht mehr: {{path}}",
@@ -343,7 +346,8 @@
   "projectManager": {
     "errorFolderExists": "Ein Ordner namens \"{{folder}}\" existiert bereits in deinem Projektordner. Wähle einen anderen Titel.",
     "corruptBinder": "Die Datei _binder.json von \"{{project}}\" konnte nicht gelesen werden. Eine Sicherung wurde als _binder.json.bak im Projektordner gespeichert.",
-    "corruptProject": "Die Projektdatei in \"{{folder}}\" ist beschädigt und das Projekt konnte nicht geladen werden."
+    "corruptProject": "Die Projektdatei in \"{{folder}}\" ist beschädigt und das Projekt konnte nicht geladen werden.",
+    "corruptLog": "Schreibprotokoll für {{project}} konnte nicht gelesen werden — ein neues Protokoll wird begonnen."
   },
   "projectModal": {
     "title": "Neues Schreibprojekt",

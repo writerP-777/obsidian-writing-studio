@@ -142,7 +142,8 @@
       "testConnectionDesc": "验证凭据和连接性。",
       "testing": "测试中…",
       "removeSite": "删除站点",
-      "buyMeACoffee": "请我喝咏啡"
+      "buyMeACoffee": "请我喝咏啡",
+      "newSiteName": "新站点"
     }
   },
   "binder": {
@@ -172,7 +173,9 @@
       "duplicate": "复制",
       "moveToResearch": "移至研究",
       "publishToWordPress": "发布到 WordPress",
-      "delete": "删除"
+      "delete": "删除",
+      "moveUp": "上移",
+      "moveDown": "下移"
     },
     "wordCountSuffix": "{{count}}字",
     "fileNotFound": "文件已不存在：{{path}}",
@@ -343,7 +346,8 @@
   "projectManager": {
     "errorFolderExists": "项目文件夹中已存在名为“{{folder}}”的文件夹。请选择其他标题。",
     "corruptBinder": "无法读取“{{project}}”的 _binder.json 文件。备份已保存为项目文件夹中的 _binder.json.bak。",
-    "corruptProject": "“{{folder}}”中的项目文件已损坏，无法加载该项目。"
+    "corruptProject": "“{{folder}}”中的项目文件已损坏，无法加载该项目。",
+    "corruptLog": "无法读取 {{project}} 的写作日志——将开始新的日志。"
   },
   "projectModal": {
     "title": "新建写作项目",

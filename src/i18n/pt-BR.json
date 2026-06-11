@@ -142,7 +142,8 @@
       "testConnectionDesc": "Verificar credenciais e conectividade.",
       "testing": "Testando…",
       "removeSite": "Remover site",
-      "buyMeACoffee": "Me pague um café"
+      "buyMeACoffee": "Me pague um café",
+      "newSiteName": "Novo site"
     }
   },
   "binder": {
@@ -172,7 +173,9 @@
       "duplicate": "Duplicar",
       "moveToResearch": "Mover para pesquisa",
       "publishToWordPress": "Publicar no WordPress",
-      "delete": "Excluir"
+      "delete": "Excluir",
+      "moveUp": "Mover para cima",
+      "moveDown": "Mover para baixo"
     },
     "wordCountSuffix": "{{count}}p",
     "fileNotFound": "O arquivo não existe mais: {{path}}",
@@ -343,7 +346,8 @@
   "projectManager": {
     "errorFolderExists": "Já existe uma pasta chamada \"{{folder}}\" na sua pasta de projetos. Escolha um título diferente.",
     "corruptBinder": "Não foi possível ler o arquivo _binder.json de \"{{project}}\". Um backup foi salvo como _binder.json.bak na pasta do projeto.",
-    "corruptProject": "O arquivo de projeto em \"{{folder}}\" está corrompido e o projeto não pôde ser carregado."
+    "corruptProject": "O arquivo de projeto em \"{{folder}}\" está corrompido e o projeto não pôde ser carregado.",
+    "corruptLog": "Não foi possível ler o registro de escrita de {{project}} — iniciando um novo registro."
   },
   "projectModal": {
     "title": "Novo projeto de escrita",
