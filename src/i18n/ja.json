@@ -249,6 +249,7 @@
     "sprintsCount_other": "· {{count}} スプリント"
   },
   "sprint": {
+    "alreadyRunning": "スプリントは既に実行中です。新しいスプリントを開始する前に停止してください。",
     "started": "スプリント開始：{{minutes}} 分",
     "complete": "スプリント完了！お疲れさまでした。",
     "words": "+{{n}} 語",

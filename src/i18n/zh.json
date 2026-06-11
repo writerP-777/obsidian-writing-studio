@@ -249,6 +249,7 @@
     "sprintsCount_other": "· {{count}} 次冲刺"
   },
   "sprint": {
+    "alreadyRunning": "已有一个冲刺正在进行。请先停止它，再开始新的冲刺。",
     "started": "写作冲刺已开始：{{minutes}} 分钟",
     "complete": "冲刺完成！干得好。",
     "words": "+{{n}} 个字",

@@ -249,6 +249,7 @@
     "sprintsCount_other": "· {{count}} 스프린트"
   },
   "sprint": {
+    "alreadyRunning": "이미 진행 중인 스프린트가 있습니다. 새 스프린트를 시작하기 전에 중지하세요.",
     "started": "스프린트 시작: {{minutes}}분",
     "complete": "스프린트 완료! 잘하셨습니다.",
     "words": "+{{n}} 단어",
