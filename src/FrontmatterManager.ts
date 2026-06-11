@@ -1,4 +1,4 @@
-import { App, TFile } from 'obsidian';
+import { App, TFile, normalizePath } from 'obsidian';
 import { WPPostMeta } from '../models/WordPressSite';
 import type WritingStudioPlugin from '../main';
 
@@ -40,7 +40,9 @@ export class FrontmatterManager {
     if (file.extension !== 'md') return false;
     const projectFolder = this.plugin.settings.defaultProjectFolder;
     if (!projectFolder) return false;
-    return file.path.startsWith(projectFolder);
+    // Trailing slash so a project folder of "Writing" cannot match sibling
+    // folders like "Writing Archive/" and auto-edit unrelated notes
+    return file.path.startsWith(normalizePath(projectFolder) + '/');
   }
 
   async updateFrontmatter(file: TFile): Promise<void> {
