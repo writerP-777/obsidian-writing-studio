@@ -175,7 +175,14 @@
       "delete": "حذف"
     },
     "wordCountSuffix": "{{count}}ك",
-    "fileNotFound": "الملف لم يعد موجودًا: {{path}}"
+    "fileNotFound": "الملف لم يعد موجودًا: {{path}}",
+    "deleteConfirm": {
+      "title": "حذف المستند",
+      "message": "هل تريد إزالة \"{{title}}\" من الملزمة ونقل ملفه إلى سلة المهملات؟ لا يمكن استعادة إدخال الملزمة (الحالة، هدف عدد الكلمات، الموضع).",
+      "delete": "حذف",
+      "cancel": "إلغاء"
+    },
+    "noMatches": "لا توجد مستندات مطابقة لـ \"{{query}}\"."
   },
   "launcher": {
     "displayText": "استوديو الكتابة",
@@ -318,7 +325,9 @@
     },
     "pickerPlaceholder": "اكتب اسم مجلد لفتحه في مستكشف الشريط الجانبي…",
     "vaultRoot": "/ (جذر المخزن)",
-    "previewError": "تعذرت قراءة هذا الملف."
+    "previewError": "تعذرت قراءة هذا الملف.",
+    "noFolder": "لم يتم تحديد مجلد.",
+    "chooseFolder": "اختر مجلداً"
   },
   "focusToolbar": {
     "exitTitle": "الخروج من وضع التركيز (esc)",
@@ -335,7 +344,8 @@
     "jumpToSection": "الانتقال إلى القسم...",
     "proceedToExport": "المتابعة للتصدير",
     "closePreview": "إغلاق المعاينة",
-    "noContent": "لا محتوى للمعاينة. افتح مشروع كتابة أولاً."
+    "noContent": "لا محتوى للمعاينة. افتح مشروع كتابة أولاً.",
+    "loadCompilation": "تحميل المخطوطة المجمعة"
   },
   "projectManager": {
     "errorFolderExists": "يوجد بالفعل مجلد باسم \"{{folder}}\" في مجلد مشاريعك. اختر عنوانًا مختلفًا.",

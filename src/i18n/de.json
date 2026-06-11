@@ -175,7 +175,14 @@
       "delete": "Löschen"
     },
     "wordCountSuffix": "{{count}}W",
-    "fileNotFound": "Die Datei existiert nicht mehr: {{path}}"
+    "fileNotFound": "Die Datei existiert nicht mehr: {{path}}",
+    "deleteConfirm": {
+      "title": "Dokument löschen",
+      "message": "„{{title}}“ aus der Schreibmappe entfernen und die Datei in den Papierkorb verschieben? Der Mappeneintrag (Status, Wortziel, Position) kann nicht wiederhergestellt werden.",
+      "delete": "Löschen",
+      "cancel": "Abbrechen"
+    },
+    "noMatches": "Keine Dokumente entsprechen „{{query}}“."
   },
   "launcher": {
     "displayText": "Schreibstudio",
@@ -315,7 +322,9 @@
     },
     "pickerPlaceholder": "Ordnernamen eingeben, um im Sidebar-Explorer zu öffnen…",
     "vaultRoot": "/ (Vault-Stamm)",
-    "previewError": "Diese Datei konnte nicht gelesen werden."
+    "previewError": "Diese Datei konnte nicht gelesen werden.",
+    "noFolder": "Kein Ordner ausgewählt.",
+    "chooseFolder": "Ordner auswählen"
   },
   "focusToolbar": {
     "exitTitle": "Fokusmodus beenden (esc)",
@@ -328,7 +337,8 @@
     "jumpToSection": "Zum Abschnitt springen...",
     "proceedToExport": "Weiter zum Export",
     "closePreview": "Vorschau schließen",
-    "noContent": "Kein Inhalt zum Anzeigen. Öffne zuerst ein Schreibprojekt."
+    "noContent": "Kein Inhalt zum Anzeigen. Öffne zuerst ein Schreibprojekt.",
+    "loadCompilation": "Kompiliertes Manuskript laden"
   },
   "projectManager": {
     "errorFolderExists": "Ein Ordner namens \"{{folder}}\" existiert bereits in deinem Projektordner. Wähle einen anderen Titel.",

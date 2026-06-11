@@ -1,15 +1,21 @@
-import { ItemView, WorkspaceLeaf, MarkdownRenderer } from 'obsidian';
+import { ItemView, WorkspaceLeaf, MarkdownRenderer, Notice, normalizePath } from 'obsidian';
 import type WritingStudioPlugin from '../main';
 import { ExportOptions } from './ExportEngine';
 import { ExportModal } from '../modals/ExportModal';
 import { t } from './i18n';
+import { safeHandler } from './safeHandler';
+import { splitSections, buildJumpItems, sectionId, JumpItem } from './sections';
 
 export const COMPILE_PREVIEW_VIEW_TYPE = 'writing-studio-compile-preview';
 
 export class CompilePreviewView extends ItemView {
   private plugin: WritingStudioPlugin;
   private content = '';
-  private jumpItems: Array<{ title: string; id: string }> = [];
+  private sections: string[] = [];
+  private jumpItems: JumpItem[] = [];
+  // Virtual path inside the project folder so relative links and embeds in
+  // the rendered preview resolve from the project, not the vault root.
+  private sourcePath = '';
 
   constructor(leaf: WorkspaceLeaf, plugin: WritingStudioPlugin) {
     super(leaf);
@@ -46,22 +52,13 @@ export class CompilePreviewView extends ItemView {
       addTitlePage: true,
     };
 
-    this.content = this.plugin.exportEngine.toMarkdown(await this.plugin.exportEngine.compileContent(exportOpts));
-    this.buildJumpItems();
-    this.render();
-  }
+    const project = this.plugin.projectManager.getActiveProject();
+    this.sourcePath = project ? normalizePath(`${project.folderPath}/_compile.md`) : '';
 
-  private buildJumpItems(): void {
-    this.jumpItems = [];
-    const lines = this.content.split('\n');
-    for (const line of lines) {
-      const h1 = line.match(/^# (.+)$/);
-      if (h1) {
-        const title = h1[1];
-        const id = title.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
-        this.jumpItems.push({ title, id });
-      }
-    }
+    this.content = this.plugin.exportEngine.toMarkdown(await this.plugin.exportEngine.compileContent(exportOpts));
+    this.sections = splitSections(this.content);
+    this.jumpItems = buildJumpItems(this.sections);
+    this.render();
   }
 
   private render(): void {
@@ -110,21 +107,30 @@ export class CompilePreviewView extends ItemView {
         text: t('compilePreview.noContent'),
         cls: 'ws-empty-state',
       });
+      // A workspace-restored leaf opens empty — give it a way to load the
+      // compilation instead of being a permanently dead panel
+      const loadBtn = contentDiv.createEl('button', {
+        cls: 'ws-compile-load-btn mod-cta',
+        text: t('compilePreview.loadCompilation'),
+      });
+      loadBtn.onclick = safeHandler(async () => {
+        if (!this.plugin.projectManager.getActiveProject()) {
+          new Notice(t('binder.selectProjectFirst'));
+          return;
+        }
+        await this.loadContent();
+      });
       return;
     }
 
     // Render the compiled content section by section
-    const sections = this.content.split(/\n(?=# )/);
-    for (const section of sections) {
+    this.sections.forEach((section, index) => {
       const sectionDiv = contentDiv.createDiv('ws-compile-section');
-      const h1 = section.match(/^# (.+)\n/);
-      if (h1) {
-        const id = h1[1].toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
-        sectionDiv.setAttribute('data-section-id', id);
+      if (section.startsWith('# ')) {
+        sectionDiv.setAttribute('data-section-id', sectionId(index));
       }
-
-      void MarkdownRenderer.render(this.app, section, sectionDiv, '', this);
-    }
+      void MarkdownRenderer.render(this.app, section, sectionDiv, this.sourcePath, this);
+    });
   }
 
   async onClose(): Promise<void> {}

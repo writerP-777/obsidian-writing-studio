@@ -175,7 +175,14 @@
       "delete": "삭제"
     },
     "wordCountSuffix": "{{count}}자",
-    "fileNotFound": "파일이 더 이상 존재하지 않습니다: {{path}}"
+    "fileNotFound": "파일이 더 이상 존재하지 않습니다: {{path}}",
+    "deleteConfirm": {
+      "title": "문서 삭제",
+      "message": "\"{{title}}\"을(를) 바인더에서 제거하고 파일을 휴지통으로 이동할까요? 바인더 항목(상태, 단어 수 목표, 위치)은 복원할 수 없습니다.",
+      "delete": "삭제",
+      "cancel": "취소"
+    },
+    "noMatches": "\"{{query}}\"와 일치하는 문서가 없습니다."
   },
   "launcher": {
     "displayText": "글쓰기 스튜디오",
@@ -315,7 +322,9 @@
     },
     "pickerPlaceholder": "사이드바 탐색기에서 열 폴더 이름 입력…",
     "vaultRoot": "/ (볼트 루트)",
-    "previewError": "이 파일을 읽을 수 없습니다."
+    "previewError": "이 파일을 읽을 수 없습니다.",
+    "noFolder": "선택된 폴더가 없습니다.",
+    "chooseFolder": "폴더 선택"
   },
   "focusToolbar": {
     "exitTitle": "집중 모드 종료 (esc)",
@@ -328,7 +337,8 @@
     "jumpToSection": "섹션으로 이동...",
     "proceedToExport": "내보내기 진행",
     "closePreview": "미리보기 닫기",
-    "noContent": "미리볼 내용이 없습니다. 먼저 글쓰기 프로젝트를 여세요."
+    "noContent": "미리볼 내용이 없습니다. 먼저 글쓰기 프로젝트를 여세요.",
+    "loadCompilation": "컴파일된 원고 불러오기"
   },
   "projectManager": {
     "errorFolderExists": "프로젝트 폴더에 \"{{folder}}\"(이)라는 이름의 폴더가 이미 있습니다. 다른 제목을 선택하세요.",

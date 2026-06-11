@@ -499,6 +499,11 @@ body.writing-studio-typography .markdown-reading-view .markdown-preview-section 
   margin-bottom: 3rem;
 }
 
+.ws-compile-load-btn {
+  display: block;
+  margin: 0 auto;
+}
+
 
 /* ── Progress Bars (shared) ─────────────────────────────────────── */
 .ws-progress-wrap {
@@ -1447,6 +1452,14 @@ body .ws-launcher select {
   color: var(--text-muted);
   padding: 24px 0;
   font-size: var(--font-ui-small);
+}
+
+.ws-folder-empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding: 24px 12px;
 }
 
 .ws-folder-unsupported {

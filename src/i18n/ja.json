@@ -175,7 +175,14 @@
       "delete": "削除"
     },
     "wordCountSuffix": "{{count}}語",
-    "fileNotFound": "ファイルが存在しません：{{path}}"
+    "fileNotFound": "ファイルが存在しません：{{path}}",
+    "deleteConfirm": {
+      "title": "ドキュメントを削除",
+      "message": "「{{title}}」をバインダーから削除し、ファイルをゴミ箱に移動しますか？バインダー項目（ステータス、目標語数、位置）は復元できません。",
+      "delete": "削除",
+      "cancel": "キャンセル"
+    },
+    "noMatches": "「{{query}}」に一致するドキュメントはありません。"
   },
   "launcher": {
     "displayText": "ライティングスタジオ",
@@ -315,7 +322,9 @@
     },
     "pickerPlaceholder": "サイドバーエクスプローラーで開くフォルダ名を入力…",
     "vaultRoot": "/（ボールトルート）",
-    "previewError": "このファイルを読み取れませんでした。"
+    "previewError": "このファイルを読み取れませんでした。",
+    "noFolder": "フォルダが選択されていません。",
+    "chooseFolder": "フォルダを選択"
   },
   "focusToolbar": {
     "exitTitle": "フォーカスモードを終了 (esc)",
@@ -328,7 +337,8 @@
     "jumpToSection": "セクションにジャンプ...",
     "proceedToExport": "エクスポートに進む",
     "closePreview": "プレビューを閉じる",
-    "noContent": "プレビューするコンテンツがありません。まず執筆プロジェクトを開いてください。"
+    "noContent": "プレビューするコンテンツがありません。まず執筆プロジェクトを開いてください。",
+    "loadCompilation": "コンパイル済み原稿を読み込む"
   },
   "projectManager": {
     "errorFolderExists": "プロジェクトフォルダーに「{{folder}}」という名前のフォルダーが既に存在します。別のタイトルを選んでください。",

@@ -175,7 +175,14 @@
       "delete": "Delete"
     },
     "wordCountSuffix": "{{count}}w",
-    "fileNotFound": "File no longer exists: {{path}}"
+    "fileNotFound": "File no longer exists: {{path}}",
+    "deleteConfirm": {
+      "title": "Delete document",
+      "message": "Remove \"{{title}}\" from the binder and move its file to the trash? The binder entry (status, word count goal, position) cannot be restored.",
+      "delete": "Delete",
+      "cancel": "Cancel"
+    },
+    "noMatches": "No documents match \"{{query}}\"."
   },
   "launcher": {
     "displayText": "Writing studio",
@@ -315,7 +322,9 @@
     },
     "pickerPlaceholder": "Type a folder name to open in sidebar explorer…",
     "vaultRoot": "/ (vault root)",
-    "previewError": "Could not read this file."
+    "previewError": "Could not read this file.",
+    "noFolder": "No folder selected.",
+    "chooseFolder": "Choose folder"
   },
   "focusToolbar": {
     "exitTitle": "Exit focus mode (esc)",
@@ -328,7 +337,8 @@
     "jumpToSection": "Jump to section...",
     "proceedToExport": "Proceed to export",
     "closePreview": "Close preview",
-    "noContent": "No content to preview. Open a writing project first."
+    "noContent": "No content to preview. Open a writing project first.",
+    "loadCompilation": "Load compilation"
   },
   "projectManager": {
     "errorFolderExists": "A folder named \"{{folder}}\" already exists in your projects folder. Choose a different title.",
