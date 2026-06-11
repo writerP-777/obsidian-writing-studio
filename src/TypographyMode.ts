@@ -99,6 +99,11 @@ export class TypographyMode {
   }
 
   destroy(): void {
-    void this.disable();
+    // Teardown removes DOM/CSS state only — it must never write settings.
+    // Unload runs on every app quit, so calling disable() here would erase
+    // the persisted state that "Persist across sessions" exists to keep.
+    this.active = false;
+    this.removeCustomProperties();
+    activeDocument.body.classList.remove('writing-studio-typography');
   }
 }

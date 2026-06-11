@@ -11755,7 +11755,9 @@ var TypographyMode = class {
     }
   }
   destroy() {
-    void this.disable();
+    this.active = false;
+    this.removeCustomProperties();
+    activeDocument.body.classList.remove("writing-studio-typography");
   }
 };
 
@@ -11799,6 +11801,7 @@ var WritingModes = class {
   constructor(plugin) {
     this.currentMode = "none";
     this.statusBarEl = null;
+    this.reviewPrior = null;
     this.plugin = plugin;
     this.app = plugin.app;
   }
@@ -11809,7 +11812,7 @@ var WritingModes = class {
   getCurrentMode() {
     return this.currentMode;
   }
-  async switchMode(mode) {
+  async switchMode(mode, silent = false) {
     if (this.currentMode === mode) return;
     this.currentMode = mode;
     const config = WRITING_MODE_CONFIGS[mode];
@@ -11833,12 +11836,16 @@ var WritingModes = class {
     }
     if (config.forceReadingView) {
       this.forceReadingView();
+    } else {
+      this.restoreEditorViewMode();
     }
     this.updateStatusBar();
     this.plugin.settings.currentWritingMode = mode;
     await this.plugin.saveSettings();
-    const modeLabel = mode === "none" ? t2("writingModes.normal") : t2(`launcher.mode.${mode}`);
-    new import_obsidian13.Notice(t2("writingModes.switchedTo", { mode: modeLabel }));
+    if (!silent) {
+      const modeLabel = mode === "none" ? t2("writingModes.normal") : t2(`launcher.mode.${mode}`);
+      new import_obsidian13.Notice(t2("writingModes.switchedTo", { mode: modeLabel }));
+    }
   }
   collapseSidebars() {
     const left = this.app.workspace.leftSplit;
@@ -11854,9 +11861,22 @@ var WritingModes = class {
   }
   forceReadingView() {
     const leaf = this.app.workspace.getMostRecentLeaf();
-    if (leaf && leaf.view.getViewType() === "markdown") {
-      leaf.view.setState({ mode: "preview" }, { history: false });
+    if (!leaf || !(leaf.view instanceof import_obsidian13.MarkdownView)) return;
+    const mode = leaf.view.getMode();
+    if (mode !== "preview") {
+      this.reviewPrior = { leaf, mode };
     }
+    void this.setLeafMode(leaf, "preview");
+  }
+  restoreEditorViewMode() {
+    const prior = this.reviewPrior;
+    this.reviewPrior = null;
+    if (!prior || !(prior.leaf.view instanceof import_obsidian13.MarkdownView)) return;
+    void this.setLeafMode(prior.leaf, prior.mode);
+  }
+  async setLeafMode(leaf, mode) {
+    const state = leaf.getViewState();
+    await leaf.setViewState({ ...state, state: { ...state.state, mode } });
   }
   updateStatusBar() {
     if (!this.statusBarEl) return;
@@ -11872,13 +11892,17 @@ var WritingModes = class {
   restore() {
     const saved = this.plugin.settings.currentWritingMode;
     if (saved && saved !== "none") {
-      void this.switchMode(saved);
+      void this.switchMode(saved, true);
     }
   }
   destroy() {
-    if (this.currentMode !== "none") {
-      void this.switchMode("none");
+    if (this.currentMode === "none") return;
+    const config = WRITING_MODE_CONFIGS[this.currentMode];
+    if (!config.sidebarsVisible) {
+      this.expandSidebars();
     }
+    this.restoreEditorViewMode();
+    this.currentMode = "none";
   }
 };
 
