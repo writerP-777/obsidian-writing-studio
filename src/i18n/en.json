@@ -174,7 +174,8 @@
       "publishToWordPress": "Publish to WordPress",
       "delete": "Delete"
     },
-    "wordCountSuffix": "{{count}}w"
+    "wordCountSuffix": "{{count}}w",
+    "fileNotFound": "File no longer exists: {{path}}"
   },
   "launcher": {
     "displayText": "Writing studio",
@@ -280,7 +281,8 @@
     "connectedAs": "Connected as \"{{user}}\" to \"{{site}}\"",
     "networkError": "Network error: {{error}}",
     "httpError": "HTTP {{status}}",
-    "fetchCategoriesFailed": "Failed to fetch categories: {{error}}"
+    "fetchCategoriesFailed": "Failed to fetch categories: {{error}}",
+    "tagsSkipped": "Some tags could not be added: {{tags}}"
   },
   "folderSidebar": {
     "displayText": "Folder explorer",
@@ -309,7 +311,8 @@
       "subfolders": "Subfolders"
     },
     "pickerPlaceholder": "Type a folder name to open in sidebar explorer…",
-    "vaultRoot": "/ (vault root)"
+    "vaultRoot": "/ (vault root)",
+    "previewError": "Could not read this file."
   },
   "focusToolbar": {
     "exitTitle": "Exit focus mode (esc)",
@@ -567,7 +570,8 @@
       "delta": "(+{{delta}})",
       "goalBanner": "{{count}} / {{goal}} words — {{pct}}%",
       "dismiss": "Dismiss"
-    }
+    },
+    "operationFailed": "Operation failed: {{error}}"
   },
   "sprintSummary": {
     "title": "Sprint complete!",

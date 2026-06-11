@@ -174,7 +174,8 @@
       "publishToWordPress": "WordPressに公開",
       "delete": "削除"
     },
-    "wordCountSuffix": "{{count}}語"
+    "wordCountSuffix": "{{count}}語",
+    "fileNotFound": "ファイルが存在しません：{{path}}"
   },
   "launcher": {
     "displayText": "ライティングスタジオ",
@@ -280,7 +281,8 @@
     "connectedAs": "「{{site}}」に「{{user}}」として接続しました",
     "networkError": "ネットワークエラー：{{error}}",
     "httpError": "HTTP {{status}}",
-    "fetchCategoriesFailed": "カテゴリの取得に失敗しました：{{error}}"
+    "fetchCategoriesFailed": "カテゴリの取得に失敗しました：{{error}}",
+    "tagsSkipped": "一部のタグを追加できませんでした：{{tags}}"
   },
   "folderSidebar": {
     "displayText": "フォルダエクスプローラー",
@@ -309,7 +311,8 @@
       "subfolders": "サブフォルダ"
     },
     "pickerPlaceholder": "サイドバーエクスプローラーで開くフォルダ名を入力…",
-    "vaultRoot": "/（ボールトルート）"
+    "vaultRoot": "/（ボールトルート）",
+    "previewError": "このファイルを読み取れませんでした。"
   },
   "focusToolbar": {
     "exitTitle": "フォーカスモードを終了 (esc)",
@@ -567,7 +570,8 @@
       "delta": "(+{{delta}})",
       "goalBanner": "{{count}} / {{goal}} 語 — {{pct}}%",
       "dismiss": "閉じる"
-    }
+    },
+    "operationFailed": "操作に失敗しました：{{error}}"
   },
   "sprintSummary": {
     "title": "スプリント完了！",

@@ -174,7 +174,8 @@
       "publishToWordPress": "WordPress에 게시",
       "delete": "삭제"
     },
-    "wordCountSuffix": "{{count}}자"
+    "wordCountSuffix": "{{count}}자",
+    "fileNotFound": "파일이 더 이상 존재하지 않습니다: {{path}}"
   },
   "launcher": {
     "displayText": "글쓰기 스튜디오",
@@ -280,7 +281,8 @@
     "connectedAs": "\"{{site}}\"에 \"{{user}}\"로 연결되었습니다",
     "networkError": "네트워크 오류: {{error}}",
     "httpError": "HTTP {{status}}",
-    "fetchCategoriesFailed": "카테고리를 가져오지 못했습니다: {{error}}"
+    "fetchCategoriesFailed": "카테고리를 가져오지 못했습니다: {{error}}",
+    "tagsSkipped": "일부 태그를 추가할 수 없습니다: {{tags}}"
   },
   "folderSidebar": {
     "displayText": "폴더 탐색기",
@@ -309,7 +311,8 @@
       "subfolders": "하위 폴더"
     },
     "pickerPlaceholder": "사이드바 탐색기에서 열 폴더 이름 입력…",
-    "vaultRoot": "/ (볼트 루트)"
+    "vaultRoot": "/ (볼트 루트)",
+    "previewError": "이 파일을 읽을 수 없습니다."
   },
   "focusToolbar": {
     "exitTitle": "집중 모드 종료 (esc)",
@@ -567,7 +570,8 @@
       "delta": "(+{{delta}})",
       "goalBanner": "{{count}} / {{goal}} 단어 — {{pct}}%",
       "dismiss": "닫기"
-    }
+    },
+    "operationFailed": "작업이 실패했습니다: {{error}}"
   },
   "sprintSummary": {
     "title": "스프린트 완료!",

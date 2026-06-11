@@ -174,7 +174,8 @@
       "publishToWordPress": "Auf WordPress veröffentlichen",
       "delete": "Löschen"
     },
-    "wordCountSuffix": "{{count}}W"
+    "wordCountSuffix": "{{count}}W",
+    "fileNotFound": "Die Datei existiert nicht mehr: {{path}}"
   },
   "launcher": {
     "displayText": "Schreibstudio",
@@ -280,7 +281,8 @@
     "connectedAs": "Als „{{user}}“ mit „{{site}}“ verbunden",
     "networkError": "Netzwerkfehler: {{error}}",
     "httpError": "HTTP {{status}}",
-    "fetchCategoriesFailed": "Kategorien konnten nicht abgerufen werden: {{error}}"
+    "fetchCategoriesFailed": "Kategorien konnten nicht abgerufen werden: {{error}}",
+    "tagsSkipped": "Einige Schlagwörter konnten nicht hinzugefügt werden: {{tags}}"
   },
   "folderSidebar": {
     "displayText": "Ordner-Explorer",
@@ -309,7 +311,8 @@
       "subfolders": "Unterordner"
     },
     "pickerPlaceholder": "Ordnernamen eingeben, um im Sidebar-Explorer zu öffnen…",
-    "vaultRoot": "/ (Vault-Stamm)"
+    "vaultRoot": "/ (Vault-Stamm)",
+    "previewError": "Diese Datei konnte nicht gelesen werden."
   },
   "focusToolbar": {
     "exitTitle": "Fokusmodus beenden (esc)",
@@ -567,7 +570,8 @@
       "delta": "(+{{delta}})",
       "goalBanner": "{{count}} / {{goal}} Wörter — {{pct}}%",
       "dismiss": "Schließen"
-    }
+    },
+    "operationFailed": "Vorgang fehlgeschlagen: {{error}}"
   },
   "sprintSummary": {
     "title": "Sprint abgeschlossen!",

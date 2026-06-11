@@ -644,9 +644,15 @@ export class FolderSidebarView extends ItemView {
     const ext = file.extension.toLowerCase();
 
     if (ext === 'md') {
-      const text = await this.app.vault.read(file);
-      await MarkdownRenderer.render(this.app, text, content, file.path, this);
-      if (this.searchQuery) this.highlightTextInElement(content, this.searchQuery);
+      try {
+        const text = await this.app.vault.read(file);
+        await MarkdownRenderer.render(this.app, text, content, file.path, this);
+        if (this.searchQuery) this.highlightTextInElement(content, this.searchQuery);
+      } catch {
+        // File deleted/locked between listing and click — show a state
+        // instead of leaving a blank panel via an unhandled rejection
+        content.createDiv({ cls: 'ws-folder-empty', text: t('folderSidebar.previewError') });
+      }
     } else if (['png', 'jpg', 'jpeg', 'webp', 'gif', 'svg'].includes(ext)) {
       const img = content.createEl('img', { cls: 'ws-folder-img' });
       img.setAttribute('src', this.app.vault.getResourcePath(file));

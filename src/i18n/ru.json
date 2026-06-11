@@ -174,7 +174,8 @@
       "publishToWordPress": "Опубликовать в WordPress",
       "delete": "Удалить"
     },
-    "wordCountSuffix": "{{count}}сл"
+    "wordCountSuffix": "{{count}}сл",
+    "fileNotFound": "Файл больше не существует: {{path}}"
   },
   "launcher": {
     "displayText": "Студия письма",
@@ -282,7 +283,8 @@
     "connectedAs": "Подключено как «{{user}}» к «{{site}}»",
     "networkError": "Ошибка сети: {{error}}",
     "httpError": "HTTP {{status}}",
-    "fetchCategoriesFailed": "Не удалось получить категории: {{error}}"
+    "fetchCategoriesFailed": "Не удалось получить категории: {{error}}",
+    "tagsSkipped": "Некоторые теги не удалось добавить: {{tags}}"
   },
   "folderSidebar": {
     "displayText": "Файловый проводник",
@@ -311,7 +313,8 @@
       "subfolders": "Подпапки"
     },
     "pickerPlaceholder": "Введите название папки для открытия в боковом проводнике…",
-    "vaultRoot": "/ (корень хранилища)"
+    "vaultRoot": "/ (корень хранилища)",
+    "previewError": "Не удалось прочитать этот файл."
   },
   "focusToolbar": {
     "exitTitle": "Выйти из режима фокуса (esc)",
@@ -573,7 +576,8 @@
       "delta": "(+{{delta}})",
       "goalBanner": "{{count}} / {{goal}} слов — {{pct}}%",
       "dismiss": "Закрыть"
-    }
+    },
+    "operationFailed": "Операция не удалась: {{error}}"
   },
   "sprintSummary": {
     "title": "Спринт завершён!",

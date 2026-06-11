@@ -144,6 +144,7 @@ export class WordPressClient {
 
   private async ensureTags(site: WordPressSite, tagNames: string[]): Promise<number[]> {
     const ids: number[] = [];
+    const skipped: string[] = [];
 
     for (const name of tagNames) {
       try {
@@ -168,8 +169,17 @@ export class WordPressClient {
         });
         if (createResp.status >= 200 && createResp.status < 300) {
           ids.push((createResp.json as WPApiTag).id);
+        } else {
+          skipped.push(name);
         }
-      } catch { /* skip this tag */ }
+      } catch {
+        skipped.push(name);
+      }
+    }
+
+    if (skipped.length > 0) {
+      // The post still publishes — but tell the user which tags didn't make it
+      new Notice(t('wpClient.tagsSkipped', { tags: skipped.join(', ') }));
     }
 
     return ids;
