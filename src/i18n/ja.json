@@ -274,7 +274,10 @@
     "exportedTo": "{{path}} にエクスポートしました",
     "exportedHtmlTo": "HTMLを {{path}} にエクスポートしました",
     "pdfRequiresPandoc": "PDFエクスポートにはpandocが必要です。pandocをインストールして設定でパスを指定してください。",
-    "noActiveDocument": "開いているドキュメントがありません。ファイルを開くか、エクスポート範囲を「プロジェクト全体」に変更してください。"
+    "noActiveDocument": "開いているドキュメントがありません。ファイルを開くか、エクスポート範囲を「プロジェクト全体」に変更してください。",
+    "byAuthor": "著者：{{author}}",
+    "approxWords": "約 {{n}} 語",
+    "byline": "著"
   },
   "wpClient": {
     "authFailed": "認証に失敗しました。ユーザー名とアプリケーションパスワードを確認してください。",
@@ -609,5 +612,9 @@
       "hoursMinutes": "{{hours}}時間 {{mins}}分",
       "hours": "{{hours}}時間"
     }
+  },
+  "epub": {
+    "toc": "目次",
+    "cover": "表紙"
   }
 }

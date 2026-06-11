@@ -46,7 +46,7 @@ export class CompilePreviewView extends ItemView {
       addTitlePage: true,
     };
 
-    this.content = await this.plugin.exportEngine.compileContent(exportOpts);
+    this.content = this.plugin.exportEngine.toMarkdown(await this.plugin.exportEngine.compileContent(exportOpts));
     this.buildJumpItems();
     this.render();
   }
