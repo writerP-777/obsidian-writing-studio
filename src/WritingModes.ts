@@ -1,4 +1,5 @@
-import { App, Notice } from 'obsidian';
+import { App, MarkdownView, Notice } from 'obsidian';
+import type { WorkspaceLeaf } from 'obsidian';
 import type WritingStudioPlugin from '../main';
 import { WritingModeType, WRITING_MODE_CONFIGS } from '../models/WritingMode';
 import { t } from './i18n';
@@ -8,6 +9,7 @@ export class WritingModes {
   private app: App;
   private currentMode: WritingModeType = 'none';
   private statusBarEl: HTMLElement | null = null;
+  private reviewPrior: { leaf: WorkspaceLeaf; mode: string } | null = null;
 
   constructor(plugin: WritingStudioPlugin) {
     this.plugin = plugin;
@@ -23,7 +25,7 @@ export class WritingModes {
     return this.currentMode;
   }
 
-  async switchMode(mode: WritingModeType): Promise<void> {
+  async switchMode(mode: WritingModeType, silent = false): Promise<void> {
     if (this.currentMode === mode) return;
     this.currentMode = mode;
     const config = WRITING_MODE_CONFIGS[mode];
@@ -57,14 +59,18 @@ export class WritingModes {
     // Reading View
     if (config.forceReadingView) {
       this.forceReadingView();
+    } else {
+      this.restoreEditorViewMode();
     }
 
     this.updateStatusBar();
     this.plugin.settings.currentWritingMode = mode;
     await this.plugin.saveSettings();
 
-    const modeLabel = mode === 'none' ? t('writingModes.normal') : t(`launcher.mode.${mode}`);
-    new Notice(t('writingModes.switchedTo', { mode: modeLabel }));
+    if (!silent) {
+      const modeLabel = mode === 'none' ? t('writingModes.normal') : t(`launcher.mode.${mode}`);
+      new Notice(t('writingModes.switchedTo', { mode: modeLabel }));
+    }
   }
 
   private collapseSidebars(): void {
@@ -83,9 +89,24 @@ export class WritingModes {
 
   private forceReadingView(): void {
     const leaf = this.app.workspace.getMostRecentLeaf();
-    if (leaf && leaf.view.getViewType() === 'markdown') {
-      (leaf.view as unknown as { setState(s: { mode: string }, o: { history: boolean }): void }).setState({ mode: 'preview' }, { history: false });
+    if (!leaf || !(leaf.view instanceof MarkdownView)) return;
+    const mode = leaf.view.getMode();
+    if (mode !== 'preview') {
+      this.reviewPrior = { leaf, mode };
     }
+    void this.setLeafMode(leaf, 'preview');
+  }
+
+  private restoreEditorViewMode(): void {
+    const prior = this.reviewPrior;
+    this.reviewPrior = null;
+    if (!prior || !(prior.leaf.view instanceof MarkdownView)) return;
+    void this.setLeafMode(prior.leaf, prior.mode);
+  }
+
+  private async setLeafMode(leaf: WorkspaceLeaf, mode: string): Promise<void> {
+    const state = leaf.getViewState();
+    await leaf.setViewState({ ...state, state: { ...state.state, mode } });
   }
 
   private updateStatusBar(): void {
@@ -103,13 +124,21 @@ export class WritingModes {
   restore(): void {
     const saved = this.plugin.settings.currentWritingMode;
     if (saved && saved !== 'none') {
-      void this.switchMode(saved);
+      // Silent: a startup restore should not toast on every launch
+      void this.switchMode(saved, true);
     }
   }
 
   destroy(): void {
-    if (this.currentMode !== 'none') {
-      void this.switchMode('none');
+    // Teardown restores workspace state only — it must never write settings.
+    // switchMode('none') here would persist 'none' on every clean shutdown,
+    // leaving restore() nothing to restore.
+    if (this.currentMode === 'none') return;
+    const config = WRITING_MODE_CONFIGS[this.currentMode];
+    if (!config.sidebarsVisible) {
+      this.expandSidebars();
     }
+    this.restoreEditorViewMode();
+    this.currentMode = 'none';
   }
 }

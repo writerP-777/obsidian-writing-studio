@@ -17,6 +17,10 @@ export class TFolder {
   }
 }
 
+export class MarkdownView {}
+
+export class WorkspaceLeaf {}
+
 export class Notice {
   static messages: string[] = [];
   constructor(message = '') {
