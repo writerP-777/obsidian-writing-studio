@@ -174,7 +174,8 @@
       "publishToWordPress": "WordPress पर प्रकाशित करें",
       "delete": "हटाएं"
     },
-    "wordCountSuffix": "{{count}}श"
+    "wordCountSuffix": "{{count}}श",
+    "fileNotFound": "फ़ाइल अब मौजूद नहीं है: {{path}}"
   },
   "launcher": {
     "displayText": "राइटिंग स्टूडियो",
@@ -280,7 +281,8 @@
     "connectedAs": "\"{{site}}\" से \"{{user}}\" के रूप में कनेक्ट",
     "networkError": "नेटवर्क त्रुटि: {{error}}",
     "httpError": "HTTP {{status}}",
-    "fetchCategoriesFailed": "श्रेणियां प्राप्त करने में विफल: {{error}}"
+    "fetchCategoriesFailed": "श्रेणियां प्राप्त करने में विफल: {{error}}",
+    "tagsSkipped": "कुछ टैग नहीं जोड़े जा सके: {{tags}}"
   },
   "folderSidebar": {
     "displayText": "फ़ोल्डर एक्सप्लोरर",
@@ -309,7 +311,8 @@
       "subfolders": "उपफ़ोल्डर"
     },
     "pickerPlaceholder": "साइडबार एक्सप्लोरर में खोलने के लिए फ़ोल्डर नाम लिखें…",
-    "vaultRoot": "/ (vault मूल)"
+    "vaultRoot": "/ (vault मूल)",
+    "previewError": "यह फ़ाइल पढ़ी नहीं जा सकी।"
   },
   "focusToolbar": {
     "exitTitle": "फ़ोकस मोड से बाहर निकलें (esc)",
@@ -567,7 +570,8 @@
       "delta": "(+{{delta}})",
       "goalBanner": "{{count}} / {{goal}} शब्द — {{pct}}%",
       "dismiss": "बंद करें"
-    }
+    },
+    "operationFailed": "कार्रवाई विफल रही: {{error}}"
   },
   "sprintSummary": {
     "title": "स्प्रिंट पूर्ण!",

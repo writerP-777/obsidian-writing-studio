@@ -148,7 +148,10 @@ export class LauncherView extends ItemView {
       } else {
         wcRow.createSpan({ text: this.plugin.statsTracker.calculateReadingTime(totalWords), cls: 'ws-launcher-wc-goal' });
       }
-    } catch { /* skip if project has no files yet */ }
+    } catch (e) {
+      // Card stays minimal when stats can't load, but don't swallow real bugs
+      console.error('[Writing Studio] project card stats', e);
+    }
 
     const binderBtn = card.createEl('button', { cls: 'ws-launcher-action-btn', text: t('launcher.openBinder') });
     binderBtn.onclick = () => { void this.plugin.openBinder(); };

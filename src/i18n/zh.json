@@ -174,7 +174,8 @@
       "publishToWordPress": "发布到 WordPress",
       "delete": "删除"
     },
-    "wordCountSuffix": "{{count}}字"
+    "wordCountSuffix": "{{count}}字",
+    "fileNotFound": "文件已不存在：{{path}}"
   },
   "launcher": {
     "displayText": "写作工作室",
@@ -280,7 +281,8 @@
     "connectedAs": "已以 \"{{user}}\" 身份连接到 \"{{site}}\"",
     "networkError": "网络错误：{{error}}",
     "httpError": "HTTP {{status}}",
-    "fetchCategoriesFailed": "获取分类失败：{{error}}"
+    "fetchCategoriesFailed": "获取分类失败：{{error}}",
+    "tagsSkipped": "部分标签无法添加：{{tags}}"
   },
   "folderSidebar": {
     "displayText": "文件夹浏览器",
@@ -309,7 +311,8 @@
       "subfolders": "子文件夹"
     },
     "pickerPlaceholder": "输入文件夹名称以在侧边栏浏览器中打开…",
-    "vaultRoot": "/ (仓库根目录)"
+    "vaultRoot": "/ (仓库根目录)",
+    "previewError": "无法读取此文件。"
   },
   "focusToolbar": {
     "exitTitle": "退出专注模式 (esc)",
@@ -567,7 +570,8 @@
       "delta": "(+{{delta}})",
       "goalBanner": "{{count}} / {{goal}} 字 — {{pct}}%",
       "dismiss": "关闭"
-    }
+    },
+    "operationFailed": "操作失败：{{error}}"
   },
   "sprintSummary": {
     "title": "冲刺完成！",

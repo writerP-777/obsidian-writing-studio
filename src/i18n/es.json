@@ -174,7 +174,8 @@
       "publishToWordPress": "Publicar en WordPress",
       "delete": "Eliminar"
     },
-    "wordCountSuffix": "{{count}}p"
+    "wordCountSuffix": "{{count}}p",
+    "fileNotFound": "El archivo ya no existe: {{path}}"
   },
   "launcher": {
     "displayText": "Estudio de escritura",
@@ -280,7 +281,8 @@
     "connectedAs": "Conectado como \"{{user}}\" en \"{{site}}\"",
     "networkError": "Error de red: {{error}}",
     "httpError": "HTTP {{status}}",
-    "fetchCategoriesFailed": "Error al obtener categorías: {{error}}"
+    "fetchCategoriesFailed": "Error al obtener categorías: {{error}}",
+    "tagsSkipped": "Algunas etiquetas no se pudieron añadir: {{tags}}"
   },
   "folderSidebar": {
     "displayText": "Explorador de carpetas",
@@ -309,7 +311,8 @@
       "subfolders": "Subcarpetas"
     },
     "pickerPlaceholder": "Escribe un nombre de carpeta para abrir en el explorador lateral…",
-    "vaultRoot": "/ (raíz del vault)"
+    "vaultRoot": "/ (raíz del vault)",
+    "previewError": "No se pudo leer este archivo."
   },
   "focusToolbar": {
     "exitTitle": "Salir del modo foco (esc)",
@@ -567,7 +570,8 @@
       "delta": "(+{{delta}})",
       "goalBanner": "{{count}} / {{goal}} palabras — {{pct}}%",
       "dismiss": "Cerrar"
-    }
+    },
+    "operationFailed": "La operación falló: {{error}}"
   },
   "sprintSummary": {
     "title": "¡Sprint completado!",

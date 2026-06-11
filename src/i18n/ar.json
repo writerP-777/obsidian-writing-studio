@@ -174,7 +174,8 @@
       "publishToWordPress": "نشر على WordPress",
       "delete": "حذف"
     },
-    "wordCountSuffix": "{{count}}ك"
+    "wordCountSuffix": "{{count}}ك",
+    "fileNotFound": "الملف لم يعد موجودًا: {{path}}"
   },
   "launcher": {
     "displayText": "استوديو الكتابة",
@@ -283,7 +284,8 @@
     "connectedAs": "متصل بـ \"{{site}}\" بوصفك \"{{user}}\"",
     "networkError": "خطأ في الشبكة: {{error}}",
     "httpError": "HTTP {{status}}",
-    "fetchCategoriesFailed": "فشل جلب الفئات: {{error}}"
+    "fetchCategoriesFailed": "فشل جلب الفئات: {{error}}",
+    "tagsSkipped": "تعذرت إضافة بعض الوسوم: {{tags}}"
   },
   "folderSidebar": {
     "displayText": "مستكشف المجلدات",
@@ -312,7 +314,8 @@
       "subfolders": "المجلدات الفرعية"
     },
     "pickerPlaceholder": "اكتب اسم مجلد لفتحه في مستكشف الشريط الجانبي…",
-    "vaultRoot": "/ (جذر المخزن)"
+    "vaultRoot": "/ (جذر المخزن)",
+    "previewError": "تعذرت قراءة هذا الملف."
   },
   "focusToolbar": {
     "exitTitle": "الخروج من وضع التركيز (esc)",
@@ -578,7 +581,8 @@
       "delta": "(+{{delta}})",
       "goalBanner": "{{count}} / {{goal}} كلمة — {{pct}}%",
       "dismiss": "إغلاق"
-    }
+    },
+    "operationFailed": "فشلت العملية: {{error}}"
   },
   "sprintSummary": {
     "title": "اكتملت الجلسة!",

@@ -14,6 +14,7 @@ import { TargetsDashboardModal } from '../modals/TargetsDashboardModal';
 import { PublishModal } from '../modals/PublishModal';
 import { ScanFolderModal } from '../modals/ScanFolderModal';
 import { t } from './i18n';
+import { safeHandler } from './safeHandler';
 
 export const BINDER_VIEW_TYPE = 'writing-studio-binder';
 
@@ -360,7 +361,8 @@ export class BinderView extends ItemView {
     const commit = async () => {
       el.contentEditable = 'false';
       const newTitle = el.textContent?.trim() || item.title;
-      if (newTitle !== item.title) {
+      if (newTitle === item.title) return;
+      try {
         const file = this.app.vault.getAbstractFileByPath(item.filePath);
         if (file instanceof TFile) {
           await this.app.fileManager.processFrontMatter(file, (fm: Record<string, unknown>) => {
@@ -374,10 +376,15 @@ export class BinderView extends ItemView {
         }
         item.title = newTitle;
         await this.saveBinder();
+      } catch (e) {
+        // Rename failed (target exists, illegal name) — without this the UI
+        // shows the new title while the file keeps the old name
+        el.textContent = item.title;
+        new Notice(t('main.operationFailed', { error: e instanceof Error ? e.message : String(e) }));
       }
     };
 
-    el.onblur = commit;
+    el.onblur = () => { void commit(); };
     el.onkeydown = (e) => {
       if (e.key === 'Enter') { e.preventDefault(); el.blur(); }
       if (e.key === 'Escape') { el.textContent = item.title; el.blur(); }
@@ -387,22 +394,22 @@ export class BinderView extends ItemView {
   private showContextMenu(e: MouseEvent, item: BinderItem): void {
     const menu = new Menu();
 
-    menu.addItem(i => i.setTitle(t('binder.menu.openDocument')).setIcon('file-text').onClick(() => { void this.openDocument(item); }));
-    menu.addItem(i => i.setTitle(t('binder.menu.newChildDocument')).setIcon('plus').onClick(() => { void this.createNewDocument(item.id); }));
+    menu.addItem(i => i.setTitle(t('binder.menu.openDocument')).setIcon('file-text').onClick(safeHandler(() => this.openDocument(item))));
+    menu.addItem(i => i.setTitle(t('binder.menu.newChildDocument')).setIcon('plus').onClick(safeHandler(() => this.createNewDocument(item.id))));
     menu.addSeparator();
-    menu.addItem(i => i.setTitle(t('binder.menu.setStatusDraft')).onClick(() => { void this.setItemStatus(item, 'draft'); }));
-    menu.addItem(i => i.setTitle(t('binder.menu.setStatusInProgress')).onClick(() => { void this.setItemStatus(item, 'in-progress'); }));
-    menu.addItem(i => i.setTitle(t('binder.menu.setStatusComplete')).onClick(() => { void this.setItemStatus(item, 'complete'); }));
-    menu.addItem(i => i.setTitle(t('binder.menu.setStatusPublished')).onClick(() => { void this.setItemStatus(item, 'published'); }));
+    menu.addItem(i => i.setTitle(t('binder.menu.setStatusDraft')).onClick(safeHandler(() => this.setItemStatus(item, 'draft'))));
+    menu.addItem(i => i.setTitle(t('binder.menu.setStatusInProgress')).onClick(safeHandler(() => this.setItemStatus(item, 'in-progress'))));
+    menu.addItem(i => i.setTitle(t('binder.menu.setStatusComplete')).onClick(safeHandler(() => this.setItemStatus(item, 'complete'))));
+    menu.addItem(i => i.setTitle(t('binder.menu.setStatusPublished')).onClick(safeHandler(() => this.setItemStatus(item, 'published'))));
     menu.addSeparator();
-    menu.addItem(i => i.setTitle(t('binder.menu.duplicate')).setIcon('copy').onClick(() => { void this.duplicateItem(item); }));
-    menu.addItem(i => i.setTitle(t('binder.menu.moveToResearch')).setIcon('folder').onClick(() => { void this.moveToResearch(item); }));
+    menu.addItem(i => i.setTitle(t('binder.menu.duplicate')).setIcon('copy').onClick(safeHandler(() => this.duplicateItem(item))));
+    menu.addItem(i => i.setTitle(t('binder.menu.moveToResearch')).setIcon('folder').onClick(safeHandler(() => this.moveToResearch(item))));
     menu.addSeparator();
     menu.addItem(i => i.setTitle(t('binder.menu.publishToWordPress')).setIcon('globe').onClick(() => {
       new PublishModal(this.app, this.plugin, item.filePath).open();
     }));
     menu.addSeparator();
-    menu.addItem(i => i.setTitle(t('binder.menu.delete')).setIcon('trash').onClick(() => { void this.deleteItem(item); }));
+    menu.addItem(i => i.setTitle(t('binder.menu.delete')).setIcon('trash').onClick(safeHandler(() => this.deleteItem(item))));
 
     menu.showAtMouseEvent(e);
   }
@@ -448,13 +455,21 @@ export class BinderView extends ItemView {
 
   private async moveToResearch(item: BinderItem): Promise<void> {
     if (!this.activeProject) return;
+    const file = this.app.vault.getAbstractFileByPath(item.filePath);
+    if (!(file instanceof TFile)) {
+      // Do not mutate the binder when the move cannot happen — the old code
+      // pointed the item at a path no file was ever moved to
+      new Notice(t('binder.fileNotFound', { path: item.filePath }));
+      return;
+    }
     const researchDir = normalizePath(`${this.activeProject.folderPath}/Research`);
+    if (!this.app.vault.getAbstractFileByPath(researchDir)) {
+      // Research/ is only guaranteed at project creation; the user may have deleted it
+      await this.app.vault.createFolder(researchDir);
+    }
     const fileName = item.filePath.split('/').pop() || 'note.md';
     const newPath = normalizePath(`${researchDir}/${fileName}`);
-    const file = this.app.vault.getAbstractFileByPath(item.filePath);
-    if (file instanceof TFile) {
-      await this.app.vault.rename(file, newPath);
-    }
+    await this.app.vault.rename(file, newPath);
     item.filePath = newPath;
     item.type = 'note';
     await this.saveBinder();

@@ -174,7 +174,8 @@
       "publishToWordPress": "WordPress-এ প্রকাশ করুন",
       "delete": "মুছুন"
     },
-    "wordCountSuffix": "{{count}}শ"
+    "wordCountSuffix": "{{count}}শ",
+    "fileNotFound": "ফাইলটি আর নেই: {{path}}"
   },
   "launcher": {
     "displayText": "লেখার স্টুডিও",
@@ -280,7 +281,8 @@
     "connectedAs": "\"{{site}}\"-এ \"{{user}}\" হিসেবে সংযুক্ত",
     "networkError": "নেটওয়ার্ক ত্রুটি: {{error}}",
     "httpError": "HTTP {{status}}",
-    "fetchCategoriesFailed": "বিভাগ আনতে ব্যর্থ: {{error}}"
+    "fetchCategoriesFailed": "বিভাগ আনতে ব্যর্থ: {{error}}",
+    "tagsSkipped": "কিছু ট্যাগ যোগ করা যায়নি: {{tags}}"
   },
   "folderSidebar": {
     "displayText": "ফোল্ডার এক্সপ্লোরার",
@@ -309,7 +311,8 @@
       "subfolders": "সাবফোল্ডার"
     },
     "pickerPlaceholder": "সাইডবার এক্সপ্লোরারে খুলতে ফোল্ডারের নাম লিখুন…",
-    "vaultRoot": "/ (ভল্ট মূল)"
+    "vaultRoot": "/ (ভল্ট মূল)",
+    "previewError": "এই ফাইলটি পড়া যায়নি।"
   },
   "focusToolbar": {
     "exitTitle": "ফোকাস মোড থেকে বের হন (esc)",
@@ -567,7 +570,8 @@
       "delta": "(+{{delta}})",
       "goalBanner": "{{count}} / {{goal}} শব্দ — {{pct}}%",
       "dismiss": "বন্ধ করুন"
-    }
+    },
+    "operationFailed": "কার্যক্রম ব্যর্থ হয়েছে: {{error}}"
   },
   "sprintSummary": {
     "title": "স্প্রিন্ট সম্পন্ন!",
