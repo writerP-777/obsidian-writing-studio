@@ -461,6 +461,10 @@ export class BinderView extends ItemView {
     menu.addItem(i => i.setTitle(t('binder.menu.openDocument')).setIcon('file-text').onClick(safeHandler(() => this.openDocument(item))));
     menu.addItem(i => i.setTitle(t('binder.menu.newChildDocument')).setIcon('plus').onClick(safeHandler(() => this.createNewDocument(item.id))));
     menu.addSeparator();
+    // Keyboard-accessible reorder — drag-and-drop was the only mechanism
+    menu.addItem(i => i.setTitle(t('binder.menu.moveUp')).setIcon('arrow-up').onClick(safeHandler(() => this.nudgeItem(item, -1))));
+    menu.addItem(i => i.setTitle(t('binder.menu.moveDown')).setIcon('arrow-down').onClick(safeHandler(() => this.nudgeItem(item, 1))));
+    menu.addSeparator();
     menu.addItem(i => i.setTitle(t('binder.menu.setStatusDraft')).onClick(safeHandler(() => this.setItemStatus(item, 'draft'))));
     menu.addItem(i => i.setTitle(t('binder.menu.setStatusInProgress')).onClick(safeHandler(() => this.setItemStatus(item, 'in-progress'))));
     menu.addItem(i => i.setTitle(t('binder.menu.setStatusComplete')).onClick(safeHandler(() => this.setItemStatus(item, 'complete'))));
@@ -658,6 +662,32 @@ export class BinderView extends ItemView {
     this.reorderItems(binder.items, 1);
     await this.plugin.projectManager.saveBinder(binder);
     await this.refresh();
+  }
+
+  // Swap an item with its previous/next sibling
+  private async nudgeItem(item: BinderItem, delta: -1 | 1): Promise<void> {
+    if (!this.activeProject) return;
+    const binder = await this.plugin.projectManager.loadBinder(this.activeProject);
+    const siblings = this.findSiblings(binder.items, item.id);
+    if (!siblings) return;
+    const idx = siblings.findIndex(i => i.id === item.id);
+    const target = idx + delta;
+    if (idx < 0 || target < 0 || target >= siblings.length) return;
+    [siblings[idx], siblings[target]] = [siblings[target], siblings[idx]];
+    this.reorderItems(binder.items, 1);
+    await this.plugin.projectManager.saveBinder(binder);
+    await this.refresh();
+  }
+
+  private findSiblings(items: BinderItem[], id: string): BinderItem[] | null {
+    if (items.some(i => i.id === id)) return items;
+    for (const item of items) {
+      if (item.children) {
+        const found = this.findSiblings(item.children, id);
+        if (found) return found;
+      }
+    }
+    return null;
   }
 
   private async moveItemToRoot(sourceId: string): Promise<void> {

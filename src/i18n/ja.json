@@ -142,7 +142,8 @@
       "testConnectionDesc": "認証情報と接続性を確認します。",
       "testing": "テスト中…",
       "removeSite": "サイトを削除",
-      "buyMeACoffee": "コーヒーをおごる"
+      "buyMeACoffee": "コーヒーをおごる",
+      "newSiteName": "新しいサイト"
     }
   },
   "binder": {
@@ -172,7 +173,9 @@
       "duplicate": "複製",
       "moveToResearch": "リサーチに移動",
       "publishToWordPress": "WordPressに公開",
-      "delete": "削除"
+      "delete": "削除",
+      "moveUp": "上に移動",
+      "moveDown": "下に移動"
     },
     "wordCountSuffix": "{{count}}語",
     "fileNotFound": "ファイルが存在しません：{{path}}",
@@ -343,7 +346,8 @@
   "projectManager": {
     "errorFolderExists": "プロジェクトフォルダーに「{{folder}}」という名前のフォルダーが既に存在します。別のタイトルを選んでください。",
     "corruptBinder": "「{{project}}」の _binder.json ファイルを読み取れませんでした。バックアップを _binder.json.bak としてプロジェクトフォルダーに保存しました。",
-    "corruptProject": "「{{folder}}」のプロジェクトファイルが破損しているため、プロジェクトを読み込めませんでした。"
+    "corruptProject": "「{{folder}}」のプロジェクトファイルが破損しているため、プロジェクトを読み込めませんでした。",
+    "corruptLog": "{{project}} の執筆ログを読み取れませんでした — 新しいログを開始します。"
   },
   "projectModal": {
     "title": "新規執筆プロジェクト",

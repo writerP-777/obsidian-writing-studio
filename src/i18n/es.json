@@ -142,7 +142,8 @@
       "testConnectionDesc": "Verificar credenciales y conectividad.",
       "testing": "Probando…",
       "removeSite": "Eliminar sitio",
-      "buyMeACoffee": "Invítame a un café"
+      "buyMeACoffee": "Invítame a un café",
+      "newSiteName": "Nuevo sitio"
     }
   },
   "binder": {
@@ -172,7 +173,9 @@
       "duplicate": "Duplicar",
       "moveToResearch": "Mover a investigación",
       "publishToWordPress": "Publicar en WordPress",
-      "delete": "Eliminar"
+      "delete": "Eliminar",
+      "moveUp": "Mover hacia arriba",
+      "moveDown": "Mover hacia abajo"
     },
     "wordCountSuffix": "{{count}}p",
     "fileNotFound": "El archivo ya no existe: {{path}}",
@@ -343,7 +346,8 @@
   "projectManager": {
     "errorFolderExists": "Ya existe una carpeta llamada \"{{folder}}\" en su carpeta de proyectos. Elija un título diferente.",
     "corruptBinder": "No se pudo leer el archivo _binder.json de \"{{project}}\". Se guardó una copia de seguridad como _binder.json.bak en la carpeta del proyecto.",
-    "corruptProject": "El archivo del proyecto en \"{{folder}}\" está dañado y no se pudo cargar el proyecto."
+    "corruptProject": "El archivo del proyecto en \"{{folder}}\" está dañado y no se pudo cargar el proyecto.",
+    "corruptLog": "No se pudo leer el registro de escritura de {{project}}; se iniciará un registro nuevo."
   },
   "projectModal": {
     "title": "Nuevo proyecto de escritura",

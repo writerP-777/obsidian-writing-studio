@@ -18,7 +18,7 @@ import { FocusMode } from './src/FocusMode';
 import { TypographyMode } from './src/TypographyMode';
 import { WritingModes } from './src/WritingModes';
 import { SprintTimer } from './src/SprintTimer';
-import { ExportEngine } from './src/ExportEngine';
+import { ExportEngine, type ExportFormat } from './src/ExportEngine';
 import { WordPressClient } from './src/WordPressClient';
 import { ProjectManager } from './src/ProjectManager';
 import { StatsTracker } from './src/StatsTracker';
@@ -106,7 +106,7 @@ export interface WritingStudioSettings {
   // Daily Writing Log
   appendToDailyNote: boolean;
   // Export
-  defaultExportFormat: 'pdf' | 'docx' | 'rtf' | 'md' | 'html';
+  defaultExportFormat: ExportFormat;
   defaultPaperSize: 'letter' | 'a4';
   defaultExportFont: string;
   defaultExportFontSize: number;
@@ -895,9 +895,8 @@ class WordCountGoalModal extends Modal {
     contentEl.addClass('ws-goal-modal');
     contentEl.createEl('h2', { text: t('wordCountGoal.title') });
 
-    const content = await this.app.vault.read(this.file);
-    const fm = this.plugin.fmManager.parseFrontmatter(content);
-    this.goal = (fm?.['word-count-goal'] as number) || 0;
+    const cache = this.app.metadataCache.getFileCache(this.file);
+    this.goal = Number(cache?.frontmatter?.['word-count-goal']) || 0;
 
     new Setting(contentEl)
       .setName(t('wordCountGoal.name'))
@@ -911,8 +910,8 @@ class WordCountGoalModal extends Modal {
 
     const saveBtn = btnRow.createEl('button', { cls: 'mod-cta', text: t('wordCountGoal.save') });
     saveBtn.onclick = async () => {
-      await this.app.vault.process(this.file, (data) => {
-        return this.plugin.fmManager.setFrontmatterField(data, 'word-count-goal', this.goal);
+      await this.app.fileManager.processFrontMatter(this.file, (fm: Record<string, unknown>) => {
+        fm['word-count-goal'] = this.goal;
       });
       this.close();
     };

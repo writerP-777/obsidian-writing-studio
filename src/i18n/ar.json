@@ -142,7 +142,8 @@
       "testConnectionDesc": "التحقق من بيانات الاعتماد والاتصال.",
       "testing": "جارٍ الاختبار…",
       "removeSite": "إزالة الموقع",
-      "buyMeACoffee": "اشترِ لي قهوة"
+      "buyMeACoffee": "اشترِ لي قهوة",
+      "newSiteName": "موقع جديد"
     }
   },
   "binder": {
@@ -172,7 +173,9 @@
       "duplicate": "تكرار",
       "moveToResearch": "نقل إلى البحث",
       "publishToWordPress": "نشر على WordPress",
-      "delete": "حذف"
+      "delete": "حذف",
+      "moveUp": "نقل لأعلى",
+      "moveDown": "نقل لأسفل"
     },
     "wordCountSuffix": "{{count}}ك",
     "fileNotFound": "الملف لم يعد موجودًا: {{path}}",
@@ -350,7 +353,8 @@
   "projectManager": {
     "errorFolderExists": "يوجد بالفعل مجلد باسم \"{{folder}}\" في مجلد مشاريعك. اختر عنوانًا مختلفًا.",
     "corruptBinder": "تعذرت قراءة ملف _binder.json الخاص بـ \"{{project}}\". تم حفظ نسخة احتياطية باسم _binder.json.bak في مجلد المشروع.",
-    "corruptProject": "ملف المشروع في \"{{folder}}\" تالف ولم يتم تحميل المشروع."
+    "corruptProject": "ملف المشروع في \"{{folder}}\" تالف ولم يتم تحميل المشروع.",
+    "corruptLog": "تعذر قراءة سجل الكتابة لـ {{project}} — سيتم بدء سجل جديد."
   },
   "projectModal": {
     "title": "مشروع كتابة جديد",

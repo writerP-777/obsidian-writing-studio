@@ -61,8 +61,11 @@ export class TypographyMode {
 
   private applyCustomProperties(): void {
     const settings = this.plugin.settings;
+    // Strip characters that would break out of the quoted CSS font name —
+    // a stray quote previously invalidated the whole font-family value
+    const safeCustom = settings.customFontName.replace(/["'\\;{}():]/g, '').trim();
     const fontStack = settings.typographyFont === 'custom'
-      ? `"${settings.customFontName}", system-ui, sans-serif`
+      ? (safeCustom ? `"${safeCustom}", system-ui, sans-serif` : 'system-ui, sans-serif')
       : FONT_STACKS[settings.typographyFont] || FONT_STACKS.mono;
 
     const maxChars = settings.maxLineLength || 65;

@@ -142,7 +142,8 @@
       "testConnectionDesc": "자격 증명과 연결을 확인합니다.",
       "testing": "테스트 중…",
       "removeSite": "사이트 제거",
-      "buyMeACoffee": "커피 한 잔 사주기"
+      "buyMeACoffee": "커피 한 잔 사주기",
+      "newSiteName": "새 사이트"
     }
   },
   "binder": {
@@ -172,7 +173,9 @@
       "duplicate": "복제",
       "moveToResearch": "리서치로 이동",
       "publishToWordPress": "WordPress에 게시",
-      "delete": "삭제"
+      "delete": "삭제",
+      "moveUp": "위로 이동",
+      "moveDown": "아래로 이동"
     },
     "wordCountSuffix": "{{count}}자",
     "fileNotFound": "파일이 더 이상 존재하지 않습니다: {{path}}",
@@ -343,7 +346,8 @@
   "projectManager": {
     "errorFolderExists": "프로젝트 폴더에 \"{{folder}}\"(이)라는 이름의 폴더가 이미 있습니다. 다른 제목을 선택하세요.",
     "corruptBinder": "\"{{project}}\"의 _binder.json 파일을 읽을 수 없습니다. 백업이 프로젝트 폴더에 _binder.json.bak(으)로 저장되었습니다.",
-    "corruptProject": "\"{{folder}}\"의 프로젝트 파일이 손상되어 프로젝트를 불러올 수 없습니다."
+    "corruptProject": "\"{{folder}}\"의 프로젝트 파일이 손상되어 프로젝트를 불러올 수 없습니다.",
+    "corruptLog": "{{project}}의 글쓰기 로그를 읽을 수 없습니다 — 새 로그를 시작합니다."
   },
   "projectModal": {
     "title": "새 글쓰기 프로젝트",

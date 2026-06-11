@@ -40,7 +40,7 @@ export class PublishModal extends Modal {
     }
 
     // Load existing WP meta from frontmatter
-    await this.loadExistingMeta();
+    this.loadExistingMeta();
 
     // Site selector
     new Setting(contentEl)
@@ -156,12 +156,11 @@ export class PublishModal extends Modal {
     void this.onOpen();
   }
 
-  private async loadExistingMeta(): Promise<void> {
+  private loadExistingMeta(): void {
     const file = this.app.vault.getAbstractFileByPath(this.filePath);
     if (!(file instanceof TFile)) return;
 
-    const content = await this.app.vault.read(file);
-    const fm = this.plugin.fmManager.parseFrontmatter(content);
+    const fm = this.app.metadataCache.getFileCache(file)?.frontmatter;
 
     if (fm) {
       this.postTitle = (fm['title'] as string) || file.basename;
@@ -209,16 +208,15 @@ export class PublishModal extends Modal {
         existingPostId: updateExisting ? this.existingPostId : undefined,
       });
 
-      // Store WP meta in frontmatter
-      await this.app.vault.process(file, (data) => {
-        return this.plugin.fmManager.setWpMeta(data, {
-          wpSite: site.nickname,
-          wpPostId: result.postId,
-          wpUrl: result.url,
-          wpStatus: result.status,
-          wpPublished: result.scheduledDate ? undefined : localDateString(),
-          wpScheduled: result.scheduledDate,
-        });
+      // Store WP meta in frontmatter — processFrontMatter handles YAML
+      // escaping, replacing the hand-rolled regex writer
+      await this.app.fileManager.processFrontMatter(file, (fm: Record<string, unknown>) => {
+        fm['wp-site'] = site.nickname;
+        fm['wp-post-id'] = result.postId;
+        fm['wp-url'] = result.url;
+        fm['wp-status'] = result.status;
+        fm['wp-published'] = result.scheduledDate ? null : localDateString();
+        fm['wp-scheduled'] = result.scheduledDate ?? null;
       });
 
       const action = this.scheduledDate ? t('publishModal.scheduled') : t('publishModal.published');

@@ -297,7 +297,10 @@ tags: [writing-studio]
       try {
         const content = await this.app.vault.read(file);
         log = JSON.parse(content) as SprintSession[];
-      } catch { /* start fresh */ }
+      } catch {
+        // Surface the reset — silently starting fresh hid sprint-history loss
+        new Notice(t('projectManager.corruptLog', { project: project.title }));
+      }
     }
 
     log.push(session);

@@ -2452,7 +2452,8 @@ var en_default = {
       testConnectionDesc: "Verify credentials and connectivity.",
       testing: "Testing\u2026",
       removeSite: "Remove site",
-      buyMeACoffee: "Buy me a coffee"
+      buyMeACoffee: "Buy me a coffee",
+      newSiteName: "New site"
     }
   },
   binder: {
@@ -2482,7 +2483,9 @@ var en_default = {
       duplicate: "Duplicate",
       moveToResearch: "Move to research",
       publishToWordPress: "Publish to WordPress",
-      delete: "Delete"
+      delete: "Delete",
+      moveUp: "Move up",
+      moveDown: "Move down"
     },
     wordCountSuffix: "{{count}}w",
     fileNotFound: "File no longer exists: {{path}}",
@@ -2653,7 +2656,8 @@ var en_default = {
   projectManager: {
     errorFolderExists: 'A folder named "{{folder}}" already exists in your projects folder. Choose a different title.',
     corruptBinder: 'The binder file for "{{project}}" could not be read. A backup was saved as _binder.json.bak in the project folder.',
-    corruptProject: 'The project file in "{{folder}}" is corrupt and the project could not be loaded.'
+    corruptProject: 'The project file in "{{folder}}" is corrupt and the project could not be loaded.',
+    corruptLog: "Writing log for {{project}} could not be read \u2014 starting a fresh log."
   },
   projectModal: {
     title: "New writing project",
@@ -3084,7 +3088,8 @@ var zh_default = {
       testConnectionDesc: "\u9A8C\u8BC1\u51ED\u636E\u548C\u8FDE\u63A5\u6027\u3002",
       testing: "\u6D4B\u8BD5\u4E2D\u2026",
       removeSite: "\u5220\u9664\u7AD9\u70B9",
-      buyMeACoffee: "\u8BF7\u6211\u559D\u548F\u5561"
+      buyMeACoffee: "\u8BF7\u6211\u559D\u548F\u5561",
+      newSiteName: "\u65B0\u7AD9\u70B9"
     }
   },
   binder: {
@@ -3114,7 +3119,9 @@ var zh_default = {
       duplicate: "\u590D\u5236",
       moveToResearch: "\u79FB\u81F3\u7814\u7A76",
       publishToWordPress: "\u53D1\u5E03\u5230 WordPress",
-      delete: "\u5220\u9664"
+      delete: "\u5220\u9664",
+      moveUp: "\u4E0A\u79FB",
+      moveDown: "\u4E0B\u79FB"
     },
     wordCountSuffix: "{{count}}\u5B57",
     fileNotFound: "\u6587\u4EF6\u5DF2\u4E0D\u5B58\u5728\uFF1A{{path}}",
@@ -3285,7 +3292,8 @@ var zh_default = {
   projectManager: {
     errorFolderExists: "\u9879\u76EE\u6587\u4EF6\u5939\u4E2D\u5DF2\u5B58\u5728\u540D\u4E3A\u201C{{folder}}\u201D\u7684\u6587\u4EF6\u5939\u3002\u8BF7\u9009\u62E9\u5176\u4ED6\u6807\u9898\u3002",
     corruptBinder: "\u65E0\u6CD5\u8BFB\u53D6\u201C{{project}}\u201D\u7684 _binder.json \u6587\u4EF6\u3002\u5907\u4EFD\u5DF2\u4FDD\u5B58\u4E3A\u9879\u76EE\u6587\u4EF6\u5939\u4E2D\u7684 _binder.json.bak\u3002",
-    corruptProject: "\u201C{{folder}}\u201D\u4E2D\u7684\u9879\u76EE\u6587\u4EF6\u5DF2\u635F\u574F\uFF0C\u65E0\u6CD5\u52A0\u8F7D\u8BE5\u9879\u76EE\u3002"
+    corruptProject: "\u201C{{folder}}\u201D\u4E2D\u7684\u9879\u76EE\u6587\u4EF6\u5DF2\u635F\u574F\uFF0C\u65E0\u6CD5\u52A0\u8F7D\u8BE5\u9879\u76EE\u3002",
+    corruptLog: "\u65E0\u6CD5\u8BFB\u53D6 {{project}} \u7684\u5199\u4F5C\u65E5\u5FD7\u2014\u2014\u5C06\u5F00\u59CB\u65B0\u7684\u65E5\u5FD7\u3002"
   },
   projectModal: {
     title: "\u65B0\u5EFA\u5199\u4F5C\u9879\u76EE",
@@ -3716,7 +3724,8 @@ var hi_default = {
       testConnectionDesc: "\u0915\u094D\u0930\u0947\u0921\u0947\u0902\u0936\u093F\u092F\u0932 \u0914\u0930 \u0915\u0928\u0947\u0915\u094D\u091F\u093F\u0935\u093F\u091F\u0940 \u0938\u0924\u094D\u092F\u093E\u092A\u093F\u0924 \u0915\u0930\u0947\u0902\u0964",
       testing: "\u092A\u0930\u0940\u0915\u094D\u0937\u0923 \u0939\u094B \u0930\u0939\u093E \u0939\u0948\u2026",
       removeSite: "\u0938\u093E\u0907\u091F \u0939\u091F\u093E\u090F\u0902",
-      buyMeACoffee: "\u092E\u0941\u091D\u0947 \u0915\u0949\u092B\u0940 \u0916\u0930\u0940\u0926\u0947\u0902"
+      buyMeACoffee: "\u092E\u0941\u091D\u0947 \u0915\u0949\u092B\u0940 \u0916\u0930\u0940\u0926\u0947\u0902",
+      newSiteName: "\u0928\u0908 \u0938\u093E\u0907\u091F"
     }
   },
   binder: {
@@ -3746,7 +3755,9 @@ var hi_default = {
       duplicate: "\u0921\u0941\u092A\u094D\u0932\u093F\u0915\u0947\u091F",
       moveToResearch: "\u0936\u094B\u0927 \u092E\u0947\u0902 \u0932\u0947 \u091C\u093E\u090F\u0902",
       publishToWordPress: "WordPress \u092A\u0930 \u092A\u094D\u0930\u0915\u093E\u0936\u093F\u0924 \u0915\u0930\u0947\u0902",
-      delete: "\u0939\u091F\u093E\u090F\u0902"
+      delete: "\u0939\u091F\u093E\u090F\u0902",
+      moveUp: "\u090A\u092A\u0930 \u0932\u0947 \u091C\u093E\u090F\u0902",
+      moveDown: "\u0928\u0940\u091A\u0947 \u0932\u0947 \u091C\u093E\u090F\u0902"
     },
     wordCountSuffix: "{{count}}\u0936",
     fileNotFound: "\u092B\u093C\u093E\u0907\u0932 \u0905\u092C \u092E\u094C\u091C\u0942\u0926 \u0928\u0939\u0940\u0902 \u0939\u0948: {{path}}",
@@ -3917,7 +3928,8 @@ var hi_default = {
   projectManager: {
     errorFolderExists: '\u0906\u092A\u0915\u0947 \u092A\u094D\u0930\u094B\u091C\u0947\u0915\u094D\u091F \u092B\u093C\u094B\u0932\u094D\u0921\u0930 \u092E\u0947\u0902 "{{folder}}" \u0928\u093E\u092E \u0915\u093E \u092B\u093C\u094B\u0932\u094D\u0921\u0930 \u092A\u0939\u0932\u0947 \u0938\u0947 \u092E\u094C\u091C\u0942\u0926 \u0939\u0948\u0964 \u0915\u094B\u0908 \u0926\u0942\u0938\u0930\u093E \u0936\u0940\u0930\u094D\u0937\u0915 \u091A\u0941\u0928\u0947\u0902\u0964',
     corruptBinder: '"{{project}}" \u0915\u0940 _binder.json \u092B\u093C\u093E\u0907\u0932 \u092A\u0922\u093C\u0940 \u0928\u0939\u0940\u0902 \u091C\u093E \u0938\u0915\u0940\u0964 \u092C\u0948\u0915\u0905\u092A \u092A\u094D\u0930\u094B\u091C\u0947\u0915\u094D\u091F \u092B\u093C\u094B\u0932\u094D\u0921\u0930 \u092E\u0947\u0902 _binder.json.bak \u0915\u0947 \u0930\u0942\u092A \u092E\u0947\u0902 \u0938\u0939\u0947\u091C\u093E \u0917\u092F\u093E\u0964',
-    corruptProject: '"{{folder}}" \u0915\u0940 \u092A\u094D\u0930\u094B\u091C\u0947\u0915\u094D\u091F \u092B\u093C\u093E\u0907\u0932 \u0926\u0942\u0937\u093F\u0924 \u0939\u0948 \u0914\u0930 \u092A\u094D\u0930\u094B\u091C\u0947\u0915\u094D\u091F \u0932\u094B\u0921 \u0928\u0939\u0940\u0902 \u0939\u094B \u0938\u0915\u093E\u0964'
+    corruptProject: '"{{folder}}" \u0915\u0940 \u092A\u094D\u0930\u094B\u091C\u0947\u0915\u094D\u091F \u092B\u093C\u093E\u0907\u0932 \u0926\u0942\u0937\u093F\u0924 \u0939\u0948 \u0914\u0930 \u092A\u094D\u0930\u094B\u091C\u0947\u0915\u094D\u091F \u0932\u094B\u0921 \u0928\u0939\u0940\u0902 \u0939\u094B \u0938\u0915\u093E\u0964',
+    corruptLog: "{{project}} \u0915\u093E \u0932\u0947\u0916\u0928 \u0932\u0949\u0917 \u092A\u0922\u093C\u093E \u0928\u0939\u0940\u0902 \u091C\u093E \u0938\u0915\u093E \u2014 \u0928\u092F\u093E \u0932\u0949\u0917 \u0936\u0941\u0930\u0942 \u0915\u093F\u092F\u093E \u091C\u093E \u0930\u0939\u093E \u0939\u0948\u0964"
   },
   projectModal: {
     title: "\u0928\u0908 \u0932\u0947\u0916\u0928 \u092A\u0930\u093F\u092F\u094B\u091C\u0928\u093E",
@@ -4348,7 +4360,8 @@ var es_default = {
       testConnectionDesc: "Verificar credenciales y conectividad.",
       testing: "Probando\u2026",
       removeSite: "Eliminar sitio",
-      buyMeACoffee: "Inv\xEDtame a un caf\xE9"
+      buyMeACoffee: "Inv\xEDtame a un caf\xE9",
+      newSiteName: "Nuevo sitio"
     }
   },
   binder: {
@@ -4378,7 +4391,9 @@ var es_default = {
       duplicate: "Duplicar",
       moveToResearch: "Mover a investigaci\xF3n",
       publishToWordPress: "Publicar en WordPress",
-      delete: "Eliminar"
+      delete: "Eliminar",
+      moveUp: "Mover hacia arriba",
+      moveDown: "Mover hacia abajo"
     },
     wordCountSuffix: "{{count}}p",
     fileNotFound: "El archivo ya no existe: {{path}}",
@@ -4549,7 +4564,8 @@ var es_default = {
   projectManager: {
     errorFolderExists: 'Ya existe una carpeta llamada "{{folder}}" en su carpeta de proyectos. Elija un t\xEDtulo diferente.',
     corruptBinder: 'No se pudo leer el archivo _binder.json de "{{project}}". Se guard\xF3 una copia de seguridad como _binder.json.bak en la carpeta del proyecto.',
-    corruptProject: 'El archivo del proyecto en "{{folder}}" est\xE1 da\xF1ado y no se pudo cargar el proyecto.'
+    corruptProject: 'El archivo del proyecto en "{{folder}}" est\xE1 da\xF1ado y no se pudo cargar el proyecto.',
+    corruptLog: "No se pudo leer el registro de escritura de {{project}}; se iniciar\xE1 un registro nuevo."
   },
   projectModal: {
     title: "Nuevo proyecto de escritura",
@@ -4980,7 +4996,8 @@ var ar_default = {
       testConnectionDesc: "\u0627\u0644\u062A\u062D\u0642\u0642 \u0645\u0646 \u0628\u064A\u0627\u0646\u0627\u062A \u0627\u0644\u0627\u0639\u062A\u0645\u0627\u062F \u0648\u0627\u0644\u0627\u062A\u0635\u0627\u0644.",
       testing: "\u062C\u0627\u0631\u064D \u0627\u0644\u0627\u062E\u062A\u0628\u0627\u0631\u2026",
       removeSite: "\u0625\u0632\u0627\u0644\u0629 \u0627\u0644\u0645\u0648\u0642\u0639",
-      buyMeACoffee: "\u0627\u0634\u062A\u0631\u0650 \u0644\u064A \u0642\u0647\u0648\u0629"
+      buyMeACoffee: "\u0627\u0634\u062A\u0631\u0650 \u0644\u064A \u0642\u0647\u0648\u0629",
+      newSiteName: "\u0645\u0648\u0642\u0639 \u062C\u062F\u064A\u062F"
     }
   },
   binder: {
@@ -5010,7 +5027,9 @@ var ar_default = {
       duplicate: "\u062A\u0643\u0631\u0627\u0631",
       moveToResearch: "\u0646\u0642\u0644 \u0625\u0644\u0649 \u0627\u0644\u0628\u062D\u062B",
       publishToWordPress: "\u0646\u0634\u0631 \u0639\u0644\u0649 WordPress",
-      delete: "\u062D\u0630\u0641"
+      delete: "\u062D\u0630\u0641",
+      moveUp: "\u0646\u0642\u0644 \u0644\u0623\u0639\u0644\u0649",
+      moveDown: "\u0646\u0642\u0644 \u0644\u0623\u0633\u0641\u0644"
     },
     wordCountSuffix: "{{count}}\u0643",
     fileNotFound: "\u0627\u0644\u0645\u0644\u0641 \u0644\u0645 \u064A\u0639\u062F \u0645\u0648\u062C\u0648\u062F\u064B\u0627: {{path}}",
@@ -5188,7 +5207,8 @@ var ar_default = {
   projectManager: {
     errorFolderExists: '\u064A\u0648\u062C\u062F \u0628\u0627\u0644\u0641\u0639\u0644 \u0645\u062C\u0644\u062F \u0628\u0627\u0633\u0645 "{{folder}}" \u0641\u064A \u0645\u062C\u0644\u062F \u0645\u0634\u0627\u0631\u064A\u0639\u0643. \u0627\u062E\u062A\u0631 \u0639\u0646\u0648\u0627\u0646\u064B\u0627 \u0645\u062E\u062A\u0644\u0641\u064B\u0627.',
     corruptBinder: '\u062A\u0639\u0630\u0631\u062A \u0642\u0631\u0627\u0621\u0629 \u0645\u0644\u0641 _binder.json \u0627\u0644\u062E\u0627\u0635 \u0628\u0640 "{{project}}". \u062A\u0645 \u062D\u0641\u0638 \u0646\u0633\u062E\u0629 \u0627\u062D\u062A\u064A\u0627\u0637\u064A\u0629 \u0628\u0627\u0633\u0645 _binder.json.bak \u0641\u064A \u0645\u062C\u0644\u062F \u0627\u0644\u0645\u0634\u0631\u0648\u0639.',
-    corruptProject: '\u0645\u0644\u0641 \u0627\u0644\u0645\u0634\u0631\u0648\u0639 \u0641\u064A "{{folder}}" \u062A\u0627\u0644\u0641 \u0648\u0644\u0645 \u064A\u062A\u0645 \u062A\u062D\u0645\u064A\u0644 \u0627\u0644\u0645\u0634\u0631\u0648\u0639.'
+    corruptProject: '\u0645\u0644\u0641 \u0627\u0644\u0645\u0634\u0631\u0648\u0639 \u0641\u064A "{{folder}}" \u062A\u0627\u0644\u0641 \u0648\u0644\u0645 \u064A\u062A\u0645 \u062A\u062D\u0645\u064A\u0644 \u0627\u0644\u0645\u0634\u0631\u0648\u0639.',
+    corruptLog: "\u062A\u0639\u0630\u0631 \u0642\u0631\u0627\u0621\u0629 \u0633\u062C\u0644 \u0627\u0644\u0643\u062A\u0627\u0628\u0629 \u0644\u0640 {{project}} \u2014 \u0633\u064A\u062A\u0645 \u0628\u062F\u0621 \u0633\u062C\u0644 \u062C\u062F\u064A\u062F."
   },
   projectModal: {
     title: "\u0645\u0634\u0631\u0648\u0639 \u0643\u062A\u0627\u0628\u0629 \u062C\u062F\u064A\u062F",
@@ -5623,7 +5643,8 @@ var fr_default = {
       testConnectionDesc: "V\xE9rifier les identifiants et la connectivit\xE9.",
       testing: "Test en cours\u2026",
       removeSite: "Supprimer le site",
-      buyMeACoffee: "Offrez-moi un caf\xE9"
+      buyMeACoffee: "Offrez-moi un caf\xE9",
+      newSiteName: "Nouveau site"
     }
   },
   binder: {
@@ -5653,7 +5674,9 @@ var fr_default = {
       duplicate: "Dupliquer",
       moveToResearch: "D\xE9placer vers la recherche",
       publishToWordPress: "Publier sur WordPress",
-      delete: "Supprimer"
+      delete: "Supprimer",
+      moveUp: "Monter",
+      moveDown: "Descendre"
     },
     wordCountSuffix: "{{count}}m",
     fileNotFound: "Le fichier n'existe plus : {{path}}",
@@ -5824,7 +5847,8 @@ var fr_default = {
   projectManager: {
     errorFolderExists: 'Un dossier nomm\xE9 "{{folder}}" existe d\xE9j\xE0 dans votre dossier de projets. Choisissez un autre titre.',
     corruptBinder: `Le fichier _binder.json de "{{project}}" n'a pas pu \xEAtre lu. Une sauvegarde a \xE9t\xE9 enregistr\xE9e sous _binder.json.bak dans le dossier du projet.`,
-    corruptProject: `Le fichier de projet dans "{{folder}}" est corrompu et le projet n'a pas pu \xEAtre charg\xE9.`
+    corruptProject: `Le fichier de projet dans "{{folder}}" est corrompu et le projet n'a pas pu \xEAtre charg\xE9.`,
+    corruptLog: "Impossible de lire le journal d\u2019\xE9criture de {{project}} \u2014 un nouveau journal va \xEAtre cr\xE9\xE9."
   },
   projectModal: {
     title: "Nouveau projet d'\xE9criture",
@@ -6255,7 +6279,8 @@ var bn_default = {
       testConnectionDesc: "\u09B6\u0982\u09B8\u09BE\u09AA\u09A4\u09CD\u09B0 \u098F\u09AC\u0982 \u09B8\u0982\u09AF\u09CB\u0997 \u09AF\u09BE\u099A\u09BE\u0987 \u0995\u09B0\u09C1\u09A8\u0964",
       testing: "\u09AA\u09B0\u09C0\u0995\u09CD\u09B7\u09BE \u0995\u09B0\u09BE \u09B9\u099A\u09CD\u099B\u09C7\u2026",
       removeSite: "\u09B8\u09BE\u0987\u099F \u09B8\u09B0\u09BE\u09A8",
-      buyMeACoffee: "\u0986\u09AE\u09BE\u0995\u09C7 \u0995\u09AB\u09BF \u0995\u09BF\u09A8\u09C1\u09A8"
+      buyMeACoffee: "\u0986\u09AE\u09BE\u0995\u09C7 \u0995\u09AB\u09BF \u0995\u09BF\u09A8\u09C1\u09A8",
+      newSiteName: "\u09A8\u09A4\u09C1\u09A8 \u09B8\u09BE\u0987\u099F"
     }
   },
   binder: {
@@ -6285,7 +6310,9 @@ var bn_default = {
       duplicate: "\u09A1\u09C1\u09AA\u09CD\u09B2\u09BF\u0995\u09C7\u099F",
       moveToResearch: "\u0997\u09AC\u09C7\u09B7\u09A3\u09BE\u09AF\u09BC \u09B8\u09B0\u09BE\u09A8",
       publishToWordPress: "WordPress-\u098F \u09AA\u09CD\u09B0\u0995\u09BE\u09B6 \u0995\u09B0\u09C1\u09A8",
-      delete: "\u09AE\u09C1\u099B\u09C1\u09A8"
+      delete: "\u09AE\u09C1\u099B\u09C1\u09A8",
+      moveUp: "\u0989\u09AA\u09B0\u09C7 \u09B8\u09B0\u09BE\u09A8",
+      moveDown: "\u09A8\u09BF\u099A\u09C7 \u09B8\u09B0\u09BE\u09A8"
     },
     wordCountSuffix: "{{count}}\u09B6",
     fileNotFound: "\u09AB\u09BE\u0987\u09B2\u099F\u09BF \u0986\u09B0 \u09A8\u09C7\u0987: {{path}}",
@@ -6456,7 +6483,8 @@ var bn_default = {
   projectManager: {
     errorFolderExists: '\u0986\u09AA\u09A8\u09BE\u09B0 \u09AA\u09CD\u09B0\u099C\u09C7\u0995\u09CD\u099F \u09AB\u09CB\u09B2\u09CD\u09A1\u09BE\u09B0\u09C7 "{{folder}}" \u09A8\u09BE\u09AE\u09C7 \u098F\u0995\u099F\u09BF \u09AB\u09CB\u09B2\u09CD\u09A1\u09BE\u09B0 \u0987\u09A4\u09BF\u09AE\u09A7\u09CD\u09AF\u09C7 \u09B0\u09AF\u09BC\u09C7\u099B\u09C7\u0964 \u0985\u09A8\u09CD\u09AF \u098F\u0995\u099F\u09BF \u09B6\u09BF\u09B0\u09CB\u09A8\u09BE\u09AE \u09AC\u09C7\u099B\u09C7 \u09A8\u09BF\u09A8\u0964',
     corruptBinder: '"{{project}}"-\u098F\u09B0 _binder.json \u09AB\u09BE\u0987\u09B2\u099F\u09BF \u09AA\u09A1\u09BC\u09BE \u09AF\u09BE\u09AF\u09BC\u09A8\u09BF\u0964 \u09AA\u09CD\u09B0\u099C\u09C7\u0995\u09CD\u099F \u09AB\u09CB\u09B2\u09CD\u09A1\u09BE\u09B0\u09C7 _binder.json.bak \u09A8\u09BE\u09AE\u09C7 \u098F\u0995\u099F\u09BF \u09AC\u09CD\u09AF\u09BE\u0995\u0986\u09AA \u09B8\u0982\u09B0\u0995\u09CD\u09B7\u09A3 \u0995\u09B0\u09BE \u09B9\u09AF\u09BC\u09C7\u099B\u09C7\u0964',
-    corruptProject: '"{{folder}}"-\u098F\u09B0 \u09AA\u09CD\u09B0\u099C\u09C7\u0995\u09CD\u099F \u09AB\u09BE\u0987\u09B2\u099F\u09BF \u0995\u09CD\u09B7\u09A4\u09BF\u0997\u09CD\u09B0\u09B8\u09CD\u09A4 \u098F\u09AC\u0982 \u09AA\u09CD\u09B0\u099C\u09C7\u0995\u09CD\u099F\u099F\u09BF \u09B2\u09CB\u09A1 \u0995\u09B0\u09BE \u09AF\u09BE\u09AF\u09BC\u09A8\u09BF\u0964'
+    corruptProject: '"{{folder}}"-\u098F\u09B0 \u09AA\u09CD\u09B0\u099C\u09C7\u0995\u09CD\u099F \u09AB\u09BE\u0987\u09B2\u099F\u09BF \u0995\u09CD\u09B7\u09A4\u09BF\u0997\u09CD\u09B0\u09B8\u09CD\u09A4 \u098F\u09AC\u0982 \u09AA\u09CD\u09B0\u099C\u09C7\u0995\u09CD\u099F\u099F\u09BF \u09B2\u09CB\u09A1 \u0995\u09B0\u09BE \u09AF\u09BE\u09AF\u09BC\u09A8\u09BF\u0964',
+    corruptLog: "{{project}} \u098F\u09B0 \u09B2\u09C7\u0996\u09BE\u09B0 \u09B2\u0997 \u09AA\u09A1\u09BC\u09BE \u09AF\u09BE\u09AF\u09BC\u09A8\u09BF \u2014 \u09A8\u09A4\u09C1\u09A8 \u09B2\u0997 \u09B6\u09C1\u09B0\u09C1 \u09B9\u099A\u09CD\u099B\u09C7\u0964"
   },
   projectModal: {
     title: "\u09A8\u09A4\u09C1\u09A8 \u09B2\u09C7\u0996\u09BE\u09B0 \u09AA\u09CD\u09B0\u0995\u09B2\u09CD\u09AA",
@@ -6887,7 +6915,8 @@ var pt_BR_default = {
       testConnectionDesc: "Verificar credenciais e conectividade.",
       testing: "Testando\u2026",
       removeSite: "Remover site",
-      buyMeACoffee: "Me pague um caf\xE9"
+      buyMeACoffee: "Me pague um caf\xE9",
+      newSiteName: "Novo site"
     }
   },
   binder: {
@@ -6917,7 +6946,9 @@ var pt_BR_default = {
       duplicate: "Duplicar",
       moveToResearch: "Mover para pesquisa",
       publishToWordPress: "Publicar no WordPress",
-      delete: "Excluir"
+      delete: "Excluir",
+      moveUp: "Mover para cima",
+      moveDown: "Mover para baixo"
     },
     wordCountSuffix: "{{count}}p",
     fileNotFound: "O arquivo n\xE3o existe mais: {{path}}",
@@ -7088,7 +7119,8 @@ var pt_BR_default = {
   projectManager: {
     errorFolderExists: 'J\xE1 existe uma pasta chamada "{{folder}}" na sua pasta de projetos. Escolha um t\xEDtulo diferente.',
     corruptBinder: 'N\xE3o foi poss\xEDvel ler o arquivo _binder.json de "{{project}}". Um backup foi salvo como _binder.json.bak na pasta do projeto.',
-    corruptProject: 'O arquivo de projeto em "{{folder}}" est\xE1 corrompido e o projeto n\xE3o p\xF4de ser carregado.'
+    corruptProject: 'O arquivo de projeto em "{{folder}}" est\xE1 corrompido e o projeto n\xE3o p\xF4de ser carregado.',
+    corruptLog: "N\xE3o foi poss\xEDvel ler o registro de escrita de {{project}} \u2014 iniciando um novo registro."
   },
   projectModal: {
     title: "Novo projeto de escrita",
@@ -7519,7 +7551,8 @@ var ru_default = {
       testConnectionDesc: "\u041F\u0440\u043E\u0432\u0435\u0440\u0438\u0442\u044C \u0443\u0447\u0451\u0442\u043D\u044B\u0435 \u0434\u0430\u043D\u043D\u044B\u0435 \u0438 \u043F\u043E\u0434\u043A\u043B\u044E\u0447\u0435\u043D\u0438\u0435.",
       testing: "\u041F\u0440\u043E\u0432\u0435\u0440\u043A\u0430\u2026",
       removeSite: "\u0423\u0434\u0430\u043B\u0438\u0442\u044C \u0441\u0430\u0439\u0442",
-      buyMeACoffee: "\u041A\u0443\u043F\u0438 \u043C\u043D\u0435 \u043A\u043E\u0444\u0435"
+      buyMeACoffee: "\u041A\u0443\u043F\u0438 \u043C\u043D\u0435 \u043A\u043E\u0444\u0435",
+      newSiteName: "\u041D\u043E\u0432\u044B\u0439 \u0441\u0430\u0439\u0442"
     }
   },
   binder: {
@@ -7549,7 +7582,9 @@ var ru_default = {
       duplicate: "\u0414\u0443\u0431\u043B\u0438\u0440\u043E\u0432\u0430\u0442\u044C",
       moveToResearch: "\u041F\u0435\u0440\u0435\u043C\u0435\u0441\u0442\u0438\u0442\u044C \u0432 \u0438\u0441\u0441\u043B\u0435\u0434\u043E\u0432\u0430\u043D\u0438\u044F",
       publishToWordPress: "\u041E\u043F\u0443\u0431\u043B\u0438\u043A\u043E\u0432\u0430\u0442\u044C \u0432 WordPress",
-      delete: "\u0423\u0434\u0430\u043B\u0438\u0442\u044C"
+      delete: "\u0423\u0434\u0430\u043B\u0438\u0442\u044C",
+      moveUp: "\u041F\u0435\u0440\u0435\u043C\u0435\u0441\u0442\u0438\u0442\u044C \u0432\u0432\u0435\u0440\u0445",
+      moveDown: "\u041F\u0435\u0440\u0435\u043C\u0435\u0441\u0442\u0438\u0442\u044C \u0432\u043D\u0438\u0437"
     },
     wordCountSuffix: "{{count}}\u0441\u043B",
     fileNotFound: "\u0424\u0430\u0439\u043B \u0431\u043E\u043B\u044C\u0448\u0435 \u043D\u0435 \u0441\u0443\u0449\u0435\u0441\u0442\u0432\u0443\u0435\u0442: {{path}}",
@@ -7724,7 +7759,8 @@ var ru_default = {
   projectManager: {
     errorFolderExists: '\u041F\u0430\u043F\u043A\u0430 \u0441 \u0438\u043C\u0435\u043D\u0435\u043C "{{folder}}" \u0443\u0436\u0435 \u0441\u0443\u0449\u0435\u0441\u0442\u0432\u0443\u0435\u0442 \u0432 \u043F\u0430\u043F\u043A\u0435 \u043F\u0440\u043E\u0435\u043A\u0442\u043E\u0432. \u0412\u044B\u0431\u0435\u0440\u0438\u0442\u0435 \u0434\u0440\u0443\u0433\u043E\u0435 \u043D\u0430\u0437\u0432\u0430\u043D\u0438\u0435.',
     corruptBinder: '\u041D\u0435 \u0443\u0434\u0430\u043B\u043E\u0441\u044C \u043F\u0440\u043E\u0447\u0438\u0442\u0430\u0442\u044C \u0444\u0430\u0439\u043B _binder.json \u043F\u0440\u043E\u0435\u043A\u0442\u0430 "{{project}}". \u0420\u0435\u0437\u0435\u0440\u0432\u043D\u0430\u044F \u043A\u043E\u043F\u0438\u044F \u0441\u043E\u0445\u0440\u0430\u043D\u0435\u043D\u0430 \u043A\u0430\u043A _binder.json.bak \u0432 \u043F\u0430\u043F\u043A\u0435 \u043F\u0440\u043E\u0435\u043A\u0442\u0430.',
-    corruptProject: '\u0424\u0430\u0439\u043B \u043F\u0440\u043E\u0435\u043A\u0442\u0430 \u0432 "{{folder}}" \u043F\u043E\u0432\u0440\u0435\u0436\u0434\u0451\u043D, \u0438 \u043F\u0440\u043E\u0435\u043A\u0442 \u043D\u0435 \u0443\u0434\u0430\u043B\u043E\u0441\u044C \u0437\u0430\u0433\u0440\u0443\u0437\u0438\u0442\u044C.'
+    corruptProject: '\u0424\u0430\u0439\u043B \u043F\u0440\u043E\u0435\u043A\u0442\u0430 \u0432 "{{folder}}" \u043F\u043E\u0432\u0440\u0435\u0436\u0434\u0451\u043D, \u0438 \u043F\u0440\u043E\u0435\u043A\u0442 \u043D\u0435 \u0443\u0434\u0430\u043B\u043E\u0441\u044C \u0437\u0430\u0433\u0440\u0443\u0437\u0438\u0442\u044C.',
+    corruptLog: "\u041D\u0435 \u0443\u0434\u0430\u043B\u043E\u0441\u044C \u043F\u0440\u043E\u0447\u0438\u0442\u0430\u0442\u044C \u0436\u0443\u0440\u043D\u0430\u043B \u0437\u0430\u043F\u0438\u0441\u0438 \u0434\u043B\u044F {{project}} \u2014 \u0431\u0443\u0434\u0435\u0442 \u0441\u043E\u0437\u0434\u0430\u043D \u043D\u043E\u0432\u044B\u0439 \u0436\u0443\u0440\u043D\u0430\u043B."
   },
   projectModal: {
     title: "\u041D\u043E\u0432\u044B\u0439 \u043F\u0438\u0441\u044C\u043C\u0435\u043D\u043D\u044B\u0439 \u043F\u0440\u043E\u0435\u043A\u0442",
@@ -8157,7 +8193,8 @@ var ja_default = {
       testConnectionDesc: "\u8A8D\u8A3C\u60C5\u5831\u3068\u63A5\u7D9A\u6027\u3092\u78BA\u8A8D\u3057\u307E\u3059\u3002",
       testing: "\u30C6\u30B9\u30C8\u4E2D\u2026",
       removeSite: "\u30B5\u30A4\u30C8\u3092\u524A\u9664",
-      buyMeACoffee: "\u30B3\u30FC\u30D2\u30FC\u3092\u304A\u3054\u308B"
+      buyMeACoffee: "\u30B3\u30FC\u30D2\u30FC\u3092\u304A\u3054\u308B",
+      newSiteName: "\u65B0\u3057\u3044\u30B5\u30A4\u30C8"
     }
   },
   binder: {
@@ -8187,7 +8224,9 @@ var ja_default = {
       duplicate: "\u8907\u88FD",
       moveToResearch: "\u30EA\u30B5\u30FC\u30C1\u306B\u79FB\u52D5",
       publishToWordPress: "WordPress\u306B\u516C\u958B",
-      delete: "\u524A\u9664"
+      delete: "\u524A\u9664",
+      moveUp: "\u4E0A\u306B\u79FB\u52D5",
+      moveDown: "\u4E0B\u306B\u79FB\u52D5"
     },
     wordCountSuffix: "{{count}}\u8A9E",
     fileNotFound: "\u30D5\u30A1\u30A4\u30EB\u304C\u5B58\u5728\u3057\u307E\u305B\u3093\uFF1A{{path}}",
@@ -8358,7 +8397,8 @@ var ja_default = {
   projectManager: {
     errorFolderExists: "\u30D7\u30ED\u30B8\u30A7\u30AF\u30C8\u30D5\u30A9\u30EB\u30C0\u30FC\u306B\u300C{{folder}}\u300D\u3068\u3044\u3046\u540D\u524D\u306E\u30D5\u30A9\u30EB\u30C0\u30FC\u304C\u65E2\u306B\u5B58\u5728\u3057\u307E\u3059\u3002\u5225\u306E\u30BF\u30A4\u30C8\u30EB\u3092\u9078\u3093\u3067\u304F\u3060\u3055\u3044\u3002",
     corruptBinder: "\u300C{{project}}\u300D\u306E _binder.json \u30D5\u30A1\u30A4\u30EB\u3092\u8AAD\u307F\u53D6\u308C\u307E\u305B\u3093\u3067\u3057\u305F\u3002\u30D0\u30C3\u30AF\u30A2\u30C3\u30D7\u3092 _binder.json.bak \u3068\u3057\u3066\u30D7\u30ED\u30B8\u30A7\u30AF\u30C8\u30D5\u30A9\u30EB\u30C0\u30FC\u306B\u4FDD\u5B58\u3057\u307E\u3057\u305F\u3002",
-    corruptProject: "\u300C{{folder}}\u300D\u306E\u30D7\u30ED\u30B8\u30A7\u30AF\u30C8\u30D5\u30A1\u30A4\u30EB\u304C\u7834\u640D\u3057\u3066\u3044\u308B\u305F\u3081\u3001\u30D7\u30ED\u30B8\u30A7\u30AF\u30C8\u3092\u8AAD\u307F\u8FBC\u3081\u307E\u305B\u3093\u3067\u3057\u305F\u3002"
+    corruptProject: "\u300C{{folder}}\u300D\u306E\u30D7\u30ED\u30B8\u30A7\u30AF\u30C8\u30D5\u30A1\u30A4\u30EB\u304C\u7834\u640D\u3057\u3066\u3044\u308B\u305F\u3081\u3001\u30D7\u30ED\u30B8\u30A7\u30AF\u30C8\u3092\u8AAD\u307F\u8FBC\u3081\u307E\u305B\u3093\u3067\u3057\u305F\u3002",
+    corruptLog: "{{project}} \u306E\u57F7\u7B46\u30ED\u30B0\u3092\u8AAD\u307F\u53D6\u308C\u307E\u305B\u3093\u3067\u3057\u305F \u2014 \u65B0\u3057\u3044\u30ED\u30B0\u3092\u958B\u59CB\u3057\u307E\u3059\u3002"
   },
   projectModal: {
     title: "\u65B0\u898F\u57F7\u7B46\u30D7\u30ED\u30B8\u30A7\u30AF\u30C8",
@@ -8789,7 +8829,8 @@ var de_default = {
       testConnectionDesc: "Anmeldeinformationen und Konnektivit\xE4t \xFCberpr\xFCfen.",
       testing: "Teste\u2026",
       removeSite: "Seite entfernen",
-      buyMeACoffee: "Kauf mir einen Kaffee"
+      buyMeACoffee: "Kauf mir einen Kaffee",
+      newSiteName: "Neue Website"
     }
   },
   binder: {
@@ -8819,7 +8860,9 @@ var de_default = {
       duplicate: "Duplizieren",
       moveToResearch: "In Recherche verschieben",
       publishToWordPress: "Auf WordPress ver\xF6ffentlichen",
-      delete: "L\xF6schen"
+      delete: "L\xF6schen",
+      moveUp: "Nach oben verschieben",
+      moveDown: "Nach unten verschieben"
     },
     wordCountSuffix: "{{count}}W",
     fileNotFound: "Die Datei existiert nicht mehr: {{path}}",
@@ -8990,7 +9033,8 @@ var de_default = {
   projectManager: {
     errorFolderExists: 'Ein Ordner namens "{{folder}}" existiert bereits in deinem Projektordner. W\xE4hle einen anderen Titel.',
     corruptBinder: 'Die Datei _binder.json von "{{project}}" konnte nicht gelesen werden. Eine Sicherung wurde als _binder.json.bak im Projektordner gespeichert.',
-    corruptProject: 'Die Projektdatei in "{{folder}}" ist besch\xE4digt und das Projekt konnte nicht geladen werden.'
+    corruptProject: 'Die Projektdatei in "{{folder}}" ist besch\xE4digt und das Projekt konnte nicht geladen werden.',
+    corruptLog: "Schreibprotokoll f\xFCr {{project}} konnte nicht gelesen werden \u2014 ein neues Protokoll wird begonnen."
   },
   projectModal: {
     title: "Neues Schreibprojekt",
@@ -9421,7 +9465,8 @@ var ko_default = {
       testConnectionDesc: "\uC790\uACA9 \uC99D\uBA85\uACFC \uC5F0\uACB0\uC744 \uD655\uC778\uD569\uB2C8\uB2E4.",
       testing: "\uD14C\uC2A4\uD2B8 \uC911\u2026",
       removeSite: "\uC0AC\uC774\uD2B8 \uC81C\uAC70",
-      buyMeACoffee: "\uCEE4\uD53C \uD55C \uC794 \uC0AC\uC8FC\uAE30"
+      buyMeACoffee: "\uCEE4\uD53C \uD55C \uC794 \uC0AC\uC8FC\uAE30",
+      newSiteName: "\uC0C8 \uC0AC\uC774\uD2B8"
     }
   },
   binder: {
@@ -9451,7 +9496,9 @@ var ko_default = {
       duplicate: "\uBCF5\uC81C",
       moveToResearch: "\uB9AC\uC11C\uCE58\uB85C \uC774\uB3D9",
       publishToWordPress: "WordPress\uC5D0 \uAC8C\uC2DC",
-      delete: "\uC0AD\uC81C"
+      delete: "\uC0AD\uC81C",
+      moveUp: "\uC704\uB85C \uC774\uB3D9",
+      moveDown: "\uC544\uB798\uB85C \uC774\uB3D9"
     },
     wordCountSuffix: "{{count}}\uC790",
     fileNotFound: "\uD30C\uC77C\uC774 \uB354 \uC774\uC0C1 \uC874\uC7AC\uD558\uC9C0 \uC54A\uC2B5\uB2C8\uB2E4: {{path}}",
@@ -9622,7 +9669,8 @@ var ko_default = {
   projectManager: {
     errorFolderExists: '\uD504\uB85C\uC81D\uD2B8 \uD3F4\uB354\uC5D0 "{{folder}}"(\uC774)\uB77C\uB294 \uC774\uB984\uC758 \uD3F4\uB354\uAC00 \uC774\uBBF8 \uC788\uC2B5\uB2C8\uB2E4. \uB2E4\uB978 \uC81C\uBAA9\uC744 \uC120\uD0DD\uD558\uC138\uC694.',
     corruptBinder: '"{{project}}"\uC758 _binder.json \uD30C\uC77C\uC744 \uC77D\uC744 \uC218 \uC5C6\uC2B5\uB2C8\uB2E4. \uBC31\uC5C5\uC774 \uD504\uB85C\uC81D\uD2B8 \uD3F4\uB354\uC5D0 _binder.json.bak(\uC73C)\uB85C \uC800\uC7A5\uB418\uC5C8\uC2B5\uB2C8\uB2E4.',
-    corruptProject: '"{{folder}}"\uC758 \uD504\uB85C\uC81D\uD2B8 \uD30C\uC77C\uC774 \uC190\uC0C1\uB418\uC5B4 \uD504\uB85C\uC81D\uD2B8\uB97C \uBD88\uB7EC\uC62C \uC218 \uC5C6\uC2B5\uB2C8\uB2E4.'
+    corruptProject: '"{{folder}}"\uC758 \uD504\uB85C\uC81D\uD2B8 \uD30C\uC77C\uC774 \uC190\uC0C1\uB418\uC5B4 \uD504\uB85C\uC81D\uD2B8\uB97C \uBD88\uB7EC\uC62C \uC218 \uC5C6\uC2B5\uB2C8\uB2E4.',
+    corruptLog: "{{project}}\uC758 \uAE00\uC4F0\uAE30 \uB85C\uADF8\uB97C \uC77D\uC744 \uC218 \uC5C6\uC2B5\uB2C8\uB2E4 \u2014 \uC0C8 \uB85C\uADF8\uB97C \uC2DC\uC791\uD569\uB2C8\uB2E4."
   },
   projectModal: {
     title: "\uC0C8 \uAE00\uC4F0\uAE30 \uD504\uB85C\uC81D\uD2B8",
@@ -10074,8 +10122,8 @@ var TargetsDashboardModal = class extends import_obsidian3.Modal {
       const file = this.app.vault.getAbstractFileByPath(item.filePath);
       let wordCount = 0;
       if (file instanceof import_obsidian3.TFile) {
-        const content = await this.app.vault.read(file);
-        wordCount = this.plugin.fmManager.countWords(content);
+        const content2 = await this.app.vault.read(file);
+        wordCount = this.plugin.fmManager.countWords(content2);
       }
       this.stats.push({
         item,
@@ -10272,7 +10320,7 @@ var PublishModal = class extends import_obsidian5.Modal {
       contentEl.createEl("button", { text: t2("publishModal.close") }).onclick = () => this.close();
       return;
     }
-    await this.loadExistingMeta();
+    this.loadExistingMeta();
     new import_obsidian5.Setting(contentEl).setName(t2("publishModal.siteName")).addDropdown((d) => {
       sites.forEach((s) => {
         d.addOption(s.id, s.nickname || s.url);
@@ -10352,11 +10400,11 @@ var PublishModal = class extends import_obsidian5.Modal {
   render() {
     void this.onOpen();
   }
-  async loadExistingMeta() {
+  loadExistingMeta() {
+    var _a2;
     const file = this.app.vault.getAbstractFileByPath(this.filePath);
     if (!(file instanceof import_obsidian5.TFile)) return;
-    const content = await this.app.vault.read(file);
-    const fm = this.plugin.fmManager.parseFrontmatter(content);
+    const fm = (_a2 = this.app.metadataCache.getFileCache(file)) == null ? void 0 : _a2.frontmatter;
     if (fm) {
       this.postTitle = fm["title"] || file.basename;
       if (fm["wp-post-id"]) this.existingPostId = Number(fm["wp-post-id"]);
@@ -10402,15 +10450,14 @@ var PublishModal = class extends import_obsidian5.Modal {
         scheduledDate: this.scheduledDate || void 0,
         existingPostId: updateExisting ? this.existingPostId : void 0
       });
-      await this.app.vault.process(file, (data) => {
-        return this.plugin.fmManager.setWpMeta(data, {
-          wpSite: site.nickname,
-          wpPostId: result.postId,
-          wpUrl: result.url,
-          wpStatus: result.status,
-          wpPublished: result.scheduledDate ? void 0 : localDateString(),
-          wpScheduled: result.scheduledDate
-        });
+      await this.app.fileManager.processFrontMatter(file, (fm) => {
+        var _a2;
+        fm["wp-site"] = site.nickname;
+        fm["wp-post-id"] = result.postId;
+        fm["wp-url"] = result.url;
+        fm["wp-status"] = result.status;
+        fm["wp-published"] = result.scheduledDate ? null : localDateString();
+        fm["wp-scheduled"] = (_a2 = result.scheduledDate) != null ? _a2 : null;
       });
       const action = this.scheduledDate ? t2("publishModal.scheduled") : t2("publishModal.published");
       new import_obsidian5.Notice(t2("publishModal.actionNotice", { action, url: result.url }), 1e4);
@@ -10834,8 +10881,8 @@ var BinderView = class extends import_obsidian9.ItemView {
       el.textContent = "0W";
       return;
     }
-    const content = await this.app.vault.cachedRead(file);
-    const wc = this.plugin.fmManager.countWords(content);
+    const content2 = await this.app.vault.cachedRead(file);
+    const wc = this.plugin.fmManager.countWords(content2);
     const goal = item.wordCountGoal;
     if (goal) {
       const pct = Math.min(100, Math.round(wc / goal * 100));
@@ -10932,6 +10979,9 @@ var BinderView = class extends import_obsidian9.ItemView {
     menu.addItem((i) => i.setTitle(t2("binder.menu.openDocument")).setIcon("file-text").onClick(safeHandler(() => this.openDocument(item))));
     menu.addItem((i) => i.setTitle(t2("binder.menu.newChildDocument")).setIcon("plus").onClick(safeHandler(() => this.createNewDocument(item.id))));
     menu.addSeparator();
+    menu.addItem((i) => i.setTitle(t2("binder.menu.moveUp")).setIcon("arrow-up").onClick(safeHandler(() => this.nudgeItem(item, -1))));
+    menu.addItem((i) => i.setTitle(t2("binder.menu.moveDown")).setIcon("arrow-down").onClick(safeHandler(() => this.nudgeItem(item, 1))));
+    menu.addSeparator();
     menu.addItem((i) => i.setTitle(t2("binder.menu.setStatusDraft")).onClick(safeHandler(() => this.setItemStatus(item, "draft"))));
     menu.addItem((i) => i.setTitle(t2("binder.menu.setStatusInProgress")).onClick(safeHandler(() => this.setItemStatus(item, "in-progress"))));
     menu.addItem((i) => i.setTitle(t2("binder.menu.setStatusComplete")).onClick(safeHandler(() => this.setItemStatus(item, "complete"))));
@@ -10968,13 +11018,13 @@ var BinderView = class extends import_obsidian9.ItemView {
     if (item.type === "group" || item.type === "part") return;
     const newTitle = `${item.title} ${t2("binder.copySuffix")}`;
     const srcFile = this.app.vault.getAbstractFileByPath(item.filePath);
-    const content = srcFile instanceof import_obsidian9.TFile ? await this.app.vault.read(srcFile) : void 0;
+    const content2 = srcFile instanceof import_obsidian9.TFile ? await this.app.vault.read(srcFile) : void 0;
     const newItem = await this.plugin.projectManager.addDocumentToBinder(
       this.activeProject,
       newTitle,
       item.type,
       void 0,
-      content
+      content2
     );
     newItem.status = item.status;
     newItem.wordCountGoal = item.wordCountGoal;
@@ -11114,6 +11164,30 @@ var BinderView = class extends import_obsidian9.ItemView {
     await this.plugin.projectManager.saveBinder(binder);
     await this.refresh();
   }
+  // Swap an item with its previous/next sibling
+  async nudgeItem(item, delta) {
+    if (!this.activeProject) return;
+    const binder = await this.plugin.projectManager.loadBinder(this.activeProject);
+    const siblings = this.findSiblings(binder.items, item.id);
+    if (!siblings) return;
+    const idx = siblings.findIndex((i) => i.id === item.id);
+    const target = idx + delta;
+    if (idx < 0 || target < 0 || target >= siblings.length) return;
+    [siblings[idx], siblings[target]] = [siblings[target], siblings[idx]];
+    this.reorderItems(binder.items, 1);
+    await this.plugin.projectManager.saveBinder(binder);
+    await this.refresh();
+  }
+  findSiblings(items, id) {
+    if (items.some((i) => i.id === id)) return items;
+    for (const item of items) {
+      if (item.children) {
+        const found = this.findSiblings(item.children, id);
+        if (found) return found;
+      }
+    }
+    return null;
+  }
   async moveItemToRoot(sourceId) {
     if (!this.activeProject) return;
     const binder = await this.plugin.projectManager.loadBinder(this.activeProject);
@@ -11124,8 +11198,8 @@ var BinderView = class extends import_obsidian9.ItemView {
     await this.plugin.projectManager.saveBinder(binder);
     await this.refresh();
   }
-  reorderItems(items, start) {
-    let order = start;
+  reorderItems(items, start2) {
+    let order = start2;
     for (const item of items) {
       item.order = order++;
       if (item.children) {
@@ -11278,8 +11352,8 @@ var ExportModal = class extends import_obsidian10.Modal {
 };
 
 // src/sections.ts
-function splitSections(content) {
-  const lines = content.split("\n");
+function splitSections(content2) {
+  const lines = content2.split("\n");
   const sections = [];
   let current = [];
   let fence = null;
@@ -11515,8 +11589,8 @@ var WritingDashboardModal = class extends import_obsidian12.Modal {
         const file = this.app.vault.getAbstractFileByPath(item.filePath);
         let wc = 0;
         if (file instanceof import_obsidian12.TFile) {
-          const content = await this.app.vault.read(file);
-          wc = this.plugin.fmManager.countWords(content);
+          const content2 = await this.app.vault.read(file);
+          wc = this.plugin.fmManager.countWords(content2);
         }
         const tr = tbody.createEl("tr");
         const titleTd = tr.createEl("td");
@@ -12064,8 +12138,8 @@ var FocusMode = class {
     if (!leaf) return 0;
     const view = leaf.view;
     if (view instanceof import_obsidian15.MarkdownView) {
-      const content = ((_a2 = view.editor) == null ? void 0 : _a2.getValue()) || "";
-      return this.plugin.fmManager.countWords(content);
+      const content2 = ((_a2 = view.editor) == null ? void 0 : _a2.getValue()) || "";
+      return this.plugin.fmManager.countWords(content2);
     }
     return 0;
   }
@@ -12096,19 +12170,19 @@ var FocusMode = class {
           const cursorLine = doc.lineAt(sel.head);
           const isParaMode = plugin.settings.focusUnit !== "sentence";
           if (isParaMode) {
-            let start = cursorLine.number;
+            let start2 = cursorLine.number;
             let end = cursorLine.number;
-            while (start > 1) {
-              const prev = doc.line(start - 1);
+            while (start2 > 1) {
+              const prev = doc.line(start2 - 1);
               if (prev.text.trim() === "") break;
-              start--;
+              start2--;
             }
             while (end < doc.lines) {
               const next = doc.line(end + 1);
               if (next.text.trim() === "") break;
               end++;
             }
-            for (let i = start; i <= end; i++) {
+            for (let i = start2; i <= end; i++) {
               const line = doc.line(i);
               builder.add(line.from, line.from, focusParaDecoration);
             }
@@ -12192,7 +12266,8 @@ var TypographyMode = class {
   }
   applyCustomProperties() {
     const settings = this.plugin.settings;
-    const fontStack = settings.typographyFont === "custom" ? `"${settings.customFontName}", system-ui, sans-serif` : FONT_STACKS[settings.typographyFont] || FONT_STACKS.mono;
+    const safeCustom = settings.customFontName.replace(/["'\\;{}():]/g, "").trim();
+    const fontStack = settings.typographyFont === "custom" ? safeCustom ? `"${safeCustom}", system-ui, sans-serif` : "system-ui, sans-serif" : FONT_STACKS[settings.typographyFont] || FONT_STACKS.mono;
     const maxChars = settings.maxLineLength || 65;
     const fontSize = settings.typographyFontSize || 18;
     const lineHeight = settings.lineHeight || 1.7;
@@ -12808,10 +12883,10 @@ var fdeb = new u8([
   0
 ]);
 var clim = new u8([16, 17, 18, 0, 8, 7, 9, 6, 10, 5, 11, 4, 12, 3, 13, 2, 14, 1, 15]);
-var freb = function(eb, start) {
+var freb = function(eb, start2) {
   var b = new u16(31);
   for (var i = 0; i < 31; ++i) {
-    b[i] = start += 1 << eb[i - 1];
+    b[i] = start2 += 1 << eb[i - 1];
   }
   var r = new i32(b[30]);
   for (var i = 1; i < 30; ++i) {
@@ -13573,6 +13648,7 @@ var EpubEngine = class {
     this.app = plugin.app;
   }
   async build(opts, outputVaultPath) {
+    var _a2;
     this.lang = opts.language || "en";
     const uid = `urn:uuid:${this.uuid()}`;
     const modified = (/* @__PURE__ */ new Date()).toISOString().replace(/\.\d{3}Z$/, "Z");
@@ -13585,9 +13661,16 @@ var EpubEngine = class {
       const vaultFile = this.app.vault.getAbstractFileByPath(opts.coverImagePath);
       if (vaultFile instanceof import_obsidian18.TFile) {
         const raw = await this.app.vault.readBinary(vaultFile);
-        const isPng = opts.coverImagePath.toLowerCase().endsWith(".png");
-        coverImageMime = isPng ? "image/png" : "image/jpeg";
-        coverImageFile = isPng ? "cover.png" : "cover.jpg";
+        const mimeByExt = {
+          png: "image/png",
+          webp: "image/webp",
+          gif: "image/gif",
+          jpg: "image/jpeg",
+          jpeg: "image/jpeg"
+        };
+        const ext = vaultFile.extension.toLowerCase();
+        coverImageMime = (_a2 = mimeByExt[ext]) != null ? _a2 : "image/jpeg";
+        coverImageFile = `cover.${ext === "jpeg" ? "jpg" : ext || "jpg"}`;
         entries[`OEBPS/${coverImageFile}`] = [new Uint8Array(raw), { level: 6 }];
       }
     }
@@ -14134,12 +14217,12 @@ var ExportEngine = class {
       if (!(file instanceof import_obsidian19.TFile)) {
         throw new Error(t2("exportEngine.noActiveDocument"));
       }
-      let content = await this.app.vault.read(file);
+      let content2 = await this.app.vault.read(file);
       if (!opts.includeFrontmatter) {
-        content = content.replace(/^---\r?\n[\s\S]*?\r?\n---\r?\n?/, "");
+        content2 = content2.replace(/^---\r?\n[\s\S]*?\r?\n---\r?\n?/, "");
       }
-      content = this.preprocessObsidianMarkdown(content.trim());
-      const htmlContent = this.htmlToXhtml(markdownToHtml(content));
+      content2 = this.preprocessObsidianMarkdown(content2.trim());
+      const htmlContent = this.htmlToXhtml(markdownToHtml(content2));
       chapters.push({ id: "chapter-1", title: file.basename, htmlContent });
     } else if (opts.scope === "project" && project) {
       const binder = await this.plugin.projectManager.loadBinder(project);
@@ -14151,15 +14234,15 @@ var ExportEngine = class {
         if (!opts.includeResearch && item.filePath.includes("/Research/")) continue;
         const file = this.app.vault.getAbstractFileByPath(item.filePath);
         if (!(file instanceof import_obsidian19.TFile)) continue;
-        let content = await this.app.vault.read(file);
+        let content2 = await this.app.vault.read(file);
         if (!opts.includeFrontmatter) {
-          content = content.replace(/^---\r?\n[\s\S]*?\r?\n---\r?\n?/, "");
+          content2 = content2.replace(/^---\r?\n[\s\S]*?\r?\n---\r?\n?/, "");
         }
-        content = this.preprocessObsidianMarkdown(content.trim());
+        content2 = this.preprocessObsidianMarkdown(content2.trim());
         if (opts.includeTitlesAsHeadings) {
-          content = content.replace(/^# [^\n]*\n+/, "").trim();
+          content2 = content2.replace(/^# [^\n]*\n+/, "").trim();
         }
-        const htmlContent = this.htmlToXhtml(markdownToHtml(content));
+        const htmlContent = this.htmlToXhtml(markdownToHtml(content2));
         chapters.push({ id: `chapter-${idx++}`, title: item.title, htmlContent });
       }
     }
@@ -14211,39 +14294,39 @@ ${today}`);
         if (!opts.includeResearch && item.filePath.includes("/Research/")) continue;
         const file = this.app.vault.getAbstractFileByPath(item.filePath);
         if (!(file instanceof import_obsidian19.TFile)) continue;
-        const content = await this.processFile(file, opts);
+        const content2 = await this.processFile(file, opts);
         if (opts.includeTitlesAsHeadings) {
-          const body = content.replace(/^# [^\n]*\n+/, "").trim();
+          const body = content2.replace(/^# [^\n]*\n+/, "").trim();
           parts.push(`# ${item.title}
 
 ${body}`);
         } else {
-          parts.push(content);
+          parts.push(content2);
         }
       }
     } else if (opts.scope === "selected" && opts.selectedFiles) {
       for (const filePath of opts.selectedFiles) {
         const file = this.app.vault.getAbstractFileByPath(filePath);
         if (!(file instanceof import_obsidian19.TFile)) continue;
-        const content = await this.processFile(file, opts);
+        const content2 = await this.processFile(file, opts);
         if (opts.includeTitlesAsHeadings) {
-          const body = content.replace(/^# [^\n]*\n+/, "").trim();
+          const body = content2.replace(/^# [^\n]*\n+/, "").trim();
           parts.push(`# ${file.basename}
 
 ${body}`);
         } else {
-          parts.push(content);
+          parts.push(content2);
         }
       }
     }
     return parts.join(SECTION_BREAK);
   }
   async processFile(file, opts) {
-    let content = await this.app.vault.read(file);
+    let content2 = await this.app.vault.read(file);
     if (!opts.includeFrontmatter) {
-      content = content.replace(/^---\r?\n[\s\S]*?\r?\n---\r?\n?/, "");
+      content2 = content2.replace(/^---\r?\n[\s\S]*?\r?\n---\r?\n?/, "");
     }
-    return content.trim();
+    return content2.trim();
   }
   async exportManuscript(opts, outputPath) {
     const project = this.plugin.projectManager.getActiveProject();
@@ -14302,12 +14385,12 @@ ${bodyHtml}
     new import_obsidian19.Notice(t2("exportEngine.manuscriptExported", { path: outputPath }));
     return outputPath;
   }
-  async exportMarkdown(content, outputPath) {
-    await this.writeFile(outputPath, content);
+  async exportMarkdown(content2, outputPath) {
+    await this.writeFile(outputPath, content2);
     new import_obsidian19.Notice(t2("exportEngine.exportedTo", { path: outputPath }));
     return outputPath;
   }
-  async exportHtml(content, outputPath, title, opts) {
+  async exportHtml(content2, outputPath, title, opts) {
     const font = opts.font || "Georgia";
     const fontSize = opts.fontSize || 16;
     const html = `<!DOCTYPE html>
@@ -14330,18 +14413,18 @@ ${bodyHtml}
   </style>
 </head>
 <body>
-${markdownToHtml(content)}
+${markdownToHtml(content2)}
 </body>
 </html>`;
     await this.writeFile(outputPath, html);
     new import_obsidian19.Notice(t2("exportEngine.exportedHtmlTo", { path: outputPath }));
     return outputPath;
   }
-  async exportPandoc(content, outputPath, opts) {
+  async exportPandoc(content2, outputPath, opts) {
     const pandocPath = this.plugin.settings.pandocPath || "pandoc";
     const tempMdPath = outputPath.replace(/\.[^.]+$/, ".tmp.md");
     try {
-      await this.writeFile(tempMdPath, content);
+      await this.writeFile(tempMdPath, content2);
       const absOutput = this.getAbsPath(outputPath);
       const absInput = this.getAbsPath(tempMdPath);
       const args = [absInput, "--from", "markdown", "-o", absOutput];
@@ -14361,25 +14444,25 @@ Ensure pandoc is installed.`);
       }
     }
   }
-  async exportPdf(content, outputPath, opts) {
+  async exportPdf(content2, outputPath, opts) {
     try {
-      return await this.exportPandoc(content, outputPath, opts);
+      return await this.exportPandoc(content2, outputPath, opts);
     } catch (e) {
       new import_obsidian19.Notice(t2("exportEngine.pdfRequiresPandoc"));
       throw e;
     }
   }
-  async writeFile(vaultPath, content) {
+  async writeFile(vaultPath, content2) {
     const existing = this.app.vault.getAbstractFileByPath(vaultPath);
     if (existing instanceof import_obsidian19.TFile) {
-      await this.app.vault.modify(existing, content);
+      await this.app.vault.modify(existing, content2);
     } else {
-      await this.app.vault.create(vaultPath, content);
+      await this.app.vault.create(vaultPath, content2);
     }
   }
   getAbsPath(vaultPath) {
     const adapter = this.app.vault.adapter;
-    return adapter.getFullPath ? adapter.getFullPath(vaultPath) : vaultPath;
+    return adapter instanceof import_obsidian19.FileSystemAdapter ? adapter.getFullPath(vaultPath) : vaultPath;
   }
   async ensureFolder(path) {
     if (!this.app.vault.getAbstractFileByPath(path)) {
@@ -14627,9 +14710,9 @@ var BookTemplate = class _BookTemplate {
       items
     };
   }
-  static async createFile(app, path, content) {
+  static async createFile(app, path, content2) {
     if (!app.vault.getAbstractFileByPath(path)) {
-      await app.vault.create(path, content);
+      await app.vault.create(path, content2);
     }
   }
   static frontMatterDoc(date) {
@@ -14723,9 +14806,9 @@ var ArticleSeriesTemplate = class _ArticleSeriesTemplate {
       items
     };
   }
-  static async createFile(app, path, content) {
+  static async createFile(app, path, content2) {
     if (!app.vault.getAbstractFileByPath(path)) {
-      await app.vault.create(path, content);
+      await app.vault.create(path, content2);
     }
   }
   static seriesOverviewDoc(title, date) {
@@ -14817,9 +14900,9 @@ var BlogCollectionTemplate = class _BlogCollectionTemplate {
       items
     };
   }
-  static async createFile(app, path, content) {
+  static async createFile(app, path, content2) {
     if (!app.vault.getAbstractFileByPath(path)) {
-      await app.vault.create(path, content);
+      await app.vault.create(path, content2);
     }
   }
   static async createFolder(app, path) {
@@ -14866,8 +14949,8 @@ var JournalArticleTemplate = class _JournalArticleTemplate {
       [p("References"), _JournalArticleTemplate.standardDoc("References", "references", 10, 0, now, "List all cited works here. Format according to target journal style (APA, MLA, Chicago, etc.).")],
       [p("Appendices"), _JournalArticleTemplate.standardDoc("Appendices", "appendix", 11, 0, now, "Include supplementary materials, data tables, or extended quotations here if needed.")]
     ];
-    for (const [filePath, content] of docs) {
-      await _JournalArticleTemplate.createFile(app, filePath, content);
+    for (const [filePath, content2] of docs) {
+      await _JournalArticleTemplate.createFile(app, filePath, content2);
     }
     const items = [
       { id: "ja-title-page", title: "Title Page", filePath: p("Title Page"), type: "section", order: 1, status: "draft", wordCountGoal: 500, includeInExport: true },
@@ -14884,9 +14967,9 @@ var JournalArticleTemplate = class _JournalArticleTemplate {
     ];
     return { version: "2.0", projectId: project.id, items };
   }
-  static async createFile(app, path, content) {
+  static async createFile(app, path, content2) {
     if (!app.vault.getAbstractFileByPath(path)) {
-      await app.vault.create(path, content);
+      await app.vault.create(path, content2);
     }
   }
   static hint(text) {
@@ -14962,8 +15045,8 @@ var MagazineArticleTemplate = class _MagazineArticleTemplate {
       [p("Fact-Check Notes"), _MagazineArticleTemplate.notesDoc("Fact-Check Notes", "notes", 8, 0, now, "List every factual claim that requires verification, with source links or contact info.")],
       [p("Author Bio"), _MagazineArticleTemplate.standardDoc("Author Bio", "bio", 9, 75, now, "Write a third-person author bio of 50\u201375 words for publication.")]
     ];
-    for (const [filePath, content] of docs) {
-      await _MagazineArticleTemplate.createFile(app, filePath, content);
+    for (const [filePath, content2] of docs) {
+      await _MagazineArticleTemplate.createFile(app, filePath, content2);
     }
     const items = [
       { id: "ma-pitch", title: "Pitch / Query Notes", filePath: p("Pitch - Query Notes"), type: "note", order: 1, status: "draft", wordCountGoal: 300, includeInExport: false },
@@ -14978,9 +15061,9 @@ var MagazineArticleTemplate = class _MagazineArticleTemplate {
     ];
     return { version: "2.0", projectId: project.id, items };
   }
-  static async createFile(app, path, content) {
+  static async createFile(app, path, content2) {
     if (!app.vault.getAbstractFileByPath(path)) {
-      await app.vault.create(path, content);
+      await app.vault.create(path, content2);
     }
   }
   static hint(text) {
@@ -15059,8 +15142,8 @@ var ProjectManager = class {
     const file = this.app.vault.getAbstractFileByPath(projectFilePath);
     if (!(file instanceof import_obsidian26.TFile)) return null;
     try {
-      const content = await this.app.vault.read(file);
-      const project = JSON.parse(content);
+      const content2 = await this.app.vault.read(file);
+      const project = JSON.parse(content2);
       this.projects.set(project.id, project);
       return project;
     } catch (e) {
@@ -15139,18 +15222,18 @@ var ProjectManager = class {
     if (!(file instanceof import_obsidian26.TFile)) {
       return { version: "2.0", projectId: project.id, items: [] };
     }
-    let content;
+    let content2;
     try {
-      content = await this.app.vault.read(file);
+      content2 = await this.app.vault.read(file);
     } catch (e) {
       return { version: "2.0", projectId: project.id, items: [] };
     }
     try {
-      const data = JSON.parse(content);
+      const data = JSON.parse(content2);
       this.binderCache.set(project.id, data);
       return data;
     } catch (e) {
-      await this.writeRaw((0, import_obsidian26.normalizePath)(`${project.folderPath}/_binder.json.bak`), content);
+      await this.writeRaw((0, import_obsidian26.normalizePath)(`${project.folderPath}/_binder.json.bak`), content2);
       new import_obsidian26.Notice(t2("projectManager.corruptBinder", { project: project.title }));
       return { version: "2.0", projectId: project.id, items: [] };
     }
@@ -15167,7 +15250,7 @@ var ProjectManager = class {
     await this.writeJson(path, binder);
     this.plugin.statsTracker.invalidateWordCountCache();
   }
-  async addDocumentToBinder(project, title, type, parentId, content) {
+  async addDocumentToBinder(project, title, type, parentId, content2) {
     const binder = await this.loadBinder(project);
     const now = localDateString();
     const baseName = title.replace(/[\\/:*?"<>|]/g, "-");
@@ -15185,7 +15268,7 @@ var ProjectManager = class {
       includeInExport: true
     };
     const frontmatter = this.buildDocFrontmatter(title, type, item.order, now);
-    await this.app.vault.create(filePath, content != null ? content : frontmatter + "\n\n");
+    await this.app.vault.create(filePath, content2 != null ? content2 : frontmatter + "\n\n");
     if (parentId) {
       const parent = this.findItem(binder.items, parentId);
       if (parent) {
@@ -15255,9 +15338,10 @@ tags: [writing-studio]
     const file = this.app.vault.getAbstractFileByPath(logPath);
     if (file instanceof import_obsidian26.TFile) {
       try {
-        const content = await this.app.vault.read(file);
-        log = JSON.parse(content);
+        const content2 = await this.app.vault.read(file);
+        log = JSON.parse(content2);
       } catch (e) {
+        new import_obsidian26.Notice(t2("projectManager.corruptLog", { project: project.title }));
       }
     }
     log.push(session);
@@ -15272,8 +15356,8 @@ tags: [writing-studio]
     const file = this.app.vault.getAbstractFileByPath(logPath);
     if (!(file instanceof import_obsidian26.TFile)) return [];
     try {
-      const content = await this.app.vault.read(file);
-      return JSON.parse(content);
+      const content2 = await this.app.vault.read(file);
+      return JSON.parse(content2);
     } catch (e) {
       return [];
     }
@@ -15285,12 +15369,12 @@ tags: [writing-studio]
   async writeJson(path, data) {
     await this.writeRaw(path, JSON.stringify(data, null, 2));
   }
-  async writeRaw(path, content) {
+  async writeRaw(path, content2) {
     const existing = this.app.vault.getAbstractFileByPath(path);
     if (existing instanceof import_obsidian26.TFile) {
-      await this.app.vault.modify(existing, content);
+      await this.app.vault.modify(existing, content2);
     } else {
-      await this.app.vault.create(path, content);
+      await this.app.vault.create(path, content2);
     }
   }
   async ensureFolder(path) {
@@ -15462,8 +15546,8 @@ ${t2("statsTracker.dailyNote.heading")}
     const counts = await Promise.all(items.map(async (item) => {
       const file = this.app.vault.getAbstractFileByPath(item.filePath);
       if (!(file instanceof import_obsidian27.TFile)) return 0;
-      const content = await this.app.vault.cachedRead(file);
-      return this.plugin.fmManager.countWords(content);
+      const content2 = await this.app.vault.cachedRead(file);
+      return this.plugin.fmManager.countWords(content2);
     }));
     const total = counts.reduce((sum, n) => sum + n, 0);
     this.cachedTotalWordCount = total;
@@ -15546,8 +15630,8 @@ ${t2("statsTracker.dailyNote.heading")}
 var import_obsidian28 = require("obsidian");
 
 // src/words.ts
-function countWords(content) {
-  const body = content.replace(/^---\r?\n[\s\S]*?\r?\n---\r?\n?/, "");
+function countWords(content2) {
+  const body = content2.replace(/^---\r?\n[\s\S]*?\r?\n---\r?\n?/, "");
   const stripped = body.replace(/```[\s\S]*?```/g, "").replace(/`[^`]*`/g, "").replace(/!\[.*?\]\(.*?\)/g, "").replace(/\[.*?\]\(.*?\)/g, "").replace(/#{1,6}\s/g, "").replace(/[*_~`]/g, "").replace(/\n/g, " ").trim();
   if (!stripped) return 0;
   return stripped.split(/\s+/).filter((w) => w.length > 0).length;
@@ -15584,8 +15668,8 @@ var FrontmatterManager = class {
   async updateFrontmatter(file) {
     this.writingFiles.add(file.path);
     try {
-      const content = await this.app.vault.read(file);
-      const wordCount = this.countWords(content);
+      const content2 = await this.app.vault.read(file);
+      const wordCount = this.countWords(content2);
       const now = localDateString();
       await this.app.fileManager.processFrontMatter(file, (fm) => {
         fm["word-count"] = wordCount;
@@ -15598,101 +15682,8 @@ var FrontmatterManager = class {
       window.setTimeout(() => this.writingFiles.delete(file.path), 500);
     }
   }
-  setFrontmatterFields(content, fields) {
-    const fmMatch = content.match(/^---\n([\s\S]*?)\n---/);
-    if (!fmMatch) return content;
-    let fm = fmMatch[1];
-    for (const [key, value] of Object.entries(fields)) {
-      const lineRegex = new RegExp(`^${key}:.*$`, "m");
-      const newLine = `${key}: ${value}`;
-      if (lineRegex.test(fm)) {
-        fm = fm.replace(lineRegex, newLine);
-      } else {
-        fm += `
-${newLine}`;
-      }
-    }
-    return content.replace(/^---\n[\s\S]*?\n---/, `---
-${fm}
----`);
-  }
-  countWords(content) {
-    return countWords(content);
-  }
-  buildFrontmatter(fields) {
-    const lines = ["---"];
-    for (const [key, value] of Object.entries(fields)) {
-      if (Array.isArray(value)) {
-        lines.push(`${key}: [${value.map((v) => `${v}`).join(", ")}]`);
-      } else if (typeof value === "string") {
-        const needsQuotes = value.includes(":") || value.includes("#") || value.includes('"') || value.includes("\\");
-        lines.push(`${key}: ${needsQuotes ? `"${value.replace(/\\/g, "\\\\").replace(/"/g, '\\"')}"` : value}`);
-      } else {
-        lines.push(`${key}: ${String(value)}`);
-      }
-    }
-    lines.push("---");
-    return lines.join("\n");
-  }
-  parseFrontmatter(content) {
-    const match = content.match(/^---\n([\s\S]*?)\n---/);
-    if (!match) return null;
-    const result = {};
-    const lines = match[1].split("\n");
-    for (const line of lines) {
-      const colonIdx = line.indexOf(":");
-      if (colonIdx < 0) continue;
-      const key = line.slice(0, colonIdx).trim();
-      let val = line.slice(colonIdx + 1).trim();
-      if (val.startsWith('"') && val.endsWith('"')) {
-        val = val.slice(1, -1);
-      }
-      if (val.startsWith("[") && val.endsWith("]")) {
-        result[key] = val.slice(1, -1).split(",").map((s) => s.trim()).filter(Boolean);
-      } else if (!isNaN(Number(val)) && val !== "") {
-        result[key] = Number(val);
-      } else {
-        result[key] = val;
-      }
-    }
-    return result;
-  }
-  setFrontmatterField(content, key, value) {
-    return this.setFrontmatterFields(content, { [key]: value });
-  }
-  setWpMeta(content, meta) {
-    const fields = {
-      "wp-site": meta.wpSite,
-      "wp-post-id": meta.wpPostId,
-      "wp-url": meta.wpUrl,
-      "wp-status": meta.wpStatus,
-      "wp-published": meta.wpPublished || null,
-      "wp-scheduled": meta.wpScheduled || null
-    };
-    const fmMatch = content.match(/^---\n([\s\S]*?)\n---/);
-    if (!fmMatch) {
-      const lines = ["---"];
-      for (const [k, v] of Object.entries(fields)) {
-        if (v !== null) lines.push(`${k}: "${v}"`);
-      }
-      lines.push("---");
-      return lines.join("\n") + "\n" + content;
-    }
-    let fm = fmMatch[1];
-    for (const [k, v] of Object.entries(fields)) {
-      const regex = new RegExp(`^${k}:.*$`, "m");
-      if (v === null) {
-        fm = fm.replace(regex, `${k}: null`);
-      } else if (regex.test(fm)) {
-        fm = fm.replace(regex, `${k}: "${v}"`);
-      } else {
-        fm += `
-${k}: "${v}"`;
-      }
-    }
-    return content.replace(/^---\n[\s\S]*?\n---/, `---
-${fm}
----`);
+  countWords(content2) {
+    return countWords(content2);
   }
   destroy() {
     for (const timer of this.pendingUpdates.values()) {
@@ -15709,8 +15700,12 @@ var import_obsidian29 = require("obsidian");
 var README_default = '<p align="center">\r\n  <img src="assets/logo.png" width="120" alt="Writing Studio logo">\r\n</p>\r\n\r\n# Writing Studio\r\n\r\n**Version 2.5.2** \xB7 Desktop only\r\n\r\n![GitHub all releases](https://img.shields.io/github/downloads/writerP-777/obsidian-writing-studio/total)\r\n[![OpenSSF Best Practices](https://www.bestpractices.dev/projects/12832/badge)](https://www.bestpractices.dev/projects/12832)\r\n\r\nWriting Studio turns Obsidian into a dedicated environment for serious nonfiction work \u2014 from your first research notes to a finished, exported manuscript. It bundles a project binder, writing modes, focus and typography tools, sprint timer, progress tracking, manuscript export, and WordPress publishing into a single plugin. A built-in sidebar file explorer lets you browse, preview, and pull content from anywhere in your vault without leaving your draft.\r\n\r\n<p align="center">\r\n  <img src="assets/sidebar-explorer-screenshot.png" alt="Writing Studio with the Launcher panel open on the left, an active draft in the center, and the Folder Sidebar Explorer open to a research folder on the right" width="900">\r\n  <br>\r\n  <em>Writing Studio in use \u2014 Launcher (left), active draft with word count goal banner (center), Folder Sidebar Explorer open to a research folder (right).</em>\r\n</p>\r\n\r\n<p align="center">\r\n  <a href="https://buymeacoffee.com/writerp777">\r\n    <img src="https://img.buymeacoffee.com/button-api/?text=Buy%20me%20a%20coffee&slug=writerp777&button_colour=c9a84c&font_colour=000000&font_family=Georgia&outline_colour=000000&coffee_colour=ffffff" alt="Buy me a coffee" height="40">\r\n  </a>\r\n</p>\r\n\r\n## Contents\r\n\r\n- [Features](#features)\r\n- [Language support](#language-support)\r\n- [Writing Studio Launcher](#writing-studio-launcher)\r\n- [Folder Sidebar Explorer](#folder-sidebar-explorer)\r\n- [Your Project](#your-project)\r\n- [Your Writing Environment](#your-writing-environment)\r\n- [Tracking Your Progress](#tracking-your-progress)\r\n- [Getting Your Work Out](#getting-your-work-out)\r\n- [Supporting Tools](#supporting-tools)\r\n- [Context Menus](#context-menus)\r\n- [Commands Reference](#commands-reference)\r\n- [Settings Overview](#settings-overview)\r\n- [Ribbon Icon](#ribbon-icon)\r\n- [Installation](#installation)\r\n- [Requirements](#requirements)\r\n- [Reporting a Bug](#reporting-a-bug)\r\n- [Security](#security)\r\n\r\n---\r\n\r\n## Features\r\n\r\n**Writing Binder** \u2014 Organize your manuscript as an ordered collection of documents with per-item status, word count, and export flags. Drag chapters into order, toggle items in or out of export, and add files from anywhere in your vault.\r\n\r\n**Project Manager** \u2014 Create projects from six templates (blank, book, article series, blog collection, journal article, magazine article), set a total word count goal, and switch between projects from the Launcher.\r\n\r\n**Compile Preview** \u2014 Concatenate all binder documents in order and render them as a finished manuscript in a split pane, without exporting.\r\n\r\n**Writing Modes** \u2014 Switch between Draft (distraction-free), Edit (full tooling), and Review (read-only) modes from the status bar, command palette, context menu, or Launcher.\r\n\r\n**Focus Mode** \u2014 Dim everything except the paragraph or sentence you are writing. Configurable dim level, font size override, sidebar collapse, and typewriter scroll.\r\n\r\n**Typography Mode** \u2014 Apply a curated font, constrained line length, and controlled line height to the editor. Fourteen font options including iA Writer fonts, Google Fonts, and custom system fonts.\r\n\r\n**Sprint Timer** \u2014 Run timed writing sessions with a draggable floating overlay. Set duration, word goal, and scope (file or project). Quick-start presets (10 m, 15 m, 25 m) available from the Launcher.\r\n\r\n**Progress Tracking** \u2014 Live word counts in the status bar and Launcher, session delta tracking, per-document and per-project word count goals with inline progress banners, and a 30-day writing log with streak tracking.\r\n\r\n**Export Engine** \u2014 Export to Manuscript (HTML), PDF, Word (.docx), RTF, HTML, Markdown, and EPUB. Manuscript format produces industry-standard layout with no external tools; other formats require Pandoc.\r\n\r\n**WordPress Publishing** \u2014 Publish directly to WordPress from Obsidian. Set post title, status, categories, tags, excerpt, and scheduled date. Supports multiple sites with per-site credentials and connection testing.\r\n\r\n**Folder Sidebar Explorer** \u2014 Browse any vault folder in a sidebar panel. Search by name or file content, preview Markdown files and images inline, and insert selected text directly into the active editor.\r\n\r\n## Language support\r\n\r\nWriting Studio is available in the following languages in addition to English:\r\n\r\n- Arabic\r\n- Chinese (Simplified)\r\n- French\r\n- German\r\n- Japanese\r\n- Korean\r\n- Portuguese (Brazil)\r\n- Russian\r\n- Spanish\r\n\r\n**To change the language:** Open **Settings \u2192 General** in Obsidian, scroll to **Language**, and select your preferred language from the list. Restart Obsidian for the change to take effect. Writing Studio will display in the selected language if it is supported.\r\n\r\n**Found a translation error or missing text?** Please open an issue on GitHub \u2014 [Submit a bug report or enhancement request](https://github.com/writerP-777/obsidian-writing-studio/issues/new) \u2014 and include the language, the location in the plugin where the text appears, and what it currently says. We will address it in the next release.\r\n\r\n### Writing Studio Launcher\r\n\r\nThe Launcher is your home base in Writing Studio \u2014 a sidebar panel that shows your active project, progress toward your goals, and one-click access to every major feature.\r\n\r\nBy default it opens automatically when Obsidian loads. To disable this, turn off **Open on startup** in **Settings \u2192 General**.\r\n\r\n**To open manually:** Click the feather ribbon icon, or assign a hotkey to **Open launcher** in Settings \u2192 Hotkeys.\r\n\r\n**The Launcher includes:**\r\n- Active project name, total word count, and progress toward your project word count goal\r\n- Writing mode selector (Draft / Edit / Review)\r\n- Focus Mode and Typography Mode toggles\r\n- Sprint timer with "Set up sprint" button and Quick Sprint Options presets (10 m, 15 m, 25 m)\r\n- Today card showing words written, sprints completed, session word count, and streak\r\n- Quick-action buttons: Targets Dashboard, Writing Dashboard, Preview manuscript, Export, Writing Log, Publish to WordPress\r\n\r\n---\r\n\r\n### Folder Sidebar Explorer\r\n\r\nThe Folder Sidebar Explorer opens any vault folder in a right-sidebar panel, letting you browse reference material, research notes, or any folder outside your active project without leaving your draft. Unlike the Binder \u2014 which is scoped to your writing project \u2014 the sidebar explorer works with any folder in your vault.\r\n\r\n**To open:**\r\n- Use the command **Open folder in sidebar explorer** from the command palette \u2014 a folder picker appears so you can choose which folder to explore.\r\n- Right-click any folder in the file explorer and choose **Open in sidebar explorer** under **Writing studio options**.\r\n- Right-click any folder in [Notebook Navigator](https://github.com/johansan/notebook-navigator) and choose **Open in sidebar explorer** (requires Notebook Navigator to be installed).\r\n- Assign a hotkey in Settings \u2192 Hotkeys.\r\n\r\nThe panel opens in the **right sidebar**. The folder you open becomes the **root folder** for that session \u2014 the breadcrumb trail, the \u2302 root button, and search all operate relative to it.\r\n\r\n**Browsing and navigation:**\r\n\r\n| Feature | How to use |\r\n|---------|-----------|\r\n| Browse into a subfolder | Click the folder |\r\n| Preview a Markdown file | Click the file \u2014 the folder listing is replaced by a rendered preview inside the panel |\r\n| Preview an image | Click the file \u2014 displayed inline |\r\n| Preview audio | Click the file \u2014 player appears inline |\r\n| Other file types | Click the file \u2014 an **Open in editor** button appears |\r\n| Go back | Click **\u2190 back**, or press `Backspace` when the list has keyboard focus |\r\n| Return to root folder | Click **\u2302 root** to jump back to the folder you originally opened |\r\n| Keyboard navigation | Tab to focus the list, then `\u2191` / `\u2193` to move, `Enter` to open, `Backspace` to go back |\r\n| Breadcrumb navigation | Click any segment in the breadcrumb trail to jump directly to that folder |\r\n\r\n**Search:**\r\n\r\nA search bar appears at the top of the folder list. Type your query and press **Enter** to run the search.\r\n\r\n- Searches **both folder/file names and file contents** (`.md` and `.txt` files).\r\n- Frontmatter is excluded from content search to avoid false positives from YAML fields.\r\n- Name matches show the matched term highlighted in the result title.\r\n- Content matches show a text snippet around the match with the term highlighted, plus a **CONTENT** badge to distinguish them from name matches.\r\n- Results always search from the root folder, regardless of which subfolder you are currently browsing.\r\n- Click **\xD7** to clear the search and return to the normal folder view.\r\n\r\n**Sort:**\r\n\r\nA sort dropdown sits next to the search bar. Options:\r\n\r\n| Option | Description |\r\n|--------|-------------|\r\n| Folders \u2191 A-Z | Folders first, then files, both alphabetical (default) |\r\n| Folders \u2191 Z-A | Folders first, then files, both reverse-alphabetical |\r\n| Name A-Z | All items alphabetical, folders and files mixed |\r\n| Name Z-A | All items reverse-alphabetical, mixed |\r\n| Newest first | Sort by last-modified date, newest at top |\r\n| Oldest first | Sort by last-modified date, oldest at top |\r\n\r\n**Copy content to the editor:**\r\n\r\nWhen a Markdown file is open in preview mode (after clicking it in the file list), its text is selectable. To insert a passage into the active editor:\r\n\r\n1. Click a file in the list \u2014 the panel switches to preview mode showing the rendered file.\r\n2. Select the text you want in the preview pane.\r\n3. Click the **\u21A9 insert selection** button in the nav bar.\r\n4. The selected text is inserted at the cursor position in the active editor.\r\n\r\nThe preview is read-only \u2014 you cannot edit the file from the sidebar.\r\n\r\n**Hover tooltips:**\r\n\r\nHover over any file or folder in the list to see an information card:\r\n\r\n| Item type | Information shown |\r\n|-----------|------------------|\r\n| Markdown / text file | Last modified date and time \xB7 File size \xB7 Word count (frontmatter excluded) |\r\n| Image / audio / other file | Last modified date and time \xB7 File size |\r\n| Folder | Total file count \xB7 Subfolder count |\r\n\r\nThe word count updates asynchronously from Obsidian\'s file cache and appears within a moment of hover.\r\n\r\n---\r\n\r\n### Your Project\r\n\r\n#### Project Manager\r\n\r\nProjects group a set of documents (binder items) and act as the scope for export, statistics, and the word count goal banner.\r\n\r\n**To create a project:** Use the command **New writing project** from the command palette, or click **+ New** in the Launcher panel.\r\n\r\n**To switch projects:** Use the Launcher panel or the project selector at the top of the Binder panel.\r\n\r\nEach project stores:\r\n- Title, type, author, and description\r\n- Ordered binder with chapters, sections, articles, and notes\r\n- Per-item word count goals, statuses, and export flags\r\n- Optional total word count goal (shown in the Launcher and status bar)\r\n\r\n**Project templates available at creation:**\r\n\r\n| Template | Structure created |\r\n|----------|------------------|\r\n| Blank | Empty \u2014 build your own structure |\r\n| Book | Front Matter, Part 1 / Chapter 1, Back Matter |\r\n| Article series | Series folder, Article 1 placeholder, series metadata |\r\n| Blog collection | Date-organized folder, first post placeholder |\r\n| Journal article | Title Page, Abstract, Keywords, Introduction, Literature Review, Methodology, Findings / Analysis, Discussion, Conclusion, References, Appendices |\r\n| Magazine article | Pitch / Query Notes, Headline & Deck, Lede, Nut Graf, Body, Quotes & Sources, Kicker, Fact-Check Notes, Author Bio |\r\n\r\n---\r\n\r\n#### Writing Binder\r\n\r\nKeeping a book-length manuscript organized means knowing at a glance which chapters are drafted, which are in progress, and how each contributes to your total word count. The Binder is a sidebar panel that shows all of that for your active project.\r\n\r\nEach document shows its title, type (Chapter, Section, Article, Note), status (Draft, In Progress, Complete), and live word count. Documents can be reordered by drag-and-drop and toggled in or out of export.\r\n\r\n**To open:** Use the command **Open binder** from the command palette, or assign a hotkey in Settings \u2192 Hotkeys.\r\n\r\n**Adding a file to a project:**\r\n1. Right-click any Markdown file in the file explorer and choose **Add to writing project** under **Writing studio options**.\r\n2. A modal appears with a dropdown listing all your writing projects.\r\n3. Select the target project and click **Add to project**.\r\n\r\n**Adding files copied directly to the project folder:**\r\n\r\nIf you copied or moved files into the project folder outside of Obsidian and they do not appear in the binder, use the **Add files copied to this folder** button in the binder toolbar (immediately to the right of the **+ document** button). The plugin scans the project folder, lists any files not yet in the binder, and lets you select which ones to add before making any changes.\r\n\r\n---\r\n\r\n#### Compile Preview\r\n\r\nThe Compile Preview opens a split pane showing all binder documents for the active project concatenated in order, rendered as a finished manuscript.\r\n\r\n**To open:** Use the command **Preview compiled manuscript** from the command palette, or click the **Preview manuscript** button in the Launcher panel.\r\n\r\n---\r\n\r\n### Your Writing Environment\r\n\r\n#### Writing Modes\r\n\r\nThree modes shape how the editor behaves. The current mode is always shown in the status bar. Click the mode pill in the status bar to switch modes.\r\n\r\n| Mode | Purpose |\r\n|------|---------|\r\n| **Draft** | Distraction-free drafting; spell-check and formatting hints suppressed |\r\n| **Edit** | Revision pass; full editor tooling active |\r\n| **Review** | Read-only style; ideal for a final proofread |\r\n| **None** | Normal Obsidian behavior |\r\n\r\n**To switch modes:**\r\n- Click the mode indicator in the status bar.\r\n- Right-click inside the editor, then choose **Switch writing mode \u2192** under **Writing studio options**.\r\n- Assign hotkeys to **Switch to draft mode / Edit mode / Review mode** in Settings \u2192 Hotkeys.\r\n- Use the Writing Studio Launcher panel.\r\n\r\nThe active mode persists across Obsidian restarts.\r\n\r\n---\r\n\r\n#### Focus Mode\r\n\r\nFocus Mode dims everything in the editor except the paragraph or sentence you are currently writing, reducing visual noise and keeping attention on the active thought.\r\n\r\n**To toggle:** Assign a hotkey to **Toggle focus mode** in Settings \u2192 Hotkeys, or use the toggle in the Launcher panel. Press `Escape` to exit.\r\n\r\n**Settings (Settings \u2192 Focus mode):**\r\n\r\n| Setting | Description |\r\n|---------|-------------|\r\n| Focus unit | Highlight at the **paragraph** or **sentence (line)** level |\r\n| Dim opacity | How opaque the dimmed text appears (10\u201350%) |\r\n| Font size override | Override the editor font size while focused; 0 = use theme default. Takes precedence over Typography Mode\'s font size while Focus Mode is active |\r\n| Auto-hide sidebars | Collapse left and right sidebars when Focus Mode activates |\r\n| Typewriter scroll | Keep the active line vertically centered as you type |\r\n\r\n---\r\n\r\n#### Typography Mode\r\n\r\nTypography Mode applies a consistent, reader-friendly text treatment to the editor: a curated font, constrained line length, controlled line height, and optional letter spacing.\r\n\r\n**To toggle:** Assign a hotkey to **Toggle typography mode** in Settings \u2192 Hotkeys, or use the toggle in the Launcher panel.\r\n\r\n**To change the font while Typography Mode is active:** Right-click inside the editor and choose **Typography font \u2192** under **Writing studio options**. A font picker menu appears with all available fonts; the active font is shown with a checkmark. Selecting a font applies it immediately and saves the setting.\r\n\r\n> **Note on fonts:** Typography fonts are loaded from Google Fonts and require an internet connection the first time each font is used. After the initial load they are cached and work offline.\r\n\r\n**Settings (Settings \u2192 Typography):**\r\n\r\n| Setting | Description |\r\n|---------|-------------|\r\n| Font family | Choose from the curated font list or enter a custom font name |\r\n| Custom font name | Used when **Custom font name\u2026** is selected above |\r\n| Max line length | Characters per line (55\u201380); constrains the editor column width |\r\n| Font size | Editor font size in pixels |\r\n| Line height | Multiplier; default 1.7 |\r\n| Letter spacing | CSS `letter-spacing` value (e.g. `normal`, `0.02em`) |\r\n| Persist across sessions | Keep Typography Mode active when Obsidian reopens |\r\n\r\n**Available fonts:**\r\n\r\n| Option | Font |\r\n|--------|------|\r\n| Monospaced | iA Writer Mono (falls back to Roboto Mono / Courier New) |\r\n| Serif | iA Writer Duo Serif (falls back to Georgia) |\r\n| Sans-serif | iA Writer Quattro (falls back to system sans-serif) |\r\n| Cormorant Garamond | Elegant display serif |\r\n| Crimson Text | Classic book serif |\r\n| EB Garamond | Traditional Garamond revival |\r\n| Libre Baskerville | Readable web serif |\r\n| Libre Caslon Text | Clean slab serif |\r\n| Literata | Designed for long-form reading |\r\n| Lora | Contemporary calligraphic serif |\r\n| Inter | Modern humanist sans-serif |\r\n| Lato | Friendly rounded sans-serif |\r\n| Source Sans 3 | Clean UI sans-serif |\r\n| Custom font name\u2026 | Use any font installed on your system |\r\n\r\n---\r\n\r\n### Tracking Your Progress\r\n\r\n#### Writing Sprint Timer\r\n\r\nThe Sprint Timer runs a timed writing session. When a sprint is active, a floating overlay displays the countdown and gives you full control \u2014 without requiring you to stay on the dashboard.\r\n\r\n**To set up a sprint:**\r\n\r\n- Click **Set up sprint** in the Launcher panel to open the sprint configuration modal.\r\n- Or click one of the **Quick Sprint Options** preset buttons (10 m, 15 m, 25 m) in the Launcher panel to load a duration directly.\r\n\r\nEither path opens the floating overlay in a ready state \u2014 the timer does not start until you press \u25B6 on the overlay itself. This gives you time to navigate to your draft or open the Binder before the clock begins.\r\n\r\n**Sprint configuration modal:**\r\n\r\nThe modal lets you set:\r\n\r\n- Duration (preset or custom, in minutes)\r\n- Word count goal for the session\r\n- Scope (current file or entire project)\r\n\r\nClick **Launch sprint timer** to open the overlay in ready state.\r\n\r\n**Using the floating overlay:**\r\n\r\n| Control | Action |\r\n|---------|--------|\r\n| \u25B6 | Start or resume the sprint |\r\n| \u23F8 | Pause the sprint |\r\n| \u25A0 | Stop and end the sprint |\r\n\r\nThe overlay is draggable \u2014 click and drag the header to reposition it anywhere on screen. It stays on top regardless of writing mode or Focus Mode. The current countdown is also shown in the Obsidian status bar (`\u23F1 MM:SS`) and, when Focus Mode is active, in the focus toolbar.\r\n\r\nWhen the sprint ends, a summary modal shows words written, duration, and words-per-minute. The session is logged to sprint history and optionally appended to your Daily Note.\r\n\r\n**Settings (Settings \u2192 Sprint & goals):**\r\n\r\n| Setting | Description |\r\n|---------|-------------|\r\n| Default sprint duration | Starting value in the sprint modal (minutes) |\r\n| Default daily word goal | Target used in the Writing Dashboard and Launcher |\r\n| Sound notifications | Play a tone when the sprint ends |\r\n| Sprint history retention | Days to keep sprint records before purging |\r\n| Inline goal banner | Show a progress bar below the editor toolbar when a document has a word count goal set |\r\n\r\n---\r\n\r\n#### Word Count Goal\r\n\r\nA per-document word count goal can be set and tracked inline.\r\n\r\n**To set a goal:**\r\n- Use the command **Set word count goal** from the command palette.\r\n- Right-click inside the editor and choose **Set word count goal** under **Writing studio options**.\r\n\r\nWhen a goal is set and **Inline goal banner** is enabled, a progress bar appears below the editor toolbar showing current words, goal, and percentage. It updates in real time as you type.\r\n\r\n---\r\n\r\n#### Session Word Count\r\n\r\nThe status bar shows a `(+N)` delta next to the current file\'s word count, indicating how many words you have added since opening that file this session. The Launcher\'s **Today** card also shows a cumulative session total across all files opened during the current Obsidian session. Both counts reset when Obsidian restarts.\r\n\r\n---\r\n\r\n#### Project Word Count Goal\r\n\r\nWhen an active project has a total word count goal set, a dedicated status bar item shows `{current} / {goal} project words`. This updates automatically as you write. Set a project goal in the Project modal when creating or editing a project.\r\n\r\n---\r\n\r\n#### Writing Dashboard\r\n\r\nThe Writing Dashboard shows session statistics (words written, sprints completed, time), sprint history, daily progress toward your goal, and per-project word counts with reading time.\r\n\r\n**To open:** Use the command **Open writing dashboard** from the command palette, or click the **Writing dashboard** button in the Launcher panel.\r\n\r\n---\r\n\r\n#### Targets Dashboard\r\n\r\nThe Targets Dashboard lets you assign word count goals to individual documents in the active project\'s binder and track progress across the whole project at a glance. Goals can be edited inline in the table. Rows are sortable and filterable by status.\r\n\r\n**To open:** Use the command **Open targets dashboard**, click the **Targets dashboard** button in the Launcher panel, or assign a hotkey in Settings \u2192 Hotkeys.\r\n\r\n---\r\n\r\n#### Daily Writing Log\r\n\r\nThe Writing Log is a sidebar panel that shows your writing history at a glance.\r\n\r\n**To open:** Use the command **Open writing log** from the command palette, or click the **Writing log** button in the Launcher panel.\r\n\r\n**The Writing Log shows:**\r\n- Current streak (days in a row with at least one sprint)\r\n- This session: total session words, sprint words, sprints completed, and minutes written\r\n- Last 30 days: a bar chart with one row per day showing word count, sprints completed, and a visual bar proportional to the day\'s output\r\n\r\nWhen **Append to daily note** is enabled (Settings \u2192 Writing log), a summary of each completed sprint is also appended to today\'s Daily Note.\r\n\r\n---\r\n\r\n### Getting Your Work Out\r\n\r\n#### Export Engine\r\n\r\nWhen your draft is ready, the Export Engine converts it to a finished file in your chosen format \u2014 no reformatting required.\r\n\r\n**Supported formats:** Manuscript (HTML) \xB7 PDF \xB7 Word (.docx) \xB7 RTF \xB7 HTML \xB7 Markdown \xB7 EPUB\r\n\r\n**To export:**\r\n- Right-click inside the editor and choose **Export this document** under **Writing studio options**.\r\n- Use the command **Export document** from the command palette.\r\n- Click the **Export** button in the Launcher panel.\r\n- Assign a hotkey to **Export document** in Settings \u2192 Hotkeys.\r\n\r\n**Manuscript format**\r\n\r\nThe Manuscript format produces a self-contained HTML file formatted to industry-standard manuscript conventions:\r\n- Courier New 12 pt, double-spaced, 1-inch margins\r\n- Title page with project title, author name, approximate word count, and optional contact information\r\n- Chapter headings in uppercase, page-break before each\r\n- Scene breaks rendered as `#` (the standard manuscript convention)\r\n\r\nNo external tools are required for manuscript export.\r\n\r\n**Settings (Settings \u2192 Export):**\r\n\r\n| Setting | Description |\r\n|---------|-------------|\r\n| Default export format | Pre-selected format in the export modal |\r\n| Default paper size | Letter (US) or A4 |\r\n| Export font | Font name used in PDF/DOCX output (e.g. `Georgia`) |\r\n| Export font size | Point size for PDF/DOCX output |\r\n| Pandoc path | Full path to the `pandoc` binary if it is not on your system PATH |\r\n| EPUB language | BCP 47 language tag (e.g. `en`, `fr`, `de`) |\r\n| EPUB include cover | Generate a text cover page when no cover image is provided |\r\n\r\n> **Requirement:** Pandoc must be installed for PDF, DOCX, RTF, HTML, and EPUB export. Download from [pandoc.org](https://pandoc.org/installing.html). For PDF export, a LaTeX distribution (e.g. TeX Live or MiKTeX) is also required. Manuscript (HTML) export does not require Pandoc.\r\n>\r\n> **Formatting note:** the built-in converter used for HTML, Manuscript, and EPUB output supports headings, paragraphs, lists, blockquotes, fenced code blocks, tables, images, and links. Nested lists, setext (underline-style) headings, and footnotes are not converted \u2014 use a Pandoc format (PDF, DOCX, RTF) if your manuscript depends on them.\r\n\r\n---\r\n\r\n#### WordPress Publishing\r\n\r\nPublish your finished draft directly to WordPress without leaving Obsidian. The modal lets you choose the target site, set the post title, status, categories, tags, excerpt, and an optional scheduled publication date.\r\n\r\n**To publish:**\r\n- Right-click inside the editor and choose **Publish to WordPress** under **Writing studio options**.\r\n- Use the command **Publish to wordpress** from the command palette.\r\n- Click the **Publish to WordPress** button in the Launcher panel.\r\n- Assign a hotkey to **Publish to wordpress** in Settings \u2192 Hotkeys.\r\n\r\n**Setting up a site (Settings \u2192 WordPress):**\r\n\r\n1. Click **+ add WordPress site**.\r\n2. Enter a nickname, the site URL (e.g. `https://yourblog.com`), and your WordPress username.\r\n3. Generate an application password in WordPress under **Users \u2192 Profile \u2192 Application passwords** and paste it into the **Application password** field.\r\n4. Click **Test connection** to verify.\r\n\r\n**Per-site options:**\r\n\r\n| Setting | Description |\r\n|---------|-------------|\r\n| Default post status | Draft \xB7 Pending Review \xB7 Published |\r\n| Wikilink handling | **Strip** removes `[[...]]` syntax, leaving plain text \xB7 **Convert** turns wikilinks into URLs |\r\n\r\n**Preserving your credentials across updates**\r\n\r\nWriting Studio stores your WordPress site credentials in your vault\'s `.obsidian/plugins/writing-studio/data.json` file. Obsidian\'s in-app update process does not touch this file \u2014 your credentials are preserved automatically. However, if you uninstall and reinstall the plugin manually, or if a vault sync conflict overwrites `data.json`, credentials will be lost and will need to be re-entered. To avoid this, always use Obsidian\'s built-in Update button rather than uninstalling manually.\r\n\r\n---\r\n\r\n### Supporting Tools\r\n\r\n#### Frontmatter Manager\r\n\r\nWriting Studio automatically manages YAML frontmatter in your documents when **Frontmatter auto-update** is enabled. On every save it updates:\r\n\r\n- `word-count` \u2014 current word count\r\n- `modified` \u2014 last-modified date\r\n\r\nThe `word-count-goal` frontmatter field is read by the inline goal banner and the Word Count Goal modal.\r\n\r\n---\r\n\r\n## Context Menus\r\n\r\nWriting Studio adds items to Obsidian\'s right-click context menus. All Writing Studio items are grouped together under the heading **Writing studio options** to distinguish them from other plugins and Obsidian\'s built-in options.\r\n\r\n### Right-click inside an open document (editor menu)\r\n\r\n| Option | Action |\r\n|--------|--------|\r\n| Export this document | Open the export modal for the current file |\r\n| Publish to WordPress | Open the WordPress publish modal for the current file |\r\n| Set word count goal | Set a word count target for the current document |\r\n| Switch writing mode \u2192 | Open a mode-switcher menu (Draft / Edit / Review / None) |\r\n| Typography font \u2192 | Open a font picker menu to change the typography font (visible only when Typography Mode is active) |\r\n\r\n### Right-click a Markdown file in the file explorer\r\n\r\n| Option | Action |\r\n|--------|--------|\r\n| Add to writing project | Open a project picker and add the file to the selected project |\r\n\r\n### Right-click a folder in the file explorer\r\n\r\n| Option | Action |\r\n|--------|--------|\r\n| Open in sidebar explorer | Open the folder in the Folder Sidebar Explorer panel |\r\n\r\n---\r\n\r\n## Commands Reference\r\n\r\nNo default hotkeys are assigned. All commands can be given a hotkey in **Settings \u2192 Hotkeys**.\r\n\r\n| Command | Description |\r\n|---------|-------------|\r\n| Open launcher | Open the launcher sidebar panel |\r\n| Open binder | Open the writing binder sidebar panel |\r\n| Open writing log | Open the daily writing log panel |\r\n| Toggle focus mode | Enable or disable focus mode |\r\n| Toggle typography mode | Enable or disable typography mode |\r\n| Switch to draft mode | Activate draft writing mode |\r\n| Switch to edit mode | Activate edit writing mode |\r\n| Switch to review mode | Activate review writing mode |\r\n| Start writing sprint | Open the sprint timer modal |\r\n| Export document | Export the current document |\r\n| Export project | Export the full project |\r\n| Preview compiled manuscript | Open the compile preview pane |\r\n| Publish to wordpress | Publish the current document to WordPress |\r\n| New writing project | Create a new writing project |\r\n| Open writing dashboard | Open the statistics dashboard |\r\n| Open targets dashboard | Open the word count targets panel |\r\n| Set word count goal | Set a per-document word count goal |\r\n| Open folder in sidebar explorer | Search and open a vault folder in the sidebar |\r\n| Add files copied to project folder | Scan the active project folder for files not in the binder and import selected files |\r\n\r\n---\r\n\r\n## Settings Overview\r\n\r\nOpen via **Settings \u2192 Writing Studio**.\r\n\r\n| Tab | What it controls |\r\n|-----|-----------------|\r\n| General | Open on startup, default project folder, author name, document type, frontmatter auto-update |\r\n| Focus mode | Focus unit, dim opacity, font override, sidebar behavior, typewriter scroll |\r\n| Typography | Font family, custom font name, line length, font size, line height, letter spacing, persistence |\r\n| Sprint & goals | Sprint duration, daily goal, sound notifications, history retention, inline banner |\r\n| Export | Format, paper size, font, font size, Pandoc path, EPUB language, EPUB cover |\r\n| Writing log | Append sprint summaries to Daily Note |\r\n| WordPress | Site credentials, default post status, wikilink handling |\r\n\r\n---\r\n\r\n## Ribbon Icon\r\n\r\nWriting Studio adds a single icon to the Obsidian ribbon.\r\n\r\n| Icon | Action |\r\n|------|--------|\r\n| Feather | Open the Writing Studio Launcher panel |\r\n\r\nAll other features are accessible from the Launcher panel, the command palette, context menus, or assigned hotkeys.\r\n\r\n---\r\n\r\n## Installation\r\n\r\n1. Download `main.js`, `manifest.json`, and `styles.css` from the latest [GitHub release](../../releases/latest).\r\n2. Create the folder `<vault>/.obsidian/plugins/obsidian-writing-studio/` if it does not exist.\r\n3. Copy the three files into that folder.\r\n4. In Obsidian, go to **Settings \u2192 Community Plugins**, find **Writing Studio**, and enable it.\r\n\r\n> **Building from source:** Clone the repository, run `npm install`, then `npm run build`. Copy the three output files as above.\r\n\r\n---\r\n\r\n## Requirements\r\n\r\nMost features work out of the box. A few require additional software for specific functions, noted below.\r\n\r\n| Requirement | When needed |\r\n|-------------|-------------|\r\n| Obsidian 1.7.2 or later | Always |\r\n| Desktop (Windows, macOS, Linux) | Always \u2014 this plugin does not run on mobile |\r\n| Internet connection | First use of each Typography Mode font (cached after that) |\r\n| [Pandoc](https://pandoc.org/installing.html) | Export to PDF, DOCX, RTF, HTML, EPUB |\r\n| LaTeX (TeX Live / MiKTeX) | Export to PDF only |\r\n| WordPress 5.6+ with REST API enabled | WordPress publishing |\r\n| WordPress Application Password | WordPress publishing |\r\n\r\n---\r\n\r\n## Reporting a Bug\r\n\r\nIf something isn\'t working, please open an issue on GitHub:\r\n\r\n**[Submit a bug report](https://github.com/writerP-777/obsidian-writing-studio/issues/new)**\r\n\r\nInclude the following when you report:\r\n\r\n- Writing Studio version (visible in **Settings \u2192 Community Plugins**)\r\n- Obsidian version (visible in **Settings \u2192 About**)\r\n- Operating system (Windows / macOS / Linux) and version\r\n- What you expected to happen\r\n- What actually happened, and any steps to reproduce it\r\n\r\nFeature requests are welcome in the same place \u2014 please label them as **[Feature Request]** in the issue title.\r\n\r\n---\r\n\r\n## Security\r\n\r\n[![CodeQL](https://github.com/writerP-777/obsidian-writing-studio/actions/workflows/codeql.yml/badge.svg)](https://github.com/writerP-777/obsidian-writing-studio/actions/workflows/codeql.yml)\r\n[![OpenSSF Scorecard](https://api.securityscorecards.dev/projects/github.com/writerP-777/obsidian-writing-studio/badge)](https://securityscorecards.dev/viewer/?uri=github.com/writerP-777/obsidian-writing-studio)\r\n[![OpenSSF Baseline](https://www.bestpractices.dev/projects/12832/baseline)](https://www.bestpractices.dev/projects/12832)\r\n[![ESLint](https://github.com/writerP-777/obsidian-writing-studio/actions/workflows/eslint.yml/badge.svg)](https://github.com/writerP-777/obsidian-writing-studio/actions/workflows/eslint.yml)\r\n[![ORCID](https://img.shields.io/badge/ORCID-0009--0009--8598--2069-brightgreen?logo=orcid&logoColor=white)](https://orcid.org/0009-0009-8598-2069)\r\n\r\nEvery push and pull request is scanned automatically:\r\n\r\n| Tool | What it checks |\r\n|------|----------------|\r\n| **CodeQL** | Static analysis for security vulnerabilities (XSS, injection, unsafe patterns) in TypeScript/JavaScript source |\r\n| **OpenSSF Scorecard** | Supply-chain security posture: dependency hygiene, branch protection, signed releases, and more |\r\n| **ESLint** (`eslint-plugin-obsidianmd`) | Obsidian plugin guideline compliance \u2014 fails on any warning or error |\r\n\r\nResults are published to the **Security** tab of this repository (GitHub code scanning).\r\n\r\nFor local development, a pre-commit hook runs ESLint (blocking) and a pre-push hook runs a full CodeQL scan (blocks the push if any HIGH or CRITICAL findings are present). Install the [CodeQL CLI](https://github.com/github/codeql-cli-binaries/releases) to enable local scanning (`winget install GitHub.CodeQL` on Windows).\r\n';
 
 // src/HelpContent.ts
-var featuresIndex = README_default.indexOf("\n## Features");
-var HELP_CONTENT = featuresIndex !== -1 ? README_default.slice(featuresIndex).trimStart() : README_default;
+var start = README_default.indexOf("\n## Features");
+var content = start !== -1 ? README_default.slice(start).trimStart() : README_default;
+var cut = content.search(/\n## (Installation|Requirements|Reporting a Bug|Security)\b/);
+if (cut !== -1) content = content.slice(0, cut);
+content = content.replace(/^!\[[^\]]*\]\((?!https?:\/\/)[^)]*\)[ \t]*$/gm, "");
+var HELP_CONTENT = content;
 
 // src/SettingsTab.ts
 var WritingStudioSettingsTab = class extends import_obsidian29.PluginSettingTab {
@@ -15925,7 +15920,7 @@ var WritingStudioSettingsTab = class extends import_obsidian29.PluginSettingTab 
   }
   renderExport(el) {
     new import_obsidian29.Setting(el).setName(t2("settings.export.heading")).setHeading();
-    new import_obsidian29.Setting(el).setName(t2("settings.export.defaultFormat")).addDropdown((d) => d.addOption("md", t2("settings.export.format.md")).addOption("html", t2("settings.export.format.html")).addOption("pdf", t2("settings.export.format.pdf")).addOption("docx", t2("settings.export.format.docx")).addOption("rtf", t2("settings.export.format.rtf")).setValue(this.plugin.settings.defaultExportFormat).onChange(async (v) => {
+    new import_obsidian29.Setting(el).setName(t2("settings.export.defaultFormat")).addDropdown((d) => d.addOption("md", t2("settings.export.format.md")).addOption("html", t2("settings.export.format.html")).addOption("manuscript", t2("exportModal.format.manuscript")).addOption("epub", t2("exportModal.format.epub")).addOption("pdf", t2("settings.export.format.pdf")).addOption("docx", t2("settings.export.format.docx")).addOption("rtf", t2("settings.export.format.rtf")).setValue(this.plugin.settings.defaultExportFormat).onChange(async (v) => {
       this.plugin.settings.defaultExportFormat = v;
       await this.plugin.saveSettings();
     }));
@@ -15973,7 +15968,7 @@ var WritingStudioSettingsTab = class extends import_obsidian29.PluginSettingTab 
     new import_obsidian29.Setting(el).addButton((b) => b.setButtonText(t2("settings.wordpress.addSite")).onClick(async () => {
       this.plugin.settings.wordPressSites.push({
         id: `site-${Date.now()}`,
-        nickname: "New Site",
+        nickname: t2("settings.wordpress.newSiteName"),
         url: "",
         username: "",
         appPassword: "",
@@ -16234,10 +16229,10 @@ var FolderSidebarView = class extends import_obsidian30.ItemView {
   /** Extract ~120 chars of context around a match for the sidebar snippet. */
   extractSnippet(text, matchIdx, matchLen) {
     const half = 60;
-    const start = Math.max(0, matchIdx - half);
+    const start2 = Math.max(0, matchIdx - half);
     const end = Math.min(text.length, matchIdx + matchLen + half);
-    let snippet = text.slice(start, end).replace(/\s+/g, " ").trim();
-    if (start > 0) snippet = "\u2026" + snippet;
+    let snippet = text.slice(start2, end).replace(/\s+/g, " ").trim();
+    if (start2 > 0) snippet = "\u2026" + snippet;
     if (end < text.length) snippet += "\u2026";
     return snippet;
   }
@@ -16299,19 +16294,6 @@ var FolderSidebarView = class extends import_obsidian30.ItemView {
     const rect = anchor.getBoundingClientRect();
     const tip = this.app.workspace.containerEl.createDiv({ cls: "ws-info-tooltip" });
     this.tooltipEl = tip;
-    const vw = window.innerWidth;
-    const vh = window.innerHeight;
-    const tipW = 280;
-    const tipH = 120;
-    let top = rect.bottom + 6;
-    let left = rect.left;
-    if (top + tipH > vh) top = rect.top - tipH - 6;
-    if (left + tipW > vw) left = vw - tipW - 8;
-    if (left < 8) left = 8;
-    tip.setCssProps({
-      "--ws-tip-top": `${Math.round(top)}px`,
-      "--ws-tip-left": `${Math.round(left)}px`
-    });
     tip.createDiv({ cls: "ws-tooltip-name", text: item.name });
     tip.createDiv({ cls: "ws-tooltip-divider" });
     if (item instanceof import_obsidian30.TFile) {
@@ -16325,8 +16307,10 @@ var FolderSidebarView = class extends import_obsidian30.ItemView {
       });
       this.addTooltipRow(tip, t2("folderSidebar.tooltip.modified"), modStr);
       this.addTooltipRow(tip, t2("folderSidebar.tooltip.size"), this.formatFileSize(item.stat.size));
-      if (["md", "txt"].includes(item.extension.toLowerCase())) {
-        const wordRow = this.addTooltipRow(tip, t2("folderSidebar.tooltip.words"), "\u2026");
+      const isText = ["md", "txt"].includes(item.extension.toLowerCase());
+      const wordRow = isText ? this.addTooltipRow(tip, t2("folderSidebar.tooltip.words"), "\u2026") : null;
+      this.positionTooltip(tip, rect);
+      if (wordRow) {
         try {
           const text = await this.app.vault.cachedRead(item);
           const words = countWords(text);
@@ -16354,7 +16338,23 @@ var FolderSidebarView = class extends import_obsidian30.ItemView {
       if (folderCount > 0) {
         this.addTooltipRow(tip, t2("folderSidebar.tooltip.subfolders"), folderCount.toLocaleString());
       }
+      this.positionTooltip(tip, rect);
     }
+  }
+  positionTooltip(tip, anchorRect) {
+    const vw = window.innerWidth;
+    const vh = window.innerHeight;
+    const tipW = 280;
+    const tipH = tip.offsetHeight || 120;
+    let top = anchorRect.bottom + 6;
+    let left = anchorRect.left;
+    if (top + tipH > vh) top = anchorRect.top - tipH - 6;
+    if (left + tipW > vw) left = vw - tipW - 8;
+    if (left < 8) left = 8;
+    tip.setCssProps({
+      "--ws-tip-top": `${Math.round(top)}px`,
+      "--ws-tip-left": `${Math.round(left)}px`
+    });
   }
   addTooltipRow(container, label, value) {
     const row = container.createDiv({ cls: "ws-tooltip-row" });
@@ -16420,70 +16420,39 @@ var FolderSidebarView = class extends import_obsidian30.ItemView {
     if (firstMark) firstMark.scrollIntoView({ block: "center" });
   }
   // ── Sort helpers ──────────────────────────────────────────────────────────
+  // One comparator for both the folder listing and search results — the two
+  // sort methods previously duplicated this switch block
+  compareEntries(a, b) {
+    const aIsFolder = a instanceof import_obsidian30.TFolder;
+    const bIsFolder = b instanceof import_obsidian30.TFolder;
+    const mtime = (x) => x instanceof import_obsidian30.TFile ? x.stat.mtime : 0;
+    switch (this.sortMode) {
+      case "folders-az":
+        if (aIsFolder !== bIsFolder) return aIsFolder ? -1 : 1;
+        return a.name.localeCompare(b.name);
+      case "folders-za":
+        if (aIsFolder !== bIsFolder) return aIsFolder ? -1 : 1;
+        return b.name.localeCompare(a.name);
+      case "az":
+        return a.name.localeCompare(b.name);
+      case "za":
+        return b.name.localeCompare(a.name);
+      case "modified-new":
+        return mtime(b) - mtime(a);
+      case "modified-old":
+        return mtime(a) - mtime(b);
+    }
+  }
   sortItems(items) {
-    return [...items].sort((a, b) => {
-      const aIsFolder = a instanceof import_obsidian30.TFolder;
-      const bIsFolder = b instanceof import_obsidian30.TFolder;
-      switch (this.sortMode) {
-        case "folders-az":
-          if (aIsFolder && !bIsFolder) return -1;
-          if (!aIsFolder && bIsFolder) return 1;
-          return a.name.localeCompare(b.name);
-        case "folders-za":
-          if (aIsFolder && !bIsFolder) return -1;
-          if (!aIsFolder && bIsFolder) return 1;
-          return b.name.localeCompare(a.name);
-        case "az":
-          return a.name.localeCompare(b.name);
-        case "za":
-          return b.name.localeCompare(a.name);
-        case "modified-new": {
-          const aMtime = a instanceof import_obsidian30.TFile ? a.stat.mtime : 0;
-          const bMtime = b instanceof import_obsidian30.TFile ? b.stat.mtime : 0;
-          return bMtime - aMtime;
-        }
-        case "modified-old": {
-          const aMtime = a instanceof import_obsidian30.TFile ? a.stat.mtime : 0;
-          const bMtime = b instanceof import_obsidian30.TFile ? b.stat.mtime : 0;
-          return aMtime - bMtime;
-        }
-      }
-    });
+    return [...items].sort((a, b) => this.compareEntries(a, b));
   }
   sortResults(results) {
-    return [...results].sort((a, b) => {
-      const aItem = a.item, bItem = b.item;
-      const aIsFolder = aItem instanceof import_obsidian30.TFolder;
-      const bIsFolder = bItem instanceof import_obsidian30.TFolder;
-      switch (this.sortMode) {
-        case "folders-az":
-          if (aIsFolder && !bIsFolder) return -1;
-          if (!aIsFolder && bIsFolder) return 1;
-          return aItem.name.localeCompare(bItem.name);
-        case "folders-za":
-          if (aIsFolder && !bIsFolder) return -1;
-          if (!aIsFolder && bIsFolder) return 1;
-          return bItem.name.localeCompare(aItem.name);
-        case "az":
-          return aItem.name.localeCompare(bItem.name);
-        case "za":
-          return bItem.name.localeCompare(aItem.name);
-        case "modified-new": {
-          const aMtime = aItem instanceof import_obsidian30.TFile ? aItem.stat.mtime : 0;
-          const bMtime = bItem instanceof import_obsidian30.TFile ? bItem.stat.mtime : 0;
-          return bMtime - aMtime;
-        }
-        case "modified-old": {
-          const aMtime = aItem instanceof import_obsidian30.TFile ? aItem.stat.mtime : 0;
-          const bMtime = bItem instanceof import_obsidian30.TFile ? bItem.stat.mtime : 0;
-          return aMtime - bMtime;
-        }
-      }
-    });
+    return [...results].sort((a, b) => this.compareEntries(a.item, b.item));
   }
   // ── Render ────────────────────────────────────────────────────────────────
   render() {
-    this.leaf.updateHeader();
+    var _a2, _b2;
+    (_b2 = (_a2 = this.leaf).updateHeader) == null ? void 0 : _b2.call(_a2);
     const container = this.containerEl.children[1];
     container.empty();
     container.addClass("ws-folder-container");
@@ -16542,9 +16511,9 @@ var FolderSidebarView = class extends import_obsidian30.ItemView {
       });
       let capturedText = "";
       insertBtn.addEventListener("mousedown", (e) => {
-        var _a2, _b2;
+        var _a3, _b3;
         e.preventDefault();
-        capturedText = (_b2 = (_a2 = window.getSelection()) == null ? void 0 : _a2.toString()) != null ? _b2 : "";
+        capturedText = (_b3 = (_a3 = window.getSelection()) == null ? void 0 : _a3.toString()) != null ? _b3 : "";
       });
       insertBtn.addEventListener("click", () => {
         if (!capturedText) return;
@@ -16625,27 +16594,27 @@ var FolderSidebarView = class extends import_obsidian30.ItemView {
   }
   // ── File preview ──────────────────────────────────────────────────────────
   async renderFileContent(container, file) {
-    const content = container.createDiv({ cls: "ws-folder-content ws-folder-content-selectable" });
+    const content2 = container.createDiv({ cls: "ws-folder-content ws-folder-content-selectable" });
     const ext = file.extension.toLowerCase();
     if (ext === "md") {
       try {
         const text = await this.app.vault.cachedRead(file);
-        await import_obsidian30.MarkdownRenderer.render(this.app, text, content, file.path, this);
-        if (this.searchQuery) this.highlightTextInElement(content, this.searchQuery);
+        await import_obsidian30.MarkdownRenderer.render(this.app, text, content2, file.path, this);
+        if (this.searchQuery) this.highlightTextInElement(content2, this.searchQuery);
       } catch (e) {
-        content.createDiv({ cls: "ws-folder-empty", text: t2("folderSidebar.previewError") });
+        content2.createDiv({ cls: "ws-folder-empty", text: t2("folderSidebar.previewError") });
       }
     } else if (["png", "jpg", "jpeg", "webp", "gif", "svg"].includes(ext)) {
-      const img = content.createEl("img", { cls: "ws-folder-img" });
+      const img = content2.createEl("img", { cls: "ws-folder-img" });
       img.setAttribute("src", this.app.vault.getResourcePath(file));
     } else if (["mp3", "wav", "m4a", "ogg", "flac"].includes(ext)) {
-      const audio = content.createEl("audio", { cls: "ws-folder-audio" });
+      const audio = content2.createEl("audio", { cls: "ws-folder-audio" });
       audio.setAttribute("controls", "");
       audio.setAttribute("src", this.app.vault.getResourcePath(file));
     } else {
-      const msg = content.createDiv({ cls: "ws-folder-unsupported" });
+      const msg = content2.createDiv({ cls: "ws-folder-unsupported" });
       msg.setText(t2("folderSidebar.noPreview", { ext: file.extension }));
-      const openBtn = content.createEl("button", { cls: "ws-folder-open-btn", text: t2("folderSidebar.openInEditor") });
+      const openBtn = content2.createEl("button", { cls: "ws-folder-open-btn", text: t2("folderSidebar.openInEditor") });
       openBtn.addEventListener("click", () => {
         void this.app.workspace.getLeaf("tab").openFile(file);
       });
@@ -16656,6 +16625,7 @@ var FolderSidebarView = class extends import_obsidian30.ItemView {
     var _a2, _b2, _c;
     const list = container.createDiv({ cls: "ws-folder-list" });
     list.setAttribute("tabindex", "0");
+    list.setAttribute("role", "listbox");
     const query = this.searchQuery.trim();
     if (query) {
       if (this.searchResults === null) {
@@ -16674,6 +16644,8 @@ var FolderSidebarView = class extends import_obsidian30.ItemView {
       for (const result of sorted2) {
         const { item, matchType, snippet } = result;
         const itemEl = list.createDiv({ cls: "ws-folder-item ws-folder-item--column" });
+        itemEl.setAttribute("role", "option");
+        itemEl.setAttribute("aria-selected", "false");
         const topRow = itemEl.createDiv({ cls: "ws-folder-item-row" });
         const iconEl = topRow.createSpan({ cls: "ws-folder-item-icon" });
         if (item instanceof import_obsidian30.TFolder) {
@@ -16750,6 +16722,8 @@ var FolderSidebarView = class extends import_obsidian30.ItemView {
     const items = [];
     for (const child of sorted) {
       const item = list.createDiv({ cls: "ws-folder-item" });
+      item.setAttribute("role", "option");
+      item.setAttribute("aria-selected", "false");
       const iconEl = item.createSpan({ cls: "ws-folder-item-icon" });
       if (child instanceof import_obsidian30.TFolder) {
         (0, import_obsidian30.setIcon)(iconEl, "folder");
@@ -16802,6 +16776,7 @@ var FolderSidebarView = class extends import_obsidian30.ItemView {
 function applyFocus(items, index) {
   items.forEach((item, i) => {
     item.toggleClass("is-keyboard-focused", i === index);
+    item.setAttribute("aria-selected", String(i === index));
     if (i === index) item.scrollIntoView({ block: "nearest" });
   });
 }
@@ -17534,8 +17509,8 @@ var WritingStudioPlugin = class extends import_obsidian33.Plugin {
       this.statusBarWordCount.textContent = "";
       return;
     }
-    const content = editor.getValue();
-    const wc = this.fmManager.countWords(content);
+    const content2 = editor.getValue();
+    const wc = this.fmManager.countWords(content2);
     const file = view.file;
     let sessionDelta = 0;
     if (file) {
@@ -17583,8 +17558,8 @@ var WritingStudioPlugin = class extends import_obsidian33.Plugin {
     if (gen !== this.bannerGeneration) return;
     if (!goal || goal <= 0) return;
     this.currentBannerGoal = goal;
-    const content = view.editor.getValue();
-    const wc = this.fmManager.countWords(content);
+    const content2 = view.editor.getValue();
+    const wc = this.fmManager.countWords(content2);
     const pct = Math.min(100, Math.round(wc / goal * 100));
     if (gen !== this.bannerGeneration) return;
     const viewHeader = leaf.view.containerEl.querySelector(":scope > .view-header");
@@ -17641,21 +17616,21 @@ var WordCountGoalModal = class extends import_obsidian33.Modal {
     this.file = file;
   }
   async onOpen() {
+    var _a2;
     const { contentEl } = this;
     contentEl.empty();
     contentEl.addClass("ws-goal-modal");
     contentEl.createEl("h2", { text: t2("wordCountGoal.title") });
-    const content = await this.app.vault.read(this.file);
-    const fm = this.plugin.fmManager.parseFrontmatter(content);
-    this.goal = (fm == null ? void 0 : fm["word-count-goal"]) || 0;
+    const cache = this.app.metadataCache.getFileCache(this.file);
+    this.goal = Number((_a2 = cache == null ? void 0 : cache.frontmatter) == null ? void 0 : _a2["word-count-goal"]) || 0;
     new import_obsidian33.Setting(contentEl).setName(t2("wordCountGoal.name")).setDesc(t2("wordCountGoal.desc")).addText((tx) => tx.setValue(String(this.goal || "")).setPlaceholder(t2("wordCountGoal.placeholder")).onChange((v) => {
       this.goal = parseInt(v) || 0;
     }));
     const btnRow = contentEl.createDiv("ws-modal-btn-row");
     const saveBtn = btnRow.createEl("button", { cls: "mod-cta", text: t2("wordCountGoal.save") });
     saveBtn.onclick = async () => {
-      await this.app.vault.process(this.file, (data) => {
-        return this.plugin.fmManager.setFrontmatterField(data, "word-count-goal", this.goal);
+      await this.app.fileManager.processFrontMatter(this.file, (fm) => {
+        fm["word-count-goal"] = this.goal;
       });
       this.close();
     };

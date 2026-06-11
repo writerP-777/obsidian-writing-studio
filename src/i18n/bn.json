@@ -142,7 +142,8 @@
       "testConnectionDesc": "শংসাপত্র এবং সংযোগ যাচাই করুন।",
       "testing": "পরীক্ষা করা হচ্ছে…",
       "removeSite": "সাইট সরান",
-      "buyMeACoffee": "আমাকে কফি কিনুন"
+      "buyMeACoffee": "আমাকে কফি কিনুন",
+      "newSiteName": "নতুন সাইট"
     }
   },
   "binder": {
@@ -172,7 +173,9 @@
       "duplicate": "ডুপ্লিকেট",
       "moveToResearch": "গবেষণায় সরান",
       "publishToWordPress": "WordPress-এ প্রকাশ করুন",
-      "delete": "মুছুন"
+      "delete": "মুছুন",
+      "moveUp": "উপরে সরান",
+      "moveDown": "নিচে সরান"
     },
     "wordCountSuffix": "{{count}}শ",
     "fileNotFound": "ফাইলটি আর নেই: {{path}}",
@@ -343,7 +346,8 @@
   "projectManager": {
     "errorFolderExists": "আপনার প্রজেক্ট ফোল্ডারে \"{{folder}}\" নামে একটি ফোল্ডার ইতিমধ্যে রয়েছে। অন্য একটি শিরোনাম বেছে নিন।",
     "corruptBinder": "\"{{project}}\"-এর _binder.json ফাইলটি পড়া যায়নি। প্রজেক্ট ফোল্ডারে _binder.json.bak নামে একটি ব্যাকআপ সংরক্ষণ করা হয়েছে।",
-    "corruptProject": "\"{{folder}}\"-এর প্রজেক্ট ফাইলটি ক্ষতিগ্রস্ত এবং প্রজেক্টটি লোড করা যায়নি।"
+    "corruptProject": "\"{{folder}}\"-এর প্রজেক্ট ফাইলটি ক্ষতিগ্রস্ত এবং প্রজেক্টটি লোড করা যায়নি।",
+    "corruptLog": "{{project}} এর লেখার লগ পড়া যায়নি — নতুন লগ শুরু হচ্ছে।"
   },
   "projectModal": {
     "title": "নতুন লেখার প্রকল্প",

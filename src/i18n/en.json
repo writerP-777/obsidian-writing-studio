@@ -142,7 +142,8 @@
       "testConnectionDesc": "Verify credentials and connectivity.",
       "testing": "Testing…",
       "removeSite": "Remove site",
-      "buyMeACoffee": "Buy me a coffee"
+      "buyMeACoffee": "Buy me a coffee",
+      "newSiteName": "New site"
     }
   },
   "binder": {
@@ -172,7 +173,9 @@
       "duplicate": "Duplicate",
       "moveToResearch": "Move to research",
       "publishToWordPress": "Publish to WordPress",
-      "delete": "Delete"
+      "delete": "Delete",
+      "moveUp": "Move up",
+      "moveDown": "Move down"
     },
     "wordCountSuffix": "{{count}}w",
     "fileNotFound": "File no longer exists: {{path}}",
@@ -343,7 +346,8 @@
   "projectManager": {
     "errorFolderExists": "A folder named \"{{folder}}\" already exists in your projects folder. Choose a different title.",
     "corruptBinder": "The binder file for \"{{project}}\" could not be read. A backup was saved as _binder.json.bak in the project folder.",
-    "corruptProject": "The project file in \"{{folder}}\" is corrupt and the project could not be loaded."
+    "corruptProject": "The project file in \"{{folder}}\" is corrupt and the project could not be loaded.",
+    "corruptLog": "Writing log for {{project}} could not be read — starting a fresh log."
   },
   "projectModal": {
     "title": "New writing project",
