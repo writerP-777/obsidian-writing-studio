@@ -79,3 +79,77 @@ describe('StatsTracker word-count session tracking', () => {
     expect(tracker.getTotalSessionWords()).toBe(0);
   });
 });
+
+describe('StatsTracker local-date handling', () => {
+  function localToday(): string {
+    const d = new Date();
+    const pad = (n: number) => String(n).padStart(2, '0');
+    return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
+  }
+
+  function makeSession(words: number) {
+    return {
+      id: 's1',
+      // Local noon as a UTC instant: the ISO string's UTC date may differ
+      // from the local date, but grouping must land on the local day
+      date: new Date(new Date().setHours(12, 0, 0, 0)).toISOString(),
+      duration: 25,
+      wordsWritten: words,
+      startWordCount: 0,
+      documents: ['a.md'],
+      completed: true,
+    };
+  }
+
+  it('session stats use the local date', () => {
+    const tracker = new StatsTracker(mockPlugin);
+    expect(tracker.getSessionStats().date).toBe(localToday());
+  });
+
+  it('recordSprint rolls the session day over after local midnight', () => {
+    const tracker = new StatsTracker(mockPlugin);
+    (tracker as unknown as { sessionStats: { date: string; wordsWritten: number } })
+      .sessionStats = { date: '2000-01-01', wordsWritten: 999, sprintsCompleted: 9, totalMinutes: 90, documents: [] } as never;
+
+    tracker.recordSprint(makeSession(50) as never);
+
+    const stats = tracker.getSessionStats();
+    expect(stats.date).toBe(localToday());
+    expect(stats.wordsWritten).toBe(50); // old day's 999 not carried over
+    expect(stats.sprintsCompleted).toBe(1);
+  });
+
+  it('getWritingHistory groups a session under its local calendar day', async () => {
+    const session = makeSession(120);
+    const plugin = {
+      app: {},
+      settings: { appendToDailyNote: false, sprintHistoryRetention: 30 },
+      projectManager: {
+        getActiveProject: () => ({ id: 'p1', title: 'P', folderPath: 'Projects/P' }),
+        getWritingLog: () => Promise.resolve([session]),
+      },
+      fmManager: {},
+    } as never;
+    const tracker = new StatsTracker(plugin);
+
+    const history = await tracker.getWritingHistory(2);
+    const todayEntry = history.find(e => e.date === localToday());
+
+    expect(todayEntry?.wordsWritten).toBe(120);
+  });
+
+  it('getStreak counts a local-noon session as today', async () => {
+    const plugin = {
+      app: {},
+      settings: { appendToDailyNote: false, sprintHistoryRetention: 30 },
+      projectManager: {
+        getActiveProject: () => ({ id: 'p1', title: 'P', folderPath: 'Projects/P' }),
+        getWritingLog: () => Promise.resolve([makeSession(10)]),
+      },
+      fmManager: {},
+    } as never;
+    const tracker = new StatsTracker(plugin);
+
+    expect(await tracker.getStreak()).toBe(1);
+  });
+});

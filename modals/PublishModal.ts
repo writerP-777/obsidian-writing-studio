@@ -2,6 +2,7 @@ import { App, Modal, Setting, Notice, TFile } from 'obsidian';
 import type WritingStudioPlugin from '../main';
 import { WordPressSite, WPCategory, WPPostStatus } from '../models/WordPressSite';
 import { t } from '../src/i18n';
+import { localDateString } from '../src/dates';
 
 export class PublishModal extends Modal {
   private plugin: WritingStudioPlugin;
@@ -215,7 +216,7 @@ export class PublishModal extends Modal {
           wpPostId: result.postId,
           wpUrl: result.url,
           wpStatus: result.status,
-          wpPublished: result.scheduledDate ? undefined : new Date().toISOString().split('T')[0],
+          wpPublished: result.scheduledDate ? undefined : localDateString(),
           wpScheduled: result.scheduledDate,
         });
       });

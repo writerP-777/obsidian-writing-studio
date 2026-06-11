@@ -1,10 +1,11 @@
 import { App, normalizePath } from 'obsidian';
+import { localDateString } from '../src/dates';
 import { WritingProject } from '../models/Project';
 import { BinderData, BinderItem } from '../models/BinderItem';
 
 export class MagazineArticleTemplate {
   static async apply(app: App, project: WritingProject): Promise<BinderData> {
-    const now = new Date().toISOString().split('T')[0];
+    const now = localDateString();
     const p = (name: string) => normalizePath(`${project.folderPath}/Chapters/${name}.md`);
 
     const docs: Array<[string, string]> = [

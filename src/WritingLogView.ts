@@ -1,6 +1,7 @@
 import { ItemView, WorkspaceLeaf, getLanguage } from 'obsidian';
 import type WritingStudioPlugin from '../main';
 import { t } from './i18n';
+import { localDateString } from './dates';
 
 export const WRITING_LOG_VIEW_TYPE = 'writing-studio-writing-log';
 
@@ -88,7 +89,7 @@ export class WritingLogView extends ItemView {
 
     const history = await this.plugin.statsTracker.getWritingHistory(30);
     const maxWords = Math.max(...history.map(d => d.wordsWritten), 1);
-    const todayStr = new Date().toISOString().split('T')[0];
+    const todayStr = localDateString();
 
     const list = histSection.createDiv('ws-log-day-list');
     for (const entry of [...history].reverse()) {
