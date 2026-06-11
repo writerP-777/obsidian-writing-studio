@@ -14,6 +14,8 @@ export const LAUNCHER_VIEW_TYPE = 'writing-studio-launcher';
 export class LauncherView extends ItemView {
   private plugin: WritingStudioPlugin;
   private refreshTimer: number | null = null;
+  private todayVals: HTMLElement[] = [];
+  private renderedSprintActive = false;
 
   constructor(leaf: WorkspaceLeaf, plugin: WritingStudioPlugin) {
     super(leaf);
@@ -34,8 +36,30 @@ export class LauncherView extends ItemView {
 
   async onOpen(): Promise<void> {
     await this.render();
-    // Refresh every 10 seconds to update word counts / sprint timer
-    this.refreshTimer = window.setInterval(() => { void this.render(); }, 10000);
+    // Patch dynamic values in place every 10 seconds — a full re-render here
+    // rebuilt the whole panel, snapping open dropdowns shut mid-selection and
+    // re-reading the writing log from disk on every tick
+    this.refreshTimer = window.setInterval(() => { void this.tickRefresh(); }, 10000);
+  }
+
+  private async tickRefresh(): Promise<void> {
+    // Sprint card layout depends on sprint state — full render only when it flips
+    const sprintActive = this.plugin.sprintTimer.isActive();
+    if (sprintActive !== this.renderedSprintActive) {
+      await this.render();
+      return;
+    }
+    await this.patchTodayCard();
+  }
+
+  private async patchTodayCard(): Promise<void> {
+    if (this.todayVals.length < 4) return;
+    const stats = this.plugin.statsTracker.getSessionStats();
+    const streak = await this.plugin.statsTracker.getStreak();
+    this.todayVals[0].textContent = stats.wordsWritten.toLocaleString();
+    this.todayVals[1].textContent = String(stats.sprintsCompleted);
+    this.todayVals[2].textContent = String(stats.totalMinutes);
+    this.todayVals[3].textContent = t('launcher.stat.streakDays', { streak });
   }
 
   onClose(): Promise<void> {
@@ -53,6 +77,8 @@ export class LauncherView extends ItemView {
   private async render(): Promise<void> {
     const root = this.containerEl.children[1] as HTMLElement;
     root.empty();
+    this.todayVals = [];
+    this.renderedSprintActive = this.plugin.sprintTimer.isActive();
     root.addClass('ws-launcher');
 
     this.renderHeader(root);
@@ -341,7 +367,7 @@ export class LauncherView extends ItemView {
 
     for (const [label, value] of items) {
       const stat = grid.createDiv('ws-launcher-today-stat');
-      stat.createDiv({ text: value, cls: 'ws-launcher-today-val' });
+      this.todayVals.push(stat.createDiv({ text: value, cls: 'ws-launcher-today-val' }));
       stat.createDiv({ text: label, cls: 'ws-launcher-today-label' });
     }
 

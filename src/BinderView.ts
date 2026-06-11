@@ -54,10 +54,29 @@ export class BinderView extends ItemView {
     if (this.activeProject) {
       const binder = await this.plugin.projectManager.loadBinder(this.activeProject);
       this.binderItems = binder.items;
+      await this.syncDriftedTitles();
     } else {
       this.binderItems = [];
     }
     this.render();
+  }
+
+  // Align binder titles with live filenames once per refresh — doing this
+  // during render() fired a concurrent saveBinder() per drifted row
+  private async syncDriftedTitles(): Promise<void> {
+    let drifted = false;
+    const walk = (items: BinderItem[]) => {
+      for (const item of items) {
+        const live = this.app.vault.getAbstractFileByPath(item.filePath);
+        if (live instanceof TFile && item.title !== live.basename) {
+          item.title = live.basename;
+          drifted = true;
+        }
+        if (item.children) walk(item.children);
+      }
+    };
+    walk(this.binderItems);
+    if (drifted) await this.saveBinder();
   }
 
   private render(): void {
@@ -200,16 +219,10 @@ export class BinderView extends ItemView {
       dot.setCssProps({ '--ws-status-color': STATUS_COLORS[item.status] });
       dot.title = t(STATUS_DOT_KEY[item.status]);
 
-      // Title — derive from the live filename so stale binder JSON is never shown
+      // Title — refresh() has already synced drifted titles with live filenames
       const titleEl = row.createSpan('ws-binder-title');
-      const liveFile = this.app.vault.getAbstractFileByPath(item.filePath);
-      const displayTitle = liveFile instanceof TFile ? liveFile.basename : item.title;
-      titleEl.textContent = displayTitle;
+      titleEl.textContent = item.title;
       titleEl.contentEditable = 'false';
-      if (liveFile instanceof TFile && item.title !== liveFile.basename) {
-        item.title = liveFile.basename;
-        void this.saveBinder();
-      }
 
       // Word count
       const wcEl = row.createSpan('ws-binder-wc');
@@ -297,7 +310,7 @@ export class BinderView extends ItemView {
       el.textContent = '0W';
       return;
     }
-    const content = await this.app.vault.read(file);
+    const content = await this.app.vault.cachedRead(file);
     const wc = this.plugin.fmManager.countWords(content);
     const goal = item.wordCountGoal;
 

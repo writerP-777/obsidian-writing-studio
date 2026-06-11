@@ -27,6 +27,7 @@ export class StatsTracker {
   private sessionCurrents  = new Map<string, number>();
   private cachedTotalWordCount: number | null = null;
   private cachedWordCountProjectId: string | null = null;
+  private cachedStreak: { projectId: string; value: number } | null = null;
 
   constructor(plugin: WritingStudioPlugin) {
     this.plugin = plugin;
@@ -50,6 +51,7 @@ export class StatsTracker {
     if (this.sessionStats.date !== localDateString()) {
       this.sessionStats = this.newDailyStats();
     }
+    this.cachedStreak = null; // a new sprint can extend the streak
     this.sessionStats.wordsWritten += session.wordsWritten;
     this.sessionStats.sprintsCompleted++;
     this.sessionStats.totalMinutes += session.duration;
@@ -152,15 +154,15 @@ ${t('statsTracker.dailyNote.heading')}
 
     const binder = await this.plugin.projectManager.loadBinder(project);
     const items = this.plugin.projectManager.flattenBinder(binder.items);
-    let total = 0;
 
-    for (const item of items) {
+    // cachedRead + parallel — these are display-only reads
+    const counts = await Promise.all(items.map(async (item) => {
       const file = this.app.vault.getAbstractFileByPath(item.filePath);
-      if (file instanceof TFile) {
-        const content = await this.app.vault.read(file);
-        total += this.plugin.fmManager.countWords(content);
-      }
-    }
+      if (!(file instanceof TFile)) return 0;
+      const content = await this.app.vault.cachedRead(file);
+      return this.plugin.fmManager.countWords(content);
+    }));
+    const total = counts.reduce((sum, n) => sum + n, 0);
 
     this.cachedTotalWordCount = total;
     this.cachedWordCountProjectId = project.id;
@@ -223,6 +225,12 @@ ${t('statsTracker.dailyNote.heading')}
     const project = this.plugin.projectManager.getActiveProject();
     if (!project) return 0;
 
+    // The streak only changes when a sprint is recorded (which invalidates
+    // this cache) — don't re-read the writing log from disk on every poll
+    if (this.cachedStreak && this.cachedStreak.projectId === project.id) {
+      return this.cachedStreak.value;
+    }
+
     const log = await this.plugin.projectManager.getWritingLog(project);
     if (log.length === 0) return 0;
 
@@ -241,6 +249,7 @@ ${t('statsTracker.dailyNote.heading')}
       }
     }
 
+    this.cachedStreak = { projectId: project.id, value: streak };
     return streak;
   }
 }
