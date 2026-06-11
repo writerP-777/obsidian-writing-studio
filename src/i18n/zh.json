@@ -323,6 +323,11 @@
     "closePreview": "关闭预览",
     "noContent": "无内容可预览。请先打开写作项目。"
   },
+  "projectManager": {
+    "errorFolderExists": "项目文件夹中已存在名为“{{folder}}”的文件夹。请选择其他标题。",
+    "corruptBinder": "无法读取“{{project}}”的 _binder.json 文件。备份已保存为项目文件夹中的 _binder.json.bak。",
+    "corruptProject": "“{{folder}}”中的项目文件已损坏，无法加载该项目。"
+  },
   "projectModal": {
     "title": "新建写作项目",
     "projectTitle": "项目标题",

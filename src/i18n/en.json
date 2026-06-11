@@ -323,6 +323,11 @@
     "closePreview": "Close preview",
     "noContent": "No content to preview. Open a writing project first."
   },
+  "projectManager": {
+    "errorFolderExists": "A folder named \"{{folder}}\" already exists in your projects folder. Choose a different title.",
+    "corruptBinder": "The binder file for \"{{project}}\" could not be read. A backup was saved as _binder.json.bak in the project folder.",
+    "corruptProject": "The project file in \"{{folder}}\" is corrupt and the project could not be loaded."
+  },
   "projectModal": {
     "title": "New writing project",
     "projectTitle": "Project title",

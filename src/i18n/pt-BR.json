@@ -323,6 +323,11 @@
     "closePreview": "Fechar visualização",
     "noContent": "Sem conteúdo para visualizar. Abra um projeto de escrita primeiro."
   },
+  "projectManager": {
+    "errorFolderExists": "Já existe uma pasta chamada \"{{folder}}\" na sua pasta de projetos. Escolha um título diferente.",
+    "corruptBinder": "Não foi possível ler o arquivo _binder.json de \"{{project}}\". Um backup foi salvo como _binder.json.bak na pasta do projeto.",
+    "corruptProject": "O arquivo de projeto em \"{{folder}}\" está corrompido e o projeto não pôde ser carregado."
+  },
   "projectModal": {
     "title": "Novo projeto de escrita",
     "projectTitle": "Título do projeto",

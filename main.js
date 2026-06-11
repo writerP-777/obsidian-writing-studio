@@ -2633,6 +2633,11 @@ var en_default = {
     closePreview: "Close preview",
     noContent: "No content to preview. Open a writing project first."
   },
+  projectManager: {
+    errorFolderExists: 'A folder named "{{folder}}" already exists in your projects folder. Choose a different title.',
+    corruptBinder: 'The binder file for "{{project}}" could not be read. A backup was saved as _binder.json.bak in the project folder.',
+    corruptProject: 'The project file in "{{folder}}" is corrupt and the project could not be loaded.'
+  },
   projectModal: {
     title: "New writing project",
     projectTitle: "Project title",
@@ -3237,6 +3242,11 @@ var zh_default = {
     proceedToExport: "\u8FDB\u884C\u5BFC\u51FA",
     closePreview: "\u5173\u95ED\u9884\u89C8",
     noContent: "\u65E0\u5185\u5BB9\u53EF\u9884\u89C8\u3002\u8BF7\u5148\u6253\u5F00\u5199\u4F5C\u9879\u76EE\u3002"
+  },
+  projectManager: {
+    errorFolderExists: "\u9879\u76EE\u6587\u4EF6\u5939\u4E2D\u5DF2\u5B58\u5728\u540D\u4E3A\u201C{{folder}}\u201D\u7684\u6587\u4EF6\u5939\u3002\u8BF7\u9009\u62E9\u5176\u4ED6\u6807\u9898\u3002",
+    corruptBinder: "\u65E0\u6CD5\u8BFB\u53D6\u201C{{project}}\u201D\u7684 _binder.json \u6587\u4EF6\u3002\u5907\u4EFD\u5DF2\u4FDD\u5B58\u4E3A\u9879\u76EE\u6587\u4EF6\u5939\u4E2D\u7684 _binder.json.bak\u3002",
+    corruptProject: "\u201C{{folder}}\u201D\u4E2D\u7684\u9879\u76EE\u6587\u4EF6\u5DF2\u635F\u574F\uFF0C\u65E0\u6CD5\u52A0\u8F7D\u8BE5\u9879\u76EE\u3002"
   },
   projectModal: {
     title: "\u65B0\u5EFA\u5199\u4F5C\u9879\u76EE",
@@ -3843,6 +3853,11 @@ var hi_default = {
     closePreview: "\u092A\u0942\u0930\u094D\u0935\u093E\u0935\u0932\u094B\u0915\u0928 \u092C\u0902\u0926 \u0915\u0930\u0947\u0902",
     noContent: "\u092A\u0942\u0930\u094D\u0935\u093E\u0935\u0932\u094B\u0915\u0928 \u0915\u0947 \u0932\u093F\u090F \u0915\u094B\u0908 \u0938\u093E\u092E\u0917\u094D\u0930\u0940 \u0928\u0939\u0940\u0902\u0964 \u092A\u0939\u0932\u0947 \u0915\u094B\u0908 \u0932\u0947\u0916\u0928 \u092A\u0930\u093F\u092F\u094B\u091C\u0928\u093E \u0916\u094B\u0932\u0947\u0902\u0964"
   },
+  projectManager: {
+    errorFolderExists: '\u0906\u092A\u0915\u0947 \u092A\u094D\u0930\u094B\u091C\u0947\u0915\u094D\u091F \u092B\u093C\u094B\u0932\u094D\u0921\u0930 \u092E\u0947\u0902 "{{folder}}" \u0928\u093E\u092E \u0915\u093E \u092B\u093C\u094B\u0932\u094D\u0921\u0930 \u092A\u0939\u0932\u0947 \u0938\u0947 \u092E\u094C\u091C\u0942\u0926 \u0939\u0948\u0964 \u0915\u094B\u0908 \u0926\u0942\u0938\u0930\u093E \u0936\u0940\u0930\u094D\u0937\u0915 \u091A\u0941\u0928\u0947\u0902\u0964',
+    corruptBinder: '"{{project}}" \u0915\u0940 _binder.json \u092B\u093C\u093E\u0907\u0932 \u092A\u0922\u093C\u0940 \u0928\u0939\u0940\u0902 \u091C\u093E \u0938\u0915\u0940\u0964 \u092C\u0948\u0915\u0905\u092A \u092A\u094D\u0930\u094B\u091C\u0947\u0915\u094D\u091F \u092B\u093C\u094B\u0932\u094D\u0921\u0930 \u092E\u0947\u0902 _binder.json.bak \u0915\u0947 \u0930\u0942\u092A \u092E\u0947\u0902 \u0938\u0939\u0947\u091C\u093E \u0917\u092F\u093E\u0964',
+    corruptProject: '"{{folder}}" \u0915\u0940 \u092A\u094D\u0930\u094B\u091C\u0947\u0915\u094D\u091F \u092B\u093C\u093E\u0907\u0932 \u0926\u0942\u0937\u093F\u0924 \u0939\u0948 \u0914\u0930 \u092A\u094D\u0930\u094B\u091C\u0947\u0915\u094D\u091F \u0932\u094B\u0921 \u0928\u0939\u0940\u0902 \u0939\u094B \u0938\u0915\u093E\u0964'
+  },
   projectModal: {
     title: "\u0928\u0908 \u0932\u0947\u0916\u0928 \u092A\u0930\u093F\u092F\u094B\u091C\u0928\u093E",
     projectTitle: "\u092A\u0930\u093F\u092F\u094B\u091C\u0928\u093E \u0936\u0940\u0930\u094D\u0937\u0915",
@@ -4447,6 +4462,11 @@ var es_default = {
     proceedToExport: "Proceder a exportar",
     closePreview: "Cerrar vista previa",
     noContent: "Sin contenido para previsualizar. Abra primero un proyecto de escritura."
+  },
+  projectManager: {
+    errorFolderExists: 'Ya existe una carpeta llamada "{{folder}}" en su carpeta de proyectos. Elija un t\xEDtulo diferente.',
+    corruptBinder: 'No se pudo leer el archivo _binder.json de "{{project}}". Se guard\xF3 una copia de seguridad como _binder.json.bak en la carpeta del proyecto.',
+    corruptProject: 'El archivo del proyecto en "{{folder}}" est\xE1 da\xF1ado y no se pudo cargar el proyecto.'
   },
   projectModal: {
     title: "Nuevo proyecto de escritura",
@@ -5060,6 +5080,11 @@ var ar_default = {
     closePreview: "\u0625\u063A\u0644\u0627\u0642 \u0627\u0644\u0645\u0639\u0627\u064A\u0646\u0629",
     noContent: "\u0644\u0627 \u0645\u062D\u062A\u0648\u0649 \u0644\u0644\u0645\u0639\u0627\u064A\u0646\u0629. \u0627\u0641\u062A\u062D \u0645\u0634\u0631\u0648\u0639 \u0643\u062A\u0627\u0628\u0629 \u0623\u0648\u0644\u0627\u064B."
   },
+  projectManager: {
+    errorFolderExists: '\u064A\u0648\u062C\u062F \u0628\u0627\u0644\u0641\u0639\u0644 \u0645\u062C\u0644\u062F \u0628\u0627\u0633\u0645 "{{folder}}" \u0641\u064A \u0645\u062C\u0644\u062F \u0645\u0634\u0627\u0631\u064A\u0639\u0643. \u0627\u062E\u062A\u0631 \u0639\u0646\u0648\u0627\u0646\u064B\u0627 \u0645\u062E\u062A\u0644\u0641\u064B\u0627.',
+    corruptBinder: '\u062A\u0639\u0630\u0631\u062A \u0642\u0631\u0627\u0621\u0629 \u0645\u0644\u0641 _binder.json \u0627\u0644\u062E\u0627\u0635 \u0628\u0640 "{{project}}". \u062A\u0645 \u062D\u0641\u0638 \u0646\u0633\u062E\u0629 \u0627\u062D\u062A\u064A\u0627\u0637\u064A\u0629 \u0628\u0627\u0633\u0645 _binder.json.bak \u0641\u064A \u0645\u062C\u0644\u062F \u0627\u0644\u0645\u0634\u0631\u0648\u0639.',
+    corruptProject: '\u0645\u0644\u0641 \u0627\u0644\u0645\u0634\u0631\u0648\u0639 \u0641\u064A "{{folder}}" \u062A\u0627\u0644\u0641 \u0648\u0644\u0645 \u064A\u062A\u0645 \u062A\u062D\u0645\u064A\u0644 \u0627\u0644\u0645\u0634\u0631\u0648\u0639.'
+  },
   projectModal: {
     title: "\u0645\u0634\u0631\u0648\u0639 \u0643\u062A\u0627\u0628\u0629 \u062C\u062F\u064A\u062F",
     projectTitle: "\u0639\u0646\u0648\u0627\u0646 \u0627\u0644\u0645\u0634\u0631\u0648\u0639",
@@ -5669,6 +5694,11 @@ var fr_default = {
     closePreview: "Fermer l'aper\xE7u",
     noContent: "Aucun contenu \xE0 pr\xE9visualiser. Ouvrez d'abord un projet d'\xE9criture."
   },
+  projectManager: {
+    errorFolderExists: 'Un dossier nomm\xE9 "{{folder}}" existe d\xE9j\xE0 dans votre dossier de projets. Choisissez un autre titre.',
+    corruptBinder: `Le fichier _binder.json de "{{project}}" n'a pas pu \xEAtre lu. Une sauvegarde a \xE9t\xE9 enregistr\xE9e sous _binder.json.bak dans le dossier du projet.`,
+    corruptProject: `Le fichier de projet dans "{{folder}}" est corrompu et le projet n'a pas pu \xEAtre charg\xE9.`
+  },
   projectModal: {
     title: "Nouveau projet d'\xE9criture",
     projectTitle: "Titre du projet",
@@ -6274,6 +6304,11 @@ var bn_default = {
     closePreview: "\u09AA\u09C2\u09B0\u09CD\u09AC\u09B0\u09C2\u09AA \u09AC\u09A8\u09CD\u09A7 \u0995\u09B0\u09C1\u09A8",
     noContent: "\u09AA\u09C2\u09B0\u09CD\u09AC\u09B0\u09C2\u09AA\u09C7\u09B0 \u099C\u09A8\u09CD\u09AF \u0995\u09CB\u09A8\u09CB \u09AC\u09BF\u09B7\u09AF\u09BC\u09AC\u09B8\u09CD\u09A4\u09C1 \u09A8\u09C7\u0987\u0964 \u09AA\u09CD\u09B0\u09A5\u09AE\u09C7 \u098F\u0995\u099F\u09BF \u09B2\u09C7\u0996\u09BE\u09B0 \u09AA\u09CD\u09B0\u0995\u09B2\u09CD\u09AA \u0996\u09C1\u09B2\u09C1\u09A8\u0964"
   },
+  projectManager: {
+    errorFolderExists: '\u0986\u09AA\u09A8\u09BE\u09B0 \u09AA\u09CD\u09B0\u099C\u09C7\u0995\u09CD\u099F \u09AB\u09CB\u09B2\u09CD\u09A1\u09BE\u09B0\u09C7 "{{folder}}" \u09A8\u09BE\u09AE\u09C7 \u098F\u0995\u099F\u09BF \u09AB\u09CB\u09B2\u09CD\u09A1\u09BE\u09B0 \u0987\u09A4\u09BF\u09AE\u09A7\u09CD\u09AF\u09C7 \u09B0\u09AF\u09BC\u09C7\u099B\u09C7\u0964 \u0985\u09A8\u09CD\u09AF \u098F\u0995\u099F\u09BF \u09B6\u09BF\u09B0\u09CB\u09A8\u09BE\u09AE \u09AC\u09C7\u099B\u09C7 \u09A8\u09BF\u09A8\u0964',
+    corruptBinder: '"{{project}}"-\u098F\u09B0 _binder.json \u09AB\u09BE\u0987\u09B2\u099F\u09BF \u09AA\u09A1\u09BC\u09BE \u09AF\u09BE\u09AF\u09BC\u09A8\u09BF\u0964 \u09AA\u09CD\u09B0\u099C\u09C7\u0995\u09CD\u099F \u09AB\u09CB\u09B2\u09CD\u09A1\u09BE\u09B0\u09C7 _binder.json.bak \u09A8\u09BE\u09AE\u09C7 \u098F\u0995\u099F\u09BF \u09AC\u09CD\u09AF\u09BE\u0995\u0986\u09AA \u09B8\u0982\u09B0\u0995\u09CD\u09B7\u09A3 \u0995\u09B0\u09BE \u09B9\u09AF\u09BC\u09C7\u099B\u09C7\u0964',
+    corruptProject: '"{{folder}}"-\u098F\u09B0 \u09AA\u09CD\u09B0\u099C\u09C7\u0995\u09CD\u099F \u09AB\u09BE\u0987\u09B2\u099F\u09BF \u0995\u09CD\u09B7\u09A4\u09BF\u0997\u09CD\u09B0\u09B8\u09CD\u09A4 \u098F\u09AC\u0982 \u09AA\u09CD\u09B0\u099C\u09C7\u0995\u09CD\u099F\u099F\u09BF \u09B2\u09CB\u09A1 \u0995\u09B0\u09BE \u09AF\u09BE\u09AF\u09BC\u09A8\u09BF\u0964'
+  },
   projectModal: {
     title: "\u09A8\u09A4\u09C1\u09A8 \u09B2\u09C7\u0996\u09BE\u09B0 \u09AA\u09CD\u09B0\u0995\u09B2\u09CD\u09AA",
     projectTitle: "\u09AA\u09CD\u09B0\u0995\u09B2\u09CD\u09AA\u09C7\u09B0 \u09B6\u09BF\u09B0\u09CB\u09A8\u09BE\u09AE",
@@ -6878,6 +6913,11 @@ var pt_BR_default = {
     proceedToExport: "Prosseguir para exportar",
     closePreview: "Fechar visualiza\xE7\xE3o",
     noContent: "Sem conte\xFAdo para visualizar. Abra um projeto de escrita primeiro."
+  },
+  projectManager: {
+    errorFolderExists: 'J\xE1 existe uma pasta chamada "{{folder}}" na sua pasta de projetos. Escolha um t\xEDtulo diferente.',
+    corruptBinder: 'N\xE3o foi poss\xEDvel ler o arquivo _binder.json de "{{project}}". Um backup foi salvo como _binder.json.bak na pasta do projeto.',
+    corruptProject: 'O arquivo de projeto em "{{folder}}" est\xE1 corrompido e o projeto n\xE3o p\xF4de ser carregado.'
   },
   projectModal: {
     title: "Novo projeto de escrita",
@@ -7488,6 +7528,11 @@ var ru_default = {
     closePreview: "\u0417\u0430\u043A\u0440\u044B\u0442\u044C \u043F\u0440\u0435\u0434\u043F\u0440\u043E\u0441\u043C\u043E\u0442\u0440",
     noContent: "\u041D\u0435\u0442 \u0441\u043E\u0434\u0435\u0440\u0436\u0438\u043C\u043E\u0433\u043E \u0434\u043B\u044F \u043F\u0440\u0435\u0434\u043F\u0440\u043E\u0441\u043C\u043E\u0442\u0440\u0430. \u0421\u043D\u0430\u0447\u0430\u043B\u0430 \u043E\u0442\u043A\u0440\u043E\u0439\u0442\u0435 \u043F\u0438\u0441\u044C\u043C\u0435\u043D\u043D\u044B\u0439 \u043F\u0440\u043E\u0435\u043A\u0442."
   },
+  projectManager: {
+    errorFolderExists: '\u041F\u0430\u043F\u043A\u0430 \u0441 \u0438\u043C\u0435\u043D\u0435\u043C "{{folder}}" \u0443\u0436\u0435 \u0441\u0443\u0449\u0435\u0441\u0442\u0432\u0443\u0435\u0442 \u0432 \u043F\u0430\u043F\u043A\u0435 \u043F\u0440\u043E\u0435\u043A\u0442\u043E\u0432. \u0412\u044B\u0431\u0435\u0440\u0438\u0442\u0435 \u0434\u0440\u0443\u0433\u043E\u0435 \u043D\u0430\u0437\u0432\u0430\u043D\u0438\u0435.',
+    corruptBinder: '\u041D\u0435 \u0443\u0434\u0430\u043B\u043E\u0441\u044C \u043F\u0440\u043E\u0447\u0438\u0442\u0430\u0442\u044C \u0444\u0430\u0439\u043B _binder.json \u043F\u0440\u043E\u0435\u043A\u0442\u0430 "{{project}}". \u0420\u0435\u0437\u0435\u0440\u0432\u043D\u0430\u044F \u043A\u043E\u043F\u0438\u044F \u0441\u043E\u0445\u0440\u0430\u043D\u0435\u043D\u0430 \u043A\u0430\u043A _binder.json.bak \u0432 \u043F\u0430\u043F\u043A\u0435 \u043F\u0440\u043E\u0435\u043A\u0442\u0430.',
+    corruptProject: '\u0424\u0430\u0439\u043B \u043F\u0440\u043E\u0435\u043A\u0442\u0430 \u0432 "{{folder}}" \u043F\u043E\u0432\u0440\u0435\u0436\u0434\u0451\u043D, \u0438 \u043F\u0440\u043E\u0435\u043A\u0442 \u043D\u0435 \u0443\u0434\u0430\u043B\u043E\u0441\u044C \u0437\u0430\u0433\u0440\u0443\u0437\u0438\u0442\u044C.'
+  },
   projectModal: {
     title: "\u041D\u043E\u0432\u044B\u0439 \u043F\u0438\u0441\u044C\u043C\u0435\u043D\u043D\u044B\u0439 \u043F\u0440\u043E\u0435\u043A\u0442",
     projectTitle: "\u041D\u0430\u0437\u0432\u0430\u043D\u0438\u0435 \u043F\u0440\u043E\u0435\u043A\u0442\u0430",
@@ -8095,6 +8140,11 @@ var ja_default = {
     closePreview: "\u30D7\u30EC\u30D3\u30E5\u30FC\u3092\u9589\u3058\u308B",
     noContent: "\u30D7\u30EC\u30D3\u30E5\u30FC\u3059\u308B\u30B3\u30F3\u30C6\u30F3\u30C4\u304C\u3042\u308A\u307E\u305B\u3093\u3002\u307E\u305A\u57F7\u7B46\u30D7\u30ED\u30B8\u30A7\u30AF\u30C8\u3092\u958B\u3044\u3066\u304F\u3060\u3055\u3044\u3002"
   },
+  projectManager: {
+    errorFolderExists: "\u30D7\u30ED\u30B8\u30A7\u30AF\u30C8\u30D5\u30A9\u30EB\u30C0\u30FC\u306B\u300C{{folder}}\u300D\u3068\u3044\u3046\u540D\u524D\u306E\u30D5\u30A9\u30EB\u30C0\u30FC\u304C\u65E2\u306B\u5B58\u5728\u3057\u307E\u3059\u3002\u5225\u306E\u30BF\u30A4\u30C8\u30EB\u3092\u9078\u3093\u3067\u304F\u3060\u3055\u3044\u3002",
+    corruptBinder: "\u300C{{project}}\u300D\u306E _binder.json \u30D5\u30A1\u30A4\u30EB\u3092\u8AAD\u307F\u53D6\u308C\u307E\u305B\u3093\u3067\u3057\u305F\u3002\u30D0\u30C3\u30AF\u30A2\u30C3\u30D7\u3092 _binder.json.bak \u3068\u3057\u3066\u30D7\u30ED\u30B8\u30A7\u30AF\u30C8\u30D5\u30A9\u30EB\u30C0\u30FC\u306B\u4FDD\u5B58\u3057\u307E\u3057\u305F\u3002",
+    corruptProject: "\u300C{{folder}}\u300D\u306E\u30D7\u30ED\u30B8\u30A7\u30AF\u30C8\u30D5\u30A1\u30A4\u30EB\u304C\u7834\u640D\u3057\u3066\u3044\u308B\u305F\u3081\u3001\u30D7\u30ED\u30B8\u30A7\u30AF\u30C8\u3092\u8AAD\u307F\u8FBC\u3081\u307E\u305B\u3093\u3067\u3057\u305F\u3002"
+  },
   projectModal: {
     title: "\u65B0\u898F\u57F7\u7B46\u30D7\u30ED\u30B8\u30A7\u30AF\u30C8",
     projectTitle: "\u30D7\u30ED\u30B8\u30A7\u30AF\u30C8\u30BF\u30A4\u30C8\u30EB",
@@ -8700,6 +8750,11 @@ var de_default = {
     closePreview: "Vorschau schlie\xDFen",
     noContent: "Kein Inhalt zum Anzeigen. \xD6ffne zuerst ein Schreibprojekt."
   },
+  projectManager: {
+    errorFolderExists: 'Ein Ordner namens "{{folder}}" existiert bereits in deinem Projektordner. W\xE4hle einen anderen Titel.',
+    corruptBinder: 'Die Datei _binder.json von "{{project}}" konnte nicht gelesen werden. Eine Sicherung wurde als _binder.json.bak im Projektordner gespeichert.',
+    corruptProject: 'Die Projektdatei in "{{folder}}" ist besch\xE4digt und das Projekt konnte nicht geladen werden.'
+  },
   projectModal: {
     title: "Neues Schreibprojekt",
     projectTitle: "Projekttitel",
@@ -9304,6 +9359,11 @@ var ko_default = {
     proceedToExport: "\uB0B4\uBCF4\uB0B4\uAE30 \uC9C4\uD589",
     closePreview: "\uBBF8\uB9AC\uBCF4\uAE30 \uB2EB\uAE30",
     noContent: "\uBBF8\uB9AC\uBCFC \uB0B4\uC6A9\uC774 \uC5C6\uC2B5\uB2C8\uB2E4. \uBA3C\uC800 \uAE00\uC4F0\uAE30 \uD504\uB85C\uC81D\uD2B8\uB97C \uC5EC\uC138\uC694."
+  },
+  projectManager: {
+    errorFolderExists: '\uD504\uB85C\uC81D\uD2B8 \uD3F4\uB354\uC5D0 "{{folder}}"(\uC774)\uB77C\uB294 \uC774\uB984\uC758 \uD3F4\uB354\uAC00 \uC774\uBBF8 \uC788\uC2B5\uB2C8\uB2E4. \uB2E4\uB978 \uC81C\uBAA9\uC744 \uC120\uD0DD\uD558\uC138\uC694.',
+    corruptBinder: '"{{project}}"\uC758 _binder.json \uD30C\uC77C\uC744 \uC77D\uC744 \uC218 \uC5C6\uC2B5\uB2C8\uB2E4. \uBC31\uC5C5\uC774 \uD504\uB85C\uC81D\uD2B8 \uD3F4\uB354\uC5D0 _binder.json.bak(\uC73C)\uB85C \uC800\uC7A5\uB418\uC5C8\uC2B5\uB2C8\uB2E4.',
+    corruptProject: '"{{folder}}"\uC758 \uD504\uB85C\uC81D\uD2B8 \uD30C\uC77C\uC774 \uC190\uC0C1\uB418\uC5B4 \uD504\uB85C\uC81D\uD2B8\uB97C \uBD88\uB7EC\uC62C \uC218 \uC5C6\uC2B5\uB2C8\uB2E4.'
   },
   projectModal: {
     title: "\uC0C8 \uAE00\uC4F0\uAE30 \uD504\uB85C\uC81D\uD2B8",
@@ -14248,6 +14308,7 @@ var ProjectManager = class {
       this.projects.set(project.id, project);
       return project;
     } catch (e) {
+      new import_obsidian23.Notice(t2("projectManager.corruptProject", { folder: folderPath }));
       return null;
     }
   }
@@ -14256,6 +14317,9 @@ var ProjectManager = class {
     const id = `project-${Date.now()}`;
     const folderName = title.replace(/[\\/:*?"<>|]/g, "-");
     const folderPath = (0, import_obsidian23.normalizePath)(`${rootFolder}/${folderName}`);
+    if (this.app.vault.getAbstractFileByPath(folderPath)) {
+      throw new Error(t2("projectManager.errorFolderExists", { folder: folderName }));
+    }
     await this.ensureFolder(folderPath);
     await this.ensureFolder((0, import_obsidian23.normalizePath)(`${folderPath}/Chapters`));
     await this.ensureFolder((0, import_obsidian23.normalizePath)(`${folderPath}/Research`));
@@ -14319,12 +14383,19 @@ var ProjectManager = class {
     if (!(file instanceof import_obsidian23.TFile)) {
       return { version: "2.0", projectId: project.id, items: [] };
     }
+    let content;
     try {
-      const content = await this.app.vault.read(file);
+      content = await this.app.vault.read(file);
+    } catch (e) {
+      return { version: "2.0", projectId: project.id, items: [] };
+    }
+    try {
       const data = JSON.parse(content);
       this.binderCache.set(project.id, data);
       return data;
     } catch (e) {
+      await this.writeRaw((0, import_obsidian23.normalizePath)(`${project.folderPath}/_binder.json.bak`), content);
+      new import_obsidian23.Notice(t2("projectManager.corruptBinder", { project: project.title }));
       return { version: "2.0", projectId: project.id, items: [] };
     }
   }
@@ -14339,8 +14410,11 @@ var ProjectManager = class {
   async addDocumentToBinder(project, title, type, parentId) {
     const binder = await this.loadBinder(project);
     const now = (/* @__PURE__ */ new Date()).toISOString().split("T")[0];
-    const fileName = title.replace(/[\\/:*?"<>|]/g, "-") + ".md";
-    const filePath = (0, import_obsidian23.normalizePath)(`${project.folderPath}/Chapters/${fileName}`);
+    const baseName = title.replace(/[\\/:*?"<>|]/g, "-");
+    let filePath = (0, import_obsidian23.normalizePath)(`${project.folderPath}/Chapters/${baseName}.md`);
+    for (let n = 2; this.app.vault.getAbstractFileByPath(filePath); n++) {
+      filePath = (0, import_obsidian23.normalizePath)(`${project.folderPath}/Chapters/${baseName} ${n}.md`);
+    }
     const item = {
       id: `item-${Date.now()}`,
       title,
@@ -14449,7 +14523,9 @@ tags: [writing-studio]
     await this.writeJson(logPath, []);
   }
   async writeJson(path, data) {
-    const content = JSON.stringify(data, null, 2);
+    await this.writeRaw(path, JSON.stringify(data, null, 2));
+  }
+  async writeRaw(path, content) {
     const existing = this.app.vault.getAbstractFileByPath(path);
     if (existing instanceof import_obsidian23.TFile) {
       await this.app.vault.modify(existing, content);
