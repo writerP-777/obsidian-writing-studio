@@ -20,6 +20,11 @@ export interface SprintState {
   totalPausedMs: number;
   durationMinutes: number;
   wordCountGoal?: number;
-  startWordCount: number;
+  // Per-file word counts captured while the sprint runs. Baselines are
+  // recorded the first time a file is seen so switching documents mid-sprint
+  // cannot compare counts from two different files.
+  primaryFile: string | null; // file active when the clock started ('file' scope counts only this)
+  baselines: Map<string, number>;
+  currents: Map<string, number>;
   projectScope: 'file' | 'project';
 }

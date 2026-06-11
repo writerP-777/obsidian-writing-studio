@@ -1,13 +1,39 @@
-import { App, MarkdownView, Notice } from 'obsidian';
+import { App, MarkdownView, Notice, normalizePath } from 'obsidian';
 import type WritingStudioPlugin from '../main';
 import { SprintSession, SprintState } from '../models/SprintSession';
 import { t } from './i18n';
+
+// Pure word-accounting over the per-file baselines captured during a sprint.
+// 'file' scope counts only the document active when the clock started;
+// 'project' scope sums every tracked file (limited to the project folder when one is active).
+export function computeSprintWords(
+  scope: 'file' | 'project',
+  primaryFile: string | null,
+  baselines: ReadonlyMap<string, number>,
+  currents: ReadonlyMap<string, number>,
+  projectPrefix: string | null
+): number {
+  if (scope === 'project') {
+    let total = 0;
+    for (const [path, current] of currents) {
+      if (projectPrefix && !path.startsWith(projectPrefix)) continue;
+      const baseline = baselines.get(path) ?? current;
+      total += Math.max(0, current - baseline);
+    }
+    return total;
+  }
+  if (!primaryFile) return 0;
+  const baseline = baselines.get(primaryFile) ?? 0;
+  const current = currents.get(primaryFile) ?? baseline;
+  return Math.max(0, current - baseline);
+}
 
 export class SprintTimer {
   private plugin: WritingStudioPlugin;
   private app: App;
   private state: SprintState | null = null;
   private intervalId: number | null = null;
+  private tickCount = 0;
   private floatingEl: HTMLElement | null = null;
   private statusBarEl: HTMLElement | null = null;
   private onComplete: ((session: SprintSession) => void | Promise<void>) | null = null;
@@ -33,7 +59,12 @@ export class SprintTimer {
   // Opens overlay in paused/ready state — called by SprintModal and preset buttons.
   // The clock does not run until the user presses Start on the overlay itself.
   setup(durationMinutes: number, wordCountGoal?: number, projectScope: 'file' | 'project' = 'file'): void {
-    if (this.state?.active) this.stop();
+    if (this.state?.active && !this.state.ready) {
+      // A sprint is running — refuse rather than silently logging it and
+      // popping the summary modal in the middle of starting a new one
+      new Notice(t('sprint.alreadyRunning'));
+      return;
+    }
 
     this.state = {
       active: true,
@@ -44,7 +75,9 @@ export class SprintTimer {
       totalPausedMs: 0,
       durationMinutes,
       wordCountGoal,
-      startWordCount: this.getCurrentWordCount(),
+      primaryFile: null,
+      baselines: new Map(),
+      currents: new Map(),
       projectScope,
     };
 
@@ -54,6 +87,7 @@ export class SprintTimer {
 
   pause(): void {
     if (!this.state || !this.state.active || this.state.paused) return;
+    this.sampleActiveFile();
     this.state.paused = true;
     this.state.pausedAt = Date.now();
     this.stopInterval();
@@ -66,6 +100,14 @@ export class SprintTimer {
     this.state.totalPausedMs += Date.now() - this.state.pausedAt;
     this.state.paused = false;
     this.state.ready = false;
+    if (wasReady) {
+      // The clock starts now — capture the baseline here, not at setup, so
+      // "navigate to your draft before the clock begins" works as documented
+      this.state.baselines.clear();
+      this.state.currents.clear();
+      this.sampleActiveFile();
+      this.state.primaryFile = this.getActiveFilePath();
+    }
     this.startInterval();
     this.updateDisplay();
     if (wasReady) {
@@ -85,20 +127,45 @@ export class SprintTimer {
   }
 
   private buildSession(): SprintSession {
+    this.sampleActiveFile();
     const s = this.state!;
-    const wordsWritten = Math.max(0, this.getCurrentWordCount() - s.startWordCount);
-    const now = new Date();
+    const wordsWritten = this.getWordsWritten();
+    const documents = this.getCountedDocuments();
+    const startWordCount = documents.reduce((sum, p) => sum + (s.baselines.get(p) ?? 0), 0);
 
     return {
       id: `sprint-${Date.now()}`,
-      date: now.toISOString(),
+      date: new Date().toISOString(),
       duration: s.durationMinutes,
       wordsWritten,
-      startWordCount: s.startWordCount,
+      startWordCount,
       wordCountGoal: s.wordCountGoal,
-      documents: this.getCurrentDocuments(),
+      documents,
       completed: true,
     };
+  }
+
+  private getWordsWritten(): number {
+    const s = this.state;
+    if (!s) return 0;
+    return computeSprintWords(s.projectScope, s.primaryFile, s.baselines, s.currents, this.getProjectPrefix());
+  }
+
+  // Files whose words count toward this sprint, given its scope
+  private getCountedDocuments(): string[] {
+    const s = this.state;
+    if (!s) return [];
+    if (s.projectScope === 'project') {
+      const prefix = this.getProjectPrefix();
+      return [...s.currents.keys()].filter(p => !prefix || p.startsWith(prefix));
+    }
+    return s.primaryFile ? [s.primaryFile] : [];
+  }
+
+  private getProjectPrefix(): string | null {
+    if (this.state?.projectScope !== 'project') return null;
+    const project = this.plugin.projectManager.getActiveProject();
+    return project ? normalizePath(project.folderPath) + '/' : null;
   }
 
   getElapsedMs(): number {
@@ -137,11 +204,17 @@ export class SprintTimer {
       this.handleComplete();
       return;
     }
+    // Sample word counts every 5th tick — re-counting a book-length document
+    // every second is wasteful; the clock still updates every second
+    if (++this.tickCount % 5 === 0) {
+      this.sampleActiveFile();
+    }
     this.updateDisplay();
   }
 
   private handleComplete(): void {
     this.stopInterval();
+    this.sampleActiveFile();
     if (this.plugin.settings.soundNotifications) {
       this.playBell();
     }
@@ -164,6 +237,7 @@ export class SprintTimer {
       osc.type = 'sine';
       gain.gain.setValueAtTime(0.3, ctx.currentTime);
       gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 1.5);
+      osc.onended = () => { void ctx.close(); };
       osc.start(ctx.currentTime);
       osc.stop(ctx.currentTime + 1.5);
     } catch { /* audio not available */ }
@@ -178,9 +252,8 @@ export class SprintTimer {
       const timeEl = this.floatingEl.querySelector('.ws-sprint-time');
       if (timeEl) timeEl.textContent = time;
 
-      const wc = this.getCurrentWordCount() - (this.state?.startWordCount || 0);
       const wcEl = this.floatingEl.querySelector('.ws-sprint-wc');
-      if (wcEl) wcEl.textContent = t('sprint.words', { n: Math.max(0, wc) });
+      if (wcEl) wcEl.textContent = t('sprint.words', { n: this.getWordsWritten() });
 
       const pauseBtn = this.floatingEl.querySelector('.ws-sprint-pause') as HTMLButtonElement;
       if (pauseBtn) {
@@ -278,23 +351,27 @@ export class SprintTimer {
     }
   }
 
-  private getCurrentWordCount(): number {
+  // Record the active file's current word count, setting its baseline the
+  // first time it is seen during this sprint
+  private sampleActiveFile(): void {
+    const s = this.state;
+    if (!s) return;
     const leaf = this.app.workspace.getMostRecentLeaf();
-    if (!leaf) return 0;
+    if (!leaf) return;
     const view = leaf.view;
-    if (view instanceof MarkdownView) {
-      const content = view.editor?.getValue() || '';
-      return this.plugin.fmManager.countWords(content);
+    if (!(view instanceof MarkdownView) || !view.file) return;
+    const path = view.file.path;
+    const count = this.plugin.fmManager.countWords(view.editor?.getValue() || '');
+    if (!s.baselines.has(path)) {
+      s.baselines.set(path, count);
     }
-    return 0;
+    s.currents.set(path, count);
   }
 
-  private getCurrentDocuments(): string[] {
+  private getActiveFilePath(): string | null {
     const leaf = this.app.workspace.getMostRecentLeaf();
-    if (!leaf) return [];
-    const view = leaf.view;
-    const file = view instanceof MarkdownView ? view.file : null;
-    return file ? [file.path] : [];
+    const view = leaf?.view;
+    return view instanceof MarkdownView ? view.file?.path ?? null : null;
   }
 
   destroy(): void {

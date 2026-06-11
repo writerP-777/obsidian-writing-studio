@@ -249,6 +249,7 @@
     "sprintsCount_other": "· {{count}} Sprints"
   },
   "sprint": {
+    "alreadyRunning": "Ein Sprint läuft bereits. Beende ihn, bevor du einen neuen startest.",
     "started": "Sprint gestartet: {{minutes}} Minuten",
     "complete": "Sprint abgeschlossen! Tolle Arbeit.",
     "words": "+{{n}} Wörter",

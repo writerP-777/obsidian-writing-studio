@@ -2559,6 +2559,7 @@ var en_default = {
     sprintsCount_other: "\xB7 {{count}} sprints"
   },
   sprint: {
+    alreadyRunning: "A sprint is already running. Stop it before starting a new one.",
     started: "Sprint started: {{minutes}} minutes",
     complete: "Sprint complete! Great work.",
     words: "+{{n}} words",
@@ -3169,6 +3170,7 @@ var zh_default = {
     sprintsCount_other: "\xB7 {{count}} \u6B21\u51B2\u523A"
   },
   sprint: {
+    alreadyRunning: "\u5DF2\u6709\u4E00\u4E2A\u51B2\u523A\u6B63\u5728\u8FDB\u884C\u3002\u8BF7\u5148\u505C\u6B62\u5B83\uFF0C\u518D\u5F00\u59CB\u65B0\u7684\u51B2\u523A\u3002",
     started: "\u5199\u4F5C\u51B2\u523A\u5DF2\u5F00\u59CB\uFF1A{{minutes}} \u5206\u949F",
     complete: "\u51B2\u523A\u5B8C\u6210\uFF01\u5E72\u5F97\u597D\u3002",
     words: "+{{n}} \u4E2A\u5B57",
@@ -3779,6 +3781,7 @@ var hi_default = {
     sprintsCount_other: "\xB7 {{count}} \u0938\u094D\u092A\u094D\u0930\u093F\u0902\u091F"
   },
   sprint: {
+    alreadyRunning: "\u090F\u0915 \u0938\u094D\u092A\u094D\u0930\u093F\u0902\u091F \u092A\u0939\u0932\u0947 \u0938\u0947 \u091A\u0932 \u0930\u0939\u093E \u0939\u0948\u0964 \u0928\u092F\u093E \u0936\u0941\u0930\u0942 \u0915\u0930\u0928\u0947 \u0938\u0947 \u092A\u0939\u0932\u0947 \u0909\u0938\u0947 \u0930\u094B\u0915\u0947\u0902\u0964",
     started: "\u0932\u0947\u0916\u0928 \u0938\u094D\u092A\u094D\u0930\u093F\u0902\u091F \u0936\u0941\u0930\u0942 \u0939\u0941\u0906: {{minutes}} \u092E\u093F\u0928\u091F",
     complete: "\u0938\u094D\u092A\u094D\u0930\u093F\u0902\u091F \u092A\u0942\u0930\u093E! \u0936\u093E\u0928\u0926\u093E\u0930 \u0915\u093E\u092E\u0964",
     words: "+{{n}} \u0936\u092C\u094D\u0926",
@@ -4389,6 +4392,7 @@ var es_default = {
     sprintsCount_other: "\xB7 {{count}} sprints"
   },
   sprint: {
+    alreadyRunning: "Ya hay un sprint en curso. Det\xE9ngalo antes de iniciar uno nuevo.",
     started: "Sprint iniciado: {{minutes}} minutos",
     complete: "\xA1Sprint completado! Excelente trabajo.",
     words: "+{{n}} palabras",
@@ -5002,6 +5006,7 @@ var ar_default = {
     sprintsCount_other: "\xB7 {{count}} \u0633\u0628\u0627\u0642"
   },
   sprint: {
+    alreadyRunning: "\u0647\u0646\u0627\u0643 \u0633\u0628\u0627\u0642 \u0642\u064A\u062F \u0627\u0644\u062A\u0634\u063A\u064A\u0644 \u0628\u0627\u0644\u0641\u0639\u0644. \u0623\u0648\u0642\u0641\u0647 \u0642\u0628\u0644 \u0628\u062F\u0621 \u0633\u0628\u0627\u0642 \u062C\u062F\u064A\u062F.",
     started: "\u0628\u062F\u0623 \u0627\u0644\u0633\u0628\u0627\u0642: {{minutes}} \u062F\u0642\u0627\u0626\u0642",
     complete: "\u0627\u0643\u062A\u0645\u0644 \u0627\u0644\u0633\u0628\u0627\u0642! \u0639\u0645\u0644 \u0631\u0627\u0626\u0639.",
     words: "+{{n}} \u0643\u0644\u0645\u0629",
@@ -5620,6 +5625,7 @@ var fr_default = {
     sprintsCount_other: "\xB7 {{count}} sprints"
   },
   sprint: {
+    alreadyRunning: "Un sprint est d\xE9j\xE0 en cours. Arr\xEAtez-le avant d'en d\xE9marrer un nouveau.",
     started: "Sprint d\xE9marr\xE9 : {{minutes}} minutes",
     complete: "Sprint termin\xE9 ! Excellent travail.",
     words: "+{{n}} mots",
@@ -6230,6 +6236,7 @@ var bn_default = {
     sprintsCount_other: "\xB7 {{count}} \u09B8\u09CD\u09AA\u09CD\u09B0\u09BF\u09A8\u09CD\u099F"
   },
   sprint: {
+    alreadyRunning: "\u098F\u0995\u099F\u09BF \u09B8\u09CD\u09AA\u09CD\u09B0\u09BF\u09A8\u09CD\u099F \u0987\u09A4\u09BF\u09AE\u09A7\u09CD\u09AF\u09C7 \u099A\u09B2\u099B\u09C7\u0964 \u09A8\u09A4\u09C1\u09A8 \u09B6\u09C1\u09B0\u09C1 \u0995\u09B0\u09BE\u09B0 \u0986\u0997\u09C7 \u09B8\u09C7\u099F\u09BF \u09AC\u09A8\u09CD\u09A7 \u0995\u09B0\u09C1\u09A8\u0964",
     started: "\u09B2\u09C7\u0996\u09BE\u09B0 \u09B8\u09CD\u09AA\u09CD\u09B0\u09BF\u09A8\u09CD\u099F \u09B6\u09C1\u09B0\u09C1 \u09B9\u09AF\u09BC\u09C7\u099B\u09C7: {{minutes}} \u09AE\u09BF\u09A8\u09BF\u099F",
     complete: "\u09B8\u09CD\u09AA\u09CD\u09B0\u09BF\u09A8\u09CD\u099F \u09B8\u09AE\u09CD\u09AA\u09A8\u09CD\u09A8! \u09A6\u09BE\u09B0\u09C1\u09A3 \u0995\u09BE\u099C\u0964",
     words: "+{{n}} \u09B6\u09AC\u09CD\u09A6",
@@ -6840,6 +6847,7 @@ var pt_BR_default = {
     sprintsCount_other: "\xB7 {{count}} sprints"
   },
   sprint: {
+    alreadyRunning: "J\xE1 h\xE1 um sprint em andamento. Pare-o antes de iniciar um novo.",
     started: "Sprint iniciado: {{minutes}} minutos",
     complete: "Sprint conclu\xEDdo! \xD3timo trabalho.",
     words: "+{{n}} palavras",
@@ -7452,6 +7460,7 @@ var ru_default = {
     sprintsCount_other: "\xB7 {{count}} \u0441\u043F\u0440\u0438\u043D\u0442\u043E\u0432"
   },
   sprint: {
+    alreadyRunning: "\u0421\u043F\u0440\u0438\u043D\u0442 \u0443\u0436\u0435 \u0438\u0434\u0451\u0442. \u041E\u0441\u0442\u0430\u043D\u043E\u0432\u0438\u0442\u0435 \u0435\u0433\u043E, \u043F\u0440\u0435\u0436\u0434\u0435 \u0447\u0435\u043C \u043D\u0430\u0447\u0438\u043D\u0430\u0442\u044C \u043D\u043E\u0432\u044B\u0439.",
     started: "\u0421\u043F\u0440\u0438\u043D\u0442 \u043D\u0430\u0447\u0430\u0442: {{minutes}} \u043C\u0438\u043D\u0443\u0442",
     complete: "\u0421\u043F\u0440\u0438\u043D\u0442 \u0437\u0430\u0432\u0435\u0440\u0448\u0451\u043D! \u041E\u0442\u043B\u0438\u0447\u043D\u0430\u044F \u0440\u0430\u0431\u043E\u0442\u0430.",
     words: "+{{n}} \u0441\u043B\u043E\u0432",
@@ -8066,6 +8075,7 @@ var ja_default = {
     sprintsCount_other: "\xB7 {{count}} \u30B9\u30D7\u30EA\u30F3\u30C8"
   },
   sprint: {
+    alreadyRunning: "\u30B9\u30D7\u30EA\u30F3\u30C8\u306F\u65E2\u306B\u5B9F\u884C\u4E2D\u3067\u3059\u3002\u65B0\u3057\u3044\u30B9\u30D7\u30EA\u30F3\u30C8\u3092\u958B\u59CB\u3059\u308B\u524D\u306B\u505C\u6B62\u3057\u3066\u304F\u3060\u3055\u3044\u3002",
     started: "\u30B9\u30D7\u30EA\u30F3\u30C8\u958B\u59CB\uFF1A{{minutes}} \u5206",
     complete: "\u30B9\u30D7\u30EA\u30F3\u30C8\u5B8C\u4E86\uFF01\u304A\u75B2\u308C\u3055\u307E\u3067\u3057\u305F\u3002",
     words: "+{{n}} \u8A9E",
@@ -8676,6 +8686,7 @@ var de_default = {
     sprintsCount_other: "\xB7 {{count}} Sprints"
   },
   sprint: {
+    alreadyRunning: "Ein Sprint l\xE4uft bereits. Beende ihn, bevor du einen neuen startest.",
     started: "Sprint gestartet: {{minutes}} Minuten",
     complete: "Sprint abgeschlossen! Tolle Arbeit.",
     words: "+{{n}} W\xF6rter",
@@ -9286,6 +9297,7 @@ var ko_default = {
     sprintsCount_other: "\xB7 {{count}} \uC2A4\uD504\uB9B0\uD2B8"
   },
   sprint: {
+    alreadyRunning: "\uC774\uBBF8 \uC9C4\uD589 \uC911\uC778 \uC2A4\uD504\uB9B0\uD2B8\uAC00 \uC788\uC2B5\uB2C8\uB2E4. \uC0C8 \uC2A4\uD504\uB9B0\uD2B8\uB97C \uC2DC\uC791\uD558\uAE30 \uC804\uC5D0 \uC911\uC9C0\uD558\uC138\uC694.",
     started: "\uC2A4\uD504\uB9B0\uD2B8 \uC2DC\uC791: {{minutes}}\uBD84",
     complete: "\uC2A4\uD504\uB9B0\uD2B8 \uC644\uB8CC! \uC798\uD558\uC168\uC2B5\uB2C8\uB2E4.",
     words: "+{{n}} \uB2E8\uC5B4",
@@ -11908,10 +11920,27 @@ var WritingModes = class {
 
 // src/SprintTimer.ts
 var import_obsidian14 = require("obsidian");
+function computeSprintWords(scope, primaryFile, baselines, currents, projectPrefix) {
+  var _a2, _b2, _c;
+  if (scope === "project") {
+    let total = 0;
+    for (const [path, current2] of currents) {
+      if (projectPrefix && !path.startsWith(projectPrefix)) continue;
+      const baseline2 = (_a2 = baselines.get(path)) != null ? _a2 : current2;
+      total += Math.max(0, current2 - baseline2);
+    }
+    return total;
+  }
+  if (!primaryFile) return 0;
+  const baseline = (_b2 = baselines.get(primaryFile)) != null ? _b2 : 0;
+  const current = (_c = currents.get(primaryFile)) != null ? _c : baseline;
+  return Math.max(0, current - baseline);
+}
 var SprintTimer = class {
   constructor(plugin) {
     this.state = null;
     this.intervalId = null;
+    this.tickCount = 0;
     this.floatingEl = null;
     this.statusBarEl = null;
     this.onComplete = null;
@@ -11932,7 +11961,10 @@ var SprintTimer = class {
   // The clock does not run until the user presses Start on the overlay itself.
   setup(durationMinutes, wordCountGoal, projectScope = "file") {
     var _a2;
-    if ((_a2 = this.state) == null ? void 0 : _a2.active) this.stop();
+    if (((_a2 = this.state) == null ? void 0 : _a2.active) && !this.state.ready) {
+      new import_obsidian14.Notice(t2("sprint.alreadyRunning"));
+      return;
+    }
     this.state = {
       active: true,
       paused: true,
@@ -11942,7 +11974,9 @@ var SprintTimer = class {
       totalPausedMs: 0,
       durationMinutes,
       wordCountGoal,
-      startWordCount: this.getCurrentWordCount(),
+      primaryFile: null,
+      baselines: /* @__PURE__ */ new Map(),
+      currents: /* @__PURE__ */ new Map(),
       projectScope
     };
     this.showFloating();
@@ -11950,6 +11984,7 @@ var SprintTimer = class {
   }
   pause() {
     if (!this.state || !this.state.active || this.state.paused) return;
+    this.sampleActiveFile();
     this.state.paused = true;
     this.state.pausedAt = Date.now();
     this.stopInterval();
@@ -11961,6 +11996,12 @@ var SprintTimer = class {
     this.state.totalPausedMs += Date.now() - this.state.pausedAt;
     this.state.paused = false;
     this.state.ready = false;
+    if (wasReady) {
+      this.state.baselines.clear();
+      this.state.currents.clear();
+      this.sampleActiveFile();
+      this.state.primaryFile = this.getActiveFilePath();
+    }
     this.startInterval();
     this.updateDisplay();
     if (wasReady) {
@@ -11978,19 +12019,45 @@ var SprintTimer = class {
     if (!wasReady && session && this.onComplete) void this.onComplete(session);
   }
   buildSession() {
+    this.sampleActiveFile();
     const s = this.state;
-    const wordsWritten = Math.max(0, this.getCurrentWordCount() - s.startWordCount);
-    const now = /* @__PURE__ */ new Date();
+    const wordsWritten = this.getWordsWritten();
+    const documents = this.getCountedDocuments();
+    const startWordCount = documents.reduce((sum, p) => {
+      var _a2;
+      return sum + ((_a2 = s.baselines.get(p)) != null ? _a2 : 0);
+    }, 0);
     return {
       id: `sprint-${Date.now()}`,
-      date: now.toISOString(),
+      date: (/* @__PURE__ */ new Date()).toISOString(),
       duration: s.durationMinutes,
       wordsWritten,
-      startWordCount: s.startWordCount,
+      startWordCount,
       wordCountGoal: s.wordCountGoal,
-      documents: this.getCurrentDocuments(),
+      documents,
       completed: true
     };
+  }
+  getWordsWritten() {
+    const s = this.state;
+    if (!s) return 0;
+    return computeSprintWords(s.projectScope, s.primaryFile, s.baselines, s.currents, this.getProjectPrefix());
+  }
+  // Files whose words count toward this sprint, given its scope
+  getCountedDocuments() {
+    const s = this.state;
+    if (!s) return [];
+    if (s.projectScope === "project") {
+      const prefix = this.getProjectPrefix();
+      return [...s.currents.keys()].filter((p) => !prefix || p.startsWith(prefix));
+    }
+    return s.primaryFile ? [s.primaryFile] : [];
+  }
+  getProjectPrefix() {
+    var _a2;
+    if (((_a2 = this.state) == null ? void 0 : _a2.projectScope) !== "project") return null;
+    const project = this.plugin.projectManager.getActiveProject();
+    return project ? (0, import_obsidian14.normalizePath)(project.folderPath) + "/" : null;
   }
   getElapsedMs() {
     if (!this.state) return 0;
@@ -12023,10 +12090,14 @@ var SprintTimer = class {
       this.handleComplete();
       return;
     }
+    if (++this.tickCount % 5 === 0) {
+      this.sampleActiveFile();
+    }
     this.updateDisplay();
   }
   handleComplete() {
     this.stopInterval();
+    this.sampleActiveFile();
     if (this.plugin.settings.soundNotifications) {
       this.playBell();
     }
@@ -12048,28 +12119,30 @@ var SprintTimer = class {
       osc.type = "sine";
       gain.gain.setValueAtTime(0.3, ctx.currentTime);
       gain.gain.exponentialRampToValueAtTime(1e-3, ctx.currentTime + 1.5);
+      osc.onended = () => {
+        void ctx.close();
+      };
       osc.start(ctx.currentTime);
       osc.stop(ctx.currentTime + 1.5);
     } catch (e) {
     }
   }
   updateDisplay() {
-    var _a2, _b2, _c, _d, _e;
+    var _a2, _b2, _c, _d;
     const time = this.getFormattedRemaining();
     const paused = ((_a2 = this.state) == null ? void 0 : _a2.paused) && !((_b2 = this.state) == null ? void 0 : _b2.ready) ? " \u23F8" : "";
     const label = `\u23F1 ${time}${paused}`;
     if (this.floatingEl) {
       const timeEl = this.floatingEl.querySelector(".ws-sprint-time");
       if (timeEl) timeEl.textContent = time;
-      const wc = this.getCurrentWordCount() - (((_c = this.state) == null ? void 0 : _c.startWordCount) || 0);
       const wcEl = this.floatingEl.querySelector(".ws-sprint-wc");
-      if (wcEl) wcEl.textContent = t2("sprint.words", { n: Math.max(0, wc) });
+      if (wcEl) wcEl.textContent = t2("sprint.words", { n: this.getWordsWritten() });
       const pauseBtn = this.floatingEl.querySelector(".ws-sprint-pause");
       if (pauseBtn) {
-        if ((_d = this.state) == null ? void 0 : _d.ready) {
+        if ((_c = this.state) == null ? void 0 : _c.ready) {
           pauseBtn.textContent = "\u25B6";
           pauseBtn.title = t2("sprint.startTitle");
-        } else if ((_e = this.state) == null ? void 0 : _e.paused) {
+        } else if ((_d = this.state) == null ? void 0 : _d.paused) {
           pauseBtn.textContent = "\u25B6";
           pauseBtn.title = t2("sprint.resumeTitle");
         } else {
@@ -12147,23 +12220,28 @@ var SprintTimer = class {
       this.floatingEl = null;
     }
   }
-  getCurrentWordCount() {
+  // Record the active file's current word count, setting its baseline the
+  // first time it is seen during this sprint
+  sampleActiveFile() {
     var _a2;
+    const s = this.state;
+    if (!s) return;
     const leaf = this.app.workspace.getMostRecentLeaf();
-    if (!leaf) return 0;
+    if (!leaf) return;
     const view = leaf.view;
-    if (view instanceof import_obsidian14.MarkdownView) {
-      const content = ((_a2 = view.editor) == null ? void 0 : _a2.getValue()) || "";
-      return this.plugin.fmManager.countWords(content);
+    if (!(view instanceof import_obsidian14.MarkdownView) || !view.file) return;
+    const path = view.file.path;
+    const count = this.plugin.fmManager.countWords(((_a2 = view.editor) == null ? void 0 : _a2.getValue()) || "");
+    if (!s.baselines.has(path)) {
+      s.baselines.set(path, count);
     }
-    return 0;
+    s.currents.set(path, count);
   }
-  getCurrentDocuments() {
+  getActiveFilePath() {
+    var _a2, _b2;
     const leaf = this.app.workspace.getMostRecentLeaf();
-    if (!leaf) return [];
-    const view = leaf.view;
-    const file = view instanceof import_obsidian14.MarkdownView ? view.file : null;
-    return file ? [file.path] : [];
+    const view = leaf == null ? void 0 : leaf.view;
+    return view instanceof import_obsidian14.MarkdownView ? (_b2 = (_a2 = view.file) == null ? void 0 : _a2.path) != null ? _b2 : null : null;
   }
   destroy() {
     this.stopInterval();

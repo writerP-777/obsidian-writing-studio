@@ -252,6 +252,7 @@
     "sprintsCount_other": "· {{count}} سباق"
   },
   "sprint": {
+    "alreadyRunning": "هناك سباق قيد التشغيل بالفعل. أوقفه قبل بدء سباق جديد.",
     "started": "بدأ السباق: {{minutes}} دقائق",
     "complete": "اكتمل السباق! عمل رائع.",
     "words": "+{{n}} كلمة",
