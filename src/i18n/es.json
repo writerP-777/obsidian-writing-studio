@@ -323,6 +323,11 @@
     "closePreview": "Cerrar vista previa",
     "noContent": "Sin contenido para previsualizar. Abra primero un proyecto de escritura."
   },
+  "projectManager": {
+    "errorFolderExists": "Ya existe una carpeta llamada \"{{folder}}\" en su carpeta de proyectos. Elija un título diferente.",
+    "corruptBinder": "No se pudo leer el archivo _binder.json de \"{{project}}\". Se guardó una copia de seguridad como _binder.json.bak en la carpeta del proyecto.",
+    "corruptProject": "El archivo del proyecto en \"{{folder}}\" está dañado y no se pudo cargar el proyecto."
+  },
   "projectModal": {
     "title": "Nuevo proyecto de escritura",
     "projectTitle": "Título del proyecto",

@@ -323,6 +323,11 @@
     "closePreview": "Vorschau schließen",
     "noContent": "Kein Inhalt zum Anzeigen. Öffne zuerst ein Schreibprojekt."
   },
+  "projectManager": {
+    "errorFolderExists": "Ein Ordner namens \"{{folder}}\" existiert bereits in deinem Projektordner. Wähle einen anderen Titel.",
+    "corruptBinder": "Die Datei _binder.json von \"{{project}}\" konnte nicht gelesen werden. Eine Sicherung wurde als _binder.json.bak im Projektordner gespeichert.",
+    "corruptProject": "Die Projektdatei in \"{{folder}}\" ist beschädigt und das Projekt konnte nicht geladen werden."
+  },
   "projectModal": {
     "title": "Neues Schreibprojekt",
     "projectTitle": "Projekttitel",

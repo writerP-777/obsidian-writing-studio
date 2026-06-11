@@ -330,6 +330,11 @@
     "closePreview": "إغلاق المعاينة",
     "noContent": "لا محتوى للمعاينة. افتح مشروع كتابة أولاً."
   },
+  "projectManager": {
+    "errorFolderExists": "يوجد بالفعل مجلد باسم \"{{folder}}\" في مجلد مشاريعك. اختر عنوانًا مختلفًا.",
+    "corruptBinder": "تعذرت قراءة ملف _binder.json الخاص بـ \"{{project}}\". تم حفظ نسخة احتياطية باسم _binder.json.bak في مجلد المشروع.",
+    "corruptProject": "ملف المشروع في \"{{folder}}\" تالف ولم يتم تحميل المشروع."
+  },
   "projectModal": {
     "title": "مشروع كتابة جديد",
     "projectTitle": "عنوان المشروع",

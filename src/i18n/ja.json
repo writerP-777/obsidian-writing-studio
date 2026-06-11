@@ -323,6 +323,11 @@
     "closePreview": "プレビューを閉じる",
     "noContent": "プレビューするコンテンツがありません。まず執筆プロジェクトを開いてください。"
   },
+  "projectManager": {
+    "errorFolderExists": "プロジェクトフォルダーに「{{folder}}」という名前のフォルダーが既に存在します。別のタイトルを選んでください。",
+    "corruptBinder": "「{{project}}」の _binder.json ファイルを読み取れませんでした。バックアップを _binder.json.bak としてプロジェクトフォルダーに保存しました。",
+    "corruptProject": "「{{folder}}」のプロジェクトファイルが破損しているため、プロジェクトを読み込めませんでした。"
+  },
   "projectModal": {
     "title": "新規執筆プロジェクト",
     "projectTitle": "プロジェクトタイトル",

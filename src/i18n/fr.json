@@ -323,6 +323,11 @@
     "closePreview": "Fermer l'aperçu",
     "noContent": "Aucun contenu à prévisualiser. Ouvrez d'abord un projet d'écriture."
   },
+  "projectManager": {
+    "errorFolderExists": "Un dossier nommé \"{{folder}}\" existe déjà dans votre dossier de projets. Choisissez un autre titre.",
+    "corruptBinder": "Le fichier _binder.json de \"{{project}}\" n'a pas pu être lu. Une sauvegarde a été enregistrée sous _binder.json.bak dans le dossier du projet.",
+    "corruptProject": "Le fichier de projet dans \"{{folder}}\" est corrompu et le projet n'a pas pu être chargé."
+  },
   "projectModal": {
     "title": "Nouveau projet d'écriture",
     "projectTitle": "Titre du projet",

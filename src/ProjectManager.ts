@@ -1,5 +1,6 @@
-import { App, TFolder, TFile, normalizePath } from 'obsidian';
+import { App, Notice, TFolder, TFile, normalizePath } from 'obsidian';
 import type WritingStudioPlugin from '../main';
+import { t } from './i18n';
 import { WritingProject, ProjectType } from '../models/Project';
 import { BinderData, BinderItem } from '../models/BinderItem';
 import { SprintSession } from '../models/SprintSession';
@@ -51,6 +52,7 @@ export class ProjectManager {
       this.projects.set(project.id, project);
       return project;
     } catch {
+      new Notice(t('projectManager.corruptProject', { folder: folderPath }));
       return null;
     }
   }
@@ -65,6 +67,12 @@ export class ProjectManager {
     const id = `project-${Date.now()}`;
     const folderName = title.replace(/[\\/:*?"<>|]/g, '-');
     const folderPath = normalizePath(`${rootFolder}/${folderName}`);
+
+    // Refuse rather than scaffold into an existing folder — writing into one
+    // would overwrite the existing project's _project.json and _binder.json
+    if (this.app.vault.getAbstractFileByPath(folderPath)) {
+      throw new Error(t('projectManager.errorFolderExists', { folder: folderName }));
+    }
 
     // Create folder structure
     await this.ensureFolder(folderPath);
@@ -139,12 +147,21 @@ export class ProjectManager {
     if (!(file instanceof TFile)) {
       return { version: '2.0', projectId: project.id, items: [] };
     }
+    let content: string;
     try {
-      const content = await this.app.vault.read(file);
+      content = await this.app.vault.read(file);
+    } catch {
+      return { version: '2.0', projectId: project.id, items: [] };
+    }
+    try {
       const data = JSON.parse(content) as BinderData;
       this.binderCache.set(project.id, data);
       return data;
     } catch {
+      // Preserve the corrupt file for manual repair; the returned empty binder
+      // is deliberately not cached so a repaired file is picked up on next load
+      await this.writeRaw(normalizePath(`${project.folderPath}/_binder.json.bak`), content);
+      new Notice(t('projectManager.corruptBinder', { project: project.title }));
       return { version: '2.0', projectId: project.id, items: [] };
     }
   }
@@ -166,8 +183,11 @@ export class ProjectManager {
   ): Promise<BinderItem> {
     const binder = await this.loadBinder(project);
     const now = new Date().toISOString().split('T')[0];
-    const fileName = title.replace(/[\\/:*?"<>|]/g, '-') + '.md';
-    const filePath = normalizePath(`${project.folderPath}/Chapters/${fileName}`);
+    const baseName = title.replace(/[\\/:*?"<>|]/g, '-');
+    let filePath = normalizePath(`${project.folderPath}/Chapters/${baseName}.md`);
+    for (let n = 2; this.app.vault.getAbstractFileByPath(filePath); n++) {
+      filePath = normalizePath(`${project.folderPath}/Chapters/${baseName} ${n}.md`);
+    }
 
     const item: BinderItem = {
       id: `item-${Date.now()}`,
@@ -296,7 +316,10 @@ tags: [writing-studio]
   }
 
   private async writeJson(path: string, data: unknown): Promise<void> {
-    const content = JSON.stringify(data, null, 2);
+    await this.writeRaw(path, JSON.stringify(data, null, 2));
+  }
+
+  private async writeRaw(path: string, content: string): Promise<void> {
     const existing = this.app.vault.getAbstractFileByPath(path);
     if (existing instanceof TFile) {
       await this.app.vault.modify(existing, content);
