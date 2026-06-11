@@ -6,6 +6,7 @@ import type WritingStudioPlugin from '../main';
 import { t } from './i18n';
 
 const FOCUS_CLASS = 'writing-studio-focus-mode';
+const FOCUS_FONT_CLASS = 'ws-focus-fontsize';
 const FOCUS_PARA_CLASS = 'cm-ws-focus-para';
 
 export class FocusMode {
@@ -38,6 +39,7 @@ export class FocusMode {
     this.active = true;
     activeDocument.body.classList.add(FOCUS_CLASS);
     this.applyDimOpacity();
+    this.applyFontSize();
 
     if (this.plugin.settings.focusAutoHideSidebars) {
       this.hideSidebars();
@@ -49,12 +51,25 @@ export class FocusMode {
   disable(): void {
     this.active = false;
     activeDocument.body.classList.remove(FOCUS_CLASS);
+    this.applyFontSize();
 
     if (this.plugin.settings.focusAutoHideSidebars) {
       this.restoreSidebars();
     }
 
     this.hideToolbar();
+  }
+
+  // Applies the focus font size override while focus mode is active.
+  // 0 means no override: the class is absent and the theme default applies.
+  applyFontSize(): void {
+    const size = this.plugin.settings.focusFontSize || 0;
+    if (this.active && size > 0) {
+      activeDocument.documentElement.setCssProps({ '--ws-focus-font-size': `${size}px` });
+      activeDocument.body.classList.add(FOCUS_FONT_CLASS);
+    } else {
+      activeDocument.body.classList.remove(FOCUS_FONT_CLASS);
+    }
   }
 
   private applyDimOpacity(): void {
@@ -163,8 +178,11 @@ export class FocusMode {
         }
 
         buildDecorations(view: EditorView): DecorationSet {
-          if (!plugin.focusMode.isActive()) return Decoration.none;
-
+          // Build unconditionally: the dim styles only apply under the focus
+          // body class, so keeping the focus-para marker current even while
+          // inactive means enabling focus mode highlights the active
+          // paragraph immediately instead of dimming everything until the
+          // next cursor move.
           const builder = new RangeSetBuilder<Decoration>();
           const state = view.state;
           const sel = state.selection.main;
@@ -213,7 +231,9 @@ export class FocusMode {
       const scrollEl = view.scrollDOM;
       const viewMid = scrollEl.clientHeight / 2;
       const lineTop = coords.top - scrollEl.getBoundingClientRect().top + scrollEl.scrollTop;
-      scrollEl.scrollTo({ top: lineTop - viewMid, behavior: 'smooth' });
+      // 'auto' rather than 'smooth': rapid typing fires a scroll per
+      // selection change, and queued smooth animations visibly jitter
+      scrollEl.scrollTo({ top: lineTop - viewMid, behavior: 'auto' });
     });
   }
 
