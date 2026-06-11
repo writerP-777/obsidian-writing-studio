@@ -1,5 +1,5 @@
 import { App, MarkdownView, TFile, normalizePath, Notice } from 'obsidian';
-import { exec } from 'child_process';
+import { execFile } from 'child_process';
 import { promisify } from 'util';
 import type WritingStudioPlugin from '../main';
 import { EpubEngine, EpubChapter } from './EpubEngine';
@@ -9,7 +9,7 @@ interface FileSystemAdapter {
   getFullPath?(vaultPath: string): string;
 }
 
-const execAsync = promisify(exec);
+const execFileAsync = promisify(execFile);
 
 export type ExportFormat = 'pdf' | 'docx' | 'rtf' | 'md' | 'html' | 'epub' | 'manuscript';
 export type ExportScope = 'current' | 'selected' | 'project';
@@ -434,33 +434,28 @@ ${this.markdownToHtml(content)}
       const absOutput = this.getAbsPath(outputPath);
       const absInput = this.getAbsPath(tempMdPath);
 
-      const isPdf = outputPath.endsWith('.pdf');
-
-      const args = [
-        `"${absInput}"`,
-        `--from markdown`,
-        `-o "${absOutput}"`,
-      ];
-
-      // --pdf-engine is only valid for PDF output; passing it for DOCX/RTF
-      // causes a fatal error in pandoc 3.x and must be omitted.
-      if (isPdf) {
-        args.push('--pdf-engine=wkhtmltopdf');
-      }
+      // No --pdf-engine flag: pandoc defaults to LaTeX for PDF output, which
+      // is what the README tells users to install (TeX Live / MiKTeX)
+      const args = [absInput, '--from', 'markdown', '-o', absOutput];
 
       if (opts.font) {
         const safeFont = opts.font.replace(/["'`\\$]/g, '');
-        args.push(`-V mainfont="${safeFont}"`);
+        args.push('-V', `mainfont=${safeFont}`);
       }
 
-      await execAsync(`${pandocPath} ${args.join(' ')}`);
+      // execFile: no shell, so a pandoc path with spaces (C:\Program Files\...)
+      // works and path/font content cannot be interpreted as shell syntax
+      await execFileAsync(pandocPath, args);
       new Notice(t('exportEngine.exportedTo', { path: outputPath }));
       return outputPath;
     } catch (e) {
       throw new Error(`Pandoc export failed: ${e instanceof Error ? e.message : String(e)}\nEnsure pandoc is installed.`);
     } finally {
-      const tmpFile = this.app.vault.getAbstractFileByPath(tempMdPath);
-      if (tmpFile instanceof TFile) await this.app.fileManager.trashFile(tmpFile);
+      // Remove the temp file outright via the adapter — trashing it
+      // accumulated a .tmp.md in .trash/ on every pandoc export
+      if (this.app.vault.getAbstractFileByPath(tempMdPath) instanceof TFile) {
+        await this.app.vault.adapter.remove(tempMdPath);
+      }
     }
   }
 
