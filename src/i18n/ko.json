@@ -377,7 +377,9 @@
     "errorNoTitle": "프로젝트 제목을 입력하세요.",
     "errorCreate": "프로젝트 만들기 실패: {{error}}",
     "created": "프로젝트 \"{{title}}\"이(가) 만들어졌습니다!",
-    "cancel": "취소"
+    "cancel": "취소",
+    "goalLabel": "총 단어 수 목표",
+    "goalDesc": "선택 사항. 런처와 상태 표시줄에 진행률로 표시됩니다. 목표가 없으면 비워 두세요."
   },
   "sprintModal": {
     "setupTitle": "스프린트 설정",

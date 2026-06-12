@@ -377,7 +377,9 @@
     "errorNoTitle": "Por favor, insira um título para o projeto.",
     "errorCreate": "Falha ao criar o projeto: {{error}}",
     "created": "Projeto \"{{title}}\" criado!",
-    "cancel": "Cancelar"
+    "cancel": "Cancelar",
+    "goalLabel": "Meta total de palavras",
+    "goalDesc": "Opcional. Exibida como progresso no iniciador e na barra de status. Deixe em branco para nenhuma meta."
   },
   "sprintModal": {
     "setupTitle": "Configurar sprint",

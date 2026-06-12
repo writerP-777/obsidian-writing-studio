@@ -377,7 +377,9 @@
     "errorNoTitle": "Please enter a project title.",
     "errorCreate": "Failed to create project: {{error}}",
     "created": "Project \"{{title}}\" created!",
-    "cancel": "Cancel"
+    "cancel": "Cancel",
+    "goalLabel": "Total word count goal",
+    "goalDesc": "Optional. Shown as progress in the launcher and status bar. Leave empty for no goal."
   },
   "sprintModal": {
     "setupTitle": "Set up sprint",
