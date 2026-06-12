@@ -238,6 +238,8 @@ body.writing-studio-typography .markdown-reading-view .markdown-preview-section 
 }
 
 .ws-binder-root-append-zone {
+  /* Hidden until a binder drag is active — see ws-binder-drag-active */
+  display: none;
   margin: 6px 8px 4px;
   padding: 5px 12px;
   border: 1px dashed var(--background-modifier-border);
@@ -247,6 +249,10 @@ body.writing-studio-typography .markdown-reading-view .markdown-preview-section 
   text-align: center;
   cursor: default;
   transition: all 0.1s;
+}
+
+.ws-binder-drag-active .ws-binder-root-append-zone {
+  display: block;
 }
 
 .ws-binder-root-append-zone.ws-binder-root-append-active {

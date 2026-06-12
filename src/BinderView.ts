@@ -383,10 +383,13 @@ export class BinderView extends ItemView {
       row.ondragstart = (e) => {
         this.dragSource = item.id;
         row.addClass('ws-binder-dragging');
+        // Reveals the root append zone — hidden except during a drag
+        this.listEl?.addClass('ws-binder-drag-active');
         e.dataTransfer?.setData('text/plain', item.id);
       };
       row.ondragend = () => {
         row.classList.remove('ws-binder-dragging');
+        this.listEl?.removeClass('ws-binder-drag-active');
         this.dragSource = null;
         this.dropZone = null;
         const container = this.containerEl.children[1] as HTMLElement;

@@ -4,6 +4,18 @@ All notable changes to Writing Studio are documented here.
 
 ---
 
+## [Unreleased]
+
+UX improvement cycle from the 2026-06-12 product-experience review (issues #153–#171).
+
+### Fixed
+- The binder's "drop here to promote to root" zone now appears only while a drag is in progress, instead of sitting permanently under the document list. (#161)
+
+### Changed
+- Launcher mode buttons, binder document type icons, and the status bar mode pill now use Lucide icons instead of emoji, matching the icon language of the rest of the plugin. The status bar pill is hidden when no writing mode is active rather than reading "— mode". (#163)
+
+---
+
 ## [2.7.0]
 
 Post-audit improvement release: six structural and UX improvements from the 2026-06-12 fresh-eyes review (issues #138–#143, PRs #144–#148), the startup-gating fix (#150), and documentation corrections.
