@@ -152,7 +152,6 @@ export class WritingStudioSettingsTab extends PluginSettingTab {
       .addSlider(s => s
         .setLimits(10, 50, 5)
         .setValue(this.plugin.settings.dimOpacity)
-        .setDynamicTooltip()
         .onChange(async v => {
           this.plugin.settings.dimOpacity = v;
           await this.plugin.saveSettings();
@@ -231,7 +230,6 @@ export class WritingStudioSettingsTab extends PluginSettingTab {
       .addSlider(s => s
         .setLimits(55, 80, 1)
         .setValue(this.plugin.settings.maxLineLength)
-        .setDynamicTooltip()
         .onChange(async v => { this.plugin.settings.maxLineLength = v; await this.plugin.saveSettings(); }));
 
     new Setting(el)

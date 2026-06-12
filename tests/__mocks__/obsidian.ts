@@ -38,3 +38,27 @@ export class Notice {
 export function normalizePath(path: string): string {
   return path.replace(/\\/g, '/').replace(/\/+/g, '/');
 }
+
+export class Component {
+  load(): void {}
+  unload(): void {}
+}
+
+export class PluginSettingTab {
+  app: unknown;
+  plugin: unknown;
+  constructor(app: unknown, plugin: unknown) {
+    this.app = app;
+    this.plugin = plugin;
+  }
+  display(): void {}
+  hide(): void {}
+}
+
+export class Setting {
+  constructor(_el?: unknown) {}
+}
+
+export class MarkdownRenderer {
+  static async render(): Promise<void> {}
+}
