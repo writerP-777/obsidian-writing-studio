@@ -9,6 +9,7 @@ All notable changes to Writing Studio are documented here.
 UX improvement cycle from the 2026-06-12 product-experience review (issues #153–#171).
 
 ### Fixed
+- "Set word count goal" now edits the binder item's goal when the document is in the active project's binder — previously it read and wrote only frontmatter, so for binder documents it showed the wrong current value and saving had no effect (the binder goal silently took precedence). Frontmatter is still used for files not in any binder. (#156)
 - The binder's "drop here to promote to root" zone now appears only while a drag is in progress, instead of sitting permanently under the document list. (#161)
 
 ### Changed

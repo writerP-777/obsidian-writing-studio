@@ -375,6 +375,16 @@ tags: [writing-studio]
     return undefined;
   }
 
+  // The goal modal needs the writable binder entry, not just the resolved
+  // number — null when the file is not in the active project's binder.
+  async findBinderEntryForFile(filePath: string): Promise<{ binder: BinderData; item: BinderItem } | null> {
+    const project = this.getActiveProject();
+    if (!project) return null;
+    const binder = await this.loadBinder(project);
+    const item = this.findBinderItemByPath(binder.items, filePath);
+    return item ? { binder, item } : null;
+  }
+
   async getWordCountGoalForFile(file: TFile): Promise<number | undefined> {
     const project = this.getActiveProject();
     if (project) {
