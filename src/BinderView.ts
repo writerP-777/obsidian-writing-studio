@@ -17,6 +17,8 @@ import { ConfirmModal } from '../modals/ConfirmModal';
 import { t } from './i18n';
 import { safeHandler } from './safeHandler';
 import { computeBinderFilter, BinderFilterResult } from './binderFilter';
+import { treeNavAction, parentIndex } from './treeNav';
+import { applyFocus } from './FolderSidebarView';
 
 export const BINDER_VIEW_TYPE = 'writing-studio-binder';
 
@@ -35,6 +37,12 @@ export class BinderView extends ItemView {
   // Non-null while a search is active — computed from the data model so
   // matches inside collapsed groups are found and their ancestors expanded.
   private filterSets: BinderFilterResult | null = null;
+  // Visible rows in visual order, rebuilt on every list render — the flat
+  // sequence keyboard navigation moves through.
+  private navRows: Array<{ el: HTMLElement; item: BinderItem; depth: number; hasChildren: boolean; isExpanded: boolean }> = [];
+  // Item id of the keyboard-focused row, so focus survives event-driven
+  // re-renders (every expand/collapse rebuilds the DOM).
+  private navFocusItemId: string | null = null;
 
   constructor(leaf: WorkspaceLeaf, plugin: WritingStudioPlugin) {
     super(leaf);
@@ -173,9 +181,64 @@ export class BinderView extends ItemView {
       this.renderList();
     };
 
-    // Document list
+    // Document list — the list container holds DOM focus; rows carry a
+    // visual focus class (same pattern as the folder sidebar listing)
     this.listEl = container.createDiv('ws-binder-list');
+    this.listEl.setAttribute('tabindex', '0');
+    this.listEl.setAttribute('role', 'tree');
+    this.listEl.addEventListener('keydown', (e) => this.handleTreeKey(e));
     this.renderList();
+  }
+
+  private handleTreeKey(e: KeyboardEvent): void {
+    // Never intercept keys meant for the inline-rename editor
+    if (e.target instanceof HTMLElement && e.target.isContentEditable) return;
+
+    const index = this.navRows.findIndex(r => r.item.id === this.navFocusItemId);
+    const row = index >= 0 ? this.navRows[index] : null;
+    const action = treeNavAction(e.key === 'F10' && e.shiftKey ? 'ContextMenu' : e.key, row);
+    if (!action) return;
+    e.preventDefault();
+
+    switch (action) {
+      case 'next':
+        this.focusRow(Math.min(index + 1, this.navRows.length - 1));
+        break;
+      case 'prev':
+        // First arrow press with nothing focused lands on the first row
+        this.focusRow(index <= 0 ? 0 : index - 1);
+        break;
+      case 'expand':
+        if (row) { row.item.collapsed = false; void this.saveBinder(); }
+        break;
+      case 'collapse':
+        if (row) { row.item.collapsed = true; void this.saveBinder(); }
+        break;
+      case 'to-parent':
+        this.focusRow(parentIndex(this.navRows, index));
+        break;
+      case 'activate':
+        if (!row) break;
+        if (row.hasChildren) {
+          row.item.collapsed = !row.item.collapsed;
+          void this.saveBinder();
+        } else {
+          void this.openDocument(row.item);
+        }
+        break;
+      case 'menu':
+        if (row) {
+          const rect = row.el.getBoundingClientRect();
+          this.buildContextMenu(row.item).showAtPosition({ x: rect.left, y: rect.bottom });
+        }
+        break;
+    }
+  }
+
+  private focusRow(index: number): void {
+    if (index < 0 || index >= this.navRows.length) return;
+    this.navFocusItemId = this.navRows[index].item.id;
+    applyFocus(this.navRows.map(r => r.el), index);
   }
 
   private renderList(): void {
@@ -183,6 +246,7 @@ export class BinderView extends ItemView {
     if (!listEl) return;
     listEl.empty();
     this.wcElements.clear();
+    this.navRows = [];
 
     if (!this.activeProject) {
       const empty = listEl.createDiv('ws-binder-empty');
@@ -206,6 +270,15 @@ export class BinderView extends ItemView {
     }
 
     this.renderItems(listEl, this.binderItems, 0);
+
+    // Restore keyboard focus after an event-driven rebuild (expand/collapse,
+    // reorder). Only when focus fell to the body — never steal it from the
+    // search input or the editor.
+    const focusIdx = this.navRows.findIndex(r => r.item.id === this.navFocusItemId);
+    if (focusIdx >= 0 && activeDocument.activeElement === activeDocument.body) {
+      listEl.focus();
+      applyFocus(this.navRows.map(r => r.el), focusIdx);
+    }
 
     // Root append zone — visible during drag to promote/append at root level
     const rootZone = listEl.createDiv('ws-binder-root-append-zone');
@@ -234,6 +307,10 @@ export class BinderView extends ItemView {
       const row = container.createDiv({ cls: `ws-binder-item ws-binder-depth-${depth}` });
       row.setAttribute('data-item-id', item.id);
       row.setAttribute('draggable', 'true');
+      row.setAttribute('role', 'treeitem');
+      row.setAttribute('aria-level', String(depth + 1));
+      if (item.children?.length) row.setAttribute('aria-expanded', String(isExpanded));
+      this.navRows.push({ el: row, item, depth, hasChildren: !!item.children?.length, isExpanded });
 
       // Indent — padding-left comes from .ws-binder-item { padding-left: var(--ws-binder-depth, 0px) } in CSS
       if (depth > 0) {
@@ -278,6 +355,8 @@ export class BinderView extends ItemView {
       // double-click does not navigate away before editing starts
       let clickTimer: number | null = null;
       row.onclick = () => {
+        // Keep keyboard position in sync with mouse interaction
+        this.navFocusItemId = item.id;
         if (clickTimer !== null) return;
         clickTimer = window.setTimeout(() => {
           clickTimer = null;
@@ -463,6 +542,10 @@ export class BinderView extends ItemView {
   }
 
   private showContextMenu(e: MouseEvent, item: BinderItem): void {
+    this.buildContextMenu(item).showAtMouseEvent(e);
+  }
+
+  private buildContextMenu(item: BinderItem): Menu {
     const menu = new Menu();
 
     menu.addItem(i => i.setTitle(t('binder.menu.openDocument')).setIcon('file-text').onClick(safeHandler(() => this.openDocument(item))));
@@ -486,7 +569,7 @@ export class BinderView extends ItemView {
     menu.addSeparator();
     menu.addItem(i => i.setTitle(t('binder.menu.delete')).setIcon('trash').onClick(() => this.deleteItem(item)));
 
-    menu.showAtMouseEvent(e);
+    return menu;
   }
 
   private async createNewDocument(parentId?: string): Promise<void> {
