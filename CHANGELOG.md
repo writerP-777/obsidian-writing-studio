@@ -4,7 +4,9 @@ All notable changes to Writing Studio are documented here.
 
 ---
 
-## [Unreleased]
+## [2.7.0]
+
+Post-audit improvement release: six structural and UX improvements from the 2026-06-12 fresh-eyes review (issues #138–#143, PRs #144–#148), the startup-gating fix (#150), and documentation corrections.
 
 ### Fixed
 - **"Open on startup" now actually gates startup.** Since 2.6.0, the saved writing mode (and persisted typography) was restored on every Obsidian launch regardless of the toggle — restoring draft mode would even collapse the sidebars at launch — and Writing Studio status bar items always appeared. Session restore is now tied to Writing Studio's own launch: with the toggle on, the studio launches and restores at startup as before; with it off, Obsidian opens completely clean, and your last session's mode and typography are restored when you launch the studio yourself (feather icon, launcher command, or switching a mode). (#150)
