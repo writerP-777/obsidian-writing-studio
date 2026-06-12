@@ -6,7 +6,9 @@ import { t } from './i18n';
 // project goal bar. Anything new goes after the project goal bar.
 export class StatusBar {
   private plugin: WritingStudioPlugin;
+  private modeEl!: HTMLElement;
   private wordCountEl!: HTMLElement;
+  private sprintEl!: HTMLElement;
   private projectGoalEl!: HTMLElement;
   private projectGoalTimer: number | null = null;
 
@@ -15,20 +17,30 @@ export class StatusBar {
   }
 
   init(onModeClick: (e: MouseEvent) => void): void {
-    const modeEl = this.plugin.addStatusBarItem();
-    modeEl.addClass('ws-status-mode');
-    this.plugin.writingModes.setStatusBar(modeEl);
-    modeEl.addEventListener('click', onModeClick);
+    // All items start hidden — reveal() runs when the studio launches, so a
+    // disabled startup toggle leaves the status bar untouched.
+    this.modeEl = this.plugin.addStatusBarItem();
+    this.modeEl.addClass('ws-status-mode', 'ws-hidden');
+    this.plugin.writingModes.setStatusBar(this.modeEl);
+    this.modeEl.addEventListener('click', onModeClick);
 
     this.wordCountEl = this.plugin.addStatusBarItem();
-    this.wordCountEl.addClass('ws-status-wordcount');
+    this.wordCountEl.addClass('ws-status-wordcount', 'ws-hidden');
 
-    const sprintEl = this.plugin.addStatusBarItem();
-    sprintEl.addClass('ws-status-sprint');
-    this.plugin.sprintTimer.setStatusBar(sprintEl);
+    this.sprintEl = this.plugin.addStatusBarItem();
+    this.sprintEl.addClass('ws-status-sprint', 'ws-hidden');
+    this.plugin.sprintTimer.setStatusBar(this.sprintEl);
 
     this.projectGoalEl = this.plugin.addStatusBarItem();
     this.projectGoalEl.addClass('ws-status-project-goal', 'ws-hidden');
+  }
+
+  reveal(): void {
+    this.modeEl.removeClass('ws-hidden');
+    this.wordCountEl.removeClass('ws-hidden');
+    this.sprintEl.removeClass('ws-hidden');
+    // The project goal bar stays managed by updateProjectGoalBar — it only
+    // shows when the active project has a total word count goal.
   }
 
   clearWordCount(): void {

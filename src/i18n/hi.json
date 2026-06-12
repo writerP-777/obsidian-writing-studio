@@ -12,7 +12,7 @@
     },
     "general": {
       "openOnStartup": "स्टार्टअप पर खोलें",
-      "openOnStartupDesc": "Obsidian लॉन्च होने पर Writing Studio पैनल स्वचालित रूप से खोलें।",
+      "openOnStartupDesc": "Obsidian शुरू होने पर लेखन स्टूडियो लॉन्च करें और पिछला लेखन मोड व टाइपोग्राफ़ी बहाल करें। बंद होने पर, लॉन्चर खोलने तक यह निष्क्रिय रहता है।",
       "defaultProjectFolder": "डिफ़ॉल्ट प्रोजेक्ट फ़ोल्डर",
       "defaultProjectFolderDesc": "वॉल्ट पथ जहाँ लेखन प्रोजेक्ट संग्रहीत हैं।",
       "defaultProjectFolderPlaceholder": "लेखन प्रोजेक्ट",

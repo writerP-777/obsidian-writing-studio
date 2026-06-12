@@ -12,7 +12,7 @@
     },
     "general": {
       "openOnStartup": "চালু হলে খুলুন",
-      "openOnStartupDesc": "Obsidian চালু হলে Writing Studio প্যানেল স্বয়ংক্রিয়ভাবে খুলুন।",
+      "openOnStartupDesc": "Obsidian চালু হলে লেখার স্টুডিও চালু করুন এবং সর্বশেষ লেখার মোড ও টাইপোগ্রাফি পুনরুদ্ধার করুন। বন্ধ থাকলে, লঞ্চার খোলা না পর্যন্ত এটি নিষ্ক্রিয় থাকে।",
       "defaultProjectFolder": "ডিফল্ট প্রকল্প ফোল্ডার",
       "defaultProjectFolderDesc": "ভল্ট পাথ যেখানে লেখার প্রকল্পগুলি সংরক্ষিত হয়।",
       "defaultProjectFolderPlaceholder": "লেখার প্রকল্প",

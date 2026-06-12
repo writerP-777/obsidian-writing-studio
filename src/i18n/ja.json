@@ -12,7 +12,7 @@
     },
     "general": {
       "openOnStartup": "起動時に開く",
-      "openOnStartupDesc": "Obsidianの起動時に自動でライティングスタジオパネルを開きます。",
+      "openOnStartupDesc": "Obsidian の起動時にライティングスタジオを起動し、前回の執筆モードとタイポグラフィを復元します。オフの場合、ランチャーを開くまで休止状態のままです。",
       "defaultProjectFolder": "デフォルトのプロジェクトフォルダ",
       "defaultProjectFolderDesc": "執筆プロジェクトを保存するVaultのパス。",
       "defaultProjectFolderPlaceholder": "執筆プロジェクト",

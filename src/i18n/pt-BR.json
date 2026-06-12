@@ -12,7 +12,7 @@
     },
     "general": {
       "openOnStartup": "Abrir ao iniciar",
-      "openOnStartupDesc": "Abrir automaticamente o painel Writing Studio quando o Obsidian iniciar.",
+      "openOnStartupDesc": "Inicia o estúdio de escrita quando o Obsidian abre, restaurando seu último modo de escrita e tipografia. Quando desativado, permanece inativo até você abrir o iniciador.",
       "defaultProjectFolder": "Pasta de projeto padrão",
       "defaultProjectFolderDesc": "Caminho do vault onde os projetos de escrita são armazenados.",
       "defaultProjectFolderPlaceholder": "Projetos de escrita",

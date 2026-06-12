@@ -12,7 +12,7 @@
     },
     "general": {
       "openOnStartup": "Ouvrir au démarrage",
-      "openOnStartupDesc": "Ouvrir automatiquement le panneau Writing Studio au lancement d’Obsidian.",
+      "openOnStartupDesc": "Lance le studio d’écriture au démarrage d’Obsidian, en restaurant votre dernier mode d’écriture et la typographie. Si désactivé, il reste inactif jusqu’à l’ouverture du lanceur.",
       "defaultProjectFolder": "Dossier de projet par défaut",
       "defaultProjectFolderDesc": "Chemin du coffre où les projets d’écriture sont stockés.",
       "defaultProjectFolderPlaceholder": "Projets d’écriture",

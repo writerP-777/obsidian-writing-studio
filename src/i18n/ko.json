@@ -12,7 +12,7 @@
     },
     "general": {
       "openOnStartup": "시작 시 열기",
-      "openOnStartupDesc": "Obsidian이 시작될 때 글쓰기 스튜디오 패널을 자동으로 엽니다.",
+      "openOnStartupDesc": "Obsidian 시작 시 글쓰기 스튜디오를 실행하고 마지막 글쓰기 모드와 타이포그래피를 복원합니다. 끄면 런처를 열 때까지 비활성 상태로 유지됩니다.",
       "defaultProjectFolder": "기본 프로젝트 폴더",
       "defaultProjectFolderDesc": "글쓰기 프로젝트가 저장되는 볼트 경로.",
       "defaultProjectFolderPlaceholder": "글쓰기 프로젝트",

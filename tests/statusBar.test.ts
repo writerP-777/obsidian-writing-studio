@@ -66,6 +66,28 @@ describe('StatusBar item ordering', () => {
 
     expect(items[3].classes).toContain('ws-hidden');
   });
+
+  it('starts every item hidden until the studio launches (#150)', () => {
+    const items: FakeItem[] = [];
+    new StatusBar(makePlugin(items)).init(() => {});
+
+    for (const item of items) {
+      expect(item.classes).toContain('ws-hidden');
+    }
+  });
+
+  it('reveal() unhides all but the goal bar, which manages itself', () => {
+    const items: FakeItem[] = [];
+    const bar = new StatusBar(makePlugin(items));
+    bar.init(() => {});
+
+    bar.reveal();
+
+    expect(items[0].classes).not.toContain('ws-hidden');
+    expect(items[1].classes).not.toContain('ws-hidden');
+    expect(items[2].classes).not.toContain('ws-hidden');
+    expect(items[3].classes).toContain('ws-hidden');
+  });
 });
 
 describe('StatusBar word count display', () => {

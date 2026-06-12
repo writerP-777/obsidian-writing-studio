@@ -66,6 +66,7 @@ function makeWritingModesPlugin() {
     },
     settings: { currentWritingMode: 'none' },
     saveSettings: jest.fn().mockResolvedValue(undefined),
+    activateStudio: jest.fn(),
     focusMode: { isActive: () => false, enable: jest.fn(), disable: jest.fn() },
     typographyMode: {
       isActive: () => false,
@@ -104,6 +105,47 @@ describe('WritingModes teardown must not write settings', () => {
     await wm.switchMode('none');
 
     expect(plugin.settings.currentWritingMode).toBe('none');
+  });
+});
+
+describe('startup gating (#150)', () => {
+  it('TypographyMode does not restore itself at construction', () => {
+    const plugin = makeTypographyPlugin();
+    plugin.settings.typographyModeActive = true;
+
+    const mode = new TypographyMode(plugin as never);
+
+    expect(mode.isActive()).toBe(false);
+  });
+
+  it('restorePersisted() enables when both flags are set', () => {
+    const plugin = makeTypographyPlugin();
+    plugin.settings.typographyModeActive = true;
+
+    const mode = new TypographyMode(plugin as never);
+    mode.restorePersisted();
+
+    expect(mode.isActive()).toBe(true);
+  });
+
+  it('restorePersisted() does nothing when persistence is off', () => {
+    const plugin = makeTypographyPlugin();
+    plugin.settings.typographyModeActive = true;
+    plugin.settings.persistTypography = false;
+
+    const mode = new TypographyMode(plugin as never);
+    mode.restorePersisted();
+
+    expect(mode.isActive()).toBe(false);
+  });
+
+  it('an explicit mode switch launches the studio', async () => {
+    const plugin = makeWritingModesPlugin();
+    const wm = new WritingModes(plugin as never);
+
+    await wm.switchMode('draft');
+
+    expect(plugin.activateStudio).toHaveBeenCalled();
   });
 });
 

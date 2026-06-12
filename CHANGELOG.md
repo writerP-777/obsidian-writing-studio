@@ -6,6 +6,9 @@ All notable changes to Writing Studio are documented here.
 
 ## [Unreleased]
 
+### Fixed
+- **"Open on startup" now actually gates startup.** Since 2.6.0, the saved writing mode (and persisted typography) was restored on every Obsidian launch regardless of the toggle — restoring draft mode would even collapse the sidebars at launch — and Writing Studio status bar items always appeared. Session restore is now tied to Writing Studio's own launch: with the toggle on, the studio launches and restores at startup as before; with it off, Obsidian opens completely clean, and your last session's mode and typography are restored when you launch the studio yourself (feather icon, launcher command, or switching a mode). (#150)
+
 ### Added
 - **Keyboard navigation in the binder.** The binder tree is now fully keyboard-operable: Up/Down move through visible items, Right expands a group or steps into it, Left collapses or climbs to the parent, Enter opens a document or toggles a group, and Shift+F10 (or the menu key) opens the item's context menu. Keyboard position survives expand/collapse re-renders, and the tree carries proper ARIA roles. The folder sidebar's existing list navigation is unchanged. (#143)
 
