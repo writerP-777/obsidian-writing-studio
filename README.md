@@ -190,6 +190,8 @@ Projects group a set of documents (binder items) and act as the scope for export
 
 **To switch projects:** Use the Launcher panel or the project selector at the top of the Binder panel.
 
+**To edit a project:** Click the pencil icon in the Launcher project card or next to the project selector in the Binder. You can change the title, author, description, and total word count goal. The project folder keeps its original name — renaming the title does not move any files.
+
 Each project stores:
 - Title, type, author, and description
 - Ordered binder with chapters, sections, articles, and notes
@@ -399,7 +401,7 @@ The status bar shows a `(+N)` delta next to the current file's word count, indic
 
 #### Project Word Count Goal
 
-When an active project has a total word count goal set, a dedicated status bar item shows `{current} / {goal} project words`. This updates automatically as you write. Set a project goal in the Project modal when creating a project.
+When an active project has a total word count goal set, a dedicated status bar item shows `{current} / {goal} project words`. This updates automatically as you write. Set a project goal in the Project modal when creating or editing a project.
 
 ---
 

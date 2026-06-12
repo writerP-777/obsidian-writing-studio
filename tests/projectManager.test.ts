@@ -181,6 +181,29 @@ describe('ProjectManager change notification', () => {
   });
 });
 
+describe('ProjectManager edit persistence', () => {
+  it('persists title, author, and goal edits through saveProject and reload', async () => {
+    const files = new InMemoryVaultFiles();
+    files.folders.add('Projects/My Book');
+    const pm = new ProjectManager(makePlugin(), files);
+    const project = makeProject();
+    await pm.saveProject(project);
+
+    // The edit-project modal mutates the live project and saves it
+    project.title = 'Renamed Book';
+    project.author = 'Don Pucik';
+    project.goals = { totalWordCount: 80000 };
+    await pm.saveProject(project);
+
+    const pm2 = new ProjectManager(makePlugin(), files);
+    await pm2.loadAllProjects();
+    const reloaded = pm2.getProjects().find(p => p.id === 'project-1');
+    expect(reloaded?.title).toBe('Renamed Book');
+    expect(reloaded?.author).toBe('Don Pucik');
+    expect(reloaded?.goals.totalWordCount).toBe(80000);
+  });
+});
+
 describe('ProjectManager.findBinderEntryForFile', () => {
   it('returns the writable entry for a file in the active binder, including nested items', async () => {
     const pm = new ProjectManager(makePlugin(), new InMemoryVaultFiles());

@@ -379,7 +379,10 @@
     "created": "¡Proyecto «{{title}}» creado!",
     "cancel": "Cancelar",
     "goalLabel": "Meta total de palabras",
-    "goalDesc": "Opcional. Se muestra como progreso en el lanzador y la barra de estado. Déjalo vacío para no fijar una meta."
+    "goalDesc": "Opcional. Se muestra como progreso en el lanzador y la barra de estado. Déjalo vacío para no fijar una meta.",
+    "editTitle": "Editar proyecto",
+    "saveBtn": "Guardar",
+    "updated": "¡Proyecto \"{{title}}\" actualizado!"
   },
   "sprintModal": {
     "setupTitle": "Configurar sprint",

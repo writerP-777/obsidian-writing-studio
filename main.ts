@@ -198,6 +198,14 @@ export default class WritingStudioPlugin extends Plugin {
     this.registerEvent(this.projectManager.onBinderChanged(() => {
       this.statsTracker.invalidateWordCountCache();
     }));
+    // Goal/title edits and project switches refresh the status bar goal bar.
+    // Gated on launch — before activateStudio() the status bar stays untouched.
+    this.registerEvent(this.projectManager.onProjectsChanged(() => {
+      if (this.studioActivated) void this.statusBar.updateProjectGoalBar();
+    }));
+    this.registerEvent(this.projectManager.onActiveProjectChanged(() => {
+      if (this.studioActivated) void this.statusBar.updateProjectGoalBar();
+    }));
     this.focusMode = new FocusMode(this);
     this.typographyMode = new TypographyMode(this);
     this.writingModes = new WritingModes(this);
