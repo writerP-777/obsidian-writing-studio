@@ -276,10 +276,9 @@
   "writingModes": {
     "switchedTo": "استوديو الكتابة: وضع {{mode}}",
     "normal": "عادي",
-    "statusDraft": "✍ مسودة",
-    "statusEdit": "✎ تحرير",
-    "statusReview": "👁 مراجعة",
-    "statusNone": "— وضع"
+    "statusDraft": "مسودة",
+    "statusEdit": "تحرير",
+    "statusReview": "مراجعة"
   },
   "exportEngine": {
     "epubExported": "تم تصدير EPUB إلى {{path}}",

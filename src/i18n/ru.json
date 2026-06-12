@@ -275,10 +275,9 @@
   "writingModes": {
     "switchedTo": "Студия письма: режим {{mode}}",
     "normal": "Обычный",
-    "statusDraft": "✍ черновик",
-    "statusEdit": "✎ редактирование",
-    "statusReview": "👁 рецензия",
-    "statusNone": "— режим"
+    "statusDraft": "черновик",
+    "statusEdit": "редактирование",
+    "statusReview": "рецензия"
   },
   "exportEngine": {
     "epubExported": "EPUB экспортирован в {{path}}",

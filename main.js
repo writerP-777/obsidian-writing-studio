@@ -2583,10 +2583,9 @@ var en_default = {
   writingModes: {
     switchedTo: "Writing studio: {{mode}} mode",
     normal: "Normal",
-    statusDraft: "\u270D draft",
-    statusEdit: "\u270E edit",
-    statusReview: "\u{1F441} review",
-    statusNone: "\u2014 mode"
+    statusDraft: "draft",
+    statusEdit: "edit",
+    statusReview: "review"
   },
   exportEngine: {
     epubExported: "EPUB exported to {{path}}",
@@ -3219,10 +3218,9 @@ var zh_default = {
   writingModes: {
     switchedTo: "\u5199\u4F5C\u5DE5\u4F5C\u5BA4\uFF1A{{mode}} \u6A21\u5F0F",
     normal: "\u666E\u901A",
-    statusDraft: "\u270D \u8349\u7A3F",
-    statusEdit: "\u270E \u7F16\u8F91",
-    statusReview: "\u{1F441} \u5BA1\u9605",
-    statusNone: "\u2014 \u6A21\u5F0F"
+    statusDraft: "\u8349\u7A3F",
+    statusEdit: "\u7F16\u8F91",
+    statusReview: "\u5BA1\u9605"
   },
   exportEngine: {
     epubExported: "EPUB \u5DF2\u5BFC\u51FA\u5230 {{path}}",
@@ -3855,10 +3853,9 @@ var hi_default = {
   writingModes: {
     switchedTo: "\u0930\u093E\u0907\u091F\u093F\u0902\u0917 \u0938\u094D\u091F\u0942\u0921\u093F\u092F\u094B: {{mode}} \u092E\u094B\u0921",
     normal: "\u0938\u093E\u092E\u093E\u0928\u094D\u092F",
-    statusDraft: "\u270D \u0921\u094D\u0930\u093E\u092B\u094D\u091F",
-    statusEdit: "\u270E \u0938\u0902\u092A\u093E\u0926\u0928",
-    statusReview: "\u{1F441} \u0938\u092E\u0940\u0915\u094D\u0937\u093E",
-    statusNone: "\u2014 \u092E\u094B\u0921"
+    statusDraft: "\u0921\u094D\u0930\u093E\u092B\u094D\u091F",
+    statusEdit: "\u0938\u0902\u092A\u093E\u0926\u0928",
+    statusReview: "\u0938\u092E\u0940\u0915\u094D\u0937\u093E"
   },
   exportEngine: {
     epubExported: "EPUB {{path}} \u092A\u0930 \u0928\u093F\u0930\u094D\u092F\u093E\u0924 \u0915\u093F\u092F\u093E",
@@ -4491,10 +4488,9 @@ var es_default = {
   writingModes: {
     switchedTo: "Estudio de escritura: modo {{mode}}",
     normal: "Normal",
-    statusDraft: "\u270D borrador",
-    statusEdit: "\u270E editar",
-    statusReview: "\u{1F441} revisar",
-    statusNone: "\u2014 modo"
+    statusDraft: "borrador",
+    statusEdit: "editar",
+    statusReview: "revisar"
   },
   exportEngine: {
     epubExported: "EPUB exportado a {{path}}",
@@ -5130,10 +5126,9 @@ var ar_default = {
   writingModes: {
     switchedTo: "\u0627\u0633\u062A\u0648\u062F\u064A\u0648 \u0627\u0644\u0643\u062A\u0627\u0628\u0629: \u0648\u0636\u0639 {{mode}}",
     normal: "\u0639\u0627\u062F\u064A",
-    statusDraft: "\u270D \u0645\u0633\u0648\u062F\u0629",
-    statusEdit: "\u270E \u062A\u062D\u0631\u064A\u0631",
-    statusReview: "\u{1F441} \u0645\u0631\u0627\u062C\u0639\u0629",
-    statusNone: "\u2014 \u0648\u0636\u0639"
+    statusDraft: "\u0645\u0633\u0648\u062F\u0629",
+    statusEdit: "\u062A\u062D\u0631\u064A\u0631",
+    statusReview: "\u0645\u0631\u0627\u062C\u0639\u0629"
   },
   exportEngine: {
     epubExported: "\u062A\u0645 \u062A\u0635\u062F\u064A\u0631 EPUB \u0625\u0644\u0649 {{path}}",
@@ -5774,10 +5769,9 @@ var fr_default = {
   writingModes: {
     switchedTo: "Studio d'\xE9criture : mode {{mode}}",
     normal: "Normal",
-    statusDraft: "\u270D brouillon",
-    statusEdit: "\u270E \xE9dition",
-    statusReview: "\u{1F441} r\xE9vision",
-    statusNone: "\u2014 mode"
+    statusDraft: "brouillon",
+    statusEdit: "\xE9dition",
+    statusReview: "r\xE9vision"
   },
   exportEngine: {
     epubExported: "EPUB export\xE9 vers {{path}}",
@@ -6410,10 +6404,9 @@ var bn_default = {
   writingModes: {
     switchedTo: "\u09B0\u09BE\u0987\u099F\u09BF\u0982 \u09B8\u09CD\u099F\u09C1\u09A1\u09BF\u0993: {{mode}} \u09AE\u09CB\u09A1",
     normal: "\u09B8\u09BE\u09A7\u09BE\u09B0\u09A3",
-    statusDraft: "\u270D \u0996\u09B8\u09A1\u09BC\u09BE",
-    statusEdit: "\u270E \u09B8\u09AE\u09CD\u09AA\u09BE\u09A6\u09A8\u09BE",
-    statusReview: "\u{1F441} \u09AA\u09B0\u09CD\u09AF\u09BE\u09B2\u09CB\u099A\u09A8\u09BE",
-    statusNone: "\u2014 \u09AE\u09CB\u09A1"
+    statusDraft: "\u0996\u09B8\u09A1\u09BC\u09BE",
+    statusEdit: "\u09B8\u09AE\u09CD\u09AA\u09BE\u09A6\u09A8\u09BE",
+    statusReview: "\u09AA\u09B0\u09CD\u09AF\u09BE\u09B2\u09CB\u099A\u09A8\u09BE"
   },
   exportEngine: {
     epubExported: "EPUB {{path}}-\u098F \u09B0\u09AA\u09CD\u09A4\u09BE\u09A8\u09BF \u0995\u09B0\u09BE \u09B9\u09AF\u09BC\u09C7\u099B\u09C7",
@@ -7046,10 +7039,9 @@ var pt_BR_default = {
   writingModes: {
     switchedTo: "Est\xFAdio de escrita: modo {{mode}}",
     normal: "Normal",
-    statusDraft: "\u270D rascunho",
-    statusEdit: "\u270E editar",
-    statusReview: "\u{1F441} revisar",
-    statusNone: "\u2014 modo"
+    statusDraft: "rascunho",
+    statusEdit: "editar",
+    statusReview: "revisar"
   },
   exportEngine: {
     epubExported: "EPUB exportado para {{path}}",
@@ -7684,10 +7676,9 @@ var ru_default = {
   writingModes: {
     switchedTo: "\u0421\u0442\u0443\u0434\u0438\u044F \u043F\u0438\u0441\u044C\u043C\u0430: \u0440\u0435\u0436\u0438\u043C {{mode}}",
     normal: "\u041E\u0431\u044B\u0447\u043D\u044B\u0439",
-    statusDraft: "\u270D \u0447\u0435\u0440\u043D\u043E\u0432\u0438\u043A",
-    statusEdit: "\u270E \u0440\u0435\u0434\u0430\u043A\u0442\u0438\u0440\u043E\u0432\u0430\u043D\u0438\u0435",
-    statusReview: "\u{1F441} \u0440\u0435\u0446\u0435\u043D\u0437\u0438\u044F",
-    statusNone: "\u2014 \u0440\u0435\u0436\u0438\u043C"
+    statusDraft: "\u0447\u0435\u0440\u043D\u043E\u0432\u0438\u043A",
+    statusEdit: "\u0440\u0435\u0434\u0430\u043A\u0442\u0438\u0440\u043E\u0432\u0430\u043D\u0438\u0435",
+    statusReview: "\u0440\u0435\u0446\u0435\u043D\u0437\u0438\u044F"
   },
   exportEngine: {
     epubExported: "EPUB \u044D\u043A\u0441\u043F\u043E\u0440\u0442\u0438\u0440\u043E\u0432\u0430\u043D \u0432 {{path}}",
@@ -8324,10 +8315,9 @@ var ja_default = {
   writingModes: {
     switchedTo: "\u30E9\u30A4\u30C6\u30A3\u30F3\u30B0\u30B9\u30BF\u30B8\u30AA\uFF1A{{mode}} \u30E2\u30FC\u30C9",
     normal: "\u30CE\u30FC\u30DE\u30EB",
-    statusDraft: "\u270D \u4E0B\u66F8\u304D",
-    statusEdit: "\u270E \u7DE8\u96C6",
-    statusReview: "\u{1F441} \u30EC\u30D3\u30E5\u30FC",
-    statusNone: "\u2014 \u30E2\u30FC\u30C9"
+    statusDraft: "\u4E0B\u66F8\u304D",
+    statusEdit: "\u7DE8\u96C6",
+    statusReview: "\u30EC\u30D3\u30E5\u30FC"
   },
   exportEngine: {
     epubExported: "EPUB\u3092 {{path}} \u306B\u30A8\u30AF\u30B9\u30DD\u30FC\u30C8\u3057\u307E\u3057\u305F",
@@ -8960,10 +8950,9 @@ var de_default = {
   writingModes: {
     switchedTo: "Schreibstudio: {{mode}}-Modus",
     normal: "Normal",
-    statusDraft: "\u270D Entwurf",
-    statusEdit: "\u270E Bearbeiten",
-    statusReview: "\u{1F441} \xDCberpr\xFCfen",
-    statusNone: "\u2014 Modus"
+    statusDraft: "Entwurf",
+    statusEdit: "Bearbeiten",
+    statusReview: "\xDCberpr\xFCfen"
   },
   exportEngine: {
     epubExported: "EPUB nach {{path}} exportiert",
@@ -9596,10 +9585,9 @@ var ko_default = {
   writingModes: {
     switchedTo: "\uAE00\uC4F0\uAE30 \uC2A4\uD29C\uB514\uC624: {{mode}} \uBAA8\uB4DC",
     normal: "\uC77C\uBC18",
-    statusDraft: "\u270D \uCD08\uC548",
-    statusEdit: "\u270E \uD3B8\uC9D1",
-    statusReview: "\u{1F441} \uAC80\uD1A0",
-    statusNone: "\u2014 \uBAA8\uB4DC"
+    statusDraft: "\uCD08\uC548",
+    statusEdit: "\uD3B8\uC9D1",
+    statusReview: "\uAC80\uD1A0"
   },
   exportEngine: {
     epubExported: "EPUB\uC744 {{path}}\uC5D0 \uB0B4\uBCF4\uB0C8\uC2B5\uB2C8\uB2E4",
@@ -11650,8 +11638,7 @@ var BinderView = class extends import_obsidian10.ItemView {
       } else {
         row.createSpan("ws-binder-toggle ws-binder-toggle-leaf");
       }
-      const icon = row.createSpan("ws-binder-icon");
-      icon.textContent = this.getTypeIcon(item.type);
+      (0, import_obsidian10.setIcon)(row.createSpan("ws-binder-icon"), this.getTypeIcon(item.type));
       const dot = row.createSpan("ws-binder-status-dot");
       dot.setCssProps({ "--ws-status-color": STATUS_COLORS[item.status] });
       dot.title = t2(STATUS_DOT_KEY[item.status]);
@@ -11772,16 +11759,17 @@ var BinderView = class extends import_obsidian10.ItemView {
       }
     }
   }
+  // Lucide icon names — emoji clashed with the icon language everywhere else
   getTypeIcon(type) {
     const icons = {
-      chapter: "\u{1F4C4}",
-      section: "\xA7",
-      article: "\u{1F4F0}",
-      note: "\u{1F4DD}",
-      group: "\u{1F4C1}",
-      part: "\u{1F4DA}"
+      chapter: "file-text",
+      section: "pilcrow",
+      article: "newspaper",
+      note: "sticky-note",
+      group: "folder",
+      part: "library"
     };
-    return icons[type] || "\u{1F4C4}";
+    return icons[type] || "file-text";
   }
   async openDocument(item) {
     const file = this.app.vault.getAbstractFileByPath(item.filePath);
@@ -12689,9 +12677,9 @@ var LauncherView = class extends import_obsidian15.ItemView {
     const card = root.createDiv("ws-launcher-card");
     card.createDiv({ text: t2("launcher.writingMode"), cls: "ws-launcher-card-label" });
     const modes = [
-      { id: "draft", label: t2("launcher.mode.draft"), icon: "\u270D", desc: t2("launcher.mode.draftDesc") },
-      { id: "edit", label: t2("launcher.mode.edit"), icon: "\u270E", desc: t2("launcher.mode.editDesc") },
-      { id: "review", label: t2("launcher.mode.review"), icon: "\u{1F441}", desc: t2("launcher.mode.reviewDesc") }
+      { id: "draft", label: t2("launcher.mode.draft"), icon: "pencil", desc: t2("launcher.mode.draftDesc") },
+      { id: "edit", label: t2("launcher.mode.edit"), icon: "edit-3", desc: t2("launcher.mode.editDesc") },
+      { id: "review", label: t2("launcher.mode.review"), icon: "eye", desc: t2("launcher.mode.reviewDesc") }
     ];
     const btnRow = card.createDiv("ws-launcher-mode-btns");
     const current = this.plugin.writingModes.getCurrentMode();
@@ -12700,7 +12688,7 @@ var LauncherView = class extends import_obsidian15.ItemView {
         cls: `ws-launcher-mode-btn ${current === mode.id ? "is-active" : ""}`,
         title: mode.desc
       });
-      btn.createSpan({ text: mode.icon, cls: "ws-mode-icon" });
+      (0, import_obsidian15.setIcon)(btn.createSpan("ws-mode-icon"), mode.icon);
       btn.createSpan({ text: mode.label, cls: "ws-mode-label" });
       btn.onclick = async () => {
         if (current === mode.id) {
@@ -13291,14 +13279,23 @@ var WritingModes = class {
   }
   updateStatusBar() {
     if (!this.statusBarEl) return;
+    const mode = this.currentMode;
+    this.statusBarEl.empty();
+    this.statusBarEl.toggleClass("ws-status-mode-empty", mode === "none");
+    this.statusBarEl.toggleClass("ws-status-mode--active", mode !== "none");
+    if (mode === "none") return;
+    const icons = {
+      draft: "pencil",
+      edit: "edit-3",
+      review: "eye"
+    };
     const labels = {
       draft: t2("writingModes.statusDraft"),
       edit: t2("writingModes.statusEdit"),
-      review: t2("writingModes.statusReview"),
-      none: t2("writingModes.statusNone")
+      review: t2("writingModes.statusReview")
     };
-    this.statusBarEl.textContent = labels[this.currentMode];
-    this.statusBarEl.toggleClass("ws-status-mode--active", this.currentMode !== "none");
+    (0, import_obsidian17.setIcon)(this.statusBarEl.createSpan("ws-status-mode-icon"), icons[mode]);
+    this.statusBarEl.createSpan({ text: labels[mode] });
   }
   restore() {
     const saved = this.plugin.settings.currentWritingMode;

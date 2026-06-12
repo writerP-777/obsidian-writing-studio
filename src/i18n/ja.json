@@ -273,10 +273,9 @@
   "writingModes": {
     "switchedTo": "ライティングスタジオ：{{mode}} モード",
     "normal": "ノーマル",
-    "statusDraft": "✍ 下書き",
-    "statusEdit": "✎ 編集",
-    "statusReview": "👁 レビュー",
-    "statusNone": "— モード"
+    "statusDraft": "下書き",
+    "statusEdit": "編集",
+    "statusReview": "レビュー"
   },
   "exportEngine": {
     "epubExported": "EPUBを {{path}} にエクスポートしました",

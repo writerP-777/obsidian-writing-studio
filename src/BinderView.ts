@@ -331,8 +331,7 @@ export class BinderView extends ItemView {
       }
 
       // Type icon
-      const icon = row.createSpan('ws-binder-icon');
-      icon.textContent = this.getTypeIcon(item.type);
+      setIcon(row.createSpan('ws-binder-icon'), this.getTypeIcon(item.type));
 
       // Status dot
       const dot = row.createSpan('ws-binder-status-dot');
@@ -476,16 +475,17 @@ export class BinderView extends ItemView {
     }
   }
 
+  // Lucide icon names — emoji clashed with the icon language everywhere else
   private getTypeIcon(type: BinderItem['type']): string {
     const icons: Record<string, string> = {
-      chapter: '📄',
-      section: '§',
-      article: '📰',
-      note: '📝',
-      group: '📁',
-      part: '📚',
+      chapter: 'file-text',
+      section: 'pilcrow',
+      article: 'newspaper',
+      note: 'sticky-note',
+      group: 'folder',
+      part: 'library',
     };
-    return icons[type] || '📄';
+    return icons[type] || 'file-text';
   }
 
   private async openDocument(item: BinderItem): Promise<void> {
