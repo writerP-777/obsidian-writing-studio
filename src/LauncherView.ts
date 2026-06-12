@@ -35,6 +35,9 @@ export class LauncherView extends ItemView {
   }
 
   async onOpen(): Promise<void> {
+    // The launcher opening IS the studio launch — including a leaf restored
+    // by the workspace at startup, which never goes through openLauncher()
+    this.plugin.activateStudio();
     // No binder-changed subscription — binder content is not shown here, and a
     // full re-render per binder save would snap open dropdowns shut (see below)
     this.registerEvent(this.plugin.projectManager.onActiveProjectChanged(() => {

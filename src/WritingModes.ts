@@ -28,6 +28,10 @@ export class WritingModes {
   async switchMode(mode: WritingModeType, silent = false): Promise<void> {
     if (this.currentMode === mode) return;
     this.currentMode = mode;
+    // An explicit mode switch counts as launching the studio. Ordered after
+    // currentMode is set so activation skips its saved-mode restore — the
+    // user's fresh choice beats the previous session.
+    this.plugin.activateStudio();
     const config = WRITING_MODE_CONFIGS[mode];
 
     // Focus Mode

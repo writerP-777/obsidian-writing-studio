@@ -12,7 +12,7 @@
     },
     "general": {
       "openOnStartup": "Open on startup",
-      "openOnStartupDesc": "Automatically open the writing studio panel when Obsidian launches.",
+      "openOnStartupDesc": "Launch the writing studio when Obsidian starts, restoring your last writing mode and typography. When off, it stays dormant until you open the launcher.",
       "defaultProjectFolder": "Default project folder",
       "defaultProjectFolderDesc": "Vault path where writing projects are stored.",
       "defaultProjectFolderPlaceholder": "Writing projects",

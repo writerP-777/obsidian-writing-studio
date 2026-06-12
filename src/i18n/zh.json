@@ -12,7 +12,7 @@
     },
     "general": {
       "openOnStartup": "启动时打开",
-      "openOnStartupDesc": "Obsidian 启动时自动打开写作工作室面板。",
+      "openOnStartupDesc": "Obsidian 启动时自动启动写作工作室，并恢复上次的写作模式和排版设置。关闭后，在打开启动器之前保持休眠。",
       "defaultProjectFolder": "默认项目文件夹",
       "defaultProjectFolderDesc": "存储写作项目的库路径。",
       "defaultProjectFolderPlaceholder": "写作项目",

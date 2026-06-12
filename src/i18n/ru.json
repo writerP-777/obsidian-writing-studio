@@ -12,7 +12,7 @@
     },
     "general": {
       "openOnStartup": "Открывать при запуске",
-      "openOnStartupDesc": "Автоматически открывать панель Writing Studio при запуске Obsidian.",
+      "openOnStartupDesc": "Запускать студию письма при старте Obsidian, восстанавливая последний режим письма и типографику. Если выключено, она бездействует, пока вы не откроете лаунчер.",
       "defaultProjectFolder": "Папка проекта по умолчанию",
       "defaultProjectFolderDesc": "Путь в хранилище, где хранятся проекты.",
       "defaultProjectFolderPlaceholder": "Письменные проекты",

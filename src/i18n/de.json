@@ -12,7 +12,7 @@
     },
     "general": {
       "openOnStartup": "Beim Start öffnen",
-      "openOnStartupDesc": "Das Schreibstudio-Panel beim Start von Obsidian automatisch öffnen.",
+      "openOnStartupDesc": "Startet das Schreibstudio beim Start von Obsidian und stellt den letzten Schreibmodus und die Typografie wieder her. Wenn deaktiviert, bleibt es inaktiv, bis du den Launcher öffnest.",
       "defaultProjectFolder": "Standard-Projektordner",
       "defaultProjectFolderDesc": "Vault-Pfad, in dem Schreibprojekte gespeichert werden.",
       "defaultProjectFolderPlaceholder": "Schreibprojekte",

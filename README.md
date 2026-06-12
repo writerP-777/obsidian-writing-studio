@@ -91,7 +91,7 @@ Writing Studio is available in the following languages in addition to English:
 
 The Launcher is your home base in Writing Studio — a sidebar panel that shows your active project, progress toward your goals, and one-click access to every major feature.
 
-By default it opens automatically when Obsidian loads. To disable this, turn off **Open on startup** in **Settings → General**.
+By default Writing Studio launches automatically when Obsidian loads — the Launcher opens and your last session's writing mode and typography are restored. To disable this, turn off **Open on startup** in **Settings → General**: Obsidian then opens clean, with no Writing Studio status bar items or restored modes, and the studio stays dormant until you launch it yourself. Launching it manually restores your last session state the same way.
 
 **To open manually:** Click the feather ribbon icon, or assign a hotkey to **Open launcher** in Settings → Hotkeys.
 
@@ -267,7 +267,7 @@ Three modes shape how the editor behaves. The current mode is always shown in th
 - Assign hotkeys to **Switch to draft mode / Edit mode / Review mode** in Settings → Hotkeys.
 - Use the Writing Studio Launcher panel.
 
-The active mode persists across Obsidian restarts.
+The active mode is saved and restored the next time Writing Studio launches — automatically at startup when **Open on startup** is enabled, or when you next open the Launcher or switch a mode.
 
 ---
 
@@ -309,7 +309,7 @@ Typography Mode applies a consistent, reader-friendly text treatment to the edit
 | Font size | Editor font size in pixels |
 | Line height | Multiplier; default 1.7 |
 | Letter spacing | CSS `letter-spacing` value (e.g. `normal`, `0.02em`) |
-| Persist across sessions | Keep Typography Mode active when Obsidian reopens |
+| Persist across sessions | Restore Typography Mode when Writing Studio next launches |
 
 **Available fonts:**
 

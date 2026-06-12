@@ -22,7 +22,13 @@ export class TypographyMode {
 
   constructor(plugin: WritingStudioPlugin) {
     this.plugin = plugin;
-    if (plugin.settings.typographyModeActive && plugin.settings.persistTypography) {
+  }
+
+  // Session continuity: called when Writing Studio launches (not at plugin
+  // load — with the startup toggle off, Obsidian must open without any
+  // typography styling applied).
+  restorePersisted(): void {
+    if (this.plugin.settings.typographyModeActive && this.plugin.settings.persistTypography && !this.active) {
       void this.enable();
     }
   }

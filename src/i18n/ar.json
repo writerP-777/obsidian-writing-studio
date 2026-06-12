@@ -12,7 +12,7 @@
     },
     "general": {
       "openOnStartup": "فتح عند بدء التشغيل",
-      "openOnStartupDesc": "فتح لوحة استوديو الكتابة تلقائيًا عند تشغيل Obsidian.",
+      "openOnStartupDesc": "تشغيل استوديو الكتابة عند بدء Obsidian واستعادة وضع الكتابة والطباعة الأخيرين. عند الإيقاف، يظل خاملاً حتى تفتح المشغّل.",
       "defaultProjectFolder": "مجلد المشروع الافتراضي",
       "defaultProjectFolderDesc": "مسار الخزنة حيث تُخزَّن مشاريع الكتابة.",
       "defaultProjectFolderPlaceholder": "مشاريع الكتابة",

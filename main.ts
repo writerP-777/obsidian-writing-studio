@@ -182,6 +182,7 @@ export default class WritingStudioPlugin extends Plugin {
   private wordCountUpdateTimer: number | null = null;
   private launcherRefreshTimer: number | null = null;
   private nnFolderMenuDispose: (() => void) | undefined;
+  private studioActivated = false;
   private isReady = false;
 
   async onload(): Promise<void> {
@@ -284,9 +285,12 @@ export default class WritingStudioPlugin extends Plugin {
       this.app.vault.on('modify', (file) => {
         if (file instanceof TFile) {
           this.fmManager.scheduleUpdate(file);
-          this.scheduleWordCountUpdate();
-          this.statusBar.scheduleProjectGoalUpdate();
           this.statsTracker.invalidateWordCountCache();
+          // Status bar surfaces stay dormant until the studio has launched
+          if (this.studioActivated) {
+            this.scheduleWordCountUpdate();
+            this.statusBar.scheduleProjectGoalUpdate();
+          }
         }
       })
     );
@@ -304,7 +308,7 @@ export default class WritingStudioPlugin extends Plugin {
     // Word count update when active leaf changes
     this.registerEvent(
       this.app.workspace.on('active-leaf-change', () => {
-        if (!this.isReady) return;
+        if (!this.isReady || !this.studioActivated) return;
         void this.updateWordCount();
         void this.goalBanner.show();
         this.scheduleLauncherRefresh();
@@ -314,13 +318,13 @@ export default class WritingStudioPlugin extends Plugin {
     // Settings tab
     this.addSettingTab(new WritingStudioSettingsTab(this.app, this));
 
-    // Initialize project manager and open launcher once vault is fully indexed
+    // Initialize project manager and open launcher once vault is fully indexed.
+    // Session restore (mode, typography, status bar) happens in
+    // activateStudio() — triggered by the launcher opening, never directly by
+    // Obsidian's startup, so a disabled startup toggle means a clean launch.
     this.app.workspace.onLayoutReady(async () => {
       await this.projectManager.initialize();
       if (this.settings.openOnStartup) await this.openLauncher();
-      if (this.settings.currentWritingMode && this.settings.currentWritingMode !== 'none') {
-        this.writingModes.restore();
-      }
 
       // Register folder context menu item in Notebook Navigator if installed.
       // Guard on major version <= 2 per NN's stability policy (breaking changes require v3+).
@@ -336,10 +340,8 @@ export default class WritingStudioPlugin extends Plugin {
         }
       }
 
-      // Plugin is fully ready — allow active-leaf-change handlers to fire and
-      // do an initial project goal bar render now that projects are loaded.
+      // Plugin is fully ready — allow active-leaf-change handlers to fire.
       this.isReady = true;
-      void this.statusBar.updateProjectGoalBar();
     });
 
   }
@@ -376,7 +378,33 @@ export default class WritingStudioPlugin extends Plugin {
     await this.saveData(this.settings);
   }
 
+  // Writing Studio "launches" when the launcher opens — automatically at
+  // startup when openOnStartup is on, manually via the ribbon or command, or
+  // when a workspace-restored launcher leaf reopens — or when the user
+  // invokes a writing mode directly. Launch reveals the status bar and
+  // restores the previous session's mode and typography. It must never run
+  // on Obsidian startup by itself: with the toggle off, Obsidian opens clean.
+  activateStudio(): void {
+    if (this.studioActivated) return;
+    this.studioActivated = true;
+    this.app.workspace.onLayoutReady(() => {
+      this.statusBar.reveal();
+      // Skip the mode restore when launch came from an explicit mode
+      // switch — the user's fresh choice beats the saved session.
+      if (this.writingModes.getCurrentMode() === 'none'
+          && this.settings.currentWritingMode
+          && this.settings.currentWritingMode !== 'none') {
+        this.writingModes.restore();
+      }
+      this.typographyMode.restorePersisted();
+      void this.updateWordCount();
+      void this.goalBanner.show();
+      void this.statusBar.updateProjectGoalBar();
+    });
+  }
+
   async openLauncher(): Promise<void> {
+    this.activateStudio();
     const existing = this.app.workspace.getLeavesOfType(LAUNCHER_VIEW_TYPE);
     if (existing.length > 0) {
       void this.app.workspace.revealLeaf(existing[0]);
