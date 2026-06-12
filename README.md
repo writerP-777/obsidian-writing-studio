@@ -186,7 +186,7 @@ The word count updates asynchronously from Obsidian's file cache and appears wit
 
 Projects group a set of documents (binder items) and act as the scope for export, statistics, and the word count goal banner.
 
-**To create a project:** Use the command **New writing project** from the command palette, or click **+ New** in the Launcher panel.
+**To create a project:** Use the command **Create new writing project** from the command palette, or click **+ New** in the Launcher panel.
 
 **To switch projects:** Use the Launcher panel or the project selector at the top of the Binder panel.
 
@@ -202,7 +202,7 @@ Each project stores:
 |----------|------------------|
 | Blank | Empty — build your own structure |
 | Book | Front Matter, Part 1 / Chapter 1, Back Matter |
-| Article series | Series folder, Article 1 placeholder, series metadata |
+| Article series | Series Overview note (with article schedule), Article 1 placeholder |
 | Blog collection | Date-organized folder, first post placeholder |
 | Journal article | Title Page, Abstract, Keywords, Introduction, Literature Review, Methodology, Findings / Analysis, Discussion, Conclusion, References, Appendices |
 | Magazine article | Pitch / Query Notes, Headline & Deck, Lede, Nut Graf, Body, Quotes & Sources, Kicker, Fact-Check Notes, Author Bio |
@@ -213,9 +213,21 @@ Each project stores:
 
 Keeping a book-length manuscript organized means knowing at a glance which chapters are drafted, which are in progress, and how each contributes to your total word count. The Binder is a sidebar panel that shows all of that for your active project.
 
-Each document shows its title, type (Chapter, Section, Article, Note), status (Draft, In Progress, Complete), and live word count. Documents can be reordered by drag-and-drop and toggled in or out of export.
+Each document shows its title, type (Chapter, Section, Article, Note), status (Draft, In Progress, Complete, Published), and live word count. Documents can be reordered by drag-and-drop and toggled in or out of export.
 
 **To open:** Use the command **Open binder** from the command palette, or assign a hotkey in Settings → Hotkeys.
+
+**Keyboard navigation:**
+
+The binder tree is fully keyboard-operable. Tab to focus the list, then:
+
+| Key | Action |
+|-----|--------|
+| `↑` / `↓` | Move through visible documents and groups |
+| `→` | Expand a collapsed group, or step into an open one |
+| `←` | Collapse an open group, or jump to the parent |
+| `Enter` | Open the document, or expand/collapse a group |
+| `Shift+F10` or menu key | Open the item's right-click menu |
 
 **Adding a file to a project:**
 1. Right-click any Markdown file in the file explorer and choose **Add to writing project** under **Writing studio options**.
@@ -470,9 +482,9 @@ Publish your finished draft directly to WordPress without leaving Obsidian. The 
 
 **To publish:**
 - Right-click inside the editor and choose **Publish to WordPress** under **Writing studio options**.
-- Use the command **Publish to wordpress** from the command palette.
+- Use the command **Publish to WordPress** from the command palette.
 - Click the **Publish to WordPress** button in the Launcher panel.
-- Assign a hotkey to **Publish to wordpress** in Settings → Hotkeys.
+- Assign a hotkey to **Publish to WordPress** in Settings → Hotkeys.
 
 **Setting up a site (Settings → WordPress):**
 
@@ -553,13 +565,13 @@ No default hotkeys are assigned. All commands can be given a hotkey in **Setting
 | Export document | Export the current document |
 | Export project | Export the full project |
 | Preview compiled manuscript | Open the compile preview pane |
-| Publish to wordpress | Publish the current document to WordPress |
-| New writing project | Create a new writing project |
+| Publish to WordPress | Publish the current document to WordPress |
+| Create new writing project | Create a new writing project |
 | Open writing dashboard | Open the statistics dashboard |
 | Open targets dashboard | Open the word count targets panel |
 | Set word count goal | Set a per-document word count goal |
 | Open folder in sidebar explorer | Search and open a vault folder in the sidebar |
-| Add files copied to project folder | Scan the active project folder for files not in the binder and import selected files |
+| Scan project folder for new files | Scan the active project folder for files not in the binder and import selected files |
 
 ---
 
@@ -594,7 +606,7 @@ All other features are accessible from the Launcher panel, the command palette, 
 ## Installation
 
 1. Download `main.js`, `manifest.json`, and `styles.css` from the latest [GitHub release](../../releases/latest).
-2. Create the folder `<vault>/.obsidian/plugins/obsidian-writing-studio/` if it does not exist.
+2. Create the folder `<vault>/.obsidian/plugins/writing-studio/` if it does not exist.
 3. Copy the three files into that folder.
 4. In Obsidian, go to **Settings → Community Plugins**, find **Writing Studio**, and enable it.
 
@@ -608,7 +620,7 @@ Most features work out of the box. A few require additional software for specifi
 
 | Requirement | When needed |
 |-------------|-------------|
-| Obsidian 1.7.2 or later | Always |
+| Obsidian 1.8.7 or later | Always |
 | Desktop (Windows, macOS, Linux) | Always — this plugin does not run on mobile |
 | Internet connection | First use of each Typography Mode font (cached after that) |
 | [Pandoc](https://pandoc.org/installing.html) | Export to PDF, DOCX, RTF, HTML, EPUB |
