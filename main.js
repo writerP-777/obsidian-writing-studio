@@ -11672,13 +11672,16 @@ var BinderView = class extends import_obsidian10.ItemView {
         this.showContextMenu(e, item);
       };
       row.ondragstart = (e) => {
-        var _a3;
+        var _a3, _b3;
         this.dragSource = item.id;
         row.addClass("ws-binder-dragging");
-        (_a3 = e.dataTransfer) == null ? void 0 : _a3.setData("text/plain", item.id);
+        (_a3 = this.listEl) == null ? void 0 : _a3.addClass("ws-binder-drag-active");
+        (_b3 = e.dataTransfer) == null ? void 0 : _b3.setData("text/plain", item.id);
       };
       row.ondragend = () => {
+        var _a3;
         row.classList.remove("ws-binder-dragging");
+        (_a3 = this.listEl) == null ? void 0 : _a3.removeClass("ws-binder-drag-active");
         this.dragSource = null;
         this.dropZone = null;
         const container2 = this.containerEl.children[1];
