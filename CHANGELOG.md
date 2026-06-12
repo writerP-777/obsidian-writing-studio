@@ -7,6 +7,7 @@ All notable changes to Writing Studio are documented here.
 ## [Unreleased]
 
 ### Changed
+- Project state changes (active project switched, binder saved, project created or edited) are now announced by the project manager itself, and the binder and launcher panels subscribe to them — replacing the scattered manual view-refresh calls. Panels update consistently no matter where a change originates. (#138)
 - Removed the deprecated `setDynamicTooltip()` call on the focus dim opacity and line length sliders — Obsidian 1.13 always shows the slider value inline. (On Obsidian versions before 1.13 the value tooltip while dragging is no longer shown.)
 
 ### Internal

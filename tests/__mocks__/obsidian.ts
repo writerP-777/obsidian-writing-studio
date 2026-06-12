@@ -1,5 +1,32 @@
 export class App {}
 
+export interface EventRef {
+  name: string;
+  callback: (...data: unknown[]) => unknown;
+}
+
+export class Events {
+  private handlers = new Map<string, Set<(...data: unknown[]) => unknown>>();
+
+  on(name: string, callback: (...data: unknown[]) => unknown): EventRef {
+    if (!this.handlers.has(name)) this.handlers.set(name, new Set());
+    this.handlers.get(name)!.add(callback);
+    return { name, callback };
+  }
+
+  off(name: string, callback: (...data: unknown[]) => unknown): void {
+    this.handlers.get(name)?.delete(callback);
+  }
+
+  offref(ref: EventRef): void {
+    this.off(ref.name, ref.callback);
+  }
+
+  trigger(name: string, ...data: unknown[]): void {
+    for (const cb of this.handlers.get(name) ?? []) cb(...data);
+  }
+}
+
 export class TFile {
   path: string;
   extension: string;

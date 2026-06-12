@@ -195,6 +195,9 @@ export default class WritingStudioPlugin extends Plugin {
     this.fmManager = new FrontmatterManager(this);
     this.projectManager = new ProjectManager(this);
     this.statsTracker = new StatsTracker(this);
+    this.registerEvent(this.projectManager.onBinderChanged(() => {
+      this.statsTracker.invalidateWordCountCache();
+    }));
     this.focusMode = new FocusMode(this);
     this.typographyMode = new TypographyMode(this);
     this.writingModes = new WritingModes(this);
@@ -317,7 +320,7 @@ export default class WritingStudioPlugin extends Plugin {
     this.addCommand({
       id: 'new-project',
       name: t('main.cmd.newProject'),
-      callback: () => new ProjectModal(this.app, this, () => { void this.refreshBinder(); }).open(),
+      callback: () => new ProjectModal(this.app, this).open(),
     });
 
     this.addCommand({
@@ -539,7 +542,6 @@ export default class WritingStudioPlugin extends Plugin {
     const existing = this.app.workspace.getLeavesOfType(BINDER_VIEW_TYPE);
     if (existing.length > 0) {
       void this.app.workspace.revealLeaf(existing[0]);
-      await this.refreshBinder();
       return;
     }
 
@@ -547,22 +549,7 @@ export default class WritingStudioPlugin extends Plugin {
     if (leaf) {
       await leaf.setViewState({ type: BINDER_VIEW_TYPE, active: true });
       void this.app.workspace.revealLeaf(leaf);
-      await this.refreshBinder();
     }
-  }
-
-  async refreshBinder(): Promise<void> {
-    const leaves = this.app.workspace.getLeavesOfType(BINDER_VIEW_TYPE);
-    for (const leaf of leaves) {
-      if (leaf.view instanceof BinderView) {
-        await leaf.view.refresh();
-      }
-    }
-  }
-
-  async onActiveProjectChanged(): Promise<void> {
-    await this.refreshLauncher();
-    await this.refreshBinder();
   }
 
   private async repairBinderPaths(oldPath: string, newPath: string, newBasename: string): Promise<void> {
@@ -575,7 +562,6 @@ export default class WritingStudioPlugin extends Plugin {
         item.filePath = newPath;
         item.title = newBasename;
         await this.projectManager.saveBinder(binder);
-        await this.refreshBinder();
         break;
       }
     }
@@ -708,7 +694,6 @@ export default class WritingStudioPlugin extends Plugin {
 
       binder.items.push(item);
       await this.projectManager.saveBinder(binder);
-      await this.refreshBinder();
       new Notice(t('main.notice.addedToProject', { file: file.basename, project: project.title }));
     }).open();
   }

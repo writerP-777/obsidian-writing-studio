@@ -9985,6 +9985,8 @@ function t2(key, vars) {
 
 // modals/ProjectModal.ts
 var ProjectModal = class extends import_obsidian2.Modal {
+  // Most callers need no callback — ProjectManager announces the new project
+  // itself. Pass onDone only for work beyond refreshing project state.
   constructor(app, plugin, onDone) {
     super(app);
     this.title = "";
@@ -10014,6 +10016,7 @@ var ProjectModal = class extends import_obsidian2.Modal {
     const btnRow = contentEl.createDiv("ws-modal-btn-row");
     const createBtn = btnRow.createEl("button", { cls: "mod-cta", text: t2("projectModal.createBtn") });
     createBtn.onclick = async () => {
+      var _a2;
       if (!this.title.trim()) {
         new import_obsidian2.Notice(t2("projectModal.errorNoTitle"));
         return;
@@ -10030,7 +10033,7 @@ var ProjectModal = class extends import_obsidian2.Modal {
         await this.plugin.projectManager.setActiveProject(project.id);
         new import_obsidian2.Notice(t2("projectModal.created", { title: project.title }));
         this.close();
-        this.onDone();
+        (_a2 = this.onDone) == null ? void 0 : _a2.call(this);
       } catch (e) {
         new import_obsidian2.Notice(t2("projectModal.errorCreate", { error: e instanceof Error ? e.message : String(e) }));
         createBtn.disabled = false;
@@ -10625,6 +10628,16 @@ var BinderView = class extends import_obsidian9.ItemView {
     return "book-open";
   }
   async onOpen() {
+    this.registerEvent(this.plugin.projectManager.onActiveProjectChanged(() => {
+      void this.refresh();
+    }));
+    this.registerEvent(this.plugin.projectManager.onBinderChanged((binder) => {
+      var _a2;
+      if (binder.projectId === ((_a2 = this.activeProject) == null ? void 0 : _a2.id)) void this.refresh();
+    }));
+    this.registerEvent(this.plugin.projectManager.onProjectsChanged(() => {
+      void this.refresh();
+    }));
     await this.refresh();
   }
   async refresh() {
@@ -10674,14 +10687,11 @@ var BinderView = class extends import_obsidian9.ItemView {
     }
     projectSel.onchange = async () => {
       await this.plugin.projectManager.setActiveProject(projectSel.value || null);
-      await this.refresh();
     };
     const newProjectBtn = projectRow.createEl("button", { cls: "ws-binder-btn", title: t2("binder.newProject") });
     (0, import_obsidian9.setIcon)(newProjectBtn, "plus");
     newProjectBtn.onclick = () => {
-      new ProjectModal(this.app, this.plugin, () => {
-        void this.refresh();
-      }).open();
+      new ProjectModal(this.app, this.plugin).open();
     };
     const toolbar = header.createDiv("ws-binder-toolbar");
     const newDocBtn = toolbar.createEl("button", {
@@ -10782,7 +10792,6 @@ var BinderView = class extends import_obsidian9.ItemView {
           e.stopPropagation();
           item.collapsed = !item.collapsed;
           void this.saveBinder();
-          this.render();
         };
       } else {
         row.createSpan("ws-binder-toggle ws-binder-toggle-leaf");
@@ -11006,12 +11015,10 @@ var BinderView = class extends import_obsidian9.ItemView {
       "chapter",
       parentId
     );
-    await this.refresh();
   }
   async setItemStatus(item, status) {
     if (!this.activeProject) return;
     await this.plugin.projectManager.updateItemStatus(this.activeProject, item.id, status);
-    await this.refresh();
   }
   async duplicateItem(item) {
     if (!this.activeProject) return;
@@ -11030,7 +11037,6 @@ var BinderView = class extends import_obsidian9.ItemView {
     newItem.wordCountGoal = item.wordCountGoal;
     newItem.includeInExport = item.includeInExport;
     await this.saveBinder();
-    await this.refresh();
   }
   async moveToResearch(item) {
     if (!this.activeProject) return;
@@ -11049,7 +11055,6 @@ var BinderView = class extends import_obsidian9.ItemView {
     item.filePath = newPath;
     item.type = "note";
     await this.saveBinder();
-    await this.refresh();
   }
   deleteItem(item) {
     const project = this.activeProject;
@@ -11066,7 +11071,6 @@ var BinderView = class extends import_obsidian9.ItemView {
           await this.app.fileManager.trashFile(file);
         }
         await this.plugin.projectManager.removeItemFromBinder(project, item.id);
-        await this.refresh();
       }
     ).open();
   }
@@ -11118,7 +11122,6 @@ var BinderView = class extends import_obsidian9.ItemView {
     if (!insert(binder.items)) binder.items.unshift(moving);
     this.reorderItems(binder.items, 1);
     await this.plugin.projectManager.saveBinder(binder);
-    await this.refresh();
   }
   async moveItemAfter(sourceId, targetId) {
     if (!this.activeProject) return;
@@ -11138,7 +11141,6 @@ var BinderView = class extends import_obsidian9.ItemView {
     if (!insert(binder.items)) binder.items.push(moving);
     this.reorderItems(binder.items, 1);
     await this.plugin.projectManager.saveBinder(binder);
-    await this.refresh();
   }
   async moveItemInto(sourceId, targetId) {
     if (!this.activeProject) return;
@@ -11162,7 +11164,6 @@ var BinderView = class extends import_obsidian9.ItemView {
     if (!addTo(binder.items)) binder.items.push(moving);
     this.reorderItems(binder.items, 1);
     await this.plugin.projectManager.saveBinder(binder);
-    await this.refresh();
   }
   // Swap an item with its previous/next sibling
   async nudgeItem(item, delta) {
@@ -11176,7 +11177,6 @@ var BinderView = class extends import_obsidian9.ItemView {
     [siblings[idx], siblings[target]] = [siblings[target], siblings[idx]];
     this.reorderItems(binder.items, 1);
     await this.plugin.projectManager.saveBinder(binder);
-    await this.refresh();
   }
   findSiblings(items, id) {
     if (items.some((i) => i.id === id)) return items;
@@ -11196,7 +11196,6 @@ var BinderView = class extends import_obsidian9.ItemView {
     binder.items.push(moving);
     this.reorderItems(binder.items, 1);
     await this.plugin.projectManager.saveBinder(binder);
-    await this.refresh();
   }
   reorderItems(items, start2) {
     let order = start2;
@@ -11242,7 +11241,6 @@ var BinderView = class extends import_obsidian9.ItemView {
         });
       }
       await this.plugin.projectManager.saveBinder(binder);
-      await this.refresh();
     }).open();
   }
   async saveBinder() {
@@ -11696,6 +11694,12 @@ var LauncherView = class extends import_obsidian14.ItemView {
     return "feather";
   }
   async onOpen() {
+    this.registerEvent(this.plugin.projectManager.onActiveProjectChanged(() => {
+      void this.refresh();
+    }));
+    this.registerEvent(this.plugin.projectManager.onProjectsChanged(() => {
+      void this.refresh();
+    }));
     await this.render();
     this.refreshTimer = window.setInterval(() => {
       void this.tickRefresh();
@@ -11763,9 +11767,7 @@ var LauncherView = class extends import_obsidian14.ItemView {
     cardHeader.createSpan({ text: t2("launcher.project"), cls: "ws-launcher-card-label" });
     const newProjectBtn = cardHeader.createEl("button", { cls: "ws-launcher-text-btn", text: t2("launcher.newProject") });
     newProjectBtn.onclick = () => {
-      new ProjectModal(this.app, this.plugin, () => {
-        void this.refresh();
-      }).open();
+      new ProjectModal(this.app, this.plugin).open();
     };
     if (!project) {
       const emptyRow = card.createDiv("ws-launcher-empty");
@@ -15114,13 +15116,32 @@ ${_MagazineArticleTemplate.hint(hintText)}
 };
 
 // src/ProjectManager.ts
-var ProjectManager = class {
+var ProjectManager = class extends import_obsidian26.Events {
   constructor(plugin) {
+    super();
     this.projects = /* @__PURE__ */ new Map();
     this.activeProjectId = null;
     this.binderCache = /* @__PURE__ */ new Map();
     this.plugin = plugin;
     this.app = plugin.app;
+  }
+  // Project state is announced here, not pulled — subscribe instead of
+  // reaching into views to refresh them after a mutation. Returned refs work
+  // with Component.registerEvent for automatic cleanup.
+  onActiveProjectChanged(cb) {
+    return this.on("active-project-changed", (...data) => {
+      cb(data[0]);
+    });
+  }
+  onBinderChanged(cb) {
+    return this.on("binder-changed", (...data) => {
+      cb(data[0]);
+    });
+  }
+  onProjectsChanged(cb) {
+    return this.on("projects-changed", () => {
+      cb();
+    });
   }
   async initialize() {
     await this.loadAllProjects();
@@ -15213,6 +15234,7 @@ var ProjectManager = class {
     const path = (0, import_obsidian26.normalizePath)(`${project.folderPath}/_project.json`);
     await this.writeJson(path, project);
     this.projects.set(project.id, project);
+    this.trigger("projects-changed");
   }
   async loadBinder(project) {
     const cached = this.binderCache.get(project.id);
@@ -15248,7 +15270,7 @@ var ProjectManager = class {
     this.binderCache.set(binder.projectId, binder);
     const path = (0, import_obsidian26.normalizePath)(`${project.folderPath}/_binder.json`);
     await this.writeJson(path, binder);
-    this.plugin.statsTracker.invalidateWordCountCache();
+    this.trigger("binder-changed", binder);
   }
   async addDocumentToBinder(project, title, type, parentId, content2) {
     const binder = await this.loadBinder(project);
@@ -15397,7 +15419,7 @@ tags: [writing-studio]
     this.activeProjectId = id;
     this.plugin.settings.activeProjectId = id;
     await this.plugin.saveSettings();
-    await this.plugin.onActiveProjectChanged();
+    this.trigger("active-project-changed", this.getActiveProject());
   }
   flattenBinder(items) {
     const result = [];
@@ -17029,6 +17051,9 @@ var WritingStudioPlugin = class extends import_obsidian33.Plugin {
     this.fmManager = new FrontmatterManager(this);
     this.projectManager = new ProjectManager(this);
     this.statsTracker = new StatsTracker(this);
+    this.registerEvent(this.projectManager.onBinderChanged(() => {
+      this.statsTracker.invalidateWordCountCache();
+    }));
     this.focusMode = new FocusMode(this);
     this.typographyMode = new TypographyMode(this);
     this.writingModes = new WritingModes(this);
@@ -17138,9 +17163,7 @@ var WritingStudioPlugin = class extends import_obsidian33.Plugin {
     this.addCommand({
       id: "new-project",
       name: t2("main.cmd.newProject"),
-      callback: () => new ProjectModal(this.app, this, () => {
-        void this.refreshBinder();
-      }).open()
+      callback: () => new ProjectModal(this.app, this).open()
     });
     this.addCommand({
       id: "open-dashboard",
@@ -17327,27 +17350,13 @@ var WritingStudioPlugin = class extends import_obsidian33.Plugin {
     const existing = this.app.workspace.getLeavesOfType(BINDER_VIEW_TYPE);
     if (existing.length > 0) {
       void this.app.workspace.revealLeaf(existing[0]);
-      await this.refreshBinder();
       return;
     }
     const leaf = this.app.workspace.getLeftLeaf(false);
     if (leaf) {
       await leaf.setViewState({ type: BINDER_VIEW_TYPE, active: true });
       void this.app.workspace.revealLeaf(leaf);
-      await this.refreshBinder();
     }
-  }
-  async refreshBinder() {
-    const leaves = this.app.workspace.getLeavesOfType(BINDER_VIEW_TYPE);
-    for (const leaf of leaves) {
-      if (leaf.view instanceof BinderView) {
-        await leaf.view.refresh();
-      }
-    }
-  }
-  async onActiveProjectChanged() {
-    await this.refreshLauncher();
-    await this.refreshBinder();
   }
   async repairBinderPaths(oldPath, newPath, newBasename) {
     const projects = this.projectManager.getProjects();
@@ -17359,7 +17368,6 @@ var WritingStudioPlugin = class extends import_obsidian33.Plugin {
         item.filePath = newPath;
         item.title = newBasename;
         await this.projectManager.saveBinder(binder);
-        await this.refreshBinder();
         break;
       }
     }
@@ -17480,7 +17488,6 @@ var WritingStudioPlugin = class extends import_obsidian33.Plugin {
       };
       binder.items.push(item);
       await this.projectManager.saveBinder(binder);
-      await this.refreshBinder();
       new import_obsidian33.Notice(t2("main.notice.addedToProject", { file: file.basename, project: project.title }));
     }).open();
   }

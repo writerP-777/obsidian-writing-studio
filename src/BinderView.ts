@@ -54,6 +54,15 @@ export class BinderView extends ItemView {
   }
 
   async onOpen(): Promise<void> {
+    this.registerEvent(this.plugin.projectManager.onActiveProjectChanged(() => {
+      void this.refresh();
+    }));
+    this.registerEvent(this.plugin.projectManager.onBinderChanged((binder) => {
+      if (binder.projectId === this.activeProject?.id) void this.refresh();
+    }));
+    this.registerEvent(this.plugin.projectManager.onProjectsChanged(() => {
+      void this.refresh();
+    }));
     await this.refresh();
   }
 
@@ -112,13 +121,12 @@ export class BinderView extends ItemView {
 
     projectSel.onchange = async () => {
       await this.plugin.projectManager.setActiveProject(projectSel.value || null);
-      await this.refresh();
     };
 
     const newProjectBtn = projectRow.createEl('button', { cls: 'ws-binder-btn', title: t('binder.newProject') });
     setIcon(newProjectBtn, 'plus');
     newProjectBtn.onclick = () => {
-      new ProjectModal(this.app, this.plugin, () => { void this.refresh(); }).open();
+      new ProjectModal(this.app, this.plugin).open();
     };
 
     // Toolbar
@@ -240,7 +248,6 @@ export class BinderView extends ItemView {
           e.stopPropagation();
           item.collapsed = !item.collapsed;
           void this.saveBinder();
-          this.render();
         };
       } else {
         row.createSpan('ws-binder-toggle ws-binder-toggle-leaf');
@@ -491,13 +498,11 @@ export class BinderView extends ItemView {
       'chapter',
       parentId
     );
-    await this.refresh();
   }
 
   private async setItemStatus(item: BinderItem, status: DocumentStatus): Promise<void> {
     if (!this.activeProject) return;
     await this.plugin.projectManager.updateItemStatus(this.activeProject, item.id, status);
-    await this.refresh();
   }
 
   private async duplicateItem(item: BinderItem): Promise<void> {
@@ -525,8 +530,6 @@ export class BinderView extends ItemView {
     newItem.wordCountGoal = item.wordCountGoal;
     newItem.includeInExport = item.includeInExport;
     await this.saveBinder();
-
-    await this.refresh();
   }
 
   private async moveToResearch(item: BinderItem): Promise<void> {
@@ -549,7 +552,6 @@ export class BinderView extends ItemView {
     item.filePath = newPath;
     item.type = 'note';
     await this.saveBinder();
-    await this.refresh();
   }
 
   private deleteItem(item: BinderItem): void {
@@ -569,7 +571,6 @@ export class BinderView extends ItemView {
           await this.app.fileManager.trashFile(file);
         }
         await this.plugin.projectManager.removeItemFromBinder(project, item.id);
-        await this.refresh();
       }
     ).open();
   }
@@ -617,7 +618,6 @@ export class BinderView extends ItemView {
     if (!insert(binder.items)) binder.items.unshift(moving);
     this.reorderItems(binder.items, 1);
     await this.plugin.projectManager.saveBinder(binder);
-    await this.refresh();
   }
 
   private async moveItemAfter(sourceId: string, targetId: string): Promise<void> {
@@ -635,7 +635,6 @@ export class BinderView extends ItemView {
     if (!insert(binder.items)) binder.items.push(moving);
     this.reorderItems(binder.items, 1);
     await this.plugin.projectManager.saveBinder(binder);
-    await this.refresh();
   }
 
   private async moveItemInto(sourceId: string, targetId: string): Promise<void> {
@@ -661,7 +660,6 @@ export class BinderView extends ItemView {
     if (!addTo(binder.items)) binder.items.push(moving);
     this.reorderItems(binder.items, 1);
     await this.plugin.projectManager.saveBinder(binder);
-    await this.refresh();
   }
 
   // Swap an item with its previous/next sibling
@@ -676,7 +674,6 @@ export class BinderView extends ItemView {
     [siblings[idx], siblings[target]] = [siblings[target], siblings[idx]];
     this.reorderItems(binder.items, 1);
     await this.plugin.projectManager.saveBinder(binder);
-    await this.refresh();
   }
 
   private findSiblings(items: BinderItem[], id: string): BinderItem[] | null {
@@ -698,7 +695,6 @@ export class BinderView extends ItemView {
     binder.items.push(moving);
     this.reorderItems(binder.items, 1);
     await this.plugin.projectManager.saveBinder(binder);
-    await this.refresh();
   }
 
   private reorderItems(items: BinderItem[], start: number): number {
@@ -753,7 +749,6 @@ export class BinderView extends ItemView {
         });
       }
       await this.plugin.projectManager.saveBinder(binder);
-      await this.refresh();
     }).open();
   }
 

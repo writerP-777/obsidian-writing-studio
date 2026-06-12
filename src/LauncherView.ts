@@ -35,6 +35,14 @@ export class LauncherView extends ItemView {
   }
 
   async onOpen(): Promise<void> {
+    // No binder-changed subscription — binder content is not shown here, and a
+    // full re-render per binder save would snap open dropdowns shut (see below)
+    this.registerEvent(this.plugin.projectManager.onActiveProjectChanged(() => {
+      void this.refresh();
+    }));
+    this.registerEvent(this.plugin.projectManager.onProjectsChanged(() => {
+      void this.refresh();
+    }));
     await this.render();
     // Patch dynamic values in place every 10 seconds — a full re-render here
     // rebuilt the whole panel, snapping open dropdowns shut mid-selection and
@@ -116,7 +124,7 @@ export class LauncherView extends ItemView {
 
     const newProjectBtn = cardHeader.createEl('button', { cls: 'ws-launcher-text-btn', text: t('launcher.newProject') });
     newProjectBtn.onclick = () => {
-      new ProjectModal(this.app, this.plugin, () => { void this.refresh(); }).open();
+      new ProjectModal(this.app, this.plugin).open();
     };
 
     if (!project) {

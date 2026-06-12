@@ -1,4 +1,4 @@
-import { App, Notice, TFolder, TFile, normalizePath } from 'obsidian';
+import { App, Events, EventRef, Notice, TFolder, TFile, normalizePath } from 'obsidian';
 import type WritingStudioPlugin from '../main';
 import { t } from './i18n';
 import { localDateString } from './dates';
@@ -11,7 +11,7 @@ import { BlogCollectionTemplate } from '../templates/BlogCollectionTemplate';
 import { JournalArticleTemplate } from '../templates/JournalArticleTemplate';
 import { MagazineArticleTemplate } from '../templates/MagazineArticleTemplate';
 
-export class ProjectManager {
+export class ProjectManager extends Events {
   private plugin: WritingStudioPlugin;
   private app: App;
   private projects = new Map<string, WritingProject>();
@@ -19,8 +19,30 @@ export class ProjectManager {
   private binderCache = new Map<string, BinderData>();
 
   constructor(plugin: WritingStudioPlugin) {
+    super();
     this.plugin = plugin;
     this.app = plugin.app;
+  }
+
+  // Project state is announced here, not pulled — subscribe instead of
+  // reaching into views to refresh them after a mutation. Returned refs work
+  // with Component.registerEvent for automatic cleanup.
+  onActiveProjectChanged(cb: (project: WritingProject | null) => void): EventRef {
+    return this.on('active-project-changed', (...data: unknown[]) => {
+      cb(data[0] as WritingProject | null);
+    });
+  }
+
+  onBinderChanged(cb: (binder: BinderData) => void): EventRef {
+    return this.on('binder-changed', (...data: unknown[]) => {
+      cb(data[0] as BinderData);
+    });
+  }
+
+  onProjectsChanged(cb: () => void): EventRef {
+    return this.on('projects-changed', () => {
+      cb();
+    });
   }
 
   async initialize(): Promise<void> {
@@ -137,6 +159,7 @@ export class ProjectManager {
     const path = normalizePath(`${project.folderPath}/_project.json`);
     await this.writeJson(path, project);
     this.projects.set(project.id, project);
+    this.trigger('projects-changed');
   }
 
   async loadBinder(project: WritingProject): Promise<BinderData> {
@@ -181,7 +204,7 @@ export class ProjectManager {
     this.binderCache.set(binder.projectId, binder);
     const path = normalizePath(`${project.folderPath}/_binder.json`);
     await this.writeJson(path, binder);
-    this.plugin.statsTracker.invalidateWordCountCache();
+    this.trigger('binder-changed', binder);
   }
 
   async addDocumentToBinder(
@@ -368,7 +391,7 @@ tags: [writing-studio]
     this.activeProjectId = id;
     this.plugin.settings.activeProjectId = id;
     await this.plugin.saveSettings();
-    await this.plugin.onActiveProjectChanged();
+    this.trigger('active-project-changed', this.getActiveProject());
   }
 
   flattenBinder(items: BinderItem[]): BinderItem[] {
