@@ -554,13 +554,13 @@
       "exportProject": "Exportar proyecto",
       "previewManuscript": "Vista previa del manuscrito compilado",
       "publishWordPress": "Publicar en WordPress",
-      "newProject": "Nuevo proyecto de escritura",
+      "newProject": "Crear nuevo proyecto de escritura",
       "openDashboard": "Abrir panel de escritura",
       "openTargetsDashboard": "Abrir panel de objetivos",
       "setWordCountGoal": "Establecer objetivo de recuento de palabras",
       "openWritingLog": "Abrir registro de escritura",
       "openFolderSidebar": "Abrir carpeta en el explorador lateral",
-      "addFilesToBinder": "Agregar archivos copiados a la carpeta del proyecto"
+      "addFilesToBinder": "Buscar archivos nuevos en la carpeta del proyecto"
     },
     "menu": {
       "studioOptions": "Opciones de Writing Studio",

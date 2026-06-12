@@ -554,13 +554,13 @@
       "exportProject": "프로젝트 내보내기",
       "previewManuscript": "컴파일된 원고 미리보기",
       "publishWordPress": "WordPress에 게시",
-      "newProject": "새 글쓰기 프로젝트",
+      "newProject": "새 글쓰기 프로젝트 만들기",
       "openDashboard": "글쓰기 대시보드 열기",
       "openTargetsDashboard": "목표 대시보드 열기",
       "setWordCountGoal": "단어 수 목표 설정",
       "openWritingLog": "글쓰기 로그 열기",
       "openFolderSidebar": "사이드바 탐색기에서 폴더 열기",
-      "addFilesToBinder": "프로젝트 폴더에 복사된 파일 추가"
+      "addFilesToBinder": "프로젝트 폴더에서 새 파일 검색"
     },
     "menu": {
       "studioOptions": "글쓰기 스튜디오 옵션",

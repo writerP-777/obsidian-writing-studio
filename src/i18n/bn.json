@@ -554,13 +554,13 @@
       "exportProject": "প্রজেক্ট রপ্তানি করুন",
       "previewManuscript": "সংকলিত পাণ্ডুলিপির পূর্বরূপ দেখুন",
       "publishWordPress": "WordPress-এ প্রকাশ করুন",
-      "newProject": "নতুন রাইটিং প্রজেক্ট",
+      "newProject": "নতুন লেখার প্রকল্প তৈরি করুন",
       "openDashboard": "রাইটিং ড্যাশবোর্ড খুলুন",
       "openTargetsDashboard": "টার্গেট ড্যাশবোর্ড খুলুন",
       "setWordCountGoal": "শব্দ সংখ্যার লক্ষ্য নির্ধারণ করুন",
       "openWritingLog": "রাইটিং লগ খুলুন",
       "openFolderSidebar": "সাইডবার এক্সপ্লোরারে ফোল্ডার খুলুন",
-      "addFilesToBinder": "প্রজেক্ট ফোল্ডারে কপি করা ফাইল যোগ করুন"
+      "addFilesToBinder": "নতুন ফাইলের জন্য প্রকল্প ফোল্ডার স্ক্যান করুন"
     },
     "menu": {
       "studioOptions": "রাইটিং স্টুডিও বিকল্প",

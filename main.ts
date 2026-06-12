@@ -27,6 +27,9 @@ import { WritingStudioSettingsTab } from './src/SettingsTab';
 import { FolderSidebarView, FolderPickerModal, FOLDER_SIDEBAR_VIEW_TYPE } from './src/FolderSidebarView';
 import { initI18n, t } from './src/i18n';
 import { WritingLogView, WRITING_LOG_VIEW_TYPE } from './src/WritingLogView';
+import { registerCommands } from './src/commands';
+import { StatusBar } from './src/StatusBar';
+import { GoalBanner } from './src/GoalBanner';
 
 import { AddToProjectModal } from './modals/AddToProjectModal';
 import { SprintModal } from './modals/SprintModal';
@@ -171,25 +174,17 @@ export default class WritingStudioPlugin extends Plugin {
   projectManager!: ProjectManager;
   statsTracker!: StatsTracker;
   fmManager!: FrontmatterManager;
+  statusBar!: StatusBar;
+  goalBanner!: GoalBanner;
 
-  private statusBarMode!: HTMLElement;
-  private statusBarWordCount!: HTMLElement;
-  private statusBarSprint!: HTMLElement;
-  private statusBarProjectGoal!: HTMLElement;
   private wordCountUpdateTimer: number | null = null;
-  private projectGoalUpdateTimer: number | null = null;
   private launcherRefreshTimer: number | null = null;
-  private bannerGeneration = 0;
-  private currentBannerGoal = 0;
   private nnFolderMenuDispose: (() => void) | undefined;
   private isReady = false;
 
   async onload(): Promise<void> {
     await initI18n();
     await this.loadSettings();
-
-    // Register custom icons
-    this.registerIcons();
 
     // Initialize modules
     this.fmManager = new FrontmatterManager(this);
@@ -204,6 +199,7 @@ export default class WritingStudioPlugin extends Plugin {
     this.sprintTimer = new SprintTimer(this);
     this.exportEngine = new ExportEngine(this);
     this.wpClient = new WordPressClient();
+    this.goalBanner = new GoalBanner(this);
 
     // Register CM6 editor extension for focus mode
     this.registerEditorExtension(this.focusMode.getEditorExtension());
@@ -216,20 +212,8 @@ export default class WritingStudioPlugin extends Plugin {
     this.registerView(WRITING_LOG_VIEW_TYPE, (leaf) => new WritingLogView(leaf, this));
 
     // Status bar items
-    this.statusBarMode = this.addStatusBarItem();
-    this.statusBarMode.addClass('ws-status-mode');
-    this.writingModes.setStatusBar(this.statusBarMode);
-    this.statusBarMode.addEventListener('click', (e) => this.showModeSwitcher(e));
-
-    this.statusBarWordCount = this.addStatusBarItem();
-    this.statusBarWordCount.addClass('ws-status-wordcount');
-
-    this.statusBarSprint = this.addStatusBarItem();
-    this.statusBarSprint.addClass('ws-status-sprint');
-    this.sprintTimer.setStatusBar(this.statusBarSprint);
-
-    this.statusBarProjectGoal = this.addStatusBarItem();
-    this.statusBarProjectGoal.addClass('ws-status-project-goal', 'ws-hidden');
+    this.statusBar = new StatusBar(this);
+    this.statusBar.init((e) => this.showModeSwitcher(e));
 
     // Register sprint complete handler
     this.sprintTimer.setOnComplete(async (session) => {
@@ -244,130 +228,8 @@ export default class WritingStudioPlugin extends Plugin {
     // Ribbon icons — launcher only; all other features are accessible via the launcher panel, commands, or context menu
     this.addRibbonIcon('feather', t('main.ribbonTitle'), () => this.openLauncher());
 
-    // Commands
-    this.addCommand({
-      id: 'open-launcher',
-      name: t('main.cmd.openLauncher'),
-      callback: () => { void this.openLauncher(); },
-    });
-
-    this.addCommand({
-      id: 'open-binder',
-      name: t('main.cmd.openBinder'),
-      callback: () => { void this.openBinder(); },
-    });
-
-    this.addCommand({
-      id: 'toggle-focus-mode',
-      name: t('main.cmd.toggleFocusMode'),
-      callback: () => this.focusMode.toggle(),
-    });
-
-    this.addCommand({
-      id: 'toggle-typography-mode',
-      name: t('main.cmd.toggleTypographyMode'),
-      callback: () => { void this.typographyMode.toggle(); },
-    });
-
-    this.addCommand({
-      id: 'switch-draft-mode',
-      name: t('main.cmd.switchDraftMode'),
-      callback: () => { void this.writingModes.switchMode('draft'); },
-    });
-
-    this.addCommand({
-      id: 'switch-edit-mode',
-      name: t('main.cmd.switchEditMode'),
-      callback: () => { void this.writingModes.switchMode('edit'); },
-    });
-
-    this.addCommand({
-      id: 'switch-review-mode',
-      name: t('main.cmd.switchReviewMode'),
-      callback: () => { void this.writingModes.switchMode('review'); },
-    });
-
-    this.addCommand({
-      id: 'start-sprint',
-      name: t('main.cmd.startSprint'),
-      callback: () => new SprintModal(this.app, this).open(),
-    });
-
-    this.addCommand({
-      id: 'export-document',
-      name: t('main.cmd.exportDocument'),
-      callback: () => new ExportModal(this.app, this).open(),
-    });
-
-    this.addCommand({
-      id: 'export-project',
-      name: t('main.cmd.exportProject'),
-      callback: () => new ExportModal(this.app, this, 'project').open(),
-    });
-
-    this.addCommand({
-      id: 'preview-manuscript',
-      name: t('main.cmd.previewManuscript'),
-      callback: () => { void this.openCompilePreview(); },
-    });
-
-    this.addCommand({
-      id: 'publish-wordpress',
-      name: t('main.cmd.publishWordPress'),
-      callback: () => this.publishCurrentFile(),
-    });
-
-    this.addCommand({
-      id: 'new-project',
-      name: t('main.cmd.newProject'),
-      callback: () => new ProjectModal(this.app, this).open(),
-    });
-
-    this.addCommand({
-      id: 'open-dashboard',
-      name: t('main.cmd.openDashboard'),
-      callback: () => new WritingDashboardModal(this.app, this).open(),
-    });
-
-    this.addCommand({
-      id: 'open-targets-dashboard',
-      name: t('main.cmd.openTargetsDashboard'),
-      callback: () => new TargetsDashboardModal(this.app, this).open(),
-    });
-
-    this.addCommand({
-      id: 'set-word-count-goal',
-      name: t('main.cmd.setWordCountGoal'),
-      editorCallback: (_editor, view) => this.setWordCountGoal(view.file),
-    });
-
-    this.addCommand({
-      id: 'open-writing-log',
-      name: t('main.cmd.openWritingLog'),
-      callback: () => { void this.openWritingLog(); },
-    });
-
-    this.addCommand({
-      id: 'open-folder-sidebar',
-      name: t('main.cmd.openFolderSidebar'),
-      callback: () => {
-        new FolderPickerModal(this.app, (folder) => { void this.openFolder(folder); }).open();
-      },
-    });
-
-    this.addCommand({
-      id: 'add-files-to-binder',
-      name: t('main.cmd.addFilesToBinder'),
-      callback: async () => {
-        await this.openBinder();
-        for (const leaf of this.app.workspace.getLeavesOfType(BINDER_VIEW_TYPE)) {
-          if (leaf.view instanceof BinderView) {
-            await leaf.view.scanProjectFolder();
-            break;
-          }
-        }
-      },
-    });
+    // Commands — the full palette surface lives in src/commands.ts
+    registerCommands(this);
 
     // Keyboard: Escape to exit focus mode
     this.registerDomEvent(activeDocument, 'keydown', (e: KeyboardEvent) => {
@@ -420,7 +282,7 @@ export default class WritingStudioPlugin extends Plugin {
         if (file instanceof TFile) {
           this.fmManager.scheduleUpdate(file);
           this.scheduleWordCountUpdate();
-          this.scheduleProjectGoalUpdate();
+          this.statusBar.scheduleProjectGoalUpdate();
           this.statsTracker.invalidateWordCountCache();
         }
       })
@@ -441,7 +303,7 @@ export default class WritingStudioPlugin extends Plugin {
       this.app.workspace.on('active-leaf-change', () => {
         if (!this.isReady) return;
         void this.updateWordCount();
-        void this.showInlineGoalBanner();
+        void this.goalBanner.show();
         this.scheduleLauncherRefresh();
       })
     );
@@ -474,7 +336,7 @@ export default class WritingStudioPlugin extends Plugin {
       // Plugin is fully ready — allow active-leaf-change handlers to fire and
       // do an initial project goal bar render now that projects are loaded.
       this.isReady = true;
-      void this.updateProjectGoalBar();
+      void this.statusBar.updateProjectGoalBar();
     });
 
   }
@@ -485,21 +347,16 @@ export default class WritingStudioPlugin extends Plugin {
     this.writingModes.destroy();
     this.sprintTimer.destroy();
     this.fmManager.destroy();
+    this.statusBar.destroy();
+    this.goalBanner.destroy();
 
     if (this.wordCountUpdateTimer) {
       window.clearTimeout(this.wordCountUpdateTimer);
     }
 
-    if (this.projectGoalUpdateTimer) {
-      window.clearTimeout(this.projectGoalUpdateTimer);
-    }
-
     if (this.launcherRefreshTimer) {
       window.clearTimeout(this.launcherRefreshTimer);
     }
-
-    // Remove inline goal banners
-    activeDocument.querySelectorAll('.ws-inline-goal-banner').forEach(el => el.remove());
 
     this.nnFolderMenuDispose?.();
   }
@@ -610,26 +467,9 @@ export default class WritingStudioPlugin extends Plugin {
     }
   }
 
-  private async updateProjectGoalBar(): Promise<void> {
-    const project = this.projectManager.getActiveProject();
-    const goal = project?.goals?.totalWordCount ?? 0;
-    if (!project || goal <= 0) {
-      this.statusBarProjectGoal.addClass('ws-hidden');
-      return;
-    }
-    const total = await this.statsTracker.getTotalWordCount();
-    this.statusBarProjectGoal.setText(t('main.statusBar.projectWords', { total: total.toLocaleString(), goal: goal.toLocaleString() }));
-    this.statusBarProjectGoal.removeClass('ws-hidden');
-  }
+  // ─── Feature entry points (used by src/commands.ts and context menus) ─────
 
-  private scheduleProjectGoalUpdate(): void {
-    if (this.projectGoalUpdateTimer) window.clearTimeout(this.projectGoalUpdateTimer);
-    this.projectGoalUpdateTimer = window.setTimeout(() => {
-      void this.updateProjectGoalBar();
-    }, 5000);
-  }
-
-  private publishCurrentFile(): void {
+  publishCurrentFile(): void {
     const leaf = this.app.workspace.getMostRecentLeaf();
     const view = leaf?.view;
     const file = view instanceof MarkdownView ? view.file : null;
@@ -640,9 +480,47 @@ export default class WritingStudioPlugin extends Plugin {
     new PublishModal(this.app, this, file.path).open();
   }
 
-  private setWordCountGoal(file: TFile | null): void {
+  setWordCountGoal(file: TFile | null): void {
     if (!file) return;
     new WordCountGoalModal(this.app, this, file).open();
+  }
+
+  startSprint(): void {
+    new SprintModal(this.app, this).open();
+  }
+
+  exportDocument(): void {
+    new ExportModal(this.app, this).open();
+  }
+
+  exportProject(): void {
+    new ExportModal(this.app, this, 'project').open();
+  }
+
+  newProject(): void {
+    new ProjectModal(this.app, this).open();
+  }
+
+  openWritingDashboard(): void {
+    new WritingDashboardModal(this.app, this).open();
+  }
+
+  openTargetsDashboard(): void {
+    new TargetsDashboardModal(this.app, this).open();
+  }
+
+  openFolderPicker(): void {
+    new FolderPickerModal(this.app, (folder) => { void this.openFolder(folder); }).open();
+  }
+
+  async addFilesToBinder(): Promise<void> {
+    await this.openBinder();
+    for (const leaf of this.app.workspace.getLeavesOfType(BINDER_VIEW_TYPE)) {
+      if (leaf.view instanceof BinderView) {
+        await leaf.view.scanProjectFolder();
+        break;
+      }
+    }
   }
 
   private showModeSwitcher(e: MouseEvent | KeyboardEvent): void {
@@ -710,17 +588,17 @@ export default class WritingStudioPlugin extends Plugin {
     }, 1000);
   }
 
+  // Compute the live word count once, then fan it out to every surface that
+  // shows it: status bar, focus-mode toolbar, binder rows, and the goal banner.
   private async updateWordCount(): Promise<void> {
     const leaf = this.app.workspace.getMostRecentLeaf();
-    if (!leaf) { this.statusBarWordCount.textContent = ''; return; }
+    const view = leaf?.view;
+    if (!(view instanceof MarkdownView) || !view.editor) {
+      this.statusBar.clearWordCount();
+      return;
+    }
 
-    const view = leaf.view;
-    if (!(view instanceof MarkdownView)) { this.statusBarWordCount.textContent = ''; return; }
-
-    const editor = view.editor;
-    if (!editor) { this.statusBarWordCount.textContent = ''; return; }
-
-    const content = editor.getValue();
+    const content = view.editor.getValue();
     const wc = this.fmManager.countWords(content);
     const file = view.file;
 
@@ -731,14 +609,8 @@ export default class WritingStudioPlugin extends Plugin {
       sessionDelta = this.statsTracker.getSessionDelta(file.path);
     }
 
-    const fmGoal = file ? await this.projectManager.getWordCountGoalForFile(file) : undefined;
-    const delta = sessionDelta > 0 ? ` ${t('main.statusBar.delta', { delta: sessionDelta })}` : '';
-    if (fmGoal && fmGoal > 0) {
-      this.statusBarWordCount.textContent = t('main.statusBar.wordCountGoal', { count: wc, goal: fmGoal }) + delta;
-    } else {
-      this.statusBarWordCount.textContent = t('main.statusBar.wordCount', { count: wc }) + delta;
-    }
-
+    const goal = file ? await this.projectManager.getWordCountGoalForFile(file) : undefined;
+    this.statusBar.showWordCount(wc, goal, sessionDelta);
     this.focusMode.updateToolbarWordCount(wc);
 
     // Push the fresh count to the binder panel (O(1) map lookup, no re-render).
@@ -748,74 +620,8 @@ export default class WritingStudioPlugin extends Plugin {
           bl.view.updateWordCount(file.path, wc);
         }
       }
-      // Patch the goal banner in-place so it updates while the user types.
-      this.updateBannerWordCount(wc);
+      this.goalBanner.patch(wc);
     }
-  }
-
-  private updateBannerWordCount(wc: number): void {
-    if (this.currentBannerGoal <= 0) return;
-    const banner = activeDocument.querySelector('.ws-inline-goal-banner');
-    if (!banner) return;
-    const pct = Math.min(100, Math.round((wc / this.currentBannerGoal) * 100));
-    const textEl = banner.querySelector('.ws-goal-text');
-    const barEl = banner.querySelector<HTMLElement>('.ws-goal-bar');
-    if (textEl) textEl.textContent = t('main.statusBar.goalBanner', { count: wc, goal: this.currentBannerGoal, pct });
-    if (barEl) barEl.setCssProps({ '--ws-bar-width': `${pct}%` });
-  }
-
-  private async showInlineGoalBanner(): Promise<void> {
-    // Increment generation so any stale in-flight call abandons its result.
-    const gen = ++this.bannerGeneration;
-
-    activeDocument.querySelectorAll('.ws-inline-goal-banner').forEach(el => el.remove());
-
-    if (!this.settings.inlineGoalBanner) return;
-
-    const leaf = this.app.workspace.getMostRecentLeaf();
-    if (!leaf) return;
-
-    const view = leaf.view;
-    if (!(view instanceof MarkdownView)) return;
-
-    const file = view.file;
-    if (!file) return;
-
-    const goal = await this.projectManager.getWordCountGoalForFile(file);
-    if (gen !== this.bannerGeneration) return;
-    if (!goal || goal <= 0) return;
-
-    // Store so updateBannerWordCount() can refresh the bar without an async lookup.
-    this.currentBannerGoal = goal;
-
-    const content = view.editor.getValue();
-    const wc = this.fmManager.countWords(content);
-    const pct = Math.min(100, Math.round((wc / goal) * 100));
-
-    if (gen !== this.bannerGeneration) return;
-
-    // Position: find .view-header (the toolbar row) inside the leaf container and
-    // insert the banner immediately after it. This places the banner between the
-    // bottom edge of the toolbar and the top of the document content area,
-    // regardless of which child element the CM6 editor happens to live in.
-    const viewHeader = leaf.view.containerEl.querySelector(':scope > .view-header');
-    if (!viewHeader) return;
-
-    // Final duplicate guard after all async work is done.
-    leaf.view.containerEl.querySelectorAll('.ws-inline-goal-banner').forEach(el => el.remove());
-
-    const banner = createDiv({ cls: 'ws-inline-goal-banner' });
-    banner.createSpan({ cls: 'ws-goal-text', text: t('main.statusBar.goalBanner', { count: wc, goal, pct }) });
-    const barWrap = banner.createDiv({ cls: 'ws-goal-bar-wrap' });
-    const barEl = barWrap.createDiv({ cls: 'ws-goal-bar' });
-    barEl.setCssProps({ '--ws-bar-width': `${pct}%` });
-    const dismissBtn = banner.createEl('button', { cls: 'ws-goal-dismiss', title: t('main.statusBar.dismiss'), text: '✕' });
-    dismissBtn.addEventListener('click', () => banner.remove());
-    viewHeader.insertAdjacentElement('afterend', banner);
-  }
-
-  private registerIcons(): void {
-    // Icons are registered via Obsidian's setIcon — no custom SVG needed for built-in names
   }
 }
 

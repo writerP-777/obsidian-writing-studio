@@ -554,13 +554,13 @@
       "exportProject": "プロジェクトをエクスポート",
       "previewManuscript": "コンパイル済み原稿をプレビュー",
       "publishWordPress": "WordPressに公開",
-      "newProject": "新規執筆プロジェクト",
+      "newProject": "新しい執筆プロジェクトを作成",
       "openDashboard": "執筆ダッシュボードを開く",
       "openTargetsDashboard": "ターゲットダッシュボードを開く",
       "setWordCountGoal": "語数目標を設定",
       "openWritingLog": "執筆ログを開く",
       "openFolderSidebar": "サイドバーエクスプローラーでフォルダを開く",
-      "addFilesToBinder": "プロジェクトフォルダにコピーされたファイルを追加"
+      "addFilesToBinder": "プロジェクトフォルダーの新しいファイルをスキャン"
     },
     "menu": {
       "studioOptions": "ライティングスタジオのオプション",

@@ -554,13 +554,13 @@
       "exportProject": "Exporter le projet",
       "previewManuscript": "Prévisualiser le manuscrit compilé",
       "publishWordPress": "Publier sur WordPress",
-      "newProject": "Nouveau projet d'écriture",
+      "newProject": "Créer un nouveau projet d’écriture",
       "openDashboard": "Ouvrir le tableau de bord d'écriture",
       "openTargetsDashboard": "Ouvrir le tableau de bord des objectifs",
       "setWordCountGoal": "Définir un objectif de nombre de mots",
       "openWritingLog": "Ouvrir le journal d'écriture",
       "openFolderSidebar": "Ouvrir le dossier dans l'explorateur latéral",
-      "addFilesToBinder": "Ajouter les fichiers copiés dans le dossier du projet"
+      "addFilesToBinder": "Analyser le dossier du projet pour trouver de nouveaux fichiers"
     },
     "menu": {
       "studioOptions": "Options de Writing Studio",

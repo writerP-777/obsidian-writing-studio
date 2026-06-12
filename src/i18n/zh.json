@@ -554,13 +554,13 @@
       "exportProject": "导出项目",
       "previewManuscript": "预览编译稿件",
       "publishWordPress": "发布到 WordPress",
-      "newProject": "新建写作项目",
+      "newProject": "创建新写作项目",
       "openDashboard": "打开写作仪表板",
       "openTargetsDashboard": "打开目标仪表板",
       "setWordCountGoal": "设置字数目标",
       "openWritingLog": "打开写作日志",
       "openFolderSidebar": "在侧边栏浏览器中打开文件夹",
-      "addFilesToBinder": "将复制到项目文件夹的文件添加进来"
+      "addFilesToBinder": "扫描项目文件夹中的新文件"
     },
     "menu": {
       "studioOptions": "写作工作室选项",
