@@ -382,7 +382,11 @@
     "goalDesc": "任意。ランチャーとステータスバーに進捗として表示されます。目標なしの場合は空欄のままにしてください。",
     "editTitle": "プロジェクトを編集",
     "saveBtn": "保存",
-    "updated": "プロジェクト「{{title}}」を更新しました！"
+    "updated": "プロジェクト「{{title}}」を更新しました！",
+    "deleteTitle": "プロジェクトを削除",
+    "deleteMessage": "「{{title}}」をWriting Studioから削除しますか？プロジェクトフォルダとそのすべてのファイルはVaultに残ります。",
+    "deleteBtn": "プロジェクトを削除",
+    "deleted": "プロジェクト「{{title}}」を削除しました。ファイルはVaultに残っています。"
   },
   "sprintModal": {
     "setupTitle": "スプリントを設定",

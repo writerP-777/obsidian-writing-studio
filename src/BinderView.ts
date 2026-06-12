@@ -14,6 +14,7 @@ import { TargetsDashboardModal } from '../modals/TargetsDashboardModal';
 import { PublishModal } from '../modals/PublishModal';
 import { ScanFolderModal } from '../modals/ScanFolderModal';
 import { ConfirmModal } from '../modals/ConfirmModal';
+import { confirmDeleteProject } from '../modals/confirmDeleteProject';
 import { t } from './i18n';
 import { safeHandler } from './safeHandler';
 import { computeBinderFilter, BinderFilterResult } from './binderFilter';
@@ -143,6 +144,12 @@ export class BinderView extends ItemView {
       setIcon(editProjectBtn, 'pencil');
       editProjectBtn.onclick = () => {
         new ProjectModal(this.app, this.plugin, undefined, project).open();
+      };
+
+      const deleteProjectBtn = projectRow.createEl('button', { cls: 'ws-binder-btn', title: t('projectModal.deleteTitle') });
+      setIcon(deleteProjectBtn, 'trash');
+      deleteProjectBtn.onclick = () => {
+        confirmDeleteProject(this.app, this.plugin, project);
       };
     }
 

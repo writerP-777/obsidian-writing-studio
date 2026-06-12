@@ -124,6 +124,9 @@ export interface WritingStudioSettings {
   // State
   activeProjectId: string | null;
   currentWritingMode: WritingModeType;
+  // Projects are discovered by folder scan, so a deleted project's id is
+  // tombstoned here to keep it out of the registry while its files stay put
+  removedProjectIds: string[];
 }
 
 const DEFAULT_SETTINGS: WritingStudioSettings = {
@@ -162,6 +165,7 @@ const DEFAULT_SETTINGS: WritingStudioSettings = {
   wikilinkHandling: 'strip',
   activeProjectId: null,
   currentWritingMode: 'none',
+  removedProjectIds: [],
 };
 
 export default class WritingStudioPlugin extends Plugin {

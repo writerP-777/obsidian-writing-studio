@@ -382,7 +382,11 @@
     "goalDesc": "Facultatif. Affiché comme progression dans le lanceur et la barre d'état. Laisser vide pour aucun objectif.",
     "editTitle": "Modifier le projet",
     "saveBtn": "Enregistrer",
-    "updated": "Projet \"{{title}}\" mis à jour !"
+    "updated": "Projet \"{{title}}\" mis à jour !",
+    "deleteTitle": "Supprimer le projet",
+    "deleteMessage": "Retirer « {{title}} » de Writing Studio ? Le dossier du projet et tous ses fichiers restent dans votre coffre.",
+    "deleteBtn": "Retirer le projet",
+    "deleted": "Projet « {{title}} » retiré. Ses fichiers restent dans votre coffre."
   },
   "sprintModal": {
     "setupTitle": "Configurer un sprint",

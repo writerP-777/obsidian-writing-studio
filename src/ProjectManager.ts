@@ -67,6 +67,9 @@ export class ProjectManager extends Events {
 
     try {
       const project = JSON.parse(content) as WritingProject;
+      // Deleted projects keep their files in the vault, so the folder scan
+      // still finds them — the tombstone list is what keeps them out
+      if (this.plugin.settings.removedProjectIds.includes(project.id)) return null;
       this.projects.set(project.id, project);
       return project;
     } catch {
@@ -344,6 +347,23 @@ tags: [writing-studio]
   getActiveProject(): WritingProject | null {
     if (!this.activeProjectId) return null;
     return this.projects.get(this.activeProjectId) || null;
+  }
+
+  // Registry-only removal — the project folder, its documents, _project.json,
+  // and _binder.json all stay untouched in the vault
+  async deleteProject(id: string): Promise<void> {
+    if (!this.projects.has(id)) return;
+    this.projects.delete(id);
+    this.binderCache.delete(id);
+    if (!this.plugin.settings.removedProjectIds.includes(id)) {
+      this.plugin.settings.removedProjectIds.push(id);
+    }
+    if (this.activeProjectId === id) {
+      await this.setActiveProject(null); // also persists settings
+    } else {
+      await this.plugin.saveSettings();
+    }
+    this.trigger('projects-changed');
   }
 
   async setActiveProject(id: string | null): Promise<void> {

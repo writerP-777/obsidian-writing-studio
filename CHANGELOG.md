@@ -9,6 +9,7 @@ All notable changes to Writing Studio are documented here.
 UX improvement cycle from the 2026-06-12 product-experience review (issues #153–#171).
 
 ### Added
+- Writing projects can now be deleted. A trash icon next to the edit icon in the launcher project card and the binder's project selector removes the project from Writing Studio after confirmation — the project folder, its documents, `_project.json`, and `_binder.json` all stay untouched in the vault. If the deleted project was active, the launcher and binder fall back to their no-project states. (#155)
 - Writing projects can now be edited after creation. A pencil icon in the launcher project card and next to the binder's project selector opens the project modal in edit mode — title, author, description, and total word count goal can all be changed (clearing the goal field removes the goal). The project folder keeps its original name. The status bar project goal bar now also refreshes immediately on project edits and switches. (#154)
 - The create-project modal now collects the author (prefilled from the author name setting) and an optional total word count goal. The goal was previously displayed in the launcher, status bar, and writing dashboard but could not be set anywhere in the UI. The unused `dailyWordCount` and `deadline` project goal fields were removed from the data model. (#153)
 
