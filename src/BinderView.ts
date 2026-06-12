@@ -137,6 +137,15 @@ export class BinderView extends ItemView {
       new ProjectModal(this.app, this.plugin).open();
     };
 
+    if (this.activeProject) {
+      const project = this.activeProject;
+      const editProjectBtn = projectRow.createEl('button', { cls: 'ws-binder-btn', title: t('projectModal.editTitle') });
+      setIcon(editProjectBtn, 'pencil');
+      editProjectBtn.onclick = () => {
+        new ProjectModal(this.app, this.plugin, undefined, project).open();
+      };
+    }
+
     // Toolbar
     const toolbar = header.createDiv('ws-binder-toolbar');
     const newDocBtn = toolbar.createEl('button', {

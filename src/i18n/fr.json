@@ -379,7 +379,10 @@
     "created": "Projet « {{title}} » créé !",
     "cancel": "Annuler",
     "goalLabel": "Objectif total de mots",
-    "goalDesc": "Facultatif. Affiché comme progression dans le lanceur et la barre d'état. Laisser vide pour aucun objectif."
+    "goalDesc": "Facultatif. Affiché comme progression dans le lanceur et la barre d'état. Laisser vide pour aucun objectif.",
+    "editTitle": "Modifier le projet",
+    "saveBtn": "Enregistrer",
+    "updated": "Projet \"{{title}}\" mis à jour !"
   },
   "sprintModal": {
     "setupTitle": "Configurer un sprint",

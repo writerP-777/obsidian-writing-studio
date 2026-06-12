@@ -130,6 +130,14 @@ export class LauncherView extends ItemView {
       new ProjectModal(this.app, this.plugin).open();
     };
 
+    if (project) {
+      const editBtn = cardHeader.createEl('button', { cls: 'ws-launcher-icon-btn', title: t('projectModal.editTitle') });
+      setIcon(editBtn, 'pencil');
+      editBtn.onclick = () => {
+        new ProjectModal(this.app, this.plugin, undefined, project).open();
+      };
+    }
+
     if (!project) {
       const emptyRow = card.createDiv('ws-launcher-empty');
       emptyRow.textContent = t('launcher.noProjectSelected');

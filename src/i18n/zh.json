@@ -379,7 +379,10 @@
     "created": "项目「{{title}}」已创建！",
     "cancel": "取消",
     "goalLabel": "总字数目标",
-    "goalDesc": "可选。在启动器和状态栏中显示为进度。留空表示不设目标。"
+    "goalDesc": "可选。在启动器和状态栏中显示为进度。留空表示不设目标。",
+    "editTitle": "编辑项目",
+    "saveBtn": "保存",
+    "updated": "项目 \"{{title}}\" 已更新！"
   },
   "sprintModal": {
     "setupTitle": "设置冲刺",

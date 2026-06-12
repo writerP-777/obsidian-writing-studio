@@ -379,7 +379,10 @@
     "created": "Project \"{{title}}\" created!",
     "cancel": "Cancel",
     "goalLabel": "Total word count goal",
-    "goalDesc": "Optional. Shown as progress in the launcher and status bar. Leave empty for no goal."
+    "goalDesc": "Optional. Shown as progress in the launcher and status bar. Leave empty for no goal.",
+    "editTitle": "Edit project",
+    "saveBtn": "Save",
+    "updated": "Project \"{{title}}\" updated!"
   },
   "sprintModal": {
     "setupTitle": "Set up sprint",

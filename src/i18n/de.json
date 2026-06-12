@@ -379,7 +379,10 @@
     "created": "Projekt „{{title}}“ erstellt!",
     "cancel": "Abbrechen",
     "goalLabel": "Gesamtwortziel",
-    "goalDesc": "Optional. Wird als Fortschritt im Launcher und in der Statusleiste angezeigt. Leer lassen für kein Ziel."
+    "goalDesc": "Optional. Wird als Fortschritt im Launcher und in der Statusleiste angezeigt. Leer lassen für kein Ziel.",
+    "editTitle": "Projekt bearbeiten",
+    "saveBtn": "Speichern",
+    "updated": "Projekt \"{{title}}\" aktualisiert!"
   },
   "sprintModal": {
     "setupTitle": "Sprint einrichten",
