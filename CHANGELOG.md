@@ -4,6 +4,11 @@ All notable changes to Writing Studio are documented here.
 
 ---
 
+## [2.6.1]
+
+### Fixed
+- **Settings tab blank on Obsidian 1.13:** Obsidian 1.13 added a `renderTab()` method to its settings tab base class and made it the entry point for opening a tab. Writing Studio's settings tab had a same-named private helper that shadowed it at runtime, so the settings pane opened completely empty (no error). The helper is renamed and the settings render correctly again on all supported Obsidian versions. (#135)
+
 ## [2.6.0]
 
 Consolidated release covering all 15 fix units from the June 2026 full code audit (issues #104–#118, PRs #119–#133). The automated test suite grew from 53 to 105 tests.
