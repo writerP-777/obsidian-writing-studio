@@ -4,6 +4,15 @@ All notable changes to Writing Studio are documented here.
 
 ---
 
+## [Unreleased]
+
+### Changed
+- Removed the deprecated `setDynamicTooltip()` call on the focus dim opacity and line length sliders — Obsidian 1.13 always shows the slider value inline. (On Obsidian versions before 1.13 the value tooltip while dragging is no longer shown.)
+
+### Internal
+- Added a regression test that fails if the settings tab ever defines a member shadowing Obsidian's undocumented `SettingTab` internals — the failure mode behind the 2.6.1 blank-settings bug (#135).
+- Pinned the `obsidian` typings dev-dependency to `^1.13.1` (was `latest`).
+
 ## [2.6.1]
 
 ### Fixed
