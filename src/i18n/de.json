@@ -377,7 +377,9 @@
     "errorNoTitle": "Bitte einen Projekttitel eingeben.",
     "errorCreate": "Projekt konnte nicht erstellt werden: {{error}}",
     "created": "Projekt „{{title}}“ erstellt!",
-    "cancel": "Abbrechen"
+    "cancel": "Abbrechen",
+    "goalLabel": "Gesamtwortziel",
+    "goalDesc": "Optional. Wird als Fortschritt im Launcher und in der Statusleiste angezeigt. Leer lassen für kein Ziel."
   },
   "sprintModal": {
     "setupTitle": "Sprint einrichten",

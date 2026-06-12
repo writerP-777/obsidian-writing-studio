@@ -8,6 +8,8 @@ export class ProjectModal extends Modal {
   private onDone?: () => void;
   private title = '';
   private type: ProjectType = 'blank';
+  private author = '';
+  private goalRaw = '';
   private description = '';
 
   // Most callers need no callback — ProjectManager announces the new project
@@ -49,6 +51,22 @@ export class ProjectModal extends Modal {
           this.updateTemplatePreview(previewEl, this.type);
         }));
 
+    // Author was previously taken silently from settings — surfacing it here
+    // means the manuscript title page never gets a blank author unnoticed
+    this.author = this.plugin.settings.authorName;
+    new Setting(contentEl)
+      .setName(t('settings.general.authorName'))
+      .addText(tx => tx
+        .setValue(this.author)
+        .onChange(v => { this.author = v; }));
+
+    new Setting(contentEl)
+      .setName(t('projectModal.goalLabel'))
+      .setDesc(t('projectModal.goalDesc'))
+      .addText(tx => tx
+        .setPlaceholder('50000')
+        .onChange(v => { this.goalRaw = v; }));
+
     new Setting(contentEl)
       .setName(t('projectModal.descriptionLabel'))
       .addTextArea(tx => tx
@@ -72,9 +90,14 @@ export class ProjectModal extends Modal {
         const project = await this.plugin.projectManager.createProject(
           this.title.trim(),
           this.type,
-          this.plugin.settings.authorName,
+          this.author.trim(),
           this.description
         );
+        const goal = parseInt(this.goalRaw) || 0;
+        if (goal > 0) {
+          project.goals = { ...project.goals, totalWordCount: goal };
+          await this.plugin.projectManager.saveProject(project);
+        }
         await this.plugin.projectManager.setActiveProject(project.id);
         new Notice(t('projectModal.created', { title: project.title }));
         this.close();

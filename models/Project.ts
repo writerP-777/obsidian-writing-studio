@@ -2,8 +2,6 @@ export type ProjectType = 'book' | 'series' | 'blog' | 'blank' | 'journal-articl
 
 export interface ProjectGoals {
   totalWordCount?: number;
-  dailyWordCount?: number;
-  deadline?: string;
 }
 
 export interface WritingProject {

@@ -377,7 +377,9 @@
     "errorNoTitle": "プロジェクトタイトルを入力してください。",
     "errorCreate": "プロジェクトの作成に失敗しました：{{error}}",
     "created": "プロジェクト「{{title}}」が作成されました！",
-    "cancel": "キャンセル"
+    "cancel": "キャンセル",
+    "goalLabel": "合計語数目標",
+    "goalDesc": "任意。ランチャーとステータスバーに進捗として表示されます。目標なしの場合は空欄のままにしてください。"
   },
   "sprintModal": {
     "setupTitle": "スプリントを設定",

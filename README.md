@@ -399,7 +399,7 @@ The status bar shows a `(+N)` delta next to the current file's word count, indic
 
 #### Project Word Count Goal
 
-When an active project has a total word count goal set, a dedicated status bar item shows `{current} / {goal} project words`. This updates automatically as you write. Set a project goal in the Project modal when creating or editing a project.
+When an active project has a total word count goal set, a dedicated status bar item shows `{current} / {goal} project words`. This updates automatically as you write. Set a project goal in the Project modal when creating a project.
 
 ---
 
