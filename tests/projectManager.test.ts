@@ -24,7 +24,7 @@ function makePlugin(vault: MockVault) {
   return {
     app: { vault },
     settings: { defaultProjectFolder: 'Projects', authorName: '' },
-    statsTracker: { invalidateWordCountCache: jest.fn() },
+    saveSettings: jest.fn().mockResolvedValue(undefined),
   } as never;
 }
 
@@ -120,6 +120,69 @@ describe('ProjectManager.loadBinder corrupt file handling', () => {
 
     expect(vault.read).toHaveBeenCalledTimes(1);
     expect(vault.create).not.toHaveBeenCalled();
+  });
+});
+
+describe('ProjectManager change notification', () => {
+  it('announces the active project on setActiveProject', async () => {
+    const vault = makeVault();
+    const pm = new ProjectManager(makePlugin(vault));
+    const project = makeProject();
+    await pm.saveProject(project);
+    const seen: (WritingProject | null)[] = [];
+    pm.onActiveProjectChanged(p => { seen.push(p); });
+
+    await pm.setActiveProject('project-1');
+    await pm.setActiveProject(null);
+
+    expect(seen).toEqual([project, null]);
+  });
+
+  it('announces binder-changed with the saved binder', async () => {
+    const vault = makeVault();
+    const pm = new ProjectManager(makePlugin(vault));
+    await pm.saveProject(makeProject());
+    const seen: string[] = [];
+    pm.onBinderChanged(binder => { seen.push(binder.projectId); });
+
+    await pm.saveBinder({ version: '2.0', projectId: 'project-1', items: [] });
+
+    expect(seen).toEqual(['project-1']);
+  });
+
+  it('announces projects-changed when a project is saved', async () => {
+    const vault = makeVault();
+    const pm = new ProjectManager(makePlugin(vault));
+    const events = jest.fn();
+    pm.onProjectsChanged(events);
+
+    await pm.saveProject(makeProject());
+
+    expect(events).toHaveBeenCalledTimes(1);
+  });
+
+  it('does not announce binder-changed for an unknown project', async () => {
+    const vault = makeVault();
+    const pm = new ProjectManager(makePlugin(vault));
+    const events = jest.fn();
+    pm.onBinderChanged(events);
+
+    // saveBinder returns early when the project is not loaded
+    await pm.saveBinder({ version: '2.0', projectId: 'ghost', items: [] });
+
+    expect(events).not.toHaveBeenCalled();
+  });
+
+  it('stops announcing after offref', async () => {
+    const vault = makeVault();
+    const pm = new ProjectManager(makePlugin(vault));
+    const events = jest.fn();
+    const ref = pm.onProjectsChanged(events);
+    pm.offref(ref);
+
+    await pm.saveProject(makeProject());
+
+    expect(events).not.toHaveBeenCalled();
   });
 });
 

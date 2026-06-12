@@ -5,12 +5,14 @@ import { t } from '../src/i18n';
 
 export class ProjectModal extends Modal {
   private plugin: WritingStudioPlugin;
-  private onDone: () => void;
+  private onDone?: () => void;
   private title = '';
   private type: ProjectType = 'blank';
   private description = '';
 
-  constructor(app: App, plugin: WritingStudioPlugin, onDone: () => void) {
+  // Most callers need no callback — ProjectManager announces the new project
+  // itself. Pass onDone only for work beyond refreshing project state.
+  constructor(app: App, plugin: WritingStudioPlugin, onDone?: () => void) {
     super(app);
     this.plugin = plugin;
     this.onDone = onDone;
@@ -76,7 +78,7 @@ export class ProjectModal extends Modal {
         await this.plugin.projectManager.setActiveProject(project.id);
         new Notice(t('projectModal.created', { title: project.title }));
         this.close();
-        this.onDone();
+        this.onDone?.();
       } catch (e) {
         new Notice(t('projectModal.errorCreate', { error: e instanceof Error ? e.message : String(e) }));
         createBtn.disabled = false;
