@@ -382,7 +382,11 @@
     "goalDesc": "Optional. Shown as progress in the launcher and status bar. Leave empty for no goal.",
     "editTitle": "Edit project",
     "saveBtn": "Save",
-    "updated": "Project \"{{title}}\" updated!"
+    "updated": "Project \"{{title}}\" updated!",
+    "deleteTitle": "Delete project",
+    "deleteMessage": "Remove \"{{title}}\" from Writing Studio? The project folder and all of its files stay in your vault.",
+    "deleteBtn": "Remove project",
+    "deleted": "Project \"{{title}}\" removed. Its files remain in your vault."
   },
   "sprintModal": {
     "setupTitle": "Set up sprint",

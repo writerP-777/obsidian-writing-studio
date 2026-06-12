@@ -382,7 +382,11 @@
     "goalDesc": "可选。在启动器和状态栏中显示为进度。留空表示不设目标。",
     "editTitle": "编辑项目",
     "saveBtn": "保存",
-    "updated": "项目 \"{{title}}\" 已更新！"
+    "updated": "项目 \"{{title}}\" 已更新！",
+    "deleteTitle": "删除项目",
+    "deleteMessage": "从 Writing Studio 中移除「{{title}}」？项目文件夹及其所有文件将保留在库中。",
+    "deleteBtn": "移除项目",
+    "deleted": "项目「{{title}}」已移除。文件仍保留在库中。"
   },
   "sprintModal": {
     "setupTitle": "设置冲刺",

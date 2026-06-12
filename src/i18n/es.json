@@ -382,7 +382,11 @@
     "goalDesc": "Opcional. Se muestra como progreso en el lanzador y la barra de estado. Déjalo vacío para no fijar una meta.",
     "editTitle": "Editar proyecto",
     "saveBtn": "Guardar",
-    "updated": "¡Proyecto \"{{title}}\" actualizado!"
+    "updated": "¡Proyecto \"{{title}}\" actualizado!",
+    "deleteTitle": "Eliminar proyecto",
+    "deleteMessage": "¿Quitar «{{title}}» de Writing Studio? La carpeta del proyecto y todos sus archivos permanecen en tu vault.",
+    "deleteBtn": "Quitar proyecto",
+    "deleted": "Proyecto «{{title}}» quitado. Sus archivos permanecen en tu vault."
   },
   "sprintModal": {
     "setupTitle": "Configurar sprint",

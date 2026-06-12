@@ -382,7 +382,11 @@
     "goalDesc": "Optional. Wird als Fortschritt im Launcher und in der Statusleiste angezeigt. Leer lassen für kein Ziel.",
     "editTitle": "Projekt bearbeiten",
     "saveBtn": "Speichern",
-    "updated": "Projekt \"{{title}}\" aktualisiert!"
+    "updated": "Projekt \"{{title}}\" aktualisiert!",
+    "deleteTitle": "Projekt löschen",
+    "deleteMessage": "„{{title}}“ aus Writing Studio entfernen? Der Projektordner und alle seine Dateien bleiben im Vault.",
+    "deleteBtn": "Projekt entfernen",
+    "deleted": "Projekt „{{title}}“ entfernt. Die Dateien bleiben im Vault."
   },
   "sprintModal": {
     "setupTitle": "Sprint einrichten",

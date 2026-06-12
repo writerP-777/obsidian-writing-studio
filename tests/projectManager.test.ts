@@ -6,7 +6,7 @@ import { InMemoryVaultFiles } from './inMemoryVaultFiles';
 function makePlugin() {
   return {
     app: {},
-    settings: { defaultProjectFolder: 'Projects', authorName: '' },
+    settings: { defaultProjectFolder: 'Projects', authorName: '', removedProjectIds: [] as string[] },
     saveSettings: jest.fn().mockResolvedValue(undefined),
   } as never;
 }
@@ -247,6 +247,87 @@ describe('ProjectManager.findBinderEntryForFile', () => {
 
     await pm.setActiveProject('project-1');
     expect(await pm.findBinderEntryForFile('not-in-binder.md')).toBeNull();
+  });
+});
+
+describe('ProjectManager.deleteProject', () => {
+  function seededFiles(): InMemoryVaultFiles {
+    const files = new InMemoryVaultFiles();
+    files.folders.add('Projects/My Book');
+    files.files.set('Projects/My Book/_project.json', JSON.stringify(makeProject()));
+    files.files.set('Projects/My Book/_binder.json', '{"version":"2.0","projectId":"project-1","items":[]}');
+    files.files.set('Projects/My Book/Chapters/Ch 1.md', 'words');
+    return files;
+  }
+
+  it('removes the project from the registry without touching any vault file', async () => {
+    const files = seededFiles();
+    const pm = new ProjectManager(makePlugin(), files);
+    await pm.loadAllProjects();
+    const filesBefore = new Map(files.files);
+    const events = jest.fn();
+    pm.onProjectsChanged(events);
+
+    await pm.deleteProject('project-1');
+
+    expect(pm.getProjects()).toHaveLength(0);
+    expect(events).toHaveBeenCalledTimes(1);
+    expect(files.files).toEqual(filesBefore);
+    expect(files.folders).toContain('Projects/My Book');
+  });
+
+  it('clears the active project and announces it when the deleted project was active', async () => {
+    const pm = new ProjectManager(makePlugin(), seededFiles());
+    await pm.loadAllProjects();
+    await pm.setActiveProject('project-1');
+    const seen: (WritingProject | null)[] = [];
+    pm.onActiveProjectChanged(p => { seen.push(p); });
+
+    await pm.deleteProject('project-1');
+
+    expect(pm.getActiveProject()).toBeNull();
+    expect(seen).toEqual([null]);
+  });
+
+  it('keeps the active project when a different project is deleted', async () => {
+    const plugin = makePlugin();
+    const files = seededFiles();
+    files.folders.add('Projects/Other');
+    files.files.set('Projects/Other/_project.json', JSON.stringify({ ...makeProject(), id: 'other', folderPath: 'Projects/Other' }));
+    const pm = new ProjectManager(plugin, files);
+    await pm.loadAllProjects();
+    await pm.setActiveProject('project-1');
+
+    await pm.deleteProject('other');
+
+    expect(pm.getActiveProject()?.id).toBe('project-1');
+    expect((plugin as { saveSettings: jest.Mock }).saveSettings).toHaveBeenCalled();
+  });
+
+  it('does not resurrect a deleted project on the next folder scan', async () => {
+    const plugin = makePlugin();
+    const files = seededFiles();
+    const pm = new ProjectManager(plugin, files);
+    await pm.loadAllProjects();
+    await pm.deleteProject('project-1');
+
+    // Same persisted settings, fresh manager — simulates a plugin reload
+    const pm2 = new ProjectManager(plugin, files);
+    await pm2.loadAllProjects();
+
+    expect(pm2.getProjects()).toHaveLength(0);
+  });
+
+  it('ignores ids that are not in the registry', async () => {
+    const plugin = makePlugin();
+    const pm = new ProjectManager(plugin, new InMemoryVaultFiles());
+    const events = jest.fn();
+    pm.onProjectsChanged(events);
+
+    await pm.deleteProject('ghost');
+
+    expect(events).not.toHaveBeenCalled();
+    expect((plugin as { settings: { removedProjectIds: string[] } }).settings.removedProjectIds).toEqual([]);
   });
 });
 

@@ -382,7 +382,11 @@
     "goalDesc": "선택 사항. 런처와 상태 표시줄에 진행률로 표시됩니다. 목표가 없으면 비워 두세요.",
     "editTitle": "프로젝트 편집",
     "saveBtn": "저장",
-    "updated": "프로젝트 \"{{title}}\"이(가) 업데이트되었습니다!"
+    "updated": "프로젝트 \"{{title}}\"이(가) 업데이트되었습니다!",
+    "deleteTitle": "프로젝트 삭제",
+    "deleteMessage": "\"{{title}}\"을(를) Writing Studio에서 제거할까요? 프로젝트 폴더와 모든 파일은 볼트에 그대로 남습니다.",
+    "deleteBtn": "프로젝트 제거",
+    "deleted": "프로젝트 \"{{title}}\"이(가) 제거되었습니다. 파일은 볼트에 남아 있습니다."
   },
   "sprintModal": {
     "setupTitle": "스프린트 설정",

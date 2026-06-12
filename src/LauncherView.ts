@@ -7,6 +7,7 @@ import { WritingDashboardModal } from '../modals/WritingDashboardModal';
 import { ExportModal } from '../modals/ExportModal';
 import { PublishModal } from '../modals/PublishModal';
 import { SprintModal } from '../modals/SprintModal';
+import { confirmDeleteProject } from '../modals/confirmDeleteProject';
 import { t } from './i18n';
 
 export const LAUNCHER_VIEW_TYPE = 'writing-studio-launcher';
@@ -135,6 +136,12 @@ export class LauncherView extends ItemView {
       setIcon(editBtn, 'pencil');
       editBtn.onclick = () => {
         new ProjectModal(this.app, this.plugin, undefined, project).open();
+      };
+
+      const deleteBtn = cardHeader.createEl('button', { cls: 'ws-launcher-icon-btn', title: t('projectModal.deleteTitle') });
+      setIcon(deleteBtn, 'trash');
+      deleteBtn.onclick = () => {
+        confirmDeleteProject(this.app, this.plugin, project);
       };
     }
 
