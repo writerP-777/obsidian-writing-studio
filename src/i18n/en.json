@@ -554,13 +554,13 @@
       "exportProject": "Export project",
       "previewManuscript": "Preview compiled manuscript",
       "publishWordPress": "Publish to WordPress",
-      "newProject": "New writing project",
+      "newProject": "Create new writing project",
       "openDashboard": "Open writing dashboard",
       "openTargetsDashboard": "Open targets dashboard",
       "setWordCountGoal": "Set word count goal",
       "openWritingLog": "Open writing log",
       "openFolderSidebar": "Open folder in sidebar explorer",
-      "addFilesToBinder": "Add files copied to project folder"
+      "addFilesToBinder": "Scan project folder for new files"
     },
     "menu": {
       "studioOptions": "Writing studio options",

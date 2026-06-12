@@ -27,7 +27,7 @@ __export(main_exports, {
   default: () => WritingStudioPlugin
 });
 module.exports = __toCommonJS(main_exports);
-var import_obsidian33 = require("obsidian");
+var import_obsidian34 = require("obsidian");
 
 // src/BinderView.ts
 var import_obsidian9 = require("obsidian");
@@ -2864,13 +2864,13 @@ var en_default = {
       exportProject: "Export project",
       previewManuscript: "Preview compiled manuscript",
       publishWordPress: "Publish to WordPress",
-      newProject: "New writing project",
+      newProject: "Create new writing project",
       openDashboard: "Open writing dashboard",
       openTargetsDashboard: "Open targets dashboard",
       setWordCountGoal: "Set word count goal",
       openWritingLog: "Open writing log",
       openFolderSidebar: "Open folder in sidebar explorer",
-      addFilesToBinder: "Add files copied to project folder"
+      addFilesToBinder: "Scan project folder for new files"
     },
     menu: {
       studioOptions: "Writing studio options",
@@ -3500,13 +3500,13 @@ var zh_default = {
       exportProject: "\u5BFC\u51FA\u9879\u76EE",
       previewManuscript: "\u9884\u89C8\u7F16\u8BD1\u7A3F\u4EF6",
       publishWordPress: "\u53D1\u5E03\u5230 WordPress",
-      newProject: "\u65B0\u5EFA\u5199\u4F5C\u9879\u76EE",
+      newProject: "\u521B\u5EFA\u65B0\u5199\u4F5C\u9879\u76EE",
       openDashboard: "\u6253\u5F00\u5199\u4F5C\u4EEA\u8868\u677F",
       openTargetsDashboard: "\u6253\u5F00\u76EE\u6807\u4EEA\u8868\u677F",
       setWordCountGoal: "\u8BBE\u7F6E\u5B57\u6570\u76EE\u6807",
       openWritingLog: "\u6253\u5F00\u5199\u4F5C\u65E5\u5FD7",
       openFolderSidebar: "\u5728\u4FA7\u8FB9\u680F\u6D4F\u89C8\u5668\u4E2D\u6253\u5F00\u6587\u4EF6\u5939",
-      addFilesToBinder: "\u5C06\u590D\u5236\u5230\u9879\u76EE\u6587\u4EF6\u5939\u7684\u6587\u4EF6\u6DFB\u52A0\u8FDB\u6765"
+      addFilesToBinder: "\u626B\u63CF\u9879\u76EE\u6587\u4EF6\u5939\u4E2D\u7684\u65B0\u6587\u4EF6"
     },
     menu: {
       studioOptions: "\u5199\u4F5C\u5DE5\u4F5C\u5BA4\u9009\u9879",
@@ -4136,13 +4136,13 @@ var hi_default = {
       exportProject: "\u092A\u094D\u0930\u094B\u091C\u0947\u0915\u094D\u091F \u0928\u093F\u0930\u094D\u092F\u093E\u0924 \u0915\u0930\u0947\u0902",
       previewManuscript: "\u0938\u0902\u0915\u0932\u093F\u0924 \u092A\u093E\u0902\u0921\u0941\u0932\u093F\u092A\u093F \u0915\u093E \u092A\u0942\u0930\u094D\u0935\u093E\u0935\u0932\u094B\u0915\u0928",
       publishWordPress: "WordPress \u092A\u0930 \u092A\u094D\u0930\u0915\u093E\u0936\u093F\u0924 \u0915\u0930\u0947\u0902",
-      newProject: "\u0928\u092F\u093E \u0930\u093E\u0907\u091F\u093F\u0902\u0917 \u092A\u094D\u0930\u094B\u091C\u0947\u0915\u094D\u091F",
+      newProject: "\u0928\u0908 \u0932\u0947\u0916\u0928 \u092A\u0930\u093F\u092F\u094B\u091C\u0928\u093E \u092C\u0928\u093E\u090F\u0902",
       openDashboard: "\u0930\u093E\u0907\u091F\u093F\u0902\u0917 \u0921\u0948\u0936\u092C\u094B\u0930\u094D\u0921 \u0916\u094B\u0932\u0947\u0902",
       openTargetsDashboard: "\u091F\u093E\u0930\u094D\u0917\u0947\u091F \u0921\u0948\u0936\u092C\u094B\u0930\u094D\u0921 \u0916\u094B\u0932\u0947\u0902",
       setWordCountGoal: "\u0936\u092C\u094D\u0926 \u0938\u0902\u0916\u094D\u092F\u093E \u0932\u0915\u094D\u0937\u094D\u092F \u0938\u0947\u091F \u0915\u0930\u0947\u0902",
       openWritingLog: "\u0930\u093E\u0907\u091F\u093F\u0902\u0917 \u0932\u0949\u0917 \u0916\u094B\u0932\u0947\u0902",
       openFolderSidebar: "\u0938\u093E\u0907\u0921\u092C\u093E\u0930 \u090F\u0915\u094D\u0938\u092A\u094D\u0932\u094B\u0930\u0930 \u092E\u0947\u0902 \u092B\u093C\u094B\u0932\u094D\u0921\u0930 \u0916\u094B\u0932\u0947\u0902",
-      addFilesToBinder: "\u092A\u094D\u0930\u094B\u091C\u0947\u0915\u094D\u091F \u092B\u093C\u094B\u0932\u094D\u0921\u0930 \u092E\u0947\u0902 \u0915\u0949\u092A\u0940 \u0915\u0940 \u0917\u0908 \u092B\u093C\u093E\u0907\u0932\u0947\u0902 \u091C\u094B\u0921\u093C\u0947\u0902"
+      addFilesToBinder: "\u0928\u0908 \u092B\u093C\u093E\u0907\u0932\u094B\u0902 \u0915\u0947 \u0932\u093F\u090F \u092A\u0930\u093F\u092F\u094B\u091C\u0928\u093E \u092B\u093C\u094B\u0932\u094D\u0921\u0930 \u0938\u094D\u0915\u0948\u0928 \u0915\u0930\u0947\u0902"
     },
     menu: {
       studioOptions: "\u0930\u093E\u0907\u091F\u093F\u0902\u0917 \u0938\u094D\u091F\u0942\u0921\u093F\u092F\u094B \u0935\u093F\u0915\u0932\u094D\u092A",
@@ -4772,13 +4772,13 @@ var es_default = {
       exportProject: "Exportar proyecto",
       previewManuscript: "Vista previa del manuscrito compilado",
       publishWordPress: "Publicar en WordPress",
-      newProject: "Nuevo proyecto de escritura",
+      newProject: "Crear nuevo proyecto de escritura",
       openDashboard: "Abrir panel de escritura",
       openTargetsDashboard: "Abrir panel de objetivos",
       setWordCountGoal: "Establecer objetivo de recuento de palabras",
       openWritingLog: "Abrir registro de escritura",
       openFolderSidebar: "Abrir carpeta en el explorador lateral",
-      addFilesToBinder: "Agregar archivos copiados a la carpeta del proyecto"
+      addFilesToBinder: "Buscar archivos nuevos en la carpeta del proyecto"
     },
     menu: {
       studioOptions: "Opciones de Writing Studio",
@@ -5419,13 +5419,13 @@ var ar_default = {
       exportProject: "\u062A\u0635\u062F\u064A\u0631 \u0627\u0644\u0645\u0634\u0631\u0648\u0639",
       previewManuscript: "\u0645\u0639\u0627\u064A\u0646\u0629 \u0627\u0644\u0645\u062E\u0637\u0648\u0637\u0629 \u0627\u0644\u0645\u062C\u0645\u0651\u0639\u0629",
       publishWordPress: "\u0627\u0644\u0646\u0634\u0631 \u0639\u0644\u0649 WordPress",
-      newProject: "\u0645\u0634\u0631\u0648\u0639 \u0643\u062A\u0627\u0628\u0629 \u062C\u062F\u064A\u062F",
+      newProject: "\u0625\u0646\u0634\u0627\u0621 \u0645\u0634\u0631\u0648\u0639 \u0643\u062A\u0627\u0628\u0629 \u062C\u062F\u064A\u062F",
       openDashboard: "\u0641\u062A\u062D \u0644\u0648\u062D\u0629 \u0627\u0644\u0643\u062A\u0627\u0628\u0629",
       openTargetsDashboard: "\u0641\u062A\u062D \u0644\u0648\u062D\u0629 \u0627\u0644\u0623\u0647\u062F\u0627\u0641",
       setWordCountGoal: "\u062A\u0639\u064A\u064A\u0646 \u0647\u062F\u0641 \u0639\u062F\u062F \u0627\u0644\u0643\u0644\u0645\u0627\u062A",
       openWritingLog: "\u0641\u062A\u062D \u0633\u062C\u0644 \u0627\u0644\u0643\u062A\u0627\u0628\u0629",
       openFolderSidebar: "\u0641\u062A\u062D \u0627\u0644\u0645\u062C\u0644\u062F \u0641\u064A \u0627\u0644\u0645\u0633\u062A\u0643\u0634\u0641 \u0627\u0644\u062C\u0627\u0646\u0628\u064A",
-      addFilesToBinder: "\u0625\u0636\u0627\u0641\u0629 \u0627\u0644\u0645\u0644\u0641\u0627\u062A \u0627\u0644\u0645\u0646\u0633\u0648\u062E\u0629 \u0625\u0644\u0649 \u0645\u062C\u0644\u062F \u0627\u0644\u0645\u0634\u0631\u0648\u0639"
+      addFilesToBinder: "\u0641\u062D\u0635 \u0645\u062C\u0644\u062F \u0627\u0644\u0645\u0634\u0631\u0648\u0639 \u0628\u062D\u062B\u064B\u0627 \u0639\u0646 \u0645\u0644\u0641\u0627\u062A \u062C\u062F\u064A\u062F\u0629"
     },
     menu: {
       studioOptions: "\u062E\u064A\u0627\u0631\u0627\u062A \u0627\u0633\u062A\u0648\u062F\u064A\u0648 \u0627\u0644\u0643\u062A\u0627\u0628\u0629",
@@ -6055,13 +6055,13 @@ var fr_default = {
       exportProject: "Exporter le projet",
       previewManuscript: "Pr\xE9visualiser le manuscrit compil\xE9",
       publishWordPress: "Publier sur WordPress",
-      newProject: "Nouveau projet d'\xE9criture",
+      newProject: "Cr\xE9er un nouveau projet d\u2019\xE9criture",
       openDashboard: "Ouvrir le tableau de bord d'\xE9criture",
       openTargetsDashboard: "Ouvrir le tableau de bord des objectifs",
       setWordCountGoal: "D\xE9finir un objectif de nombre de mots",
       openWritingLog: "Ouvrir le journal d'\xE9criture",
       openFolderSidebar: "Ouvrir le dossier dans l'explorateur lat\xE9ral",
-      addFilesToBinder: "Ajouter les fichiers copi\xE9s dans le dossier du projet"
+      addFilesToBinder: "Analyser le dossier du projet pour trouver de nouveaux fichiers"
     },
     menu: {
       studioOptions: "Options de Writing Studio",
@@ -6691,13 +6691,13 @@ var bn_default = {
       exportProject: "\u09AA\u09CD\u09B0\u099C\u09C7\u0995\u09CD\u099F \u09B0\u09AA\u09CD\u09A4\u09BE\u09A8\u09BF \u0995\u09B0\u09C1\u09A8",
       previewManuscript: "\u09B8\u0982\u0995\u09B2\u09BF\u09A4 \u09AA\u09BE\u09A3\u09CD\u09A1\u09C1\u09B2\u09BF\u09AA\u09BF\u09B0 \u09AA\u09C2\u09B0\u09CD\u09AC\u09B0\u09C2\u09AA \u09A6\u09C7\u0996\u09C1\u09A8",
       publishWordPress: "WordPress-\u098F \u09AA\u09CD\u09B0\u0995\u09BE\u09B6 \u0995\u09B0\u09C1\u09A8",
-      newProject: "\u09A8\u09A4\u09C1\u09A8 \u09B0\u09BE\u0987\u099F\u09BF\u0982 \u09AA\u09CD\u09B0\u099C\u09C7\u0995\u09CD\u099F",
+      newProject: "\u09A8\u09A4\u09C1\u09A8 \u09B2\u09C7\u0996\u09BE\u09B0 \u09AA\u09CD\u09B0\u0995\u09B2\u09CD\u09AA \u09A4\u09C8\u09B0\u09BF \u0995\u09B0\u09C1\u09A8",
       openDashboard: "\u09B0\u09BE\u0987\u099F\u09BF\u0982 \u09A1\u09CD\u09AF\u09BE\u09B6\u09AC\u09CB\u09B0\u09CD\u09A1 \u0996\u09C1\u09B2\u09C1\u09A8",
       openTargetsDashboard: "\u099F\u09BE\u09B0\u09CD\u0997\u09C7\u099F \u09A1\u09CD\u09AF\u09BE\u09B6\u09AC\u09CB\u09B0\u09CD\u09A1 \u0996\u09C1\u09B2\u09C1\u09A8",
       setWordCountGoal: "\u09B6\u09AC\u09CD\u09A6 \u09B8\u0982\u0996\u09CD\u09AF\u09BE\u09B0 \u09B2\u0995\u09CD\u09B7\u09CD\u09AF \u09A8\u09BF\u09B0\u09CD\u09A7\u09BE\u09B0\u09A3 \u0995\u09B0\u09C1\u09A8",
       openWritingLog: "\u09B0\u09BE\u0987\u099F\u09BF\u0982 \u09B2\u0997 \u0996\u09C1\u09B2\u09C1\u09A8",
       openFolderSidebar: "\u09B8\u09BE\u0987\u09A1\u09AC\u09BE\u09B0 \u098F\u0995\u09CD\u09B8\u09AA\u09CD\u09B2\u09CB\u09B0\u09BE\u09B0\u09C7 \u09AB\u09CB\u09B2\u09CD\u09A1\u09BE\u09B0 \u0996\u09C1\u09B2\u09C1\u09A8",
-      addFilesToBinder: "\u09AA\u09CD\u09B0\u099C\u09C7\u0995\u09CD\u099F \u09AB\u09CB\u09B2\u09CD\u09A1\u09BE\u09B0\u09C7 \u0995\u09AA\u09BF \u0995\u09B0\u09BE \u09AB\u09BE\u0987\u09B2 \u09AF\u09CB\u0997 \u0995\u09B0\u09C1\u09A8"
+      addFilesToBinder: "\u09A8\u09A4\u09C1\u09A8 \u09AB\u09BE\u0987\u09B2\u09C7\u09B0 \u099C\u09A8\u09CD\u09AF \u09AA\u09CD\u09B0\u0995\u09B2\u09CD\u09AA \u09AB\u09CB\u09B2\u09CD\u09A1\u09BE\u09B0 \u09B8\u09CD\u0995\u09CD\u09AF\u09BE\u09A8 \u0995\u09B0\u09C1\u09A8"
     },
     menu: {
       studioOptions: "\u09B0\u09BE\u0987\u099F\u09BF\u0982 \u09B8\u09CD\u099F\u09C1\u09A1\u09BF\u0993 \u09AC\u09BF\u0995\u09B2\u09CD\u09AA",
@@ -7327,13 +7327,13 @@ var pt_BR_default = {
       exportProject: "Exportar projeto",
       previewManuscript: "Visualizar manuscrito compilado",
       publishWordPress: "Publicar no WordPress",
-      newProject: "Novo projeto de escrita",
+      newProject: "Criar novo projeto de escrita",
       openDashboard: "Abrir painel de escrita",
       openTargetsDashboard: "Abrir painel de metas",
       setWordCountGoal: "Definir meta de contagem de palavras",
       openWritingLog: "Abrir registro de escrita",
       openFolderSidebar: "Abrir pasta no explorador lateral",
-      addFilesToBinder: "Adicionar arquivos copiados \xE0 pasta do projeto"
+      addFilesToBinder: "Verificar novos arquivos na pasta do projeto"
     },
     menu: {
       studioOptions: "Op\xE7\xF5es do Writing Studio",
@@ -7969,13 +7969,13 @@ var ru_default = {
       exportProject: "\u042D\u043A\u0441\u043F\u043E\u0440\u0442\u0438\u0440\u043E\u0432\u0430\u0442\u044C \u043F\u0440\u043E\u0435\u043A\u0442",
       previewManuscript: "\u041F\u0440\u0435\u0434\u0432\u0430\u0440\u0438\u0442\u0435\u043B\u044C\u043D\u044B\u0439 \u043F\u0440\u043E\u0441\u043C\u043E\u0442\u0440 \u0440\u0443\u043A\u043E\u043F\u0438\u0441\u0438",
       publishWordPress: "\u041E\u043F\u0443\u0431\u043B\u0438\u043A\u043E\u0432\u0430\u0442\u044C \u0432 WordPress",
-      newProject: "\u041D\u043E\u0432\u044B\u0439 \u043F\u0440\u043E\u0435\u043A\u0442 \u043F\u043E \u043F\u0438\u0441\u044C\u043C\u0443",
+      newProject: "\u0421\u043E\u0437\u0434\u0430\u0442\u044C \u043D\u043E\u0432\u044B\u0439 \u043F\u0438\u0441\u0430\u0442\u0435\u043B\u044C\u0441\u043A\u0438\u0439 \u043F\u0440\u043E\u0435\u043A\u0442",
       openDashboard: "\u041E\u0442\u043A\u0440\u044B\u0442\u044C \u043F\u0430\u043D\u0435\u043B\u044C \u043F\u0438\u0441\u044C\u043C\u0430",
       openTargetsDashboard: "\u041E\u0442\u043A\u0440\u044B\u0442\u044C \u043F\u0430\u043D\u0435\u043B\u044C \u0446\u0435\u043B\u0435\u0439",
       setWordCountGoal: "\u0423\u0441\u0442\u0430\u043D\u043E\u0432\u0438\u0442\u044C \u0446\u0435\u043B\u044C \u043F\u043E \u043A\u043E\u043B\u0438\u0447\u0435\u0441\u0442\u0432\u0443 \u0441\u043B\u043E\u0432",
       openWritingLog: "\u041E\u0442\u043A\u0440\u044B\u0442\u044C \u0436\u0443\u0440\u043D\u0430\u043B \u043F\u0438\u0441\u044C\u043C\u0430",
       openFolderSidebar: "\u041E\u0442\u043A\u0440\u044B\u0442\u044C \u043F\u0430\u043F\u043A\u0443 \u0432 \u0431\u043E\u043A\u043E\u0432\u043E\u043C \u043E\u0431\u043E\u0437\u0440\u0435\u0432\u0430\u0442\u0435\u043B\u0435",
-      addFilesToBinder: "\u0414\u043E\u0431\u0430\u0432\u0438\u0442\u044C \u0444\u0430\u0439\u043B\u044B, \u0441\u043A\u043E\u043F\u0438\u0440\u043E\u0432\u0430\u043D\u043D\u044B\u0435 \u0432 \u043F\u0430\u043F\u043A\u0443 \u043F\u0440\u043E\u0435\u043A\u0442\u0430"
+      addFilesToBinder: "\u0421\u043A\u0430\u043D\u0438\u0440\u043E\u0432\u0430\u0442\u044C \u043F\u0430\u043F\u043A\u0443 \u043F\u0440\u043E\u0435\u043A\u0442\u0430 \u043D\u0430 \u043D\u043E\u0432\u044B\u0435 \u0444\u0430\u0439\u043B\u044B"
     },
     menu: {
       studioOptions: "\u041F\u0430\u0440\u0430\u043C\u0435\u0442\u0440\u044B Writing Studio",
@@ -8605,13 +8605,13 @@ var ja_default = {
       exportProject: "\u30D7\u30ED\u30B8\u30A7\u30AF\u30C8\u3092\u30A8\u30AF\u30B9\u30DD\u30FC\u30C8",
       previewManuscript: "\u30B3\u30F3\u30D1\u30A4\u30EB\u6E08\u307F\u539F\u7A3F\u3092\u30D7\u30EC\u30D3\u30E5\u30FC",
       publishWordPress: "WordPress\u306B\u516C\u958B",
-      newProject: "\u65B0\u898F\u57F7\u7B46\u30D7\u30ED\u30B8\u30A7\u30AF\u30C8",
+      newProject: "\u65B0\u3057\u3044\u57F7\u7B46\u30D7\u30ED\u30B8\u30A7\u30AF\u30C8\u3092\u4F5C\u6210",
       openDashboard: "\u57F7\u7B46\u30C0\u30C3\u30B7\u30E5\u30DC\u30FC\u30C9\u3092\u958B\u304F",
       openTargetsDashboard: "\u30BF\u30FC\u30B2\u30C3\u30C8\u30C0\u30C3\u30B7\u30E5\u30DC\u30FC\u30C9\u3092\u958B\u304F",
       setWordCountGoal: "\u8A9E\u6570\u76EE\u6A19\u3092\u8A2D\u5B9A",
       openWritingLog: "\u57F7\u7B46\u30ED\u30B0\u3092\u958B\u304F",
       openFolderSidebar: "\u30B5\u30A4\u30C9\u30D0\u30FC\u30A8\u30AF\u30B9\u30D7\u30ED\u30FC\u30E9\u30FC\u3067\u30D5\u30A9\u30EB\u30C0\u3092\u958B\u304F",
-      addFilesToBinder: "\u30D7\u30ED\u30B8\u30A7\u30AF\u30C8\u30D5\u30A9\u30EB\u30C0\u306B\u30B3\u30D4\u30FC\u3055\u308C\u305F\u30D5\u30A1\u30A4\u30EB\u3092\u8FFD\u52A0"
+      addFilesToBinder: "\u30D7\u30ED\u30B8\u30A7\u30AF\u30C8\u30D5\u30A9\u30EB\u30C0\u30FC\u306E\u65B0\u3057\u3044\u30D5\u30A1\u30A4\u30EB\u3092\u30B9\u30AD\u30E3\u30F3"
     },
     menu: {
       studioOptions: "\u30E9\u30A4\u30C6\u30A3\u30F3\u30B0\u30B9\u30BF\u30B8\u30AA\u306E\u30AA\u30D7\u30B7\u30E7\u30F3",
@@ -9241,13 +9241,13 @@ var de_default = {
       exportProject: "Projekt exportieren",
       previewManuscript: "Kompiliertes Manuskript vorschau",
       publishWordPress: "Auf WordPress ver\xF6ffentlichen",
-      newProject: "Neues Schreibprojekt",
+      newProject: "Neues Schreibprojekt erstellen",
       openDashboard: "Schreib-Dashboard \xF6ffnen",
       openTargetsDashboard: "Ziel-Dashboard \xF6ffnen",
       setWordCountGoal: "Wortziel festlegen",
       openWritingLog: "Schreibprotokoll \xF6ffnen",
       openFolderSidebar: "Ordner im Sidebar-Explorer \xF6ffnen",
-      addFilesToBinder: "In Projektordner kopierte Dateien hinzuf\xFCgen"
+      addFilesToBinder: "Projektordner nach neuen Dateien durchsuchen"
     },
     menu: {
       studioOptions: "Schreibstudio-Optionen",
@@ -9877,13 +9877,13 @@ var ko_default = {
       exportProject: "\uD504\uB85C\uC81D\uD2B8 \uB0B4\uBCF4\uB0B4\uAE30",
       previewManuscript: "\uCEF4\uD30C\uC77C\uB41C \uC6D0\uACE0 \uBBF8\uB9AC\uBCF4\uAE30",
       publishWordPress: "WordPress\uC5D0 \uAC8C\uC2DC",
-      newProject: "\uC0C8 \uAE00\uC4F0\uAE30 \uD504\uB85C\uC81D\uD2B8",
+      newProject: "\uC0C8 \uAE00\uC4F0\uAE30 \uD504\uB85C\uC81D\uD2B8 \uB9CC\uB4E4\uAE30",
       openDashboard: "\uAE00\uC4F0\uAE30 \uB300\uC2DC\uBCF4\uB4DC \uC5F4\uAE30",
       openTargetsDashboard: "\uBAA9\uD45C \uB300\uC2DC\uBCF4\uB4DC \uC5F4\uAE30",
       setWordCountGoal: "\uB2E8\uC5B4 \uC218 \uBAA9\uD45C \uC124\uC815",
       openWritingLog: "\uAE00\uC4F0\uAE30 \uB85C\uADF8 \uC5F4\uAE30",
       openFolderSidebar: "\uC0AC\uC774\uB4DC\uBC14 \uD0D0\uC0C9\uAE30\uC5D0\uC11C \uD3F4\uB354 \uC5F4\uAE30",
-      addFilesToBinder: "\uD504\uB85C\uC81D\uD2B8 \uD3F4\uB354\uC5D0 \uBCF5\uC0AC\uB41C \uD30C\uC77C \uCD94\uAC00"
+      addFilesToBinder: "\uD504\uB85C\uC81D\uD2B8 \uD3F4\uB354\uC5D0\uC11C \uC0C8 \uD30C\uC77C \uAC80\uC0C9"
     },
     menu: {
       studioOptions: "\uAE00\uC4F0\uAE30 \uC2A4\uD29C\uB514\uC624 \uC635\uC158",
@@ -16934,9 +16934,181 @@ var WritingLogView = class extends import_obsidian31.ItemView {
   }
 };
 
-// modals/AddToProjectModal.ts
+// src/commands.ts
+var COMMAND_SPECS = [
+  { id: "open-launcher", nameKey: "main.cmd.openLauncher", run: (p) => p.openLauncher() },
+  { id: "open-binder", nameKey: "main.cmd.openBinder", run: (p) => p.openBinder() },
+  { id: "toggle-focus-mode", nameKey: "main.cmd.toggleFocusMode", run: (p) => {
+    p.focusMode.toggle();
+  } },
+  { id: "toggle-typography-mode", nameKey: "main.cmd.toggleTypographyMode", run: (p) => p.typographyMode.toggle() },
+  { id: "switch-draft-mode", nameKey: "main.cmd.switchDraftMode", run: (p) => p.writingModes.switchMode("draft") },
+  { id: "switch-edit-mode", nameKey: "main.cmd.switchEditMode", run: (p) => p.writingModes.switchMode("edit") },
+  { id: "switch-review-mode", nameKey: "main.cmd.switchReviewMode", run: (p) => p.writingModes.switchMode("review") },
+  { id: "start-sprint", nameKey: "main.cmd.startSprint", run: (p) => {
+    p.startSprint();
+  } },
+  { id: "export-document", nameKey: "main.cmd.exportDocument", run: (p) => {
+    p.exportDocument();
+  } },
+  { id: "export-project", nameKey: "main.cmd.exportProject", run: (p) => {
+    p.exportProject();
+  } },
+  { id: "preview-manuscript", nameKey: "main.cmd.previewManuscript", run: (p) => p.openCompilePreview() },
+  { id: "publish-wordpress", nameKey: "main.cmd.publishWordPress", run: (p) => {
+    p.publishCurrentFile();
+  } },
+  { id: "new-project", nameKey: "main.cmd.newProject", run: (p) => {
+    p.newProject();
+  } },
+  { id: "open-dashboard", nameKey: "main.cmd.openDashboard", run: (p) => {
+    p.openWritingDashboard();
+  } },
+  { id: "open-targets-dashboard", nameKey: "main.cmd.openTargetsDashboard", run: (p) => {
+    p.openTargetsDashboard();
+  } },
+  { id: "set-word-count-goal", nameKey: "main.cmd.setWordCountGoal", editorRun: (p, _editor, view) => {
+    p.setWordCountGoal(view.file);
+  } },
+  { id: "open-writing-log", nameKey: "main.cmd.openWritingLog", run: (p) => p.openWritingLog() },
+  { id: "open-folder-sidebar", nameKey: "main.cmd.openFolderSidebar", run: (p) => {
+    p.openFolderPicker();
+  } },
+  { id: "add-files-to-binder", nameKey: "main.cmd.addFilesToBinder", run: (p) => p.addFilesToBinder() }
+];
+function registerCommands(plugin) {
+  for (const spec of COMMAND_SPECS) {
+    const { run, editorRun } = spec;
+    if (editorRun) {
+      plugin.addCommand({
+        id: spec.id,
+        name: t2(spec.nameKey),
+        editorCallback: (editor, view) => {
+          editorRun(plugin, editor, view);
+        }
+      });
+    } else if (run) {
+      plugin.addCommand({
+        id: spec.id,
+        name: t2(spec.nameKey),
+        callback: () => {
+          void run(plugin);
+        }
+      });
+    }
+  }
+}
+
+// src/StatusBar.ts
+var StatusBar = class {
+  constructor(plugin) {
+    this.projectGoalTimer = null;
+    this.plugin = plugin;
+  }
+  init(onModeClick) {
+    const modeEl = this.plugin.addStatusBarItem();
+    modeEl.addClass("ws-status-mode");
+    this.plugin.writingModes.setStatusBar(modeEl);
+    modeEl.addEventListener("click", onModeClick);
+    this.wordCountEl = this.plugin.addStatusBarItem();
+    this.wordCountEl.addClass("ws-status-wordcount");
+    const sprintEl = this.plugin.addStatusBarItem();
+    sprintEl.addClass("ws-status-sprint");
+    this.plugin.sprintTimer.setStatusBar(sprintEl);
+    this.projectGoalEl = this.plugin.addStatusBarItem();
+    this.projectGoalEl.addClass("ws-status-project-goal", "ws-hidden");
+  }
+  clearWordCount() {
+    this.wordCountEl.textContent = "";
+  }
+  showWordCount(wc, goal, sessionDelta) {
+    const delta = sessionDelta > 0 ? ` ${t2("main.statusBar.delta", { delta: sessionDelta })}` : "";
+    this.wordCountEl.textContent = goal && goal > 0 ? t2("main.statusBar.wordCountGoal", { count: wc, goal }) + delta : t2("main.statusBar.wordCount", { count: wc }) + delta;
+  }
+  async updateProjectGoalBar() {
+    var _a2, _b2;
+    const project = this.plugin.projectManager.getActiveProject();
+    const goal = (_b2 = (_a2 = project == null ? void 0 : project.goals) == null ? void 0 : _a2.totalWordCount) != null ? _b2 : 0;
+    if (!project || goal <= 0) {
+      this.projectGoalEl.addClass("ws-hidden");
+      return;
+    }
+    const total = await this.plugin.statsTracker.getTotalWordCount();
+    this.projectGoalEl.setText(t2("main.statusBar.projectWords", { total: total.toLocaleString(), goal: goal.toLocaleString() }));
+    this.projectGoalEl.removeClass("ws-hidden");
+  }
+  scheduleProjectGoalUpdate() {
+    if (this.projectGoalTimer) window.clearTimeout(this.projectGoalTimer);
+    this.projectGoalTimer = window.setTimeout(() => {
+      void this.updateProjectGoalBar();
+    }, 5e3);
+  }
+  destroy() {
+    if (this.projectGoalTimer) {
+      window.clearTimeout(this.projectGoalTimer);
+      this.projectGoalTimer = null;
+    }
+  }
+};
+
+// src/GoalBanner.ts
 var import_obsidian32 = require("obsidian");
-var AddToProjectModal = class extends import_obsidian32.Modal {
+var GoalBanner = class {
+  constructor(plugin) {
+    this.generation = 0;
+    this.currentGoal = 0;
+    this.plugin = plugin;
+  }
+  // Patch the live banner in place so it updates while the user types,
+  // without the async goal lookup show() performs.
+  patch(wc) {
+    if (this.currentGoal <= 0) return;
+    const banner = activeDocument.querySelector(".ws-inline-goal-banner");
+    if (!banner) return;
+    const pct = Math.min(100, Math.round(wc / this.currentGoal * 100));
+    const textEl = banner.querySelector(".ws-goal-text");
+    const barEl = banner.querySelector(".ws-goal-bar");
+    if (textEl) textEl.textContent = t2("main.statusBar.goalBanner", { count: wc, goal: this.currentGoal, pct });
+    if (barEl) barEl.setCssProps({ "--ws-bar-width": `${pct}%` });
+  }
+  async show() {
+    const gen = ++this.generation;
+    activeDocument.querySelectorAll(".ws-inline-goal-banner").forEach((el) => el.remove());
+    if (!this.plugin.settings.inlineGoalBanner) return;
+    const leaf = this.plugin.app.workspace.getMostRecentLeaf();
+    if (!leaf) return;
+    const view = leaf.view;
+    if (!(view instanceof import_obsidian32.MarkdownView)) return;
+    const file = view.file;
+    if (!file) return;
+    const goal = await this.plugin.projectManager.getWordCountGoalForFile(file);
+    if (gen !== this.generation) return;
+    if (!goal || goal <= 0) return;
+    this.currentGoal = goal;
+    const content2 = view.editor.getValue();
+    const wc = this.plugin.fmManager.countWords(content2);
+    const pct = Math.min(100, Math.round(wc / goal * 100));
+    if (gen !== this.generation) return;
+    const viewHeader = leaf.view.containerEl.querySelector(":scope > .view-header");
+    if (!viewHeader) return;
+    leaf.view.containerEl.querySelectorAll(".ws-inline-goal-banner").forEach((el) => el.remove());
+    const banner = createDiv({ cls: "ws-inline-goal-banner" });
+    banner.createSpan({ cls: "ws-goal-text", text: t2("main.statusBar.goalBanner", { count: wc, goal, pct }) });
+    const barWrap = banner.createDiv({ cls: "ws-goal-bar-wrap" });
+    const barEl = barWrap.createDiv({ cls: "ws-goal-bar" });
+    barEl.setCssProps({ "--ws-bar-width": `${pct}%` });
+    const dismissBtn = banner.createEl("button", { cls: "ws-goal-dismiss", title: t2("main.statusBar.dismiss"), text: "\u2715" });
+    dismissBtn.addEventListener("click", () => banner.remove());
+    viewHeader.insertAdjacentElement("afterend", banner);
+  }
+  destroy() {
+    activeDocument.querySelectorAll(".ws-inline-goal-banner").forEach((el) => el.remove());
+  }
+};
+
+// modals/AddToProjectModal.ts
+var import_obsidian33 = require("obsidian");
+var AddToProjectModal = class extends import_obsidian33.Modal {
   constructor(app, plugin, file, onConfirm) {
     super(app);
     this.selectedProjectId = "";
@@ -16958,7 +17130,7 @@ var AddToProjectModal = class extends import_obsidian32.Modal {
     }
     this.selectedProjectId = projects[0].id;
     contentEl.createEl("p", { text: t2("addToProject.file", { path: this.file.path }), cls: "ws-add-to-project-path" });
-    new import_obsidian32.Setting(contentEl).setName(t2("addToProject.projectName")).setDesc(t2("addToProject.projectDesc")).addDropdown((d) => {
+    new import_obsidian33.Setting(contentEl).setName(t2("addToProject.projectName")).setDesc(t2("addToProject.projectDesc")).addDropdown((d) => {
       projects.forEach((p) => {
         d.addOption(p.id, p.title);
       });
@@ -17034,20 +17206,16 @@ var DEFAULT_SETTINGS = {
   activeProjectId: null,
   currentWritingMode: "none"
 };
-var WritingStudioPlugin = class extends import_obsidian33.Plugin {
+var WritingStudioPlugin = class extends import_obsidian34.Plugin {
   constructor() {
     super(...arguments);
     this.wordCountUpdateTimer = null;
-    this.projectGoalUpdateTimer = null;
     this.launcherRefreshTimer = null;
-    this.bannerGeneration = 0;
-    this.currentBannerGoal = 0;
     this.isReady = false;
   }
   async onload() {
     await initI18n();
     await this.loadSettings();
-    this.registerIcons();
     this.fmManager = new FrontmatterManager(this);
     this.projectManager = new ProjectManager(this);
     this.statsTracker = new StatsTracker(this);
@@ -17060,23 +17228,15 @@ var WritingStudioPlugin = class extends import_obsidian33.Plugin {
     this.sprintTimer = new SprintTimer(this);
     this.exportEngine = new ExportEngine(this);
     this.wpClient = new WordPressClient();
+    this.goalBanner = new GoalBanner(this);
     this.registerEditorExtension(this.focusMode.getEditorExtension());
     this.registerView(LAUNCHER_VIEW_TYPE, (leaf) => new LauncherView(leaf, this));
     this.registerView(BINDER_VIEW_TYPE, (leaf) => new BinderView(leaf, this));
     this.registerView(COMPILE_PREVIEW_VIEW_TYPE, (leaf) => new CompilePreviewView(leaf, this));
     this.registerView(FOLDER_SIDEBAR_VIEW_TYPE, (leaf) => new FolderSidebarView(leaf));
     this.registerView(WRITING_LOG_VIEW_TYPE, (leaf) => new WritingLogView(leaf, this));
-    this.statusBarMode = this.addStatusBarItem();
-    this.statusBarMode.addClass("ws-status-mode");
-    this.writingModes.setStatusBar(this.statusBarMode);
-    this.statusBarMode.addEventListener("click", (e) => this.showModeSwitcher(e));
-    this.statusBarWordCount = this.addStatusBarItem();
-    this.statusBarWordCount.addClass("ws-status-wordcount");
-    this.statusBarSprint = this.addStatusBarItem();
-    this.statusBarSprint.addClass("ws-status-sprint");
-    this.sprintTimer.setStatusBar(this.statusBarSprint);
-    this.statusBarProjectGoal = this.addStatusBarItem();
-    this.statusBarProjectGoal.addClass("ws-status-project-goal", "ws-hidden");
+    this.statusBar = new StatusBar(this);
+    this.statusBar.init((e) => this.showModeSwitcher(e));
     this.sprintTimer.setOnComplete(async (session) => {
       this.statsTracker.recordSprint(session);
       const project = this.projectManager.getActiveProject();
@@ -17086,129 +17246,7 @@ var WritingStudioPlugin = class extends import_obsidian33.Plugin {
       new SprintSummaryModal(this.app, session).open();
     });
     this.addRibbonIcon("feather", t2("main.ribbonTitle"), () => this.openLauncher());
-    this.addCommand({
-      id: "open-launcher",
-      name: t2("main.cmd.openLauncher"),
-      callback: () => {
-        void this.openLauncher();
-      }
-    });
-    this.addCommand({
-      id: "open-binder",
-      name: t2("main.cmd.openBinder"),
-      callback: () => {
-        void this.openBinder();
-      }
-    });
-    this.addCommand({
-      id: "toggle-focus-mode",
-      name: t2("main.cmd.toggleFocusMode"),
-      callback: () => this.focusMode.toggle()
-    });
-    this.addCommand({
-      id: "toggle-typography-mode",
-      name: t2("main.cmd.toggleTypographyMode"),
-      callback: () => {
-        void this.typographyMode.toggle();
-      }
-    });
-    this.addCommand({
-      id: "switch-draft-mode",
-      name: t2("main.cmd.switchDraftMode"),
-      callback: () => {
-        void this.writingModes.switchMode("draft");
-      }
-    });
-    this.addCommand({
-      id: "switch-edit-mode",
-      name: t2("main.cmd.switchEditMode"),
-      callback: () => {
-        void this.writingModes.switchMode("edit");
-      }
-    });
-    this.addCommand({
-      id: "switch-review-mode",
-      name: t2("main.cmd.switchReviewMode"),
-      callback: () => {
-        void this.writingModes.switchMode("review");
-      }
-    });
-    this.addCommand({
-      id: "start-sprint",
-      name: t2("main.cmd.startSprint"),
-      callback: () => new SprintModal(this.app, this).open()
-    });
-    this.addCommand({
-      id: "export-document",
-      name: t2("main.cmd.exportDocument"),
-      callback: () => new ExportModal(this.app, this).open()
-    });
-    this.addCommand({
-      id: "export-project",
-      name: t2("main.cmd.exportProject"),
-      callback: () => new ExportModal(this.app, this, "project").open()
-    });
-    this.addCommand({
-      id: "preview-manuscript",
-      name: t2("main.cmd.previewManuscript"),
-      callback: () => {
-        void this.openCompilePreview();
-      }
-    });
-    this.addCommand({
-      id: "publish-wordpress",
-      name: t2("main.cmd.publishWordPress"),
-      callback: () => this.publishCurrentFile()
-    });
-    this.addCommand({
-      id: "new-project",
-      name: t2("main.cmd.newProject"),
-      callback: () => new ProjectModal(this.app, this).open()
-    });
-    this.addCommand({
-      id: "open-dashboard",
-      name: t2("main.cmd.openDashboard"),
-      callback: () => new WritingDashboardModal(this.app, this).open()
-    });
-    this.addCommand({
-      id: "open-targets-dashboard",
-      name: t2("main.cmd.openTargetsDashboard"),
-      callback: () => new TargetsDashboardModal(this.app, this).open()
-    });
-    this.addCommand({
-      id: "set-word-count-goal",
-      name: t2("main.cmd.setWordCountGoal"),
-      editorCallback: (_editor, view) => this.setWordCountGoal(view.file)
-    });
-    this.addCommand({
-      id: "open-writing-log",
-      name: t2("main.cmd.openWritingLog"),
-      callback: () => {
-        void this.openWritingLog();
-      }
-    });
-    this.addCommand({
-      id: "open-folder-sidebar",
-      name: t2("main.cmd.openFolderSidebar"),
-      callback: () => {
-        new FolderPickerModal(this.app, (folder) => {
-          void this.openFolder(folder);
-        }).open();
-      }
-    });
-    this.addCommand({
-      id: "add-files-to-binder",
-      name: t2("main.cmd.addFilesToBinder"),
-      callback: async () => {
-        await this.openBinder();
-        for (const leaf of this.app.workspace.getLeavesOfType(BINDER_VIEW_TYPE)) {
-          if (leaf.view instanceof BinderView) {
-            await leaf.view.scanProjectFolder();
-            break;
-          }
-        }
-      }
-    });
+    registerCommands(this);
     this.registerDomEvent(activeDocument, "keydown", (e) => {
       if (e.key === "Escape" && this.focusMode.isActive()) {
         this.focusMode.disable();
@@ -17228,7 +17266,7 @@ var WritingStudioPlugin = class extends import_obsidian33.Plugin {
     );
     this.registerEvent(
       this.app.workspace.on("file-menu", (menu, file) => {
-        if (file instanceof import_obsidian33.TFile && file.extension === "md") {
+        if (file instanceof import_obsidian34.TFile && file.extension === "md") {
           menu.addItem((i) => i.setTitle(t2("main.menu.studioOptions")).setSection("writing-studio").setDisabled(true));
           menu.addItem(
             (i) => i.setTitle(t2("main.menu.addToProject")).setIcon("book-open").setSection("writing-studio").onClick(() => {
@@ -17236,7 +17274,7 @@ var WritingStudioPlugin = class extends import_obsidian33.Plugin {
             })
           );
         }
-        if (file instanceof import_obsidian33.TFolder) {
+        if (file instanceof import_obsidian34.TFolder) {
           menu.addItem((i) => i.setTitle(t2("main.menu.studioOptions")).setSection("writing-studio").setDisabled(true));
           menu.addItem(
             (i) => i.setTitle(t2("main.menu.openSidebar")).setIcon("folder").setSection("writing-studio").onClick(() => {
@@ -17248,17 +17286,17 @@ var WritingStudioPlugin = class extends import_obsidian33.Plugin {
     );
     this.registerEvent(
       this.app.vault.on("modify", (file) => {
-        if (file instanceof import_obsidian33.TFile) {
+        if (file instanceof import_obsidian34.TFile) {
           this.fmManager.scheduleUpdate(file);
           this.scheduleWordCountUpdate();
-          this.scheduleProjectGoalUpdate();
+          this.statusBar.scheduleProjectGoalUpdate();
           this.statsTracker.invalidateWordCountCache();
         }
       })
     );
     this.registerEvent(
       this.app.vault.on("rename", (file, oldPath) => {
-        if (!(file instanceof import_obsidian33.TFile)) return;
+        if (!(file instanceof import_obsidian34.TFile)) return;
         if (file.extension === "md") {
           void this.repairBinderPaths(oldPath, file.path, file.basename);
         }
@@ -17268,7 +17306,7 @@ var WritingStudioPlugin = class extends import_obsidian33.Plugin {
       this.app.workspace.on("active-leaf-change", () => {
         if (!this.isReady) return;
         void this.updateWordCount();
-        void this.showInlineGoalBanner();
+        void this.goalBanner.show();
         this.scheduleLauncherRefresh();
       })
     );
@@ -17294,7 +17332,7 @@ var WritingStudioPlugin = class extends import_obsidian33.Plugin {
         }
       }
       this.isReady = true;
-      void this.updateProjectGoalBar();
+      void this.statusBar.updateProjectGoalBar();
     });
   }
   onunload() {
@@ -17304,16 +17342,14 @@ var WritingStudioPlugin = class extends import_obsidian33.Plugin {
     this.writingModes.destroy();
     this.sprintTimer.destroy();
     this.fmManager.destroy();
+    this.statusBar.destroy();
+    this.goalBanner.destroy();
     if (this.wordCountUpdateTimer) {
       window.clearTimeout(this.wordCountUpdateTimer);
-    }
-    if (this.projectGoalUpdateTimer) {
-      window.clearTimeout(this.projectGoalUpdateTimer);
     }
     if (this.launcherRefreshTimer) {
       window.clearTimeout(this.launcherRefreshTimer);
     }
-    activeDocument.querySelectorAll(".ws-inline-goal-banner").forEach((el) => el.remove());
     (_a2 = this.nnFolderMenuDispose) == null ? void 0 : _a2.call(this);
   }
   async loadSettings() {
@@ -17410,30 +17446,13 @@ var WritingStudioPlugin = class extends import_obsidian33.Plugin {
       void this.app.workspace.revealLeaf(leaf);
     }
   }
-  async updateProjectGoalBar() {
-    var _a2, _b2;
-    const project = this.projectManager.getActiveProject();
-    const goal = (_b2 = (_a2 = project == null ? void 0 : project.goals) == null ? void 0 : _a2.totalWordCount) != null ? _b2 : 0;
-    if (!project || goal <= 0) {
-      this.statusBarProjectGoal.addClass("ws-hidden");
-      return;
-    }
-    const total = await this.statsTracker.getTotalWordCount();
-    this.statusBarProjectGoal.setText(t2("main.statusBar.projectWords", { total: total.toLocaleString(), goal: goal.toLocaleString() }));
-    this.statusBarProjectGoal.removeClass("ws-hidden");
-  }
-  scheduleProjectGoalUpdate() {
-    if (this.projectGoalUpdateTimer) window.clearTimeout(this.projectGoalUpdateTimer);
-    this.projectGoalUpdateTimer = window.setTimeout(() => {
-      void this.updateProjectGoalBar();
-    }, 5e3);
-  }
+  // ─── Feature entry points (used by src/commands.ts and context menus) ─────
   publishCurrentFile() {
     const leaf = this.app.workspace.getMostRecentLeaf();
     const view = leaf == null ? void 0 : leaf.view;
-    const file = view instanceof import_obsidian33.MarkdownView ? view.file : null;
-    if (!(file instanceof import_obsidian33.TFile)) {
-      new import_obsidian33.Notice(t2("main.notice.noMarkdownOpen"));
+    const file = view instanceof import_obsidian34.MarkdownView ? view.file : null;
+    if (!(file instanceof import_obsidian34.TFile)) {
+      new import_obsidian34.Notice(t2("main.notice.noMarkdownOpen"));
       return;
     }
     new PublishModal(this.app, this, file.path).open();
@@ -17442,8 +17461,40 @@ var WritingStudioPlugin = class extends import_obsidian33.Plugin {
     if (!file) return;
     new WordCountGoalModal(this.app, this, file).open();
   }
+  startSprint() {
+    new SprintModal(this.app, this).open();
+  }
+  exportDocument() {
+    new ExportModal(this.app, this).open();
+  }
+  exportProject() {
+    new ExportModal(this.app, this, "project").open();
+  }
+  newProject() {
+    new ProjectModal(this.app, this).open();
+  }
+  openWritingDashboard() {
+    new WritingDashboardModal(this.app, this).open();
+  }
+  openTargetsDashboard() {
+    new TargetsDashboardModal(this.app, this).open();
+  }
+  openFolderPicker() {
+    new FolderPickerModal(this.app, (folder) => {
+      void this.openFolder(folder);
+    }).open();
+  }
+  async addFilesToBinder() {
+    await this.openBinder();
+    for (const leaf of this.app.workspace.getLeavesOfType(BINDER_VIEW_TYPE)) {
+      if (leaf.view instanceof BinderView) {
+        await leaf.view.scanProjectFolder();
+        break;
+      }
+    }
+  }
   showModeSwitcher(e) {
-    const menu = new import_obsidian33.Menu();
+    const menu = new import_obsidian34.Menu();
     menu.addItem((i) => i.setTitle(t2("main.menu.draftMode")).setIcon("pencil").onClick(() => this.writingModes.switchMode("draft")));
     menu.addItem((i) => i.setTitle(t2("main.menu.editMode")).setIcon("edit-3").onClick(() => this.writingModes.switchMode("edit")));
     menu.addItem((i) => i.setTitle(t2("main.menu.reviewMode")).setIcon("eye").onClick(() => this.writingModes.switchMode("review")));
@@ -17452,7 +17503,7 @@ var WritingStudioPlugin = class extends import_obsidian33.Plugin {
     if (e instanceof MouseEvent) menu.showAtMouseEvent(e);
   }
   showFontPicker(e) {
-    const menu = new import_obsidian33.Menu();
+    const menu = new import_obsidian34.Menu();
     TYPOGRAPHY_FONT_OPTIONS.forEach(({ key }) => {
       menu.addItem((i) => {
         i.setTitle(t2(`settings.typography.font.${key}`)).onClick(() => {
@@ -17470,7 +17521,7 @@ var WritingStudioPlugin = class extends import_obsidian33.Plugin {
   addFileToProject(file) {
     const projects = this.projectManager.getProjects();
     if (projects.length === 0) {
-      new import_obsidian33.Notice(t2("addToProject.noProjects"));
+      new import_obsidian34.Notice(t2("addToProject.noProjects"));
       return;
     }
     new AddToProjectModal(this.app, this, file, async (projectId) => {
@@ -17488,7 +17539,7 @@ var WritingStudioPlugin = class extends import_obsidian33.Plugin {
       };
       binder.items.push(item);
       await this.projectManager.saveBinder(binder);
-      new import_obsidian33.Notice(t2("main.notice.addedToProject", { file: file.basename, project: project.title }));
+      new import_obsidian34.Notice(t2("main.notice.addedToProject", { file: file.basename, project: project.title }));
     }).open();
   }
   scheduleLauncherRefresh() {
@@ -17503,23 +17554,16 @@ var WritingStudioPlugin = class extends import_obsidian33.Plugin {
       void this.updateWordCount();
     }, 1e3);
   }
+  // Compute the live word count once, then fan it out to every surface that
+  // shows it: status bar, focus-mode toolbar, binder rows, and the goal banner.
   async updateWordCount() {
     const leaf = this.app.workspace.getMostRecentLeaf();
-    if (!leaf) {
-      this.statusBarWordCount.textContent = "";
+    const view = leaf == null ? void 0 : leaf.view;
+    if (!(view instanceof import_obsidian34.MarkdownView) || !view.editor) {
+      this.statusBar.clearWordCount();
       return;
     }
-    const view = leaf.view;
-    if (!(view instanceof import_obsidian33.MarkdownView)) {
-      this.statusBarWordCount.textContent = "";
-      return;
-    }
-    const editor = view.editor;
-    if (!editor) {
-      this.statusBarWordCount.textContent = "";
-      return;
-    }
-    const content2 = editor.getValue();
+    const content2 = view.editor.getValue();
     const wc = this.fmManager.countWords(content2);
     const file = view.file;
     let sessionDelta = 0;
@@ -17527,13 +17571,8 @@ var WritingStudioPlugin = class extends import_obsidian33.Plugin {
       this.statsTracker.updateFileWordCount(file.path, wc);
       sessionDelta = this.statsTracker.getSessionDelta(file.path);
     }
-    const fmGoal = file ? await this.projectManager.getWordCountGoalForFile(file) : void 0;
-    const delta = sessionDelta > 0 ? ` ${t2("main.statusBar.delta", { delta: sessionDelta })}` : "";
-    if (fmGoal && fmGoal > 0) {
-      this.statusBarWordCount.textContent = t2("main.statusBar.wordCountGoal", { count: wc, goal: fmGoal }) + delta;
-    } else {
-      this.statusBarWordCount.textContent = t2("main.statusBar.wordCount", { count: wc }) + delta;
-    }
+    const goal = file ? await this.projectManager.getWordCountGoalForFile(file) : void 0;
+    this.statusBar.showWordCount(wc, goal, sessionDelta);
     this.focusMode.updateToolbarWordCount(wc);
     if (file) {
       for (const bl of this.app.workspace.getLeavesOfType(BINDER_VIEW_TYPE)) {
@@ -17541,53 +17580,11 @@ var WritingStudioPlugin = class extends import_obsidian33.Plugin {
           bl.view.updateWordCount(file.path, wc);
         }
       }
-      this.updateBannerWordCount(wc);
+      this.goalBanner.patch(wc);
     }
   }
-  updateBannerWordCount(wc) {
-    if (this.currentBannerGoal <= 0) return;
-    const banner = activeDocument.querySelector(".ws-inline-goal-banner");
-    if (!banner) return;
-    const pct = Math.min(100, Math.round(wc / this.currentBannerGoal * 100));
-    const textEl = banner.querySelector(".ws-goal-text");
-    const barEl = banner.querySelector(".ws-goal-bar");
-    if (textEl) textEl.textContent = t2("main.statusBar.goalBanner", { count: wc, goal: this.currentBannerGoal, pct });
-    if (barEl) barEl.setCssProps({ "--ws-bar-width": `${pct}%` });
-  }
-  async showInlineGoalBanner() {
-    const gen = ++this.bannerGeneration;
-    activeDocument.querySelectorAll(".ws-inline-goal-banner").forEach((el) => el.remove());
-    if (!this.settings.inlineGoalBanner) return;
-    const leaf = this.app.workspace.getMostRecentLeaf();
-    if (!leaf) return;
-    const view = leaf.view;
-    if (!(view instanceof import_obsidian33.MarkdownView)) return;
-    const file = view.file;
-    if (!file) return;
-    const goal = await this.projectManager.getWordCountGoalForFile(file);
-    if (gen !== this.bannerGeneration) return;
-    if (!goal || goal <= 0) return;
-    this.currentBannerGoal = goal;
-    const content2 = view.editor.getValue();
-    const wc = this.fmManager.countWords(content2);
-    const pct = Math.min(100, Math.round(wc / goal * 100));
-    if (gen !== this.bannerGeneration) return;
-    const viewHeader = leaf.view.containerEl.querySelector(":scope > .view-header");
-    if (!viewHeader) return;
-    leaf.view.containerEl.querySelectorAll(".ws-inline-goal-banner").forEach((el) => el.remove());
-    const banner = createDiv({ cls: "ws-inline-goal-banner" });
-    banner.createSpan({ cls: "ws-goal-text", text: t2("main.statusBar.goalBanner", { count: wc, goal, pct }) });
-    const barWrap = banner.createDiv({ cls: "ws-goal-bar-wrap" });
-    const barEl = barWrap.createDiv({ cls: "ws-goal-bar" });
-    barEl.setCssProps({ "--ws-bar-width": `${pct}%` });
-    const dismissBtn = banner.createEl("button", { cls: "ws-goal-dismiss", title: t2("main.statusBar.dismiss"), text: "\u2715" });
-    dismissBtn.addEventListener("click", () => banner.remove());
-    viewHeader.insertAdjacentElement("afterend", banner);
-  }
-  registerIcons() {
-  }
 };
-var SprintSummaryModal = class extends import_obsidian33.Modal {
+var SprintSummaryModal = class extends import_obsidian34.Modal {
   constructor(app, session) {
     super(app);
     this.session = session;
@@ -17618,7 +17615,7 @@ var SprintSummaryModal = class extends import_obsidian33.Modal {
     this.contentEl.empty();
   }
 };
-var WordCountGoalModal = class extends import_obsidian33.Modal {
+var WordCountGoalModal = class extends import_obsidian34.Modal {
   constructor(app, plugin, file) {
     super(app);
     this.goal = 0;
@@ -17633,7 +17630,7 @@ var WordCountGoalModal = class extends import_obsidian33.Modal {
     contentEl.createEl("h2", { text: t2("wordCountGoal.title") });
     const cache = this.app.metadataCache.getFileCache(this.file);
     this.goal = Number((_a2 = cache == null ? void 0 : cache.frontmatter) == null ? void 0 : _a2["word-count-goal"]) || 0;
-    new import_obsidian33.Setting(contentEl).setName(t2("wordCountGoal.name")).setDesc(t2("wordCountGoal.desc")).addText((tx) => tx.setValue(String(this.goal || "")).setPlaceholder(t2("wordCountGoal.placeholder")).onChange((v) => {
+    new import_obsidian34.Setting(contentEl).setName(t2("wordCountGoal.name")).setDesc(t2("wordCountGoal.desc")).addText((tx) => tx.setValue(String(this.goal || "")).setPlaceholder(t2("wordCountGoal.placeholder")).onChange((v) => {
       this.goal = parseInt(v) || 0;
     }));
     const btnRow = contentEl.createDiv("ws-modal-btn-row");

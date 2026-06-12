@@ -560,13 +560,13 @@
       "exportProject": "Экспортировать проект",
       "previewManuscript": "Предварительный просмотр рукописи",
       "publishWordPress": "Опубликовать в WordPress",
-      "newProject": "Новый проект по письму",
+      "newProject": "Создать новый писательский проект",
       "openDashboard": "Открыть панель письма",
       "openTargetsDashboard": "Открыть панель целей",
       "setWordCountGoal": "Установить цель по количеству слов",
       "openWritingLog": "Открыть журнал письма",
       "openFolderSidebar": "Открыть папку в боковом обозревателе",
-      "addFilesToBinder": "Добавить файлы, скопированные в папку проекта"
+      "addFilesToBinder": "Сканировать папку проекта на новые файлы"
     },
     "menu": {
       "studioOptions": "Параметры Writing Studio",

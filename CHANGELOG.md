@@ -8,6 +8,10 @@ All notable changes to Writing Studio are documented here.
 
 ### Changed
 - Project state changes (active project switched, binder saved, project created or edited) are now announced by the project manager itself, and the binder and launcher panels subscribe to them — replacing the scattered manual view-refresh calls. Panels update consistently no matter where a change originates. (#138)
+- Two command palette entries renamed for clarity and consistency: "New writing project" → "Create new writing project", and "Add files copied to project folder" → "Scan project folder for new files". Command ids are unchanged, so existing hotkeys keep working. All 12 languages updated. (#139)
+
+### Internal
+- The plugin entry point (main.ts) was decomposed: the 19 palette commands now live in a declarative registry (`src/commands.ts`), the four status bar items and their fixed ordering in `src/StatusBar.ts`, and the inline goal banner in `src/GoalBanner.ts`. New tests enforce command-table integrity (unique ids, valid i18n keys, sentence-case names) and the status bar ordering invariant. (#139)
 - Removed the deprecated `setDynamicTooltip()` call on the focus dim opacity and line length sliders — Obsidian 1.13 always shows the slider value inline. (On Obsidian versions before 1.13 the value tooltip while dragging is no longer shown.)
 
 ### Internal

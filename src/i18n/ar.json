@@ -565,13 +565,13 @@
       "exportProject": "تصدير المشروع",
       "previewManuscript": "معاينة المخطوطة المجمّعة",
       "publishWordPress": "النشر على WordPress",
-      "newProject": "مشروع كتابة جديد",
+      "newProject": "إنشاء مشروع كتابة جديد",
       "openDashboard": "فتح لوحة الكتابة",
       "openTargetsDashboard": "فتح لوحة الأهداف",
       "setWordCountGoal": "تعيين هدف عدد الكلمات",
       "openWritingLog": "فتح سجل الكتابة",
       "openFolderSidebar": "فتح المجلد في المستكشف الجانبي",
-      "addFilesToBinder": "إضافة الملفات المنسوخة إلى مجلد المشروع"
+      "addFilesToBinder": "فحص مجلد المشروع بحثًا عن ملفات جديدة"
     },
     "menu": {
       "studioOptions": "خيارات استوديو الكتابة",
