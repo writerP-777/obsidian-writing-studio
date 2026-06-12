@@ -1,4 +1,4 @@
-import { App, MarkdownView, Notice } from 'obsidian';
+import { App, MarkdownView, Notice, setIcon } from 'obsidian';
 import type { WorkspaceLeaf } from 'obsidian';
 import type WritingStudioPlugin from '../main';
 import { WritingModeType, WRITING_MODE_CONFIGS } from '../models/WritingMode';
@@ -115,14 +115,26 @@ export class WritingModes {
 
   private updateStatusBar(): void {
     if (!this.statusBarEl) return;
-    const labels: Record<WritingModeType, string> = {
+    const mode = this.currentMode;
+    this.statusBarEl.empty();
+    // With no mode active the pill is meaningless — hide it entirely rather
+    // than show a placeholder. Independent of the launch-gating ws-hidden
+    // class managed by StatusBar.reveal().
+    this.statusBarEl.toggleClass('ws-status-mode-empty', mode === 'none');
+    this.statusBarEl.toggleClass('ws-status-mode--active', mode !== 'none');
+    if (mode === 'none') return;
+    const icons: Record<Exclude<WritingModeType, 'none'>, string> = {
+      draft: 'pencil',
+      edit: 'edit-3',
+      review: 'eye',
+    };
+    const labels: Record<Exclude<WritingModeType, 'none'>, string> = {
       draft: t('writingModes.statusDraft'),
       edit: t('writingModes.statusEdit'),
       review: t('writingModes.statusReview'),
-      none: t('writingModes.statusNone'),
     };
-    this.statusBarEl.textContent = labels[this.currentMode];
-    this.statusBarEl.toggleClass('ws-status-mode--active', this.currentMode !== 'none');
+    setIcon(this.statusBarEl.createSpan('ws-status-mode-icon'), icons[mode]);
+    this.statusBarEl.createSpan({ text: labels[mode] });
   }
 
   restore(): void {

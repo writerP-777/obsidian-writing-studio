@@ -273,10 +273,9 @@
   "writingModes": {
     "switchedTo": "写作工作室：{{mode}} 模式",
     "normal": "普通",
-    "statusDraft": "✍ 草稿",
-    "statusEdit": "✎ 编辑",
-    "statusReview": "👁 审阅",
-    "statusNone": "— 模式"
+    "statusDraft": "草稿",
+    "statusEdit": "编辑",
+    "statusReview": "审阅"
   },
   "exportEngine": {
     "epubExported": "EPUB 已导出到 {{path}}",

@@ -273,10 +273,9 @@
   "writingModes": {
     "switchedTo": "राइटिंग स्टूडियो: {{mode}} मोड",
     "normal": "सामान्य",
-    "statusDraft": "✍ ड्राफ्ट",
-    "statusEdit": "✎ संपादन",
-    "statusReview": "👁 समीक्षा",
-    "statusNone": "— मोड"
+    "statusDraft": "ड्राफ्ट",
+    "statusEdit": "संपादन",
+    "statusReview": "समीक्षा"
   },
   "exportEngine": {
     "epubExported": "EPUB {{path}} पर निर्यात किया",

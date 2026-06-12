@@ -269,8 +269,15 @@ body.writing-studio-typography .markdown-reading-view .markdown-preview-section 
 
 .ws-binder-icon {
   width: 18px;
-  font-size: 13px;
   flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  color: var(--text-muted);
+}
+
+.ws-binder-icon svg {
+  width: 14px;
+  height: 14px;
 }
 
 .ws-binder-status-dot {
@@ -852,6 +859,19 @@ body.writing-studio-typography .markdown-reading-view .markdown-preview-section 
   font-weight: 500;
   color: var(--text-muted);
   cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+/* Hidden while no writing mode is active */
+.ws-status-mode.ws-status-mode-empty {
+  display: none;
+}
+
+.ws-status-mode-icon svg {
+  width: 13px;
+  height: 13px;
 }
 
 .ws-status-mode--active {
@@ -1054,7 +1074,14 @@ body.writing-studio-typography .markdown-reading-view .markdown-preview-section 
 }
 
 .ws-mode-icon {
-  font-size: 16px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.ws-mode-icon svg {
+  width: 16px;
+  height: 16px;
 }
 
 .ws-mode-label {

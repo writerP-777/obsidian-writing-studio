@@ -273,10 +273,9 @@
   "writingModes": {
     "switchedTo": "글쓰기 스튜디오: {{mode}} 모드",
     "normal": "일반",
-    "statusDraft": "✍ 초안",
-    "statusEdit": "✎ 편집",
-    "statusReview": "👁 검토",
-    "statusNone": "— 모드"
+    "statusDraft": "초안",
+    "statusEdit": "편집",
+    "statusReview": "검토"
   },
   "exportEngine": {
     "epubExported": "EPUB을 {{path}}에 내보냈습니다",

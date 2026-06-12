@@ -200,10 +200,11 @@ export class LauncherView extends ItemView {
     const card = root.createDiv('ws-launcher-card');
     card.createDiv({ text: t('launcher.writingMode'), cls: 'ws-launcher-card-label' });
 
+    // Lucide icon names — same icons the mode-switcher context menu uses
     const modes: Array<{ id: WritingModeType; label: string; icon: string; desc: string }> = [
-      { id: 'draft',  label: t('launcher.mode.draft'),  icon: '✍',  desc: t('launcher.mode.draftDesc') },
-      { id: 'edit',   label: t('launcher.mode.edit'),   icon: '✎',  desc: t('launcher.mode.editDesc') },
-      { id: 'review', label: t('launcher.mode.review'), icon: '👁', desc: t('launcher.mode.reviewDesc') },
+      { id: 'draft',  label: t('launcher.mode.draft'),  icon: 'pencil', desc: t('launcher.mode.draftDesc') },
+      { id: 'edit',   label: t('launcher.mode.edit'),   icon: 'edit-3', desc: t('launcher.mode.editDesc') },
+      { id: 'review', label: t('launcher.mode.review'), icon: 'eye',    desc: t('launcher.mode.reviewDesc') },
     ];
 
     const btnRow = card.createDiv('ws-launcher-mode-btns');
@@ -214,7 +215,7 @@ export class LauncherView extends ItemView {
         cls: `ws-launcher-mode-btn ${current === mode.id ? 'is-active' : ''}`,
         title: mode.desc,
       });
-      btn.createSpan({ text: mode.icon, cls: 'ws-mode-icon' });
+      setIcon(btn.createSpan('ws-mode-icon'), mode.icon);
       btn.createSpan({ text: mode.label, cls: 'ws-mode-label' });
       btn.onclick = async () => {
         if (current === mode.id) {
