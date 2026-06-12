@@ -15756,12 +15756,15 @@ var WritingStudioSettingsTab = class extends import_obsidian29.PluginSettingTab 
         tabBar.querySelectorAll(".ws-settings-tab").forEach((b) => b.removeClass("is-active"));
         btn.addClass("is-active");
         contentEl.empty();
-        this.renderTab(tab.id, contentEl);
+        this.renderActiveTab(tab.id, contentEl);
       };
     });
-    this.renderTab(this.activeTab, contentEl);
+    this.renderActiveTab(this.activeTab, contentEl);
   }
-  renderTab(tab, el) {
+  // Named to avoid shadowing SettingTab.renderTab(), the entry point Obsidian
+  // 1.13+ invokes when opening a tab — a same-named method here silently
+  // replaces it and display() is never called.
+  renderActiveTab(tab, el) {
     switch (tab) {
       case "general":
         this.renderGeneral(el);
