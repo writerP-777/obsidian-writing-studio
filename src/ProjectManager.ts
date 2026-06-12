@@ -6,11 +6,8 @@ import { localDateString } from './dates';
 import { WritingProject, ProjectType } from '../models/Project';
 import { BinderData, BinderItem } from '../models/BinderItem';
 import { SprintSession } from '../models/SprintSession';
-import { BookTemplate } from '../templates/BookTemplate';
-import { ArticleSeriesTemplate } from '../templates/ArticleSeriesTemplate';
-import { BlogCollectionTemplate } from '../templates/BlogCollectionTemplate';
-import { JournalArticleTemplate } from '../templates/JournalArticleTemplate';
-import { MagazineArticleTemplate } from '../templates/MagazineArticleTemplate';
+import { TemplateScaffolder } from './scaffold';
+import { TEMPLATE_MANIFESTS } from '../templates/manifests';
 
 export class ProjectManager extends Events {
   private plugin: WritingStudioPlugin;
@@ -115,26 +112,10 @@ export class ProjectManager extends Events {
     };
 
     // Apply template
-    let binderData: BinderData;
-    switch (type) {
-      case 'book':
-        binderData = await BookTemplate.apply(this.app, project);
-        break;
-      case 'series':
-        binderData = await ArticleSeriesTemplate.apply(this.app, project);
-        break;
-      case 'blog':
-        binderData = await BlogCollectionTemplate.apply(this.app, project);
-        break;
-      case 'journal-article':
-        binderData = await JournalArticleTemplate.apply(this.app, project);
-        break;
-      case 'magazine-article':
-        binderData = await MagazineArticleTemplate.apply(this.app, project);
-        break;
-      default:
-        binderData = this.createBlankBinder(project);
-    }
+    const manifestBuilder = TEMPLATE_MANIFESTS[type];
+    const binderData: BinderData = manifestBuilder
+      ? await new TemplateScaffolder(this.files).apply(project, manifestBuilder(project))
+      : this.createBlankBinder(project);
 
     await this.saveProject(project);
     await this.saveBinder(binderData);
