@@ -181,6 +181,52 @@ describe('ProjectManager change notification', () => {
   });
 });
 
+describe('ProjectManager.findBinderEntryForFile', () => {
+  it('returns the writable entry for a file in the active binder, including nested items', async () => {
+    const pm = new ProjectManager(makePlugin(), new InMemoryVaultFiles());
+    await pm.saveProject(makeProject());
+    await pm.setActiveProject('project-1');
+    await pm.saveBinder({
+      version: '2.0', projectId: 'project-1', items: [
+        { id: 'g1', title: 'Part 1', filePath: '', type: 'part', order: 1, status: 'draft', includeInExport: true, children: [
+          { id: 'c1', title: 'Ch 1', filePath: 'Projects/My Book/Chapters/Ch 1.md', type: 'chapter', order: 1, status: 'draft', includeInExport: true, wordCountGoal: 250 },
+        ] },
+      ],
+    });
+
+    const entry = await pm.findBinderEntryForFile('Projects/My Book/Chapters/Ch 1.md');
+
+    expect(entry).not.toBeNull();
+    expect(entry!.item.id).toBe('c1');
+    expect(entry!.item.wordCountGoal).toBe(250);
+  });
+
+  it('persists a goal written through the returned entry (the modal save path)', async () => {
+    const pm = new ProjectManager(makePlugin(), new InMemoryVaultFiles());
+    await pm.saveProject(makeProject());
+    await pm.setActiveProject('project-1');
+    const item = await pm.addDocumentToBinder(makeProject(), 'Chapter One', 'chapter');
+
+    const entry = await pm.findBinderEntryForFile(item.filePath);
+    entry!.item.wordCountGoal = 500;
+    await pm.saveBinder(entry!.binder);
+
+    const reloaded = await pm.findBinderEntryForFile(item.filePath);
+    expect(reloaded!.item.wordCountGoal).toBe(500);
+  });
+
+  it('returns null for files outside the binder and when no project is active', async () => {
+    const pm = new ProjectManager(makePlugin(), new InMemoryVaultFiles());
+    await pm.saveProject(makeProject());
+
+    // No active project yet
+    expect(await pm.findBinderEntryForFile('anything.md')).toBeNull();
+
+    await pm.setActiveProject('project-1');
+    expect(await pm.findBinderEntryForFile('not-in-binder.md')).toBeNull();
+  });
+});
+
 describe('ProjectManager.addDocumentToBinder filename de-duplication', () => {
   it('suffixes the filename when the target file already exists', async () => {
     const files = new InMemoryVaultFiles();

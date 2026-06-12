@@ -42,6 +42,7 @@ import { WritingDashboardModal } from './modals/WritingDashboardModal';
 
 import { WordPressSite } from './models/WordPressSite';
 import { WritingModeType } from './models/WritingMode';
+import type { BinderData, BinderItem } from './models/BinderItem';
 
 // Minimal subset of the Notebook Navigator public API (v1.2–2.x) used by Writing Studio.
 // Full spec: https://github.com/johansan/notebook-navigator/blob/main/docs/api-reference.md
@@ -704,6 +705,10 @@ class WordCountGoalModal extends Modal {
   private plugin: WritingStudioPlugin;
   private file: TFile;
   private goal = 0;
+  // Non-null when the file is in the active project's binder — the binder
+  // item is then the authoritative goal store (CONTEXT.md invariant 1) and
+  // frontmatter is neither read nor written.
+  private binderEntry: { binder: BinderData; item: BinderItem } | null = null;
 
   constructor(app: App, plugin: WritingStudioPlugin, file: TFile) {
     super(app);
@@ -717,8 +722,13 @@ class WordCountGoalModal extends Modal {
     contentEl.addClass('ws-goal-modal');
     contentEl.createEl('h2', { text: t('wordCountGoal.title') });
 
-    const cache = this.app.metadataCache.getFileCache(this.file);
-    this.goal = Number(cache?.frontmatter?.['word-count-goal']) || 0;
+    this.binderEntry = await this.plugin.projectManager.findBinderEntryForFile(this.file.path);
+    if (this.binderEntry) {
+      this.goal = this.binderEntry.item.wordCountGoal ?? 0;
+    } else {
+      const cache = this.app.metadataCache.getFileCache(this.file);
+      this.goal = Number(cache?.frontmatter?.['word-count-goal']) || 0;
+    }
 
     new Setting(contentEl)
       .setName(t('wordCountGoal.name'))
@@ -732,9 +742,16 @@ class WordCountGoalModal extends Modal {
 
     const saveBtn = btnRow.createEl('button', { cls: 'mod-cta', text: t('wordCountGoal.save') });
     saveBtn.onclick = async () => {
-      await this.app.fileManager.processFrontMatter(this.file, (fm: Record<string, unknown>) => {
-        fm['word-count-goal'] = this.goal;
-      });
+      if (this.binderEntry) {
+        this.binderEntry.item.wordCountGoal = this.goal;
+        await this.plugin.projectManager.saveBinder(this.binderEntry.binder);
+      } else {
+        await this.app.fileManager.processFrontMatter(this.file, (fm: Record<string, unknown>) => {
+          fm['word-count-goal'] = this.goal;
+        });
+      }
+      // The banner re-resolves the goal — binder rows update via binder-changed
+      void this.plugin.goalBanner.show();
       this.close();
     };
 

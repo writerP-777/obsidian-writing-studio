@@ -16235,6 +16235,15 @@ tags: [writing-studio]
     }
     return void 0;
   }
+  // The goal modal needs the writable binder entry, not just the resolved
+  // number — null when the file is not in the active project's binder.
+  async findBinderEntryForFile(filePath) {
+    const project = this.getActiveProject();
+    if (!project) return null;
+    const binder = await this.loadBinder(project);
+    const item = this.findBinderItemByPath(binder.items, filePath);
+    return item ? { binder, item } : null;
+  }
   async getWordCountGoalForFile(file) {
     var _a2;
     const project = this.getActiveProject();
@@ -17739,26 +17748,41 @@ var WordCountGoalModal = class extends import_obsidian30.Modal {
   constructor(app, plugin, file) {
     super(app);
     this.goal = 0;
+    // Non-null when the file is in the active project's binder — the binder
+    // item is then the authoritative goal store (CONTEXT.md invariant 1) and
+    // frontmatter is neither read nor written.
+    this.binderEntry = null;
     this.plugin = plugin;
     this.file = file;
   }
   async onOpen() {
-    var _a2;
+    var _a2, _b2;
     const { contentEl } = this;
     contentEl.empty();
     contentEl.addClass("ws-goal-modal");
     contentEl.createEl("h2", { text: t2("wordCountGoal.title") });
-    const cache = this.app.metadataCache.getFileCache(this.file);
-    this.goal = Number((_a2 = cache == null ? void 0 : cache.frontmatter) == null ? void 0 : _a2["word-count-goal"]) || 0;
+    this.binderEntry = await this.plugin.projectManager.findBinderEntryForFile(this.file.path);
+    if (this.binderEntry) {
+      this.goal = (_a2 = this.binderEntry.item.wordCountGoal) != null ? _a2 : 0;
+    } else {
+      const cache = this.app.metadataCache.getFileCache(this.file);
+      this.goal = Number((_b2 = cache == null ? void 0 : cache.frontmatter) == null ? void 0 : _b2["word-count-goal"]) || 0;
+    }
     new import_obsidian30.Setting(contentEl).setName(t2("wordCountGoal.name")).setDesc(t2("wordCountGoal.desc")).addText((tx) => tx.setValue(String(this.goal || "")).setPlaceholder(t2("wordCountGoal.placeholder")).onChange((v) => {
       this.goal = parseInt(v) || 0;
     }));
     const btnRow = contentEl.createDiv("ws-modal-btn-row");
     const saveBtn = btnRow.createEl("button", { cls: "mod-cta", text: t2("wordCountGoal.save") });
     saveBtn.onclick = async () => {
-      await this.app.fileManager.processFrontMatter(this.file, (fm) => {
-        fm["word-count-goal"] = this.goal;
-      });
+      if (this.binderEntry) {
+        this.binderEntry.item.wordCountGoal = this.goal;
+        await this.plugin.projectManager.saveBinder(this.binderEntry.binder);
+      } else {
+        await this.app.fileManager.processFrontMatter(this.file, (fm) => {
+          fm["word-count-goal"] = this.goal;
+        });
+      }
+      void this.plugin.goalBanner.show();
       this.close();
     };
     const cancelBtn = btnRow.createEl("button", { text: t2("wordCountGoal.cancel") });
