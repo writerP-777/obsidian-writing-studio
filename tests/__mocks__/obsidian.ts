@@ -55,6 +55,12 @@ export class MarkdownView {}
 
 export class WorkspaceLeaf {}
 
+export class FileSystemAdapter {}
+
+export function getLanguage(): string {
+  return 'en';
+}
+
 export class Notice {
   static messages: string[] = [];
   constructor(message = '') {
