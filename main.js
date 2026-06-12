@@ -15820,7 +15820,7 @@ var WritingStudioSettingsTab = class extends import_obsidian29.PluginSettingTab 
       this.plugin.settings.focusUnit = v;
       await this.plugin.saveSettings();
     }));
-    new import_obsidian29.Setting(el).setName(t2("settings.focus.dimOpacity")).setDesc(t2("settings.focus.dimOpacityDesc")).addSlider((s) => s.setLimits(10, 50, 5).setValue(this.plugin.settings.dimOpacity).setDynamicTooltip().onChange(async (v) => {
+    new import_obsidian29.Setting(el).setName(t2("settings.focus.dimOpacity")).setDesc(t2("settings.focus.dimOpacityDesc")).addSlider((s) => s.setLimits(10, 50, 5).setValue(this.plugin.settings.dimOpacity).onChange(async (v) => {
       this.plugin.settings.dimOpacity = v;
       await this.plugin.saveSettings();
       this.plugin.focusMode.applyDimOpacity();
@@ -15869,7 +15869,7 @@ var WritingStudioSettingsTab = class extends import_obsidian29.PluginSettingTab 
       this.plugin.settings.customFontName = v;
       await this.plugin.saveSettings();
     }));
-    new import_obsidian29.Setting(el).setName(t2("settings.typography.maxLineLength")).setDesc(t2("settings.typography.maxLineLengthDesc")).addSlider((s) => s.setLimits(55, 80, 1).setValue(this.plugin.settings.maxLineLength).setDynamicTooltip().onChange(async (v) => {
+    new import_obsidian29.Setting(el).setName(t2("settings.typography.maxLineLength")).setDesc(t2("settings.typography.maxLineLengthDesc")).addSlider((s) => s.setLimits(55, 80, 1).setValue(this.plugin.settings.maxLineLength).onChange(async (v) => {
       this.plugin.settings.maxLineLength = v;
       await this.plugin.saveSettings();
     }));
