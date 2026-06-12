@@ -1,69 +1,22 @@
-import { App, normalizePath } from 'obsidian';
 import { localDateString } from '../src/dates';
 import { WritingProject } from '../models/Project';
-import { BinderData, BinderItem } from '../models/BinderItem';
+import { TemplateManifest, templateDoc } from '../src/scaffold';
 
-export class ArticleSeriesTemplate {
-  static async apply(app: App, project: WritingProject): Promise<BinderData> {
-    const now = localDateString();
-    const chaptersPath = normalizePath(`${project.folderPath}/Chapters`);
-
-    const seriesMetaFile = normalizePath(`${chaptersPath}/Series Overview.md`);
-    const article1File = normalizePath(`${chaptersPath}/Article 1.md`);
-
-    await ArticleSeriesTemplate.createFile(app, seriesMetaFile, ArticleSeriesTemplate.seriesOverviewDoc(project.title, now));
-    await ArticleSeriesTemplate.createFile(app, article1File, ArticleSeriesTemplate.article1Doc(project.title, now));
-
-    const items: BinderItem[] = [
+export function articleSeriesManifest(project: WritingProject): TemplateManifest {
+  const date = localDateString();
+  return {
+    items: [
       {
         id: 'item-series-overview',
         title: 'Series Overview',
-        filePath: seriesMetaFile,
         type: 'note',
-        order: 1,
-        status: 'draft',
+        fileName: 'Series Overview',
         includeInExport: false,
-      },
-      {
-        id: 'item-article-1',
-        title: 'Article 1',
-        filePath: article1File,
-        type: 'article',
-        order: 2,
-        status: 'draft',
-        wordCountGoal: 1500,
-        includeInExport: true,
-      },
-    ];
-
-    return {
-      version: '2.0',
-      projectId: project.id,
-      items,
-    };
-  }
-
-  private static async createFile(app: App, path: string, content: string): Promise<void> {
-    if (!app.vault.getAbstractFileByPath(path)) {
-      await app.vault.create(path, content);
-    }
-  }
-
-  private static seriesOverviewDoc(title: string, date: string): string {
-    return `---
-title: "Series Overview"
-type: note
-order: 1
-status: draft
-word-count: 0
-created: ${date}
-modified: ${date}
-tags: [writing-studio, series-meta]
----
-
-# ${title} — Series Overview
-
-## Series Description
+        content: templateDoc({
+          title: 'Series Overview', fmType: 'note', order: 1, date,
+          tags: ['writing-studio', 'series-meta'],
+          heading: `${project.title} — Series Overview`,
+          body: `## Series Description
 
 *Describe the series premise, target audience, and goals here.*
 
@@ -76,26 +29,20 @@ tags: [writing-studio, series-meta]
 ## WordPress Settings
 
 - **Site:** *(configure in Settings → WordPress)*
-- **Category:** *(set in Project Settings)*
-`;
-  }
-
-  private static article1Doc(_seriesTitle: string, date: string): string {
-    return `---
-title: "Article 1"
-type: article
-order: 1
-status: draft
-word-count-goal: 1500
-word-count: 0
-created: ${date}
-modified: ${date}
-tags: [writing-studio]
----
-
-# Article 1
-
-*Write your first article here.*
-`;
-  }
+- **Category:** *(set in Project Settings)*`,
+        }),
+      },
+      {
+        id: 'item-article-1',
+        title: 'Article 1',
+        type: 'article',
+        fileName: 'Article 1',
+        wordCountGoal: 1500,
+        content: templateDoc({
+          title: 'Article 1', fmType: 'article', order: 1, goal: 1500, date,
+          body: '*Write your first article here.*',
+        }),
+      },
+    ],
+  };
 }
