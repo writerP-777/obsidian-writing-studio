@@ -12,6 +12,7 @@ All notable changes to Writing Studio are documented here.
 
 ### Internal
 - The plugin entry point (main.ts) was decomposed: the 19 palette commands now live in a declarative registry (`src/commands.ts`), the four status bar items and their fixed ordering in `src/StatusBar.ts`, and the inline goal banner in `src/GoalBanner.ts`. New tests enforce command-table integrity (unique ids, valid i18n keys, sentence-case names) and the status bar ordering invariant. (#139)
+- File access now goes through a narrow vault adapter (`src/VaultFiles.ts`) consumed by the project manager and both export engines, with an in-memory implementation for tests. The compile/export pipeline — frontmatter stripping, binder-title headings, research and export-exclusion filtering — is covered by automated tests for the first time. (#140)
 - Removed the deprecated `setDynamicTooltip()` call on the focus dim opacity and line length sliders — Obsidian 1.13 always shows the slider value inline. (On Obsidian versions before 1.13 the value tooltip while dragging is no longer shown.)
 
 ### Internal

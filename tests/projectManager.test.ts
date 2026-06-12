@@ -1,28 +1,11 @@
 import { ProjectManager } from '../src/ProjectManager';
-import { TFile, TFolder, Notice } from 'obsidian';
+import { Notice } from 'obsidian';
 import { WritingProject } from '../models/Project';
+import { InMemoryVaultFiles } from './inMemoryVaultFiles';
 
-interface MockVault {
-  getAbstractFileByPath: jest.Mock;
-  read: jest.Mock;
-  create: jest.Mock;
-  createFolder: jest.Mock;
-  modify: jest.Mock;
-}
-
-function makeVault(): MockVault {
+function makePlugin() {
   return {
-    getAbstractFileByPath: jest.fn().mockReturnValue(null),
-    read: jest.fn(),
-    create: jest.fn().mockResolvedValue(undefined),
-    createFolder: jest.fn().mockResolvedValue(undefined),
-    modify: jest.fn().mockResolvedValue(undefined),
-  };
-}
-
-function makePlugin(vault: MockVault) {
-  return {
-    app: { vault },
+    app: {},
     settings: { defaultProjectFolder: 'Projects', authorName: '' },
     saveSettings: jest.fn().mockResolvedValue(undefined),
   } as never;
@@ -48,85 +31,101 @@ beforeEach(() => {
 
 describe('ProjectManager.createProject name collision', () => {
   it('refuses to create a project when the target folder already exists', async () => {
-    const vault = makeVault();
-    vault.getAbstractFileByPath.mockImplementation((path: string) =>
-      path === 'Projects/My Book' ? new TFolder('Projects/My Book') : null
-    );
-    const pm = new ProjectManager(makePlugin(vault));
+    const files = new InMemoryVaultFiles();
+    files.folders.add('Projects/My Book');
+    const pm = new ProjectManager(makePlugin(), files);
 
     await expect(pm.createProject('My Book', 'blank', '', '')).rejects.toThrow();
 
     // The existing project's files must be untouched
-    expect(vault.create).not.toHaveBeenCalled();
-    expect(vault.modify).not.toHaveBeenCalled();
-    expect(vault.createFolder).not.toHaveBeenCalled();
+    expect(files.files.size).toBe(0);
   });
 
   it('creates the project when no folder exists', async () => {
-    const vault = makeVault();
-    const pm = new ProjectManager(makePlugin(vault));
+    const files = new InMemoryVaultFiles();
+    const pm = new ProjectManager(makePlugin(), files);
 
     const project = await pm.createProject('Fresh Title', 'blank', '', '');
 
     expect(project.title).toBe('Fresh Title');
-    expect(vault.createFolder).toHaveBeenCalledWith('Projects/Fresh Title');
+    expect(files.folders).toContain('Projects/Fresh Title');
+    expect(files.files.has('Projects/Fresh Title/_project.json')).toBe(true);
+    expect(files.files.has('Projects/Fresh Title/_binder.json')).toBe(true);
+  });
+});
+
+describe('ProjectManager.loadAllProjects', () => {
+  it('loads projects from the immediate subfolders of the root', async () => {
+    const files = new InMemoryVaultFiles();
+    files.folders.add('Projects/Book A');
+    files.files.set('Projects/Book A/_project.json', JSON.stringify({ ...makeProject(), id: 'a', folderPath: 'Projects/Book A' }));
+    const pm = new ProjectManager(makePlugin(), files);
+
+    await pm.loadAllProjects();
+
+    expect(pm.getProject('a')).toBeDefined();
+  });
+
+  it('skips subfolders without a project file', async () => {
+    const files = new InMemoryVaultFiles();
+    files.folders.add('Projects/Not A Project');
+    const pm = new ProjectManager(makePlugin(), files);
+
+    await pm.loadAllProjects();
+
+    expect(pm.getProjects()).toHaveLength(0);
   });
 });
 
 describe('ProjectManager.loadBinder corrupt file handling', () => {
-  function corruptVault(): MockVault {
-    const vault = makeVault();
-    vault.getAbstractFileByPath.mockImplementation((path: string) =>
-      path === 'Projects/My Book/_binder.json' ? new TFile(path) : null
-    );
-    vault.read.mockResolvedValue('{ not valid json');
-    return vault;
+  function corruptFiles(): InMemoryVaultFiles {
+    const files = new InMemoryVaultFiles();
+    files.files.set('Projects/My Book/_binder.json', '{ not valid json');
+    return files;
   }
 
   it('backs up a corrupt binder before returning an empty one', async () => {
-    const vault = corruptVault();
-    const pm = new ProjectManager(makePlugin(vault));
+    const files = corruptFiles();
+    const pm = new ProjectManager(makePlugin(), files);
 
     const binder = await pm.loadBinder(makeProject());
 
     expect(binder.items).toEqual([]);
-    expect(vault.create).toHaveBeenCalledWith(
-      'Projects/My Book/_binder.json.bak',
-      '{ not valid json'
-    );
+    expect(files.files.get('Projects/My Book/_binder.json.bak')).toBe('{ not valid json');
     expect(Notice.messages.length).toBe(1);
   });
 
   it('does not cache the empty binder so a repaired file is picked up', async () => {
-    const vault = corruptVault();
-    const pm = new ProjectManager(makePlugin(vault));
+    const files = corruptFiles();
+    const read = jest.spyOn(files, 'readText');
+    const pm = new ProjectManager(makePlugin(), files);
     const project = makeProject();
 
     await pm.loadBinder(project);
     await pm.loadBinder(project);
 
     // Cached results would skip the second read
-    expect(vault.read).toHaveBeenCalledTimes(2);
+    expect(read).toHaveBeenCalledTimes(2);
   });
 
   it('caches a valid binder', async () => {
-    const vault = corruptVault();
-    vault.read.mockResolvedValue('{"version":"2.0","projectId":"project-1","items":[]}');
-    const pm = new ProjectManager(makePlugin(vault));
+    const files = new InMemoryVaultFiles();
+    files.files.set('Projects/My Book/_binder.json', '{"version":"2.0","projectId":"project-1","items":[]}');
+    const read = jest.spyOn(files, 'readText');
+    const pm = new ProjectManager(makePlugin(), files);
     const project = makeProject();
 
     await pm.loadBinder(project);
     await pm.loadBinder(project);
 
-    expect(vault.read).toHaveBeenCalledTimes(1);
-    expect(vault.create).not.toHaveBeenCalled();
+    expect(read).toHaveBeenCalledTimes(1);
+    expect(files.files.has('Projects/My Book/_binder.json.bak')).toBe(false);
   });
 });
 
 describe('ProjectManager change notification', () => {
   it('announces the active project on setActiveProject', async () => {
-    const vault = makeVault();
-    const pm = new ProjectManager(makePlugin(vault));
+    const pm = new ProjectManager(makePlugin(), new InMemoryVaultFiles());
     const project = makeProject();
     await pm.saveProject(project);
     const seen: (WritingProject | null)[] = [];
@@ -139,8 +138,7 @@ describe('ProjectManager change notification', () => {
   });
 
   it('announces binder-changed with the saved binder', async () => {
-    const vault = makeVault();
-    const pm = new ProjectManager(makePlugin(vault));
+    const pm = new ProjectManager(makePlugin(), new InMemoryVaultFiles());
     await pm.saveProject(makeProject());
     const seen: string[] = [];
     pm.onBinderChanged(binder => { seen.push(binder.projectId); });
@@ -151,8 +149,7 @@ describe('ProjectManager change notification', () => {
   });
 
   it('announces projects-changed when a project is saved', async () => {
-    const vault = makeVault();
-    const pm = new ProjectManager(makePlugin(vault));
+    const pm = new ProjectManager(makePlugin(), new InMemoryVaultFiles());
     const events = jest.fn();
     pm.onProjectsChanged(events);
 
@@ -162,8 +159,7 @@ describe('ProjectManager change notification', () => {
   });
 
   it('does not announce binder-changed for an unknown project', async () => {
-    const vault = makeVault();
-    const pm = new ProjectManager(makePlugin(vault));
+    const pm = new ProjectManager(makePlugin(), new InMemoryVaultFiles());
     const events = jest.fn();
     pm.onBinderChanged(events);
 
@@ -174,8 +170,7 @@ describe('ProjectManager change notification', () => {
   });
 
   it('stops announcing after offref', async () => {
-    const vault = makeVault();
-    const pm = new ProjectManager(makePlugin(vault));
+    const pm = new ProjectManager(makePlugin(), new InMemoryVaultFiles());
     const events = jest.fn();
     const ref = pm.onProjectsChanged(events);
     pm.offref(ref);
@@ -188,29 +183,23 @@ describe('ProjectManager change notification', () => {
 
 describe('ProjectManager.addDocumentToBinder filename de-duplication', () => {
   it('suffixes the filename when the target file already exists', async () => {
-    const vault = makeVault();
-    const existing = new Set([
-      'Projects/My Book/Chapters/Interlude.md',
-      'Projects/My Book/Chapters/Interlude 2.md',
-    ]);
-    vault.getAbstractFileByPath.mockImplementation((path: string) =>
-      existing.has(path) ? new TFile(path) : null
-    );
-    const pm = new ProjectManager(makePlugin(vault));
+    const files = new InMemoryVaultFiles();
+    files.files.set('Projects/My Book/Chapters/Interlude.md', 'x');
+    files.files.set('Projects/My Book/Chapters/Interlude 2.md', 'x');
+    const pm = new ProjectManager(makePlugin(), files);
+    await pm.saveProject(makeProject());
 
     const item = await pm.addDocumentToBinder(makeProject(), 'Interlude', 'chapter');
 
     expect(item.filePath).toBe('Projects/My Book/Chapters/Interlude 3.md');
     expect(item.title).toBe('Interlude');
-    expect(vault.create).toHaveBeenCalledWith(
-      'Projects/My Book/Chapters/Interlude 3.md',
-      expect.stringContaining('title: "Interlude"')
-    );
+    expect(files.files.get('Projects/My Book/Chapters/Interlude 3.md')).toContain('title: "Interlude"');
   });
 
   it('uses the plain filename when no collision exists', async () => {
-    const vault = makeVault();
-    const pm = new ProjectManager(makePlugin(vault));
+    const files = new InMemoryVaultFiles();
+    const pm = new ProjectManager(makePlugin(), files);
+    await pm.saveProject(makeProject());
 
     const item = await pm.addDocumentToBinder(makeProject(), 'Chapter One', 'chapter');
 

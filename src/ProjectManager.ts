@@ -1,5 +1,6 @@
-import { App, Events, EventRef, Notice, TFolder, TFile, normalizePath } from 'obsidian';
+import { App, Events, EventRef, Notice, TFile, normalizePath } from 'obsidian';
 import type WritingStudioPlugin from '../main';
+import type { VaultFiles } from './VaultFiles';
 import { t } from './i18n';
 import { localDateString } from './dates';
 import { WritingProject, ProjectType } from '../models/Project';
@@ -14,14 +15,16 @@ import { MagazineArticleTemplate } from '../templates/MagazineArticleTemplate';
 export class ProjectManager extends Events {
   private plugin: WritingStudioPlugin;
   private app: App;
+  private files: VaultFiles;
   private projects = new Map<string, WritingProject>();
   private activeProjectId: string | null = null;
   private binderCache = new Map<string, BinderData>();
 
-  constructor(plugin: WritingStudioPlugin) {
+  constructor(plugin: WritingStudioPlugin, files: VaultFiles) {
     super();
     this.plugin = plugin;
     this.app = plugin.app;
+    this.files = files;
   }
 
   // Project state is announced here, not pulled — subscribe instead of
@@ -57,20 +60,15 @@ export class ProjectManager extends Events {
     const rootFolder = this.plugin.settings.defaultProjectFolder;
     if (!rootFolder) return;
 
-    const folder = this.app.vault.getAbstractFileByPath(normalizePath(rootFolder));
-    if (!(folder instanceof TFolder)) return;
-
-    const subfolders = folder.children.filter((c): c is TFolder => c instanceof TFolder);
-    await Promise.all(subfolders.map(f => this.loadProject(f.path)));
+    const subfolders = this.files.listSubfolders(normalizePath(rootFolder));
+    await Promise.all(subfolders.map(f => this.loadProject(f)));
   }
 
   async loadProject(folderPath: string): Promise<WritingProject | null> {
-    const projectFilePath = normalizePath(`${folderPath}/_project.json`);
-    const file = this.app.vault.getAbstractFileByPath(projectFilePath);
-    if (!(file instanceof TFile)) return null;
+    const content = await this.files.readText(normalizePath(`${folderPath}/_project.json`));
+    if (content === null) return null;
 
     try {
-      const content = await this.app.vault.read(file);
       const project = JSON.parse(content) as WritingProject;
       this.projects.set(project.id, project);
       return project;
@@ -93,15 +91,15 @@ export class ProjectManager extends Events {
 
     // Refuse rather than scaffold into an existing folder — writing into one
     // would overwrite the existing project's _project.json and _binder.json
-    if (this.app.vault.getAbstractFileByPath(folderPath)) {
+    if (this.files.exists(folderPath)) {
       throw new Error(t('projectManager.errorFolderExists', { folder: folderName }));
     }
 
     // Create folder structure
-    await this.ensureFolder(folderPath);
-    await this.ensureFolder(normalizePath(`${folderPath}/Chapters`));
-    await this.ensureFolder(normalizePath(`${folderPath}/Research`));
-    await this.ensureFolder(normalizePath(`${folderPath}/Exports`));
+    await this.files.ensureFolder(folderPath);
+    await this.files.ensureFolder(normalizePath(`${folderPath}/Chapters`));
+    await this.files.ensureFolder(normalizePath(`${folderPath}/Research`));
+    await this.files.ensureFolder(normalizePath(`${folderPath}/Exports`));
 
     const now = localDateString();
     const project: WritingProject = {
@@ -167,14 +165,13 @@ export class ProjectManager extends Events {
     if (cached) return cached;
 
     const path = normalizePath(`${project.folderPath}/_binder.json`);
-    const file = this.app.vault.getAbstractFileByPath(path);
-    if (!(file instanceof TFile)) {
+    let content: string | null;
+    try {
+      content = await this.files.readText(path);
+    } catch {
       return { version: '2.0', projectId: project.id, items: [] };
     }
-    let content: string;
-    try {
-      content = await this.app.vault.read(file);
-    } catch {
+    if (content === null) {
       return { version: '2.0', projectId: project.id, items: [] };
     }
     try {
@@ -184,7 +181,7 @@ export class ProjectManager extends Events {
     } catch {
       // Preserve the corrupt file for manual repair; the returned empty binder
       // is deliberately not cached so a repaired file is picked up on next load
-      await this.writeRaw(normalizePath(`${project.folderPath}/_binder.json.bak`), content);
+      await this.files.writeText(normalizePath(`${project.folderPath}/_binder.json.bak`), content);
       new Notice(t('projectManager.corruptBinder', { project: project.title }));
       return { version: '2.0', projectId: project.id, items: [] };
     }
@@ -218,7 +215,7 @@ export class ProjectManager extends Events {
     const now = localDateString();
     const baseName = title.replace(/[\\/:*?"<>|]/g, '-');
     let filePath = normalizePath(`${project.folderPath}/Chapters/${baseName}.md`);
-    for (let n = 2; this.app.vault.getAbstractFileByPath(filePath); n++) {
+    for (let n = 2; this.files.exists(filePath); n++) {
       filePath = normalizePath(`${project.folderPath}/Chapters/${baseName} ${n}.md`);
     }
 
@@ -235,7 +232,7 @@ export class ProjectManager extends Events {
     // Callers that already have the full document body (duplicate) pass it in
     // so the file is written once instead of template-then-overwrite
     const frontmatter = this.buildDocFrontmatter(title, type, item.order, now);
-    await this.app.vault.create(filePath, content ?? frontmatter + '\n\n');
+    await this.files.writeText(filePath, content ?? frontmatter + '\n\n');
 
     if (parentId) {
       const parent = this.findItem(binder.items, parentId);
@@ -315,10 +312,9 @@ tags: [writing-studio]
     const logPath = normalizePath(`${project.folderPath}/_writing-log.json`);
     let log: SprintSession[] = [];
 
-    const file = this.app.vault.getAbstractFileByPath(logPath);
-    if (file instanceof TFile) {
+    const content = await this.files.readText(logPath);
+    if (content !== null) {
       try {
-        const content = await this.app.vault.read(file);
         log = JSON.parse(content) as SprintSession[];
       } catch {
         // Surface the reset — silently starting fresh hid sprint-history loss
@@ -339,11 +335,9 @@ tags: [writing-studio]
 
   async getWritingLog(project: WritingProject): Promise<SprintSession[]> {
     const logPath = normalizePath(`${project.folderPath}/_writing-log.json`);
-    const file = this.app.vault.getAbstractFileByPath(logPath);
-    if (!(file instanceof TFile)) return [];
     try {
-      const content = await this.app.vault.read(file);
-      return JSON.parse(content) as SprintSession[];
+      const content = await this.files.readText(logPath);
+      return content === null ? [] : JSON.parse(content) as SprintSession[];
     } catch {
       return [];
     }
@@ -355,23 +349,7 @@ tags: [writing-studio]
   }
 
   private async writeJson(path: string, data: unknown): Promise<void> {
-    await this.writeRaw(path, JSON.stringify(data, null, 2));
-  }
-
-  private async writeRaw(path: string, content: string): Promise<void> {
-    const existing = this.app.vault.getAbstractFileByPath(path);
-    if (existing instanceof TFile) {
-      await this.app.vault.modify(existing, content);
-    } else {
-      await this.app.vault.create(path, content);
-    }
-  }
-
-  private async ensureFolder(path: string): Promise<void> {
-    const existing = this.app.vault.getAbstractFileByPath(path);
-    if (!existing) {
-      await this.app.vault.createFolder(path);
-    }
+    await this.files.writeText(path, JSON.stringify(data, null, 2));
   }
 
   getProjects(): WritingProject[] {

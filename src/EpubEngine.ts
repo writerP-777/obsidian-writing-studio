@@ -1,6 +1,5 @@
-import { App, TFile } from 'obsidian';
 import { zip, type AsyncZippable } from 'fflate';
-import type WritingStudioPlugin from '../main';
+import type { VaultFiles } from './VaultFiles';
 import { t } from './i18n';
 
 export interface EpubChapter {
@@ -19,15 +18,13 @@ export interface EpubBuildOptions {
 }
 
 export class EpubEngine {
-  private app: App;
-  private plugin: WritingStudioPlugin;
+  private files: VaultFiles;
   // Configured book language — every chapter's xml:lang previously
   // hardcoded "en", contradicting the language declared in content.opf
   private lang = 'en';
 
-  constructor(plugin: WritingStudioPlugin) {
-    this.plugin = plugin;
-    this.app = plugin.app;
+  constructor(files: VaultFiles) {
+    this.files = files;
   }
 
   async build(opts: EpubBuildOptions, outputVaultPath: string): Promise<void> {
@@ -45,9 +42,8 @@ export class EpubEngine {
     let coverImageFile: string | null = null;
     let coverImageMime = 'image/jpeg';
     if (opts.coverImagePath) {
-      const vaultFile = this.app.vault.getAbstractFileByPath(opts.coverImagePath);
-      if (vaultFile instanceof TFile) {
-        const raw = await this.app.vault.readBinary(vaultFile);
+      const raw = await this.files.readBinary(opts.coverImagePath);
+      if (raw !== null) {
         // MIME by actual extension — labeling a .webp/.gif as image/jpeg
         // produced covers some readers reject
         const mimeByExt: Record<string, string> = {
@@ -57,7 +53,7 @@ export class EpubEngine {
           jpg: 'image/jpeg',
           jpeg: 'image/jpeg',
         };
-        const ext = vaultFile.extension.toLowerCase();
+        const ext = (opts.coverImagePath.split('.').pop() ?? '').toLowerCase();
         coverImageMime = mimeByExt[ext] ?? 'image/jpeg';
         coverImageFile = `cover.${ext === 'jpeg' ? 'jpg' : ext || 'jpg'}`;
         entries[`OEBPS/${coverImageFile}`] = [new Uint8Array(raw), { level: 6 }];
@@ -84,12 +80,7 @@ export class EpubEngine {
     });
     const data = new ArrayBuffer(compressed.byteLength);
     new Uint8Array(data).set(compressed);
-    const existing = this.app.vault.getAbstractFileByPath(outputVaultPath);
-    if (existing instanceof TFile) {
-      await this.app.vault.modifyBinary(existing, data);
-    } else {
-      await this.app.vault.createBinary(outputVaultPath, data);
-    }
+    await this.files.writeBinary(outputVaultPath, data);
   }
 
   // ── Helpers ────────────────────────────────────────────────────────────────

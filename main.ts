@@ -30,6 +30,7 @@ import { WritingLogView, WRITING_LOG_VIEW_TYPE } from './src/WritingLogView';
 import { registerCommands } from './src/commands';
 import { StatusBar } from './src/StatusBar';
 import { GoalBanner } from './src/GoalBanner';
+import { ObsidianVaultFiles, type VaultFiles } from './src/VaultFiles';
 
 import { AddToProjectModal } from './modals/AddToProjectModal';
 import { SprintModal } from './modals/SprintModal';
@@ -176,6 +177,7 @@ export default class WritingStudioPlugin extends Plugin {
   fmManager!: FrontmatterManager;
   statusBar!: StatusBar;
   goalBanner!: GoalBanner;
+  vaultFiles!: VaultFiles;
 
   private wordCountUpdateTimer: number | null = null;
   private launcherRefreshTimer: number | null = null;
@@ -187,8 +189,9 @@ export default class WritingStudioPlugin extends Plugin {
     await this.loadSettings();
 
     // Initialize modules
+    this.vaultFiles = new ObsidianVaultFiles(this.app);
     this.fmManager = new FrontmatterManager(this);
-    this.projectManager = new ProjectManager(this);
+    this.projectManager = new ProjectManager(this, this.vaultFiles);
     this.statsTracker = new StatsTracker(this);
     this.registerEvent(this.projectManager.onBinderChanged(() => {
       this.statsTracker.invalidateWordCountCache();
@@ -197,7 +200,7 @@ export default class WritingStudioPlugin extends Plugin {
     this.typographyMode = new TypographyMode(this);
     this.writingModes = new WritingModes(this);
     this.sprintTimer = new SprintTimer(this);
-    this.exportEngine = new ExportEngine(this);
+    this.exportEngine = new ExportEngine(this, this.vaultFiles);
     this.wpClient = new WordPressClient();
     this.goalBanner = new GoalBanner(this);
 

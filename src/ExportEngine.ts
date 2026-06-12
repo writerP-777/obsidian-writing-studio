@@ -1,7 +1,8 @@
-import { App, FileSystemAdapter, MarkdownView, TFile, getLanguage, normalizePath, Notice } from 'obsidian';
+import { App, MarkdownView, TFile, getLanguage, normalizePath, Notice } from 'obsidian';
 import { execFile } from 'child_process';
 import { promisify } from 'util';
 import type WritingStudioPlugin from '../main';
+import type { VaultFiles } from './VaultFiles';
 import { EpubEngine, EpubChapter } from './EpubEngine';
 import { t } from './i18n';
 import { localDateString } from './dates';
@@ -121,10 +122,12 @@ const SECTION_BREAK = '\n\n\u0000WS-SECTION-BREAK\u0000\n\n';
 export class ExportEngine {
   private plugin: WritingStudioPlugin;
   private app: App;
+  private files: VaultFiles;
 
-  constructor(plugin: WritingStudioPlugin) {
+  constructor(plugin: WritingStudioPlugin, files: VaultFiles) {
     this.plugin = plugin;
     this.app = plugin.app;
+    this.files = files;
   }
 
   // Resolve section sentinels to a markdown hr for text-based outputs
@@ -139,7 +142,7 @@ export class ExportEngine {
       ? normalizePath(`${project.folderPath}/Exports`)
       : normalizePath('Exports');
 
-    await this.ensureFolder(outputDir);
+    await this.files.ensureFolder(outputDir);
 
     const timestamp = new Date().toISOString().replace(/[:.]/g, '-').slice(0, 19);
     const projectTitle = project?.title.replace(/[\\/:*?"<>|]/g, '-') || 'export';
@@ -189,7 +192,10 @@ export class ExportEngine {
       if (!(file instanceof TFile)) {
         throw new Error(t('exportEngine.noActiveDocument'));
       }
-      let content = await this.app.vault.read(file);
+      let content = await this.files.readText(file.path);
+      if (content === null) {
+        throw new Error(t('exportEngine.noActiveDocument'));
+      }
       if (!opts.includeFrontmatter) {
         content = content.replace(/^---\r?\n[\s\S]*?\r?\n---\r?\n?/, '');
       }
@@ -204,9 +210,8 @@ export class ExportEngine {
         if (!item.includeInExport) continue;
         if (!item.filePath) continue;
         if (!opts.includeResearch && item.filePath.includes('/Research/')) continue;
-        const file = this.app.vault.getAbstractFileByPath(item.filePath);
-        if (!(file instanceof TFile)) continue;
-        let content = await this.app.vault.read(file);
+        let content = await this.files.readText(item.filePath);
+        if (content === null) continue;
         if (!opts.includeFrontmatter) {
           content = content.replace(/^---\r?\n[\s\S]*?\r?\n---\r?\n?/, '');
         }
@@ -225,7 +230,7 @@ export class ExportEngine {
       throw new Error(t('exportEngine.noActiveDocument'));
     }
 
-    await new EpubEngine(this.plugin).build({
+    await new EpubEngine(this.files).build({
       title,
       author,
       language,
@@ -272,7 +277,11 @@ export class ExportEngine {
       if (!(file instanceof TFile)) {
         throw new Error(t('exportEngine.noActiveDocument'));
       }
-      parts.push(await this.processFile(file, opts));
+      const content = await this.processPath(file.path, opts);
+      if (content === null) {
+        throw new Error(t('exportEngine.noActiveDocument'));
+      }
+      parts.push(content);
     } else if (opts.scope === 'project' && project) {
       const binder = await this.plugin.projectManager.loadBinder(project);
       const flatItems = this.plugin.projectManager.flattenBinder(binder.items);
@@ -281,9 +290,8 @@ export class ExportEngine {
         if (!item.includeInExport) continue;
         if (!item.filePath) continue; // group/part items have no file
         if (!opts.includeResearch && item.filePath.includes('/Research/')) continue;
-        const file = this.app.vault.getAbstractFileByPath(item.filePath);
-        if (!(file instanceof TFile)) continue;
-        const content = await this.processFile(file, opts);
+        const content = await this.processPath(item.filePath, opts);
+        if (content === null) continue;
         if (opts.includeTitlesAsHeadings) {
           // Strip any leading h1 from the document body — the canonical heading
           // comes from item.title, so the in-document heading must not be kept
@@ -296,12 +304,12 @@ export class ExportEngine {
       }
     } else if (opts.scope === 'selected' && opts.selectedFiles) {
       for (const filePath of opts.selectedFiles) {
-        const file = this.app.vault.getAbstractFileByPath(filePath);
-        if (!(file instanceof TFile)) continue;
-        const content = await this.processFile(file, opts);
+        const content = await this.processPath(filePath, opts);
+        if (content === null) continue;
         if (opts.includeTitlesAsHeadings) {
+          const basename = filePath.split('/').pop()?.replace(/\.md$/, '') ?? filePath;
           const body = content.replace(/^# [^\n]*\n+/, '').trim();
-          parts.push(`# ${file.basename}\n\n${body}`);
+          parts.push(`# ${basename}\n\n${body}`);
         } else {
           parts.push(content);
         }
@@ -315,8 +323,10 @@ export class ExportEngine {
     return parts.join(SECTION_BREAK);
   }
 
-  private async processFile(file: TFile, opts: ExportOptions): Promise<string> {
-    let content = await this.app.vault.read(file);
+  // Resolves to null when the file does not exist.
+  private async processPath(path: string, opts: ExportOptions): Promise<string | null> {
+    let content = await this.files.readText(path);
+    if (content === null) return null;
     if (!opts.includeFrontmatter) {
       content = content.replace(/^---\r?\n[\s\S]*?\r?\n---\r?\n?/, '');
     }
@@ -396,13 +406,13 @@ ${bodyHtml}
 </body>
 </html>`;
 
-    await this.writeFile(outputPath, fullHtml);
+    await this.files.writeText(outputPath, fullHtml);
     new Notice(t('exportEngine.manuscriptExported', { path: outputPath }));
     return outputPath;
   }
 
   private async exportMarkdown(content: string, outputPath: string): Promise<string> {
-    await this.writeFile(outputPath, content);
+    await this.files.writeText(outputPath, content);
     new Notice(t('exportEngine.exportedTo', { path: outputPath }));
     return outputPath;
   }
@@ -433,7 +443,7 @@ ${bodyHtml}
 ${markdownToHtml(content)}
 </body>
 </html>`;
-    await this.writeFile(outputPath, html);
+    await this.files.writeText(outputPath, html);
     new Notice(t('exportEngine.exportedHtmlTo', { path: outputPath }));
     return outputPath;
   }
@@ -443,10 +453,10 @@ ${markdownToHtml(content)}
     const tempMdPath = outputPath.replace(/\.[^.]+$/, '.tmp.md');
 
     try {
-      await this.writeFile(tempMdPath, content);
+      await this.files.writeText(tempMdPath, content);
 
-      const absOutput = this.getAbsPath(outputPath);
-      const absInput = this.getAbsPath(tempMdPath);
+      const absOutput = this.files.absolutePath(outputPath);
+      const absInput = this.files.absolutePath(tempMdPath);
 
       // No --pdf-engine flag: pandoc defaults to LaTeX for PDF output, which
       // is what the README tells users to install (TeX Live / MiKTeX)
@@ -465,11 +475,9 @@ ${markdownToHtml(content)}
     } catch (e) {
       throw new Error(`Pandoc export failed: ${e instanceof Error ? e.message : String(e)}\nEnsure pandoc is installed.`);
     } finally {
-      // Remove the temp file outright via the adapter — trashing it
-      // accumulated a .tmp.md in .trash/ on every pandoc export
-      if (this.app.vault.getAbstractFileByPath(tempMdPath) instanceof TFile) {
-        await this.app.vault.adapter.remove(tempMdPath);
-      }
+      // Remove the temp file outright — trashing it accumulated a .tmp.md
+      // in .trash/ on every pandoc export
+      await this.files.remove(tempMdPath);
     }
   }
 
@@ -479,26 +487,6 @@ ${markdownToHtml(content)}
     } catch (e) {
       new Notice(t('exportEngine.pdfRequiresPandoc'));
       throw e; // preserve the original pandoc error for the Export modal to display
-    }
-  }
-
-  private async writeFile(vaultPath: string, content: string): Promise<void> {
-    const existing = this.app.vault.getAbstractFileByPath(vaultPath);
-    if (existing instanceof TFile) {
-      await this.app.vault.modify(existing, content);
-    } else {
-      await this.app.vault.create(vaultPath, content);
-    }
-  }
-
-  private getAbsPath(vaultPath: string): string {
-    const adapter = this.app.vault.adapter;
-    return adapter instanceof FileSystemAdapter ? adapter.getFullPath(vaultPath) : vaultPath;
-  }
-
-  private async ensureFolder(path: string): Promise<void> {
-    if (!this.app.vault.getAbstractFileByPath(path)) {
-      await this.app.vault.createFolder(path);
     }
   }
 
