@@ -267,7 +267,8 @@
     },
     "sessionWordsTyped": "الجلسة: +{{n}} كلمة مكتوبة",
     "dailyGoal": "الهدف اليومي: {{written}} / {{goal}} كلمة",
-    "sprintInProgress": "السباق جارٍ"
+    "sprintInProgress": "السباق جارٍ",
+    "switchProject": "تبديل المشروع"
   },
   "log": {
     "displayText": "سجل الكتابة",

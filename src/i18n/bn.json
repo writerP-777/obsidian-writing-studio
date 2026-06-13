@@ -267,7 +267,8 @@
     },
     "sessionWordsTyped": "সেশন: +{{n}} শব্দ টাইপ করা হয়েছে",
     "dailyGoal": "দৈনিক লক্ষ্য: {{written}} / {{goal}} শব্দ",
-    "sprintInProgress": "স্প্রিন্ট চলছে"
+    "sprintInProgress": "স্প্রিন্ট চলছে",
+    "switchProject": "প্রকল্প পরিবর্তন করুন"
   },
   "log": {
     "displayText": "লেখার লগ",

@@ -267,7 +267,8 @@
     },
     "sessionWordsTyped": "세션: +{{n}} 단어 입력",
     "dailyGoal": "일일 목표: {{written}} / {{goal}} 단어",
-    "sprintInProgress": "스프린트 진행 중"
+    "sprintInProgress": "스프린트 진행 중",
+    "switchProject": "프로젝트 전환"
   },
   "log": {
     "displayText": "글쓰기 로그",

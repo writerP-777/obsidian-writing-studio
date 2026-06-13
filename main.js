@@ -2577,7 +2577,8 @@ var en_default = {
       streakDays: "{{streak}}d"
     },
     sessionWordsTyped: "Session: +{{n}} words typed",
-    dailyGoal: "Daily goal: {{written}} / {{goal}} words"
+    dailyGoal: "Daily goal: {{written}} / {{goal}} words",
+    switchProject: "Switch project"
   },
   log: {
     displayText: "Writing log",
@@ -3249,7 +3250,8 @@ var zh_default = {
     },
     sessionWordsTyped: "\u672C\u6B21\uFF1A+{{n}} \u5B57",
     dailyGoal: "\u6BCF\u65E5\u76EE\u6807\uFF1A{{written}} / {{goal}} \u5B57",
-    sprintInProgress: "\u51B2\u523A\u8FDB\u884C\u4E2D"
+    sprintInProgress: "\u51B2\u523A\u8FDB\u884C\u4E2D",
+    switchProject: "\u5207\u6362\u9879\u76EE"
   },
   log: {
     displayText: "\u5199\u4F5C\u65E5\u5FD7",
@@ -3921,7 +3923,8 @@ var hi_default = {
     },
     sessionWordsTyped: "\u0938\u0924\u094D\u0930: +{{n}} \u0936\u092C\u094D\u0926 \u0932\u093F\u0916\u0947",
     dailyGoal: "\u0926\u0948\u0928\u093F\u0915 \u0932\u0915\u094D\u0937\u094D\u092F: {{written}} / {{goal}} \u0936\u092C\u094D\u0926",
-    sprintInProgress: "\u0938\u094D\u092A\u094D\u0930\u093F\u0902\u091F \u091C\u093E\u0930\u0940 \u0939\u0948"
+    sprintInProgress: "\u0938\u094D\u092A\u094D\u0930\u093F\u0902\u091F \u091C\u093E\u0930\u0940 \u0939\u0948",
+    switchProject: "\u092A\u094D\u0930\u094B\u091C\u0947\u0915\u094D\u091F \u092C\u0926\u0932\u0947\u0902"
   },
   log: {
     displayText: "\u0932\u0947\u0916\u0928 \u0932\u0949\u0917",
@@ -4593,7 +4596,8 @@ var es_default = {
     },
     sessionWordsTyped: "Sesi\xF3n: +{{n}} palabras escritas",
     dailyGoal: "Meta diaria: {{written}} / {{goal}} palabras",
-    sprintInProgress: "Sprint en curso"
+    sprintInProgress: "Sprint en curso",
+    switchProject: "Cambiar de proyecto"
   },
   log: {
     displayText: "Registro de escritura",
@@ -5265,7 +5269,8 @@ var ar_default = {
     },
     sessionWordsTyped: "\u0627\u0644\u062C\u0644\u0633\u0629: +{{n}} \u0643\u0644\u0645\u0629 \u0645\u0643\u062A\u0648\u0628\u0629",
     dailyGoal: "\u0627\u0644\u0647\u062F\u0641 \u0627\u0644\u064A\u0648\u0645\u064A: {{written}} / {{goal}} \u0643\u0644\u0645\u0629",
-    sprintInProgress: "\u0627\u0644\u0633\u0628\u0627\u0642 \u062C\u0627\u0631\u064D"
+    sprintInProgress: "\u0627\u0644\u0633\u0628\u0627\u0642 \u062C\u0627\u0631\u064D",
+    switchProject: "\u062A\u0628\u062F\u064A\u0644 \u0627\u0644\u0645\u0634\u0631\u0648\u0639"
   },
   log: {
     displayText: "\u0633\u062C\u0644 \u0627\u0644\u0643\u062A\u0627\u0628\u0629",
@@ -5948,7 +5953,8 @@ var fr_default = {
     },
     sessionWordsTyped: "Session : +{{n}} mots \xE9crits",
     dailyGoal: "Objectif quotidien : {{written}} / {{goal}} mots",
-    sprintInProgress: "Sprint en cours"
+    sprintInProgress: "Sprint en cours",
+    switchProject: "Changer de projet"
   },
   log: {
     displayText: "Journal d'\xE9criture",
@@ -6620,7 +6626,8 @@ var bn_default = {
     },
     sessionWordsTyped: "\u09B8\u09C7\u09B6\u09A8: +{{n}} \u09B6\u09AC\u09CD\u09A6 \u099F\u09BE\u0987\u09AA \u0995\u09B0\u09BE \u09B9\u09AF\u09BC\u09C7\u099B\u09C7",
     dailyGoal: "\u09A6\u09C8\u09A8\u09BF\u0995 \u09B2\u0995\u09CD\u09B7\u09CD\u09AF: {{written}} / {{goal}} \u09B6\u09AC\u09CD\u09A6",
-    sprintInProgress: "\u09B8\u09CD\u09AA\u09CD\u09B0\u09BF\u09A8\u09CD\u099F \u099A\u09B2\u099B\u09C7"
+    sprintInProgress: "\u09B8\u09CD\u09AA\u09CD\u09B0\u09BF\u09A8\u09CD\u099F \u099A\u09B2\u099B\u09C7",
+    switchProject: "\u09AA\u09CD\u09B0\u0995\u09B2\u09CD\u09AA \u09AA\u09B0\u09BF\u09AC\u09B0\u09CD\u09A4\u09A8 \u0995\u09B0\u09C1\u09A8"
   },
   log: {
     displayText: "\u09B2\u09C7\u0996\u09BE\u09B0 \u09B2\u0997",
@@ -7292,7 +7299,8 @@ var pt_BR_default = {
     },
     sessionWordsTyped: "Sess\xE3o: +{{n}} palavras digitadas",
     dailyGoal: "Meta di\xE1ria: {{written}} / {{goal}} palavras",
-    sprintInProgress: "Sprint em andamento"
+    sprintInProgress: "Sprint em andamento",
+    switchProject: "Trocar de projeto"
   },
   log: {
     displayText: "Di\xE1rio de escrita",
@@ -7964,7 +7972,8 @@ var ru_default = {
     },
     sessionWordsTyped: "\u0421\u0435\u0430\u043D\u0441: +{{n}} \u043D\u0430\u043F\u0438\u0441\u0430\u043D\u043D\u044B\u0445 \u0441\u043B\u043E\u0432",
     dailyGoal: "\u0414\u043D\u0435\u0432\u043D\u0430\u044F \u0446\u0435\u043B\u044C: {{written}} / {{goal}} \u0441\u043B\u043E\u0432",
-    sprintInProgress: "\u0421\u043F\u0440\u0438\u043D\u0442 \u0438\u0434\u0451\u0442"
+    sprintInProgress: "\u0421\u043F\u0440\u0438\u043D\u0442 \u0438\u0434\u0451\u0442",
+    switchProject: "\u0421\u043C\u0435\u043D\u0438\u0442\u044C \u043F\u0440\u043E\u0435\u043A\u0442"
   },
   log: {
     displayText: "\u0416\u0443\u0440\u043D\u0430\u043B \u043F\u0438\u0441\u044C\u043C\u0430",
@@ -8642,7 +8651,8 @@ var ja_default = {
     },
     sessionWordsTyped: "\u30BB\u30C3\u30B7\u30E7\u30F3\uFF1A+{{n}} \u8A9E",
     dailyGoal: "1\u65E5\u306E\u76EE\u6A19\uFF1A{{written}} / {{goal}} \u8A9E",
-    sprintInProgress: "\u30B9\u30D7\u30EA\u30F3\u30C8\u5B9F\u884C\u4E2D"
+    sprintInProgress: "\u30B9\u30D7\u30EA\u30F3\u30C8\u5B9F\u884C\u4E2D",
+    switchProject: "\u30D7\u30ED\u30B8\u30A7\u30AF\u30C8\u3092\u5207\u308A\u66FF\u3048"
   },
   log: {
     displayText: "\u57F7\u7B46\u30ED\u30B0",
@@ -9314,7 +9324,8 @@ var de_default = {
     },
     sessionWordsTyped: "Sitzung: +{{n}} W\xF6rter getippt",
     dailyGoal: "Tagesziel: {{written}} / {{goal}} W\xF6rter",
-    sprintInProgress: "Sprint l\xE4uft"
+    sprintInProgress: "Sprint l\xE4uft",
+    switchProject: "Projekt wechseln"
   },
   log: {
     displayText: "Schreibprotokoll",
@@ -9986,7 +9997,8 @@ var ko_default = {
     },
     sessionWordsTyped: "\uC138\uC158: +{{n}} \uB2E8\uC5B4 \uC785\uB825",
     dailyGoal: "\uC77C\uC77C \uBAA9\uD45C: {{written}} / {{goal}} \uB2E8\uC5B4",
-    sprintInProgress: "\uC2A4\uD504\uB9B0\uD2B8 \uC9C4\uD589 \uC911"
+    sprintInProgress: "\uC2A4\uD504\uB9B0\uD2B8 \uC9C4\uD589 \uC911",
+    switchProject: "\uD504\uB85C\uC81D\uD2B8 \uC804\uD658"
   },
   log: {
     displayText: "\uAE00\uC4F0\uAE30 \uB85C\uADF8",
@@ -13454,14 +13466,19 @@ var LauncherView = class extends import_obsidian18.ItemView {
     nameRow.createEl("strong", { text: project.title, cls: "ws-launcher-project-name" });
     const projects = this.plugin.projectManager.getProjects();
     if (projects.length > 1) {
-      const sel = nameRow.createEl("select", { cls: "ws-launcher-project-mini-sel" });
-      for (const p of projects) {
-        const opt = sel.createEl("option", { text: p.title, value: p.id });
-        if (p.id === project.id) opt.selected = true;
-      }
-      sel.onchange = async () => {
-        await this.plugin.projectManager.setActiveProject(sel.value);
-        await this.refresh();
+      const switchBtn = nameRow.createEl("button", { cls: "ws-launcher-icon-btn" });
+      (0, import_obsidian18.setIcon)(switchBtn, "chevrons-up-down");
+      (0, import_obsidian18.setTooltip)(switchBtn, t2("launcher.switchProject"));
+      switchBtn.onclick = (e) => {
+        const menu = new import_obsidian18.Menu();
+        for (const p of projects) {
+          menu.addItem((i) => {
+            i.setTitle(p.title).setChecked(p.id === project.id).onClick(async () => {
+              await this.plugin.projectManager.setActiveProject(p.id);
+            });
+          });
+        }
+        menu.showAtMouseEvent(e);
       };
     }
     try {

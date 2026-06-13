@@ -267,7 +267,8 @@
     },
     "sessionWordsTyped": "सत्र: +{{n}} शब्द लिखे",
     "dailyGoal": "दैनिक लक्ष्य: {{written}} / {{goal}} शब्द",
-    "sprintInProgress": "स्प्रिंट जारी है"
+    "sprintInProgress": "स्प्रिंट जारी है",
+    "switchProject": "प्रोजेक्ट बदलें"
   },
   "log": {
     "displayText": "लेखन लॉग",

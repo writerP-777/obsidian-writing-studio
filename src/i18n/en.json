@@ -267,7 +267,8 @@
       "streakDays": "{{streak}}d"
     },
     "sessionWordsTyped": "Session: +{{n}} words typed",
-    "dailyGoal": "Daily goal: {{written}} / {{goal}} words"
+    "dailyGoal": "Daily goal: {{written}} / {{goal}} words",
+    "switchProject": "Switch project"
   },
   "log": {
     "displayText": "Writing log",

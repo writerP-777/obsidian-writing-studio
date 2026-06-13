@@ -267,7 +267,8 @@
     },
     "sessionWordsTyped": "Session : +{{n}} mots écrits",
     "dailyGoal": "Objectif quotidien : {{written}} / {{goal}} mots",
-    "sprintInProgress": "Sprint en cours"
+    "sprintInProgress": "Sprint en cours",
+    "switchProject": "Changer de projet"
   },
   "log": {
     "displayText": "Journal d'écriture",

@@ -989,8 +989,7 @@ body.writing-studio-typography .markdown-reading-view .markdown-preview-section 
   margin-bottom: 8px;
 }
 
-.ws-launcher-project-sel,
-.ws-launcher-project-mini-sel {
+.ws-launcher-project-sel {
   font-size: 12px;
   padding: 3px 6px;
   background: var(--background-secondary);
@@ -1011,12 +1010,6 @@ body.writing-studio-typography .markdown-reading-view .markdown-preview-section 
 .ws-launcher-project-name {
   font-size: 14px;
   color: var(--text-normal);
-}
-
-.ws-launcher-project-mini-sel {
-  font-size: 11px;
-  padding: 2px 4px;
-  opacity: 0.7;
 }
 
 .ws-launcher-wc-row {

@@ -267,7 +267,8 @@
     },
     "sessionWordsTyped": "Sitzung: +{{n}} Wörter getippt",
     "dailyGoal": "Tagesziel: {{written}} / {{goal}} Wörter",
-    "sprintInProgress": "Sprint läuft"
+    "sprintInProgress": "Sprint läuft",
+    "switchProject": "Projekt wechseln"
   },
   "log": {
     "displayText": "Schreibprotokoll",

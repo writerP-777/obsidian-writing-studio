@@ -18,6 +18,7 @@ UX improvement cycle from the 2026-06-12 product-experience review (issues #153�
 - The create-project modal now collects the author (prefilled from the author name setting) and an optional total word count goal. The goal was previously displayed in the launcher, status bar, and writing dashboard but could not be set anywhere in the UI. The unused `dailyWordCount` and `deadline` project goal fields were removed from the data model. (#153)
 
 ### Fixed
+- The launcher project card shows the project name once — with multiple projects, the switcher is now an icon-only menu next to the name instead of a dropdown that echoed the same title. Single-project vaults are unchanged. (#164)
 - "Set word count goal" now edits the binder item's goal when the document is in the active project's binder — previously it read and wrote only frontmatter, so for binder documents it showed the wrong current value and saving had no effect (the binder goal silently took precedence). Frontmatter is still used for files not in any binder. (#156)
 - The binder's "drop here to promote to root" zone now appears only while a drag is in progress, instead of sitting permanently under the document list. (#161)
 
