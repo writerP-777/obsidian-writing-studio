@@ -177,7 +177,12 @@
       "moveUp": "Mover para cima",
       "moveDown": "Mover para baixo",
       "rename": "Renomear",
-      "removeFromBinder": "Remover da pasta"
+      "removeFromBinder": "Remover da pasta",
+      "newGroup": "Novo grupo",
+      "newPart": "Nova parte",
+      "newChildGroup": "Novo grupo filho",
+      "newChildPart": "Nova parte filha",
+      "changeType": "Alterar tipo: {{type}}"
     },
     "wordCountSuffix": "{{count}}p",
     "fileNotFound": "O arquivo não existe mais: {{path}}",
@@ -196,7 +201,10 @@
       "title": "Remover da pasta",
       "message": "Remover \"{{title}}\" da pasta? O arquivo permanece no seu vault, mas o status, a meta de palavras e a configuração de exportação da entrada são perdidos. Documentos aninhados sobem para o lugar dele.",
       "remove": "Remover"
-    }
+    },
+    "newGroupOrPart": "Novo grupo ou parte",
+    "untitledGroup": "Grupo sem título",
+    "untitledPart": "Parte sem título"
   },
   "launcher": {
     "displayText": "Estúdio de escrita",

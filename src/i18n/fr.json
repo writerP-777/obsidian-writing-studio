@@ -177,7 +177,12 @@
       "moveUp": "Monter",
       "moveDown": "Descendre",
       "rename": "Renommer",
-      "removeFromBinder": "Retirer du classeur"
+      "removeFromBinder": "Retirer du classeur",
+      "newGroup": "Nouveau groupe",
+      "newPart": "Nouvelle partie",
+      "newChildGroup": "Nouveau groupe enfant",
+      "newChildPart": "Nouvelle partie enfant",
+      "changeType": "Changer le type : {{type}}"
     },
     "wordCountSuffix": "{{count}}m",
     "fileNotFound": "Le fichier n'existe plus : {{path}}",
@@ -196,7 +201,10 @@
       "title": "Retirer du classeur",
       "message": "Retirer « {{title}} » du classeur ? Le fichier reste dans votre coffre, mais le statut, l'objectif de mots et le réglage d'export de l'entrée sont perdus. Les documents imbriqués remontent à sa place.",
       "remove": "Retirer"
-    }
+    },
+    "newGroupOrPart": "Nouveau groupe ou nouvelle partie",
+    "untitledGroup": "Groupe sans titre",
+    "untitledPart": "Partie sans titre"
   },
   "launcher": {
     "displayText": "Studio d'écriture",

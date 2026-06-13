@@ -168,6 +168,21 @@ export class BinderView extends ItemView {
       this.createNewDocument();
     };
 
+    const newGroupBtn = toolbar.createEl('button', { cls: 'ws-binder-btn' });
+    newGroupBtn.ariaLabel = t('binder.newGroupOrPart');
+    setIcon(newGroupBtn, 'folder-plus');
+    setTooltip(newGroupBtn, t('binder.newGroupOrPart'));
+    newGroupBtn.onclick = (e) => {
+      if (!this.activeProject) {
+        new Notice(t('binder.selectProjectFirst'));
+        return;
+      }
+      const menu = new Menu();
+      menu.addItem(i => i.setTitle(t('binder.menu.newGroup')).setIcon('folder').onClick(() => this.createStructuralItem('group')));
+      menu.addItem(i => i.setTitle(t('binder.menu.newPart')).setIcon('library').onClick(() => this.createStructuralItem('part')));
+      menu.showAtMouseEvent(e);
+    };
+
     const scanBtn = toolbar.createEl('button', { cls: 'ws-binder-btn' });
     scanBtn.ariaLabel = t('binder.addFiles');
     setIcon(scanBtn, 'folder-sync');
@@ -239,7 +254,8 @@ export class BinderView extends ItemView {
         if (row.hasChildren) {
           row.item.collapsed = !row.item.collapsed;
           void this.saveBinder();
-        } else {
+        } else if (row.item.type !== 'group' && row.item.type !== 'part') {
+          // A childless structural item has nothing to open or toggle
           void this.openDocument(row.item);
         }
         break;
@@ -371,10 +387,18 @@ export class BinderView extends ItemView {
       void this.loadWordCount(item, wcEl);
 
       // Click opens immediately, matching Obsidian's file explorer — rename
-      // lives in the context menu and on F2, so no disambiguation delay
+      // lives in the context menu and on F2, so no disambiguation delay.
+      // Structural items have no file to open; clicking them toggles collapse.
       row.onclick = () => {
         // Keep keyboard position in sync with mouse interaction
         this.navFocusItemId = item.id;
+        if (item.type === 'group' || item.type === 'part') {
+          if (item.children?.length) {
+            item.collapsed = !item.collapsed;
+            void this.saveBinder();
+          }
+          return;
+        }
         void this.openDocument(item);
       };
 
@@ -563,10 +587,17 @@ export class BinderView extends ItemView {
 
   private buildContextMenu(item: BinderItem): Menu {
     const menu = new Menu();
+    // Structural items (group/part) have no backing file — every
+    // file-dependent action is hidden for them
+    const structural = item.type === 'group' || item.type === 'part';
 
-    menu.addItem(i => i.setTitle(t('binder.menu.openDocument')).setIcon('file-text').onClick(safeHandler(() => this.openDocument(item))));
+    if (!structural) {
+      menu.addItem(i => i.setTitle(t('binder.menu.openDocument')).setIcon('file-text').onClick(safeHandler(() => this.openDocument(item))));
+    }
     menu.addItem(i => i.setTitle(t('binder.menu.rename')).setIcon('pencil').onClick(() => this.renameItem(item)));
     menu.addItem(i => i.setTitle(t('binder.menu.newChildDocument')).setIcon('plus').onClick(() => this.createNewDocument(item.id)));
+    menu.addItem(i => i.setTitle(t('binder.menu.newChildGroup')).setIcon('folder').onClick(() => this.createStructuralItem('group', item.id)));
+    menu.addItem(i => i.setTitle(t('binder.menu.newChildPart')).setIcon('library').onClick(() => this.createStructuralItem('part', item.id)));
     menu.addSeparator();
     // Keyboard-accessible reorder — drag-and-drop was the only mechanism
     menu.addItem(i => i.setTitle(t('binder.menu.moveUp')).setIcon('arrow-up').onClick(safeHandler(() => this.nudgeItem(item, -1))));
@@ -576,18 +607,44 @@ export class BinderView extends ItemView {
     menu.addItem(i => i.setTitle(t('binder.menu.setStatusInProgress')).onClick(safeHandler(() => this.setItemStatus(item, 'in-progress'))));
     menu.addItem(i => i.setTitle(t('binder.menu.setStatusComplete')).onClick(safeHandler(() => this.setItemStatus(item, 'complete'))));
     menu.addItem(i => i.setTitle(t('binder.menu.setStatusPublished')).onClick(safeHandler(() => this.setItemStatus(item, 'published'))));
-    menu.addSeparator();
-    menu.addItem(i => i.setTitle(t('binder.menu.duplicate')).setIcon('copy').onClick(safeHandler(() => this.duplicateItem(item))));
-    menu.addItem(i => i.setTitle(t('binder.menu.moveToResearch')).setIcon('folder').onClick(safeHandler(() => this.moveToResearch(item))));
-    menu.addSeparator();
-    menu.addItem(i => i.setTitle(t('binder.menu.publishToWordPress')).setIcon('globe').onClick(() => {
-      new PublishModal(this.app, this.plugin, item.filePath).open();
-    }));
+    if (!structural) {
+      menu.addSeparator();
+      for (const docType of ['chapter', 'section', 'article', 'note'] as const) {
+        menu.addItem(i => i
+          .setTitle(t('binder.menu.changeType', { type: t(`settings.general.docType.${docType}`) }))
+          .setIcon(this.getTypeIcon(docType))
+          .onClick(safeHandler(() => this.changeItemType(item, docType))));
+      }
+      menu.addSeparator();
+      menu.addItem(i => i.setTitle(t('binder.menu.duplicate')).setIcon('copy').onClick(safeHandler(() => this.duplicateItem(item))));
+      menu.addItem(i => i.setTitle(t('binder.menu.moveToResearch')).setIcon('folder').onClick(safeHandler(() => this.moveToResearch(item))));
+      menu.addSeparator();
+      menu.addItem(i => i.setTitle(t('binder.menu.publishToWordPress')).setIcon('globe').onClick(() => {
+        new PublishModal(this.app, this.plugin, item.filePath).open();
+      }));
+    }
     menu.addSeparator();
     menu.addItem(i => i.setTitle(t('binder.menu.removeFromBinder')).setIcon('list-x').onClick(() => this.removeFromBinder(item)));
     menu.addItem(i => i.setTitle(t('binder.menu.delete')).setIcon('trash').onClick(() => this.deleteItem(item)));
 
     return menu;
+  }
+
+  private createStructuralItem(type: 'group' | 'part', parentId?: string): void {
+    if (!this.activeProject) return;
+    const project = this.activeProject;
+    const heading = type === 'group' ? t('binder.menu.newGroup') : t('binder.menu.newPart');
+    const fallback = type === 'group' ? t('binder.untitledGroup') : t('binder.untitledPart');
+    new TitlePromptModal(
+      this.app,
+      heading,
+      fallback,
+      t('binder.titlePrompt.create'),
+      t('binder.deleteConfirm.cancel'),
+      async (title) => {
+        await this.plugin.projectManager.addStructuralItem(project, title, type, parentId);
+      }
+    ).open();
   }
 
   private createNewDocument(parentId?: string): void {
@@ -614,6 +671,12 @@ export class BinderView extends ItemView {
   private async setItemStatus(item: BinderItem, status: DocumentStatus): Promise<void> {
     if (!this.activeProject) return;
     await this.plugin.projectManager.updateItemStatus(this.activeProject, item.id, status);
+  }
+
+  // The type icon refreshes via the binder-changed re-render
+  private async changeItemType(item: BinderItem, type: 'chapter' | 'section' | 'article' | 'note'): Promise<void> {
+    if (!this.activeProject) return;
+    await this.plugin.projectManager.updateItemType(this.activeProject, item.id, type);
   }
 
   private async duplicateItem(item: BinderItem): Promise<void> {

@@ -177,7 +177,12 @@
       "moveUp": "Move up",
       "moveDown": "Move down",
       "rename": "Rename",
-      "removeFromBinder": "Remove from binder"
+      "removeFromBinder": "Remove from binder",
+      "newGroup": "New group",
+      "newPart": "New part",
+      "newChildGroup": "New child group",
+      "newChildPart": "New child part",
+      "changeType": "Change type: {{type}}"
     },
     "wordCountSuffix": "{{count}}w",
     "fileNotFound": "File no longer exists: {{path}}",
@@ -196,7 +201,10 @@
       "title": "Remove from binder",
       "message": "Remove \"{{title}}\" from the binder? The file stays in your vault, but the entry's status, word count goal, and export setting are lost. Nested documents move up to take its place.",
       "remove": "Remove"
-    }
+    },
+    "newGroupOrPart": "New group or part",
+    "untitledGroup": "Untitled group",
+    "untitledPart": "Untitled part"
   },
   "launcher": {
     "displayText": "Writing studio",

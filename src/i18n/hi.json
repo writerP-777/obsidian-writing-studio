@@ -177,7 +177,12 @@
       "moveUp": "ऊपर ले जाएं",
       "moveDown": "नीचे ले जाएं",
       "rename": "नाम बदलें",
-      "removeFromBinder": "बाइंडर से हटाएँ"
+      "removeFromBinder": "बाइंडर से हटाएँ",
+      "newGroup": "नया समूह",
+      "newPart": "नया भाग",
+      "newChildGroup": "नया चाइल्ड समूह",
+      "newChildPart": "नया चाइल्ड भाग",
+      "changeType": "प्रकार बदलें: {{type}}"
     },
     "wordCountSuffix": "{{count}}श",
     "fileNotFound": "फ़ाइल अब मौजूद नहीं है: {{path}}",
@@ -196,7 +201,10 @@
       "title": "बाइंडर से हटाएँ",
       "message": "\"{{title}}\" को बाइंडर से हटाएँ? फ़ाइल वॉल्ट में बनी रहेगी, लेकिन प्रविष्टि की स्थिति, शब्द संख्या लक्ष्य और निर्यात सेटिंग खो जाएँगी। भीतर के दस्तावेज़ इसकी जगह ऊपर आ जाएँगे।",
       "remove": "हटाएँ"
-    }
+    },
+    "newGroupOrPart": "नया समूह या भाग",
+    "untitledGroup": "बिना शीर्षक समूह",
+    "untitledPart": "बिना शीर्षक भाग"
   },
   "launcher": {
     "displayText": "राइटिंग स्टूडियो",

@@ -177,7 +177,12 @@
       "moveUp": "Mover hacia arriba",
       "moveDown": "Mover hacia abajo",
       "rename": "Renombrar",
-      "removeFromBinder": "Quitar de la carpeta"
+      "removeFromBinder": "Quitar de la carpeta",
+      "newGroup": "Nuevo grupo",
+      "newPart": "Nueva parte",
+      "newChildGroup": "Nuevo grupo hijo",
+      "newChildPart": "Nueva parte hija",
+      "changeType": "Cambiar tipo: {{type}}"
     },
     "wordCountSuffix": "{{count}}p",
     "fileNotFound": "El archivo ya no existe: {{path}}",
@@ -196,7 +201,10 @@
       "title": "Quitar de la carpeta",
       "message": "¿Quitar \"{{title}}\" de la carpeta? El archivo permanece en tu vault, pero se pierden el estado, el objetivo de palabras y el ajuste de exportación de la entrada. Los documentos anidados suben a ocupar su lugar.",
       "remove": "Quitar"
-    }
+    },
+    "newGroupOrPart": "Nuevo grupo o parte",
+    "untitledGroup": "Grupo sin título",
+    "untitledPart": "Parte sin título"
   },
   "launcher": {
     "displayText": "Estudio de escritura",

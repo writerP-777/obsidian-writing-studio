@@ -177,7 +177,12 @@
       "moveUp": "위로 이동",
       "moveDown": "아래로 이동",
       "rename": "이름 바꾸기",
-      "removeFromBinder": "바인더에서 제거"
+      "removeFromBinder": "바인더에서 제거",
+      "newGroup": "새 그룹",
+      "newPart": "새 파트",
+      "newChildGroup": "새 하위 그룹",
+      "newChildPart": "새 하위 파트",
+      "changeType": "유형 변경: {{type}}"
     },
     "wordCountSuffix": "{{count}}자",
     "fileNotFound": "파일이 더 이상 존재하지 않습니다: {{path}}",
@@ -196,7 +201,10 @@
       "title": "바인더에서 제거",
       "message": "\"{{title}}\"을(를) 바인더에서 제거할까요? 파일은 볼트에 남지만 항목의 상태, 단어 수 목표, 내보내기 설정은 사라집니다. 하위 문서는 그 자리로 올라옵니다.",
       "remove": "제거"
-    }
+    },
+    "newGroupOrPart": "새 그룹 또는 파트",
+    "untitledGroup": "제목 없는 그룹",
+    "untitledPart": "제목 없는 파트"
   },
   "launcher": {
     "displayText": "글쓰기 스튜디오",
