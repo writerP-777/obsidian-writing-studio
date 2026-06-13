@@ -185,7 +185,11 @@
       "delete": "删除",
       "cancel": "取消"
     },
-    "noMatches": "没有与“{{query}}”匹配的文档。"
+    "noMatches": "没有与“{{query}}”匹配的文档。",
+    "titlePrompt": {
+      "heading": "新建文档",
+      "create": "创建"
+    }
   },
   "launcher": {
     "displayText": "写作工作室",

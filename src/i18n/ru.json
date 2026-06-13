@@ -185,7 +185,11 @@
       "delete": "Удалить",
       "cancel": "Отмена"
     },
-    "noMatches": "Нет документов, соответствующих «{{query}}»."
+    "noMatches": "Нет документов, соответствующих «{{query}}».",
+    "titlePrompt": {
+      "heading": "Новый документ",
+      "create": "Создать"
+    }
   },
   "launcher": {
     "displayText": "Студия письма",

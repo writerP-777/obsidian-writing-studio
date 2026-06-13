@@ -185,7 +185,11 @@
       "delete": "Löschen",
       "cancel": "Abbrechen"
     },
-    "noMatches": "Keine Dokumente entsprechen „{{query}}“."
+    "noMatches": "Keine Dokumente entsprechen „{{query}}“.",
+    "titlePrompt": {
+      "heading": "Neues Dokument",
+      "create": "Erstellen"
+    }
   },
   "launcher": {
     "displayText": "Schreibstudio",

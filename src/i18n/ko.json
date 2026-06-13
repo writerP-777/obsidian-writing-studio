@@ -185,7 +185,11 @@
       "delete": "삭제",
       "cancel": "취소"
     },
-    "noMatches": "\"{{query}}\"와 일치하는 문서가 없습니다."
+    "noMatches": "\"{{query}}\"와 일치하는 문서가 없습니다.",
+    "titlePrompt": {
+      "heading": "새 문서",
+      "create": "만들기"
+    }
   },
   "launcher": {
     "displayText": "글쓰기 스튜디오",

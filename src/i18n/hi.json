@@ -185,7 +185,11 @@
       "delete": "हटाएं",
       "cancel": "रद्द करें"
     },
-    "noMatches": "\"{{query}}\" से मेल खाता कोई दस्तावेज़ नहीं।"
+    "noMatches": "\"{{query}}\" से मेल खाता कोई दस्तावेज़ नहीं।",
+    "titlePrompt": {
+      "heading": "नया दस्तावेज़",
+      "create": "बनाएं"
+    }
   },
   "launcher": {
     "displayText": "राइटिंग स्टूडियो",

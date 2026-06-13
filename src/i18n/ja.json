@@ -185,7 +185,11 @@
       "delete": "削除",
       "cancel": "キャンセル"
     },
-    "noMatches": "「{{query}}」に一致するドキュメントはありません。"
+    "noMatches": "「{{query}}」に一致するドキュメントはありません。",
+    "titlePrompt": {
+      "heading": "新規ドキュメント",
+      "create": "作成"
+    }
   },
   "launcher": {
     "displayText": "ライティングスタジオ",

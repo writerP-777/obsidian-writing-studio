@@ -185,7 +185,11 @@
       "delete": "Excluir",
       "cancel": "Cancelar"
     },
-    "noMatches": "Nenhum documento corresponde a \"{{query}}\"."
+    "noMatches": "Nenhum documento corresponde a \"{{query}}\".",
+    "titlePrompt": {
+      "heading": "Novo documento",
+      "create": "Criar"
+    }
   },
   "launcher": {
     "displayText": "Estúdio de escrita",
