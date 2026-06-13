@@ -56,6 +56,15 @@ export class SprintTimer {
     return this.state !== null && this.state.active;
   }
 
+  // Armed but not started — the overlay is showing its ready state
+  isReady(): boolean {
+    return this.state !== null && this.state.ready;
+  }
+
+  getDurationMinutes(): number | null {
+    return this.state?.durationMinutes ?? null;
+  }
+
   // Opens overlay in paused/ready state — called by SprintModal and preset buttons.
   // The clock does not run until the user presses Start on the overlay itself.
   setup(durationMinutes: number, wordCountGoal?: number, projectScope: 'file' | 'project' = 'file'): void {
@@ -83,6 +92,7 @@ export class SprintTimer {
 
     this.showFloating();
     this.updateDisplay();
+    this.plugin.studioEvents.announceSprintChanged();
   }
 
   pause(): void {
@@ -110,6 +120,7 @@ export class SprintTimer {
     }
     this.startInterval();
     this.updateDisplay();
+    this.plugin.studioEvents.announceSprintChanged();
     if (wasReady) {
       new Notice(t('sprint.started', { minutes: this.state.durationMinutes }));
     }
@@ -123,6 +134,7 @@ export class SprintTimer {
     this.state = null;
     this.hideFloating();
     if (this.statusBarEl) this.statusBarEl.addClass('ws-hidden');
+    this.plugin.studioEvents.announceSprintChanged();
     if (!wasReady && session && this.onComplete) void this.onComplete(session);
   }
 

@@ -1,5 +1,6 @@
 import { TypographyMode } from '../src/TypographyMode';
 import { WritingModes } from '../src/WritingModes';
+import { StudioEvents } from '../src/StudioEvents';
 import { Notice } from 'obsidian';
 
 // TypographyMode touches the Obsidian `activeDocument` global; fake it for node
@@ -25,6 +26,7 @@ function makeTypographyPlugin() {
       letterSpacing: 'normal',
     },
     saveSettings: jest.fn().mockResolvedValue(undefined),
+    studioEvents: new StudioEvents(),
   };
 }
 
@@ -74,6 +76,7 @@ function makeWritingModesPlugin() {
       disable: jest.fn().mockResolvedValue(undefined),
     },
     openBinder: jest.fn().mockResolvedValue(undefined),
+    studioEvents: new StudioEvents(),
   };
 }
 

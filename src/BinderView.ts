@@ -16,6 +16,7 @@ import { ScanFolderModal } from '../modals/ScanFolderModal';
 import { ConfirmModal } from '../modals/ConfirmModal';
 import { confirmDeleteProject } from '../modals/confirmDeleteProject';
 import { TitlePromptModal } from '../modals/TitlePromptModal';
+import { ControlStrip } from './ControlStrip';
 import { t } from './i18n';
 import { safeHandler } from './safeHandler';
 import { computeBinderFilter, BinderFilterResult } from './binderFilter';
@@ -45,6 +46,7 @@ export class BinderView extends ItemView {
   // Item id of the keyboard-focused row, so focus survives event-driven
   // re-renders (every expand/collapse rebuilds the DOM).
   private navFocusItemId: string | null = null;
+  private controlStrip: ControlStrip | null = null;
 
   constructor(leaf: WorkspaceLeaf, plugin: WritingStudioPlugin) {
     super(leaf);
@@ -73,6 +75,12 @@ export class BinderView extends ItemView {
     this.registerEvent(this.plugin.projectManager.onProjectsChanged(() => {
       void this.refresh();
     }));
+    // Environment changes (mode/focus/typography/sprint) patch the control
+    // strip in place — no list re-render needed
+    this.registerEvent(this.plugin.studioEvents.onModeChanged(() => this.controlStrip?.sync()));
+    this.registerEvent(this.plugin.studioEvents.onFocusChanged(() => this.controlStrip?.sync()));
+    this.registerEvent(this.plugin.studioEvents.onTypographyChanged(() => this.controlStrip?.sync()));
+    this.registerEvent(this.plugin.studioEvents.onSprintChanged(() => this.controlStrip?.sync()));
     await this.refresh();
   }
 
@@ -111,6 +119,10 @@ export class BinderView extends ItemView {
     container.empty();
     this.wcElements.clear();
     container.addClass('ws-binder-container');
+
+    // Control strip — the high-frequency environment controls live at the
+    // very top of the panel (UX review W1, prototype variant A)
+    this.controlStrip = new ControlStrip(this.plugin, container);
 
     // Header
     const header = container.createDiv('ws-binder-header');

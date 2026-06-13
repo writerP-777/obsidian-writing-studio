@@ -204,7 +204,16 @@
     },
     "newGroupOrPart": "新規グループまたはパート",
     "untitledGroup": "無題のグループ",
-    "untitledPart": "無題のパート"
+    "untitledPart": "無題のパート",
+    "strip": {
+      "focus": "フォーカス",
+      "typography": "タイポグラフィ",
+      "sprint": "スプリント",
+      "sprintReady": "準備完了 · {{minutes}}分",
+      "sprintRunning": "スプリント中",
+      "quickStart": "クイックスタート：{{minutes}}分",
+      "moreActions": "その他の操作"
+    }
   },
   "launcher": {
     "displayText": "ライティングスタジオ",

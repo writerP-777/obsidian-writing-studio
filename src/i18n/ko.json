@@ -204,7 +204,16 @@
     },
     "newGroupOrPart": "새 그룹 또는 파트",
     "untitledGroup": "제목 없는 그룹",
-    "untitledPart": "제목 없는 파트"
+    "untitledPart": "제목 없는 파트",
+    "strip": {
+      "focus": "집중",
+      "typography": "타이포그래피",
+      "sprint": "스프린트",
+      "sprintReady": "준비됨 · {{minutes}}분",
+      "sprintRunning": "스프린트 진행 중",
+      "quickStart": "빠른 시작: {{minutes}}분",
+      "moreActions": "추가 작업"
+    }
   },
   "launcher": {
     "displayText": "글쓰기 스튜디오",

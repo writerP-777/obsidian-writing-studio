@@ -46,6 +46,7 @@ export class FocusMode {
     }
 
     this.showToolbar();
+    this.plugin.studioEvents.announceFocusChanged(true);
   }
 
   disable(): void {
@@ -58,6 +59,7 @@ export class FocusMode {
     }
 
     this.hideToolbar();
+    this.plugin.studioEvents.announceFocusChanged(false);
   }
 
   // Applies the focus font size override while focus mode is active.

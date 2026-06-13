@@ -204,7 +204,16 @@
     },
     "newGroupOrPart": "Neue Gruppe oder neuer Teil",
     "untitledGroup": "Unbenannte Gruppe",
-    "untitledPart": "Unbenannter Teil"
+    "untitledPart": "Unbenannter Teil",
+    "strip": {
+      "focus": "Fokus",
+      "typography": "Typografie",
+      "sprint": "Sprint",
+      "sprintReady": "Bereit · {{minutes}} Min.",
+      "sprintRunning": "Sprint läuft",
+      "quickStart": "Schnellstart: {{minutes}} Minuten",
+      "moreActions": "Weitere Aktionen"
+    }
   },
   "launcher": {
     "displayText": "Schreibstudio",

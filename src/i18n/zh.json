@@ -204,7 +204,16 @@
     },
     "newGroupOrPart": "新建组或部",
     "untitledGroup": "未命名组",
-    "untitledPart": "未命名部"
+    "untitledPart": "未命名部",
+    "strip": {
+      "focus": "专注",
+      "typography": "排版",
+      "sprint": "冲刺",
+      "sprintReady": "就绪 · {{minutes}}分钟",
+      "sprintRunning": "冲刺进行中",
+      "quickStart": "快速开始：{{minutes}}分钟",
+      "moreActions": "更多操作"
+    }
   },
   "launcher": {
     "displayText": "写作工作室",

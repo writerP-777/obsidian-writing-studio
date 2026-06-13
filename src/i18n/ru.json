@@ -204,7 +204,16 @@
     },
     "newGroupOrPart": "Новая группа или часть",
     "untitledGroup": "Группа без названия",
-    "untitledPart": "Часть без названия"
+    "untitledPart": "Часть без названия",
+    "strip": {
+      "focus": "Фокус",
+      "typography": "Типографика",
+      "sprint": "Спринт",
+      "sprintReady": "Готов · {{minutes}} мин",
+      "sprintRunning": "Идёт спринт",
+      "quickStart": "Быстрый старт: {{minutes}} минут",
+      "moreActions": "Другие действия"
+    }
   },
   "launcher": {
     "displayText": "Студия письма",
