@@ -11484,7 +11484,7 @@ var WritingDashboardModal = class extends import_obsidian13.Modal {
       const historySection = contentEl.createDiv("ws-dash-section");
       historySection.createEl("h3", { text: t2("writingDashboard.recentSprints") });
       const log = await this.plugin.projectManager.getWritingLog(project);
-      const recent = [...log].reverse().slice(0, 10);
+      const recent = [...log].filter((s) => s.wordsWritten > 0).reverse().slice(0, 10);
       if (recent.length === 0) {
         historySection.createEl("p", { text: t2("writingDashboard.noSprints"), cls: "ws-empty-state" });
       } else {
