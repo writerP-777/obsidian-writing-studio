@@ -268,7 +268,12 @@
     "sessionWordsTyped": "本次：+{{n}} 字",
     "dailyGoal": "每日目标：{{written}} / {{goal}} 字",
     "sprintInProgress": "冲刺进行中",
-    "switchProject": "切换项目"
+    "switchProject": "切换项目",
+    "firstRun": {
+      "intro": "Writing Studio 将您的写作整理为项目，每个项目都有自己的章节与文档活页夹。",
+      "hint": "创建一个项目以生成其文件夹并开始写作。",
+      "cta": "创建您的第一个项目"
+    }
   },
   "log": {
     "displayText": "写作日志",

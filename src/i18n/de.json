@@ -268,7 +268,12 @@
     "sessionWordsTyped": "Sitzung: +{{n}} Wörter getippt",
     "dailyGoal": "Tagesziel: {{written}} / {{goal}} Wörter",
     "sprintInProgress": "Sprint läuft",
-    "switchProject": "Projekt wechseln"
+    "switchProject": "Projekt wechseln",
+    "firstRun": {
+      "intro": "Writing Studio organisiert dein Schreiben in Projekten, jedes mit einer eigenen Schreibmappe aus Kapiteln und Dokumenten.",
+      "hint": "Erstelle ein Projekt, um seinen Ordner anzulegen und mit dem Schreiben zu beginnen.",
+      "cta": "Erstelle dein erstes Projekt"
+    }
   },
   "log": {
     "displayText": "Schreibprotokoll",
