@@ -16,6 +16,7 @@ export type TreeNavAction =
   | 'to-parent'
   | 'activate'
   | 'menu'
+  | 'rename'
   | null;
 
 export function treeNavAction(key: string, row: TreeRow | null): TreeNavAction {
@@ -36,6 +37,8 @@ export function treeNavAction(key: string, row: TreeRow | null): TreeNavAction {
       return 'activate';
     case 'ContextMenu':
       return 'menu';
+    case 'F2':
+      return row ? 'rename' : null;
     default:
       return null;
   }

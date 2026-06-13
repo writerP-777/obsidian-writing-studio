@@ -175,7 +175,8 @@
       "publishToWordPress": "Publicar no WordPress",
       "delete": "Excluir",
       "moveUp": "Mover para cima",
-      "moveDown": "Mover para baixo"
+      "moveDown": "Mover para baixo",
+      "rename": "Renomear"
     },
     "wordCountSuffix": "{{count}}p",
     "fileNotFound": "O arquivo não existe mais: {{path}}",

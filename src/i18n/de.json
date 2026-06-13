@@ -175,7 +175,8 @@
       "publishToWordPress": "Auf WordPress veröffentlichen",
       "delete": "Löschen",
       "moveUp": "Nach oben verschieben",
-      "moveDown": "Nach unten verschieben"
+      "moveDown": "Nach unten verschieben",
+      "rename": "Umbenennen"
     },
     "wordCountSuffix": "{{count}}W",
     "fileNotFound": "Die Datei existiert nicht mehr: {{path}}",

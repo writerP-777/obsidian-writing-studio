@@ -175,7 +175,8 @@
       "publishToWordPress": "发布到 WordPress",
       "delete": "删除",
       "moveUp": "上移",
-      "moveDown": "下移"
+      "moveDown": "下移",
+      "rename": "重命名"
     },
     "wordCountSuffix": "{{count}}字",
     "fileNotFound": "文件已不存在：{{path}}",

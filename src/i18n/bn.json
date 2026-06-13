@@ -175,7 +175,8 @@
       "publishToWordPress": "WordPress-এ প্রকাশ করুন",
       "delete": "মুছুন",
       "moveUp": "উপরে সরান",
-      "moveDown": "নিচে সরান"
+      "moveDown": "নিচে সরান",
+      "rename": "নাম পরিবর্তন করুন"
     },
     "wordCountSuffix": "{{count}}শ",
     "fileNotFound": "ফাইলটি আর নেই: {{path}}",
