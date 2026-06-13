@@ -63,7 +63,9 @@ export class WritingDashboardModal extends Modal {
       historySection.createEl('h3', { text: t('writingDashboard.recentSprints') });
 
       const log = await this.plugin.projectManager.getWritingLog(project);
-      const recent = [...log].reverse().slice(0, 10);
+      // Display-only filter: abandoned sprints (0 words) clutter the table with
+      // 0 / 0-WPM rows. Storage, retention, and streak logic are unaffected.
+      const recent = [...log].filter(s => s.wordsWritten > 0).reverse().slice(0, 10);
 
       if (recent.length === 0) {
         historySection.createEl('p', { text: t('writingDashboard.noSprints'), cls: 'ws-empty-state' });
