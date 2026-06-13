@@ -177,7 +177,12 @@
       "moveUp": "Nach oben verschieben",
       "moveDown": "Nach unten verschieben",
       "rename": "Umbenennen",
-      "removeFromBinder": "Aus der Schreibmappe entfernen"
+      "removeFromBinder": "Aus der Schreibmappe entfernen",
+      "newGroup": "Neue Gruppe",
+      "newPart": "Neuer Teil",
+      "newChildGroup": "Neue untergeordnete Gruppe",
+      "newChildPart": "Neuer untergeordneter Teil",
+      "changeType": "Typ ändern: {{type}}"
     },
     "wordCountSuffix": "{{count}}W",
     "fileNotFound": "Die Datei existiert nicht mehr: {{path}}",
@@ -196,7 +201,10 @@
       "title": "Aus der Schreibmappe entfernen",
       "message": "„{{title}}“ aus der Schreibmappe entfernen? Die Datei bleibt im Vault, aber Status, Wortziel und Export-Einstellung des Eintrags gehen verloren. Untergeordnete Dokumente rücken an seine Stelle.",
       "remove": "Entfernen"
-    }
+    },
+    "newGroupOrPart": "Neue Gruppe oder neuer Teil",
+    "untitledGroup": "Unbenannte Gruppe",
+    "untitledPart": "Unbenannter Teil"
   },
   "launcher": {
     "displayText": "Schreibstudio",

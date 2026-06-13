@@ -177,7 +177,12 @@
       "moveUp": "نقل لأعلى",
       "moveDown": "نقل لأسفل",
       "rename": "إعادة تسمية",
-      "removeFromBinder": "إزالة من الملزمة"
+      "removeFromBinder": "إزالة من الملزمة",
+      "newGroup": "مجموعة جديدة",
+      "newPart": "جزء جديد",
+      "newChildGroup": "مجموعة فرعية جديدة",
+      "newChildPart": "جزء فرعي جديد",
+      "changeType": "تغيير النوع: {{type}}"
     },
     "wordCountSuffix": "{{count}}ك",
     "fileNotFound": "الملف لم يعد موجودًا: {{path}}",
@@ -196,7 +201,10 @@
       "title": "إزالة من الملزمة",
       "message": "هل تريد إزالة \"{{title}}\" من الملزمة؟ سيبقى الملف في الخزنة، لكن حالة الإدخال وهدف عدد الكلمات وإعداد التصدير ستُفقد. تنتقل المستندات المتداخلة إلى مكانه.",
       "remove": "إزالة"
-    }
+    },
+    "newGroupOrPart": "مجموعة أو جزء جديد",
+    "untitledGroup": "مجموعة بدون عنوان",
+    "untitledPart": "جزء بدون عنوان"
   },
   "launcher": {
     "displayText": "استوديو الكتابة",

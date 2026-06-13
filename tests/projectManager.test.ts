@@ -394,6 +394,76 @@ describe('ProjectManager.removeFromBinderPromoteChildren', () => {
   });
 });
 
+describe('ProjectManager.addStructuralItem', () => {
+  it('creates a file-less item at the root and writes no document file', async () => {
+    const files = new InMemoryVaultFiles();
+    const pm = new ProjectManager(makePlugin(), files);
+    await pm.saveProject(makeProject());
+
+    const item = await pm.addStructuralItem(makeProject(), 'Part 1', 'part');
+
+    expect(item.type).toBe('part');
+    expect(item.filePath).toBe('');
+    const binder = await pm.loadBinder(makeProject());
+    expect(binder.items.map(i => i.id)).toEqual([item.id]);
+    // Only project metadata exists — no .md was created
+    expect([...files.files.keys()].sort()).toEqual([
+      'Projects/My Book/_binder.json',
+      'Projects/My Book/_project.json',
+    ]);
+  });
+
+  it('nests a group under a parent item', async () => {
+    const pm = new ProjectManager(makePlugin(), new InMemoryVaultFiles());
+    await pm.saveProject(makeProject());
+    const parent = await pm.addStructuralItem(makeProject(), 'Part 1', 'part');
+
+    const child = await pm.addStructuralItem(makeProject(), 'Act 1', 'group', parent.id);
+
+    const binder = await pm.loadBinder(makeProject());
+    expect(binder.items[0].children!.map(i => i.id)).toEqual([child.id]);
+  });
+});
+
+describe('ProjectManager.updateItemType', () => {
+  it('changes a document item type and persists it', async () => {
+    const pm = new ProjectManager(makePlugin(), new InMemoryVaultFiles());
+    await pm.saveProject(makeProject());
+    const item = await pm.addDocumentToBinder(makeProject(), 'Chapter One', 'chapter');
+
+    await pm.updateItemType(makeProject(), item.id, 'note');
+
+    const binder = await pm.loadBinder(makeProject());
+    expect(binder.items[0].type).toBe('note');
+  });
+
+  it('refuses to change structural items', async () => {
+    const pm = new ProjectManager(makePlugin(), new InMemoryVaultFiles());
+    await pm.saveProject(makeProject());
+    const group = await pm.addStructuralItem(makeProject(), 'Act 1', 'group');
+    const events = jest.fn();
+    pm.onBinderChanged(events);
+
+    await pm.updateItemType(makeProject(), group.id, 'chapter');
+
+    const binder = await pm.loadBinder(makeProject());
+    expect(binder.items[0].type).toBe('group');
+    expect(events).not.toHaveBeenCalled();
+  });
+
+  it('does not announce a change when the type is already set', async () => {
+    const pm = new ProjectManager(makePlugin(), new InMemoryVaultFiles());
+    await pm.saveProject(makeProject());
+    const item = await pm.addDocumentToBinder(makeProject(), 'Chapter One', 'chapter');
+    const events = jest.fn();
+    pm.onBinderChanged(events);
+
+    await pm.updateItemType(makeProject(), item.id, 'chapter');
+
+    expect(events).not.toHaveBeenCalled();
+  });
+});
+
 describe('ProjectManager.addDocumentToBinder filename de-duplication', () => {
   it('suffixes the filename when the target file already exists', async () => {
     const files = new InMemoryVaultFiles();

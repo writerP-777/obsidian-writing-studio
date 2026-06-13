@@ -232,6 +232,10 @@ The binder tree is fully keyboard-operable. Tab to focus the list, then:
 | `F2` | Rename the focused item inline (Enter commits, Escape cancels) |
 | `Shift+F10` or menu key | Open the item's right-click menu |
 
+**Organizing with groups and parts:**
+
+Groups and parts are structural entries — they organize the binder tree but have no file behind them. The book template creates parts for you, and you can build the same structure by hand: the folder-plus button in the binder toolbar creates a group or part at the root, and an item's right-click menu offers **New child group** / **New child part** beneath it. Clicking a group or part expands or collapses it. A document's type (chapter, section, article, note) can be changed at any time from the same menu via **Change type**.
+
 **Adding a file to a project:**
 1. Right-click any Markdown file in the file explorer and choose **Add to writing project** under **Writing studio options**.
 2. A modal appears with a dropdown listing all your writing projects.

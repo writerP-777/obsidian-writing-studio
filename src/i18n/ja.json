@@ -177,7 +177,12 @@
       "moveUp": "上に移動",
       "moveDown": "下に移動",
       "rename": "名前を変更",
-      "removeFromBinder": "バインダーから外す"
+      "removeFromBinder": "バインダーから外す",
+      "newGroup": "新規グループ",
+      "newPart": "新規パート",
+      "newChildGroup": "子グループを新規作成",
+      "newChildPart": "子パートを新規作成",
+      "changeType": "タイプを変更：{{type}}"
     },
     "wordCountSuffix": "{{count}}語",
     "fileNotFound": "ファイルが存在しません：{{path}}",
@@ -196,7 +201,10 @@
       "title": "バインダーから外す",
       "message": "「{{title}}」をバインダーから外しますか？ファイルはVaultに残りますが、項目のステータス、目標語数、エクスポート設定は失われます。入れ子のドキュメントはその位置に繰り上がります。",
       "remove": "外す"
-    }
+    },
+    "newGroupOrPart": "新規グループまたはパート",
+    "untitledGroup": "無題のグループ",
+    "untitledPart": "無題のパート"
   },
   "launcher": {
     "displayText": "ライティングスタジオ",

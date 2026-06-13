@@ -218,20 +218,59 @@ export class ProjectManager extends Events {
     const frontmatter = this.buildDocFrontmatter(title, type, item.order, now);
     await this.files.writeText(filePath, content ?? frontmatter + '\n\n');
 
+    this.insertIntoBinder(binder, item, parentId);
+    await this.saveBinder(binder);
+    return item;
+  }
+
+  // Structural items (group/part) organize the binder tree only — they have
+  // no backing file, so nothing is written to the vault
+  async addStructuralItem(
+    project: WritingProject,
+    title: string,
+    type: 'group' | 'part',
+    parentId?: string
+  ): Promise<BinderItem> {
+    const binder = await this.loadBinder(project);
+    const item: BinderItem = {
+      id: this.uniqueId('item'),
+      title,
+      filePath: '',
+      type,
+      order: this.getNextOrder(binder.items, parentId),
+      status: 'draft',
+      includeInExport: true,
+    };
+    this.insertIntoBinder(binder, item, parentId);
+    await this.saveBinder(binder);
+    return item;
+  }
+
+  // Document items only — structural items (group/part) keep their type,
+  // and document items can never become structural
+  async updateItemType(
+    project: WritingProject,
+    itemId: string,
+    type: 'chapter' | 'section' | 'article' | 'note'
+  ): Promise<void> {
+    const binder = await this.loadBinder(project);
+    const item = this.findItem(binder.items, itemId);
+    if (item && item.type !== 'group' && item.type !== 'part' && item.type !== type) {
+      item.type = type;
+      await this.saveBinder(binder);
+    }
+  }
+
+  private insertIntoBinder(binder: BinderData, item: BinderItem, parentId?: string): void {
     if (parentId) {
       const parent = this.findItem(binder.items, parentId);
       if (parent) {
         parent.children = parent.children || [];
         parent.children.push(item);
-      } else {
-        binder.items.push(item);
+        return;
       }
-    } else {
-      binder.items.push(item);
     }
-
-    await this.saveBinder(binder);
-    return item;
+    binder.items.push(item);
   }
 
   private buildDocFrontmatter(title: string, type: string, order: number, date: string): string {
