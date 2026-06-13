@@ -1983,3 +1983,22 @@ body .ws-launcher select {
   font-size: 12px;
   line-height: 1.4;
 }
+
+/* ── Export modal ───────────────────────────────────────────── */
+
+.ws-export-pandoc-warning {
+  margin: 4px 0 8px;
+  padding: 8px 12px;
+  border-radius: 6px;
+  background: var(--background-modifier-error);
+  color: var(--text-on-accent);
+  font-size: 12px;
+  line-height: 1.4;
+}
+
+/* Let the scope dropdown size to its longest option instead of being
+   squeezed by the setting row at the default modal width */
+.ws-export-modal .setting-item-control select.dropdown {
+  width: max-content;
+  max-width: 100%;
+}

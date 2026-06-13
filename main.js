@@ -2777,7 +2777,8 @@ var en_default = {
     exportBtn: "Export",
     exporting: "Exporting\u2026",
     exportFailed: "Export failed: {{error}}",
-    cancel: "Cancel"
+    cancel: "Cancel",
+    pandocWarning: 'Pandoc was not found. Check the "Pandoc path" field in the export settings \u2014 this export will likely fail.'
   },
   publishModal: {
     title: "Publish to WordPress",
@@ -3455,7 +3456,8 @@ var zh_default = {
     exportBtn: "\u5BFC\u51FA",
     exporting: "\u5BFC\u51FA\u4E2D\u2026",
     exportFailed: "\u5BFC\u51FA\u5931\u8D25\uFF1A{{error}}",
-    cancel: "\u53D6\u6D88"
+    cancel: "\u53D6\u6D88",
+    pandocWarning: '\u672A\u627E\u5230 Pandoc\u3002\u8BF7\u68C0\u67E5\u5BFC\u51FA\u8BBE\u7F6E\u4E2D\u7684"Pandoc \u8DEF\u5F84"\u5B57\u6BB5\u2014\u2014\u6B64\u6B21\u5BFC\u51FA\u5F88\u53EF\u80FD\u5931\u8D25\u3002'
   },
   publishModal: {
     title: "\u53D1\u5E03\u5230 WordPress",
@@ -4133,7 +4135,8 @@ var hi_default = {
     exportBtn: "\u0928\u093F\u0930\u094D\u092F\u093E\u0924",
     exporting: "\u0928\u093F\u0930\u094D\u092F\u093E\u0924 \u0939\u094B \u0930\u0939\u093E \u0939\u0948\u2026",
     exportFailed: "\u0928\u093F\u0930\u094D\u092F\u093E\u0924 \u0935\u093F\u092B\u0932: {{error}}",
-    cancel: "\u0930\u0926\u094D\u0926 \u0915\u0930\u0947\u0902"
+    cancel: "\u0930\u0926\u094D\u0926 \u0915\u0930\u0947\u0902",
+    pandocWarning: 'Pandoc \u0928\u0939\u0940\u0902 \u092E\u093F\u0932\u093E\u0964 \u0928\u093F\u0930\u094D\u092F\u093E\u0924 \u0938\u0947\u091F\u093F\u0902\u0917\u094D\u0938 \u092E\u0947\u0902 "Pandoc \u092A\u0925" \u092B\u093C\u0940\u0932\u094D\u0921 \u091C\u093E\u0901\u091A\u0947\u0902 \u2014 \u092F\u0939 \u0928\u093F\u0930\u094D\u092F\u093E\u0924 \u0938\u0902\u092D\u0935\u0924\u0903 \u0935\u093F\u092B\u0932 \u0939\u094B\u0917\u093E\u0964'
   },
   publishModal: {
     title: "WordPress \u092A\u0930 \u092A\u094D\u0930\u0915\u093E\u0936\u093F\u0924 \u0915\u0930\u0947\u0902",
@@ -4811,7 +4814,8 @@ var es_default = {
     exportBtn: "Exportar",
     exporting: "Exportando\u2026",
     exportFailed: "Error de exportaci\xF3n: {{error}}",
-    cancel: "Cancelar"
+    cancel: "Cancelar",
+    pandocWarning: 'No se encontr\xF3 Pandoc. Revisa el campo "Ruta de Pandoc" en los ajustes de exportaci\xF3n: esta exportaci\xF3n probablemente fallar\xE1.'
   },
   publishModal: {
     title: "Publicar en WordPress",
@@ -5496,7 +5500,8 @@ var ar_default = {
     exportBtn: "\u062A\u0635\u062F\u064A\u0631",
     exporting: "\u062C\u0627\u0631\u064D \u0627\u0644\u062A\u0635\u062F\u064A\u0631\u2026",
     exportFailed: "\u0641\u0634\u0644 \u0627\u0644\u062A\u0635\u062F\u064A\u0631: {{error}}",
-    cancel: "\u0625\u0644\u063A\u0627\u0621"
+    cancel: "\u0625\u0644\u063A\u0627\u0621",
+    pandocWarning: '\u0644\u0645 \u064A\u062A\u0645 \u0627\u0644\u0639\u062B\u0648\u0631 \u0639\u0644\u0649 Pandoc. \u062A\u062D\u0642\u0642 \u0645\u0646 \u062D\u0642\u0644 "\u0645\u0633\u0627\u0631 Pandoc" \u0641\u064A \u0625\u0639\u062F\u0627\u062F\u0627\u062A \u0627\u0644\u062A\u0635\u062F\u064A\u0631 \u2014 \u0645\u0646 \u0627\u0644\u0645\u0631\u062C\u062D \u0623\u0646 \u064A\u0641\u0634\u0644 \u0647\u0630\u0627 \u0627\u0644\u062A\u0635\u062F\u064A\u0631.'
   },
   publishModal: {
     title: "\u0646\u0634\u0631 \u0625\u0644\u0649 WordPress",
@@ -6178,7 +6183,8 @@ var fr_default = {
     exportBtn: "Exporter",
     exporting: "Export en cours\u2026",
     exportFailed: "\xC9chec de l'export : {{error}}",
-    cancel: "Annuler"
+    cancel: "Annuler",
+    pandocWarning: "Pandoc est introuvable. V\xE9rifiez le champ \xAB Chemin de Pandoc \xBB dans les r\xE9glages d'export \u2014 cet export \xE9chouera probablement."
   },
   publishModal: {
     title: "Publier sur WordPress",
@@ -6856,7 +6862,8 @@ var bn_default = {
     exportBtn: "\u09B0\u09AA\u09CD\u09A4\u09BE\u09A8\u09BF",
     exporting: "\u09B0\u09AA\u09CD\u09A4\u09BE\u09A8\u09BF \u09B9\u099A\u09CD\u099B\u09C7\u2026",
     exportFailed: "\u09B0\u09AA\u09CD\u09A4\u09BE\u09A8\u09BF \u09AC\u09CD\u09AF\u09B0\u09CD\u09A5: {{error}}",
-    cancel: "\u09AC\u09BE\u09A4\u09BF\u09B2"
+    cancel: "\u09AC\u09BE\u09A4\u09BF\u09B2",
+    pandocWarning: 'Pandoc \u09AA\u09BE\u0993\u09AF\u09BC\u09BE \u09AF\u09BE\u09AF\u09BC\u09A8\u09BF\u0964 \u09B0\u09AA\u09CD\u09A4\u09BE\u09A8\u09BF \u09B8\u09C7\u099F\u09BF\u0982\u09B8\u09C7 "Pandoc \u09AA\u09BE\u09A5" \u09AB\u09BF\u09B2\u09CD\u09A1\u099F\u09BF \u09A6\u09C7\u0996\u09C1\u09A8 \u2014 \u098F\u0987 \u09B0\u09AA\u09CD\u09A4\u09BE\u09A8\u09BF \u09B8\u09AE\u09CD\u09AD\u09AC\u09A4 \u09AC\u09CD\u09AF\u09B0\u09CD\u09A5 \u09B9\u09AC\u09C7\u0964'
   },
   publishModal: {
     title: "WordPress-\u098F \u09AA\u09CD\u09B0\u0995\u09BE\u09B6 \u0995\u09B0\u09C1\u09A8",
@@ -7534,7 +7541,8 @@ var pt_BR_default = {
     exportBtn: "Exportar",
     exporting: "Exportando\u2026",
     exportFailed: "Falha na exporta\xE7\xE3o: {{error}}",
-    cancel: "Cancelar"
+    cancel: "Cancelar",
+    pandocWarning: 'O Pandoc n\xE3o foi encontrado. Verifique o campo "Caminho do Pandoc" nas configura\xE7\xF5es de exporta\xE7\xE3o \u2014 esta exporta\xE7\xE3o provavelmente falhar\xE1.'
   },
   publishModal: {
     title: "Publicar no WordPress",
@@ -8216,7 +8224,8 @@ var ru_default = {
     exportBtn: "\u042D\u043A\u0441\u043F\u043E\u0440\u0442",
     exporting: "\u042D\u043A\u0441\u043F\u043E\u0440\u0442\u2026",
     exportFailed: "\u041E\u0448\u0438\u0431\u043A\u0430 \u044D\u043A\u0441\u043F\u043E\u0440\u0442\u0430: {{error}}",
-    cancel: "\u041E\u0442\u043C\u0435\u043D\u0430"
+    cancel: "\u041E\u0442\u043C\u0435\u043D\u0430",
+    pandocWarning: "Pandoc \u043D\u0435 \u043D\u0430\u0439\u0434\u0435\u043D. \u041F\u0440\u043E\u0432\u0435\u0440\u044C\u0442\u0435 \u043F\u043E\u043B\u0435 \xAB\u041F\u0443\u0442\u044C \u043A Pandoc\xBB \u0432 \u043D\u0430\u0441\u0442\u0440\u043E\u0439\u043A\u0430\u0445 \u044D\u043A\u0441\u043F\u043E\u0440\u0442\u0430 \u2014 \u044D\u043A\u0441\u043F\u043E\u0440\u0442, \u0441\u043A\u043E\u0440\u0435\u0435 \u0432\u0441\u0435\u0433\u043E, \u043D\u0435 \u0443\u0434\u0430\u0441\u0442\u0441\u044F."
   },
   publishModal: {
     title: "\u041E\u043F\u0443\u0431\u043B\u0438\u043A\u043E\u0432\u0430\u0442\u044C \u0432 WordPress",
@@ -8896,7 +8905,8 @@ var ja_default = {
     exportBtn: "\u30A8\u30AF\u30B9\u30DD\u30FC\u30C8",
     exporting: "\u30A8\u30AF\u30B9\u30DD\u30FC\u30C8\u4E2D\u2026",
     exportFailed: "\u30A8\u30AF\u30B9\u30DD\u30FC\u30C8\u306B\u5931\u6557\u3057\u307E\u3057\u305F\uFF1A{{error}}",
-    cancel: "\u30AD\u30E3\u30F3\u30BB\u30EB"
+    cancel: "\u30AD\u30E3\u30F3\u30BB\u30EB",
+    pandocWarning: "Pandoc\u304C\u898B\u3064\u304B\u308A\u307E\u305B\u3093\u3002\u30A8\u30AF\u30B9\u30DD\u30FC\u30C8\u8A2D\u5B9A\u306E\u300CPandoc\u306E\u30D1\u30B9\u300D\u3092\u78BA\u8A8D\u3057\u3066\u304F\u3060\u3055\u3044 \u2014 \u3053\u306E\u30A8\u30AF\u30B9\u30DD\u30FC\u30C8\u306F\u5931\u6557\u3059\u308B\u53EF\u80FD\u6027\u304C\u9AD8\u3044\u3067\u3059\u3002"
   },
   publishModal: {
     title: "WordPress\u306B\u516C\u958B",
@@ -9574,7 +9584,8 @@ var de_default = {
     exportBtn: "Exportieren",
     exporting: "Exportiere\u2026",
     exportFailed: "Export fehlgeschlagen: {{error}}",
-    cancel: "Abbrechen"
+    cancel: "Abbrechen",
+    pandocWarning: "Pandoc wurde nicht gefunden. Pr\xFCfe das Feld \u201EPandoc-Pfad\u201C in den Export-Einstellungen \u2014 dieser Export wird voraussichtlich fehlschlagen."
   },
   publishModal: {
     title: "Auf WordPress ver\xF6ffentlichen",
@@ -10252,7 +10263,8 @@ var ko_default = {
     exportBtn: "\uB0B4\uBCF4\uB0B4\uAE30",
     exporting: "\uB0B4\uBCF4\uB0B4\uB294 \uC911\u2026",
     exportFailed: "\uB0B4\uBCF4\uB0B4\uAE30 \uC2E4\uD328: {{error}}",
-    cancel: "\uCDE8\uC18C"
+    cancel: "\uCDE8\uC18C",
+    pandocWarning: 'Pandoc\uC744 \uCC3E\uC744 \uC218 \uC5C6\uC2B5\uB2C8\uB2E4. \uB0B4\uBCF4\uB0B4\uAE30 \uC124\uC815\uC758 "Pandoc \uACBD\uB85C" \uD544\uB4DC\uB97C \uD655\uC778\uD558\uC138\uC694 \u2014 \uC774 \uB0B4\uBCF4\uB0B4\uAE30\uB294 \uC2E4\uD328\uD560 \uAC00\uB2A5\uC131\uC774 \uB192\uC2B5\uB2C8\uB2E4.'
   },
   publishModal: {
     title: "WordPress\uC5D0 \uAC8C\uC2DC",
@@ -11190,7 +11202,7 @@ var import_obsidian14 = require("obsidian");
 
 // modals/ExportModal.ts
 var import_obsidian11 = require("obsidian");
-var ExportModal = class extends import_obsidian11.Modal {
+var _ExportModal = class _ExportModal extends import_obsidian11.Modal {
   constructor(app, plugin, initialScope = "current") {
     super(app);
     this.exportScope = "current";
@@ -11200,6 +11212,9 @@ var ExportModal = class extends import_obsidian11.Modal {
     this.addTitlePage = true;
     this.coverImagePath = "";
     this.authorContact = "";
+    this.pandocWarningEl = null;
+    // Checked once per modal open, only when a pandoc format is selected
+    this.pandocAvailable = null;
     this.plugin = plugin;
     this.format = plugin.settings.defaultExportFormat;
     this.exportScope = initialScope;
@@ -11215,7 +11230,10 @@ var ExportModal = class extends import_obsidian11.Modal {
       this.format = v;
       coverSetting.settingEl.toggleClass("ws-hidden", v !== "epub");
       contactSetting.settingEl.toggleClass("ws-hidden", v !== "manuscript");
+      this.updatePandocWarning();
     }));
+    this.pandocWarningEl = contentEl.createDiv({ cls: "ws-export-pandoc-warning ws-hidden", text: t2("exportModal.pandocWarning") });
+    this.updatePandocWarning();
     coverSetting = new import_obsidian11.Setting(contentEl).setName(t2("exportModal.coverImageName")).setDesc(t2("exportModal.coverImageDesc")).addText((tx) => tx.setValue(this.coverImagePath).setPlaceholder(t2("exportModal.coverImagePlaceholder")).onChange((v) => {
       this.coverImagePath = v.trim();
     }));
@@ -11276,10 +11294,31 @@ var ExportModal = class extends import_obsidian11.Modal {
     const cancelBtn = btnRow.createEl("button", { text: t2("exportModal.cancel") });
     cancelBtn.onclick = () => this.close();
   }
+  // Warning only — the export attempt itself stays allowed
+  updatePandocWarning() {
+    const el = this.pandocWarningEl;
+    if (!el) return;
+    if (!_ExportModal.PANDOC_FORMATS.has(this.format)) {
+      el.addClass("ws-hidden");
+      return;
+    }
+    if (this.pandocAvailable !== null) {
+      el.toggleClass("ws-hidden", this.pandocAvailable);
+      return;
+    }
+    void this.plugin.exportEngine.isPandocAvailable().then((ok) => {
+      this.pandocAvailable = ok;
+      if (_ExportModal.PANDOC_FORMATS.has(this.format)) {
+        el.toggleClass("ws-hidden", ok);
+      }
+    });
+  }
   onClose() {
     this.contentEl.empty();
   }
 };
+_ExportModal.PANDOC_FORMATS = /* @__PURE__ */ new Set(["pdf", "docx", "rtf"]);
+var ExportModal = _ExportModal;
 
 // modals/SprintModal.ts
 var import_obsidian12 = require("obsidian");
@@ -16186,6 +16225,17 @@ ${markdownToHtml(content2)}
     await this.files.writeText(outputPath, html);
     new import_obsidian22.Notice(t2("exportEngine.exportedHtmlTo", { path: outputPath }));
     return outputPath;
+  }
+  // Pre-flight for the export modal — false when the configured pandoc
+  // binary cannot be executed. Never throws; never blocks the UI.
+  async isPandocAvailable() {
+    const pandocPath = this.plugin.settings.pandocPath || "pandoc";
+    try {
+      await execFileAsync(pandocPath, ["--version"]);
+      return true;
+    } catch (e) {
+      return false;
+    }
   }
   async exportPandoc(content2, outputPath, opts) {
     const pandocPath = this.plugin.settings.pandocPath || "pandoc";

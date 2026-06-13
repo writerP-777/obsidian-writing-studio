@@ -467,7 +467,8 @@
     "exportBtn": "エクスポート",
     "exporting": "エクスポート中…",
     "exportFailed": "エクスポートに失敗しました：{{error}}",
-    "cancel": "キャンセル"
+    "cancel": "キャンセル",
+    "pandocWarning": "Pandocが見つかりません。エクスポート設定の「Pandocのパス」を確認してください — このエクスポートは失敗する可能性が高いです。"
   },
   "publishModal": {
     "title": "WordPressに公開",

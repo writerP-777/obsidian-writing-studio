@@ -474,7 +474,8 @@
     "exportBtn": "تصدير",
     "exporting": "جارٍ التصدير…",
     "exportFailed": "فشل التصدير: {{error}}",
-    "cancel": "إلغاء"
+    "cancel": "إلغاء",
+    "pandocWarning": "لم يتم العثور على Pandoc. تحقق من حقل \"مسار Pandoc\" في إعدادات التصدير — من المرجح أن يفشل هذا التصدير."
   },
   "publishModal": {
     "title": "نشر إلى WordPress",

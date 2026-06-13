@@ -467,7 +467,8 @@
     "exportBtn": "निर्यात",
     "exporting": "निर्यात हो रहा है…",
     "exportFailed": "निर्यात विफल: {{error}}",
-    "cancel": "रद्द करें"
+    "cancel": "रद्द करें",
+    "pandocWarning": "Pandoc नहीं मिला। निर्यात सेटिंग्स में \"Pandoc पथ\" फ़ील्ड जाँचें — यह निर्यात संभवतः विफल होगा।"
   },
   "publishModal": {
     "title": "WordPress पर प्रकाशित करें",

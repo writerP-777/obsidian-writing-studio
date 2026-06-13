@@ -467,7 +467,8 @@
     "exportBtn": "내보내기",
     "exporting": "내보내는 중…",
     "exportFailed": "내보내기 실패: {{error}}",
-    "cancel": "취소"
+    "cancel": "취소",
+    "pandocWarning": "Pandoc을 찾을 수 없습니다. 내보내기 설정의 \"Pandoc 경로\" 필드를 확인하세요 — 이 내보내기는 실패할 가능성이 높습니다."
   },
   "publishModal": {
     "title": "WordPress에 게시",

@@ -467,7 +467,8 @@
     "exportBtn": "导出",
     "exporting": "导出中…",
     "exportFailed": "导出失败：{{error}}",
-    "cancel": "取消"
+    "cancel": "取消",
+    "pandocWarning": "未找到 Pandoc。请检查导出设置中的\"Pandoc 路径\"字段——此次导出很可能失败。"
   },
   "publishModal": {
     "title": "发布到 WordPress",

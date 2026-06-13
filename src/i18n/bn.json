@@ -467,7 +467,8 @@
     "exportBtn": "রপ্তানি",
     "exporting": "রপ্তানি হচ্ছে…",
     "exportFailed": "রপ্তানি ব্যর্থ: {{error}}",
-    "cancel": "বাতিল"
+    "cancel": "বাতিল",
+    "pandocWarning": "Pandoc পাওয়া যায়নি। রপ্তানি সেটিংসে \"Pandoc পাথ\" ফিল্ডটি দেখুন — এই রপ্তানি সম্ভবত ব্যর্থ হবে।"
   },
   "publishModal": {
     "title": "WordPress-এ প্রকাশ করুন",
