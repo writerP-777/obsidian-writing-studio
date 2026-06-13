@@ -319,7 +319,7 @@
     "manuscriptExported": "稿件已导出到 {{path}}",
     "exportedTo": "已导出到 {{path}}",
     "exportedHtmlTo": "HTML 已导出到 {{path}}",
-    "pdfRequiresPandoc": "PDF 导出需要 pandoc。请安装 pandoc 并在设置中设置路径。",
+    "pdfRequiresPandoc": "PDF 导出需要 Pandoc。请安装 Pandoc 并在设置中设置路径。",
     "noActiveDocument": "没有打开的文档。请打开文件，或将导出范围切换为「整个项目」。",
     "byAuthor": "作者：{{author}}",
     "approxWords": "约 {{n}} 字",
@@ -449,9 +449,9 @@
       "html": "HTML",
       "manuscript": "手稿（HTML）",
       "epub": "EPUB (.epub)",
-      "pdf": "PDF（需要 pandoc）",
-      "docx": "Word (.docx)（需要 pandoc）",
-      "rtf": "RTF（需要 pandoc）"
+      "pdf": "PDF（需要 Pandoc）",
+      "docx": "Word (.docx)（需要 Pandoc）",
+      "rtf": "RTF（需要 Pandoc）"
     },
     "coverImageName": "封面图片路径",
     "coverImageDesc": "JPG 或 PNG 封面图片的 Vault 路径。留空将生成文字封面。",
@@ -507,7 +507,7 @@
     "actionNotice": "{{action}}！查看文章：{{url}}"
   },
   "targetsDashboard": {
-    "title": "章节目标仪表板",
+    "title": "目标仪表板",
     "noProject": "未选择项目。",
     "filterLabel": "筛选：",
     "allStatuses": "所有状态",

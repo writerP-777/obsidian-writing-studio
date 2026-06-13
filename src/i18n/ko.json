@@ -319,7 +319,7 @@
     "manuscriptExported": "원고를 {{path}}에 내보냈습니다",
     "exportedTo": "{{path}}에 내보냈습니다",
     "exportedHtmlTo": "HTML을 {{path}}에 내보냈습니다",
-    "pdfRequiresPandoc": "PDF 내보내기에는 pandoc이 필요합니다. pandoc을 설치하고 설정에서 경로를 설정하세요.",
+    "pdfRequiresPandoc": "PDF 내보내기에는 Pandoc이 필요합니다. Pandoc을 설치하고 설정에서 경로를 설정하세요.",
     "noActiveDocument": "열린 문서가 없습니다. 파일을 열거나 내보내기 범위를 '전체 프로젝트'로 변경하세요.",
     "byAuthor": "저자: {{author}}",
     "approxWords": "약 {{n}} 단어",
@@ -449,9 +449,9 @@
       "html": "HTML",
       "manuscript": "원고 (HTML)",
       "epub": "EPUB (.epub)",
-      "pdf": "PDF (pandoc 필요)",
-      "docx": "Word (.docx) (pandoc 필요)",
-      "rtf": "RTF (pandoc 필요)"
+      "pdf": "PDF (Pandoc 필요)",
+      "docx": "Word (.docx) (Pandoc 필요)",
+      "rtf": "RTF (Pandoc 필요)"
     },
     "coverImageName": "표지 이미지 경로",
     "coverImageDesc": "JPG 또는 PNG 표지 이미지의 볼트 경로. 생성된 텍스트 표지의 경우 비워 두세요.",
@@ -507,7 +507,7 @@
     "actionNotice": "{{action}}! 게시물 보기: {{url}}"
   },
   "targetsDashboard": {
-    "title": "챕터 목표 대시보드",
+    "title": "목표 대시보드",
     "noProject": "선택된 프로젝트가 없습니다.",
     "filterLabel": "필터: ",
     "allStatuses": "모든 상태",

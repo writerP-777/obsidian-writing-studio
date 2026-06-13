@@ -2629,7 +2629,7 @@ var en_default = {
     manuscriptExported: "Manuscript exported to {{path}}",
     exportedTo: "Exported to {{path}}",
     exportedHtmlTo: "Exported HTML to {{path}}",
-    pdfRequiresPandoc: "PDF export requires pandoc. Install pandoc and set path in settings.",
+    pdfRequiresPandoc: "PDF export requires Pandoc. Install Pandoc and set path in settings.",
     noActiveDocument: 'No document is open. Open a file or switch the export scope to "Entire project".',
     byAuthor: "By {{author}}",
     approxWords: "Approx. {{n}} words",
@@ -2759,9 +2759,9 @@ var en_default = {
       html: "HTML",
       manuscript: "Manuscript (HTML)",
       epub: "EPUB (.epub)",
-      pdf: "PDF (requires pandoc)",
-      docx: "Word (.docx) (requires pandoc)",
-      rtf: "RTF (requires pandoc)"
+      pdf: "PDF (requires Pandoc)",
+      docx: "Word (.docx) (requires Pandoc)",
+      rtf: "RTF (requires Pandoc)"
     },
     coverImageName: "Cover image path",
     coverImageDesc: "Vault path to a JPG or PNG cover image. Leave empty for a generated text cover.",
@@ -2817,7 +2817,7 @@ var en_default = {
     actionNotice: "{{action}}! View post: {{url}}"
   },
   targetsDashboard: {
-    title: "Chapter targets dashboard",
+    title: "Targets dashboard",
     noProject: "No project selected.",
     filterLabel: "Filter: ",
     allStatuses: "All statuses",
@@ -3312,7 +3312,7 @@ var zh_default = {
     manuscriptExported: "\u7A3F\u4EF6\u5DF2\u5BFC\u51FA\u5230 {{path}}",
     exportedTo: "\u5DF2\u5BFC\u51FA\u5230 {{path}}",
     exportedHtmlTo: "HTML \u5DF2\u5BFC\u51FA\u5230 {{path}}",
-    pdfRequiresPandoc: "PDF \u5BFC\u51FA\u9700\u8981 pandoc\u3002\u8BF7\u5B89\u88C5 pandoc \u5E76\u5728\u8BBE\u7F6E\u4E2D\u8BBE\u7F6E\u8DEF\u5F84\u3002",
+    pdfRequiresPandoc: "PDF \u5BFC\u51FA\u9700\u8981 Pandoc\u3002\u8BF7\u5B89\u88C5 Pandoc \u5E76\u5728\u8BBE\u7F6E\u4E2D\u8BBE\u7F6E\u8DEF\u5F84\u3002",
     noActiveDocument: "\u6CA1\u6709\u6253\u5F00\u7684\u6587\u6863\u3002\u8BF7\u6253\u5F00\u6587\u4EF6\uFF0C\u6216\u5C06\u5BFC\u51FA\u8303\u56F4\u5207\u6362\u4E3A\u300C\u6574\u4E2A\u9879\u76EE\u300D\u3002",
     byAuthor: "\u4F5C\u8005\uFF1A{{author}}",
     approxWords: "\u7EA6 {{n}} \u5B57",
@@ -3442,9 +3442,9 @@ var zh_default = {
       html: "HTML",
       manuscript: "\u624B\u7A3F\uFF08HTML\uFF09",
       epub: "EPUB (.epub)",
-      pdf: "PDF\uFF08\u9700\u8981 pandoc\uFF09",
-      docx: "Word (.docx)\uFF08\u9700\u8981 pandoc\uFF09",
-      rtf: "RTF\uFF08\u9700\u8981 pandoc\uFF09"
+      pdf: "PDF\uFF08\u9700\u8981 Pandoc\uFF09",
+      docx: "Word (.docx)\uFF08\u9700\u8981 Pandoc\uFF09",
+      rtf: "RTF\uFF08\u9700\u8981 Pandoc\uFF09"
     },
     coverImageName: "\u5C01\u9762\u56FE\u7247\u8DEF\u5F84",
     coverImageDesc: "JPG \u6216 PNG \u5C01\u9762\u56FE\u7247\u7684 Vault \u8DEF\u5F84\u3002\u7559\u7A7A\u5C06\u751F\u6210\u6587\u5B57\u5C01\u9762\u3002",
@@ -3500,7 +3500,7 @@ var zh_default = {
     actionNotice: "{{action}}\uFF01\u67E5\u770B\u6587\u7AE0\uFF1A{{url}}"
   },
   targetsDashboard: {
-    title: "\u7AE0\u8282\u76EE\u6807\u4EEA\u8868\u677F",
+    title: "\u76EE\u6807\u4EEA\u8868\u677F",
     noProject: "\u672A\u9009\u62E9\u9879\u76EE\u3002",
     filterLabel: "\u7B5B\u9009\uFF1A",
     allStatuses: "\u6240\u6709\u72B6\u6001",
@@ -3995,7 +3995,7 @@ var hi_default = {
     manuscriptExported: "\u092A\u093E\u0902\u0921\u0941\u0932\u093F\u092A\u093F {{path}} \u092A\u0930 \u0928\u093F\u0930\u094D\u092F\u093E\u0924 \u0915\u0940",
     exportedTo: "{{path}} \u092A\u0930 \u0928\u093F\u0930\u094D\u092F\u093E\u0924 \u0915\u093F\u092F\u093E",
     exportedHtmlTo: "HTML {{path}} \u092A\u0930 \u0928\u093F\u0930\u094D\u092F\u093E\u0924 \u0915\u093F\u092F\u093E",
-    pdfRequiresPandoc: "PDF \u0928\u093F\u0930\u094D\u092F\u093E\u0924 \u0915\u0947 \u0932\u093F\u090F pandoc \u091A\u093E\u0939\u093F\u090F\u0964 pandoc \u0907\u0902\u0938\u094D\u091F\u0949\u0932 \u0915\u0930\u0947\u0902 \u0914\u0930 \u0938\u0947\u091F\u093F\u0902\u0917 \u092E\u0947\u0902 \u092A\u093E\u0925 \u0938\u0947\u091F \u0915\u0930\u0947\u0902\u0964",
+    pdfRequiresPandoc: "PDF \u0928\u093F\u0930\u094D\u092F\u093E\u0924 \u0915\u0947 \u0932\u093F\u090F Pandoc \u091A\u093E\u0939\u093F\u090F\u0964 Pandoc \u0907\u0902\u0938\u094D\u091F\u0949\u0932 \u0915\u0930\u0947\u0902 \u0914\u0930 \u0938\u0947\u091F\u093F\u0902\u0917 \u092E\u0947\u0902 \u092A\u093E\u0925 \u0938\u0947\u091F \u0915\u0930\u0947\u0902\u0964",
     noActiveDocument: "\u0915\u094B\u0908 \u0926\u0938\u094D\u0924\u093E\u0935\u0947\u091C\u093C \u0928\u0939\u0940\u0902 \u0916\u0941\u0932\u093E \u0939\u0948\u0964 \u0915\u094B\u0908 \u092B\u093C\u093E\u0907\u0932 \u0916\u094B\u0932\u0947\u0902 \u092F\u093E \u0928\u093F\u0930\u094D\u092F\u093E\u0924 \u0915\u093E \u0926\u093E\u092F\u0930\u093E \xAB\u092A\u0942\u0930\u093E \u092A\u094D\u0930\u094B\u091C\u0947\u0915\u094D\u091F\xBB \u092E\u0947\u0902 \u092C\u0926\u0932\u0947\u0902\u0964",
     byAuthor: "\u0932\u0947\u0916\u0915: {{author}}",
     approxWords: "\u0932\u0917\u092D\u0917 {{n}} \u0936\u092C\u094D\u0926",
@@ -4125,9 +4125,9 @@ var hi_default = {
       html: "HTML",
       manuscript: "\u092A\u093E\u0902\u0921\u0941\u0932\u093F\u092A\u093F (HTML)",
       epub: "EPUB (.epub)",
-      pdf: "PDF (pandoc \u0906\u0935\u0936\u094D\u092F\u0915)",
-      docx: "Word (.docx) (pandoc \u0906\u0935\u0936\u094D\u092F\u0915)",
-      rtf: "RTF (pandoc \u0906\u0935\u0936\u094D\u092F\u0915)"
+      pdf: "PDF (Pandoc \u0906\u0935\u0936\u094D\u092F\u0915)",
+      docx: "Word (.docx) (Pandoc \u0906\u0935\u0936\u094D\u092F\u0915)",
+      rtf: "RTF (Pandoc \u0906\u0935\u0936\u094D\u092F\u0915)"
     },
     coverImageName: "\u0915\u0935\u0930 \u091B\u0935\u093F \u092A\u0925",
     coverImageDesc: "JPG \u092F\u093E PNG \u0915\u0935\u0930 \u091B\u0935\u093F \u0915\u093E Vault \u092A\u0925\u0964 \u0909\u0924\u094D\u092A\u0928\u094D\u0928 \u091F\u0947\u0915\u094D\u0938\u094D\u091F \u0915\u0935\u0930 \u0915\u0947 \u0932\u093F\u090F \u0916\u093E\u0932\u0940 \u091B\u094B\u0921\u093C\u0947\u0902\u0964",
@@ -4183,7 +4183,7 @@ var hi_default = {
     actionNotice: "{{action}}! \u092A\u094B\u0938\u094D\u091F \u0926\u0947\u0916\u0947\u0902: {{url}}"
   },
   targetsDashboard: {
-    title: "\u0905\u0927\u094D\u092F\u093E\u092F \u0932\u0915\u094D\u0937\u094D\u092F \u0921\u0948\u0936\u092C\u094B\u0930\u094D\u0921",
+    title: "\u0932\u0915\u094D\u0937\u094D\u092F \u0921\u0948\u0936\u092C\u094B\u0930\u094D\u0921",
     noProject: "\u0915\u094B\u0908 \u092A\u0930\u093F\u092F\u094B\u091C\u0928\u093E \u0928\u0939\u0940\u0902 \u091A\u0941\u0928\u0940 \u0917\u0908\u0964",
     filterLabel: "\u092B\u093C\u093F\u0932\u094D\u091F\u0930: ",
     allStatuses: "\u0938\u092D\u0940 \u0938\u094D\u0925\u093F\u0924\u093F\u092F\u093E\u0901",
@@ -4678,7 +4678,7 @@ var es_default = {
     manuscriptExported: "Manuscrito exportado a {{path}}",
     exportedTo: "Exportado a {{path}}",
     exportedHtmlTo: "HTML exportado a {{path}}",
-    pdfRequiresPandoc: "La exportaci\xF3n a PDF requiere pandoc. Instale pandoc y configure la ruta en los ajustes.",
+    pdfRequiresPandoc: "La exportaci\xF3n a PDF requiere Pandoc. Instale Pandoc y configure la ruta en los ajustes.",
     noActiveDocument: 'No hay ning\xFAn documento abierto. Abra un archivo o cambie el alcance de exportaci\xF3n a "Proyecto completo".',
     byAuthor: "Por {{author}}",
     approxWords: "Aprox. {{n}} palabras",
@@ -4808,9 +4808,9 @@ var es_default = {
       html: "HTML",
       manuscript: "Manuscrito (HTML)",
       epub: "EPUB (.epub)",
-      pdf: "PDF (requiere pandoc)",
-      docx: "Word (.docx) (requiere pandoc)",
-      rtf: "RTF (requiere pandoc)"
+      pdf: "PDF (requiere Pandoc)",
+      docx: "Word (.docx) (requiere Pandoc)",
+      rtf: "RTF (requiere Pandoc)"
     },
     coverImageName: "Ruta de imagen de portada",
     coverImageDesc: "Ruta del vault a una imagen JPG o PNG. Deja vac\xEDo para una portada de texto generada.",
@@ -4866,7 +4866,7 @@ var es_default = {
     actionNotice: "\xA1{{action}}! Ver publicaci\xF3n: {{url}}"
   },
   targetsDashboard: {
-    title: "Panel de objetivos de cap\xEDtulos",
+    title: "Panel de objetivos",
     noProject: "Ning\xFAn proyecto seleccionado.",
     filterLabel: "Filtrar: ",
     allStatuses: "Todos los estados",
@@ -5367,7 +5367,7 @@ var ar_default = {
     manuscriptExported: "\u062A\u0645 \u062A\u0635\u062F\u064A\u0631 \u0627\u0644\u0645\u062E\u0637\u0648\u0637\u0629 \u0625\u0644\u0649 {{path}}",
     exportedTo: "\u062A\u0645 \u0627\u0644\u062A\u0635\u062F\u064A\u0631 \u0625\u0644\u0649 {{path}}",
     exportedHtmlTo: "\u062A\u0645 \u062A\u0635\u062F\u064A\u0631 HTML \u0625\u0644\u0649 {{path}}",
-    pdfRequiresPandoc: "\u064A\u062A\u0637\u0644\u0628 \u062A\u0635\u062F\u064A\u0631 PDF \u062A\u062B\u0628\u064A\u062A pandoc. \u062B\u0628\u0651\u062A pandoc \u0648\u062D\u062F\u062F \u0627\u0644\u0645\u0633\u0627\u0631 \u0641\u064A \u0627\u0644\u0625\u0639\u062F\u0627\u062F\u0627\u062A.",
+    pdfRequiresPandoc: "\u064A\u062A\u0637\u0644\u0628 \u062A\u0635\u062F\u064A\u0631 PDF \u062A\u062B\u0628\u064A\u062A Pandoc. \u062B\u0628\u0651\u062A Pandoc \u0648\u062D\u062F\u062F \u0627\u0644\u0645\u0633\u0627\u0631 \u0641\u064A \u0627\u0644\u0625\u0639\u062F\u0627\u062F\u0627\u062A.",
     noActiveDocument: "\u0644\u0627 \u064A\u0648\u062C\u062F \u0645\u0633\u062A\u0646\u062F \u0645\u0641\u062A\u0648\u062D. \u0627\u0641\u062A\u062D \u0645\u0644\u0641\u0627\u064B \u0623\u0648 \u063A\u064A\u0651\u0631 \u0646\u0637\u0627\u0642 \u0627\u0644\u062A\u0635\u062F\u064A\u0631 \u0625\u0644\u0649 \xAB\u0627\u0644\u0645\u0634\u0631\u0648\u0639 \u0628\u0623\u0643\u0645\u0644\u0647\xBB.",
     byAuthor: "\u0628\u0642\u0644\u0645 {{author}}",
     approxWords: "\u062D\u0648\u0627\u0644\u064A {{n}} \u0643\u0644\u0645\u0629",
@@ -5501,9 +5501,9 @@ var ar_default = {
       html: "HTML",
       manuscript: "\u0645\u062E\u0637\u0648\u0637\u0629 (HTML)",
       epub: "EPUB (.epub)",
-      pdf: "PDF (\u064A\u062A\u0637\u0644\u0628 pandoc)",
-      docx: "Word (.docx) (\u064A\u062A\u0637\u0644\u0628 pandoc)",
-      rtf: "RTF (\u064A\u062A\u0637\u0644\u0628 pandoc)"
+      pdf: "PDF (\u064A\u062A\u0637\u0644\u0628 Pandoc)",
+      docx: "Word (.docx) (\u064A\u062A\u0637\u0644\u0628 Pandoc)",
+      rtf: "RTF (\u064A\u062A\u0637\u0644\u0628 Pandoc)"
     },
     coverImageName: "\u0645\u0633\u0627\u0631 \u0635\u0648\u0631\u0629 \u0627\u0644\u063A\u0644\u0627\u0641",
     coverImageDesc: "\u0645\u0633\u0627\u0631 vault \u0644\u0635\u0648\u0631\u0629 \u063A\u0644\u0627\u0641 JPG \u0623\u0648 PNG. \u0627\u062A\u0631\u0643\u0647 \u0641\u0627\u0631\u063A\u064B\u0627 \u0644\u0625\u0646\u0634\u0627\u0621 \u063A\u0644\u0627\u0641 \u0646\u0635\u064A.",
@@ -5559,7 +5559,7 @@ var ar_default = {
     actionNotice: "{{action}}! \u0639\u0631\u0636 \u0627\u0644\u0645\u0646\u0634\u0648\u0631: {{url}}"
   },
   targetsDashboard: {
-    title: "\u0644\u0648\u062D\u0629 \u0623\u0647\u062F\u0627\u0641 \u0627\u0644\u0641\u0635\u0648\u0644",
+    title: "\u0644\u0648\u062D\u0629 \u0627\u0644\u0623\u0647\u062F\u0627\u0641",
     noProject: "\u0644\u0645 \u064A\u064F\u062D\u062F\u064E\u0651\u062F \u0645\u0634\u0631\u0648\u0639.",
     filterLabel: "\u062A\u0635\u0641\u064A\u0629: ",
     allStatuses: "\u062C\u0645\u064A\u0639 \u0627\u0644\u062D\u0627\u0644\u0627\u062A",
@@ -6058,7 +6058,7 @@ var fr_default = {
     manuscriptExported: "Manuscrit export\xE9 vers {{path}}",
     exportedTo: "Export\xE9 vers {{path}}",
     exportedHtmlTo: "HTML export\xE9 vers {{path}}",
-    pdfRequiresPandoc: "L'export PDF n\xE9cessite pandoc. Installez pandoc et d\xE9finissez le chemin dans les param\xE8tres.",
+    pdfRequiresPandoc: "L'export PDF n\xE9cessite Pandoc. Installez Pandoc et d\xE9finissez le chemin dans les param\xE8tres.",
     noActiveDocument: "Aucun document ouvert. Ouvrez un fichier ou changez la port\xE9e d'export en \xAB Projet entier \xBB.",
     byAuthor: "Par {{author}}",
     approxWords: "Environ {{n}} mots",
@@ -6188,9 +6188,9 @@ var fr_default = {
       html: "HTML",
       manuscript: "Manuscrit (HTML)",
       epub: "EPUB (.epub)",
-      pdf: "PDF (n\xE9cessite pandoc)",
-      docx: "Word (.docx) (n\xE9cessite pandoc)",
-      rtf: "RTF (n\xE9cessite pandoc)"
+      pdf: "PDF (n\xE9cessite Pandoc)",
+      docx: "Word (.docx) (n\xE9cessite Pandoc)",
+      rtf: "RTF (n\xE9cessite Pandoc)"
     },
     coverImageName: "Chemin de l'image de couverture",
     coverImageDesc: "Chemin vault vers une image JPG ou PNG. Laissez vide pour une couverture texte g\xE9n\xE9r\xE9e.",
@@ -6246,7 +6246,7 @@ var fr_default = {
     actionNotice: "{{action}} ! Voir l'article : {{url}}"
   },
   targetsDashboard: {
-    title: "Tableau de bord des objectifs par chapitre",
+    title: "Tableau de bord des objectifs",
     noProject: "Aucun projet s\xE9lectionn\xE9.",
     filterLabel: "Filtrer : ",
     allStatuses: "Tous les statuts",
@@ -6741,7 +6741,7 @@ var bn_default = {
     manuscriptExported: "\u09AA\u09BE\u09A3\u09CD\u09A1\u09C1\u09B2\u09BF\u09AA\u09BF {{path}}-\u098F \u09B0\u09AA\u09CD\u09A4\u09BE\u09A8\u09BF \u0995\u09B0\u09BE \u09B9\u09AF\u09BC\u09C7\u099B\u09C7",
     exportedTo: "{{path}}-\u098F \u09B0\u09AA\u09CD\u09A4\u09BE\u09A8\u09BF \u0995\u09B0\u09BE \u09B9\u09AF\u09BC\u09C7\u099B\u09C7",
     exportedHtmlTo: "HTML {{path}}-\u098F \u09B0\u09AA\u09CD\u09A4\u09BE\u09A8\u09BF \u0995\u09B0\u09BE \u09B9\u09AF\u09BC\u09C7\u099B\u09C7",
-    pdfRequiresPandoc: "PDF \u09B0\u09AA\u09CD\u09A4\u09BE\u09A8\u09BF\u09B0 \u099C\u09A8\u09CD\u09AF pandoc \u09AA\u09CD\u09B0\u09AF\u09BC\u09CB\u099C\u09A8\u0964 pandoc \u0987\u09A8\u09B8\u09CD\u099F\u09B2 \u0995\u09B0\u09C1\u09A8 \u098F\u09AC\u0982 \u09B8\u09C7\u099F\u09BF\u0982\u09B8\u09C7 \u09AA\u09BE\u09A5 \u09B8\u09C7\u099F \u0995\u09B0\u09C1\u09A8\u0964",
+    pdfRequiresPandoc: "PDF \u09B0\u09AA\u09CD\u09A4\u09BE\u09A8\u09BF\u09B0 \u099C\u09A8\u09CD\u09AF Pandoc \u09AA\u09CD\u09B0\u09AF\u09BC\u09CB\u099C\u09A8\u0964 Pandoc \u0987\u09A8\u09B8\u09CD\u099F\u09B2 \u0995\u09B0\u09C1\u09A8 \u098F\u09AC\u0982 \u09B8\u09C7\u099F\u09BF\u0982\u09B8\u09C7 \u09AA\u09BE\u09A5 \u09B8\u09C7\u099F \u0995\u09B0\u09C1\u09A8\u0964",
     noActiveDocument: "\u0995\u09CB\u09A8\u09CB \u09A1\u0995\u09C1\u09AE\u09C7\u09A8\u09CD\u099F \u0996\u09CB\u09B2\u09BE \u09A8\u09C7\u0987\u0964 \u098F\u0995\u099F\u09BF \u09AB\u09BE\u0987\u09B2 \u0996\u09C1\u09B2\u09C1\u09A8 \u0985\u09A5\u09AC\u09BE \u09B0\u09AA\u09CD\u09A4\u09BE\u09A8\u09BF\u09B0 \u09B8\u09C1\u09AF\u09CB\u0997 '\u09B8\u09AE\u09CD\u09AA\u09C2\u09B0\u09CD\u09A3 \u09AA\u09CD\u09B0\u0995\u09B2\u09CD\u09AA'-\u098F \u09AA\u09B0\u09BF\u09AC\u09B0\u09CD\u09A4\u09A8 \u0995\u09B0\u09C1\u09A8\u0964",
     byAuthor: "\u09B2\u09C7\u0996\u0995: {{author}}",
     approxWords: "\u09AA\u09CD\u09B0\u09BE\u09AF\u09BC {{n}} \u09B6\u09AC\u09CD\u09A6",
@@ -6871,9 +6871,9 @@ var bn_default = {
       html: "HTML",
       manuscript: "\u09AA\u09BE\u09A3\u09CD\u09A1\u09C1\u09B2\u09BF\u09AA\u09BF (HTML)",
       epub: "EPUB (.epub)",
-      pdf: "PDF (pandoc \u09AA\u09CD\u09B0\u09AF\u09BC\u09CB\u099C\u09A8)",
-      docx: "Word (.docx) (pandoc \u09AA\u09CD\u09B0\u09AF\u09BC\u09CB\u099C\u09A8)",
-      rtf: "RTF (pandoc \u09AA\u09CD\u09B0\u09AF\u09BC\u09CB\u099C\u09A8)"
+      pdf: "PDF (Pandoc \u09AA\u09CD\u09B0\u09AF\u09BC\u09CB\u099C\u09A8)",
+      docx: "Word (.docx) (Pandoc \u09AA\u09CD\u09B0\u09AF\u09BC\u09CB\u099C\u09A8)",
+      rtf: "RTF (Pandoc \u09AA\u09CD\u09B0\u09AF\u09BC\u09CB\u099C\u09A8)"
     },
     coverImageName: "\u09AA\u09CD\u09B0\u099A\u09CD\u099B\u09A6 \u099B\u09AC\u09BF\u09B0 \u09AA\u09A5",
     coverImageDesc: "JPG \u09AC\u09BE PNG \u09AA\u09CD\u09B0\u099A\u09CD\u099B\u09A6 \u099B\u09AC\u09BF\u09B0 Vault \u09AA\u09A5\u0964 \u099F\u09C7\u0995\u09CD\u09B8\u099F \u09AA\u09CD\u09B0\u099A\u09CD\u099B\u09A6 \u09A4\u09C8\u09B0\u09BF\u09B0 \u099C\u09A8\u09CD\u09AF \u09AB\u09BE\u0981\u0995\u09BE \u09B0\u09BE\u0996\u09C1\u09A8\u0964",
@@ -6929,7 +6929,7 @@ var bn_default = {
     actionNotice: "{{action}}! \u09AA\u09CB\u09B8\u09CD\u099F \u09A6\u09C7\u0996\u09C1\u09A8: {{url}}"
   },
   targetsDashboard: {
-    title: "\u0985\u09A7\u09CD\u09AF\u09BE\u09AF\u09BC \u09B2\u0995\u09CD\u09B7\u09CD\u09AF \u09A1\u09CD\u09AF\u09BE\u09B6\u09AC\u09CB\u09B0\u09CD\u09A1",
+    title: "\u09B2\u0995\u09CD\u09B7\u09CD\u09AF \u09A1\u09CD\u09AF\u09BE\u09B6\u09AC\u09CB\u09B0\u09CD\u09A1",
     noProject: "\u0995\u09CB\u09A8\u09CB \u09AA\u09CD\u09B0\u0995\u09B2\u09CD\u09AA \u09A8\u09BF\u09B0\u09CD\u09AC\u09BE\u099A\u09BF\u09A4 \u09A8\u09AF\u09BC\u0964",
     filterLabel: "\u09AB\u09BF\u09B2\u09CD\u099F\u09BE\u09B0: ",
     allStatuses: "\u09B8\u09AC \u0985\u09AC\u09B8\u09CD\u09A5\u09BE",
@@ -7424,7 +7424,7 @@ var pt_BR_default = {
     manuscriptExported: "Manuscrito exportado para {{path}}",
     exportedTo: "Exportado para {{path}}",
     exportedHtmlTo: "HTML exportado para {{path}}",
-    pdfRequiresPandoc: "A exporta\xE7\xE3o para PDF requer pandoc. Instale o pandoc e defina o caminho nas configura\xE7\xF5es.",
+    pdfRequiresPandoc: "A exporta\xE7\xE3o para PDF requer Pandoc. Instale o Pandoc e defina o caminho nas configura\xE7\xF5es.",
     noActiveDocument: 'Nenhum documento aberto. Abra um arquivo ou mude o escopo de exporta\xE7\xE3o para "Projeto inteiro".',
     byAuthor: "Por {{author}}",
     approxWords: "Aprox. {{n}} palavras",
@@ -7554,9 +7554,9 @@ var pt_BR_default = {
       html: "HTML",
       manuscript: "Manuscrito (HTML)",
       epub: "EPUB (.epub)",
-      pdf: "PDF (requer pandoc)",
-      docx: "Word (.docx) (requer pandoc)",
-      rtf: "RTF (requer pandoc)"
+      pdf: "PDF (requer Pandoc)",
+      docx: "Word (.docx) (requer Pandoc)",
+      rtf: "RTF (requer Pandoc)"
     },
     coverImageName: "Caminho da imagem de capa",
     coverImageDesc: "Caminho no vault para uma imagem JPG ou PNG. Deixe vazio para uma capa de texto gerada.",
@@ -7612,7 +7612,7 @@ var pt_BR_default = {
     actionNotice: "{{action}}! Ver post: {{url}}"
   },
   targetsDashboard: {
-    title: "Painel de metas por cap\xEDtulo",
+    title: "Painel de metas",
     noProject: "Nenhum projeto selecionado.",
     filterLabel: "Filtrar: ",
     allStatuses: "Todos os status",
@@ -8111,7 +8111,7 @@ var ru_default = {
     manuscriptExported: "\u0420\u0443\u043A\u043E\u043F\u0438\u0441\u044C \u044D\u043A\u0441\u043F\u043E\u0440\u0442\u0438\u0440\u043E\u0432\u0430\u043D\u0430 \u0432 {{path}}",
     exportedTo: "\u042D\u043A\u0441\u043F\u043E\u0440\u0442\u0438\u0440\u043E\u0432\u0430\u043D\u043E \u0432 {{path}}",
     exportedHtmlTo: "HTML \u044D\u043A\u0441\u043F\u043E\u0440\u0442\u0438\u0440\u043E\u0432\u0430\u043D \u0432 {{path}}",
-    pdfRequiresPandoc: "\u0414\u043B\u044F \u044D\u043A\u0441\u043F\u043E\u0440\u0442\u0430 \u0432 PDF \u0442\u0440\u0435\u0431\u0443\u0435\u0442\u0441\u044F pandoc. \u0423\u0441\u0442\u0430\u043D\u043E\u0432\u0438\u0442\u0435 pandoc \u0438 \u0443\u043A\u0430\u0436\u0438\u0442\u0435 \u043F\u0443\u0442\u044C \u0432 \u043D\u0430\u0441\u0442\u0440\u043E\u0439\u043A\u0430\u0445.",
+    pdfRequiresPandoc: "\u0414\u043B\u044F \u044D\u043A\u0441\u043F\u043E\u0440\u0442\u0430 \u0432 PDF \u0442\u0440\u0435\u0431\u0443\u0435\u0442\u0441\u044F Pandoc. \u0423\u0441\u0442\u0430\u043D\u043E\u0432\u0438\u0442\u0435 Pandoc \u0438 \u0443\u043A\u0430\u0436\u0438\u0442\u0435 \u043F\u0443\u0442\u044C \u0432 \u043D\u0430\u0441\u0442\u0440\u043E\u0439\u043A\u0430\u0445.",
     noActiveDocument: "\u041D\u0435\u0442 \u043E\u0442\u043A\u0440\u044B\u0442\u043E\u0433\u043E \u0434\u043E\u043A\u0443\u043C\u0435\u043D\u0442\u0430. \u041E\u0442\u043A\u0440\u043E\u0439\u0442\u0435 \u0444\u0430\u0439\u043B \u0438\u043B\u0438 \u0441\u043C\u0435\u043D\u0438\u0442\u0435 \u043E\u0431\u043B\u0430\u0441\u0442\u044C \u044D\u043A\u0441\u043F\u043E\u0440\u0442\u0430 \u043D\u0430 \xAB\u0412\u0435\u0441\u044C \u043F\u0440\u043E\u0435\u043A\u0442\xBB.",
     byAuthor: "\u0410\u0432\u0442\u043E\u0440: {{author}}",
     approxWords: "\u041F\u0440\u0438\u043C\u0435\u0440\u043D\u043E {{n}} \u0441\u043B\u043E\u0432",
@@ -8243,9 +8243,9 @@ var ru_default = {
       html: "HTML",
       manuscript: "\u0420\u0443\u043A\u043E\u043F\u0438\u0441\u044C (HTML)",
       epub: "EPUB (.epub)",
-      pdf: "PDF (\u0442\u0440\u0435\u0431\u0443\u0435\u0442\u0441\u044F pandoc)",
-      docx: "Word (.docx) (\u0442\u0440\u0435\u0431\u0443\u0435\u0442\u0441\u044F pandoc)",
-      rtf: "RTF (\u0442\u0440\u0435\u0431\u0443\u0435\u0442\u0441\u044F pandoc)"
+      pdf: "PDF (\u0442\u0440\u0435\u0431\u0443\u0435\u0442\u0441\u044F Pandoc)",
+      docx: "Word (.docx) (\u0442\u0440\u0435\u0431\u0443\u0435\u0442\u0441\u044F Pandoc)",
+      rtf: "RTF (\u0442\u0440\u0435\u0431\u0443\u0435\u0442\u0441\u044F Pandoc)"
     },
     coverImageName: "\u041F\u0443\u0442\u044C \u043A \u043E\u0431\u043B\u043E\u0436\u043A\u0435",
     coverImageDesc: "\u041F\u0443\u0442\u044C \u0432 \u0445\u0440\u0430\u043D\u0438\u043B\u0438\u0449\u0435 \u043A \u0438\u0437\u043E\u0431\u0440\u0430\u0436\u0435\u043D\u0438\u044E JPG \u0438\u043B\u0438 PNG. \u041E\u0441\u0442\u0430\u0432\u044C\u0442\u0435 \u043F\u0443\u0441\u0442\u044B\u043C \u0434\u043B\u044F \u0442\u0435\u043A\u0441\u0442\u043E\u0432\u043E\u0439 \u043E\u0431\u043B\u043E\u0436\u043A\u0438.",
@@ -8301,7 +8301,7 @@ var ru_default = {
     actionNotice: "{{action}}! \u041F\u043E\u0441\u043C\u043E\u0442\u0440\u0435\u0442\u044C \u0437\u0430\u043F\u0438\u0441\u044C: {{url}}"
   },
   targetsDashboard: {
-    title: "\u041F\u0430\u043D\u0435\u043B\u044C \u0446\u0435\u043B\u0435\u0439 \u043F\u043E \u0433\u043B\u0430\u0432\u0430\u043C",
+    title: "\u041F\u0430\u043D\u0435\u043B\u044C \u0446\u0435\u043B\u0435\u0439",
     noProject: "\u041F\u0440\u043E\u0435\u043A\u0442 \u043D\u0435 \u0432\u044B\u0431\u0440\u0430\u043D.",
     filterLabel: "\u0424\u0438\u043B\u044C\u0442\u0440: ",
     allStatuses: "\u0412\u0441\u0435 \u0441\u0442\u0430\u0442\u0443\u0441\u044B",
@@ -8798,7 +8798,7 @@ var ja_default = {
     manuscriptExported: "\u539F\u7A3F\u3092 {{path}} \u306B\u30A8\u30AF\u30B9\u30DD\u30FC\u30C8\u3057\u307E\u3057\u305F",
     exportedTo: "{{path}} \u306B\u30A8\u30AF\u30B9\u30DD\u30FC\u30C8\u3057\u307E\u3057\u305F",
     exportedHtmlTo: "HTML\u3092 {{path}} \u306B\u30A8\u30AF\u30B9\u30DD\u30FC\u30C8\u3057\u307E\u3057\u305F",
-    pdfRequiresPandoc: "PDF\u30A8\u30AF\u30B9\u30DD\u30FC\u30C8\u306B\u306Fpandoc\u304C\u5FC5\u8981\u3067\u3059\u3002pandoc\u3092\u30A4\u30F3\u30B9\u30C8\u30FC\u30EB\u3057\u3066\u8A2D\u5B9A\u3067\u30D1\u30B9\u3092\u6307\u5B9A\u3057\u3066\u304F\u3060\u3055\u3044\u3002",
+    pdfRequiresPandoc: "PDF\u30A8\u30AF\u30B9\u30DD\u30FC\u30C8\u306B\u306FPandoc\u304C\u5FC5\u8981\u3067\u3059\u3002Pandoc\u3092\u30A4\u30F3\u30B9\u30C8\u30FC\u30EB\u3057\u3066\u8A2D\u5B9A\u3067\u30D1\u30B9\u3092\u6307\u5B9A\u3057\u3066\u304F\u3060\u3055\u3044\u3002",
     noActiveDocument: "\u958B\u3044\u3066\u3044\u308B\u30C9\u30AD\u30E5\u30E1\u30F3\u30C8\u304C\u3042\u308A\u307E\u305B\u3093\u3002\u30D5\u30A1\u30A4\u30EB\u3092\u958B\u304F\u304B\u3001\u30A8\u30AF\u30B9\u30DD\u30FC\u30C8\u7BC4\u56F2\u3092\u300C\u30D7\u30ED\u30B8\u30A7\u30AF\u30C8\u5168\u4F53\u300D\u306B\u5909\u66F4\u3057\u3066\u304F\u3060\u3055\u3044\u3002",
     byAuthor: "\u8457\u8005\uFF1A{{author}}",
     approxWords: "\u7D04 {{n}} \u8A9E",
@@ -8928,9 +8928,9 @@ var ja_default = {
       html: "HTML",
       manuscript: "\u539F\u7A3F\uFF08HTML\uFF09",
       epub: "EPUB (.epub)",
-      pdf: "PDF\uFF08pandoc\u304C\u5FC5\u8981\uFF09",
-      docx: "Word (.docx)\uFF08pandoc\u304C\u5FC5\u8981\uFF09",
-      rtf: "RTF\uFF08pandoc\u304C\u5FC5\u8981\uFF09"
+      pdf: "PDF\uFF08Pandoc\u304C\u5FC5\u8981\uFF09",
+      docx: "Word (.docx)\uFF08Pandoc\u304C\u5FC5\u8981\uFF09",
+      rtf: "RTF\uFF08Pandoc\u304C\u5FC5\u8981\uFF09"
     },
     coverImageName: "\u30AB\u30D0\u30FC\u753B\u50CF\u306E\u30D1\u30B9",
     coverImageDesc: "JPG\u307E\u305F\u306FPNG\u306E\u30AB\u30D0\u30FC\u753B\u50CF\u306EVault\u30D1\u30B9\u3002\u751F\u6210\u3055\u308C\u305F\u30C6\u30AD\u30B9\u30C8\u30AB\u30D0\u30FC\u306B\u306F\u7A7A\u306E\u307E\u307E\u306B\u3057\u3066\u304F\u3060\u3055\u3044\u3002",
@@ -8986,7 +8986,7 @@ var ja_default = {
     actionNotice: "{{action}}\uFF01\u6295\u7A3F\u3092\u8868\u793A\uFF1A{{url}}"
   },
   targetsDashboard: {
-    title: "\u7AE0\u306E\u30BF\u30FC\u30B2\u30C3\u30C8\u30C0\u30C3\u30B7\u30E5\u30DC\u30FC\u30C9",
+    title: "\u30BF\u30FC\u30B2\u30C3\u30C8\u30C0\u30C3\u30B7\u30E5\u30DC\u30FC\u30C9",
     noProject: "\u30D7\u30ED\u30B8\u30A7\u30AF\u30C8\u304C\u9078\u629E\u3055\u308C\u3066\u3044\u307E\u305B\u3093\u3002",
     filterLabel: "\u30D5\u30A3\u30EB\u30BF\u30FC\uFF1A",
     allStatuses: "\u3059\u3079\u3066\u306E\u30B9\u30C6\u30FC\u30BF\u30B9",
@@ -9481,7 +9481,7 @@ var de_default = {
     manuscriptExported: "Manuskript nach {{path}} exportiert",
     exportedTo: "Nach {{path}} exportiert",
     exportedHtmlTo: "HTML nach {{path}} exportiert",
-    pdfRequiresPandoc: "PDF-Export erfordert pandoc. Installiere pandoc und setze den Pfad in den Einstellungen.",
+    pdfRequiresPandoc: "PDF-Export erfordert Pandoc. Installiere Pandoc und setze den Pfad in den Einstellungen.",
     noActiveDocument: "Kein Dokument ge\xF6ffnet. \xD6ffne eine Datei oder wechsle den Exportbereich zu \u201EGesamtes Projekt\u201C.",
     byAuthor: "Von {{author}}",
     approxWords: "Ca. {{n}} W\xF6rter",
@@ -9611,9 +9611,9 @@ var de_default = {
       html: "HTML",
       manuscript: "Manuskript (HTML)",
       epub: "EPUB (.epub)",
-      pdf: "PDF (erfordert pandoc)",
-      docx: "Word (.docx) (erfordert pandoc)",
-      rtf: "RTF (erfordert pandoc)"
+      pdf: "PDF (erfordert Pandoc)",
+      docx: "Word (.docx) (erfordert Pandoc)",
+      rtf: "RTF (erfordert Pandoc)"
     },
     coverImageName: "Cover-Bildpfad",
     coverImageDesc: "Vault-Pfad zu einem JPG- oder PNG-Cover-Bild. Leer lassen f\xFCr ein generiertes Text-Cover.",
@@ -9669,7 +9669,7 @@ var de_default = {
     actionNotice: "{{action}}! Beitrag ansehen: {{url}}"
   },
   targetsDashboard: {
-    title: "Kapitel-Ziel-Dashboard",
+    title: "Ziel-Dashboard",
     noProject: "Kein Projekt ausgew\xE4hlt.",
     filterLabel: "Filter: ",
     allStatuses: "Alle Status",
@@ -10164,7 +10164,7 @@ var ko_default = {
     manuscriptExported: "\uC6D0\uACE0\uB97C {{path}}\uC5D0 \uB0B4\uBCF4\uB0C8\uC2B5\uB2C8\uB2E4",
     exportedTo: "{{path}}\uC5D0 \uB0B4\uBCF4\uB0C8\uC2B5\uB2C8\uB2E4",
     exportedHtmlTo: "HTML\uC744 {{path}}\uC5D0 \uB0B4\uBCF4\uB0C8\uC2B5\uB2C8\uB2E4",
-    pdfRequiresPandoc: "PDF \uB0B4\uBCF4\uB0B4\uAE30\uC5D0\uB294 pandoc\uC774 \uD544\uC694\uD569\uB2C8\uB2E4. pandoc\uC744 \uC124\uCE58\uD558\uACE0 \uC124\uC815\uC5D0\uC11C \uACBD\uB85C\uB97C \uC124\uC815\uD558\uC138\uC694.",
+    pdfRequiresPandoc: "PDF \uB0B4\uBCF4\uB0B4\uAE30\uC5D0\uB294 Pandoc\uC774 \uD544\uC694\uD569\uB2C8\uB2E4. Pandoc\uC744 \uC124\uCE58\uD558\uACE0 \uC124\uC815\uC5D0\uC11C \uACBD\uB85C\uB97C \uC124\uC815\uD558\uC138\uC694.",
     noActiveDocument: "\uC5F4\uB9B0 \uBB38\uC11C\uAC00 \uC5C6\uC2B5\uB2C8\uB2E4. \uD30C\uC77C\uC744 \uC5F4\uAC70\uB098 \uB0B4\uBCF4\uB0B4\uAE30 \uBC94\uC704\uB97C '\uC804\uCCB4 \uD504\uB85C\uC81D\uD2B8'\uB85C \uBCC0\uACBD\uD558\uC138\uC694.",
     byAuthor: "\uC800\uC790: {{author}}",
     approxWords: "\uC57D {{n}} \uB2E8\uC5B4",
@@ -10294,9 +10294,9 @@ var ko_default = {
       html: "HTML",
       manuscript: "\uC6D0\uACE0 (HTML)",
       epub: "EPUB (.epub)",
-      pdf: "PDF (pandoc \uD544\uC694)",
-      docx: "Word (.docx) (pandoc \uD544\uC694)",
-      rtf: "RTF (pandoc \uD544\uC694)"
+      pdf: "PDF (Pandoc \uD544\uC694)",
+      docx: "Word (.docx) (Pandoc \uD544\uC694)",
+      rtf: "RTF (Pandoc \uD544\uC694)"
     },
     coverImageName: "\uD45C\uC9C0 \uC774\uBBF8\uC9C0 \uACBD\uB85C",
     coverImageDesc: "JPG \uB610\uB294 PNG \uD45C\uC9C0 \uC774\uBBF8\uC9C0\uC758 \uBCFC\uD2B8 \uACBD\uB85C. \uC0DD\uC131\uB41C \uD14D\uC2A4\uD2B8 \uD45C\uC9C0\uC758 \uACBD\uC6B0 \uBE44\uC6CC \uB450\uC138\uC694.",
@@ -10352,7 +10352,7 @@ var ko_default = {
     actionNotice: "{{action}}! \uAC8C\uC2DC\uBB3C \uBCF4\uAE30: {{url}}"
   },
   targetsDashboard: {
-    title: "\uCC55\uD130 \uBAA9\uD45C \uB300\uC2DC\uBCF4\uB4DC",
+    title: "\uBAA9\uD45C \uB300\uC2DC\uBCF4\uB4DC",
     noProject: "\uC120\uD0DD\uB41C \uD504\uB85C\uC81D\uD2B8\uAC00 \uC5C6\uC2B5\uB2C8\uB2E4.",
     filterLabel: "\uD544\uD130: ",
     allStatuses: "\uBAA8\uB4E0 \uC0C1\uD0DC",

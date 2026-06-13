@@ -319,7 +319,7 @@
     "manuscriptExported": "Manuskript nach {{path}} exportiert",
     "exportedTo": "Nach {{path}} exportiert",
     "exportedHtmlTo": "HTML nach {{path}} exportiert",
-    "pdfRequiresPandoc": "PDF-Export erfordert pandoc. Installiere pandoc und setze den Pfad in den Einstellungen.",
+    "pdfRequiresPandoc": "PDF-Export erfordert Pandoc. Installiere Pandoc und setze den Pfad in den Einstellungen.",
     "noActiveDocument": "Kein Dokument geöffnet. Öffne eine Datei oder wechsle den Exportbereich zu „Gesamtes Projekt“.",
     "byAuthor": "Von {{author}}",
     "approxWords": "Ca. {{n}} Wörter",
@@ -449,9 +449,9 @@
       "html": "HTML",
       "manuscript": "Manuskript (HTML)",
       "epub": "EPUB (.epub)",
-      "pdf": "PDF (erfordert pandoc)",
-      "docx": "Word (.docx) (erfordert pandoc)",
-      "rtf": "RTF (erfordert pandoc)"
+      "pdf": "PDF (erfordert Pandoc)",
+      "docx": "Word (.docx) (erfordert Pandoc)",
+      "rtf": "RTF (erfordert Pandoc)"
     },
     "coverImageName": "Cover-Bildpfad",
     "coverImageDesc": "Vault-Pfad zu einem JPG- oder PNG-Cover-Bild. Leer lassen für ein generiertes Text-Cover.",
@@ -507,7 +507,7 @@
     "actionNotice": "{{action}}! Beitrag ansehen: {{url}}"
   },
   "targetsDashboard": {
-    "title": "Kapitel-Ziel-Dashboard",
+    "title": "Ziel-Dashboard",
     "noProject": "Kein Projekt ausgewählt.",
     "filterLabel": "Filter: ",
     "allStatuses": "Alle Status",

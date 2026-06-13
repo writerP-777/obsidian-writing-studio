@@ -319,7 +319,7 @@
     "manuscriptExported": "Manuscrito exportado a {{path}}",
     "exportedTo": "Exportado a {{path}}",
     "exportedHtmlTo": "HTML exportado a {{path}}",
-    "pdfRequiresPandoc": "La exportación a PDF requiere pandoc. Instale pandoc y configure la ruta en los ajustes.",
+    "pdfRequiresPandoc": "La exportación a PDF requiere Pandoc. Instale Pandoc y configure la ruta en los ajustes.",
     "noActiveDocument": "No hay ningún documento abierto. Abra un archivo o cambie el alcance de exportación a \"Proyecto completo\".",
     "byAuthor": "Por {{author}}",
     "approxWords": "Aprox. {{n}} palabras",
@@ -449,9 +449,9 @@
       "html": "HTML",
       "manuscript": "Manuscrito (HTML)",
       "epub": "EPUB (.epub)",
-      "pdf": "PDF (requiere pandoc)",
-      "docx": "Word (.docx) (requiere pandoc)",
-      "rtf": "RTF (requiere pandoc)"
+      "pdf": "PDF (requiere Pandoc)",
+      "docx": "Word (.docx) (requiere Pandoc)",
+      "rtf": "RTF (requiere Pandoc)"
     },
     "coverImageName": "Ruta de imagen de portada",
     "coverImageDesc": "Ruta del vault a una imagen JPG o PNG. Deja vacío para una portada de texto generada.",
@@ -507,7 +507,7 @@
     "actionNotice": "¡{{action}}! Ver publicación: {{url}}"
   },
   "targetsDashboard": {
-    "title": "Panel de objetivos de capítulos",
+    "title": "Panel de objetivos",
     "noProject": "Ningún proyecto seleccionado.",
     "filterLabel": "Filtrar: ",
     "allStatuses": "Todos los estados",

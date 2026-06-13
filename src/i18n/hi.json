@@ -319,7 +319,7 @@
     "manuscriptExported": "पांडुलिपि {{path}} पर निर्यात की",
     "exportedTo": "{{path}} पर निर्यात किया",
     "exportedHtmlTo": "HTML {{path}} पर निर्यात किया",
-    "pdfRequiresPandoc": "PDF निर्यात के लिए pandoc चाहिए। pandoc इंस्टॉल करें और सेटिंग में पाथ सेट करें।",
+    "pdfRequiresPandoc": "PDF निर्यात के लिए Pandoc चाहिए। Pandoc इंस्टॉल करें और सेटिंग में पाथ सेट करें।",
     "noActiveDocument": "कोई दस्तावेज़ नहीं खुला है। कोई फ़ाइल खोलें या निर्यात का दायरा «पूरा प्रोजेक्ट» में बदलें।",
     "byAuthor": "लेखक: {{author}}",
     "approxWords": "लगभग {{n}} शब्द",
@@ -449,9 +449,9 @@
       "html": "HTML",
       "manuscript": "पांडुलिपि (HTML)",
       "epub": "EPUB (.epub)",
-      "pdf": "PDF (pandoc आवश्यक)",
-      "docx": "Word (.docx) (pandoc आवश्यक)",
-      "rtf": "RTF (pandoc आवश्यक)"
+      "pdf": "PDF (Pandoc आवश्यक)",
+      "docx": "Word (.docx) (Pandoc आवश्यक)",
+      "rtf": "RTF (Pandoc आवश्यक)"
     },
     "coverImageName": "कवर छवि पथ",
     "coverImageDesc": "JPG या PNG कवर छवि का Vault पथ। उत्पन्न टेक्स्ट कवर के लिए खाली छोड़ें।",
@@ -507,7 +507,7 @@
     "actionNotice": "{{action}}! पोस्ट देखें: {{url}}"
   },
   "targetsDashboard": {
-    "title": "अध्याय लक्ष्य डैशबोर्ड",
+    "title": "लक्ष्य डैशबोर्ड",
     "noProject": "कोई परियोजना नहीं चुनी गई।",
     "filterLabel": "फ़िल्टर: ",
     "allStatuses": "सभी स्थितियाँ",
