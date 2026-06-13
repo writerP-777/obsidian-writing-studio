@@ -291,7 +291,10 @@
     "last30Days": "Últimos 30 días",
     "today": "Hoy",
     "sprintsCount_one": "· {{count}} sprint",
-    "sprintsCount_other": "· {{count}} sprints"
+    "sprintsCount_other": "· {{count}} sprints",
+    "noActivity": "Aún no hay actividad de escritura en los últimos 30 días.",
+    "quietDays_one": "{{count}} día sin actividad",
+    "quietDays_other": "{{count}} días sin actividad"
   },
   "sprint": {
     "alreadyRunning": "Ya hay un sprint en curso. Deténgalo antes de iniciar uno nuevo.",

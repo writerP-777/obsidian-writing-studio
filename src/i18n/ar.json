@@ -294,7 +294,13 @@
     "sprintsCount_two": "· {{count}} سباقان",
     "sprintsCount_few": "· {{count}} سباقات",
     "sprintsCount_many": "· {{count}} سباقاً",
-    "sprintsCount_other": "· {{count}} سباق"
+    "sprintsCount_other": "· {{count}} سباق",
+    "noActivity": "لا يوجد نشاط كتابة في آخر 30 يوماً حتى الآن.",
+    "quietDays_one": "{{count}} يوم هادئ",
+    "quietDays_two": "{{count}} يومان هادئان",
+    "quietDays_few": "{{count}} أيام هادئة",
+    "quietDays_many": "{{count}} يوماً هادئاً",
+    "quietDays_other": "{{count}} يوم هادئ"
   },
   "sprint": {
     "alreadyRunning": "هناك سباق قيد التشغيل بالفعل. أوقفه قبل بدء سباق جديد.",

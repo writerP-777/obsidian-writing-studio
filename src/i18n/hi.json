@@ -291,7 +291,10 @@
     "last30Days": "पिछले 30 दिन",
     "today": "आज",
     "sprintsCount_one": "· {{count}} स्प्रिंट",
-    "sprintsCount_other": "· {{count}} स्प्रिंट"
+    "sprintsCount_other": "· {{count}} स्प्रिंट",
+    "noActivity": "पिछले 30 दिनों में अभी तक कोई लेखन गतिविधि नहीं।",
+    "quietDays_one": "{{count}} शांत दिन",
+    "quietDays_other": "{{count}} शांत दिन"
   },
   "sprint": {
     "alreadyRunning": "एक स्प्रिंट पहले से चल रहा है। नया शुरू करने से पहले उसे रोकें।",

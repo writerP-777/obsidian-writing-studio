@@ -1810,7 +1810,7 @@ body .ws-launcher select {
   font-variant-numeric: tabular-nums;
 }
 
-.ws-log-day-row--empty .ws-log-day-date {
+.ws-log-day-row--collapsed .ws-log-day-date {
   color: var(--text-faint);
 }
 
@@ -1829,7 +1829,7 @@ body .ws-launcher select {
   transition: width 0.3s ease;
 }
 
-.ws-log-day-row--empty .ws-log-day-bar {
+.ws-log-day-row--collapsed .ws-log-day-bar-wrap {
   background: transparent;
 }
 
@@ -1842,7 +1842,7 @@ body .ws-launcher select {
   min-width: 50px;
 }
 
-.ws-log-day-row--empty .ws-log-day-words {
+.ws-log-day-row--collapsed .ws-log-day-words {
   color: var(--text-faint);
 }
 

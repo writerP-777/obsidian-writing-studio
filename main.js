@@ -2601,7 +2601,10 @@ var en_default = {
     last30Days: "Last 30 days",
     today: "Today",
     sprintsCount_one: "\xB7 {{count}} sprint",
-    sprintsCount_other: "\xB7 {{count}} sprints"
+    sprintsCount_other: "\xB7 {{count}} sprints",
+    noActivity: "No writing activity in the last 30 days yet.",
+    quietDays_one: "{{count}} quiet day",
+    quietDays_other: "{{count}} quiet days"
   },
   sprint: {
     alreadyRunning: "A sprint is already running. Stop it before starting a new one.",
@@ -3281,7 +3284,10 @@ var zh_default = {
     last30Days: "\u6700\u8FD130\u5929",
     today: "\u4ECA\u5929",
     sprintsCount_one: "\xB7 {{count}} \u6B21\u51B2\u523A",
-    sprintsCount_other: "\xB7 {{count}} \u6B21\u51B2\u523A"
+    sprintsCount_other: "\xB7 {{count}} \u6B21\u51B2\u523A",
+    noActivity: "\u8FC7\u53BB 30 \u5929\u8FD8\u6CA1\u6709\u5199\u4F5C\u8BB0\u5F55\u3002",
+    quietDays_one: "{{count}} \u4E2A\u65E0\u6D3B\u52A8\u65E5",
+    quietDays_other: "{{count}} \u4E2A\u65E0\u6D3B\u52A8\u65E5"
   },
   sprint: {
     alreadyRunning: "\u5DF2\u6709\u4E00\u4E2A\u51B2\u523A\u6B63\u5728\u8FDB\u884C\u3002\u8BF7\u5148\u505C\u6B62\u5B83\uFF0C\u518D\u5F00\u59CB\u65B0\u7684\u51B2\u523A\u3002",
@@ -3961,7 +3967,10 @@ var hi_default = {
     last30Days: "\u092A\u093F\u091B\u0932\u0947 30 \u0926\u093F\u0928",
     today: "\u0906\u091C",
     sprintsCount_one: "\xB7 {{count}} \u0938\u094D\u092A\u094D\u0930\u093F\u0902\u091F",
-    sprintsCount_other: "\xB7 {{count}} \u0938\u094D\u092A\u094D\u0930\u093F\u0902\u091F"
+    sprintsCount_other: "\xB7 {{count}} \u0938\u094D\u092A\u094D\u0930\u093F\u0902\u091F",
+    noActivity: "\u092A\u093F\u091B\u0932\u0947 30 \u0926\u093F\u0928\u094B\u0902 \u092E\u0947\u0902 \u0905\u092D\u0940 \u0924\u0915 \u0915\u094B\u0908 \u0932\u0947\u0916\u0928 \u0917\u0924\u093F\u0935\u093F\u0927\u093F \u0928\u0939\u0940\u0902\u0964",
+    quietDays_one: "{{count}} \u0936\u093E\u0902\u0924 \u0926\u093F\u0928",
+    quietDays_other: "{{count}} \u0936\u093E\u0902\u0924 \u0926\u093F\u0928"
   },
   sprint: {
     alreadyRunning: "\u090F\u0915 \u0938\u094D\u092A\u094D\u0930\u093F\u0902\u091F \u092A\u0939\u0932\u0947 \u0938\u0947 \u091A\u0932 \u0930\u0939\u093E \u0939\u0948\u0964 \u0928\u092F\u093E \u0936\u0941\u0930\u0942 \u0915\u0930\u0928\u0947 \u0938\u0947 \u092A\u0939\u0932\u0947 \u0909\u0938\u0947 \u0930\u094B\u0915\u0947\u0902\u0964",
@@ -4641,7 +4650,10 @@ var es_default = {
     last30Days: "\xDAltimos 30 d\xEDas",
     today: "Hoy",
     sprintsCount_one: "\xB7 {{count}} sprint",
-    sprintsCount_other: "\xB7 {{count}} sprints"
+    sprintsCount_other: "\xB7 {{count}} sprints",
+    noActivity: "A\xFAn no hay actividad de escritura en los \xFAltimos 30 d\xEDas.",
+    quietDays_one: "{{count}} d\xEDa sin actividad",
+    quietDays_other: "{{count}} d\xEDas sin actividad"
   },
   sprint: {
     alreadyRunning: "Ya hay un sprint en curso. Det\xE9ngalo antes de iniciar uno nuevo.",
@@ -5324,7 +5336,13 @@ var ar_default = {
     sprintsCount_two: "\xB7 {{count}} \u0633\u0628\u0627\u0642\u0627\u0646",
     sprintsCount_few: "\xB7 {{count}} \u0633\u0628\u0627\u0642\u0627\u062A",
     sprintsCount_many: "\xB7 {{count}} \u0633\u0628\u0627\u0642\u0627\u064B",
-    sprintsCount_other: "\xB7 {{count}} \u0633\u0628\u0627\u0642"
+    sprintsCount_other: "\xB7 {{count}} \u0633\u0628\u0627\u0642",
+    noActivity: "\u0644\u0627 \u064A\u0648\u062C\u062F \u0646\u0634\u0627\u0637 \u0643\u062A\u0627\u0628\u0629 \u0641\u064A \u0622\u062E\u0631 30 \u064A\u0648\u0645\u0627\u064B \u062D\u062A\u0649 \u0627\u0644\u0622\u0646.",
+    quietDays_one: "{{count}} \u064A\u0648\u0645 \u0647\u0627\u062F\u0626",
+    quietDays_two: "{{count}} \u064A\u0648\u0645\u0627\u0646 \u0647\u0627\u062F\u0626\u0627\u0646",
+    quietDays_few: "{{count}} \u0623\u064A\u0627\u0645 \u0647\u0627\u062F\u0626\u0629",
+    quietDays_many: "{{count}} \u064A\u0648\u0645\u0627\u064B \u0647\u0627\u062F\u0626\u0627\u064B",
+    quietDays_other: "{{count}} \u064A\u0648\u0645 \u0647\u0627\u062F\u0626"
   },
   sprint: {
     alreadyRunning: "\u0647\u0646\u0627\u0643 \u0633\u0628\u0627\u0642 \u0642\u064A\u062F \u0627\u0644\u062A\u0634\u063A\u064A\u0644 \u0628\u0627\u0644\u0641\u0639\u0644. \u0623\u0648\u0642\u0641\u0647 \u0642\u0628\u0644 \u0628\u062F\u0621 \u0633\u0628\u0627\u0642 \u062C\u062F\u064A\u062F.",
@@ -6012,7 +6030,10 @@ var fr_default = {
     last30Days: "30 derniers jours",
     today: "Aujourd'hui",
     sprintsCount_one: "\xB7 {{count}} sprint",
-    sprintsCount_other: "\xB7 {{count}} sprints"
+    sprintsCount_other: "\xB7 {{count}} sprints",
+    noActivity: "Aucune activit\xE9 d'\xE9criture au cours des 30 derniers jours.",
+    quietDays_one: "{{count}} jour sans activit\xE9",
+    quietDays_other: "{{count}} jours sans activit\xE9"
   },
   sprint: {
     alreadyRunning: "Un sprint est d\xE9j\xE0 en cours. Arr\xEAtez-le avant d'en d\xE9marrer un nouveau.",
@@ -6692,7 +6713,10 @@ var bn_default = {
     last30Days: "\u09B6\u09C7\u09B7 \u09E9\u09E6 \u09A6\u09BF\u09A8",
     today: "\u0986\u099C",
     sprintsCount_one: "\xB7 {{count}} \u09B8\u09CD\u09AA\u09CD\u09B0\u09BF\u09A8\u09CD\u099F",
-    sprintsCount_other: "\xB7 {{count}} \u09B8\u09CD\u09AA\u09CD\u09B0\u09BF\u09A8\u09CD\u099F"
+    sprintsCount_other: "\xB7 {{count}} \u09B8\u09CD\u09AA\u09CD\u09B0\u09BF\u09A8\u09CD\u099F",
+    noActivity: "\u0997\u09A4 \u09E9\u09E6 \u09A6\u09BF\u09A8\u09C7 \u098F\u0996\u09A8\u0993 \u0995\u09CB\u09A8\u09CB \u09B2\u09C7\u0996\u09BE\u09B0 \u0995\u09BE\u09B0\u09CD\u09AF\u0995\u09B2\u09BE\u09AA \u09A8\u09C7\u0987\u0964",
+    quietDays_one: "{{count}} \u09A8\u09BF\u09B7\u09CD\u0995\u09CD\u09B0\u09BF\u09AF\u09BC \u09A6\u09BF\u09A8",
+    quietDays_other: "{{count}} \u09A8\u09BF\u09B7\u09CD\u0995\u09CD\u09B0\u09BF\u09AF\u09BC \u09A6\u09BF\u09A8"
   },
   sprint: {
     alreadyRunning: "\u098F\u0995\u099F\u09BF \u09B8\u09CD\u09AA\u09CD\u09B0\u09BF\u09A8\u09CD\u099F \u0987\u09A4\u09BF\u09AE\u09A7\u09CD\u09AF\u09C7 \u099A\u09B2\u099B\u09C7\u0964 \u09A8\u09A4\u09C1\u09A8 \u09B6\u09C1\u09B0\u09C1 \u0995\u09B0\u09BE\u09B0 \u0986\u0997\u09C7 \u09B8\u09C7\u099F\u09BF \u09AC\u09A8\u09CD\u09A7 \u0995\u09B0\u09C1\u09A8\u0964",
@@ -7372,7 +7396,10 @@ var pt_BR_default = {
     last30Days: "\xDAltimos 30 dias",
     today: "Hoje",
     sprintsCount_one: "\xB7 {{count}} sprint",
-    sprintsCount_other: "\xB7 {{count}} sprints"
+    sprintsCount_other: "\xB7 {{count}} sprints",
+    noActivity: "Ainda sem atividade de escrita nos \xFAltimos 30 dias.",
+    quietDays_one: "{{count}} dia sem atividade",
+    quietDays_other: "{{count}} dias sem atividade"
   },
   sprint: {
     alreadyRunning: "J\xE1 h\xE1 um sprint em andamento. Pare-o antes de iniciar um novo.",
@@ -8054,7 +8081,12 @@ var ru_default = {
     sprintsCount_one: "\xB7 {{count}} \u0441\u043F\u0440\u0438\u043D\u0442",
     sprintsCount_few: "\xB7 {{count}} \u0441\u043F\u0440\u0438\u043D\u0442\u0430",
     sprintsCount_many: "\xB7 {{count}} \u0441\u043F\u0440\u0438\u043D\u0442\u043E\u0432",
-    sprintsCount_other: "\xB7 {{count}} \u0441\u043F\u0440\u0438\u043D\u0442\u043E\u0432"
+    sprintsCount_other: "\xB7 {{count}} \u0441\u043F\u0440\u0438\u043D\u0442\u043E\u0432",
+    noActivity: "\u0417\u0430 \u043F\u043E\u0441\u043B\u0435\u0434\u043D\u0438\u0435 30 \u0434\u043D\u0435\u0439 \u043F\u043E\u043A\u0430 \u043D\u0435\u0442 \u0430\u043A\u0442\u0438\u0432\u043D\u043E\u0441\u0442\u0438.",
+    quietDays_one: "{{count}} \u0434\u0435\u043D\u044C \u0431\u0435\u0437 \u0437\u0430\u043F\u0438\u0441\u0435\u0439",
+    quietDays_few: "{{count}} \u0434\u043D\u044F \u0431\u0435\u0437 \u0437\u0430\u043F\u0438\u0441\u0435\u0439",
+    quietDays_many: "{{count}} \u0434\u043D\u0435\u0439 \u0431\u0435\u0437 \u0437\u0430\u043F\u0438\u0441\u0435\u0439",
+    quietDays_other: "{{count}} \u0434\u043D\u0435\u0439 \u0431\u0435\u0437 \u0437\u0430\u043F\u0438\u0441\u0435\u0439"
   },
   sprint: {
     alreadyRunning: "\u0421\u043F\u0440\u0438\u043D\u0442 \u0443\u0436\u0435 \u0438\u0434\u0451\u0442. \u041E\u0441\u0442\u0430\u043D\u043E\u0432\u0438\u0442\u0435 \u0435\u0433\u043E, \u043F\u0440\u0435\u0436\u0434\u0435 \u0447\u0435\u043C \u043D\u0430\u0447\u0438\u043D\u0430\u0442\u044C \u043D\u043E\u0432\u044B\u0439.",
@@ -8738,7 +8770,10 @@ var ja_default = {
     last30Days: "\u904E\u53BB30\u65E5",
     today: "\u4ECA\u65E5",
     sprintsCount_one: "\xB7 {{count}} \u30B9\u30D7\u30EA\u30F3\u30C8",
-    sprintsCount_other: "\xB7 {{count}} \u30B9\u30D7\u30EA\u30F3\u30C8"
+    sprintsCount_other: "\xB7 {{count}} \u30B9\u30D7\u30EA\u30F3\u30C8",
+    noActivity: "\u904E\u53BB30\u65E5\u9593\u306E\u57F7\u7B46\u6D3B\u52D5\u306F\u307E\u3060\u3042\u308A\u307E\u305B\u3093\u3002",
+    quietDays_one: "{{count}} \u65E5\u4F11\u6B62",
+    quietDays_other: "{{count}} \u65E5\u4F11\u6B62"
   },
   sprint: {
     alreadyRunning: "\u30B9\u30D7\u30EA\u30F3\u30C8\u306F\u65E2\u306B\u5B9F\u884C\u4E2D\u3067\u3059\u3002\u65B0\u3057\u3044\u30B9\u30D7\u30EA\u30F3\u30C8\u3092\u958B\u59CB\u3059\u308B\u524D\u306B\u505C\u6B62\u3057\u3066\u304F\u3060\u3055\u3044\u3002",
@@ -9418,7 +9453,10 @@ var de_default = {
     last30Days: "Letzte 30 Tage",
     today: "Heute",
     sprintsCount_one: "\xB7 {{count}} Sprint",
-    sprintsCount_other: "\xB7 {{count}} Sprints"
+    sprintsCount_other: "\xB7 {{count}} Sprints",
+    noActivity: "In den letzten 30 Tagen noch keine Schreibaktivit\xE4t.",
+    quietDays_one: "{{count}} ruhiger Tag",
+    quietDays_other: "{{count}} ruhige Tage"
   },
   sprint: {
     alreadyRunning: "Ein Sprint l\xE4uft bereits. Beende ihn, bevor du einen neuen startest.",
@@ -10098,7 +10136,10 @@ var ko_default = {
     last30Days: "\uCD5C\uADFC 30\uC77C",
     today: "\uC624\uB298",
     sprintsCount_one: "\xB7 {{count}} \uC2A4\uD504\uB9B0\uD2B8",
-    sprintsCount_other: "\xB7 {{count}} \uC2A4\uD504\uB9B0\uD2B8"
+    sprintsCount_other: "\xB7 {{count}} \uC2A4\uD504\uB9B0\uD2B8",
+    noActivity: "\uC9C0\uB09C 30\uC77C \uB3D9\uC548 \uC9D1\uD544 \uD65C\uB3D9\uC774 \uC5C6\uC2B5\uB2C8\uB2E4.",
+    quietDays_one: "{{count}}\uC77C \uD734\uC2DD",
+    quietDays_other: "{{count}}\uC77C \uD734\uC2DD"
   },
   sprint: {
     alreadyRunning: "\uC774\uBBF8 \uC9C4\uD589 \uC911\uC778 \uC2A4\uD504\uB9B0\uD2B8\uAC00 \uC788\uC2B5\uB2C8\uB2E4. \uC0C8 \uC2A4\uD504\uB9B0\uD2B8\uB97C \uC2DC\uC791\uD558\uAE30 \uC804\uC5D0 \uC911\uC9C0\uD558\uC138\uC694.",
@@ -18006,28 +18047,55 @@ var WritingLogView = class extends import_obsidian29.ItemView {
     const history = await this.plugin.statsTracker.getWritingHistory(30);
     const maxWords = Math.max(...history.map((d) => d.wordsWritten), 1);
     const todayStr = localDateString();
+    if (!history.some((d) => d.wordsWritten > 0)) {
+      histSection.createDiv({ text: t2("log.noActivity"), cls: "ws-log-empty-msg" });
+      return;
+    }
+    const ordered = [...history].reverse();
     const list = histSection.createDiv("ws-log-day-list");
-    for (const entry of [...history].reverse()) {
-      const row = list.createDiv("ws-log-day-row");
-      if (entry.wordsWritten === 0) row.addClass("ws-log-day-row--empty");
-      const dateEl = row.createDiv("ws-log-day-date");
-      dateEl.textContent = entry.date === todayStr ? t2("log.today") : (/* @__PURE__ */ new Date(`${entry.date}T12:00:00`)).toLocaleDateString(lang, { month: "short", day: "numeric" });
-      const barWrap = row.createDiv("ws-log-day-bar-wrap");
-      const bar = barWrap.createDiv("ws-log-day-bar");
-      bar.setCssProps({ "--ws-log-bar-width": `${Math.round(entry.wordsWritten / maxWords * 100)}%` });
-      const wordsEl = row.createDiv("ws-log-day-words");
-      if (entry.wordsWritten > 0) {
-        wordsEl.createSpan({ text: entry.wordsWritten.toLocaleString() });
-        if (entry.sprintsCompleted > 0) {
-          wordsEl.createSpan({
-            text: t2("log.sprintsCount", { count: entry.sprintsCompleted }),
-            cls: "ws-log-day-meta"
-          });
-        }
+    let i = 0;
+    while (i < ordered.length) {
+      if (ordered[i].wordsWritten === 0) {
+        let j = i;
+        while (j < ordered.length && ordered[j].wordsWritten === 0) j++;
+        this.renderQuietRow(list, ordered.slice(i, j), todayStr, lang);
+        i = j;
       } else {
-        wordsEl.createSpan({ text: "\u2014" });
+        this.renderActiveRow(list, ordered[i], maxWords, todayStr, lang);
+        i++;
       }
     }
+  }
+  formatDayLabel(date, todayStr, lang) {
+    return date === todayStr ? t2("log.today") : (/* @__PURE__ */ new Date(`${date}T12:00:00`)).toLocaleDateString(lang, { month: "short", day: "numeric" });
+  }
+  renderActiveRow(list, entry, maxWords, todayStr, lang) {
+    const row = list.createDiv("ws-log-day-row");
+    row.createDiv({ text: this.formatDayLabel(entry.date, todayStr, lang), cls: "ws-log-day-date" });
+    const barWrap = row.createDiv("ws-log-day-bar-wrap");
+    const bar = barWrap.createDiv("ws-log-day-bar");
+    bar.setCssProps({ "--ws-log-bar-width": `${Math.round(entry.wordsWritten / maxWords * 100)}%` });
+    const wordsEl = row.createDiv("ws-log-day-words");
+    wordsEl.createSpan({ text: entry.wordsWritten.toLocaleString() });
+    if (entry.sprintsCompleted > 0) {
+      wordsEl.createSpan({
+        text: t2("log.sprintsCount", { count: entry.sprintsCompleted }),
+        cls: "ws-log-day-meta"
+      });
+    }
+  }
+  renderQuietRow(list, run, todayStr, lang) {
+    const row = list.createDiv("ws-log-day-row");
+    row.addClass("ws-log-day-row--collapsed");
+    const newest = this.formatDayLabel(run[0].date, todayStr, lang);
+    const oldest = this.formatDayLabel(run[run.length - 1].date, todayStr, lang);
+    row.createDiv({
+      text: run.length === 1 ? newest : `${newest} \u2013 ${oldest}`,
+      cls: "ws-log-day-date"
+    });
+    row.createDiv("ws-log-day-bar-wrap");
+    const wordsEl = row.createDiv("ws-log-day-words");
+    wordsEl.createSpan({ text: t2("log.quietDays", { count: run.length }), cls: "ws-log-day-meta" });
   }
 };
 

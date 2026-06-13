@@ -291,7 +291,10 @@
     "last30Days": "最近30天",
     "today": "今天",
     "sprintsCount_one": "· {{count}} 次冲刺",
-    "sprintsCount_other": "· {{count}} 次冲刺"
+    "sprintsCount_other": "· {{count}} 次冲刺",
+    "noActivity": "过去 30 天还没有写作记录。",
+    "quietDays_one": "{{count}} 个无活动日",
+    "quietDays_other": "{{count}} 个无活动日"
   },
   "sprint": {
     "alreadyRunning": "已有一个冲刺正在进行。请先停止它，再开始新的冲刺。",

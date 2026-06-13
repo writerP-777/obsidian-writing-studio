@@ -291,7 +291,10 @@
     "last30Days": "Last 30 days",
     "today": "Today",
     "sprintsCount_one": "· {{count}} sprint",
-    "sprintsCount_other": "· {{count}} sprints"
+    "sprintsCount_other": "· {{count}} sprints",
+    "noActivity": "No writing activity in the last 30 days yet.",
+    "quietDays_one": "{{count}} quiet day",
+    "quietDays_other": "{{count}} quiet days"
   },
   "sprint": {
     "alreadyRunning": "A sprint is already running. Stop it before starting a new one.",

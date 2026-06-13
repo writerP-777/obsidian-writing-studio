@@ -293,7 +293,12 @@
     "sprintsCount_one": "· {{count}} спринт",
     "sprintsCount_few": "· {{count}} спринта",
     "sprintsCount_many": "· {{count}} спринтов",
-    "sprintsCount_other": "· {{count}} спринтов"
+    "sprintsCount_other": "· {{count}} спринтов",
+    "noActivity": "За последние 30 дней пока нет активности.",
+    "quietDays_one": "{{count}} день без записей",
+    "quietDays_few": "{{count}} дня без записей",
+    "quietDays_many": "{{count}} дней без записей",
+    "quietDays_other": "{{count}} дней без записей"
   },
   "sprint": {
     "alreadyRunning": "Спринт уже идёт. Остановите его, прежде чем начинать новый.",
