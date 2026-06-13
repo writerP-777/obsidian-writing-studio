@@ -173,10 +173,11 @@
       "duplicate": "複製",
       "moveToResearch": "リサーチに移動",
       "publishToWordPress": "WordPressに公開",
-      "delete": "削除",
+      "delete": "ドキュメントとファイルを削除",
       "moveUp": "上に移動",
       "moveDown": "下に移動",
-      "rename": "名前を変更"
+      "rename": "名前を変更",
+      "removeFromBinder": "バインダーから外す"
     },
     "wordCountSuffix": "{{count}}語",
     "fileNotFound": "ファイルが存在しません：{{path}}",
@@ -190,6 +191,11 @@
     "titlePrompt": {
       "heading": "新規ドキュメント",
       "create": "作成"
+    },
+    "removeConfirm": {
+      "title": "バインダーから外す",
+      "message": "「{{title}}」をバインダーから外しますか？ファイルはVaultに残りますが、項目のステータス、目標語数、エクスポート設定は失われます。入れ子のドキュメントはその位置に繰り上がります。",
+      "remove": "外す"
     }
   },
   "launcher": {

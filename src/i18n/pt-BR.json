@@ -173,10 +173,11 @@
       "duplicate": "Duplicar",
       "moveToResearch": "Mover para pesquisa",
       "publishToWordPress": "Publicar no WordPress",
-      "delete": "Excluir",
+      "delete": "Excluir documento e arquivo",
       "moveUp": "Mover para cima",
       "moveDown": "Mover para baixo",
-      "rename": "Renomear"
+      "rename": "Renomear",
+      "removeFromBinder": "Remover da pasta"
     },
     "wordCountSuffix": "{{count}}p",
     "fileNotFound": "O arquivo não existe mais: {{path}}",
@@ -190,6 +191,11 @@
     "titlePrompt": {
       "heading": "Novo documento",
       "create": "Criar"
+    },
+    "removeConfirm": {
+      "title": "Remover da pasta",
+      "message": "Remover \"{{title}}\" da pasta? O arquivo permanece no seu vault, mas o status, a meta de palavras e a configuração de exportação da entrada são perdidos. Documentos aninhados sobem para o lugar dele.",
+      "remove": "Remover"
     }
   },
   "launcher": {

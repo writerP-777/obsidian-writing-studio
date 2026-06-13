@@ -173,10 +173,11 @@
       "duplicate": "Duplicate",
       "moveToResearch": "Move to research",
       "publishToWordPress": "Publish to WordPress",
-      "delete": "Delete",
+      "delete": "Delete document and file",
       "moveUp": "Move up",
       "moveDown": "Move down",
-      "rename": "Rename"
+      "rename": "Rename",
+      "removeFromBinder": "Remove from binder"
     },
     "wordCountSuffix": "{{count}}w",
     "fileNotFound": "File no longer exists: {{path}}",
@@ -190,6 +191,11 @@
     "titlePrompt": {
       "heading": "New document",
       "create": "Create"
+    },
+    "removeConfirm": {
+      "title": "Remove from binder",
+      "message": "Remove \"{{title}}\" from the binder? The file stays in your vault, but the entry's status, word count goal, and export setting are lost. Nested documents move up to take its place.",
+      "remove": "Remove"
     }
   },
   "launcher": {

@@ -173,10 +173,11 @@
       "duplicate": "Duplizieren",
       "moveToResearch": "In Recherche verschieben",
       "publishToWordPress": "Auf WordPress veröffentlichen",
-      "delete": "Löschen",
+      "delete": "Dokument und Datei löschen",
       "moveUp": "Nach oben verschieben",
       "moveDown": "Nach unten verschieben",
-      "rename": "Umbenennen"
+      "rename": "Umbenennen",
+      "removeFromBinder": "Aus der Schreibmappe entfernen"
     },
     "wordCountSuffix": "{{count}}W",
     "fileNotFound": "Die Datei existiert nicht mehr: {{path}}",
@@ -190,6 +191,11 @@
     "titlePrompt": {
       "heading": "Neues Dokument",
       "create": "Erstellen"
+    },
+    "removeConfirm": {
+      "title": "Aus der Schreibmappe entfernen",
+      "message": "„{{title}}“ aus der Schreibmappe entfernen? Die Datei bleibt im Vault, aber Status, Wortziel und Export-Einstellung des Eintrags gehen verloren. Untergeordnete Dokumente rücken an seine Stelle.",
+      "remove": "Entfernen"
     }
   },
   "launcher": {

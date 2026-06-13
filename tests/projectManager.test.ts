@@ -331,6 +331,69 @@ describe('ProjectManager.deleteProject', () => {
   });
 });
 
+describe('ProjectManager.removeFromBinderPromoteChildren', () => {
+  function entry(id: string, order: number, children?: BinderItem[]): BinderItem {
+    return {
+      id, title: id, filePath: `Projects/My Book/Chapters/${id}.md`,
+      type: 'chapter', order, status: 'draft', includeInExport: true, children,
+    };
+  }
+
+  async function setup(items: BinderItem[]) {
+    const files = new InMemoryVaultFiles();
+    files.files.set('Projects/My Book/Chapters/a.md', 'content');
+    const pm = new ProjectManager(makePlugin(), files);
+    await pm.saveProject(makeProject());
+    await pm.saveBinder({ version: '2.0', projectId: 'project-1', items });
+    return { pm, files };
+  }
+
+  it('removes the entry and leaves the file untouched', async () => {
+    const { pm, files } = await setup([entry('a', 1), entry('b', 2)]);
+
+    await pm.removeFromBinderPromoteChildren(makeProject(), 'a');
+
+    const binder = await pm.loadBinder(makeProject());
+    expect(binder.items.map(i => i.id)).toEqual(['b']);
+    expect(files.files.get('Projects/My Book/Chapters/a.md')).toBe('content');
+  });
+
+  it('promotes children into the removed parent position and renumbers orders', async () => {
+    const { pm } = await setup([
+      entry('a', 1),
+      entry('parent', 2, [entry('c1', 1), entry('c2', 2)]),
+      entry('b', 3),
+    ]);
+
+    await pm.removeFromBinderPromoteChildren(makeProject(), 'parent');
+
+    const binder = await pm.loadBinder(makeProject());
+    expect(binder.items.map(i => i.id)).toEqual(['a', 'c1', 'c2', 'b']);
+    expect(binder.items.map(i => i.order)).toEqual([1, 2, 3, 4]);
+  });
+
+  it('removes a nested entry without disturbing its siblings', async () => {
+    const { pm } = await setup([
+      entry('parent', 1, [entry('c1', 1), entry('c2', 2, [entry('g1', 1)]), entry('c3', 3)]),
+    ]);
+
+    await pm.removeFromBinderPromoteChildren(makeProject(), 'c2');
+
+    const binder = await pm.loadBinder(makeProject());
+    expect(binder.items[0].children!.map(i => i.id)).toEqual(['c1', 'g1', 'c3']);
+  });
+
+  it('announces binder-changed so views refresh', async () => {
+    const { pm } = await setup([entry('a', 1)]);
+    const events = jest.fn();
+    pm.onBinderChanged(events);
+
+    await pm.removeFromBinderPromoteChildren(makeProject(), 'a');
+
+    expect(events).toHaveBeenCalledTimes(1);
+  });
+});
+
 describe('ProjectManager.addDocumentToBinder filename de-duplication', () => {
   it('suffixes the filename when the target file already exists', async () => {
     const files = new InMemoryVaultFiles();

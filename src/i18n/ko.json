@@ -173,10 +173,11 @@
       "duplicate": "복제",
       "moveToResearch": "리서치로 이동",
       "publishToWordPress": "WordPress에 게시",
-      "delete": "삭제",
+      "delete": "문서와 파일 삭제",
       "moveUp": "위로 이동",
       "moveDown": "아래로 이동",
-      "rename": "이름 바꾸기"
+      "rename": "이름 바꾸기",
+      "removeFromBinder": "바인더에서 제거"
     },
     "wordCountSuffix": "{{count}}자",
     "fileNotFound": "파일이 더 이상 존재하지 않습니다: {{path}}",
@@ -190,6 +191,11 @@
     "titlePrompt": {
       "heading": "새 문서",
       "create": "만들기"
+    },
+    "removeConfirm": {
+      "title": "바인더에서 제거",
+      "message": "\"{{title}}\"을(를) 바인더에서 제거할까요? 파일은 볼트에 남지만 항목의 상태, 단어 수 목표, 내보내기 설정은 사라집니다. 하위 문서는 그 자리로 올라옵니다.",
+      "remove": "제거"
     }
   },
   "launcher": {

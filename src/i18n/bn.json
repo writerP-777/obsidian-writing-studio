@@ -173,10 +173,11 @@
       "duplicate": "ডুপ্লিকেট",
       "moveToResearch": "গবেষণায় সরান",
       "publishToWordPress": "WordPress-এ প্রকাশ করুন",
-      "delete": "মুছুন",
+      "delete": "নথি ও ফাইল মুছুন",
       "moveUp": "উপরে সরান",
       "moveDown": "নিচে সরান",
-      "rename": "নাম পরিবর্তন করুন"
+      "rename": "নাম পরিবর্তন করুন",
+      "removeFromBinder": "বাইন্ডার থেকে সরান"
     },
     "wordCountSuffix": "{{count}}শ",
     "fileNotFound": "ফাইলটি আর নেই: {{path}}",
@@ -190,6 +191,11 @@
     "titlePrompt": {
       "heading": "নতুন নথি",
       "create": "তৈরি করুন"
+    },
+    "removeConfirm": {
+      "title": "বাইন্ডার থেকে সরান",
+      "message": "\"{{title}}\" কে বাইন্ডার থেকে সরাবেন? ফাইলটি ভল্টে থেকে যাবে, কিন্তু এন্ট্রির অবস্থা, শব্দসংখ্যা লক্ষ্য এবং রপ্তানি সেটিং হারিয়ে যাবে। ভেতরের নথিগুলি এর জায়গায় উঠে আসবে।",
+      "remove": "সরান"
     }
   },
   "launcher": {

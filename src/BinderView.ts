@@ -584,6 +584,7 @@ export class BinderView extends ItemView {
       new PublishModal(this.app, this.plugin, item.filePath).open();
     }));
     menu.addSeparator();
+    menu.addItem(i => i.setTitle(t('binder.menu.removeFromBinder')).setIcon('list-x').onClick(() => this.removeFromBinder(item)));
     menu.addItem(i => i.setTitle(t('binder.menu.delete')).setIcon('trash').onClick(() => this.deleteItem(item)));
 
     return menu;
@@ -662,6 +663,22 @@ export class BinderView extends ItemView {
     item.filePath = newPath;
     item.type = 'note';
     await this.saveBinder();
+  }
+
+  private removeFromBinder(item: BinderItem): void {
+    const project = this.activeProject;
+    if (!project) return;
+    // The file is never touched; only the binder entry's metadata is lost
+    new ConfirmModal(
+      this.app,
+      t('binder.removeConfirm.title'),
+      t('binder.removeConfirm.message', { title: item.title }),
+      t('binder.removeConfirm.remove'),
+      t('binder.deleteConfirm.cancel'),
+      async () => {
+        await this.plugin.projectManager.removeFromBinderPromoteChildren(project, item.id);
+      }
+    ).open();
   }
 
   private deleteItem(item: BinderItem): void {
