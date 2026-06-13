@@ -2483,10 +2483,11 @@ var en_default = {
       duplicate: "Duplicate",
       moveToResearch: "Move to research",
       publishToWordPress: "Publish to WordPress",
-      delete: "Delete",
+      delete: "Delete document and file",
       moveUp: "Move up",
       moveDown: "Move down",
-      rename: "Rename"
+      rename: "Rename",
+      removeFromBinder: "Remove from binder"
     },
     wordCountSuffix: "{{count}}w",
     fileNotFound: "File no longer exists: {{path}}",
@@ -2500,6 +2501,11 @@ var en_default = {
     titlePrompt: {
       heading: "New document",
       create: "Create"
+    },
+    removeConfirm: {
+      title: "Remove from binder",
+      message: `Remove "{{title}}" from the binder? The file stays in your vault, but the entry's status, word count goal, and export setting are lost. Nested documents move up to take its place.`,
+      remove: "Remove"
     }
   },
   launcher: {
@@ -3132,10 +3138,11 @@ var zh_default = {
       duplicate: "\u590D\u5236",
       moveToResearch: "\u79FB\u81F3\u7814\u7A76",
       publishToWordPress: "\u53D1\u5E03\u5230 WordPress",
-      delete: "\u5220\u9664",
+      delete: "\u5220\u9664\u6587\u6863\u548C\u6587\u4EF6",
       moveUp: "\u4E0A\u79FB",
       moveDown: "\u4E0B\u79FB",
-      rename: "\u91CD\u547D\u540D"
+      rename: "\u91CD\u547D\u540D",
+      removeFromBinder: "\u4ECE\u6D3B\u9875\u5939\u4E2D\u79FB\u9664"
     },
     wordCountSuffix: "{{count}}\u5B57",
     fileNotFound: "\u6587\u4EF6\u5DF2\u4E0D\u5B58\u5728\uFF1A{{path}}",
@@ -3149,6 +3156,11 @@ var zh_default = {
     titlePrompt: {
       heading: "\u65B0\u5EFA\u6587\u6863",
       create: "\u521B\u5EFA"
+    },
+    removeConfirm: {
+      title: "\u4ECE\u6D3B\u9875\u5939\u4E2D\u79FB\u9664",
+      message: "\u8981\u5C06\u201C{{title}}\u201D\u4ECE\u6D3B\u9875\u5939\u4E2D\u79FB\u9664\u5417\uFF1F\u6587\u4EF6\u5C06\u4FDD\u7559\u5728\u5E93\u4E2D\uFF0C\u4F46\u8BE5\u6761\u76EE\u7684\u72B6\u6001\u3001\u5B57\u6570\u76EE\u6807\u548C\u5BFC\u51FA\u8BBE\u7F6E\u5C06\u4E22\u5931\u3002\u5D4C\u5957\u6587\u6863\u5C06\u4E0A\u79FB\u5230\u5176\u4F4D\u7F6E\u3002",
+      remove: "\u79FB\u9664"
     }
   },
   launcher: {
@@ -3781,10 +3793,11 @@ var hi_default = {
       duplicate: "\u0921\u0941\u092A\u094D\u0932\u093F\u0915\u0947\u091F",
       moveToResearch: "\u0936\u094B\u0927 \u092E\u0947\u0902 \u0932\u0947 \u091C\u093E\u090F\u0902",
       publishToWordPress: "WordPress \u092A\u0930 \u092A\u094D\u0930\u0915\u093E\u0936\u093F\u0924 \u0915\u0930\u0947\u0902",
-      delete: "\u0939\u091F\u093E\u090F\u0902",
+      delete: "\u0926\u0938\u094D\u0924\u093E\u0935\u0947\u091C\u093C \u0914\u0930 \u092B\u093C\u093E\u0907\u0932 \u0939\u091F\u093E\u090F\u0901",
       moveUp: "\u090A\u092A\u0930 \u0932\u0947 \u091C\u093E\u090F\u0902",
       moveDown: "\u0928\u0940\u091A\u0947 \u0932\u0947 \u091C\u093E\u090F\u0902",
-      rename: "\u0928\u093E\u092E \u092C\u0926\u0932\u0947\u0902"
+      rename: "\u0928\u093E\u092E \u092C\u0926\u0932\u0947\u0902",
+      removeFromBinder: "\u092C\u093E\u0907\u0902\u0921\u0930 \u0938\u0947 \u0939\u091F\u093E\u090F\u0901"
     },
     wordCountSuffix: "{{count}}\u0936",
     fileNotFound: "\u092B\u093C\u093E\u0907\u0932 \u0905\u092C \u092E\u094C\u091C\u0942\u0926 \u0928\u0939\u0940\u0902 \u0939\u0948: {{path}}",
@@ -3798,6 +3811,11 @@ var hi_default = {
     titlePrompt: {
       heading: "\u0928\u092F\u093E \u0926\u0938\u094D\u0924\u093E\u0935\u0947\u091C\u093C",
       create: "\u092C\u0928\u093E\u090F\u0902"
+    },
+    removeConfirm: {
+      title: "\u092C\u093E\u0907\u0902\u0921\u0930 \u0938\u0947 \u0939\u091F\u093E\u090F\u0901",
+      message: '"{{title}}" \u0915\u094B \u092C\u093E\u0907\u0902\u0921\u0930 \u0938\u0947 \u0939\u091F\u093E\u090F\u0901? \u092B\u093C\u093E\u0907\u0932 \u0935\u0949\u0932\u094D\u091F \u092E\u0947\u0902 \u092C\u0928\u0940 \u0930\u0939\u0947\u0917\u0940, \u0932\u0947\u0915\u093F\u0928 \u092A\u094D\u0930\u0935\u093F\u0937\u094D\u091F\u093F \u0915\u0940 \u0938\u094D\u0925\u093F\u0924\u093F, \u0936\u092C\u094D\u0926 \u0938\u0902\u0916\u094D\u092F\u093E \u0932\u0915\u094D\u0937\u094D\u092F \u0914\u0930 \u0928\u093F\u0930\u094D\u092F\u093E\u0924 \u0938\u0947\u091F\u093F\u0902\u0917 \u0916\u094B \u091C\u093E\u090F\u0901\u0917\u0940\u0964 \u092D\u0940\u0924\u0930 \u0915\u0947 \u0926\u0938\u094D\u0924\u093E\u0935\u0947\u091C\u093C \u0907\u0938\u0915\u0940 \u091C\u0917\u0939 \u090A\u092A\u0930 \u0906 \u091C\u093E\u090F\u0901\u0917\u0947\u0964',
+      remove: "\u0939\u091F\u093E\u090F\u0901"
     }
   },
   launcher: {
@@ -4430,10 +4448,11 @@ var es_default = {
       duplicate: "Duplicar",
       moveToResearch: "Mover a investigaci\xF3n",
       publishToWordPress: "Publicar en WordPress",
-      delete: "Eliminar",
+      delete: "Eliminar documento y archivo",
       moveUp: "Mover hacia arriba",
       moveDown: "Mover hacia abajo",
-      rename: "Renombrar"
+      rename: "Renombrar",
+      removeFromBinder: "Quitar de la carpeta"
     },
     wordCountSuffix: "{{count}}p",
     fileNotFound: "El archivo ya no existe: {{path}}",
@@ -4447,6 +4466,11 @@ var es_default = {
     titlePrompt: {
       heading: "Nuevo documento",
       create: "Crear"
+    },
+    removeConfirm: {
+      title: "Quitar de la carpeta",
+      message: '\xBFQuitar "{{title}}" de la carpeta? El archivo permanece en tu vault, pero se pierden el estado, el objetivo de palabras y el ajuste de exportaci\xF3n de la entrada. Los documentos anidados suben a ocupar su lugar.',
+      remove: "Quitar"
     }
   },
   launcher: {
@@ -5079,10 +5103,11 @@ var ar_default = {
       duplicate: "\u062A\u0643\u0631\u0627\u0631",
       moveToResearch: "\u0646\u0642\u0644 \u0625\u0644\u0649 \u0627\u0644\u0628\u062D\u062B",
       publishToWordPress: "\u0646\u0634\u0631 \u0639\u0644\u0649 WordPress",
-      delete: "\u062D\u0630\u0641",
+      delete: "\u062D\u0630\u0641 \u0627\u0644\u0645\u0633\u062A\u0646\u062F \u0648\u0627\u0644\u0645\u0644\u0641",
       moveUp: "\u0646\u0642\u0644 \u0644\u0623\u0639\u0644\u0649",
       moveDown: "\u0646\u0642\u0644 \u0644\u0623\u0633\u0641\u0644",
-      rename: "\u0625\u0639\u0627\u062F\u0629 \u062A\u0633\u0645\u064A\u0629"
+      rename: "\u0625\u0639\u0627\u062F\u0629 \u062A\u0633\u0645\u064A\u0629",
+      removeFromBinder: "\u0625\u0632\u0627\u0644\u0629 \u0645\u0646 \u0627\u0644\u0645\u0644\u0632\u0645\u0629"
     },
     wordCountSuffix: "{{count}}\u0643",
     fileNotFound: "\u0627\u0644\u0645\u0644\u0641 \u0644\u0645 \u064A\u0639\u062F \u0645\u0648\u062C\u0648\u062F\u064B\u0627: {{path}}",
@@ -5096,6 +5121,11 @@ var ar_default = {
     titlePrompt: {
       heading: "\u0645\u0633\u062A\u0646\u062F \u062C\u062F\u064A\u062F",
       create: "\u0625\u0646\u0634\u0627\u0621"
+    },
+    removeConfirm: {
+      title: "\u0625\u0632\u0627\u0644\u0629 \u0645\u0646 \u0627\u0644\u0645\u0644\u0632\u0645\u0629",
+      message: '\u0647\u0644 \u062A\u0631\u064A\u062F \u0625\u0632\u0627\u0644\u0629 "{{title}}" \u0645\u0646 \u0627\u0644\u0645\u0644\u0632\u0645\u0629\u061F \u0633\u064A\u0628\u0642\u0649 \u0627\u0644\u0645\u0644\u0641 \u0641\u064A \u0627\u0644\u062E\u0632\u0646\u0629\u060C \u0644\u0643\u0646 \u062D\u0627\u0644\u0629 \u0627\u0644\u0625\u062F\u062E\u0627\u0644 \u0648\u0647\u062F\u0641 \u0639\u062F\u062F \u0627\u0644\u0643\u0644\u0645\u0627\u062A \u0648\u0625\u0639\u062F\u0627\u062F \u0627\u0644\u062A\u0635\u062F\u064A\u0631 \u0633\u062A\u064F\u0641\u0642\u062F. \u062A\u0646\u062A\u0642\u0644 \u0627\u0644\u0645\u0633\u062A\u0646\u062F\u0627\u062A \u0627\u0644\u0645\u062A\u062F\u0627\u062E\u0644\u0629 \u0625\u0644\u0649 \u0645\u0643\u0627\u0646\u0647.',
+      remove: "\u0625\u0632\u0627\u0644\u0629"
     }
   },
   launcher: {
@@ -5739,10 +5769,11 @@ var fr_default = {
       duplicate: "Dupliquer",
       moveToResearch: "D\xE9placer vers la recherche",
       publishToWordPress: "Publier sur WordPress",
-      delete: "Supprimer",
+      delete: "Supprimer le document et le fichier",
       moveUp: "Monter",
       moveDown: "Descendre",
-      rename: "Renommer"
+      rename: "Renommer",
+      removeFromBinder: "Retirer du classeur"
     },
     wordCountSuffix: "{{count}}m",
     fileNotFound: "Le fichier n'existe plus : {{path}}",
@@ -5756,6 +5787,11 @@ var fr_default = {
     titlePrompt: {
       heading: "Nouveau document",
       create: "Cr\xE9er"
+    },
+    removeConfirm: {
+      title: "Retirer du classeur",
+      message: "Retirer \xAB {{title}} \xBB du classeur ? Le fichier reste dans votre coffre, mais le statut, l'objectif de mots et le r\xE9glage d'export de l'entr\xE9e sont perdus. Les documents imbriqu\xE9s remontent \xE0 sa place.",
+      remove: "Retirer"
     }
   },
   launcher: {
@@ -6388,10 +6424,11 @@ var bn_default = {
       duplicate: "\u09A1\u09C1\u09AA\u09CD\u09B2\u09BF\u0995\u09C7\u099F",
       moveToResearch: "\u0997\u09AC\u09C7\u09B7\u09A3\u09BE\u09AF\u09BC \u09B8\u09B0\u09BE\u09A8",
       publishToWordPress: "WordPress-\u098F \u09AA\u09CD\u09B0\u0995\u09BE\u09B6 \u0995\u09B0\u09C1\u09A8",
-      delete: "\u09AE\u09C1\u099B\u09C1\u09A8",
+      delete: "\u09A8\u09A5\u09BF \u0993 \u09AB\u09BE\u0987\u09B2 \u09AE\u09C1\u099B\u09C1\u09A8",
       moveUp: "\u0989\u09AA\u09B0\u09C7 \u09B8\u09B0\u09BE\u09A8",
       moveDown: "\u09A8\u09BF\u099A\u09C7 \u09B8\u09B0\u09BE\u09A8",
-      rename: "\u09A8\u09BE\u09AE \u09AA\u09B0\u09BF\u09AC\u09B0\u09CD\u09A4\u09A8 \u0995\u09B0\u09C1\u09A8"
+      rename: "\u09A8\u09BE\u09AE \u09AA\u09B0\u09BF\u09AC\u09B0\u09CD\u09A4\u09A8 \u0995\u09B0\u09C1\u09A8",
+      removeFromBinder: "\u09AC\u09BE\u0987\u09A8\u09CD\u09A1\u09BE\u09B0 \u09A5\u09C7\u0995\u09C7 \u09B8\u09B0\u09BE\u09A8"
     },
     wordCountSuffix: "{{count}}\u09B6",
     fileNotFound: "\u09AB\u09BE\u0987\u09B2\u099F\u09BF \u0986\u09B0 \u09A8\u09C7\u0987: {{path}}",
@@ -6405,6 +6442,11 @@ var bn_default = {
     titlePrompt: {
       heading: "\u09A8\u09A4\u09C1\u09A8 \u09A8\u09A5\u09BF",
       create: "\u09A4\u09C8\u09B0\u09BF \u0995\u09B0\u09C1\u09A8"
+    },
+    removeConfirm: {
+      title: "\u09AC\u09BE\u0987\u09A8\u09CD\u09A1\u09BE\u09B0 \u09A5\u09C7\u0995\u09C7 \u09B8\u09B0\u09BE\u09A8",
+      message: '"{{title}}" \u0995\u09C7 \u09AC\u09BE\u0987\u09A8\u09CD\u09A1\u09BE\u09B0 \u09A5\u09C7\u0995\u09C7 \u09B8\u09B0\u09BE\u09AC\u09C7\u09A8? \u09AB\u09BE\u0987\u09B2\u099F\u09BF \u09AD\u09B2\u09CD\u099F\u09C7 \u09A5\u09C7\u0995\u09C7 \u09AF\u09BE\u09AC\u09C7, \u0995\u09BF\u09A8\u09CD\u09A4\u09C1 \u098F\u09A8\u09CD\u099F\u09CD\u09B0\u09BF\u09B0 \u0985\u09AC\u09B8\u09CD\u09A5\u09BE, \u09B6\u09AC\u09CD\u09A6\u09B8\u0982\u0996\u09CD\u09AF\u09BE \u09B2\u0995\u09CD\u09B7\u09CD\u09AF \u098F\u09AC\u0982 \u09B0\u09AA\u09CD\u09A4\u09BE\u09A8\u09BF \u09B8\u09C7\u099F\u09BF\u0982 \u09B9\u09BE\u09B0\u09BF\u09AF\u09BC\u09C7 \u09AF\u09BE\u09AC\u09C7\u0964 \u09AD\u09C7\u09A4\u09B0\u09C7\u09B0 \u09A8\u09A5\u09BF\u0997\u09C1\u09B2\u09BF \u098F\u09B0 \u099C\u09BE\u09AF\u09BC\u0997\u09BE\u09AF\u09BC \u0989\u09A0\u09C7 \u0986\u09B8\u09AC\u09C7\u0964',
+      remove: "\u09B8\u09B0\u09BE\u09A8"
     }
   },
   launcher: {
@@ -7037,10 +7079,11 @@ var pt_BR_default = {
       duplicate: "Duplicar",
       moveToResearch: "Mover para pesquisa",
       publishToWordPress: "Publicar no WordPress",
-      delete: "Excluir",
+      delete: "Excluir documento e arquivo",
       moveUp: "Mover para cima",
       moveDown: "Mover para baixo",
-      rename: "Renomear"
+      rename: "Renomear",
+      removeFromBinder: "Remover da pasta"
     },
     wordCountSuffix: "{{count}}p",
     fileNotFound: "O arquivo n\xE3o existe mais: {{path}}",
@@ -7054,6 +7097,11 @@ var pt_BR_default = {
     titlePrompt: {
       heading: "Novo documento",
       create: "Criar"
+    },
+    removeConfirm: {
+      title: "Remover da pasta",
+      message: 'Remover "{{title}}" da pasta? O arquivo permanece no seu vault, mas o status, a meta de palavras e a configura\xE7\xE3o de exporta\xE7\xE3o da entrada s\xE3o perdidos. Documentos aninhados sobem para o lugar dele.',
+      remove: "Remover"
     }
   },
   launcher: {
@@ -7686,10 +7734,11 @@ var ru_default = {
       duplicate: "\u0414\u0443\u0431\u043B\u0438\u0440\u043E\u0432\u0430\u0442\u044C",
       moveToResearch: "\u041F\u0435\u0440\u0435\u043C\u0435\u0441\u0442\u0438\u0442\u044C \u0432 \u0438\u0441\u0441\u043B\u0435\u0434\u043E\u0432\u0430\u043D\u0438\u044F",
       publishToWordPress: "\u041E\u043F\u0443\u0431\u043B\u0438\u043A\u043E\u0432\u0430\u0442\u044C \u0432 WordPress",
-      delete: "\u0423\u0434\u0430\u043B\u0438\u0442\u044C",
+      delete: "\u0423\u0434\u0430\u043B\u0438\u0442\u044C \u0434\u043E\u043A\u0443\u043C\u0435\u043D\u0442 \u0438 \u0444\u0430\u0439\u043B",
       moveUp: "\u041F\u0435\u0440\u0435\u043C\u0435\u0441\u0442\u0438\u0442\u044C \u0432\u0432\u0435\u0440\u0445",
       moveDown: "\u041F\u0435\u0440\u0435\u043C\u0435\u0441\u0442\u0438\u0442\u044C \u0432\u043D\u0438\u0437",
-      rename: "\u041F\u0435\u0440\u0435\u0438\u043C\u0435\u043D\u043E\u0432\u0430\u0442\u044C"
+      rename: "\u041F\u0435\u0440\u0435\u0438\u043C\u0435\u043D\u043E\u0432\u0430\u0442\u044C",
+      removeFromBinder: "\u0423\u0431\u0440\u0430\u0442\u044C \u0438\u0437 \u043F\u0430\u043F\u043A\u0438"
     },
     wordCountSuffix: "{{count}}\u0441\u043B",
     fileNotFound: "\u0424\u0430\u0439\u043B \u0431\u043E\u043B\u044C\u0448\u0435 \u043D\u0435 \u0441\u0443\u0449\u0435\u0441\u0442\u0432\u0443\u0435\u0442: {{path}}",
@@ -7703,6 +7752,11 @@ var ru_default = {
     titlePrompt: {
       heading: "\u041D\u043E\u0432\u044B\u0439 \u0434\u043E\u043A\u0443\u043C\u0435\u043D\u0442",
       create: "\u0421\u043E\u0437\u0434\u0430\u0442\u044C"
+    },
+    removeConfirm: {
+      title: "\u0423\u0431\u0440\u0430\u0442\u044C \u0438\u0437 \u043F\u0430\u043F\u043A\u0438",
+      message: "\u0423\u0431\u0440\u0430\u0442\u044C \xAB{{title}}\xBB \u0438\u0437 \u043F\u0430\u043F\u043A\u0438? \u0424\u0430\u0439\u043B \u043E\u0441\u0442\u0430\u043D\u0435\u0442\u0441\u044F \u0432 \u0445\u0440\u0430\u043D\u0438\u043B\u0438\u0449\u0435, \u043D\u043E \u0441\u0442\u0430\u0442\u0443\u0441 \u0437\u0430\u043F\u0438\u0441\u0438, \u0446\u0435\u043B\u044C \u043F\u043E \u0441\u043B\u043E\u0432\u0430\u043C \u0438 \u043D\u0430\u0441\u0442\u0440\u043E\u0439\u043A\u0430 \u044D\u043A\u0441\u043F\u043E\u0440\u0442\u0430 \u0431\u0443\u0434\u0443\u0442 \u043F\u043E\u0442\u0435\u0440\u044F\u043D\u044B. \u0412\u043B\u043E\u0436\u0435\u043D\u043D\u044B\u0435 \u0434\u043E\u043A\u0443\u043C\u0435\u043D\u0442\u044B \u043F\u043E\u0434\u043D\u0438\u043C\u0443\u0442\u0441\u044F \u043D\u0430 \u0435\u0433\u043E \u043C\u0435\u0441\u0442\u043E.",
+      remove: "\u0423\u0431\u0440\u0430\u0442\u044C"
     }
   },
   launcher: {
@@ -8341,10 +8395,11 @@ var ja_default = {
       duplicate: "\u8907\u88FD",
       moveToResearch: "\u30EA\u30B5\u30FC\u30C1\u306B\u79FB\u52D5",
       publishToWordPress: "WordPress\u306B\u516C\u958B",
-      delete: "\u524A\u9664",
+      delete: "\u30C9\u30AD\u30E5\u30E1\u30F3\u30C8\u3068\u30D5\u30A1\u30A4\u30EB\u3092\u524A\u9664",
       moveUp: "\u4E0A\u306B\u79FB\u52D5",
       moveDown: "\u4E0B\u306B\u79FB\u52D5",
-      rename: "\u540D\u524D\u3092\u5909\u66F4"
+      rename: "\u540D\u524D\u3092\u5909\u66F4",
+      removeFromBinder: "\u30D0\u30A4\u30F3\u30C0\u30FC\u304B\u3089\u5916\u3059"
     },
     wordCountSuffix: "{{count}}\u8A9E",
     fileNotFound: "\u30D5\u30A1\u30A4\u30EB\u304C\u5B58\u5728\u3057\u307E\u305B\u3093\uFF1A{{path}}",
@@ -8358,6 +8413,11 @@ var ja_default = {
     titlePrompt: {
       heading: "\u65B0\u898F\u30C9\u30AD\u30E5\u30E1\u30F3\u30C8",
       create: "\u4F5C\u6210"
+    },
+    removeConfirm: {
+      title: "\u30D0\u30A4\u30F3\u30C0\u30FC\u304B\u3089\u5916\u3059",
+      message: "\u300C{{title}}\u300D\u3092\u30D0\u30A4\u30F3\u30C0\u30FC\u304B\u3089\u5916\u3057\u307E\u3059\u304B\uFF1F\u30D5\u30A1\u30A4\u30EB\u306FVault\u306B\u6B8B\u308A\u307E\u3059\u304C\u3001\u9805\u76EE\u306E\u30B9\u30C6\u30FC\u30BF\u30B9\u3001\u76EE\u6A19\u8A9E\u6570\u3001\u30A8\u30AF\u30B9\u30DD\u30FC\u30C8\u8A2D\u5B9A\u306F\u5931\u308F\u308C\u307E\u3059\u3002\u5165\u308C\u5B50\u306E\u30C9\u30AD\u30E5\u30E1\u30F3\u30C8\u306F\u305D\u306E\u4F4D\u7F6E\u306B\u7E70\u308A\u4E0A\u304C\u308A\u307E\u3059\u3002",
+      remove: "\u5916\u3059"
     }
   },
   launcher: {
@@ -8990,10 +9050,11 @@ var de_default = {
       duplicate: "Duplizieren",
       moveToResearch: "In Recherche verschieben",
       publishToWordPress: "Auf WordPress ver\xF6ffentlichen",
-      delete: "L\xF6schen",
+      delete: "Dokument und Datei l\xF6schen",
       moveUp: "Nach oben verschieben",
       moveDown: "Nach unten verschieben",
-      rename: "Umbenennen"
+      rename: "Umbenennen",
+      removeFromBinder: "Aus der Schreibmappe entfernen"
     },
     wordCountSuffix: "{{count}}W",
     fileNotFound: "Die Datei existiert nicht mehr: {{path}}",
@@ -9007,6 +9068,11 @@ var de_default = {
     titlePrompt: {
       heading: "Neues Dokument",
       create: "Erstellen"
+    },
+    removeConfirm: {
+      title: "Aus der Schreibmappe entfernen",
+      message: "\u201E{{title}}\u201C aus der Schreibmappe entfernen? Die Datei bleibt im Vault, aber Status, Wortziel und Export-Einstellung des Eintrags gehen verloren. Untergeordnete Dokumente r\xFCcken an seine Stelle.",
+      remove: "Entfernen"
     }
   },
   launcher: {
@@ -9639,10 +9705,11 @@ var ko_default = {
       duplicate: "\uBCF5\uC81C",
       moveToResearch: "\uB9AC\uC11C\uCE58\uB85C \uC774\uB3D9",
       publishToWordPress: "WordPress\uC5D0 \uAC8C\uC2DC",
-      delete: "\uC0AD\uC81C",
+      delete: "\uBB38\uC11C\uC640 \uD30C\uC77C \uC0AD\uC81C",
       moveUp: "\uC704\uB85C \uC774\uB3D9",
       moveDown: "\uC544\uB798\uB85C \uC774\uB3D9",
-      rename: "\uC774\uB984 \uBC14\uAFB8\uAE30"
+      rename: "\uC774\uB984 \uBC14\uAFB8\uAE30",
+      removeFromBinder: "\uBC14\uC778\uB354\uC5D0\uC11C \uC81C\uAC70"
     },
     wordCountSuffix: "{{count}}\uC790",
     fileNotFound: "\uD30C\uC77C\uC774 \uB354 \uC774\uC0C1 \uC874\uC7AC\uD558\uC9C0 \uC54A\uC2B5\uB2C8\uB2E4: {{path}}",
@@ -9656,6 +9723,11 @@ var ko_default = {
     titlePrompt: {
       heading: "\uC0C8 \uBB38\uC11C",
       create: "\uB9CC\uB4E4\uAE30"
+    },
+    removeConfirm: {
+      title: "\uBC14\uC778\uB354\uC5D0\uC11C \uC81C\uAC70",
+      message: '"{{title}}"\uC744(\uB97C) \uBC14\uC778\uB354\uC5D0\uC11C \uC81C\uAC70\uD560\uAE4C\uC694? \uD30C\uC77C\uC740 \uBCFC\uD2B8\uC5D0 \uB0A8\uC9C0\uB9CC \uD56D\uBAA9\uC758 \uC0C1\uD0DC, \uB2E8\uC5B4 \uC218 \uBAA9\uD45C, \uB0B4\uBCF4\uB0B4\uAE30 \uC124\uC815\uC740 \uC0AC\uB77C\uC9D1\uB2C8\uB2E4. \uD558\uC704 \uBB38\uC11C\uB294 \uADF8 \uC790\uB9AC\uB85C \uC62C\uB77C\uC635\uB2C8\uB2E4.',
+      remove: "\uC81C\uAC70"
     }
   },
   launcher: {
@@ -12155,6 +12227,7 @@ var BinderView = class extends import_obsidian12.ItemView {
       new PublishModal(this.app, this.plugin, item.filePath).open();
     }));
     menu.addSeparator();
+    menu.addItem((i) => i.setTitle(t2("binder.menu.removeFromBinder")).setIcon("list-x").onClick(() => this.removeFromBinder(item)));
     menu.addItem((i) => i.setTitle(t2("binder.menu.delete")).setIcon("trash").onClick(() => this.deleteItem(item)));
     return menu;
   }
@@ -12217,6 +12290,20 @@ var BinderView = class extends import_obsidian12.ItemView {
     item.filePath = newPath;
     item.type = "note";
     await this.saveBinder();
+  }
+  removeFromBinder(item) {
+    const project = this.activeProject;
+    if (!project) return;
+    new ConfirmModal(
+      this.app,
+      t2("binder.removeConfirm.title"),
+      t2("binder.removeConfirm.message", { title: item.title }),
+      t2("binder.removeConfirm.remove"),
+      t2("binder.deleteConfirm.cancel"),
+      async () => {
+        await this.plugin.projectManager.removeFromBinderPromoteChildren(project, item.id);
+      }
+    ).open();
   }
   deleteItem(item) {
     const project = this.activeProject;
@@ -16476,6 +16563,38 @@ tags: [writing-studio]
     const binder = await this.loadBinder(project);
     binder.items = this.removeFromTree(binder.items, itemId);
     await this.saveBinder(binder);
+  }
+  // The inverse of "Add to writing project" — drops the binder entry and
+  // leaves the file untouched. The removed item's children are promoted into
+  // its position so no entries are orphaned.
+  async removeFromBinderPromoteChildren(project, itemId) {
+    const binder = await this.loadBinder(project);
+    binder.items = this.promoteAndRemove(binder.items, itemId);
+    this.renumberOrders(binder.items);
+    await this.saveBinder(binder);
+  }
+  promoteAndRemove(items, id) {
+    var _a2;
+    const result = [];
+    for (const item of items) {
+      if (item.id === id) {
+        result.push(...(_a2 = item.children) != null ? _a2 : []);
+      } else {
+        result.push({
+          ...item,
+          children: item.children ? this.promoteAndRemove(item.children, id) : void 0
+        });
+      }
+    }
+    return result;
+  }
+  // Array position is the rendering order; keep the order fields in step the
+  // same way drag reordering does
+  renumberOrders(items) {
+    items.forEach((item, i) => {
+      item.order = i + 1;
+      if (item.children) this.renumberOrders(item.children);
+    });
   }
   removeFromTree(items, id) {
     return items.filter((item) => item.id !== id).map((item) => ({

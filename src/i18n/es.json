@@ -173,10 +173,11 @@
       "duplicate": "Duplicar",
       "moveToResearch": "Mover a investigación",
       "publishToWordPress": "Publicar en WordPress",
-      "delete": "Eliminar",
+      "delete": "Eliminar documento y archivo",
       "moveUp": "Mover hacia arriba",
       "moveDown": "Mover hacia abajo",
-      "rename": "Renombrar"
+      "rename": "Renombrar",
+      "removeFromBinder": "Quitar de la carpeta"
     },
     "wordCountSuffix": "{{count}}p",
     "fileNotFound": "El archivo ya no existe: {{path}}",
@@ -190,6 +191,11 @@
     "titlePrompt": {
       "heading": "Nuevo documento",
       "create": "Crear"
+    },
+    "removeConfirm": {
+      "title": "Quitar de la carpeta",
+      "message": "¿Quitar \"{{title}}\" de la carpeta? El archivo permanece en tu vault, pero se pierden el estado, el objetivo de palabras y el ajuste de exportación de la entrada. Los documentos anidados suben a ocupar su lugar.",
+      "remove": "Quitar"
     }
   },
   "launcher": {

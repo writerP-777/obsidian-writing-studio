@@ -173,10 +173,11 @@
       "duplicate": "Dupliquer",
       "moveToResearch": "Déplacer vers la recherche",
       "publishToWordPress": "Publier sur WordPress",
-      "delete": "Supprimer",
+      "delete": "Supprimer le document et le fichier",
       "moveUp": "Monter",
       "moveDown": "Descendre",
-      "rename": "Renommer"
+      "rename": "Renommer",
+      "removeFromBinder": "Retirer du classeur"
     },
     "wordCountSuffix": "{{count}}m",
     "fileNotFound": "Le fichier n'existe plus : {{path}}",
@@ -190,6 +191,11 @@
     "titlePrompt": {
       "heading": "Nouveau document",
       "create": "Créer"
+    },
+    "removeConfirm": {
+      "title": "Retirer du classeur",
+      "message": "Retirer « {{title}} » du classeur ? Le fichier reste dans votre coffre, mais le statut, l'objectif de mots et le réglage d'export de l'entrée sont perdus. Les documents imbriqués remontent à sa place.",
+      "remove": "Retirer"
     }
   },
   "launcher": {

@@ -173,10 +173,11 @@
       "duplicate": "复制",
       "moveToResearch": "移至研究",
       "publishToWordPress": "发布到 WordPress",
-      "delete": "删除",
+      "delete": "删除文档和文件",
       "moveUp": "上移",
       "moveDown": "下移",
-      "rename": "重命名"
+      "rename": "重命名",
+      "removeFromBinder": "从活页夹中移除"
     },
     "wordCountSuffix": "{{count}}字",
     "fileNotFound": "文件已不存在：{{path}}",
@@ -190,6 +191,11 @@
     "titlePrompt": {
       "heading": "新建文档",
       "create": "创建"
+    },
+    "removeConfirm": {
+      "title": "从活页夹中移除",
+      "message": "要将“{{title}}”从活页夹中移除吗？文件将保留在库中，但该条目的状态、字数目标和导出设置将丢失。嵌套文档将上移到其位置。",
+      "remove": "移除"
     }
   },
   "launcher": {

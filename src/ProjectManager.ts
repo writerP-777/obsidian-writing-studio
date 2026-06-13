@@ -274,6 +274,40 @@ tags: [writing-studio]
     await this.saveBinder(binder);
   }
 
+  // The inverse of "Add to writing project" — drops the binder entry and
+  // leaves the file untouched. The removed item's children are promoted into
+  // its position so no entries are orphaned.
+  async removeFromBinderPromoteChildren(project: WritingProject, itemId: string): Promise<void> {
+    const binder = await this.loadBinder(project);
+    binder.items = this.promoteAndRemove(binder.items, itemId);
+    this.renumberOrders(binder.items);
+    await this.saveBinder(binder);
+  }
+
+  private promoteAndRemove(items: BinderItem[], id: string): BinderItem[] {
+    const result: BinderItem[] = [];
+    for (const item of items) {
+      if (item.id === id) {
+        result.push(...(item.children ?? []));
+      } else {
+        result.push({
+          ...item,
+          children: item.children ? this.promoteAndRemove(item.children, id) : undefined,
+        });
+      }
+    }
+    return result;
+  }
+
+  // Array position is the rendering order; keep the order fields in step the
+  // same way drag reordering does
+  private renumberOrders(items: BinderItem[]): void {
+    items.forEach((item, i) => {
+      item.order = i + 1;
+      if (item.children) this.renumberOrders(item.children);
+    });
+  }
+
   private removeFromTree(items: BinderItem[], id: string): BinderItem[] {
     return items
       .filter(item => item.id !== id)

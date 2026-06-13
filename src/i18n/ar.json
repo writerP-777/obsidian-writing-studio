@@ -173,10 +173,11 @@
       "duplicate": "تكرار",
       "moveToResearch": "نقل إلى البحث",
       "publishToWordPress": "نشر على WordPress",
-      "delete": "حذف",
+      "delete": "حذف المستند والملف",
       "moveUp": "نقل لأعلى",
       "moveDown": "نقل لأسفل",
-      "rename": "إعادة تسمية"
+      "rename": "إعادة تسمية",
+      "removeFromBinder": "إزالة من الملزمة"
     },
     "wordCountSuffix": "{{count}}ك",
     "fileNotFound": "الملف لم يعد موجودًا: {{path}}",
@@ -190,6 +191,11 @@
     "titlePrompt": {
       "heading": "مستند جديد",
       "create": "إنشاء"
+    },
+    "removeConfirm": {
+      "title": "إزالة من الملزمة",
+      "message": "هل تريد إزالة \"{{title}}\" من الملزمة؟ سيبقى الملف في الخزنة، لكن حالة الإدخال وهدف عدد الكلمات وإعداد التصدير ستُفقد. تنتقل المستندات المتداخلة إلى مكانه.",
+      "remove": "إزالة"
     }
   },
   "launcher": {
