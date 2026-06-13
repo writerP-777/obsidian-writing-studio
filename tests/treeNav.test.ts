@@ -28,6 +28,12 @@ describe('treeNavAction', () => {
     expect(treeNavAction('ContextMenu', leaf())).toBe('menu');
   });
 
+  it('F2 renames the focused row, does nothing with no focus', () => {
+    expect(treeNavAction('F2', leaf())).toBe('rename');
+    expect(treeNavAction('F2', group(0, true))).toBe('rename');
+    expect(treeNavAction('F2', null)).toBeNull();
+  });
+
   it('ignores unrelated keys', () => {
     expect(treeNavAction('a', leaf())).toBeNull();
     expect(treeNavAction('Tab', leaf())).toBeNull();

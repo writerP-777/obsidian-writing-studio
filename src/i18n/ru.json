@@ -175,7 +175,8 @@
       "publishToWordPress": "Опубликовать в WordPress",
       "delete": "Удалить",
       "moveUp": "Переместить вверх",
-      "moveDown": "Переместить вниз"
+      "moveDown": "Переместить вниз",
+      "rename": "Переименовать"
     },
     "wordCountSuffix": "{{count}}сл",
     "fileNotFound": "Файл больше не существует: {{path}}",

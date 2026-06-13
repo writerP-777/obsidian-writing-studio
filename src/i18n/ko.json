@@ -175,7 +175,8 @@
       "publishToWordPress": "WordPress에 게시",
       "delete": "삭제",
       "moveUp": "위로 이동",
-      "moveDown": "아래로 이동"
+      "moveDown": "아래로 이동",
+      "rename": "이름 바꾸기"
     },
     "wordCountSuffix": "{{count}}자",
     "fileNotFound": "파일이 더 이상 존재하지 않습니다: {{path}}",

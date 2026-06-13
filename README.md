@@ -229,6 +229,7 @@ The binder tree is fully keyboard-operable. Tab to focus the list, then:
 | `→` | Expand a collapsed group, or step into an open one |
 | `←` | Collapse an open group, or jump to the parent |
 | `Enter` | Open the document, or expand/collapse a group |
+| `F2` | Rename the focused item inline (Enter commits, Escape cancels) |
 | `Shift+F10` or menu key | Open the item's right-click menu |
 
 **Adding a file to a project:**

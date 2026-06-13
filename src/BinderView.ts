@@ -249,6 +249,9 @@ export class BinderView extends ItemView {
           this.buildContextMenu(row.item).showAtPosition({ x: rect.left, y: rect.bottom });
         }
         break;
+      case 'rename':
+        if (row) this.renameItem(row.item);
+        break;
     }
   }
 
@@ -367,27 +370,12 @@ export class BinderView extends ItemView {
       this.wcElements.set(item.filePath, wcEntries);
       void this.loadWordCount(item, wcEl);
 
-      // Click to open — slightly delayed so the first click of a rename
-      // double-click does not navigate away before editing starts
-      let clickTimer: number | null = null;
+      // Click opens immediately, matching Obsidian's file explorer — rename
+      // lives in the context menu and on F2, so no disambiguation delay
       row.onclick = () => {
         // Keep keyboard position in sync with mouse interaction
         this.navFocusItemId = item.id;
-        if (clickTimer !== null) return;
-        clickTimer = window.setTimeout(() => {
-          clickTimer = null;
-          void this.openDocument(item);
-        }, 250);
-      };
-
-      // Double click to rename
-      titleEl.ondblclick = (e) => {
-        e.stopPropagation();
-        if (clickTimer !== null) {
-          window.clearTimeout(clickTimer);
-          clickTimer = null;
-        }
-        this.startRename(titleEl, item);
+        void this.openDocument(item);
       };
 
       // Context menu
@@ -518,6 +506,14 @@ export class BinderView extends ItemView {
     await leaf.openFile(file);
   }
 
+  // Entry point for the context menu and F2 — resolves the rendered title
+  // element for the item, since callers only hold the binder item
+  private renameItem(item: BinderItem): void {
+    const row = this.navRows.find(r => r.item.id === item.id);
+    const titleEl = row?.el.querySelector<HTMLElement>('.ws-binder-title');
+    if (titleEl) this.startRename(titleEl, item);
+  }
+
   private startRename(el: HTMLElement, item: BinderItem): void {
     el.contentEditable = 'true';
     el.focus();
@@ -569,6 +565,7 @@ export class BinderView extends ItemView {
     const menu = new Menu();
 
     menu.addItem(i => i.setTitle(t('binder.menu.openDocument')).setIcon('file-text').onClick(safeHandler(() => this.openDocument(item))));
+    menu.addItem(i => i.setTitle(t('binder.menu.rename')).setIcon('pencil').onClick(() => this.renameItem(item)));
     menu.addItem(i => i.setTitle(t('binder.menu.newChildDocument')).setIcon('plus').onClick(() => this.createNewDocument(item.id)));
     menu.addSeparator();
     // Keyboard-accessible reorder — drag-and-drop was the only mechanism

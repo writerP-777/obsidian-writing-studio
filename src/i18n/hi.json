@@ -175,7 +175,8 @@
       "publishToWordPress": "WordPress पर प्रकाशित करें",
       "delete": "हटाएं",
       "moveUp": "ऊपर ले जाएं",
-      "moveDown": "नीचे ले जाएं"
+      "moveDown": "नीचे ले जाएं",
+      "rename": "नाम बदलें"
     },
     "wordCountSuffix": "{{count}}श",
     "fileNotFound": "फ़ाइल अब मौजूद नहीं है: {{path}}",
