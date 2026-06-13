@@ -291,7 +291,10 @@
     "last30Days": "최근 30일",
     "today": "오늘",
     "sprintsCount_one": "· {{count}} 스프린트",
-    "sprintsCount_other": "· {{count}} 스프린트"
+    "sprintsCount_other": "· {{count}} 스프린트",
+    "noActivity": "지난 30일 동안 집필 활동이 없습니다.",
+    "quietDays_one": "{{count}}일 휴식",
+    "quietDays_other": "{{count}}일 휴식"
   },
   "sprint": {
     "alreadyRunning": "이미 진행 중인 스프린트가 있습니다. 새 스프린트를 시작하기 전에 중지하세요.",

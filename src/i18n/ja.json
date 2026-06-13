@@ -291,7 +291,10 @@
     "last30Days": "過去30日",
     "today": "今日",
     "sprintsCount_one": "· {{count}} スプリント",
-    "sprintsCount_other": "· {{count}} スプリント"
+    "sprintsCount_other": "· {{count}} スプリント",
+    "noActivity": "過去30日間の執筆活動はまだありません。",
+    "quietDays_one": "{{count}} 日休止",
+    "quietDays_other": "{{count}} 日休止"
   },
   "sprint": {
     "alreadyRunning": "スプリントは既に実行中です。新しいスプリントを開始する前に停止してください。",
