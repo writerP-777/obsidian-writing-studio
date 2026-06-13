@@ -467,7 +467,8 @@
     "exportBtn": "Exportieren",
     "exporting": "Exportiere…",
     "exportFailed": "Export fehlgeschlagen: {{error}}",
-    "cancel": "Abbrechen"
+    "cancel": "Abbrechen",
+    "pandocWarning": "Pandoc wurde nicht gefunden. Prüfe das Feld „Pandoc-Pfad“ in den Export-Einstellungen — dieser Export wird voraussichtlich fehlschlagen."
   },
   "publishModal": {
     "title": "Auf WordPress veröffentlichen",

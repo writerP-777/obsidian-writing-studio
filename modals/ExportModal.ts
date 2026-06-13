@@ -13,6 +13,10 @@ export class ExportModal extends Modal {
   private addTitlePage = true;
   private coverImagePath = '';
   private authorContact = '';
+  private pandocWarningEl: HTMLElement | null = null;
+  // Checked once per modal open, only when a pandoc format is selected
+  private pandocAvailable: boolean | null = null;
+  private static readonly PANDOC_FORMATS: ReadonlySet<string> = new Set(['pdf', 'docx', 'rtf']);
 
   constructor(app: App, plugin: WritingStudioPlugin, initialScope: ExportScope = 'current') {
     super(app);
@@ -45,7 +49,11 @@ export class ExportModal extends Modal {
           this.format = v as ExportFormat;
           coverSetting.settingEl.toggleClass('ws-hidden', v !== 'epub');
           contactSetting.settingEl.toggleClass('ws-hidden', v !== 'manuscript');
+          this.updatePandocWarning();
         }));
+
+    this.pandocWarningEl = contentEl.createDiv({ cls: 'ws-export-pandoc-warning ws-hidden', text: t('exportModal.pandocWarning') });
+    this.updatePandocWarning();
 
     coverSetting = new Setting(contentEl)
       .setName(t('exportModal.coverImageName'))
@@ -129,6 +137,27 @@ export class ExportModal extends Modal {
 
     const cancelBtn = btnRow.createEl('button', { text: t('exportModal.cancel') });
     cancelBtn.onclick = () => this.close();
+  }
+
+  // Warning only — the export attempt itself stays allowed
+  private updatePandocWarning(): void {
+    const el = this.pandocWarningEl;
+    if (!el) return;
+    if (!ExportModal.PANDOC_FORMATS.has(this.format)) {
+      el.addClass('ws-hidden');
+      return;
+    }
+    if (this.pandocAvailable !== null) {
+      el.toggleClass('ws-hidden', this.pandocAvailable);
+      return;
+    }
+    void this.plugin.exportEngine.isPandocAvailable().then(ok => {
+      this.pandocAvailable = ok;
+      // The user may have switched to a non-pandoc format while we checked
+      if (ExportModal.PANDOC_FORMATS.has(this.format)) {
+        el.toggleClass('ws-hidden', ok);
+      }
+    });
   }
 
   onClose(): void {

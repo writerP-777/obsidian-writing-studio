@@ -471,7 +471,8 @@
     "exportBtn": "Экспорт",
     "exporting": "Экспорт…",
     "exportFailed": "Ошибка экспорта: {{error}}",
-    "cancel": "Отмена"
+    "cancel": "Отмена",
+    "pandocWarning": "Pandoc не найден. Проверьте поле «Путь к Pandoc» в настройках экспорта — экспорт, скорее всего, не удастся."
   },
   "publishModal": {
     "title": "Опубликовать в WordPress",

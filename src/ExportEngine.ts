@@ -448,6 +448,18 @@ ${markdownToHtml(content)}
     return outputPath;
   }
 
+  // Pre-flight for the export modal — false when the configured pandoc
+  // binary cannot be executed. Never throws; never blocks the UI.
+  async isPandocAvailable(): Promise<boolean> {
+    const pandocPath = this.plugin.settings.pandocPath || 'pandoc';
+    try {
+      await execFileAsync(pandocPath, ['--version']);
+      return true;
+    } catch {
+      return false;
+    }
+  }
+
   private async exportPandoc(content: string, outputPath: string, opts: ExportOptions): Promise<string> {
     const pandocPath = this.plugin.settings.pandocPath || 'pandoc';
     const tempMdPath = outputPath.replace(/\.[^.]+$/, '.tmp.md');
