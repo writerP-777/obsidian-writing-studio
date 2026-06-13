@@ -6,8 +6,8 @@ Security fixes are applied to the **latest release only**. Older versions are no
 
 | Version | Supported |
 |---------|-----------|
-| 2.7.x (latest) | ✅ Yes |
-| < 2.7 | ❌ No |
+| 2.8.x (latest) | ✅ Yes |
+| < 2.8 | ❌ No |
 
 Always update to the latest release before reporting a security issue.
 
