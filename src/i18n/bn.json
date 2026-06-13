@@ -185,7 +185,11 @@
       "delete": "মুছুন",
       "cancel": "বাতিল"
     },
-    "noMatches": "\"{{query}}\" এর সাথে মেলে এমন কোনো নথি নেই।"
+    "noMatches": "\"{{query}}\" এর সাথে মেলে এমন কোনো নথি নেই।",
+    "titlePrompt": {
+      "heading": "নতুন নথি",
+      "create": "তৈরি করুন"
+    }
   },
   "launcher": {
     "displayText": "লেখার স্টুডিও",

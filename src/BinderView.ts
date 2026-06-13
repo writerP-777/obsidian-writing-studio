@@ -15,6 +15,7 @@ import { PublishModal } from '../modals/PublishModal';
 import { ScanFolderModal } from '../modals/ScanFolderModal';
 import { ConfirmModal } from '../modals/ConfirmModal';
 import { confirmDeleteProject } from '../modals/confirmDeleteProject';
+import { TitlePromptModal } from '../modals/TitlePromptModal';
 import { t } from './i18n';
 import { safeHandler } from './safeHandler';
 import { computeBinderFilter, BinderFilterResult } from './binderFilter';
@@ -159,12 +160,12 @@ export class BinderView extends ItemView {
       cls: 'ws-binder-btn',
       text: t('binder.addDocument'),
     });
-    newDocBtn.onclick = async () => {
+    newDocBtn.onclick = () => {
       if (!this.activeProject) {
         new Notice(t('binder.selectProjectFirst'));
         return;
       }
-      await this.createNewDocument();
+      this.createNewDocument();
     };
 
     const scanBtn = toolbar.createEl('button', { cls: 'ws-binder-btn' });
@@ -568,7 +569,7 @@ export class BinderView extends ItemView {
     const menu = new Menu();
 
     menu.addItem(i => i.setTitle(t('binder.menu.openDocument')).setIcon('file-text').onClick(safeHandler(() => this.openDocument(item))));
-    menu.addItem(i => i.setTitle(t('binder.menu.newChildDocument')).setIcon('plus').onClick(safeHandler(() => this.createNewDocument(item.id))));
+    menu.addItem(i => i.setTitle(t('binder.menu.newChildDocument')).setIcon('plus').onClick(() => this.createNewDocument(item.id)));
     menu.addSeparator();
     // Keyboard-accessible reorder — drag-and-drop was the only mechanism
     menu.addItem(i => i.setTitle(t('binder.menu.moveUp')).setIcon('arrow-up').onClick(safeHandler(() => this.nudgeItem(item, -1))));
@@ -591,15 +592,25 @@ export class BinderView extends ItemView {
     return menu;
   }
 
-  private async createNewDocument(parentId?: string): Promise<void> {
+  private createNewDocument(parentId?: string): void {
     if (!this.activeProject) return;
-    const title = t('binder.untitledDocument', { time: new Date().toLocaleTimeString() });
-    await this.plugin.projectManager.addDocumentToBinder(
-      this.activeProject,
-      title,
-      'chapter',
-      parentId
-    );
+    const project = this.activeProject;
+    const fallback = t('binder.untitledDocument', { time: new Date().toLocaleTimeString() });
+    new TitlePromptModal(
+      this.app,
+      t('binder.titlePrompt.heading'),
+      fallback,
+      t('binder.titlePrompt.create'),
+      t('binder.deleteConfirm.cancel'),
+      async (title) => {
+        await this.plugin.projectManager.addDocumentToBinder(
+          project,
+          title,
+          this.plugin.settings.defaultDocumentType,
+          parentId
+        );
+      }
+    ).open();
   }
 
   private async setItemStatus(item: BinderItem, status: DocumentStatus): Promise<void> {

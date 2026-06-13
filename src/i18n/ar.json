@@ -185,7 +185,11 @@
       "delete": "حذف",
       "cancel": "إلغاء"
     },
-    "noMatches": "لا توجد مستندات مطابقة لـ \"{{query}}\"."
+    "noMatches": "لا توجد مستندات مطابقة لـ \"{{query}}\".",
+    "titlePrompt": {
+      "heading": "مستند جديد",
+      "create": "إنشاء"
+    }
   },
   "launcher": {
     "displayText": "استوديو الكتابة",

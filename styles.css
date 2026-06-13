@@ -1859,3 +1859,11 @@ body .ws-launcher select {
   border-top: 1px solid var(--background-modifier-border);
   text-align: center;
 }
+
+/* ── Title prompt modal ─────────────────────────────────────── */
+
+.ws-title-prompt-input {
+  width: 100%;
+  box-sizing: border-box;
+  margin-bottom: 12px;
+}
