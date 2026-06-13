@@ -435,7 +435,8 @@
     "scopeProject": "Entire project",
     "startBtn": "Launch sprint timer",
     "errorDuration": "Please set a valid duration.",
-    "cancel": "Cancel"
+    "cancel": "Cancel",
+    "wordGoalPlaceholder": "0 = no goal"
   },
   "exportModal": {
     "title": "Export document",

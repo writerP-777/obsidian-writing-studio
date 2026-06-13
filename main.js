@@ -2745,7 +2745,8 @@ var en_default = {
     scopeProject: "Entire project",
     startBtn: "Launch sprint timer",
     errorDuration: "Please set a valid duration.",
-    cancel: "Cancel"
+    cancel: "Cancel",
+    wordGoalPlaceholder: "0 = no goal"
   },
   exportModal: {
     title: "Export document",
@@ -3424,7 +3425,8 @@ var zh_default = {
     scopeProject: "\u6574\u4E2A\u9879\u76EE",
     startBtn: "\u542F\u52A8\u51B2\u523A\u8BA1\u65F6\u5668",
     errorDuration: "\u8BF7\u8BBE\u7F6E\u6709\u6548\u7684\u65F6\u957F\u3002",
-    cancel: "\u53D6\u6D88"
+    cancel: "\u53D6\u6D88",
+    wordGoalPlaceholder: "0 = \u65E0\u76EE\u6807"
   },
   exportModal: {
     title: "\u5BFC\u51FA\u6587\u6863",
@@ -4103,7 +4105,8 @@ var hi_default = {
     scopeProject: "\u092A\u0942\u0930\u0940 \u092A\u0930\u093F\u092F\u094B\u091C\u0928\u093E",
     startBtn: "\u0938\u094D\u092A\u094D\u0930\u093F\u0902\u091F \u091F\u093E\u0907\u092E\u0930 \u0936\u0941\u0930\u0942 \u0915\u0930\u0947\u0902",
     errorDuration: "\u0915\u0943\u092A\u092F\u093E \u090F\u0915 \u0935\u0948\u0927 \u0905\u0935\u0927\u093F \u0938\u0947\u091F \u0915\u0930\u0947\u0902\u0964",
-    cancel: "\u0930\u0926\u094D\u0926 \u0915\u0930\u0947\u0902"
+    cancel: "\u0930\u0926\u094D\u0926 \u0915\u0930\u0947\u0902",
+    wordGoalPlaceholder: "0 = \u0915\u094B\u0908 \u0932\u0915\u094D\u0937\u094D\u092F \u0928\u0939\u0940\u0902"
   },
   exportModal: {
     title: "\u0926\u0938\u094D\u0924\u093E\u0935\u0947\u091C\u093C \u0928\u093F\u0930\u094D\u092F\u093E\u0924 \u0915\u0930\u0947\u0902",
@@ -4782,7 +4785,8 @@ var es_default = {
     scopeProject: "Proyecto completo",
     startBtn: "Iniciar temporizador de sprint",
     errorDuration: "Por favor, establece una duraci\xF3n v\xE1lida.",
-    cancel: "Cancelar"
+    cancel: "Cancelar",
+    wordGoalPlaceholder: "0 = sin objetivo"
   },
   exportModal: {
     title: "Exportar documento",
@@ -5468,7 +5472,8 @@ var ar_default = {
     scopeProject: "\u0627\u0644\u0645\u0634\u0631\u0648\u0639 \u0628\u0627\u0644\u0643\u0627\u0645\u0644",
     startBtn: "\u062A\u0634\u063A\u064A\u0644 \u0645\u0624\u0642\u062A \u0627\u0644\u0633\u0628\u0627\u0642",
     errorDuration: "\u064A\u064F\u0631\u062C\u0649 \u062A\u062D\u062F\u064A\u062F \u0645\u062F\u0629 \u0635\u0627\u0644\u062D\u0629.",
-    cancel: "\u0625\u0644\u063A\u0627\u0621"
+    cancel: "\u0625\u0644\u063A\u0627\u0621",
+    wordGoalPlaceholder: "0 = \u0628\u0644\u0627 \u0647\u062F\u0641"
   },
   exportModal: {
     title: "\u062A\u0635\u062F\u064A\u0631 \u0627\u0644\u0645\u0633\u062A\u0646\u062F",
@@ -6151,7 +6156,8 @@ var fr_default = {
     scopeProject: "Projet entier",
     startBtn: "Lancer le minuteur de sprint",
     errorDuration: "Veuillez d\xE9finir une dur\xE9e valide.",
-    cancel: "Annuler"
+    cancel: "Annuler",
+    wordGoalPlaceholder: "0 = aucun objectif"
   },
   exportModal: {
     title: "Exporter le document",
@@ -6830,7 +6836,8 @@ var bn_default = {
     scopeProject: "\u09AA\u09C1\u09B0\u09CB \u09AA\u09CD\u09B0\u0995\u09B2\u09CD\u09AA",
     startBtn: "\u09B8\u09CD\u09AA\u09CD\u09B0\u09BF\u09A8\u09CD\u099F \u099F\u09BE\u0987\u09AE\u09BE\u09B0 \u099A\u09BE\u09B2\u09C1 \u0995\u09B0\u09C1\u09A8",
     errorDuration: "\u0985\u09A8\u09C1\u0997\u09CD\u09B0\u09B9 \u0995\u09B0\u09C7 \u098F\u0995\u099F\u09BF \u09AC\u09C8\u09A7 \u09B8\u09AE\u09AF\u09BC\u0995\u09BE\u09B2 \u09B8\u09C7\u099F \u0995\u09B0\u09C1\u09A8\u0964",
-    cancel: "\u09AC\u09BE\u09A4\u09BF\u09B2"
+    cancel: "\u09AC\u09BE\u09A4\u09BF\u09B2",
+    wordGoalPlaceholder: "0 = \u0995\u09CB\u09A8\u09CB \u09B2\u0995\u09CD\u09B7\u09CD\u09AF \u09A8\u09C7\u0987"
   },
   exportModal: {
     title: "\u09A8\u09A5\u09BF \u09B0\u09AA\u09CD\u09A4\u09BE\u09A8\u09BF \u0995\u09B0\u09C1\u09A8",
@@ -7509,7 +7516,8 @@ var pt_BR_default = {
     scopeProject: "Projeto inteiro",
     startBtn: "Iniciar cron\xF4metro de sprint",
     errorDuration: "Por favor, defina uma dura\xE7\xE3o v\xE1lida.",
-    cancel: "Cancelar"
+    cancel: "Cancelar",
+    wordGoalPlaceholder: "0 = sem meta"
   },
   exportModal: {
     title: "Exportar documento",
@@ -8192,7 +8200,8 @@ var ru_default = {
     scopeProject: "\u0412\u0435\u0441\u044C \u043F\u0440\u043E\u0435\u043A\u0442",
     startBtn: "\u0417\u0430\u043F\u0443\u0441\u0442\u0438\u0442\u044C \u0442\u0430\u0439\u043C\u0435\u0440 \u0441\u043F\u0440\u0438\u043D\u0442\u0430",
     errorDuration: "\u0423\u043A\u0430\u0436\u0438\u0442\u0435 \u0434\u043E\u043F\u0443\u0441\u0442\u0438\u043C\u0443\u044E \u0434\u043B\u0438\u0442\u0435\u043B\u044C\u043D\u043E\u0441\u0442\u044C.",
-    cancel: "\u041E\u0442\u043C\u0435\u043D\u0430"
+    cancel: "\u041E\u0442\u043C\u0435\u043D\u0430",
+    wordGoalPlaceholder: "0 = \u0431\u0435\u0437 \u0446\u0435\u043B\u0438"
   },
   exportModal: {
     title: "\u042D\u043A\u0441\u043F\u043E\u0440\u0442 \u0434\u043E\u043A\u0443\u043C\u0435\u043D\u0442\u0430",
@@ -8873,7 +8882,8 @@ var ja_default = {
     scopeProject: "\u30D7\u30ED\u30B8\u30A7\u30AF\u30C8\u5168\u4F53",
     startBtn: "\u30B9\u30D7\u30EA\u30F3\u30C8\u30BF\u30A4\u30DE\u30FC\u3092\u8D77\u52D5",
     errorDuration: "\u6709\u52B9\u306A\u6642\u9593\u3092\u8A2D\u5B9A\u3057\u3066\u304F\u3060\u3055\u3044\u3002",
-    cancel: "\u30AD\u30E3\u30F3\u30BB\u30EB"
+    cancel: "\u30AD\u30E3\u30F3\u30BB\u30EB",
+    wordGoalPlaceholder: "0 = \u76EE\u6A19\u306A\u3057"
   },
   exportModal: {
     title: "\u30C9\u30AD\u30E5\u30E1\u30F3\u30C8\u3092\u30A8\u30AF\u30B9\u30DD\u30FC\u30C8",
@@ -9552,7 +9562,8 @@ var de_default = {
     scopeProject: "Gesamtes Projekt",
     startBtn: "Sprint-Timer starten",
     errorDuration: "Bitte eine g\xFCltige Dauer festlegen.",
-    cancel: "Abbrechen"
+    cancel: "Abbrechen",
+    wordGoalPlaceholder: "0 = kein Ziel"
   },
   exportModal: {
     title: "Dokument exportieren",
@@ -10231,7 +10242,8 @@ var ko_default = {
     scopeProject: "\uC804\uCCB4 \uD504\uB85C\uC81D\uD2B8",
     startBtn: "\uC2A4\uD504\uB9B0\uD2B8 \uD0C0\uC774\uBA38 \uC2DC\uC791",
     errorDuration: "\uC720\uD6A8\uD55C \uC2DC\uAC04\uC744 \uC124\uC815\uD558\uC138\uC694.",
-    cancel: "\uCDE8\uC18C"
+    cancel: "\uCDE8\uC18C",
+    wordGoalPlaceholder: "0 = \uBAA9\uD45C \uC5C6\uC74C"
   },
   exportModal: {
     title: "\uBB38\uC11C \uB0B4\uBCF4\uB0B4\uAE30",
@@ -11328,27 +11340,35 @@ var SprintModal = class extends import_obsidian12.Modal {
     this.sprintScope = "file";
     this.plugin = plugin;
     this.duration = plugin.settings.defaultSprintDuration;
-    this.wordGoal = plugin.settings.defaultDailyWordGoal;
+    this.wordGoal = 0;
   }
   onOpen() {
     const { contentEl } = this;
     contentEl.empty();
     contentEl.addClass("ws-sprint-modal");
     contentEl.createEl("h2", { text: t2("sprintModal.setupTitle") });
+    const presets = [10, 15, 25, 30, 45, 60];
+    const isPreset = presets.includes(this.duration);
+    let customSetting;
+    let customValue = isPreset ? "" : String(this.duration);
     new import_obsidian12.Setting(contentEl).setName(t2("sprintModal.durationName")).setDesc(t2("sprintModal.durationDesc")).addDropdown((d) => {
-      [10, 15, 25, 30, 45, 60].forEach((m) => {
+      presets.forEach((m) => {
         d.addOption(String(m), `${m} min`);
       });
       d.addOption("custom", t2("sprintModal.durationCustom"));
-      d.setValue(String(this.duration));
+      d.setValue(isPreset ? String(this.duration) : "custom");
       d.onChange((v) => {
-        if (v === "custom") return;
-        this.duration = parseInt(v);
+        const custom = v === "custom";
+        customSetting.settingEl.toggleClass("ws-hidden", !custom);
+        this.duration = custom ? parseInt(customValue) || 0 : parseInt(v);
       });
-    }).addText((tx) => tx.setPlaceholder(t2("sprintModal.durationCustomPlaceholder")).onChange((v) => {
-      this.duration = parseInt(v) || this.duration;
+    });
+    customSetting = new import_obsidian12.Setting(contentEl).setName(t2("sprintModal.durationCustom")).addText((tx) => tx.setPlaceholder(t2("sprintModal.durationCustomPlaceholder")).setValue(customValue).onChange((v) => {
+      customValue = v;
+      this.duration = parseInt(v) || 0;
     }));
-    new import_obsidian12.Setting(contentEl).setName(t2("sprintModal.wordGoalName")).setDesc(t2("sprintModal.wordGoalDesc")).addText((tx) => tx.setPlaceholder("0").setValue(String(this.wordGoal || "")).onChange((v) => {
+    customSetting.settingEl.toggleClass("ws-hidden", isPreset);
+    new import_obsidian12.Setting(contentEl).setName(t2("sprintModal.wordGoalName")).setDesc(t2("sprintModal.wordGoalDesc")).addText((tx) => tx.setPlaceholder(t2("sprintModal.wordGoalPlaceholder")).setValue(this.wordGoal ? String(this.wordGoal) : "").onChange((v) => {
       this.wordGoal = parseInt(v) || 0;
     }));
     new import_obsidian12.Setting(contentEl).setName(t2("sprintModal.scopeName")).addDropdown((d) => d.addOption("file", t2("sprintModal.scopeFile")).addOption("project", t2("sprintModal.scopeProject")).setValue(this.sprintScope).onChange((v) => {

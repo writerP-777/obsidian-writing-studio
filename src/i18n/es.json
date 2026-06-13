@@ -435,7 +435,8 @@
     "scopeProject": "Proyecto completo",
     "startBtn": "Iniciar temporizador de sprint",
     "errorDuration": "Por favor, establece una duración válida.",
-    "cancel": "Cancelar"
+    "cancel": "Cancelar",
+    "wordGoalPlaceholder": "0 = sin objetivo"
   },
   "exportModal": {
     "title": "Exportar documento",

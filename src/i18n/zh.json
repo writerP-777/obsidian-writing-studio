@@ -435,7 +435,8 @@
     "scopeProject": "整个项目",
     "startBtn": "启动冲刺计时器",
     "errorDuration": "请设置有效的时长。",
-    "cancel": "取消"
+    "cancel": "取消",
+    "wordGoalPlaceholder": "0 = 无目标"
   },
   "exportModal": {
     "title": "导出文档",

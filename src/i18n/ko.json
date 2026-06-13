@@ -435,7 +435,8 @@
     "scopeProject": "전체 프로젝트",
     "startBtn": "스프린트 타이머 시작",
     "errorDuration": "유효한 시간을 설정하세요.",
-    "cancel": "취소"
+    "cancel": "취소",
+    "wordGoalPlaceholder": "0 = 목표 없음"
   },
   "exportModal": {
     "title": "문서 내보내기",

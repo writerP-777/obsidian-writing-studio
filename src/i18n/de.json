@@ -435,7 +435,8 @@
     "scopeProject": "Gesamtes Projekt",
     "startBtn": "Sprint-Timer starten",
     "errorDuration": "Bitte eine gültige Dauer festlegen.",
-    "cancel": "Abbrechen"
+    "cancel": "Abbrechen",
+    "wordGoalPlaceholder": "0 = kein Ziel"
   },
   "exportModal": {
     "title": "Dokument exportieren",

@@ -435,7 +435,8 @@
     "scopeProject": "पूरी परियोजना",
     "startBtn": "स्प्रिंट टाइमर शुरू करें",
     "errorDuration": "कृपया एक वैध अवधि सेट करें।",
-    "cancel": "रद्द करें"
+    "cancel": "रद्द करें",
+    "wordGoalPlaceholder": "0 = कोई लक्ष्य नहीं"
   },
   "exportModal": {
     "title": "दस्तावेज़ निर्यात करें",

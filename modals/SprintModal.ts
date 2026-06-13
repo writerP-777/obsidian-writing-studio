@@ -12,7 +12,8 @@ export class SprintModal extends Modal {
     super(app);
     this.plugin = plugin;
     this.duration = plugin.settings.defaultSprintDuration;
-    this.wordGoal = plugin.settings.defaultDailyWordGoal;
+    // No goal by default — the daily word goal made an odd target for one sprint
+    this.wordGoal = 0;
   }
 
   onOpen(): void {
@@ -21,28 +22,45 @@ export class SprintModal extends Modal {
     contentEl.addClass('ws-sprint-modal');
     contentEl.createEl('h2', { text: t('sprintModal.setupTitle') });
 
+    // One control for one value — the minutes input shows only when the
+    // dropdown is on "Custom…" (both inputs visible meant last-edit-wins)
+    const presets = [10, 15, 25, 30, 45, 60];
+    const isPreset = presets.includes(this.duration);
+    let customSetting: Setting;
+    let customValue = isPreset ? '' : String(this.duration);
+
     new Setting(contentEl)
       .setName(t('sprintModal.durationName'))
       .setDesc(t('sprintModal.durationDesc'))
       .addDropdown(d => {
-        [10, 15, 25, 30, 45, 60].forEach(m => { d.addOption(String(m), `${m} min`); });
+        presets.forEach(m => { d.addOption(String(m), `${m} min`); });
         d.addOption('custom', t('sprintModal.durationCustom'));
-        d.setValue(String(this.duration));
+        d.setValue(isPreset ? String(this.duration) : 'custom');
         d.onChange(v => {
-          if (v === 'custom') return;
-          this.duration = parseInt(v);
+          const custom = v === 'custom';
+          customSetting.settingEl.toggleClass('ws-hidden', !custom);
+          // On custom, the typed value (possibly still empty) is the duration
+          this.duration = custom ? parseInt(customValue) || 0 : parseInt(v);
         });
-      })
+      });
+
+    customSetting = new Setting(contentEl)
+      .setName(t('sprintModal.durationCustom'))
       .addText(tx => tx
         .setPlaceholder(t('sprintModal.durationCustomPlaceholder'))
-        .onChange(v => { this.duration = parseInt(v) || this.duration; }));
+        .setValue(customValue)
+        .onChange(v => {
+          customValue = v;
+          this.duration = parseInt(v) || 0;
+        }));
+    customSetting.settingEl.toggleClass('ws-hidden', isPreset);
 
     new Setting(contentEl)
       .setName(t('sprintModal.wordGoalName'))
       .setDesc(t('sprintModal.wordGoalDesc'))
       .addText(tx => tx
-        .setPlaceholder('0')
-        .setValue(String(this.wordGoal || ''))
+        .setPlaceholder(t('sprintModal.wordGoalPlaceholder'))
+        .setValue(this.wordGoal ? String(this.wordGoal) : '')
         .onChange(v => { this.wordGoal = parseInt(v) || 0; }));
 
     new Setting(contentEl)

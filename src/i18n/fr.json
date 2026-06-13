@@ -435,7 +435,8 @@
     "scopeProject": "Projet entier",
     "startBtn": "Lancer le minuteur de sprint",
     "errorDuration": "Veuillez définir une durée valide.",
-    "cancel": "Annuler"
+    "cancel": "Annuler",
+    "wordGoalPlaceholder": "0 = aucun objectif"
   },
   "exportModal": {
     "title": "Exporter le document",
