@@ -49,6 +49,7 @@ export class TypographyMode {
     this.active = true;
     this.applyCustomProperties();
     activeDocument.body.classList.add('writing-studio-typography');
+    this.plugin.studioEvents.announceTypographyChanged(true);
     if (this.plugin.settings.persistTypography) {
       this.plugin.settings.typographyModeActive = true;
       await this.plugin.saveSettings();
@@ -59,6 +60,7 @@ export class TypographyMode {
     this.active = false;
     this.removeCustomProperties();
     activeDocument.body.classList.remove('writing-studio-typography');
+    this.plugin.studioEvents.announceTypographyChanged(false);
     if (this.plugin.settings.persistTypography) {
       this.plugin.settings.typographyModeActive = false;
       await this.plugin.saveSettings();

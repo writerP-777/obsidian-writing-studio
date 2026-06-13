@@ -204,7 +204,16 @@
     },
     "newGroupOrPart": "नया समूह या भाग",
     "untitledGroup": "बिना शीर्षक समूह",
-    "untitledPart": "बिना शीर्षक भाग"
+    "untitledPart": "बिना शीर्षक भाग",
+    "strip": {
+      "focus": "फ़ोकस",
+      "typography": "टाइपोग्राफ़ी",
+      "sprint": "स्प्रिंट",
+      "sprintReady": "तैयार · {{minutes}} मि",
+      "sprintRunning": "स्प्रिंट चालू",
+      "quickStart": "त्वरित शुरुआत: {{minutes}} मिनट",
+      "moreActions": "अधिक क्रियाएँ"
+    }
   },
   "launcher": {
     "displayText": "राइटिंग स्टूडियो",

@@ -204,7 +204,16 @@
     },
     "newGroupOrPart": "مجموعة أو جزء جديد",
     "untitledGroup": "مجموعة بدون عنوان",
-    "untitledPart": "جزء بدون عنوان"
+    "untitledPart": "جزء بدون عنوان",
+    "strip": {
+      "focus": "تركيز",
+      "typography": "طباعة",
+      "sprint": "سباق",
+      "sprintReady": "جاهز · {{minutes}} د",
+      "sprintRunning": "سباق جارٍ",
+      "quickStart": "بدء سريع: {{minutes}} دقيقة",
+      "moreActions": "مزيد من الإجراءات"
+    }
   },
   "launcher": {
     "displayText": "استوديو الكتابة",

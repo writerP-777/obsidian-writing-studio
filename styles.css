@@ -1867,3 +1867,107 @@ body .ws-launcher select {
   box-sizing: border-box;
   margin-bottom: 12px;
 }
+
+/* ── Binder control strip ───────────────────────────────────── */
+
+.ws-binder-strip {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 8px 8px 6px;
+  border-bottom: 1px solid var(--background-modifier-border);
+}
+
+.ws-strip-modes {
+  display: flex;
+  gap: 4px;
+}
+
+.ws-strip-mode-btn {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  padding: 4px 6px;
+  font-size: var(--font-ui-smaller);
+  border-radius: 4px;
+  background: var(--background-secondary);
+  color: var(--text-muted);
+  cursor: pointer;
+}
+
+.ws-strip-mode-btn.is-active {
+  background: var(--interactive-accent);
+  color: var(--text-on-accent);
+}
+
+.ws-strip-mode-icon {
+  display: flex;
+  align-items: center;
+}
+
+.ws-strip-mode-icon svg {
+  width: 13px;
+  height: 13px;
+}
+
+.ws-strip-row2 {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.ws-strip-pill,
+.ws-strip-chip {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 9px;
+  font-size: var(--font-ui-smaller);
+  border-radius: 999px;
+  background: var(--background-secondary);
+  color: var(--text-muted);
+  cursor: pointer;
+}
+
+.ws-strip-pill.is-on {
+  background: var(--interactive-accent);
+  color: var(--text-on-accent);
+}
+
+.ws-strip-chip.is-armed {
+  background: var(--background-modifier-success);
+  color: var(--text-normal);
+}
+
+.ws-strip-chip.is-running {
+  background: var(--interactive-accent);
+  color: var(--text-on-accent);
+}
+
+.ws-strip-chip-icon {
+  display: flex;
+  align-items: center;
+}
+
+.ws-strip-chip-icon svg {
+  width: 12px;
+  height: 12px;
+}
+
+.ws-strip-overflow {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  padding: 3px 6px;
+  border-radius: 4px;
+  background: transparent;
+  color: var(--text-muted);
+  cursor: pointer;
+  box-shadow: none;
+}
+
+.ws-strip-overflow:hover {
+  background: var(--background-secondary);
+}

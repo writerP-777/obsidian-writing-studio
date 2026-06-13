@@ -31,6 +31,7 @@ import { registerCommands } from './src/commands';
 import { StatusBar } from './src/StatusBar';
 import { GoalBanner } from './src/GoalBanner';
 import { ObsidianVaultFiles, type VaultFiles } from './src/VaultFiles';
+import { StudioEvents } from './src/StudioEvents';
 
 import { AddToProjectModal } from './modals/AddToProjectModal';
 import { SprintModal } from './modals/SprintModal';
@@ -183,6 +184,7 @@ export default class WritingStudioPlugin extends Plugin {
   statusBar!: StatusBar;
   goalBanner!: GoalBanner;
   vaultFiles!: VaultFiles;
+  studioEvents!: StudioEvents;
 
   private wordCountUpdateTimer: number | null = null;
   private launcherRefreshTimer: number | null = null;
@@ -195,6 +197,7 @@ export default class WritingStudioPlugin extends Plugin {
     await this.loadSettings();
 
     // Initialize modules
+    this.studioEvents = new StudioEvents();
     this.vaultFiles = new ObsidianVaultFiles(this.app);
     this.fmManager = new FrontmatterManager(this);
     this.projectManager = new ProjectManager(this, this.vaultFiles);

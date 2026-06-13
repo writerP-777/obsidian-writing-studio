@@ -204,7 +204,16 @@
     },
     "newGroupOrPart": "Nuevo grupo o parte",
     "untitledGroup": "Grupo sin título",
-    "untitledPart": "Parte sin título"
+    "untitledPart": "Parte sin título",
+    "strip": {
+      "focus": "Enfoque",
+      "typography": "Tipografía",
+      "sprint": "Sprint",
+      "sprintReady": "Listo · {{minutes}} min",
+      "sprintRunning": "Sprint en curso",
+      "quickStart": "Inicio rápido: {{minutes}} minutos",
+      "moreActions": "Más acciones"
+    }
   },
   "launcher": {
     "displayText": "Estudio de escritura",

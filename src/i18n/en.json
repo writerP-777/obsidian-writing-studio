@@ -204,7 +204,16 @@
     },
     "newGroupOrPart": "New group or part",
     "untitledGroup": "Untitled group",
-    "untitledPart": "Untitled part"
+    "untitledPart": "Untitled part",
+    "strip": {
+      "focus": "Focus",
+      "typography": "Typography",
+      "sprint": "Sprint",
+      "sprintReady": "Ready · {{minutes}}m",
+      "sprintRunning": "Sprint running",
+      "quickStart": "Quick start: {{minutes}} minutes",
+      "moreActions": "More actions"
+    }
   },
   "launcher": {
     "displayText": "Writing studio",

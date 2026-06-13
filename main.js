@@ -27,10 +27,10 @@ __export(main_exports, {
   default: () => WritingStudioPlugin
 });
 module.exports = __toCommonJS(main_exports);
-var import_obsidian32 = require("obsidian");
+var import_obsidian34 = require("obsidian");
 
 // src/BinderView.ts
-var import_obsidian12 = require("obsidian");
+var import_obsidian16 = require("obsidian");
 
 // models/BinderItem.ts
 var STATUS_COLORS = {
@@ -2514,7 +2514,16 @@ var en_default = {
     },
     newGroupOrPart: "New group or part",
     untitledGroup: "Untitled group",
-    untitledPart: "Untitled part"
+    untitledPart: "Untitled part",
+    strip: {
+      focus: "Focus",
+      typography: "Typography",
+      sprint: "Sprint",
+      sprintReady: "Ready \xB7 {{minutes}}m",
+      sprintRunning: "Sprint running",
+      quickStart: "Quick start: {{minutes}} minutes",
+      moreActions: "More actions"
+    }
   },
   launcher: {
     displayText: "Writing studio",
@@ -3177,7 +3186,16 @@ var zh_default = {
     },
     newGroupOrPart: "\u65B0\u5EFA\u7EC4\u6216\u90E8",
     untitledGroup: "\u672A\u547D\u540D\u7EC4",
-    untitledPart: "\u672A\u547D\u540D\u90E8"
+    untitledPart: "\u672A\u547D\u540D\u90E8",
+    strip: {
+      focus: "\u4E13\u6CE8",
+      typography: "\u6392\u7248",
+      sprint: "\u51B2\u523A",
+      sprintReady: "\u5C31\u7EEA \xB7 {{minutes}}\u5206\u949F",
+      sprintRunning: "\u51B2\u523A\u8FDB\u884C\u4E2D",
+      quickStart: "\u5FEB\u901F\u5F00\u59CB\uFF1A{{minutes}}\u5206\u949F",
+      moreActions: "\u66F4\u591A\u64CD\u4F5C"
+    }
   },
   launcher: {
     displayText: "\u5199\u4F5C\u5DE5\u4F5C\u5BA4",
@@ -3840,7 +3858,16 @@ var hi_default = {
     },
     newGroupOrPart: "\u0928\u092F\u093E \u0938\u092E\u0942\u0939 \u092F\u093E \u092D\u093E\u0917",
     untitledGroup: "\u092C\u093F\u0928\u093E \u0936\u0940\u0930\u094D\u0937\u0915 \u0938\u092E\u0942\u0939",
-    untitledPart: "\u092C\u093F\u0928\u093E \u0936\u0940\u0930\u094D\u0937\u0915 \u092D\u093E\u0917"
+    untitledPart: "\u092C\u093F\u0928\u093E \u0936\u0940\u0930\u094D\u0937\u0915 \u092D\u093E\u0917",
+    strip: {
+      focus: "\u092B\u093C\u094B\u0915\u0938",
+      typography: "\u091F\u093E\u0907\u092A\u094B\u0917\u094D\u0930\u093E\u092B\u093C\u0940",
+      sprint: "\u0938\u094D\u092A\u094D\u0930\u093F\u0902\u091F",
+      sprintReady: "\u0924\u0948\u092F\u093E\u0930 \xB7 {{minutes}} \u092E\u093F",
+      sprintRunning: "\u0938\u094D\u092A\u094D\u0930\u093F\u0902\u091F \u091A\u093E\u0932\u0942",
+      quickStart: "\u0924\u094D\u0935\u0930\u093F\u0924 \u0936\u0941\u0930\u0941\u0906\u0924: {{minutes}} \u092E\u093F\u0928\u091F",
+      moreActions: "\u0905\u0927\u093F\u0915 \u0915\u094D\u0930\u093F\u092F\u093E\u090F\u0901"
+    }
   },
   launcher: {
     displayText: "\u0930\u093E\u0907\u091F\u093F\u0902\u0917 \u0938\u094D\u091F\u0942\u0921\u093F\u092F\u094B",
@@ -4503,7 +4530,16 @@ var es_default = {
     },
     newGroupOrPart: "Nuevo grupo o parte",
     untitledGroup: "Grupo sin t\xEDtulo",
-    untitledPart: "Parte sin t\xEDtulo"
+    untitledPart: "Parte sin t\xEDtulo",
+    strip: {
+      focus: "Enfoque",
+      typography: "Tipograf\xEDa",
+      sprint: "Sprint",
+      sprintReady: "Listo \xB7 {{minutes}} min",
+      sprintRunning: "Sprint en curso",
+      quickStart: "Inicio r\xE1pido: {{minutes}} minutos",
+      moreActions: "M\xE1s acciones"
+    }
   },
   launcher: {
     displayText: "Estudio de escritura",
@@ -5166,7 +5202,16 @@ var ar_default = {
     },
     newGroupOrPart: "\u0645\u062C\u0645\u0648\u0639\u0629 \u0623\u0648 \u062C\u0632\u0621 \u062C\u062F\u064A\u062F",
     untitledGroup: "\u0645\u062C\u0645\u0648\u0639\u0629 \u0628\u062F\u0648\u0646 \u0639\u0646\u0648\u0627\u0646",
-    untitledPart: "\u062C\u0632\u0621 \u0628\u062F\u0648\u0646 \u0639\u0646\u0648\u0627\u0646"
+    untitledPart: "\u062C\u0632\u0621 \u0628\u062F\u0648\u0646 \u0639\u0646\u0648\u0627\u0646",
+    strip: {
+      focus: "\u062A\u0631\u0643\u064A\u0632",
+      typography: "\u0637\u0628\u0627\u0639\u0629",
+      sprint: "\u0633\u0628\u0627\u0642",
+      sprintReady: "\u062C\u0627\u0647\u0632 \xB7 {{minutes}} \u062F",
+      sprintRunning: "\u0633\u0628\u0627\u0642 \u062C\u0627\u0631\u064D",
+      quickStart: "\u0628\u062F\u0621 \u0633\u0631\u064A\u0639: {{minutes}} \u062F\u0642\u064A\u0642\u0629",
+      moreActions: "\u0645\u0632\u064A\u062F \u0645\u0646 \u0627\u0644\u0625\u062C\u0631\u0627\u0621\u0627\u062A"
+    }
   },
   launcher: {
     displayText: "\u0627\u0633\u062A\u0648\u062F\u064A\u0648 \u0627\u0644\u0643\u062A\u0627\u0628\u0629",
@@ -5840,7 +5885,16 @@ var fr_default = {
     },
     newGroupOrPart: "Nouveau groupe ou nouvelle partie",
     untitledGroup: "Groupe sans titre",
-    untitledPart: "Partie sans titre"
+    untitledPart: "Partie sans titre",
+    strip: {
+      focus: "Concentration",
+      typography: "Typographie",
+      sprint: "Sprint",
+      sprintReady: "Pr\xEAt \xB7 {{minutes}} min",
+      sprintRunning: "Sprint en cours",
+      quickStart: "D\xE9marrage rapide : {{minutes}} minutes",
+      moreActions: "Plus d'actions"
+    }
   },
   launcher: {
     displayText: "Studio d'\xE9criture",
@@ -6503,7 +6557,16 @@ var bn_default = {
     },
     newGroupOrPart: "\u09A8\u09A4\u09C1\u09A8 \u0997\u09CD\u09B0\u09C1\u09AA \u09AC\u09BE \u09AA\u09BE\u09B0\u09CD\u099F",
     untitledGroup: "\u09B6\u09BF\u09B0\u09CB\u09A8\u09BE\u09AE\u09B9\u09C0\u09A8 \u0997\u09CD\u09B0\u09C1\u09AA",
-    untitledPart: "\u09B6\u09BF\u09B0\u09CB\u09A8\u09BE\u09AE\u09B9\u09C0\u09A8 \u09AA\u09BE\u09B0\u09CD\u099F"
+    untitledPart: "\u09B6\u09BF\u09B0\u09CB\u09A8\u09BE\u09AE\u09B9\u09C0\u09A8 \u09AA\u09BE\u09B0\u09CD\u099F",
+    strip: {
+      focus: "\u09AB\u09CB\u0995\u09BE\u09B8",
+      typography: "\u099F\u09BE\u0987\u09AA\u09CB\u0997\u09CD\u09B0\u09BE\u09AB\u09BF",
+      sprint: "\u09B8\u09CD\u09AA\u09CD\u09B0\u09BF\u09A8\u09CD\u099F",
+      sprintReady: "\u09AA\u09CD\u09B0\u09B8\u09CD\u09A4\u09C1\u09A4 \xB7 {{minutes}} \u09AE\u09BF",
+      sprintRunning: "\u09B8\u09CD\u09AA\u09CD\u09B0\u09BF\u09A8\u09CD\u099F \u099A\u09B2\u099B\u09C7",
+      quickStart: "\u09A6\u09CD\u09B0\u09C1\u09A4 \u09B6\u09C1\u09B0\u09C1: {{minutes}} \u09AE\u09BF\u09A8\u09BF\u099F",
+      moreActions: "\u0986\u09B0\u0993 \u0995\u09CD\u09B0\u09BF\u09AF\u09BC\u09BE"
+    }
   },
   launcher: {
     displayText: "\u09B2\u09C7\u0996\u09BE\u09B0 \u09B8\u09CD\u099F\u09C1\u09A1\u09BF\u0993",
@@ -7166,7 +7229,16 @@ var pt_BR_default = {
     },
     newGroupOrPart: "Novo grupo ou parte",
     untitledGroup: "Grupo sem t\xEDtulo",
-    untitledPart: "Parte sem t\xEDtulo"
+    untitledPart: "Parte sem t\xEDtulo",
+    strip: {
+      focus: "Foco",
+      typography: "Tipografia",
+      sprint: "Sprint",
+      sprintReady: "Pronto \xB7 {{minutes}} min",
+      sprintRunning: "Sprint em andamento",
+      quickStart: "In\xEDcio r\xE1pido: {{minutes}} minutos",
+      moreActions: "Mais a\xE7\xF5es"
+    }
   },
   launcher: {
     displayText: "Est\xFAdio de escrita",
@@ -7829,7 +7901,16 @@ var ru_default = {
     },
     newGroupOrPart: "\u041D\u043E\u0432\u0430\u044F \u0433\u0440\u0443\u043F\u043F\u0430 \u0438\u043B\u0438 \u0447\u0430\u0441\u0442\u044C",
     untitledGroup: "\u0413\u0440\u0443\u043F\u043F\u0430 \u0431\u0435\u0437 \u043D\u0430\u0437\u0432\u0430\u043D\u0438\u044F",
-    untitledPart: "\u0427\u0430\u0441\u0442\u044C \u0431\u0435\u0437 \u043D\u0430\u0437\u0432\u0430\u043D\u0438\u044F"
+    untitledPart: "\u0427\u0430\u0441\u0442\u044C \u0431\u0435\u0437 \u043D\u0430\u0437\u0432\u0430\u043D\u0438\u044F",
+    strip: {
+      focus: "\u0424\u043E\u043A\u0443\u0441",
+      typography: "\u0422\u0438\u043F\u043E\u0433\u0440\u0430\u0444\u0438\u043A\u0430",
+      sprint: "\u0421\u043F\u0440\u0438\u043D\u0442",
+      sprintReady: "\u0413\u043E\u0442\u043E\u0432 \xB7 {{minutes}} \u043C\u0438\u043D",
+      sprintRunning: "\u0418\u0434\u0451\u0442 \u0441\u043F\u0440\u0438\u043D\u0442",
+      quickStart: "\u0411\u044B\u0441\u0442\u0440\u044B\u0439 \u0441\u0442\u0430\u0440\u0442: {{minutes}} \u043C\u0438\u043D\u0443\u0442",
+      moreActions: "\u0414\u0440\u0443\u0433\u0438\u0435 \u0434\u0435\u0439\u0441\u0442\u0432\u0438\u044F"
+    }
   },
   launcher: {
     displayText: "\u0421\u0442\u0443\u0434\u0438\u044F \u043F\u0438\u0441\u044C\u043C\u0430",
@@ -8498,7 +8579,16 @@ var ja_default = {
     },
     newGroupOrPart: "\u65B0\u898F\u30B0\u30EB\u30FC\u30D7\u307E\u305F\u306F\u30D1\u30FC\u30C8",
     untitledGroup: "\u7121\u984C\u306E\u30B0\u30EB\u30FC\u30D7",
-    untitledPart: "\u7121\u984C\u306E\u30D1\u30FC\u30C8"
+    untitledPart: "\u7121\u984C\u306E\u30D1\u30FC\u30C8",
+    strip: {
+      focus: "\u30D5\u30A9\u30FC\u30AB\u30B9",
+      typography: "\u30BF\u30A4\u30DD\u30B0\u30E9\u30D5\u30A3",
+      sprint: "\u30B9\u30D7\u30EA\u30F3\u30C8",
+      sprintReady: "\u6E96\u5099\u5B8C\u4E86 \xB7 {{minutes}}\u5206",
+      sprintRunning: "\u30B9\u30D7\u30EA\u30F3\u30C8\u4E2D",
+      quickStart: "\u30AF\u30A4\u30C3\u30AF\u30B9\u30BF\u30FC\u30C8\uFF1A{{minutes}}\u5206",
+      moreActions: "\u305D\u306E\u4ED6\u306E\u64CD\u4F5C"
+    }
   },
   launcher: {
     displayText: "\u30E9\u30A4\u30C6\u30A3\u30F3\u30B0\u30B9\u30BF\u30B8\u30AA",
@@ -9161,7 +9251,16 @@ var de_default = {
     },
     newGroupOrPart: "Neue Gruppe oder neuer Teil",
     untitledGroup: "Unbenannte Gruppe",
-    untitledPart: "Unbenannter Teil"
+    untitledPart: "Unbenannter Teil",
+    strip: {
+      focus: "Fokus",
+      typography: "Typografie",
+      sprint: "Sprint",
+      sprintReady: "Bereit \xB7 {{minutes}} Min.",
+      sprintRunning: "Sprint l\xE4uft",
+      quickStart: "Schnellstart: {{minutes}} Minuten",
+      moreActions: "Weitere Aktionen"
+    }
   },
   launcher: {
     displayText: "Schreibstudio",
@@ -9824,7 +9923,16 @@ var ko_default = {
     },
     newGroupOrPart: "\uC0C8 \uADF8\uB8F9 \uB610\uB294 \uD30C\uD2B8",
     untitledGroup: "\uC81C\uBAA9 \uC5C6\uB294 \uADF8\uB8F9",
-    untitledPart: "\uC81C\uBAA9 \uC5C6\uB294 \uD30C\uD2B8"
+    untitledPart: "\uC81C\uBAA9 \uC5C6\uB294 \uD30C\uD2B8",
+    strip: {
+      focus: "\uC9D1\uC911",
+      typography: "\uD0C0\uC774\uD3EC\uADF8\uB798\uD53C",
+      sprint: "\uC2A4\uD504\uB9B0\uD2B8",
+      sprintReady: "\uC900\uBE44\uB428 \xB7 {{minutes}}\uBD84",
+      sprintRunning: "\uC2A4\uD504\uB9B0\uD2B8 \uC9C4\uD589 \uC911",
+      quickStart: "\uBE60\uB978 \uC2DC\uC791: {{minutes}}\uBD84",
+      moreActions: "\uCD94\uAC00 \uC791\uC5C5"
+    }
   },
   launcher: {
     displayText: "\uAE00\uC4F0\uAE30 \uC2A4\uD29C\uB514\uC624",
@@ -11005,6 +11113,394 @@ var TitlePromptModal = class extends import_obsidian10.Modal {
   }
 };
 
+// src/ControlStrip.ts
+var import_obsidian14 = require("obsidian");
+
+// modals/ExportModal.ts
+var import_obsidian11 = require("obsidian");
+var ExportModal = class extends import_obsidian11.Modal {
+  constructor(app, plugin, initialScope = "current") {
+    super(app);
+    this.exportScope = "current";
+    this.includeFrontmatter = false;
+    this.includeResearch = false;
+    this.includeTitlesAsHeadings = true;
+    this.addTitlePage = true;
+    this.coverImagePath = "";
+    this.authorContact = "";
+    this.plugin = plugin;
+    this.format = plugin.settings.defaultExportFormat;
+    this.exportScope = initialScope;
+  }
+  onOpen() {
+    const { contentEl } = this;
+    contentEl.empty();
+    contentEl.addClass("ws-export-modal");
+    contentEl.createEl("h2", { text: t2("exportModal.title") });
+    let coverSetting;
+    let contactSetting;
+    new import_obsidian11.Setting(contentEl).setName(t2("exportModal.formatName")).addDropdown((d) => d.addOption("md", t2("exportModal.format.md")).addOption("html", t2("exportModal.format.html")).addOption("manuscript", t2("exportModal.format.manuscript")).addOption("epub", t2("exportModal.format.epub")).addOption("pdf", t2("exportModal.format.pdf")).addOption("docx", t2("exportModal.format.docx")).addOption("rtf", t2("exportModal.format.rtf")).setValue(this.format).onChange((v) => {
+      this.format = v;
+      coverSetting.settingEl.toggleClass("ws-hidden", v !== "epub");
+      contactSetting.settingEl.toggleClass("ws-hidden", v !== "manuscript");
+    }));
+    coverSetting = new import_obsidian11.Setting(contentEl).setName(t2("exportModal.coverImageName")).setDesc(t2("exportModal.coverImageDesc")).addText((tx) => tx.setValue(this.coverImagePath).setPlaceholder(t2("exportModal.coverImagePlaceholder")).onChange((v) => {
+      this.coverImagePath = v.trim();
+    }));
+    coverSetting.settingEl.toggleClass("ws-hidden", this.format !== "epub");
+    contactSetting = new import_obsidian11.Setting(contentEl).setName(t2("exportModal.contactInfoName")).setDesc(t2("exportModal.contactInfoDesc")).addTextArea((tx) => tx.setValue(this.authorContact).setPlaceholder(t2("exportModal.contactInfoPlaceholder")).onChange((v) => {
+      this.authorContact = v;
+    }));
+    contactSetting.settingEl.toggleClass("ws-hidden", this.format !== "manuscript");
+    new import_obsidian11.Setting(contentEl).setName(t2("exportModal.scopeName")).addDropdown((d) => d.addOption("current", t2("exportModal.scopeCurrent")).addOption("project", t2("exportModal.scopeProject")).setValue(this.exportScope).onChange((v) => {
+      this.exportScope = v;
+    }));
+    new import_obsidian11.Setting(contentEl).setName(t2("exportModal.includeFrontmatter")).addToggle((tx) => tx.setValue(this.includeFrontmatter).onChange((v) => {
+      this.includeFrontmatter = v;
+    }));
+    new import_obsidian11.Setting(contentEl).setName(t2("exportModal.includeResearch")).addToggle((tx) => tx.setValue(this.includeResearch).onChange((v) => {
+      this.includeResearch = v;
+    }));
+    new import_obsidian11.Setting(contentEl).setName(t2("exportModal.includeTitlesAsHeadings")).addToggle((tx) => tx.setValue(this.includeTitlesAsHeadings).onChange((v) => {
+      this.includeTitlesAsHeadings = v;
+    }));
+    new import_obsidian11.Setting(contentEl).setName(t2("exportModal.addTitlePage")).setDesc(t2("exportModal.addTitlePageDesc")).addToggle((tx) => tx.setValue(this.addTitlePage).onChange((v) => {
+      this.addTitlePage = v;
+    }));
+    const previewBtn = contentEl.createEl("button", {
+      cls: "ws-export-preview-btn",
+      text: t2("exportModal.previewBtn")
+    });
+    previewBtn.onclick = async () => {
+      this.close();
+      await this.plugin.openCompilePreview();
+    };
+    const btnRow = contentEl.createDiv("ws-modal-btn-row");
+    const exportBtn = btnRow.createEl("button", { cls: "mod-cta", text: t2("exportModal.exportBtn") });
+    exportBtn.onclick = async () => {
+      exportBtn.disabled = true;
+      exportBtn.textContent = t2("exportModal.exporting");
+      try {
+        await this.plugin.exportEngine.export({
+          format: this.format,
+          scope: this.exportScope,
+          includeFrontmatter: this.includeFrontmatter,
+          includeResearch: this.includeResearch,
+          includeTitlesAsHeadings: this.includeTitlesAsHeadings,
+          paperSize: this.plugin.settings.defaultPaperSize,
+          font: this.plugin.settings.defaultExportFont,
+          fontSize: this.plugin.settings.defaultExportFontSize,
+          addTitlePage: this.addTitlePage,
+          coverImagePath: this.coverImagePath || void 0,
+          authorContact: this.authorContact || void 0
+        });
+        this.close();
+      } catch (e) {
+        new import_obsidian11.Notice(t2("exportModal.exportFailed", { error: e instanceof Error ? e.message : String(e) }));
+        exportBtn.disabled = false;
+        exportBtn.textContent = t2("exportModal.exportBtn");
+      }
+    };
+    const cancelBtn = btnRow.createEl("button", { text: t2("exportModal.cancel") });
+    cancelBtn.onclick = () => this.close();
+  }
+  onClose() {
+    this.contentEl.empty();
+  }
+};
+
+// modals/SprintModal.ts
+var import_obsidian12 = require("obsidian");
+var SprintModal = class extends import_obsidian12.Modal {
+  constructor(app, plugin) {
+    super(app);
+    this.sprintScope = "file";
+    this.plugin = plugin;
+    this.duration = plugin.settings.defaultSprintDuration;
+    this.wordGoal = plugin.settings.defaultDailyWordGoal;
+  }
+  onOpen() {
+    const { contentEl } = this;
+    contentEl.empty();
+    contentEl.addClass("ws-sprint-modal");
+    contentEl.createEl("h2", { text: t2("sprintModal.setupTitle") });
+    new import_obsidian12.Setting(contentEl).setName(t2("sprintModal.durationName")).setDesc(t2("sprintModal.durationDesc")).addDropdown((d) => {
+      [10, 15, 25, 30, 45, 60].forEach((m) => {
+        d.addOption(String(m), `${m} min`);
+      });
+      d.addOption("custom", t2("sprintModal.durationCustom"));
+      d.setValue(String(this.duration));
+      d.onChange((v) => {
+        if (v === "custom") return;
+        this.duration = parseInt(v);
+      });
+    }).addText((tx) => tx.setPlaceholder(t2("sprintModal.durationCustomPlaceholder")).onChange((v) => {
+      this.duration = parseInt(v) || this.duration;
+    }));
+    new import_obsidian12.Setting(contentEl).setName(t2("sprintModal.wordGoalName")).setDesc(t2("sprintModal.wordGoalDesc")).addText((tx) => tx.setPlaceholder("0").setValue(String(this.wordGoal || "")).onChange((v) => {
+      this.wordGoal = parseInt(v) || 0;
+    }));
+    new import_obsidian12.Setting(contentEl).setName(t2("sprintModal.scopeName")).addDropdown((d) => d.addOption("file", t2("sprintModal.scopeFile")).addOption("project", t2("sprintModal.scopeProject")).setValue(this.sprintScope).onChange((v) => {
+      this.sprintScope = v;
+    }));
+    const btnRow = contentEl.createDiv("ws-modal-btn-row");
+    const startBtn = btnRow.createEl("button", {
+      cls: "mod-cta",
+      text: t2("sprintModal.startBtn")
+    });
+    startBtn.onclick = () => {
+      if (!this.duration || this.duration <= 0) {
+        new import_obsidian12.Notice(t2("sprintModal.errorDuration"));
+        return;
+      }
+      this.plugin.sprintTimer.setup(this.duration, this.wordGoal || void 0, this.sprintScope);
+      this.close();
+    };
+    const cancelBtn = btnRow.createEl("button", { text: t2("sprintModal.cancel") });
+    cancelBtn.onclick = () => this.close();
+  }
+  onClose() {
+    this.contentEl.empty();
+  }
+};
+
+// modals/WritingDashboardModal.ts
+var import_obsidian13 = require("obsidian");
+var WritingDashboardModal = class extends import_obsidian13.Modal {
+  constructor(app, plugin) {
+    super(app);
+    this.plugin = plugin;
+  }
+  async onOpen() {
+    var _a2;
+    const { contentEl } = this;
+    contentEl.empty();
+    contentEl.addClass("ws-writing-dashboard");
+    contentEl.createEl("h2", { text: t2("writingDashboard.title") });
+    const project = this.plugin.projectManager.getActiveProject();
+    const sessionStats = this.plugin.statsTracker.getSessionStats();
+    const streak = await this.plugin.statsTracker.getStreak();
+    const summarySection = contentEl.createDiv("ws-dash-section");
+    summarySection.createEl("h3", { text: t2("writingDashboard.thisSession") });
+    const grid = summarySection.createDiv("ws-dash-grid");
+    this.addStat(grid, t2("writingDashboard.stat.wordsWritten"), String(sessionStats.wordsWritten));
+    this.addStat(grid, t2("writingDashboard.stat.sprints"), String(sessionStats.sprintsCompleted));
+    this.addStat(grid, t2("writingDashboard.stat.minutes"), String(sessionStats.totalMinutes));
+    this.addStat(grid, t2("writingDashboard.stat.writingStreak"), t2("writingDashboard.stat.streakDays", { count: streak }));
+    if (project) {
+      const projectSection = contentEl.createDiv("ws-dash-section");
+      projectSection.createEl("h3", { text: t2("writingDashboard.project", { title: project.title }) });
+      const totalWords = await this.plugin.statsTracker.getTotalWordCount();
+      const totalGoal = ((_a2 = project.goals) == null ? void 0 : _a2.totalWordCount) || 0;
+      const projGrid = projectSection.createDiv("ws-dash-grid");
+      this.addStat(projGrid, t2("writingDashboard.stat.totalWords"), String(totalWords));
+      if (totalGoal > 0) {
+        const pct = Math.min(100, Math.round(totalWords / totalGoal * 100));
+        this.addStat(projGrid, t2("writingDashboard.stat.goal"), `${totalGoal}`);
+        this.addStat(projGrid, t2("writingDashboard.stat.progress"), `${pct}%`);
+      }
+      this.addStat(projGrid, t2("writingDashboard.stat.readingTime"), this.plugin.statsTracker.calculateReadingTime(totalWords));
+      if (totalGoal > 0) {
+        const pct = Math.min(100, Math.round(totalWords / totalGoal * 100));
+        const barWrap = projectSection.createDiv("ws-progress-wrap ws-dash-progress");
+        const bar = barWrap.createDiv("ws-progress-bar");
+        bar.setCssProps({ "--ws-bar-width": `${pct}%` });
+        projectSection.createEl("p", { text: `${totalWords} / ${totalGoal} words (${pct}%)`, cls: "ws-dash-progress-label" });
+      }
+    }
+    if (project) {
+      const historySection = contentEl.createDiv("ws-dash-section");
+      historySection.createEl("h3", { text: t2("writingDashboard.recentSprints") });
+      const log = await this.plugin.projectManager.getWritingLog(project);
+      const recent = [...log].reverse().slice(0, 10);
+      if (recent.length === 0) {
+        historySection.createEl("p", { text: t2("writingDashboard.noSprints"), cls: "ws-empty-state" });
+      } else {
+        const table = historySection.createEl("table", { cls: "ws-sprint-history-table" });
+        const thead = table.createEl("thead");
+        const hr = thead.createEl("tr");
+        [
+          t2("writingDashboard.sprintTable.date"),
+          t2("writingDashboard.sprintTable.duration"),
+          t2("writingDashboard.sprintTable.words"),
+          t2("writingDashboard.sprintTable.wpm"),
+          t2("writingDashboard.sprintTable.goal")
+        ].forEach((h) => hr.createEl("th", { text: h }));
+        const tbody = table.createEl("tbody");
+        for (const s of recent) {
+          const tr = tbody.createEl("tr");
+          const date = new Date(s.date).toLocaleDateString();
+          const wpm = s.duration > 0 ? Math.round(s.wordsWritten / s.duration) : 0;
+          tr.createEl("td", { text: date });
+          tr.createEl("td", { text: `${s.duration}m` });
+          tr.createEl("td", { text: String(s.wordsWritten) });
+          tr.createEl("td", { text: String(wpm) });
+          tr.createEl("td", { text: s.wordCountGoal ? `${s.wordsWritten}/${s.wordCountGoal}` : "\u2014" });
+        }
+      }
+    }
+    if (project) {
+      const docsSection = contentEl.createDiv("ws-dash-section");
+      docsSection.createEl("h3", { text: t2("writingDashboard.documentWordCounts") });
+      const binder = await this.plugin.projectManager.loadBinder(project);
+      const items = this.plugin.projectManager.flattenBinder(binder.items);
+      const table = docsSection.createEl("table", { cls: "ws-doc-wc-table" });
+      const thead = table.createEl("thead");
+      const hr = thead.createEl("tr");
+      [
+        t2("writingDashboard.docTable.document"),
+        t2("writingDashboard.docTable.words"),
+        t2("writingDashboard.docTable.readingTime")
+      ].forEach((h) => hr.createEl("th", { text: h }));
+      const tbody = table.createEl("tbody");
+      for (const item of items) {
+        if (item.type === "group" || item.type === "part") continue;
+        const file = this.app.vault.getAbstractFileByPath(item.filePath);
+        let wc = 0;
+        if (file instanceof import_obsidian13.TFile) {
+          const content2 = await this.app.vault.read(file);
+          wc = this.plugin.fmManager.countWords(content2);
+        }
+        const tr = tbody.createEl("tr");
+        const titleTd = tr.createEl("td");
+        const link = titleTd.createEl("a", { text: item.title });
+        link.href = "#";
+        link.onclick = async (e) => {
+          e.preventDefault();
+          if (file instanceof import_obsidian13.TFile) {
+            const leaf = this.app.workspace.getLeaf(false);
+            await leaf.openFile(file);
+            this.close();
+          }
+        };
+        tr.createEl("td", { text: String(wc) });
+        tr.createEl("td", { text: this.plugin.statsTracker.calculateReadingTime(wc) });
+      }
+    }
+    const closeBtn = contentEl.createEl("button", { text: t2("writingDashboard.close"), cls: "ws-dash-close" });
+    closeBtn.onclick = () => this.close();
+  }
+  addStat(container, label, value) {
+    const stat = container.createDiv("ws-dash-stat");
+    stat.createDiv({ text: value, cls: "ws-dash-stat-value" });
+    stat.createDiv({ text: label, cls: "ws-dash-stat-label" });
+  }
+  onClose() {
+    this.contentEl.empty();
+  }
+};
+
+// src/ControlStrip.ts
+var ControlStrip = class {
+  constructor(plugin, parent) {
+    this.modeBtns = /* @__PURE__ */ new Map();
+    this.plugin = plugin;
+    const strip = parent.createDiv("ws-binder-strip");
+    this.renderModeRow(strip);
+    this.renderToggleRow(strip);
+    this.sync();
+  }
+  // Patches every dynamic element from live plugin state
+  sync() {
+    const mode = this.plugin.writingModes.getCurrentMode();
+    for (const [id, btn] of this.modeBtns) {
+      btn.toggleClass("is-active", id === mode);
+    }
+    this.focusPill.toggleClass("is-on", this.plugin.focusMode.isActive());
+    this.typographyPill.toggleClass("is-on", this.plugin.typographyMode.isActive());
+    this.syncSprintChip();
+  }
+  renderModeRow(strip) {
+    const seg = strip.createDiv("ws-strip-modes");
+    const modes = [
+      { id: "draft", label: t2("launcher.mode.draft"), icon: "pencil", desc: t2("launcher.mode.draftDesc") },
+      { id: "edit", label: t2("launcher.mode.edit"), icon: "edit-3", desc: t2("launcher.mode.editDesc") },
+      { id: "review", label: t2("launcher.mode.review"), icon: "eye", desc: t2("launcher.mode.reviewDesc") }
+    ];
+    for (const mode of modes) {
+      const btn = seg.createEl("button", { cls: "ws-strip-mode-btn" });
+      (0, import_obsidian14.setTooltip)(btn, mode.desc);
+      (0, import_obsidian14.setIcon)(btn.createSpan("ws-strip-mode-icon"), mode.icon);
+      btn.createSpan({ text: mode.label, cls: "ws-strip-mode-label" });
+      btn.onclick = () => {
+        const current = this.plugin.writingModes.getCurrentMode();
+        void this.plugin.writingModes.switchMode(current === mode.id ? "none" : mode.id);
+      };
+      this.modeBtns.set(mode.id, btn);
+    }
+  }
+  renderToggleRow(strip) {
+    const row = strip.createDiv("ws-strip-row2");
+    this.focusPill = row.createEl("button", { cls: "ws-strip-pill", text: t2("binder.strip.focus") });
+    (0, import_obsidian14.setTooltip)(this.focusPill, t2("launcher.focusMode"));
+    this.focusPill.onclick = () => {
+      this.plugin.focusMode.toggle();
+    };
+    this.typographyPill = row.createEl("button", { cls: "ws-strip-pill", text: t2("binder.strip.typography") });
+    (0, import_obsidian14.setTooltip)(this.typographyPill, t2("launcher.typographyMode"));
+    this.typographyPill.onclick = () => {
+      void this.plugin.typographyMode.toggle();
+    };
+    this.sprintChip = row.createEl("button", { cls: "ws-strip-chip" });
+    this.sprintChip.onclick = (e) => this.showSprintMenu(e);
+    const overflow = row.createEl("button", { cls: "ws-strip-overflow" });
+    (0, import_obsidian14.setIcon)(overflow, "more-horizontal");
+    (0, import_obsidian14.setTooltip)(overflow, t2("binder.strip.moreActions"));
+    overflow.onclick = (e) => this.showOverflowMenu(e);
+  }
+  syncSprintChip() {
+    const timer = this.plugin.sprintTimer;
+    this.sprintChip.empty();
+    (0, import_obsidian14.setIcon)(this.sprintChip.createSpan("ws-strip-chip-icon"), "timer");
+    let label = t2("binder.strip.sprint");
+    if (timer.isActive()) {
+      const minutes = timer.getDurationMinutes();
+      label = timer.isReady() ? t2("binder.strip.sprintReady", { minutes }) : t2("binder.strip.sprintRunning");
+    }
+    this.sprintChip.createSpan({ text: label });
+    this.sprintChip.toggleClass("is-armed", timer.isActive() && timer.isReady());
+    this.sprintChip.toggleClass("is-running", timer.isActive() && !timer.isReady());
+  }
+  showSprintMenu(e) {
+    const menu = new import_obsidian14.Menu();
+    menu.addItem((i) => i.setTitle(t2("sprintModal.setupTitle")).setIcon("settings-2").onClick(() => {
+      new SprintModal(this.plugin.app, this.plugin).open();
+    }));
+    menu.addSeparator();
+    for (const mins of [10, 15, 25]) {
+      menu.addItem((i) => i.setTitle(t2("binder.strip.quickStart", { minutes: mins })).setIcon("timer").onClick(() => {
+        this.plugin.sprintTimer.setup(mins);
+      }));
+    }
+    menu.showAtMouseEvent(e);
+  }
+  // The occasional actions — each opens the same surface as its launcher
+  // counterpart (the labels are shared too)
+  showOverflowMenu(e) {
+    const menu = new import_obsidian14.Menu();
+    menu.addItem((i) => i.setTitle(t2("launcher.action.export")).setIcon("download").onClick(() => {
+      new ExportModal(this.plugin.app, this.plugin, "project").open();
+    }));
+    menu.addItem((i) => i.setTitle(t2("launcher.action.publishToWordPress")).setIcon("globe").onClick(() => {
+      this.plugin.publishCurrentFile();
+    }));
+    menu.addItem((i) => i.setTitle(t2("launcher.action.previewManuscript")).setIcon("layers").onClick(() => {
+      void this.plugin.openCompilePreview();
+    }));
+    menu.addSeparator();
+    menu.addItem((i) => i.setTitle(t2("launcher.action.targetsDashboard")).setIcon("target").onClick(() => {
+      new TargetsDashboardModal(this.plugin.app, this.plugin).open();
+    }));
+    menu.addItem((i) => i.setTitle(t2("launcher.action.writingDashboard")).setIcon("bar-chart-2").onClick(() => {
+      new WritingDashboardModal(this.plugin.app, this.plugin).open();
+    }));
+    menu.addItem((i) => i.setTitle(t2("launcher.action.writingLog")).setIcon("calendar-days").onClick(() => {
+      void this.plugin.openWritingLog();
+    }));
+    menu.showAtMouseEvent(e);
+  }
+};
+
 // src/binderFilter.ts
 function computeBinderFilter(items, query) {
   const q = query.toLowerCase();
@@ -11071,7 +11567,7 @@ function parentIndex(rows, from) {
 }
 
 // src/FolderSidebarView.ts
-var import_obsidian11 = require("obsidian");
+var import_obsidian15 = require("obsidian");
 
 // src/words.ts
 function countWords(content2) {
@@ -11083,7 +11579,7 @@ function countWords(content2) {
 
 // src/FolderSidebarView.ts
 var FOLDER_SIDEBAR_VIEW_TYPE = "folder-sidebar-explorer-view";
-var FolderSidebarView = class extends import_obsidian11.ItemView {
+var FolderSidebarView = class extends import_obsidian15.ItemView {
   constructor(leaf) {
     super(leaf);
     this.rootFolder = null;
@@ -11133,7 +11629,7 @@ var FolderSidebarView = class extends import_obsidian11.ItemView {
     const path = state == null ? void 0 : state.rootFolderPath;
     if (typeof path === "string" && path !== ((_a2 = this.rootFolder) == null ? void 0 : _a2.path)) {
       const folder = this.app.vault.getAbstractFileByPath(path);
-      if (folder instanceof import_obsidian11.TFolder) {
+      if (folder instanceof import_obsidian15.TFolder) {
         this.setRootFolder(folder);
         return;
       }
@@ -11157,10 +11653,10 @@ var FolderSidebarView = class extends import_obsidian11.ItemView {
     const active = (_a2 = this.app.workspace.activeEditor) == null ? void 0 : _a2.editor;
     if (active) return active;
     const recent = this.app.workspace.getMostRecentLeaf(this.app.workspace.rootSplit);
-    if ((recent == null ? void 0 : recent.view) instanceof import_obsidian11.MarkdownView) return recent.view.editor;
+    if ((recent == null ? void 0 : recent.view) instanceof import_obsidian15.MarkdownView) return recent.view.editor;
     for (const leaf of this.app.workspace.getLeavesOfType("markdown")) {
       const view = leaf.view;
-      if (view instanceof import_obsidian11.MarkdownView) return view.editor;
+      if (view instanceof import_obsidian15.MarkdownView) return view.editor;
     }
     return null;
   }
@@ -11190,7 +11686,7 @@ var FolderSidebarView = class extends import_obsidian11.ItemView {
     if (this.historyStack.length === 0) return;
     const prevPath = this.historyStack.pop();
     const prev = this.app.vault.getAbstractFileByPath(prevPath);
-    if (prev instanceof import_obsidian11.TFolder) {
+    if (prev instanceof import_obsidian15.TFolder) {
       this.currentFolder = prev;
       this.searchQuery = "";
       this.searchResults = null;
@@ -11227,10 +11723,10 @@ var FolderSidebarView = class extends import_obsidian11.ItemView {
     const results = [];
     const walk = (f) => {
       for (const child of f.children) {
-        if (child instanceof import_obsidian11.TFolder) {
+        if (child instanceof import_obsidian15.TFolder) {
           results.push(child);
           walk(child);
-        } else if (child instanceof import_obsidian11.TFile) {
+        } else if (child instanceof import_obsidian15.TFile) {
           results.push(child);
         }
       }
@@ -11276,7 +11772,7 @@ var FolderSidebarView = class extends import_obsidian11.ItemView {
       }
     }
     const textFiles = allItems.filter(
-      (item) => item instanceof import_obsidian11.TFile && ["md", "txt"].includes(item.extension.toLowerCase()) && !nameMatched.has(item)
+      (item) => item instanceof import_obsidian15.TFile && ["md", "txt"].includes(item.extension.toLowerCase()) && !nameMatched.has(item)
     );
     const contentMatches = await Promise.all(textFiles.map(async (file) => {
       try {
@@ -11315,7 +11811,7 @@ var FolderSidebarView = class extends import_obsidian11.ItemView {
     this.tooltipEl = tip;
     tip.createDiv({ cls: "ws-tooltip-name", text: item.name });
     tip.createDiv({ cls: "ws-tooltip-divider" });
-    if (item instanceof import_obsidian11.TFile) {
+    if (item instanceof import_obsidian15.TFile) {
       const modDate = new Date(item.stat.mtime);
       const modStr = modDate.toLocaleDateString(void 0, {
         year: "numeric",
@@ -11345,8 +11841,8 @@ var FolderSidebarView = class extends import_obsidian11.ItemView {
       let folderCount = 0;
       const walk = (f) => {
         for (const child of f.children) {
-          if (child instanceof import_obsidian11.TFile) fileCount++;
-          else if (child instanceof import_obsidian11.TFolder) {
+          if (child instanceof import_obsidian15.TFile) fileCount++;
+          else if (child instanceof import_obsidian15.TFolder) {
             folderCount++;
             walk(child);
           }
@@ -11442,9 +11938,9 @@ var FolderSidebarView = class extends import_obsidian11.ItemView {
   // One comparator for both the folder listing and search results — the two
   // sort methods previously duplicated this switch block
   compareEntries(a, b) {
-    const aIsFolder = a instanceof import_obsidian11.TFolder;
-    const bIsFolder = b instanceof import_obsidian11.TFolder;
-    const mtime = (x) => x instanceof import_obsidian11.TFile ? x.stat.mtime : 0;
+    const aIsFolder = a instanceof import_obsidian15.TFolder;
+    const bIsFolder = b instanceof import_obsidian15.TFolder;
+    const mtime = (x) => x instanceof import_obsidian15.TFile ? x.stat.mtime : 0;
     switch (this.sortMode) {
       case "folders-az":
         if (aIsFolder !== bIsFolder) return aIsFolder ? -1 : 1;
@@ -11557,7 +12053,7 @@ var FolderSidebarView = class extends import_obsidian11.ItemView {
     const toolbar = container.createDiv({ cls: "ws-folder-toolbar" });
     const searchWrap = toolbar.createDiv({ cls: "ws-folder-search-wrap" });
     const searchIcon = searchWrap.createSpan({ cls: "ws-folder-search-icon" });
-    (0, import_obsidian11.setIcon)(searchIcon, "search");
+    (0, import_obsidian15.setIcon)(searchIcon, "search");
     const searchInput = searchWrap.createEl("input", {
       cls: "ws-folder-search-input",
       type: "text",
@@ -11618,7 +12114,7 @@ var FolderSidebarView = class extends import_obsidian11.ItemView {
     if (ext === "md") {
       try {
         const text = await this.app.vault.cachedRead(file);
-        await import_obsidian11.MarkdownRenderer.render(this.app, text, content2, file.path, this);
+        await import_obsidian15.MarkdownRenderer.render(this.app, text, content2, file.path, this);
         if (this.searchQuery) this.highlightTextInElement(content2, this.searchQuery);
       } catch (e) {
         content2.createDiv({ cls: "ws-folder-empty", text: t2("folderSidebar.previewError") });
@@ -11667,14 +12163,14 @@ var FolderSidebarView = class extends import_obsidian11.ItemView {
         itemEl.setAttribute("aria-selected", "false");
         const topRow = itemEl.createDiv({ cls: "ws-folder-item-row" });
         const iconEl = topRow.createSpan({ cls: "ws-folder-item-icon" });
-        if (item instanceof import_obsidian11.TFolder) {
-          (0, import_obsidian11.setIcon)(iconEl, "folder");
+        if (item instanceof import_obsidian15.TFolder) {
+          (0, import_obsidian15.setIcon)(iconEl, "folder");
         } else {
           const ext = item.extension.toLowerCase();
-          if (ext === "md") (0, import_obsidian11.setIcon)(iconEl, "file-text");
-          else if (["png", "jpg", "jpeg", "webp", "gif", "svg"].includes(ext)) (0, import_obsidian11.setIcon)(iconEl, "image");
-          else if (["mp3", "wav", "m4a", "ogg", "flac"].includes(ext)) (0, import_obsidian11.setIcon)(iconEl, "file-audio");
-          else (0, import_obsidian11.setIcon)(iconEl, "file");
+          if (ext === "md") (0, import_obsidian15.setIcon)(iconEl, "file-text");
+          else if (["png", "jpg", "jpeg", "webp", "gif", "svg"].includes(ext)) (0, import_obsidian15.setIcon)(iconEl, "image");
+          else if (["mp3", "wav", "m4a", "ogg", "flac"].includes(ext)) (0, import_obsidian15.setIcon)(iconEl, "file-audio");
+          else (0, import_obsidian15.setIcon)(iconEl, "file");
         }
         const isAtRoot = ((_a2 = item.parent) == null ? void 0 : _a2.path) === ((_c = (_b2 = this.rootFolder) == null ? void 0 : _b2.path) != null ? _c : current.path);
         const label = !isAtRoot && item.path.startsWith(rootPath) ? item.path.slice(rootPath.length) : item.name;
@@ -11692,8 +12188,8 @@ var FolderSidebarView = class extends import_obsidian11.ItemView {
           this.renderHighlightedText(snippetEl, snippet, lowerQuery);
         }
         itemEl.addEventListener("click", () => {
-          if (item instanceof import_obsidian11.TFolder) this.navigateTo(item);
-          else if (item instanceof import_obsidian11.TFile) this.openFile(item);
+          if (item instanceof import_obsidian15.TFolder) this.navigateTo(item);
+          else if (item instanceof import_obsidian15.TFile) this.openFile(item);
         });
         this.addTooltip(itemEl, item);
         items2.push(itemEl);
@@ -11730,7 +12226,7 @@ var FolderSidebarView = class extends import_obsidian11.ItemView {
       return;
     }
     const displayItems = current.children.filter(
-      (c) => c instanceof import_obsidian11.TFolder || c instanceof import_obsidian11.TFile
+      (c) => c instanceof import_obsidian15.TFolder || c instanceof import_obsidian15.TFile
     );
     const sorted = this.sortItems(displayItems);
     if (sorted.length === 0) {
@@ -11744,19 +12240,19 @@ var FolderSidebarView = class extends import_obsidian11.ItemView {
       item.setAttribute("role", "option");
       item.setAttribute("aria-selected", "false");
       const iconEl = item.createSpan({ cls: "ws-folder-item-icon" });
-      if (child instanceof import_obsidian11.TFolder) {
-        (0, import_obsidian11.setIcon)(iconEl, "folder");
-      } else if (child instanceof import_obsidian11.TFile) {
+      if (child instanceof import_obsidian15.TFolder) {
+        (0, import_obsidian15.setIcon)(iconEl, "folder");
+      } else if (child instanceof import_obsidian15.TFile) {
         const ext = child.extension.toLowerCase();
-        if (ext === "md") (0, import_obsidian11.setIcon)(iconEl, "file-text");
-        else if (["png", "jpg", "jpeg", "webp", "gif", "svg"].includes(ext)) (0, import_obsidian11.setIcon)(iconEl, "image");
-        else if (["mp3", "wav", "m4a", "ogg", "flac"].includes(ext)) (0, import_obsidian11.setIcon)(iconEl, "file-audio");
-        else (0, import_obsidian11.setIcon)(iconEl, "file");
+        if (ext === "md") (0, import_obsidian15.setIcon)(iconEl, "file-text");
+        else if (["png", "jpg", "jpeg", "webp", "gif", "svg"].includes(ext)) (0, import_obsidian15.setIcon)(iconEl, "image");
+        else if (["mp3", "wav", "m4a", "ogg", "flac"].includes(ext)) (0, import_obsidian15.setIcon)(iconEl, "file-audio");
+        else (0, import_obsidian15.setIcon)(iconEl, "file");
       }
       item.createSpan({ text: child.name });
       item.addEventListener("click", () => {
-        if (child instanceof import_obsidian11.TFolder) this.navigateTo(child);
-        else if (child instanceof import_obsidian11.TFile) this.openFile(child);
+        if (child instanceof import_obsidian15.TFolder) this.navigateTo(child);
+        else if (child instanceof import_obsidian15.TFile) this.openFile(child);
       });
       this.addTooltip(item, child);
       items.push(item);
@@ -11799,7 +12295,7 @@ function applyFocus(items, index) {
     if (i === index) item.scrollIntoView({ block: "nearest" });
   });
 }
-var FolderPickerModal = class extends import_obsidian11.FuzzySuggestModal {
+var FolderPickerModal = class extends import_obsidian15.FuzzySuggestModal {
   constructor(app, onChoose) {
     super(app);
     this.onChoose = onChoose;
@@ -11810,7 +12306,7 @@ var FolderPickerModal = class extends import_obsidian11.FuzzySuggestModal {
     const walk = (folder) => {
       folders.push(folder);
       for (const child of folder.children) {
-        if (child instanceof import_obsidian11.TFolder) walk(child);
+        if (child instanceof import_obsidian15.TFolder) walk(child);
       }
     };
     walk(this.app.vault.getRoot());
@@ -11832,7 +12328,7 @@ var STATUS_DOT_KEY = {
   published: "targetsDashboard.status.published"
 };
 var BINDER_VIEW_TYPE = "writing-studio-binder";
-var BinderView = class extends import_obsidian12.ItemView {
+var BinderView = class extends import_obsidian16.ItemView {
   constructor(leaf, plugin) {
     super(leaf);
     this.activeProject = null;
@@ -11854,6 +12350,7 @@ var BinderView = class extends import_obsidian12.ItemView {
     // Item id of the keyboard-focused row, so focus survives event-driven
     // re-renders (every expand/collapse rebuilds the DOM).
     this.navFocusItemId = null;
+    this.controlStrip = null;
     this.plugin = plugin;
   }
   getViewType() {
@@ -11876,6 +12373,22 @@ var BinderView = class extends import_obsidian12.ItemView {
     this.registerEvent(this.plugin.projectManager.onProjectsChanged(() => {
       void this.refresh();
     }));
+    this.registerEvent(this.plugin.studioEvents.onModeChanged(() => {
+      var _a2;
+      return (_a2 = this.controlStrip) == null ? void 0 : _a2.sync();
+    }));
+    this.registerEvent(this.plugin.studioEvents.onFocusChanged(() => {
+      var _a2;
+      return (_a2 = this.controlStrip) == null ? void 0 : _a2.sync();
+    }));
+    this.registerEvent(this.plugin.studioEvents.onTypographyChanged(() => {
+      var _a2;
+      return (_a2 = this.controlStrip) == null ? void 0 : _a2.sync();
+    }));
+    this.registerEvent(this.plugin.studioEvents.onSprintChanged(() => {
+      var _a2;
+      return (_a2 = this.controlStrip) == null ? void 0 : _a2.sync();
+    }));
     await this.refresh();
   }
   async refresh() {
@@ -11896,7 +12409,7 @@ var BinderView = class extends import_obsidian12.ItemView {
     const walk = (items) => {
       for (const item of items) {
         const live = this.app.vault.getAbstractFileByPath(item.filePath);
-        if (live instanceof import_obsidian12.TFile && item.title !== live.basename) {
+        if (live instanceof import_obsidian16.TFile && item.title !== live.basename) {
           item.title = live.basename;
           drifted = true;
         }
@@ -11912,6 +12425,7 @@ var BinderView = class extends import_obsidian12.ItemView {
     container.empty();
     this.wcElements.clear();
     container.addClass("ws-binder-container");
+    this.controlStrip = new ControlStrip(this.plugin, container);
     const header = container.createDiv("ws-binder-header");
     const projectRow = header.createDiv("ws-binder-project-row");
     const projectSel = projectRow.createEl("select", { cls: "ws-binder-project-sel" });
@@ -11927,19 +12441,19 @@ var BinderView = class extends import_obsidian12.ItemView {
       await this.plugin.projectManager.setActiveProject(projectSel.value || null);
     };
     const newProjectBtn = projectRow.createEl("button", { cls: "ws-binder-btn", title: t2("binder.newProject") });
-    (0, import_obsidian12.setIcon)(newProjectBtn, "plus");
+    (0, import_obsidian16.setIcon)(newProjectBtn, "plus");
     newProjectBtn.onclick = () => {
       new ProjectModal(this.app, this.plugin).open();
     };
     if (this.activeProject) {
       const project = this.activeProject;
       const editProjectBtn = projectRow.createEl("button", { cls: "ws-binder-btn", title: t2("projectModal.editTitle") });
-      (0, import_obsidian12.setIcon)(editProjectBtn, "pencil");
+      (0, import_obsidian16.setIcon)(editProjectBtn, "pencil");
       editProjectBtn.onclick = () => {
         new ProjectModal(this.app, this.plugin, void 0, project).open();
       };
       const deleteProjectBtn = projectRow.createEl("button", { cls: "ws-binder-btn", title: t2("projectModal.deleteTitle") });
-      (0, import_obsidian12.setIcon)(deleteProjectBtn, "trash");
+      (0, import_obsidian16.setIcon)(deleteProjectBtn, "trash");
       deleteProjectBtn.onclick = () => {
         confirmDeleteProject(this.app, this.plugin, project);
       };
@@ -11951,38 +12465,38 @@ var BinderView = class extends import_obsidian12.ItemView {
     });
     newDocBtn.onclick = () => {
       if (!this.activeProject) {
-        new import_obsidian12.Notice(t2("binder.selectProjectFirst"));
+        new import_obsidian16.Notice(t2("binder.selectProjectFirst"));
         return;
       }
       this.createNewDocument();
     };
     const newGroupBtn = toolbar.createEl("button", { cls: "ws-binder-btn" });
     newGroupBtn.ariaLabel = t2("binder.newGroupOrPart");
-    (0, import_obsidian12.setIcon)(newGroupBtn, "folder-plus");
-    (0, import_obsidian12.setTooltip)(newGroupBtn, t2("binder.newGroupOrPart"));
+    (0, import_obsidian16.setIcon)(newGroupBtn, "folder-plus");
+    (0, import_obsidian16.setTooltip)(newGroupBtn, t2("binder.newGroupOrPart"));
     newGroupBtn.onclick = (e) => {
       if (!this.activeProject) {
-        new import_obsidian12.Notice(t2("binder.selectProjectFirst"));
+        new import_obsidian16.Notice(t2("binder.selectProjectFirst"));
         return;
       }
-      const menu = new import_obsidian12.Menu();
+      const menu = new import_obsidian16.Menu();
       menu.addItem((i) => i.setTitle(t2("binder.menu.newGroup")).setIcon("folder").onClick(() => this.createStructuralItem("group")));
       menu.addItem((i) => i.setTitle(t2("binder.menu.newPart")).setIcon("library").onClick(() => this.createStructuralItem("part")));
       menu.showAtMouseEvent(e);
     };
     const scanBtn = toolbar.createEl("button", { cls: "ws-binder-btn" });
     scanBtn.ariaLabel = t2("binder.addFiles");
-    (0, import_obsidian12.setIcon)(scanBtn, "folder-sync");
-    (0, import_obsidian12.setTooltip)(scanBtn, t2("binder.addFiles"));
+    (0, import_obsidian16.setIcon)(scanBtn, "folder-sync");
+    (0, import_obsidian16.setTooltip)(scanBtn, t2("binder.addFiles"));
     scanBtn.onclick = async () => {
       if (!this.activeProject) {
-        new import_obsidian12.Notice(t2("binder.selectProjectFirst"));
+        new import_obsidian16.Notice(t2("binder.selectProjectFirst"));
         return;
       }
       await this.scanProjectFolder();
     };
     const dashBtn = toolbar.createEl("button", { cls: "ws-binder-btn", title: t2("binder.targetsDashboard") });
-    (0, import_obsidian12.setIcon)(dashBtn, "target");
+    (0, import_obsidian16.setIcon)(dashBtn, "target");
     dashBtn.onclick = () => {
       new TargetsDashboardModal(this.app, this.plugin).open();
     };
@@ -12128,7 +12642,7 @@ var BinderView = class extends import_obsidian12.ItemView {
       } else {
         row.createSpan("ws-binder-toggle ws-binder-toggle-leaf");
       }
-      (0, import_obsidian12.setIcon)(row.createSpan("ws-binder-icon"), this.getTypeIcon(item.type));
+      (0, import_obsidian16.setIcon)(row.createSpan("ws-binder-icon"), this.getTypeIcon(item.type));
       const dot = row.createSpan("ws-binder-status-dot");
       dot.setCssProps({ "--ws-status-color": STATUS_COLORS[item.status] });
       dot.title = t2(STATUS_DOT_KEY[item.status]);
@@ -12216,7 +12730,7 @@ var BinderView = class extends import_obsidian12.ItemView {
   }
   async loadWordCount(item, el) {
     const file = this.app.vault.getAbstractFileByPath(item.filePath);
-    if (!(file instanceof import_obsidian12.TFile)) {
+    if (!(file instanceof import_obsidian16.TFile)) {
       el.textContent = "0W";
       return;
     }
@@ -12261,8 +12775,8 @@ var BinderView = class extends import_obsidian12.ItemView {
   }
   async openDocument(item) {
     const file = this.app.vault.getAbstractFileByPath(item.filePath);
-    if (!(file instanceof import_obsidian12.TFile)) {
-      new import_obsidian12.Notice(t2("binder.cannotFindFile", { filePath: item.filePath }));
+    if (!(file instanceof import_obsidian16.TFile)) {
+      new import_obsidian16.Notice(t2("binder.cannotFindFile", { filePath: item.filePath }));
       return;
     }
     const leaf = this.app.workspace.getLeaf(false);
@@ -12290,13 +12804,13 @@ var BinderView = class extends import_obsidian12.ItemView {
       if (newTitle === item.title) return;
       try {
         const file = this.app.vault.getAbstractFileByPath(item.filePath);
-        if (file instanceof import_obsidian12.TFile) {
+        if (file instanceof import_obsidian16.TFile) {
           await this.app.fileManager.processFrontMatter(file, (fm) => {
             fm["title"] = newTitle;
           });
           const parentPath = item.filePath.substring(0, item.filePath.lastIndexOf("/"));
           const sanitized = newTitle.replace(/[\\/:*?"<>|]/g, "-");
-          const newPath = (0, import_obsidian12.normalizePath)(`${parentPath}/${sanitized}.md`);
+          const newPath = (0, import_obsidian16.normalizePath)(`${parentPath}/${sanitized}.md`);
           await this.app.fileManager.renameFile(file, newPath);
           item.filePath = newPath;
         }
@@ -12304,7 +12818,7 @@ var BinderView = class extends import_obsidian12.ItemView {
         await this.saveBinder();
       } catch (e) {
         el.textContent = item.title;
-        new import_obsidian12.Notice(t2("main.operationFailed", { error: e instanceof Error ? e.message : String(e) }));
+        new import_obsidian16.Notice(t2("main.operationFailed", { error: e instanceof Error ? e.message : String(e) }));
       }
     };
     el.onblur = () => {
@@ -12325,7 +12839,7 @@ var BinderView = class extends import_obsidian12.ItemView {
     this.buildContextMenu(item).showAtMouseEvent(e);
   }
   buildContextMenu(item) {
-    const menu = new import_obsidian12.Menu();
+    const menu = new import_obsidian16.Menu();
     const structural = item.type === "group" || item.type === "part";
     if (!structural) {
       menu.addItem((i) => i.setTitle(t2("binder.menu.openDocument")).setIcon("file-text").onClick(safeHandler(() => this.openDocument(item))));
@@ -12410,7 +12924,7 @@ var BinderView = class extends import_obsidian12.ItemView {
     if (item.type === "group" || item.type === "part") return;
     const newTitle = `${item.title} ${t2("binder.copySuffix")}`;
     const srcFile = this.app.vault.getAbstractFileByPath(item.filePath);
-    const content2 = srcFile instanceof import_obsidian12.TFile ? await this.app.vault.read(srcFile) : void 0;
+    const content2 = srcFile instanceof import_obsidian16.TFile ? await this.app.vault.read(srcFile) : void 0;
     const newItem = await this.plugin.projectManager.addDocumentToBinder(
       this.activeProject,
       newTitle,
@@ -12426,16 +12940,16 @@ var BinderView = class extends import_obsidian12.ItemView {
   async moveToResearch(item) {
     if (!this.activeProject) return;
     const file = this.app.vault.getAbstractFileByPath(item.filePath);
-    if (!(file instanceof import_obsidian12.TFile)) {
-      new import_obsidian12.Notice(t2("binder.fileNotFound", { path: item.filePath }));
+    if (!(file instanceof import_obsidian16.TFile)) {
+      new import_obsidian16.Notice(t2("binder.fileNotFound", { path: item.filePath }));
       return;
     }
-    const researchDir = (0, import_obsidian12.normalizePath)(`${this.activeProject.folderPath}/Research`);
+    const researchDir = (0, import_obsidian16.normalizePath)(`${this.activeProject.folderPath}/Research`);
     if (!this.app.vault.getAbstractFileByPath(researchDir)) {
       await this.app.vault.createFolder(researchDir);
     }
     const fileName = item.filePath.split("/").pop() || "note.md";
-    const newPath = (0, import_obsidian12.normalizePath)(`${researchDir}/${fileName}`);
+    const newPath = (0, import_obsidian16.normalizePath)(`${researchDir}/${fileName}`);
     await this.app.vault.rename(file, newPath);
     item.filePath = newPath;
     item.type = "note";
@@ -12466,7 +12980,7 @@ var BinderView = class extends import_obsidian12.ItemView {
       t2("binder.deleteConfirm.cancel"),
       async () => {
         const file = this.app.vault.getAbstractFileByPath(item.filePath);
-        if (file instanceof import_obsidian12.TFile) {
+        if (file instanceof import_obsidian16.TFile) {
           await this.app.fileManager.trashFile(file);
         }
         await this.plugin.projectManager.removeItemFromBinder(project, item.id);
@@ -12608,10 +13122,10 @@ var BinderView = class extends import_obsidian12.ItemView {
   }
   async scanProjectFolder() {
     if (!this.activeProject) {
-      new import_obsidian12.Notice(t2("binder.selectProjectFirst"));
+      new import_obsidian16.Notice(t2("binder.selectProjectFirst"));
       return;
     }
-    const projectFolder = (0, import_obsidian12.normalizePath)(this.activeProject.folderPath);
+    const projectFolder = (0, import_obsidian16.normalizePath)(this.activeProject.folderPath);
     const existingPaths = new Set(
       this.plugin.projectManager.flattenBinder(this.binderItems).map((i) => i.filePath)
     );
@@ -12619,7 +13133,7 @@ var BinderView = class extends import_obsidian12.ItemView {
       (f) => f.extension === "md" && f.path.startsWith(projectFolder + "/") && !f.name.startsWith("_") && !existingPaths.has(f.path)
     );
     if (untracked.length === 0) {
-      new import_obsidian12.Notice(t2("binder.noNewFiles"));
+      new import_obsidian16.Notice(t2("binder.noNewFiles"));
       return;
     }
     new ScanFolderModal(this.app, untracked, async (selected) => {
@@ -12653,100 +13167,7 @@ var BinderView = class extends import_obsidian12.ItemView {
 };
 
 // src/CompilePreview.ts
-var import_obsidian14 = require("obsidian");
-
-// modals/ExportModal.ts
-var import_obsidian13 = require("obsidian");
-var ExportModal = class extends import_obsidian13.Modal {
-  constructor(app, plugin, initialScope = "current") {
-    super(app);
-    this.exportScope = "current";
-    this.includeFrontmatter = false;
-    this.includeResearch = false;
-    this.includeTitlesAsHeadings = true;
-    this.addTitlePage = true;
-    this.coverImagePath = "";
-    this.authorContact = "";
-    this.plugin = plugin;
-    this.format = plugin.settings.defaultExportFormat;
-    this.exportScope = initialScope;
-  }
-  onOpen() {
-    const { contentEl } = this;
-    contentEl.empty();
-    contentEl.addClass("ws-export-modal");
-    contentEl.createEl("h2", { text: t2("exportModal.title") });
-    let coverSetting;
-    let contactSetting;
-    new import_obsidian13.Setting(contentEl).setName(t2("exportModal.formatName")).addDropdown((d) => d.addOption("md", t2("exportModal.format.md")).addOption("html", t2("exportModal.format.html")).addOption("manuscript", t2("exportModal.format.manuscript")).addOption("epub", t2("exportModal.format.epub")).addOption("pdf", t2("exportModal.format.pdf")).addOption("docx", t2("exportModal.format.docx")).addOption("rtf", t2("exportModal.format.rtf")).setValue(this.format).onChange((v) => {
-      this.format = v;
-      coverSetting.settingEl.toggleClass("ws-hidden", v !== "epub");
-      contactSetting.settingEl.toggleClass("ws-hidden", v !== "manuscript");
-    }));
-    coverSetting = new import_obsidian13.Setting(contentEl).setName(t2("exportModal.coverImageName")).setDesc(t2("exportModal.coverImageDesc")).addText((tx) => tx.setValue(this.coverImagePath).setPlaceholder(t2("exportModal.coverImagePlaceholder")).onChange((v) => {
-      this.coverImagePath = v.trim();
-    }));
-    coverSetting.settingEl.toggleClass("ws-hidden", this.format !== "epub");
-    contactSetting = new import_obsidian13.Setting(contentEl).setName(t2("exportModal.contactInfoName")).setDesc(t2("exportModal.contactInfoDesc")).addTextArea((tx) => tx.setValue(this.authorContact).setPlaceholder(t2("exportModal.contactInfoPlaceholder")).onChange((v) => {
-      this.authorContact = v;
-    }));
-    contactSetting.settingEl.toggleClass("ws-hidden", this.format !== "manuscript");
-    new import_obsidian13.Setting(contentEl).setName(t2("exportModal.scopeName")).addDropdown((d) => d.addOption("current", t2("exportModal.scopeCurrent")).addOption("project", t2("exportModal.scopeProject")).setValue(this.exportScope).onChange((v) => {
-      this.exportScope = v;
-    }));
-    new import_obsidian13.Setting(contentEl).setName(t2("exportModal.includeFrontmatter")).addToggle((tx) => tx.setValue(this.includeFrontmatter).onChange((v) => {
-      this.includeFrontmatter = v;
-    }));
-    new import_obsidian13.Setting(contentEl).setName(t2("exportModal.includeResearch")).addToggle((tx) => tx.setValue(this.includeResearch).onChange((v) => {
-      this.includeResearch = v;
-    }));
-    new import_obsidian13.Setting(contentEl).setName(t2("exportModal.includeTitlesAsHeadings")).addToggle((tx) => tx.setValue(this.includeTitlesAsHeadings).onChange((v) => {
-      this.includeTitlesAsHeadings = v;
-    }));
-    new import_obsidian13.Setting(contentEl).setName(t2("exportModal.addTitlePage")).setDesc(t2("exportModal.addTitlePageDesc")).addToggle((tx) => tx.setValue(this.addTitlePage).onChange((v) => {
-      this.addTitlePage = v;
-    }));
-    const previewBtn = contentEl.createEl("button", {
-      cls: "ws-export-preview-btn",
-      text: t2("exportModal.previewBtn")
-    });
-    previewBtn.onclick = async () => {
-      this.close();
-      await this.plugin.openCompilePreview();
-    };
-    const btnRow = contentEl.createDiv("ws-modal-btn-row");
-    const exportBtn = btnRow.createEl("button", { cls: "mod-cta", text: t2("exportModal.exportBtn") });
-    exportBtn.onclick = async () => {
-      exportBtn.disabled = true;
-      exportBtn.textContent = t2("exportModal.exporting");
-      try {
-        await this.plugin.exportEngine.export({
-          format: this.format,
-          scope: this.exportScope,
-          includeFrontmatter: this.includeFrontmatter,
-          includeResearch: this.includeResearch,
-          includeTitlesAsHeadings: this.includeTitlesAsHeadings,
-          paperSize: this.plugin.settings.defaultPaperSize,
-          font: this.plugin.settings.defaultExportFont,
-          fontSize: this.plugin.settings.defaultExportFontSize,
-          addTitlePage: this.addTitlePage,
-          coverImagePath: this.coverImagePath || void 0,
-          authorContact: this.authorContact || void 0
-        });
-        this.close();
-      } catch (e) {
-        new import_obsidian13.Notice(t2("exportModal.exportFailed", { error: e instanceof Error ? e.message : String(e) }));
-        exportBtn.disabled = false;
-        exportBtn.textContent = t2("exportModal.exportBtn");
-      }
-    };
-    const cancelBtn = btnRow.createEl("button", { text: t2("exportModal.cancel") });
-    cancelBtn.onclick = () => this.close();
-  }
-  onClose() {
-    this.contentEl.empty();
-  }
-};
+var import_obsidian17 = require("obsidian");
 
 // src/sections.ts
 function splitSections(content2) {
@@ -12783,7 +13204,7 @@ function buildJumpItems(sections) {
 
 // src/CompilePreview.ts
 var COMPILE_PREVIEW_VIEW_TYPE = "writing-studio-compile-preview";
-var CompilePreviewView = class extends import_obsidian14.ItemView {
+var CompilePreviewView = class extends import_obsidian17.ItemView {
   constructor(leaf, plugin) {
     super(leaf);
     this.content = "";
@@ -12820,7 +13241,7 @@ var CompilePreviewView = class extends import_obsidian14.ItemView {
       addTitlePage: true
     };
     const project = this.plugin.projectManager.getActiveProject();
-    this.sourcePath = project ? (0, import_obsidian14.normalizePath)(`${project.folderPath}/_compile.md`) : "";
+    this.sourcePath = project ? (0, import_obsidian17.normalizePath)(`${project.folderPath}/_compile.md`) : "";
     this.content = this.plugin.exportEngine.toMarkdown(await this.plugin.exportEngine.compileContent(exportOpts));
     this.sections = splitSections(this.content);
     this.jumpItems = buildJumpItems(this.sections);
@@ -12870,7 +13291,7 @@ var CompilePreviewView = class extends import_obsidian14.ItemView {
       });
       loadBtn.onclick = safeHandler(async () => {
         if (!this.plugin.projectManager.getActiveProject()) {
-          new import_obsidian14.Notice(t2("binder.selectProjectFirst"));
+          new import_obsidian17.Notice(t2("binder.selectProjectFirst"));
           return;
         }
         await this.loadContent();
@@ -12882,7 +13303,7 @@ var CompilePreviewView = class extends import_obsidian14.ItemView {
       if (section.startsWith("# ")) {
         sectionDiv.setAttribute("data-section-id", sectionId(index));
       }
-      void import_obsidian14.MarkdownRenderer.render(this.app, section, sectionDiv, this.sourcePath, this);
+      void import_obsidian17.MarkdownRenderer.render(this.app, section, sectionDiv, this.sourcePath, this);
     });
   }
   async onClose() {
@@ -12890,192 +13311,9 @@ var CompilePreviewView = class extends import_obsidian14.ItemView {
 };
 
 // src/LauncherView.ts
-var import_obsidian17 = require("obsidian");
-
-// modals/WritingDashboardModal.ts
-var import_obsidian15 = require("obsidian");
-var WritingDashboardModal = class extends import_obsidian15.Modal {
-  constructor(app, plugin) {
-    super(app);
-    this.plugin = plugin;
-  }
-  async onOpen() {
-    var _a2;
-    const { contentEl } = this;
-    contentEl.empty();
-    contentEl.addClass("ws-writing-dashboard");
-    contentEl.createEl("h2", { text: t2("writingDashboard.title") });
-    const project = this.plugin.projectManager.getActiveProject();
-    const sessionStats = this.plugin.statsTracker.getSessionStats();
-    const streak = await this.plugin.statsTracker.getStreak();
-    const summarySection = contentEl.createDiv("ws-dash-section");
-    summarySection.createEl("h3", { text: t2("writingDashboard.thisSession") });
-    const grid = summarySection.createDiv("ws-dash-grid");
-    this.addStat(grid, t2("writingDashboard.stat.wordsWritten"), String(sessionStats.wordsWritten));
-    this.addStat(grid, t2("writingDashboard.stat.sprints"), String(sessionStats.sprintsCompleted));
-    this.addStat(grid, t2("writingDashboard.stat.minutes"), String(sessionStats.totalMinutes));
-    this.addStat(grid, t2("writingDashboard.stat.writingStreak"), t2("writingDashboard.stat.streakDays", { count: streak }));
-    if (project) {
-      const projectSection = contentEl.createDiv("ws-dash-section");
-      projectSection.createEl("h3", { text: t2("writingDashboard.project", { title: project.title }) });
-      const totalWords = await this.plugin.statsTracker.getTotalWordCount();
-      const totalGoal = ((_a2 = project.goals) == null ? void 0 : _a2.totalWordCount) || 0;
-      const projGrid = projectSection.createDiv("ws-dash-grid");
-      this.addStat(projGrid, t2("writingDashboard.stat.totalWords"), String(totalWords));
-      if (totalGoal > 0) {
-        const pct = Math.min(100, Math.round(totalWords / totalGoal * 100));
-        this.addStat(projGrid, t2("writingDashboard.stat.goal"), `${totalGoal}`);
-        this.addStat(projGrid, t2("writingDashboard.stat.progress"), `${pct}%`);
-      }
-      this.addStat(projGrid, t2("writingDashboard.stat.readingTime"), this.plugin.statsTracker.calculateReadingTime(totalWords));
-      if (totalGoal > 0) {
-        const pct = Math.min(100, Math.round(totalWords / totalGoal * 100));
-        const barWrap = projectSection.createDiv("ws-progress-wrap ws-dash-progress");
-        const bar = barWrap.createDiv("ws-progress-bar");
-        bar.setCssProps({ "--ws-bar-width": `${pct}%` });
-        projectSection.createEl("p", { text: `${totalWords} / ${totalGoal} words (${pct}%)`, cls: "ws-dash-progress-label" });
-      }
-    }
-    if (project) {
-      const historySection = contentEl.createDiv("ws-dash-section");
-      historySection.createEl("h3", { text: t2("writingDashboard.recentSprints") });
-      const log = await this.plugin.projectManager.getWritingLog(project);
-      const recent = [...log].reverse().slice(0, 10);
-      if (recent.length === 0) {
-        historySection.createEl("p", { text: t2("writingDashboard.noSprints"), cls: "ws-empty-state" });
-      } else {
-        const table = historySection.createEl("table", { cls: "ws-sprint-history-table" });
-        const thead = table.createEl("thead");
-        const hr = thead.createEl("tr");
-        [
-          t2("writingDashboard.sprintTable.date"),
-          t2("writingDashboard.sprintTable.duration"),
-          t2("writingDashboard.sprintTable.words"),
-          t2("writingDashboard.sprintTable.wpm"),
-          t2("writingDashboard.sprintTable.goal")
-        ].forEach((h) => hr.createEl("th", { text: h }));
-        const tbody = table.createEl("tbody");
-        for (const s of recent) {
-          const tr = tbody.createEl("tr");
-          const date = new Date(s.date).toLocaleDateString();
-          const wpm = s.duration > 0 ? Math.round(s.wordsWritten / s.duration) : 0;
-          tr.createEl("td", { text: date });
-          tr.createEl("td", { text: `${s.duration}m` });
-          tr.createEl("td", { text: String(s.wordsWritten) });
-          tr.createEl("td", { text: String(wpm) });
-          tr.createEl("td", { text: s.wordCountGoal ? `${s.wordsWritten}/${s.wordCountGoal}` : "\u2014" });
-        }
-      }
-    }
-    if (project) {
-      const docsSection = contentEl.createDiv("ws-dash-section");
-      docsSection.createEl("h3", { text: t2("writingDashboard.documentWordCounts") });
-      const binder = await this.plugin.projectManager.loadBinder(project);
-      const items = this.plugin.projectManager.flattenBinder(binder.items);
-      const table = docsSection.createEl("table", { cls: "ws-doc-wc-table" });
-      const thead = table.createEl("thead");
-      const hr = thead.createEl("tr");
-      [
-        t2("writingDashboard.docTable.document"),
-        t2("writingDashboard.docTable.words"),
-        t2("writingDashboard.docTable.readingTime")
-      ].forEach((h) => hr.createEl("th", { text: h }));
-      const tbody = table.createEl("tbody");
-      for (const item of items) {
-        if (item.type === "group" || item.type === "part") continue;
-        const file = this.app.vault.getAbstractFileByPath(item.filePath);
-        let wc = 0;
-        if (file instanceof import_obsidian15.TFile) {
-          const content2 = await this.app.vault.read(file);
-          wc = this.plugin.fmManager.countWords(content2);
-        }
-        const tr = tbody.createEl("tr");
-        const titleTd = tr.createEl("td");
-        const link = titleTd.createEl("a", { text: item.title });
-        link.href = "#";
-        link.onclick = async (e) => {
-          e.preventDefault();
-          if (file instanceof import_obsidian15.TFile) {
-            const leaf = this.app.workspace.getLeaf(false);
-            await leaf.openFile(file);
-            this.close();
-          }
-        };
-        tr.createEl("td", { text: String(wc) });
-        tr.createEl("td", { text: this.plugin.statsTracker.calculateReadingTime(wc) });
-      }
-    }
-    const closeBtn = contentEl.createEl("button", { text: t2("writingDashboard.close"), cls: "ws-dash-close" });
-    closeBtn.onclick = () => this.close();
-  }
-  addStat(container, label, value) {
-    const stat = container.createDiv("ws-dash-stat");
-    stat.createDiv({ text: value, cls: "ws-dash-stat-value" });
-    stat.createDiv({ text: label, cls: "ws-dash-stat-label" });
-  }
-  onClose() {
-    this.contentEl.empty();
-  }
-};
-
-// modals/SprintModal.ts
-var import_obsidian16 = require("obsidian");
-var SprintModal = class extends import_obsidian16.Modal {
-  constructor(app, plugin) {
-    super(app);
-    this.sprintScope = "file";
-    this.plugin = plugin;
-    this.duration = plugin.settings.defaultSprintDuration;
-    this.wordGoal = plugin.settings.defaultDailyWordGoal;
-  }
-  onOpen() {
-    const { contentEl } = this;
-    contentEl.empty();
-    contentEl.addClass("ws-sprint-modal");
-    contentEl.createEl("h2", { text: t2("sprintModal.setupTitle") });
-    new import_obsidian16.Setting(contentEl).setName(t2("sprintModal.durationName")).setDesc(t2("sprintModal.durationDesc")).addDropdown((d) => {
-      [10, 15, 25, 30, 45, 60].forEach((m) => {
-        d.addOption(String(m), `${m} min`);
-      });
-      d.addOption("custom", t2("sprintModal.durationCustom"));
-      d.setValue(String(this.duration));
-      d.onChange((v) => {
-        if (v === "custom") return;
-        this.duration = parseInt(v);
-      });
-    }).addText((tx) => tx.setPlaceholder(t2("sprintModal.durationCustomPlaceholder")).onChange((v) => {
-      this.duration = parseInt(v) || this.duration;
-    }));
-    new import_obsidian16.Setting(contentEl).setName(t2("sprintModal.wordGoalName")).setDesc(t2("sprintModal.wordGoalDesc")).addText((tx) => tx.setPlaceholder("0").setValue(String(this.wordGoal || "")).onChange((v) => {
-      this.wordGoal = parseInt(v) || 0;
-    }));
-    new import_obsidian16.Setting(contentEl).setName(t2("sprintModal.scopeName")).addDropdown((d) => d.addOption("file", t2("sprintModal.scopeFile")).addOption("project", t2("sprintModal.scopeProject")).setValue(this.sprintScope).onChange((v) => {
-      this.sprintScope = v;
-    }));
-    const btnRow = contentEl.createDiv("ws-modal-btn-row");
-    const startBtn = btnRow.createEl("button", {
-      cls: "mod-cta",
-      text: t2("sprintModal.startBtn")
-    });
-    startBtn.onclick = () => {
-      if (!this.duration || this.duration <= 0) {
-        new import_obsidian16.Notice(t2("sprintModal.errorDuration"));
-        return;
-      }
-      this.plugin.sprintTimer.setup(this.duration, this.wordGoal || void 0, this.sprintScope);
-      this.close();
-    };
-    const cancelBtn = btnRow.createEl("button", { text: t2("sprintModal.cancel") });
-    cancelBtn.onclick = () => this.close();
-  }
-  onClose() {
-    this.contentEl.empty();
-  }
-};
-
-// src/LauncherView.ts
+var import_obsidian18 = require("obsidian");
 var LAUNCHER_VIEW_TYPE = "writing-studio-launcher";
-var LauncherView = class extends import_obsidian17.ItemView {
+var LauncherView = class extends import_obsidian18.ItemView {
   constructor(leaf, plugin) {
     super(leaf);
     this.refreshTimer = null;
@@ -13098,6 +13336,18 @@ var LauncherView = class extends import_obsidian17.ItemView {
       void this.refresh();
     }));
     this.registerEvent(this.plugin.projectManager.onProjectsChanged(() => {
+      void this.refresh();
+    }));
+    this.registerEvent(this.plugin.studioEvents.onModeChanged(() => {
+      void this.refresh();
+    }));
+    this.registerEvent(this.plugin.studioEvents.onFocusChanged(() => {
+      void this.refresh();
+    }));
+    this.registerEvent(this.plugin.studioEvents.onTypographyChanged(() => {
+      void this.refresh();
+    }));
+    this.registerEvent(this.plugin.studioEvents.onSprintChanged(() => {
       void this.refresh();
     }));
     await this.render();
@@ -13151,7 +13401,7 @@ var LauncherView = class extends import_obsidian17.ItemView {
     const header = root.createDiv("ws-launcher-header");
     header.createSpan({ text: t2("launcher.title"), cls: "ws-launcher-title" });
     const settingsBtn = header.createEl("button", { cls: "ws-launcher-icon-btn", title: t2("launcher.settings") });
-    (0, import_obsidian17.setIcon)(settingsBtn, "settings");
+    (0, import_obsidian18.setIcon)(settingsBtn, "settings");
     settingsBtn.onclick = () => {
       var _a2, _b2;
       (_a2 = this.app.setting) == null ? void 0 : _a2.open();
@@ -13171,12 +13421,12 @@ var LauncherView = class extends import_obsidian17.ItemView {
     };
     if (project) {
       const editBtn = cardHeader.createEl("button", { cls: "ws-launcher-icon-btn", title: t2("projectModal.editTitle") });
-      (0, import_obsidian17.setIcon)(editBtn, "pencil");
+      (0, import_obsidian18.setIcon)(editBtn, "pencil");
       editBtn.onclick = () => {
         new ProjectModal(this.app, this.plugin, void 0, project).open();
       };
       const deleteBtn = cardHeader.createEl("button", { cls: "ws-launcher-icon-btn", title: t2("projectModal.deleteTitle") });
-      (0, import_obsidian17.setIcon)(deleteBtn, "trash");
+      (0, import_obsidian18.setIcon)(deleteBtn, "trash");
       deleteBtn.onclick = () => {
         confirmDeleteProject(this.app, this.plugin, project);
       };
@@ -13253,22 +13503,16 @@ var LauncherView = class extends import_obsidian17.ItemView {
         cls: `ws-launcher-mode-btn ${current === mode.id ? "is-active" : ""}`,
         title: mode.desc
       });
-      (0, import_obsidian17.setIcon)(btn.createSpan("ws-mode-icon"), mode.icon);
+      (0, import_obsidian18.setIcon)(btn.createSpan("ws-mode-icon"), mode.icon);
       btn.createSpan({ text: mode.label, cls: "ws-mode-label" });
-      btn.onclick = async () => {
-        if (current === mode.id) {
-          await this.plugin.writingModes.switchMode("none");
-        } else {
-          await this.plugin.writingModes.switchMode(mode.id);
-        }
-        await this.render();
+      btn.onclick = () => {
+        void this.plugin.writingModes.switchMode(current === mode.id ? "none" : mode.id);
       };
     }
     if (current !== "none") {
       const clearBtn = card.createEl("button", { cls: "ws-launcher-text-btn ws-launcher-clear-mode", text: t2("launcher.mode.clearMode") });
-      clearBtn.onclick = async () => {
-        await this.plugin.writingModes.switchMode("none");
-        await this.render();
+      clearBtn.onclick = () => {
+        void this.plugin.writingModes.switchMode("none");
       };
     }
   }
@@ -13282,7 +13526,6 @@ var LauncherView = class extends import_obsidian17.ItemView {
         isOn: () => this.plugin.focusMode.isActive(),
         toggle: () => {
           this.plugin.focusMode.toggle();
-          void this.render();
         }
       },
       {
@@ -13290,7 +13533,6 @@ var LauncherView = class extends import_obsidian17.ItemView {
         isOn: () => this.plugin.typographyMode.isActive(),
         toggle: () => {
           void this.plugin.typographyMode.toggle();
-          void this.render();
         }
       }
     ];
@@ -13348,14 +13590,7 @@ var LauncherView = class extends import_obsidian17.ItemView {
         icon: "globe",
         label: t2("launcher.action.publishToWordPress"),
         action: () => {
-          const leaf = this.app.workspace.getMostRecentLeaf();
-          const view = leaf == null ? void 0 : leaf.view;
-          const file = view instanceof import_obsidian17.MarkdownView ? view.file : null;
-          if (file instanceof import_obsidian17.TFile) {
-            new PublishModal(this.app, this.plugin, file.path).open();
-          } else {
-            new import_obsidian17.Notice(t2("launcher.openDocumentFirst"));
-          }
+          this.plugin.publishCurrentFile();
         }
       }
     ];
@@ -13363,7 +13598,7 @@ var LauncherView = class extends import_obsidian17.ItemView {
     for (const a of actions) {
       const btn = grid.createEl("button", { cls: "ws-launcher-action-grid-btn", title: a.label });
       const iconEl = btn.createDiv("ws-launcher-grid-icon");
-      (0, import_obsidian17.setIcon)(iconEl, a.icon);
+      (0, import_obsidian18.setIcon)(iconEl, a.icon);
       btn.createDiv({ text: a.label, cls: "ws-launcher-grid-label" });
       btn.onclick = a.action;
     }
@@ -13386,7 +13621,6 @@ var LauncherView = class extends import_obsidian17.ItemView {
       const btn = presets.createEl("button", { cls: "ws-launcher-preset-btn", text: `${mins}m` });
       btn.onclick = () => {
         this.plugin.sprintTimer.setup(mins);
-        void this.render();
       };
     }
   }
@@ -13430,7 +13664,7 @@ var LauncherView = class extends import_obsidian17.ItemView {
 };
 
 // src/FocusMode.ts
-var import_obsidian18 = require("obsidian");
+var import_obsidian19 = require("obsidian");
 var import_view = require("@codemirror/view");
 var import_state = require("@codemirror/state");
 var FOCUS_CLASS = "writing-studio-focus-mode";
@@ -13465,6 +13699,7 @@ var FocusMode = class {
       this.hideSidebars();
     }
     this.showToolbar();
+    this.plugin.studioEvents.announceFocusChanged(true);
   }
   disable() {
     this.active = false;
@@ -13474,6 +13709,7 @@ var FocusMode = class {
       this.restoreSidebars();
     }
     this.hideToolbar();
+    this.plugin.studioEvents.announceFocusChanged(false);
   }
   // Applies the focus font size override while focus mode is active.
   // 0 means no override: the class is absent and the theme default applies.
@@ -13551,7 +13787,7 @@ var FocusMode = class {
     const leaf = this.app.workspace.getMostRecentLeaf();
     if (!leaf) return 0;
     const view = leaf.view;
-    if (view instanceof import_obsidian18.MarkdownView) {
+    if (view instanceof import_obsidian19.MarkdownView) {
       const content2 = ((_a2 = view.editor) == null ? void 0 : _a2.getValue()) || "";
       return this.plugin.fmManager.countWords(content2);
     }
@@ -13669,6 +13905,7 @@ var TypographyMode = class {
     this.active = true;
     this.applyCustomProperties();
     activeDocument.body.classList.add("writing-studio-typography");
+    this.plugin.studioEvents.announceTypographyChanged(true);
     if (this.plugin.settings.persistTypography) {
       this.plugin.settings.typographyModeActive = true;
       await this.plugin.saveSettings();
@@ -13678,6 +13915,7 @@ var TypographyMode = class {
     this.active = false;
     this.removeCustomProperties();
     activeDocument.body.classList.remove("writing-studio-typography");
+    this.plugin.studioEvents.announceTypographyChanged(false);
     if (this.plugin.settings.persistTypography) {
       this.plugin.settings.typographyModeActive = false;
       await this.plugin.saveSettings();
@@ -13725,7 +13963,7 @@ var TypographyMode = class {
 };
 
 // src/WritingModes.ts
-var import_obsidian19 = require("obsidian");
+var import_obsidian20 = require("obsidian");
 
 // models/WritingMode.ts
 var WRITING_MODE_CONFIGS = {
@@ -13804,11 +14042,12 @@ var WritingModes = class {
       this.restoreEditorViewMode();
     }
     this.updateStatusBar();
+    this.plugin.studioEvents.announceModeChanged(mode);
     this.plugin.settings.currentWritingMode = mode;
     await this.plugin.saveSettings();
     if (!silent) {
       const modeLabel = mode === "none" ? t2("writingModes.normal") : t2(`launcher.mode.${mode}`);
-      new import_obsidian19.Notice(t2("writingModes.switchedTo", { mode: modeLabel }));
+      new import_obsidian20.Notice(t2("writingModes.switchedTo", { mode: modeLabel }));
     }
   }
   collapseSidebars() {
@@ -13825,7 +14064,7 @@ var WritingModes = class {
   }
   forceReadingView() {
     const leaf = this.app.workspace.getMostRecentLeaf();
-    if (!leaf || !(leaf.view instanceof import_obsidian19.MarkdownView)) return;
+    if (!leaf || !(leaf.view instanceof import_obsidian20.MarkdownView)) return;
     const mode = leaf.view.getMode();
     if (mode !== "preview") {
       this.reviewPrior = { leaf, mode };
@@ -13835,7 +14074,7 @@ var WritingModes = class {
   restoreEditorViewMode() {
     const prior = this.reviewPrior;
     this.reviewPrior = null;
-    if (!prior || !(prior.leaf.view instanceof import_obsidian19.MarkdownView)) return;
+    if (!prior || !(prior.leaf.view instanceof import_obsidian20.MarkdownView)) return;
     void this.setLeafMode(prior.leaf, prior.mode);
   }
   async setLeafMode(leaf, mode) {
@@ -13859,7 +14098,7 @@ var WritingModes = class {
       edit: t2("writingModes.statusEdit"),
       review: t2("writingModes.statusReview")
     };
-    (0, import_obsidian19.setIcon)(this.statusBarEl.createSpan("ws-status-mode-icon"), icons[mode]);
+    (0, import_obsidian20.setIcon)(this.statusBarEl.createSpan("ws-status-mode-icon"), icons[mode]);
     this.statusBarEl.createSpan({ text: labels[mode] });
   }
   restore() {
@@ -13880,7 +14119,7 @@ var WritingModes = class {
 };
 
 // src/SprintTimer.ts
-var import_obsidian20 = require("obsidian");
+var import_obsidian21 = require("obsidian");
 function computeSprintWords(scope, primaryFile, baselines, currents, projectPrefix) {
   var _a2, _b2, _c;
   if (scope === "project") {
@@ -13918,12 +14157,20 @@ var SprintTimer = class {
   isActive() {
     return this.state !== null && this.state.active;
   }
+  // Armed but not started — the overlay is showing its ready state
+  isReady() {
+    return this.state !== null && this.state.ready;
+  }
+  getDurationMinutes() {
+    var _a2, _b2;
+    return (_b2 = (_a2 = this.state) == null ? void 0 : _a2.durationMinutes) != null ? _b2 : null;
+  }
   // Opens overlay in paused/ready state — called by SprintModal and preset buttons.
   // The clock does not run until the user presses Start on the overlay itself.
   setup(durationMinutes, wordCountGoal, projectScope = "file") {
     var _a2;
     if (((_a2 = this.state) == null ? void 0 : _a2.active) && !this.state.ready) {
-      new import_obsidian20.Notice(t2("sprint.alreadyRunning"));
+      new import_obsidian21.Notice(t2("sprint.alreadyRunning"));
       return;
     }
     this.state = {
@@ -13942,6 +14189,7 @@ var SprintTimer = class {
     };
     this.showFloating();
     this.updateDisplay();
+    this.plugin.studioEvents.announceSprintChanged();
   }
   pause() {
     if (!this.state || !this.state.active || this.state.paused) return;
@@ -13965,8 +14213,9 @@ var SprintTimer = class {
     }
     this.startInterval();
     this.updateDisplay();
+    this.plugin.studioEvents.announceSprintChanged();
     if (wasReady) {
-      new import_obsidian20.Notice(t2("sprint.started", { minutes: this.state.durationMinutes }));
+      new import_obsidian21.Notice(t2("sprint.started", { minutes: this.state.durationMinutes }));
     }
   }
   stop() {
@@ -13977,6 +14226,7 @@ var SprintTimer = class {
     this.state = null;
     this.hideFloating();
     if (this.statusBarEl) this.statusBarEl.addClass("ws-hidden");
+    this.plugin.studioEvents.announceSprintChanged();
     if (!wasReady && session && this.onComplete) void this.onComplete(session);
   }
   buildSession() {
@@ -14018,7 +14268,7 @@ var SprintTimer = class {
     var _a2;
     if (((_a2 = this.state) == null ? void 0 : _a2.projectScope) !== "project") return null;
     const project = this.plugin.projectManager.getActiveProject();
-    return project ? (0, import_obsidian20.normalizePath)(project.folderPath) + "/" : null;
+    return project ? (0, import_obsidian21.normalizePath)(project.folderPath) + "/" : null;
   }
   getElapsedMs() {
     if (!this.state) return 0;
@@ -14062,7 +14312,7 @@ var SprintTimer = class {
     if (this.plugin.settings.soundNotifications) {
       this.playBell();
     }
-    new import_obsidian20.Notice(t2("sprint.complete"), 5e3);
+    new import_obsidian21.Notice(t2("sprint.complete"), 5e3);
     const session = this.buildSession();
     this.state = null;
     this.hideFloating();
@@ -14190,7 +14440,7 @@ var SprintTimer = class {
     const leaf = this.app.workspace.getMostRecentLeaf();
     if (!leaf) return;
     const view = leaf.view;
-    if (!(view instanceof import_obsidian20.MarkdownView) || !view.file) return;
+    if (!(view instanceof import_obsidian21.MarkdownView) || !view.file) return;
     const path = view.file.path;
     const count = this.plugin.fmManager.countWords(((_a2 = view.editor) == null ? void 0 : _a2.getValue()) || "");
     if (!s.baselines.has(path)) {
@@ -14202,7 +14452,7 @@ var SprintTimer = class {
     var _a2, _b2;
     const leaf = this.app.workspace.getMostRecentLeaf();
     const view = leaf == null ? void 0 : leaf.view;
-    return view instanceof import_obsidian20.MarkdownView ? (_b2 = (_a2 = view.file) == null ? void 0 : _a2.path) != null ? _b2 : null : null;
+    return view instanceof import_obsidian21.MarkdownView ? (_b2 = (_a2 = view.file) == null ? void 0 : _a2.path) != null ? _b2 : null : null;
   }
   destroy() {
     this.stopInterval();
@@ -14211,7 +14461,7 @@ var SprintTimer = class {
 };
 
 // src/ExportEngine.ts
-var import_obsidian21 = require("obsidian");
+var import_obsidian22 = require("obsidian");
 var import_child_process = require("child_process");
 var import_util = require("util");
 
@@ -15595,11 +15845,11 @@ var ExportEngine = class {
   }
   async export(opts) {
     const project = this.plugin.projectManager.getActiveProject();
-    const outputDir = project ? (0, import_obsidian21.normalizePath)(`${project.folderPath}/Exports`) : (0, import_obsidian21.normalizePath)("Exports");
+    const outputDir = project ? (0, import_obsidian22.normalizePath)(`${project.folderPath}/Exports`) : (0, import_obsidian22.normalizePath)("Exports");
     await this.files.ensureFolder(outputDir);
     const timestamp = (/* @__PURE__ */ new Date()).toISOString().replace(/[:.]/g, "-").slice(0, 19);
     const projectTitle = (project == null ? void 0 : project.title.replace(/[\\/:*?"<>|]/g, "-")) || "export";
-    const baseFile = (0, import_obsidian21.normalizePath)(`${outputDir}/${projectTitle}-${timestamp}`);
+    const baseFile = (0, import_obsidian22.normalizePath)(`${outputDir}/${projectTitle}-${timestamp}`);
     if (opts.format === "epub") {
       return this.exportEpub(opts, baseFile);
     }
@@ -15633,8 +15883,8 @@ var ExportEngine = class {
     if (opts.scope === "current") {
       const leaf = this.app.workspace.getMostRecentLeaf();
       const view = leaf == null ? void 0 : leaf.view;
-      const file = view instanceof import_obsidian21.MarkdownView ? view.file : null;
-      if (!(file instanceof import_obsidian21.TFile)) {
+      const file = view instanceof import_obsidian22.MarkdownView ? view.file : null;
+      if (!(file instanceof import_obsidian22.TFile)) {
         throw new Error(t2("exportEngine.noActiveDocument"));
       }
       let content2 = await this.files.readText(file.path);
@@ -15679,7 +15929,7 @@ var ExportEngine = class {
       coverImagePath: opts.coverImagePath,
       chapters
     }, outputPath);
-    new import_obsidian21.Notice(t2("exportEngine.epubExported", { path: outputPath }));
+    new import_obsidian22.Notice(t2("exportEngine.epubExported", { path: outputPath }));
     return outputPath;
   }
   preprocessObsidianMarkdown(md) {
@@ -15703,8 +15953,8 @@ ${today}`);
     if (opts.scope === "current") {
       const leaf = this.app.workspace.getMostRecentLeaf();
       const view = leaf == null ? void 0 : leaf.view;
-      const file = view instanceof import_obsidian21.MarkdownView ? view.file : null;
-      if (!(file instanceof import_obsidian21.TFile)) {
+      const file = view instanceof import_obsidian22.MarkdownView ? view.file : null;
+      if (!(file instanceof import_obsidian22.TFile)) {
         throw new Error(t2("exportEngine.noActiveDocument"));
       }
       const content2 = await this.processPath(file.path, opts);
@@ -15795,7 +16045,7 @@ ${body}`);
   </div>
 </div>`;
     const fullHtml = `<!DOCTYPE html>
-<html lang="${(0, import_obsidian21.getLanguage)()}">
+<html lang="${(0, import_obsidian22.getLanguage)()}">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -15810,19 +16060,19 @@ ${bodyHtml}
 </body>
 </html>`;
     await this.files.writeText(outputPath, fullHtml);
-    new import_obsidian21.Notice(t2("exportEngine.manuscriptExported", { path: outputPath }));
+    new import_obsidian22.Notice(t2("exportEngine.manuscriptExported", { path: outputPath }));
     return outputPath;
   }
   async exportMarkdown(content2, outputPath) {
     await this.files.writeText(outputPath, content2);
-    new import_obsidian21.Notice(t2("exportEngine.exportedTo", { path: outputPath }));
+    new import_obsidian22.Notice(t2("exportEngine.exportedTo", { path: outputPath }));
     return outputPath;
   }
   async exportHtml(content2, outputPath, title, opts) {
     const font = opts.font || "Georgia";
     const fontSize = opts.fontSize || 16;
     const html = `<!DOCTYPE html>
-<html lang="${(0, import_obsidian21.getLanguage)()}">
+<html lang="${(0, import_obsidian22.getLanguage)()}">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -15845,7 +16095,7 @@ ${markdownToHtml(content2)}
 </body>
 </html>`;
     await this.files.writeText(outputPath, html);
-    new import_obsidian21.Notice(t2("exportEngine.exportedHtmlTo", { path: outputPath }));
+    new import_obsidian22.Notice(t2("exportEngine.exportedHtmlTo", { path: outputPath }));
     return outputPath;
   }
   async exportPandoc(content2, outputPath, opts) {
@@ -15861,7 +16111,7 @@ ${markdownToHtml(content2)}
         args.push("-V", `mainfont=${safeFont}`);
       }
       await execFileAsync(pandocPath, args);
-      new import_obsidian21.Notice(t2("exportEngine.exportedTo", { path: outputPath }));
+      new import_obsidian22.Notice(t2("exportEngine.exportedTo", { path: outputPath }));
       return outputPath;
     } catch (e) {
       throw new Error(`Pandoc export failed: ${e instanceof Error ? e.message : String(e)}
@@ -15874,7 +16124,7 @@ Ensure pandoc is installed.`);
     try {
       return await this.exportPandoc(content2, outputPath, opts);
     } catch (e) {
-      new import_obsidian21.Notice(t2("exportEngine.pdfRequiresPandoc"));
+      new import_obsidian22.Notice(t2("exportEngine.pdfRequiresPandoc"));
       throw e;
     }
   }
@@ -15884,7 +16134,7 @@ Ensure pandoc is installed.`);
 };
 
 // src/WordPressClient.ts
-var import_obsidian22 = require("obsidian");
+var import_obsidian23 = require("obsidian");
 var WordPressClient = class {
   authHeaders(site) {
     const credentials = `${site.username}:${site.appPassword}`;
@@ -15901,7 +16151,7 @@ var WordPressClient = class {
   async testConnection(site) {
     var _a2;
     try {
-      const resp = await (0, import_obsidian22.requestUrl)({
+      const resp = await (0, import_obsidian23.requestUrl)({
         url: this.apiUrl(site, "users/me"),
         method: "GET",
         headers: this.authHeaders(site),
@@ -15916,7 +16166,7 @@ var WordPressClient = class {
       const data = resp.json;
       let siteName = site.url;
       try {
-        const siteResp = await (0, import_obsidian22.requestUrl)({
+        const siteResp = await (0, import_obsidian23.requestUrl)({
           url: `${site.url.replace(/\/$/, "")}/wp-json/`,
           method: "GET",
           headers: this.authHeaders(site),
@@ -15941,7 +16191,7 @@ var WordPressClient = class {
     try {
       const all = [];
       for (let page = 1; page <= 20; page++) {
-        const resp = await (0, import_obsidian22.requestUrl)({
+        const resp = await (0, import_obsidian23.requestUrl)({
           url: this.apiUrl(site, `categories?per_page=100&page=${page}`),
           method: "GET",
           headers: this.authHeaders(site),
@@ -15962,7 +16212,7 @@ var WordPressClient = class {
       }
       return all;
     } catch (e) {
-      new import_obsidian22.Notice(t2("wpClient.fetchCategoriesFailed", { error: e instanceof Error ? e.message : String(e) }));
+      new import_obsidian23.Notice(t2("wpClient.fetchCategoriesFailed", { error: e instanceof Error ? e.message : String(e) }));
       return [];
     }
   }
@@ -15982,7 +16232,7 @@ var WordPressClient = class {
     if (opts.featuredMediaId) body.featured_media = opts.featuredMediaId;
     if (opts.scheduledDate) body.date = opts.scheduledDate;
     const url = opts.existingPostId ? this.apiUrl(site, `posts/${opts.existingPostId}`) : this.apiUrl(site, "posts");
-    const resp = await (0, import_obsidian22.requestUrl)({
+    const resp = await (0, import_obsidian23.requestUrl)({
       url,
       method: opts.existingPostId ? "PUT" : "POST",
       headers: this.authHeaders(site),
@@ -16006,7 +16256,7 @@ var WordPressClient = class {
     const skipped = [];
     for (const name of tagNames) {
       try {
-        const searchResp = await (0, import_obsidian22.requestUrl)({
+        const searchResp = await (0, import_obsidian23.requestUrl)({
           url: this.apiUrl(site, `tags?search=${encodeURIComponent(name)}`),
           method: "GET",
           headers: this.authHeaders(site),
@@ -16020,7 +16270,7 @@ var WordPressClient = class {
             continue;
           }
         }
-        const createResp = await (0, import_obsidian22.requestUrl)({
+        const createResp = await (0, import_obsidian23.requestUrl)({
           url: this.apiUrl(site, "tags"),
           method: "POST",
           headers: this.authHeaders(site),
@@ -16037,7 +16287,7 @@ var WordPressClient = class {
       }
     }
     if (skipped.length > 0) {
-      new import_obsidian22.Notice(t2("wpClient.tagsSkipped", { tags: skipped.join(", ") }));
+      new import_obsidian23.Notice(t2("wpClient.tagsSkipped", { tags: skipped.join(", ") }));
     }
     return ids;
   }
@@ -16058,10 +16308,10 @@ var WordPressClient = class {
 };
 
 // src/ProjectManager.ts
-var import_obsidian24 = require("obsidian");
+var import_obsidian25 = require("obsidian");
 
 // src/scaffold.ts
-var import_obsidian23 = require("obsidian");
+var import_obsidian24 = require("obsidian");
 function templateDoc(f) {
   var _a2, _b2, _c;
   const extra = Object.entries((_a2 = f.extraFields) != null ? _a2 : {}).map(([k, v]) => `
@@ -16096,9 +16346,9 @@ var TemplateScaffolder = class {
   }
   async apply(project, manifest) {
     var _a2;
-    const chapters = (0, import_obsidian23.normalizePath)(`${project.folderPath}/Chapters`);
+    const chapters = (0, import_obsidian24.normalizePath)(`${project.folderPath}/Chapters`);
     for (const folder of (_a2 = manifest.folders) != null ? _a2 : []) {
-      await this.files.ensureFolder((0, import_obsidian23.normalizePath)(`${chapters}/${folder}`));
+      await this.files.ensureFolder((0, import_obsidian24.normalizePath)(`${chapters}/${folder}`));
     }
     const items = await this.buildItems(manifest.items, chapters);
     return { version: "2.0", projectId: project.id, items };
@@ -16110,7 +16360,7 @@ var TemplateScaffolder = class {
     for (const node of nodes) {
       let filePath = "";
       if (node.fileName) {
-        filePath = (0, import_obsidian23.normalizePath)(`${chapters}/${node.fileName}.md`);
+        filePath = (0, import_obsidian24.normalizePath)(`${chapters}/${node.fileName}.md`);
         if (!this.files.exists(filePath)) {
           await this.files.writeText(filePath, (_a2 = node.content) != null ? _a2 : "");
         }
@@ -16511,7 +16761,7 @@ var TEMPLATE_MANIFESTS = {
 };
 
 // src/ProjectManager.ts
-var ProjectManager = class extends import_obsidian24.Events {
+var ProjectManager = class extends import_obsidian25.Events {
   constructor(plugin, files) {
     super();
     this.projects = /* @__PURE__ */ new Map();
@@ -16549,11 +16799,11 @@ var ProjectManager = class extends import_obsidian24.Events {
     this.projects.clear();
     const rootFolder = this.plugin.settings.defaultProjectFolder;
     if (!rootFolder) return;
-    const subfolders = this.files.listSubfolders((0, import_obsidian24.normalizePath)(rootFolder));
+    const subfolders = this.files.listSubfolders((0, import_obsidian25.normalizePath)(rootFolder));
     await Promise.all(subfolders.map((f) => this.loadProject(f)));
   }
   async loadProject(folderPath) {
-    const content2 = await this.files.readText((0, import_obsidian24.normalizePath)(`${folderPath}/_project.json`));
+    const content2 = await this.files.readText((0, import_obsidian25.normalizePath)(`${folderPath}/_project.json`));
     if (content2 === null) return null;
     try {
       const project = JSON.parse(content2);
@@ -16561,7 +16811,7 @@ var ProjectManager = class extends import_obsidian24.Events {
       this.projects.set(project.id, project);
       return project;
     } catch (e) {
-      new import_obsidian24.Notice(t2("projectManager.corruptProject", { folder: folderPath }));
+      new import_obsidian25.Notice(t2("projectManager.corruptProject", { folder: folderPath }));
       return null;
     }
   }
@@ -16569,14 +16819,14 @@ var ProjectManager = class extends import_obsidian24.Events {
     const rootFolder = this.plugin.settings.defaultProjectFolder || "Writing Projects";
     const id = this.uniqueId("project");
     const folderName = title.replace(/[\\/:*?"<>|]/g, "-");
-    const folderPath = (0, import_obsidian24.normalizePath)(`${rootFolder}/${folderName}`);
+    const folderPath = (0, import_obsidian25.normalizePath)(`${rootFolder}/${folderName}`);
     if (this.files.exists(folderPath)) {
       throw new Error(t2("projectManager.errorFolderExists", { folder: folderName }));
     }
     await this.files.ensureFolder(folderPath);
-    await this.files.ensureFolder((0, import_obsidian24.normalizePath)(`${folderPath}/Chapters`));
-    await this.files.ensureFolder((0, import_obsidian24.normalizePath)(`${folderPath}/Research`));
-    await this.files.ensureFolder((0, import_obsidian24.normalizePath)(`${folderPath}/Exports`));
+    await this.files.ensureFolder((0, import_obsidian25.normalizePath)(`${folderPath}/Chapters`));
+    await this.files.ensureFolder((0, import_obsidian25.normalizePath)(`${folderPath}/Research`));
+    await this.files.ensureFolder((0, import_obsidian25.normalizePath)(`${folderPath}/Exports`));
     const now = localDateString();
     const project = {
       id,
@@ -16606,7 +16856,7 @@ var ProjectManager = class extends import_obsidian24.Events {
   }
   async saveProject(project) {
     project.modified = localDateString();
-    const path = (0, import_obsidian24.normalizePath)(`${project.folderPath}/_project.json`);
+    const path = (0, import_obsidian25.normalizePath)(`${project.folderPath}/_project.json`);
     await this.writeJson(path, project);
     this.projects.set(project.id, project);
     this.trigger("projects-changed");
@@ -16614,7 +16864,7 @@ var ProjectManager = class extends import_obsidian24.Events {
   async loadBinder(project) {
     const cached = this.binderCache.get(project.id);
     if (cached) return cached;
-    const path = (0, import_obsidian24.normalizePath)(`${project.folderPath}/_binder.json`);
+    const path = (0, import_obsidian25.normalizePath)(`${project.folderPath}/_binder.json`);
     let content2;
     try {
       content2 = await this.files.readText(path);
@@ -16629,8 +16879,8 @@ var ProjectManager = class extends import_obsidian24.Events {
       this.binderCache.set(project.id, data);
       return data;
     } catch (e) {
-      await this.files.writeText((0, import_obsidian24.normalizePath)(`${project.folderPath}/_binder.json.bak`), content2);
-      new import_obsidian24.Notice(t2("projectManager.corruptBinder", { project: project.title }));
+      await this.files.writeText((0, import_obsidian25.normalizePath)(`${project.folderPath}/_binder.json.bak`), content2);
+      new import_obsidian25.Notice(t2("projectManager.corruptBinder", { project: project.title }));
       return { version: "2.0", projectId: project.id, items: [] };
     }
   }
@@ -16642,7 +16892,7 @@ var ProjectManager = class extends import_obsidian24.Events {
     const project = this.projects.get(binder.projectId);
     if (!project) return;
     this.binderCache.set(binder.projectId, binder);
-    const path = (0, import_obsidian24.normalizePath)(`${project.folderPath}/_binder.json`);
+    const path = (0, import_obsidian25.normalizePath)(`${project.folderPath}/_binder.json`);
     await this.writeJson(path, binder);
     this.trigger("binder-changed", binder);
   }
@@ -16650,9 +16900,9 @@ var ProjectManager = class extends import_obsidian24.Events {
     const binder = await this.loadBinder(project);
     const now = localDateString();
     const baseName = title.replace(/[\\/:*?"<>|]/g, "-");
-    let filePath = (0, import_obsidian24.normalizePath)(`${project.folderPath}/Chapters/${baseName}.md`);
+    let filePath = (0, import_obsidian25.normalizePath)(`${project.folderPath}/Chapters/${baseName}.md`);
     for (let n = 2; this.files.exists(filePath); n++) {
-      filePath = (0, import_obsidian24.normalizePath)(`${project.folderPath}/Chapters/${baseName} ${n}.md`);
+      filePath = (0, import_obsidian25.normalizePath)(`${project.folderPath}/Chapters/${baseName} ${n}.md`);
     }
     const item = {
       id: this.uniqueId("item"),
@@ -16789,14 +17039,14 @@ tags: [writing-studio]
     }
   }
   async logSprintSession(project, session) {
-    const logPath = (0, import_obsidian24.normalizePath)(`${project.folderPath}/_writing-log.json`);
+    const logPath = (0, import_obsidian25.normalizePath)(`${project.folderPath}/_writing-log.json`);
     let log = [];
     const content2 = await this.files.readText(logPath);
     if (content2 !== null) {
       try {
         log = JSON.parse(content2);
       } catch (e) {
-        new import_obsidian24.Notice(t2("projectManager.corruptLog", { project: project.title }));
+        new import_obsidian25.Notice(t2("projectManager.corruptLog", { project: project.title }));
       }
     }
     log.push(session);
@@ -16807,7 +17057,7 @@ tags: [writing-studio]
     await this.writeJson(logPath, log);
   }
   async getWritingLog(project) {
-    const logPath = (0, import_obsidian24.normalizePath)(`${project.folderPath}/_writing-log.json`);
+    const logPath = (0, import_obsidian25.normalizePath)(`${project.folderPath}/_writing-log.json`);
     try {
       const content2 = await this.files.readText(logPath);
       return content2 === null ? [] : JSON.parse(content2);
@@ -16816,7 +17066,7 @@ tags: [writing-studio]
     }
   }
   async initWritingLog(project) {
-    const logPath = (0, import_obsidian24.normalizePath)(`${project.folderPath}/_writing-log.json`);
+    const logPath = (0, import_obsidian25.normalizePath)(`${project.folderPath}/_writing-log.json`);
     await this.writeJson(logPath, []);
   }
   async writeJson(path, data) {
@@ -16899,7 +17149,7 @@ tags: [writing-studio]
 };
 
 // src/StatsTracker.ts
-var import_obsidian25 = require("obsidian");
+var import_obsidian26 = require("obsidian");
 var StatsTracker = class {
   constructor(plugin) {
     this.sessionBaselines = /* @__PURE__ */ new Map();
@@ -16956,7 +17206,7 @@ ${t2("statsTracker.dailyNote.heading")}
 - ${t2("statsTracker.dailyNote.sessionTotal")} ${t2("statsTracker.dailyNote.sessionTotalValue", { duration: session.duration })}
 `;
     const dailyFile = this.app.vault.getAbstractFileByPath(dailyNotePath);
-    if (dailyFile instanceof import_obsidian25.TFile) {
+    if (dailyFile instanceof import_obsidian26.TFile) {
       await this.app.vault.append(dailyFile, "\n" + entry);
       return;
     }
@@ -16970,7 +17220,7 @@ ${t2("statsTracker.dailyNote.heading")}
     const options = (_d = (_c = (_b2 = (_a2 = this.app.internalPlugins) == null ? void 0 : _a2.plugins) == null ? void 0 : _b2["daily-notes"]) == null ? void 0 : _c.instance) == null ? void 0 : _d.options;
     const fileName = moment().format((options == null ? void 0 : options.format) || "YYYY-MM-DD");
     const folder = (options == null ? void 0 : options.folder) || "";
-    return (0, import_obsidian25.normalizePath)(folder ? `${folder}/${fileName}.md` : `${fileName}.md`);
+    return (0, import_obsidian26.normalizePath)(folder ? `${folder}/${fileName}.md` : `${fileName}.md`);
   }
   updateFileWordCount(path, wordCount) {
     if (!this.sessionBaselines.has(path)) {
@@ -17009,7 +17259,7 @@ ${t2("statsTracker.dailyNote.heading")}
     const items = this.plugin.projectManager.flattenBinder(binder.items);
     const counts = await Promise.all(items.map(async (item) => {
       const file = this.app.vault.getAbstractFileByPath(item.filePath);
-      if (!(file instanceof import_obsidian25.TFile)) return 0;
+      if (!(file instanceof import_obsidian26.TFile)) return 0;
       const content2 = await this.app.vault.cachedRead(file);
       return this.plugin.fmManager.countWords(content2);
     }));
@@ -17091,7 +17341,7 @@ ${t2("statsTracker.dailyNote.heading")}
 };
 
 // src/FrontmatterManager.ts
-var import_obsidian26 = require("obsidian");
+var import_obsidian27 = require("obsidian");
 var FrontmatterManager = class {
   constructor(plugin) {
     this.pendingUpdates = /* @__PURE__ */ new Map();
@@ -17117,7 +17367,7 @@ var FrontmatterManager = class {
     if (file.extension !== "md") return false;
     const projectFolder = this.plugin.settings.defaultProjectFolder;
     if (!projectFolder) return false;
-    return file.path.startsWith((0, import_obsidian26.normalizePath)(projectFolder) + "/");
+    return file.path.startsWith((0, import_obsidian27.normalizePath)(projectFolder) + "/");
   }
   async updateFrontmatter(file) {
     this.writingFiles.add(file.path);
@@ -17148,10 +17398,10 @@ var FrontmatterManager = class {
 };
 
 // src/SettingsTab.ts
-var import_obsidian27 = require("obsidian");
+var import_obsidian28 = require("obsidian");
 
 // README.md
-var README_default = '<p align="center">\r\n  <img src="assets/logo.png" width="120" alt="Writing Studio logo">\r\n</p>\r\n\r\n# Writing Studio\r\n\r\n**Version 2.7.0** \xB7 Desktop only\r\n\r\n![GitHub all releases](https://img.shields.io/github/downloads/writerP-777/obsidian-writing-studio/total)\r\n[![OpenSSF Best Practices](https://www.bestpractices.dev/projects/12832/badge)](https://www.bestpractices.dev/projects/12832)\r\n\r\nWriting Studio turns Obsidian into a dedicated environment for serious nonfiction work \u2014 from your first research notes to a finished, exported manuscript. It bundles a project binder, writing modes, focus and typography tools, sprint timer, progress tracking, manuscript export, and WordPress publishing into a single plugin. A built-in sidebar file explorer lets you browse, preview, and pull content from anywhere in your vault without leaving your draft.\r\n\r\n<p align="center">\r\n  <img src="assets/sidebar-explorer-screenshot.png" alt="Writing Studio with the Launcher panel open on the left, an active draft in the center, and the Folder Sidebar Explorer open to a research folder on the right" width="900">\r\n  <br>\r\n  <em>Writing Studio in use \u2014 Launcher (left), active draft with word count goal banner (center), Folder Sidebar Explorer open to a research folder (right).</em>\r\n</p>\r\n\r\n<p align="center">\r\n  <a href="https://buymeacoffee.com/writerp777">\r\n    <img src="https://img.buymeacoffee.com/button-api/?text=Buy%20me%20a%20coffee&slug=writerp777&button_colour=c9a84c&font_colour=000000&font_family=Georgia&outline_colour=000000&coffee_colour=ffffff" alt="Buy me a coffee" height="40">\r\n  </a>\r\n</p>\r\n\r\n## Contents\r\n\r\n- [Features](#features)\r\n- [Language support](#language-support)\r\n- [Writing Studio Launcher](#writing-studio-launcher)\r\n- [Folder Sidebar Explorer](#folder-sidebar-explorer)\r\n- [Your Project](#your-project)\r\n- [Your Writing Environment](#your-writing-environment)\r\n- [Tracking Your Progress](#tracking-your-progress)\r\n- [Getting Your Work Out](#getting-your-work-out)\r\n- [Supporting Tools](#supporting-tools)\r\n- [Context Menus](#context-menus)\r\n- [Commands Reference](#commands-reference)\r\n- [Settings Overview](#settings-overview)\r\n- [Ribbon Icon](#ribbon-icon)\r\n- [Installation](#installation)\r\n- [Requirements](#requirements)\r\n- [Reporting a Bug](#reporting-a-bug)\r\n- [Security](#security)\r\n\r\n---\r\n\r\n## Features\r\n\r\n**Writing Binder** \u2014 Organize your manuscript as an ordered collection of documents with per-item status, word count, and export flags. Drag chapters into order, toggle items in or out of export, and add files from anywhere in your vault.\r\n\r\n**Project Manager** \u2014 Create projects from six templates (blank, book, article series, blog collection, journal article, magazine article), set a total word count goal, and switch between projects from the Launcher.\r\n\r\n**Compile Preview** \u2014 Concatenate all binder documents in order and render them as a finished manuscript in a split pane, without exporting.\r\n\r\n**Writing Modes** \u2014 Switch between Draft (distraction-free), Edit (full tooling), and Review (read-only) modes from the status bar, command palette, context menu, or Launcher.\r\n\r\n**Focus Mode** \u2014 Dim everything except the paragraph or sentence you are writing. Configurable dim level, font size override, sidebar collapse, and typewriter scroll.\r\n\r\n**Typography Mode** \u2014 Apply a curated font, constrained line length, and controlled line height to the editor. Fourteen font options including iA Writer fonts, Google Fonts, and custom system fonts.\r\n\r\n**Sprint Timer** \u2014 Run timed writing sessions with a draggable floating overlay. Set duration, word goal, and scope (file or project). Quick-start presets (10 m, 15 m, 25 m) available from the Launcher.\r\n\r\n**Progress Tracking** \u2014 Live word counts in the status bar and Launcher, session delta tracking, per-document and per-project word count goals with inline progress banners, and a 30-day writing log with streak tracking.\r\n\r\n**Export Engine** \u2014 Export to Manuscript (HTML), PDF, Word (.docx), RTF, HTML, Markdown, and EPUB. Manuscript format produces industry-standard layout with no external tools; other formats require Pandoc.\r\n\r\n**WordPress Publishing** \u2014 Publish directly to WordPress from Obsidian. Set post title, status, categories, tags, excerpt, and scheduled date. Supports multiple sites with per-site credentials and connection testing.\r\n\r\n**Folder Sidebar Explorer** \u2014 Browse any vault folder in a sidebar panel. Search by name or file content, preview Markdown files and images inline, and insert selected text directly into the active editor.\r\n\r\n## Language support\r\n\r\nWriting Studio is available in the following languages in addition to English:\r\n\r\n- Arabic\r\n- Chinese (Simplified)\r\n- French\r\n- German\r\n- Japanese\r\n- Korean\r\n- Portuguese (Brazil)\r\n- Russian\r\n- Spanish\r\n\r\n**To change the language:** Open **Settings \u2192 General** in Obsidian, scroll to **Language**, and select your preferred language from the list. Restart Obsidian for the change to take effect. Writing Studio will display in the selected language if it is supported.\r\n\r\n**Found a translation error or missing text?** Please open an issue on GitHub \u2014 [Submit a bug report or enhancement request](https://github.com/writerP-777/obsidian-writing-studio/issues/new) \u2014 and include the language, the location in the plugin where the text appears, and what it currently says. We will address it in the next release.\r\n\r\n### Writing Studio Launcher\r\n\r\nThe Launcher is your home base in Writing Studio \u2014 a sidebar panel that shows your active project, progress toward your goals, and one-click access to every major feature.\r\n\r\nBy default Writing Studio launches automatically when Obsidian loads \u2014 the Launcher opens and your last session\'s writing mode and typography are restored. To disable this, turn off **Open on startup** in **Settings \u2192 General**: Obsidian then opens clean, with no Writing Studio status bar items or restored modes, and the studio stays dormant until you launch it yourself. Launching it manually restores your last session state the same way.\r\n\r\n**To open manually:** Click the feather ribbon icon, or assign a hotkey to **Open launcher** in Settings \u2192 Hotkeys.\r\n\r\n**The Launcher includes:**\r\n- Active project name, total word count, and progress toward your project word count goal\r\n- Writing mode selector (Draft / Edit / Review)\r\n- Focus Mode and Typography Mode toggles\r\n- Sprint timer with "Set up sprint" button and Quick Sprint Options presets (10 m, 15 m, 25 m)\r\n- Today card showing words written, sprints completed, session word count, and streak\r\n- Quick-action buttons: Targets Dashboard, Writing Dashboard, Preview manuscript, Export, Writing Log, Publish to WordPress\r\n\r\n---\r\n\r\n### Folder Sidebar Explorer\r\n\r\nThe Folder Sidebar Explorer opens any vault folder in a right-sidebar panel, letting you browse reference material, research notes, or any folder outside your active project without leaving your draft. Unlike the Binder \u2014 which is scoped to your writing project \u2014 the sidebar explorer works with any folder in your vault.\r\n\r\n**To open:**\r\n- Use the command **Open folder in sidebar explorer** from the command palette \u2014 a folder picker appears so you can choose which folder to explore.\r\n- Right-click any folder in the file explorer and choose **Open in sidebar explorer** under **Writing studio options**.\r\n- Right-click any folder in [Notebook Navigator](https://github.com/johansan/notebook-navigator) and choose **Open in sidebar explorer** (requires Notebook Navigator to be installed).\r\n- Assign a hotkey in Settings \u2192 Hotkeys.\r\n\r\nThe panel opens in the **right sidebar**. The folder you open becomes the **root folder** for that session \u2014 the breadcrumb trail, the \u2302 root button, and search all operate relative to it.\r\n\r\n**Browsing and navigation:**\r\n\r\n| Feature | How to use |\r\n|---------|-----------|\r\n| Browse into a subfolder | Click the folder |\r\n| Preview a Markdown file | Click the file \u2014 the folder listing is replaced by a rendered preview inside the panel |\r\n| Preview an image | Click the file \u2014 displayed inline |\r\n| Preview audio | Click the file \u2014 player appears inline |\r\n| Other file types | Click the file \u2014 an **Open in editor** button appears |\r\n| Go back | Click **\u2190 back**, or press `Backspace` when the list has keyboard focus |\r\n| Return to root folder | Click **\u2302 root** to jump back to the folder you originally opened |\r\n| Keyboard navigation | Tab to focus the list, then `\u2191` / `\u2193` to move, `Enter` to open, `Backspace` to go back |\r\n| Breadcrumb navigation | Click any segment in the breadcrumb trail to jump directly to that folder |\r\n\r\n**Search:**\r\n\r\nA search bar appears at the top of the folder list. Type your query and press **Enter** to run the search.\r\n\r\n- Searches **both folder/file names and file contents** (`.md` and `.txt` files).\r\n- Frontmatter is excluded from content search to avoid false positives from YAML fields.\r\n- Name matches show the matched term highlighted in the result title.\r\n- Content matches show a text snippet around the match with the term highlighted, plus a **CONTENT** badge to distinguish them from name matches.\r\n- Results always search from the root folder, regardless of which subfolder you are currently browsing.\r\n- Click **\xD7** to clear the search and return to the normal folder view.\r\n\r\n**Sort:**\r\n\r\nA sort dropdown sits next to the search bar. Options:\r\n\r\n| Option | Description |\r\n|--------|-------------|\r\n| Folders \u2191 A-Z | Folders first, then files, both alphabetical (default) |\r\n| Folders \u2191 Z-A | Folders first, then files, both reverse-alphabetical |\r\n| Name A-Z | All items alphabetical, folders and files mixed |\r\n| Name Z-A | All items reverse-alphabetical, mixed |\r\n| Newest first | Sort by last-modified date, newest at top |\r\n| Oldest first | Sort by last-modified date, oldest at top |\r\n\r\n**Copy content to the editor:**\r\n\r\nWhen a Markdown file is open in preview mode (after clicking it in the file list), its text is selectable. To insert a passage into the active editor:\r\n\r\n1. Click a file in the list \u2014 the panel switches to preview mode showing the rendered file.\r\n2. Select the text you want in the preview pane.\r\n3. Click the **\u21A9 insert selection** button in the nav bar.\r\n4. The selected text is inserted at the cursor position in the active editor.\r\n\r\nThe preview is read-only \u2014 you cannot edit the file from the sidebar.\r\n\r\n**Hover tooltips:**\r\n\r\nHover over any file or folder in the list to see an information card:\r\n\r\n| Item type | Information shown |\r\n|-----------|------------------|\r\n| Markdown / text file | Last modified date and time \xB7 File size \xB7 Word count (frontmatter excluded) |\r\n| Image / audio / other file | Last modified date and time \xB7 File size |\r\n| Folder | Total file count \xB7 Subfolder count |\r\n\r\nThe word count updates asynchronously from Obsidian\'s file cache and appears within a moment of hover.\r\n\r\n---\r\n\r\n### Your Project\r\n\r\n#### Project Manager\r\n\r\nProjects group a set of documents (binder items) and act as the scope for export, statistics, and the word count goal banner.\r\n\r\n**To create a project:** Use the command **Create new writing project** from the command palette, or click **+ New** in the Launcher panel.\r\n\r\n**To switch projects:** Use the Launcher panel or the project selector at the top of the Binder panel.\r\n\r\n**To edit a project:** Click the pencil icon in the Launcher project card or next to the project selector in the Binder. You can change the title, author, description, and total word count goal. The project folder keeps its original name \u2014 renaming the title does not move any files.\r\n\r\nEach project stores:\r\n- Title, type, author, and description\r\n- Ordered binder with chapters, sections, articles, and notes\r\n- Per-item word count goals, statuses, and export flags\r\n- Optional total word count goal (shown in the Launcher and status bar)\r\n\r\n**Project templates available at creation:**\r\n\r\n| Template | Structure created |\r\n|----------|------------------|\r\n| Blank | Empty \u2014 build your own structure |\r\n| Book | Front Matter, Part 1 / Chapter 1, Back Matter |\r\n| Article series | Series Overview note (with article schedule), Article 1 placeholder |\r\n| Blog collection | Date-organized folder, first post placeholder |\r\n| Journal article | Title Page, Abstract, Keywords, Introduction, Literature Review, Methodology, Findings / Analysis, Discussion, Conclusion, References, Appendices |\r\n| Magazine article | Pitch / Query Notes, Headline & Deck, Lede, Nut Graf, Body, Quotes & Sources, Kicker, Fact-Check Notes, Author Bio |\r\n\r\n---\r\n\r\n#### Writing Binder\r\n\r\nKeeping a book-length manuscript organized means knowing at a glance which chapters are drafted, which are in progress, and how each contributes to your total word count. The Binder is a sidebar panel that shows all of that for your active project.\r\n\r\nEach document shows its title, type (Chapter, Section, Article, Note), status (Draft, In Progress, Complete, Published), and live word count. Documents can be reordered by drag-and-drop and toggled in or out of export.\r\n\r\n**To open:** Use the command **Open binder** from the command palette, or assign a hotkey in Settings \u2192 Hotkeys.\r\n\r\n**Keyboard navigation:**\r\n\r\nThe binder tree is fully keyboard-operable. Tab to focus the list, then:\r\n\r\n| Key | Action |\r\n|-----|--------|\r\n| `\u2191` / `\u2193` | Move through visible documents and groups |\r\n| `\u2192` | Expand a collapsed group, or step into an open one |\r\n| `\u2190` | Collapse an open group, or jump to the parent |\r\n| `Enter` | Open the document, or expand/collapse a group |\r\n| `F2` | Rename the focused item inline (Enter commits, Escape cancels) |\r\n| `Shift+F10` or menu key | Open the item\'s right-click menu |\r\n\r\n**Organizing with groups and parts:**\r\n\r\nGroups and parts are structural entries \u2014 they organize the binder tree but have no file behind them. The book template creates parts for you, and you can build the same structure by hand: the folder-plus button in the binder toolbar creates a group or part at the root, and an item\'s right-click menu offers **New child group** / **New child part** beneath it. Clicking a group or part expands or collapses it. A document\'s type (chapter, section, article, note) can be changed at any time from the same menu via **Change type**.\r\n\r\n**Adding a file to a project:**\r\n1. Right-click any Markdown file in the file explorer and choose **Add to writing project** under **Writing studio options**.\r\n2. A modal appears with a dropdown listing all your writing projects.\r\n3. Select the target project and click **Add to project**.\r\n\r\n**Adding files copied directly to the project folder:**\r\n\r\nIf you copied or moved files into the project folder outside of Obsidian and they do not appear in the binder, use the **Add files copied to this folder** button in the binder toolbar (immediately to the right of the **+ document** button). The plugin scans the project folder, lists any files not yet in the binder, and lets you select which ones to add before making any changes.\r\n\r\n---\r\n\r\n#### Compile Preview\r\n\r\nThe Compile Preview opens a split pane showing all binder documents for the active project concatenated in order, rendered as a finished manuscript.\r\n\r\n**To open:** Use the command **Preview compiled manuscript** from the command palette, or click the **Preview manuscript** button in the Launcher panel.\r\n\r\n---\r\n\r\n### Your Writing Environment\r\n\r\n#### Writing Modes\r\n\r\nThree modes shape how the editor behaves. The current mode is always shown in the status bar. Click the mode pill in the status bar to switch modes.\r\n\r\n| Mode | Purpose |\r\n|------|---------|\r\n| **Draft** | Distraction-free drafting; spell-check and formatting hints suppressed |\r\n| **Edit** | Revision pass; full editor tooling active |\r\n| **Review** | Read-only style; ideal for a final proofread |\r\n| **None** | Normal Obsidian behavior |\r\n\r\n**To switch modes:**\r\n- Click the mode indicator in the status bar.\r\n- Right-click inside the editor, then choose **Switch writing mode \u2192** under **Writing studio options**.\r\n- Assign hotkeys to **Switch to draft mode / Edit mode / Review mode** in Settings \u2192 Hotkeys.\r\n- Use the Writing Studio Launcher panel.\r\n\r\nThe active mode is saved and restored the next time Writing Studio launches \u2014 automatically at startup when **Open on startup** is enabled, or when you next open the Launcher or switch a mode.\r\n\r\n---\r\n\r\n#### Focus Mode\r\n\r\nFocus Mode dims everything in the editor except the paragraph or sentence you are currently writing, reducing visual noise and keeping attention on the active thought.\r\n\r\n**To toggle:** Assign a hotkey to **Toggle focus mode** in Settings \u2192 Hotkeys, or use the toggle in the Launcher panel. Press `Escape` to exit.\r\n\r\n**Settings (Settings \u2192 Focus mode):**\r\n\r\n| Setting | Description |\r\n|---------|-------------|\r\n| Focus unit | Highlight at the **paragraph** or **sentence (line)** level |\r\n| Dim opacity | How opaque the dimmed text appears (10\u201350%) |\r\n| Font size override | Override the editor font size while focused; 0 = use theme default. Takes precedence over Typography Mode\'s font size while Focus Mode is active |\r\n| Auto-hide sidebars | Collapse left and right sidebars when Focus Mode activates |\r\n| Typewriter scroll | Keep the active line vertically centered as you type |\r\n\r\n---\r\n\r\n#### Typography Mode\r\n\r\nTypography Mode applies a consistent, reader-friendly text treatment to the editor: a curated font, constrained line length, controlled line height, and optional letter spacing.\r\n\r\n**To toggle:** Assign a hotkey to **Toggle typography mode** in Settings \u2192 Hotkeys, or use the toggle in the Launcher panel.\r\n\r\n**To change the font while Typography Mode is active:** Right-click inside the editor and choose **Typography font \u2192** under **Writing studio options**. A font picker menu appears with all available fonts; the active font is shown with a checkmark. Selecting a font applies it immediately and saves the setting.\r\n\r\n> **Note on fonts:** Typography fonts are loaded from Google Fonts and require an internet connection the first time each font is used. After the initial load they are cached and work offline.\r\n\r\n**Settings (Settings \u2192 Typography):**\r\n\r\n| Setting | Description |\r\n|---------|-------------|\r\n| Font family | Choose from the curated font list or enter a custom font name |\r\n| Custom font name | Used when **Custom font name\u2026** is selected above |\r\n| Max line length | Characters per line (55\u201380); constrains the editor column width |\r\n| Font size | Editor font size in pixels |\r\n| Line height | Multiplier; default 1.7 |\r\n| Letter spacing | CSS `letter-spacing` value (e.g. `normal`, `0.02em`) |\r\n| Persist across sessions | Restore Typography Mode when Writing Studio next launches |\r\n\r\n**Available fonts:**\r\n\r\n| Option | Font |\r\n|--------|------|\r\n| Monospaced | iA Writer Mono (falls back to Roboto Mono / Courier New) |\r\n| Serif | iA Writer Duo Serif (falls back to Georgia) |\r\n| Sans-serif | iA Writer Quattro (falls back to system sans-serif) |\r\n| Cormorant Garamond | Elegant display serif |\r\n| Crimson Text | Classic book serif |\r\n| EB Garamond | Traditional Garamond revival |\r\n| Libre Baskerville | Readable web serif |\r\n| Libre Caslon Text | Clean slab serif |\r\n| Literata | Designed for long-form reading |\r\n| Lora | Contemporary calligraphic serif |\r\n| Inter | Modern humanist sans-serif |\r\n| Lato | Friendly rounded sans-serif |\r\n| Source Sans 3 | Clean UI sans-serif |\r\n| Custom font name\u2026 | Use any font installed on your system |\r\n\r\n---\r\n\r\n### Tracking Your Progress\r\n\r\n#### Writing Sprint Timer\r\n\r\nThe Sprint Timer runs a timed writing session. When a sprint is active, a floating overlay displays the countdown and gives you full control \u2014 without requiring you to stay on the dashboard.\r\n\r\n**To set up a sprint:**\r\n\r\n- Click **Set up sprint** in the Launcher panel to open the sprint configuration modal.\r\n- Or click one of the **Quick Sprint Options** preset buttons (10 m, 15 m, 25 m) in the Launcher panel to load a duration directly.\r\n\r\nEither path opens the floating overlay in a ready state \u2014 the timer does not start until you press \u25B6 on the overlay itself. This gives you time to navigate to your draft or open the Binder before the clock begins.\r\n\r\n**Sprint configuration modal:**\r\n\r\nThe modal lets you set:\r\n\r\n- Duration (preset or custom, in minutes)\r\n- Word count goal for the session\r\n- Scope (current file or entire project)\r\n\r\nClick **Launch sprint timer** to open the overlay in ready state.\r\n\r\n**Using the floating overlay:**\r\n\r\n| Control | Action |\r\n|---------|--------|\r\n| \u25B6 | Start or resume the sprint |\r\n| \u23F8 | Pause the sprint |\r\n| \u25A0 | Stop and end the sprint |\r\n\r\nThe overlay is draggable \u2014 click and drag the header to reposition it anywhere on screen. It stays on top regardless of writing mode or Focus Mode. The current countdown is also shown in the Obsidian status bar (`\u23F1 MM:SS`) and, when Focus Mode is active, in the focus toolbar.\r\n\r\nWhen the sprint ends, a summary modal shows words written, duration, and words-per-minute. The session is logged to sprint history and optionally appended to your Daily Note.\r\n\r\n**Settings (Settings \u2192 Sprint & goals):**\r\n\r\n| Setting | Description |\r\n|---------|-------------|\r\n| Default sprint duration | Starting value in the sprint modal (minutes) |\r\n| Default daily word goal | Target used in the Writing Dashboard and Launcher |\r\n| Sound notifications | Play a tone when the sprint ends |\r\n| Sprint history retention | Days to keep sprint records before purging |\r\n| Inline goal banner | Show a progress bar below the editor toolbar when a document has a word count goal set |\r\n\r\n---\r\n\r\n#### Word Count Goal\r\n\r\nA per-document word count goal can be set and tracked inline.\r\n\r\n**To set a goal:**\r\n- Use the command **Set word count goal** from the command palette.\r\n- Right-click inside the editor and choose **Set word count goal** under **Writing studio options**.\r\n\r\nWhen a goal is set and **Inline goal banner** is enabled, a progress bar appears below the editor toolbar showing current words, goal, and percentage. It updates in real time as you type.\r\n\r\n---\r\n\r\n#### Session Word Count\r\n\r\nThe status bar shows a `(+N)` delta next to the current file\'s word count, indicating how many words you have added since opening that file this session. The Launcher\'s **Today** card also shows a cumulative session total across all files opened during the current Obsidian session. Both counts reset when Obsidian restarts.\r\n\r\n---\r\n\r\n#### Project Word Count Goal\r\n\r\nWhen an active project has a total word count goal set, a dedicated status bar item shows `{current} / {goal} project words`. This updates automatically as you write. Set a project goal in the Project modal when creating or editing a project.\r\n\r\n---\r\n\r\n#### Writing Dashboard\r\n\r\nThe Writing Dashboard shows session statistics (words written, sprints completed, time), sprint history, daily progress toward your goal, and per-project word counts with reading time.\r\n\r\n**To open:** Use the command **Open writing dashboard** from the command palette, or click the **Writing dashboard** button in the Launcher panel.\r\n\r\n---\r\n\r\n#### Targets Dashboard\r\n\r\nThe Targets Dashboard lets you assign word count goals to individual documents in the active project\'s binder and track progress across the whole project at a glance. Goals can be edited inline in the table. Rows are sortable and filterable by status.\r\n\r\n**To open:** Use the command **Open targets dashboard**, click the **Targets dashboard** button in the Launcher panel, or assign a hotkey in Settings \u2192 Hotkeys.\r\n\r\n---\r\n\r\n#### Daily Writing Log\r\n\r\nThe Writing Log is a sidebar panel that shows your writing history at a glance.\r\n\r\n**To open:** Use the command **Open writing log** from the command palette, or click the **Writing log** button in the Launcher panel.\r\n\r\n**The Writing Log shows:**\r\n- Current streak (days in a row with at least one sprint)\r\n- This session: total session words, sprint words, sprints completed, and minutes written\r\n- Last 30 days: a bar chart with one row per day showing word count, sprints completed, and a visual bar proportional to the day\'s output\r\n\r\nWhen **Append to daily note** is enabled (Settings \u2192 Writing log), a summary of each completed sprint is also appended to today\'s Daily Note.\r\n\r\n---\r\n\r\n### Getting Your Work Out\r\n\r\n#### Export Engine\r\n\r\nWhen your draft is ready, the Export Engine converts it to a finished file in your chosen format \u2014 no reformatting required.\r\n\r\n**Supported formats:** Manuscript (HTML) \xB7 PDF \xB7 Word (.docx) \xB7 RTF \xB7 HTML \xB7 Markdown \xB7 EPUB\r\n\r\n**To export:**\r\n- Right-click inside the editor and choose **Export this document** under **Writing studio options**.\r\n- Use the command **Export document** from the command palette.\r\n- Click the **Export** button in the Launcher panel.\r\n- Assign a hotkey to **Export document** in Settings \u2192 Hotkeys.\r\n\r\n**Manuscript format**\r\n\r\nThe Manuscript format produces a self-contained HTML file formatted to industry-standard manuscript conventions:\r\n- Courier New 12 pt, double-spaced, 1-inch margins\r\n- Title page with project title, author name, approximate word count, and optional contact information\r\n- Chapter headings in uppercase, page-break before each\r\n- Scene breaks rendered as `#` (the standard manuscript convention)\r\n\r\nNo external tools are required for manuscript export.\r\n\r\n**Settings (Settings \u2192 Export):**\r\n\r\n| Setting | Description |\r\n|---------|-------------|\r\n| Default export format | Pre-selected format in the export modal |\r\n| Default paper size | Letter (US) or A4 |\r\n| Export font | Font name used in PDF/DOCX output (e.g. `Georgia`) |\r\n| Export font size | Point size for PDF/DOCX output |\r\n| Pandoc path | Full path to the `pandoc` binary if it is not on your system PATH |\r\n| EPUB language | BCP 47 language tag (e.g. `en`, `fr`, `de`) |\r\n| EPUB include cover | Generate a text cover page when no cover image is provided |\r\n\r\n> **Requirement:** Pandoc must be installed for PDF, DOCX, RTF, HTML, and EPUB export. Download from [pandoc.org](https://pandoc.org/installing.html). For PDF export, a LaTeX distribution (e.g. TeX Live or MiKTeX) is also required. Manuscript (HTML) export does not require Pandoc.\r\n>\r\n> **Formatting note:** the built-in converter used for HTML, Manuscript, and EPUB output supports headings, paragraphs, lists, blockquotes, fenced code blocks, tables, images, and links. Nested lists, setext (underline-style) headings, and footnotes are not converted \u2014 use a Pandoc format (PDF, DOCX, RTF) if your manuscript depends on them.\r\n\r\n---\r\n\r\n#### WordPress Publishing\r\n\r\nPublish your finished draft directly to WordPress without leaving Obsidian. The modal lets you choose the target site, set the post title, status, categories, tags, excerpt, and an optional scheduled publication date.\r\n\r\n**To publish:**\r\n- Right-click inside the editor and choose **Publish to WordPress** under **Writing studio options**.\r\n- Use the command **Publish to WordPress** from the command palette.\r\n- Click the **Publish to WordPress** button in the Launcher panel.\r\n- Assign a hotkey to **Publish to WordPress** in Settings \u2192 Hotkeys.\r\n\r\n**Setting up a site (Settings \u2192 WordPress):**\r\n\r\n1. Click **+ add WordPress site**.\r\n2. Enter a nickname, the site URL (e.g. `https://yourblog.com`), and your WordPress username.\r\n3. Generate an application password in WordPress under **Users \u2192 Profile \u2192 Application passwords** and paste it into the **Application password** field.\r\n4. Click **Test connection** to verify.\r\n\r\n**Per-site options:**\r\n\r\n| Setting | Description |\r\n|---------|-------------|\r\n| Default post status | Draft \xB7 Pending Review \xB7 Published |\r\n| Wikilink handling | **Strip** removes `[[...]]` syntax, leaving plain text \xB7 **Convert** turns wikilinks into URLs |\r\n\r\n**Preserving your credentials across updates**\r\n\r\nWriting Studio stores your WordPress site credentials in your vault\'s `.obsidian/plugins/writing-studio/data.json` file. Obsidian\'s in-app update process does not touch this file \u2014 your credentials are preserved automatically. However, if you uninstall and reinstall the plugin manually, or if a vault sync conflict overwrites `data.json`, credentials will be lost and will need to be re-entered. To avoid this, always use Obsidian\'s built-in Update button rather than uninstalling manually.\r\n\r\n---\r\n\r\n### Supporting Tools\r\n\r\n#### Frontmatter Manager\r\n\r\nWriting Studio automatically manages YAML frontmatter in your documents when **Frontmatter auto-update** is enabled. On every save it updates:\r\n\r\n- `word-count` \u2014 current word count\r\n- `modified` \u2014 last-modified date\r\n\r\nThe `word-count-goal` frontmatter field is read by the inline goal banner and the Word Count Goal modal.\r\n\r\n---\r\n\r\n## Context Menus\r\n\r\nWriting Studio adds items to Obsidian\'s right-click context menus. All Writing Studio items are grouped together under the heading **Writing studio options** to distinguish them from other plugins and Obsidian\'s built-in options.\r\n\r\n### Right-click inside an open document (editor menu)\r\n\r\n| Option | Action |\r\n|--------|--------|\r\n| Export this document | Open the export modal for the current file |\r\n| Publish to WordPress | Open the WordPress publish modal for the current file |\r\n| Set word count goal | Set a word count target for the current document |\r\n| Switch writing mode \u2192 | Open a mode-switcher menu (Draft / Edit / Review / None) |\r\n| Typography font \u2192 | Open a font picker menu to change the typography font (visible only when Typography Mode is active) |\r\n\r\n### Right-click a Markdown file in the file explorer\r\n\r\n| Option | Action |\r\n|--------|--------|\r\n| Add to writing project | Open a project picker and add the file to the selected project |\r\n\r\n### Right-click a folder in the file explorer\r\n\r\n| Option | Action |\r\n|--------|--------|\r\n| Open in sidebar explorer | Open the folder in the Folder Sidebar Explorer panel |\r\n\r\n---\r\n\r\n## Commands Reference\r\n\r\nNo default hotkeys are assigned. All commands can be given a hotkey in **Settings \u2192 Hotkeys**.\r\n\r\n| Command | Description |\r\n|---------|-------------|\r\n| Open launcher | Open the launcher sidebar panel |\r\n| Open binder | Open the writing binder sidebar panel |\r\n| Open writing log | Open the daily writing log panel |\r\n| Toggle focus mode | Enable or disable focus mode |\r\n| Toggle typography mode | Enable or disable typography mode |\r\n| Switch to draft mode | Activate draft writing mode |\r\n| Switch to edit mode | Activate edit writing mode |\r\n| Switch to review mode | Activate review writing mode |\r\n| Start writing sprint | Open the sprint timer modal |\r\n| Export document | Export the current document |\r\n| Export project | Export the full project |\r\n| Preview compiled manuscript | Open the compile preview pane |\r\n| Publish to WordPress | Publish the current document to WordPress |\r\n| Create new writing project | Create a new writing project |\r\n| Open writing dashboard | Open the statistics dashboard |\r\n| Open targets dashboard | Open the word count targets panel |\r\n| Set word count goal | Set a per-document word count goal |\r\n| Open folder in sidebar explorer | Search and open a vault folder in the sidebar |\r\n| Scan project folder for new files | Scan the active project folder for files not in the binder and import selected files |\r\n\r\n---\r\n\r\n## Settings Overview\r\n\r\nOpen via **Settings \u2192 Writing Studio**.\r\n\r\n| Tab | What it controls |\r\n|-----|-----------------|\r\n| General | Open on startup, default project folder, author name, document type, frontmatter auto-update |\r\n| Focus mode | Focus unit, dim opacity, font override, sidebar behavior, typewriter scroll |\r\n| Typography | Font family, custom font name, line length, font size, line height, letter spacing, persistence |\r\n| Sprint & goals | Sprint duration, daily goal, sound notifications, history retention, inline banner |\r\n| Export | Format, paper size, font, font size, Pandoc path, EPUB language, EPUB cover |\r\n| Writing log | Append sprint summaries to Daily Note |\r\n| WordPress | Site credentials, default post status, wikilink handling |\r\n\r\n---\r\n\r\n## Ribbon Icon\r\n\r\nWriting Studio adds a single icon to the Obsidian ribbon.\r\n\r\n| Icon | Action |\r\n|------|--------|\r\n| Feather | Open the Writing Studio Launcher panel |\r\n\r\nAll other features are accessible from the Launcher panel, the command palette, context menus, or assigned hotkeys.\r\n\r\n---\r\n\r\n## Installation\r\n\r\n1. Download `main.js`, `manifest.json`, and `styles.css` from the latest [GitHub release](../../releases/latest).\r\n2. Create the folder `<vault>/.obsidian/plugins/writing-studio/` if it does not exist.\r\n3. Copy the three files into that folder.\r\n4. In Obsidian, go to **Settings \u2192 Community Plugins**, find **Writing Studio**, and enable it.\r\n\r\n> **Building from source:** Clone the repository, run `npm install`, then `npm run build`. Copy the three output files as above.\r\n\r\n---\r\n\r\n## Requirements\r\n\r\nMost features work out of the box. A few require additional software for specific functions, noted below.\r\n\r\n| Requirement | When needed |\r\n|-------------|-------------|\r\n| Obsidian 1.8.7 or later | Always |\r\n| Desktop (Windows, macOS, Linux) | Always \u2014 this plugin does not run on mobile |\r\n| Internet connection | First use of each Typography Mode font (cached after that) |\r\n| [Pandoc](https://pandoc.org/installing.html) | Export to PDF, DOCX, RTF, HTML, EPUB |\r\n| LaTeX (TeX Live / MiKTeX) | Export to PDF only |\r\n| WordPress 5.6+ with REST API enabled | WordPress publishing |\r\n| WordPress Application Password | WordPress publishing |\r\n\r\n---\r\n\r\n## Reporting a Bug\r\n\r\nIf something isn\'t working, please open an issue on GitHub:\r\n\r\n**[Submit a bug report](https://github.com/writerP-777/obsidian-writing-studio/issues/new)**\r\n\r\nInclude the following when you report:\r\n\r\n- Writing Studio version (visible in **Settings \u2192 Community Plugins**)\r\n- Obsidian version (visible in **Settings \u2192 About**)\r\n- Operating system (Windows / macOS / Linux) and version\r\n- What you expected to happen\r\n- What actually happened, and any steps to reproduce it\r\n\r\nFeature requests are welcome in the same place \u2014 please label them as **[Feature Request]** in the issue title.\r\n\r\n---\r\n\r\n## Security\r\n\r\n[![CodeQL](https://github.com/writerP-777/obsidian-writing-studio/actions/workflows/codeql.yml/badge.svg)](https://github.com/writerP-777/obsidian-writing-studio/actions/workflows/codeql.yml)\r\n[![OpenSSF Scorecard](https://api.securityscorecards.dev/projects/github.com/writerP-777/obsidian-writing-studio/badge)](https://securityscorecards.dev/viewer/?uri=github.com/writerP-777/obsidian-writing-studio)\r\n[![OpenSSF Baseline](https://www.bestpractices.dev/projects/12832/baseline)](https://www.bestpractices.dev/projects/12832)\r\n[![ESLint](https://github.com/writerP-777/obsidian-writing-studio/actions/workflows/eslint.yml/badge.svg)](https://github.com/writerP-777/obsidian-writing-studio/actions/workflows/eslint.yml)\r\n[![ORCID](https://img.shields.io/badge/ORCID-0009--0009--8598--2069-brightgreen?logo=orcid&logoColor=white)](https://orcid.org/0009-0009-8598-2069)\r\n\r\nEvery push and pull request is scanned automatically:\r\n\r\n| Tool | What it checks |\r\n|------|----------------|\r\n| **CodeQL** | Static analysis for security vulnerabilities (XSS, injection, unsafe patterns) in TypeScript/JavaScript source |\r\n| **OpenSSF Scorecard** | Supply-chain security posture: dependency hygiene, branch protection, signed releases, and more |\r\n| **ESLint** (`eslint-plugin-obsidianmd`) | Obsidian plugin guideline compliance \u2014 fails on any warning or error |\r\n\r\nResults are published to the **Security** tab of this repository (GitHub code scanning).\r\n\r\nFor local development, a pre-commit hook runs ESLint (blocking) and a pre-push hook runs a full CodeQL scan (blocks the push if any HIGH or CRITICAL findings are present). Install the [CodeQL CLI](https://github.com/github/codeql-cli-binaries/releases) to enable local scanning (`winget install GitHub.CodeQL` on Windows).\r\n';
+var README_default = '<p align="center">\r\n  <img src="assets/logo.png" width="120" alt="Writing Studio logo">\r\n</p>\r\n\r\n# Writing Studio\r\n\r\n**Version 2.7.0** \xB7 Desktop only\r\n\r\n![GitHub all releases](https://img.shields.io/github/downloads/writerP-777/obsidian-writing-studio/total)\r\n[![OpenSSF Best Practices](https://www.bestpractices.dev/projects/12832/badge)](https://www.bestpractices.dev/projects/12832)\r\n\r\nWriting Studio turns Obsidian into a dedicated environment for serious nonfiction work \u2014 from your first research notes to a finished, exported manuscript. It bundles a project binder, writing modes, focus and typography tools, sprint timer, progress tracking, manuscript export, and WordPress publishing into a single plugin. A built-in sidebar file explorer lets you browse, preview, and pull content from anywhere in your vault without leaving your draft.\r\n\r\n<p align="center">\r\n  <img src="assets/sidebar-explorer-screenshot.png" alt="Writing Studio with the Launcher panel open on the left, an active draft in the center, and the Folder Sidebar Explorer open to a research folder on the right" width="900">\r\n  <br>\r\n  <em>Writing Studio in use \u2014 Launcher (left), active draft with word count goal banner (center), Folder Sidebar Explorer open to a research folder (right).</em>\r\n</p>\r\n\r\n<p align="center">\r\n  <a href="https://buymeacoffee.com/writerp777">\r\n    <img src="https://img.buymeacoffee.com/button-api/?text=Buy%20me%20a%20coffee&slug=writerp777&button_colour=c9a84c&font_colour=000000&font_family=Georgia&outline_colour=000000&coffee_colour=ffffff" alt="Buy me a coffee" height="40">\r\n  </a>\r\n</p>\r\n\r\n## Contents\r\n\r\n- [Features](#features)\r\n- [Language support](#language-support)\r\n- [Writing Studio Launcher](#writing-studio-launcher)\r\n- [Folder Sidebar Explorer](#folder-sidebar-explorer)\r\n- [Your Project](#your-project)\r\n- [Your Writing Environment](#your-writing-environment)\r\n- [Tracking Your Progress](#tracking-your-progress)\r\n- [Getting Your Work Out](#getting-your-work-out)\r\n- [Supporting Tools](#supporting-tools)\r\n- [Context Menus](#context-menus)\r\n- [Commands Reference](#commands-reference)\r\n- [Settings Overview](#settings-overview)\r\n- [Ribbon Icon](#ribbon-icon)\r\n- [Installation](#installation)\r\n- [Requirements](#requirements)\r\n- [Reporting a Bug](#reporting-a-bug)\r\n- [Security](#security)\r\n\r\n---\r\n\r\n## Features\r\n\r\n**Writing Binder** \u2014 Organize your manuscript as an ordered collection of documents with per-item status, word count, and export flags. Drag chapters into order, toggle items in or out of export, and add files from anywhere in your vault.\r\n\r\n**Project Manager** \u2014 Create projects from six templates (blank, book, article series, blog collection, journal article, magazine article), set a total word count goal, and switch between projects from the Launcher.\r\n\r\n**Compile Preview** \u2014 Concatenate all binder documents in order and render them as a finished manuscript in a split pane, without exporting.\r\n\r\n**Writing Modes** \u2014 Switch between Draft (distraction-free), Edit (full tooling), and Review (read-only) modes from the status bar, command palette, context menu, or Launcher.\r\n\r\n**Focus Mode** \u2014 Dim everything except the paragraph or sentence you are writing. Configurable dim level, font size override, sidebar collapse, and typewriter scroll.\r\n\r\n**Typography Mode** \u2014 Apply a curated font, constrained line length, and controlled line height to the editor. Fourteen font options including iA Writer fonts, Google Fonts, and custom system fonts.\r\n\r\n**Sprint Timer** \u2014 Run timed writing sessions with a draggable floating overlay. Set duration, word goal, and scope (file or project). Quick-start presets (10 m, 15 m, 25 m) available from the Launcher.\r\n\r\n**Progress Tracking** \u2014 Live word counts in the status bar and Launcher, session delta tracking, per-document and per-project word count goals with inline progress banners, and a 30-day writing log with streak tracking.\r\n\r\n**Export Engine** \u2014 Export to Manuscript (HTML), PDF, Word (.docx), RTF, HTML, Markdown, and EPUB. Manuscript format produces industry-standard layout with no external tools; other formats require Pandoc.\r\n\r\n**WordPress Publishing** \u2014 Publish directly to WordPress from Obsidian. Set post title, status, categories, tags, excerpt, and scheduled date. Supports multiple sites with per-site credentials and connection testing.\r\n\r\n**Folder Sidebar Explorer** \u2014 Browse any vault folder in a sidebar panel. Search by name or file content, preview Markdown files and images inline, and insert selected text directly into the active editor.\r\n\r\n## Language support\r\n\r\nWriting Studio is available in the following languages in addition to English:\r\n\r\n- Arabic\r\n- Chinese (Simplified)\r\n- French\r\n- German\r\n- Japanese\r\n- Korean\r\n- Portuguese (Brazil)\r\n- Russian\r\n- Spanish\r\n\r\n**To change the language:** Open **Settings \u2192 General** in Obsidian, scroll to **Language**, and select your preferred language from the list. Restart Obsidian for the change to take effect. Writing Studio will display in the selected language if it is supported.\r\n\r\n**Found a translation error or missing text?** Please open an issue on GitHub \u2014 [Submit a bug report or enhancement request](https://github.com/writerP-777/obsidian-writing-studio/issues/new) \u2014 and include the language, the location in the plugin where the text appears, and what it currently says. We will address it in the next release.\r\n\r\n### Writing Studio Launcher\r\n\r\nThe Launcher is your home base in Writing Studio \u2014 a sidebar panel that shows your active project, progress toward your goals, and one-click access to every major feature.\r\n\r\nBy default Writing Studio launches automatically when Obsidian loads \u2014 the Launcher opens and your last session\'s writing mode and typography are restored. To disable this, turn off **Open on startup** in **Settings \u2192 General**: Obsidian then opens clean, with no Writing Studio status bar items or restored modes, and the studio stays dormant until you launch it yourself. Launching it manually restores your last session state the same way.\r\n\r\n**To open manually:** Click the feather ribbon icon, or assign a hotkey to **Open launcher** in Settings \u2192 Hotkeys.\r\n\r\n**The Launcher includes:**\r\n- Active project name, total word count, and progress toward your project word count goal\r\n- Writing mode selector (Draft / Edit / Review)\r\n- Focus Mode and Typography Mode toggles\r\n- Sprint timer with "Set up sprint" button and Quick Sprint Options presets (10 m, 15 m, 25 m)\r\n- Today card showing words written, sprints completed, session word count, and streak\r\n- Quick-action buttons: Targets Dashboard, Writing Dashboard, Preview manuscript, Export, Writing Log, Publish to WordPress\r\n\r\n---\r\n\r\n### Folder Sidebar Explorer\r\n\r\nThe Folder Sidebar Explorer opens any vault folder in a right-sidebar panel, letting you browse reference material, research notes, or any folder outside your active project without leaving your draft. Unlike the Binder \u2014 which is scoped to your writing project \u2014 the sidebar explorer works with any folder in your vault.\r\n\r\n**To open:**\r\n- Use the command **Open folder in sidebar explorer** from the command palette \u2014 a folder picker appears so you can choose which folder to explore.\r\n- Right-click any folder in the file explorer and choose **Open in sidebar explorer** under **Writing studio options**.\r\n- Right-click any folder in [Notebook Navigator](https://github.com/johansan/notebook-navigator) and choose **Open in sidebar explorer** (requires Notebook Navigator to be installed).\r\n- Assign a hotkey in Settings \u2192 Hotkeys.\r\n\r\nThe panel opens in the **right sidebar**. The folder you open becomes the **root folder** for that session \u2014 the breadcrumb trail, the \u2302 root button, and search all operate relative to it.\r\n\r\n**Browsing and navigation:**\r\n\r\n| Feature | How to use |\r\n|---------|-----------|\r\n| Browse into a subfolder | Click the folder |\r\n| Preview a Markdown file | Click the file \u2014 the folder listing is replaced by a rendered preview inside the panel |\r\n| Preview an image | Click the file \u2014 displayed inline |\r\n| Preview audio | Click the file \u2014 player appears inline |\r\n| Other file types | Click the file \u2014 an **Open in editor** button appears |\r\n| Go back | Click **\u2190 back**, or press `Backspace` when the list has keyboard focus |\r\n| Return to root folder | Click **\u2302 root** to jump back to the folder you originally opened |\r\n| Keyboard navigation | Tab to focus the list, then `\u2191` / `\u2193` to move, `Enter` to open, `Backspace` to go back |\r\n| Breadcrumb navigation | Click any segment in the breadcrumb trail to jump directly to that folder |\r\n\r\n**Search:**\r\n\r\nA search bar appears at the top of the folder list. Type your query and press **Enter** to run the search.\r\n\r\n- Searches **both folder/file names and file contents** (`.md` and `.txt` files).\r\n- Frontmatter is excluded from content search to avoid false positives from YAML fields.\r\n- Name matches show the matched term highlighted in the result title.\r\n- Content matches show a text snippet around the match with the term highlighted, plus a **CONTENT** badge to distinguish them from name matches.\r\n- Results always search from the root folder, regardless of which subfolder you are currently browsing.\r\n- Click **\xD7** to clear the search and return to the normal folder view.\r\n\r\n**Sort:**\r\n\r\nA sort dropdown sits next to the search bar. Options:\r\n\r\n| Option | Description |\r\n|--------|-------------|\r\n| Folders \u2191 A-Z | Folders first, then files, both alphabetical (default) |\r\n| Folders \u2191 Z-A | Folders first, then files, both reverse-alphabetical |\r\n| Name A-Z | All items alphabetical, folders and files mixed |\r\n| Name Z-A | All items reverse-alphabetical, mixed |\r\n| Newest first | Sort by last-modified date, newest at top |\r\n| Oldest first | Sort by last-modified date, oldest at top |\r\n\r\n**Copy content to the editor:**\r\n\r\nWhen a Markdown file is open in preview mode (after clicking it in the file list), its text is selectable. To insert a passage into the active editor:\r\n\r\n1. Click a file in the list \u2014 the panel switches to preview mode showing the rendered file.\r\n2. Select the text you want in the preview pane.\r\n3. Click the **\u21A9 insert selection** button in the nav bar.\r\n4. The selected text is inserted at the cursor position in the active editor.\r\n\r\nThe preview is read-only \u2014 you cannot edit the file from the sidebar.\r\n\r\n**Hover tooltips:**\r\n\r\nHover over any file or folder in the list to see an information card:\r\n\r\n| Item type | Information shown |\r\n|-----------|------------------|\r\n| Markdown / text file | Last modified date and time \xB7 File size \xB7 Word count (frontmatter excluded) |\r\n| Image / audio / other file | Last modified date and time \xB7 File size |\r\n| Folder | Total file count \xB7 Subfolder count |\r\n\r\nThe word count updates asynchronously from Obsidian\'s file cache and appears within a moment of hover.\r\n\r\n---\r\n\r\n### Your Project\r\n\r\n#### Project Manager\r\n\r\nProjects group a set of documents (binder items) and act as the scope for export, statistics, and the word count goal banner.\r\n\r\n**To create a project:** Use the command **Create new writing project** from the command palette, or click **+ New** in the Launcher panel.\r\n\r\n**To switch projects:** Use the Launcher panel or the project selector at the top of the Binder panel.\r\n\r\n**To edit a project:** Click the pencil icon in the Launcher project card or next to the project selector in the Binder. You can change the title, author, description, and total word count goal. The project folder keeps its original name \u2014 renaming the title does not move any files.\r\n\r\nEach project stores:\r\n- Title, type, author, and description\r\n- Ordered binder with chapters, sections, articles, and notes\r\n- Per-item word count goals, statuses, and export flags\r\n- Optional total word count goal (shown in the Launcher and status bar)\r\n\r\n**Project templates available at creation:**\r\n\r\n| Template | Structure created |\r\n|----------|------------------|\r\n| Blank | Empty \u2014 build your own structure |\r\n| Book | Front Matter, Part 1 / Chapter 1, Back Matter |\r\n| Article series | Series Overview note (with article schedule), Article 1 placeholder |\r\n| Blog collection | Date-organized folder, first post placeholder |\r\n| Journal article | Title Page, Abstract, Keywords, Introduction, Literature Review, Methodology, Findings / Analysis, Discussion, Conclusion, References, Appendices |\r\n| Magazine article | Pitch / Query Notes, Headline & Deck, Lede, Nut Graf, Body, Quotes & Sources, Kicker, Fact-Check Notes, Author Bio |\r\n\r\n---\r\n\r\n#### Writing Binder\r\n\r\nKeeping a book-length manuscript organized means knowing at a glance which chapters are drafted, which are in progress, and how each contributes to your total word count. The Binder is a sidebar panel that shows all of that for your active project.\r\n\r\nEach document shows its title, type (Chapter, Section, Article, Note), status (Draft, In Progress, Complete, Published), and live word count. Documents can be reordered by drag-and-drop and toggled in or out of export.\r\n\r\n**To open:** Use the command **Open binder** from the command palette, or assign a hotkey in Settings \u2192 Hotkeys.\r\n\r\n**Control strip:**\r\n\r\nA two-row control strip at the top of the binder keeps the high-frequency writing controls next to your documents, so the daily loop doesn\'t require switching to the launcher tab. The top row is a Draft / Edit / Review segmented control (clicking the active mode switches back to normal). The bottom row holds Focus and Typography toggles, a sprint chip (its menu offers the set-up modal and 10/15/25-minute quick starts; an armed sprint shows a ready chip with the duration), and a **...** menu with the occasional actions: export, publish, preview manuscript, targets dashboard, writing dashboard, and writing log. The launcher keeps its own copies of all controls, and every surface stays in sync no matter where a change is made.\r\n\r\n**Keyboard navigation:**\r\n\r\nThe binder tree is fully keyboard-operable. Tab to focus the list, then:\r\n\r\n| Key | Action |\r\n|-----|--------|\r\n| `\u2191` / `\u2193` | Move through visible documents and groups |\r\n| `\u2192` | Expand a collapsed group, or step into an open one |\r\n| `\u2190` | Collapse an open group, or jump to the parent |\r\n| `Enter` | Open the document, or expand/collapse a group |\r\n| `F2` | Rename the focused item inline (Enter commits, Escape cancels) |\r\n| `Shift+F10` or menu key | Open the item\'s right-click menu |\r\n\r\n**Organizing with groups and parts:**\r\n\r\nGroups and parts are structural entries \u2014 they organize the binder tree but have no file behind them. The book template creates parts for you, and you can build the same structure by hand: the folder-plus button in the binder toolbar creates a group or part at the root, and an item\'s right-click menu offers **New child group** / **New child part** beneath it. Clicking a group or part expands or collapses it. A document\'s type (chapter, section, article, note) can be changed at any time from the same menu via **Change type**.\r\n\r\n**Adding a file to a project:**\r\n1. Right-click any Markdown file in the file explorer and choose **Add to writing project** under **Writing studio options**.\r\n2. A modal appears with a dropdown listing all your writing projects.\r\n3. Select the target project and click **Add to project**.\r\n\r\n**Adding files copied directly to the project folder:**\r\n\r\nIf you copied or moved files into the project folder outside of Obsidian and they do not appear in the binder, use the **Add files copied to this folder** button in the binder toolbar (immediately to the right of the **+ document** button). The plugin scans the project folder, lists any files not yet in the binder, and lets you select which ones to add before making any changes.\r\n\r\n---\r\n\r\n#### Compile Preview\r\n\r\nThe Compile Preview opens a split pane showing all binder documents for the active project concatenated in order, rendered as a finished manuscript.\r\n\r\n**To open:** Use the command **Preview compiled manuscript** from the command palette, or click the **Preview manuscript** button in the Launcher panel.\r\n\r\n---\r\n\r\n### Your Writing Environment\r\n\r\n#### Writing Modes\r\n\r\nThree modes shape how the editor behaves. The current mode is always shown in the status bar. Click the mode pill in the status bar to switch modes.\r\n\r\n| Mode | Purpose |\r\n|------|---------|\r\n| **Draft** | Distraction-free drafting; spell-check and formatting hints suppressed |\r\n| **Edit** | Revision pass; full editor tooling active |\r\n| **Review** | Read-only style; ideal for a final proofread |\r\n| **None** | Normal Obsidian behavior |\r\n\r\n**To switch modes:**\r\n- Click the mode indicator in the status bar.\r\n- Right-click inside the editor, then choose **Switch writing mode \u2192** under **Writing studio options**.\r\n- Assign hotkeys to **Switch to draft mode / Edit mode / Review mode** in Settings \u2192 Hotkeys.\r\n- Use the Writing Studio Launcher panel.\r\n\r\nThe active mode is saved and restored the next time Writing Studio launches \u2014 automatically at startup when **Open on startup** is enabled, or when you next open the Launcher or switch a mode.\r\n\r\n---\r\n\r\n#### Focus Mode\r\n\r\nFocus Mode dims everything in the editor except the paragraph or sentence you are currently writing, reducing visual noise and keeping attention on the active thought.\r\n\r\n**To toggle:** Assign a hotkey to **Toggle focus mode** in Settings \u2192 Hotkeys, or use the toggle in the Launcher panel. Press `Escape` to exit.\r\n\r\n**Settings (Settings \u2192 Focus mode):**\r\n\r\n| Setting | Description |\r\n|---------|-------------|\r\n| Focus unit | Highlight at the **paragraph** or **sentence (line)** level |\r\n| Dim opacity | How opaque the dimmed text appears (10\u201350%) |\r\n| Font size override | Override the editor font size while focused; 0 = use theme default. Takes precedence over Typography Mode\'s font size while Focus Mode is active |\r\n| Auto-hide sidebars | Collapse left and right sidebars when Focus Mode activates |\r\n| Typewriter scroll | Keep the active line vertically centered as you type |\r\n\r\n---\r\n\r\n#### Typography Mode\r\n\r\nTypography Mode applies a consistent, reader-friendly text treatment to the editor: a curated font, constrained line length, controlled line height, and optional letter spacing.\r\n\r\n**To toggle:** Assign a hotkey to **Toggle typography mode** in Settings \u2192 Hotkeys, or use the toggle in the Launcher panel.\r\n\r\n**To change the font while Typography Mode is active:** Right-click inside the editor and choose **Typography font \u2192** under **Writing studio options**. A font picker menu appears with all available fonts; the active font is shown with a checkmark. Selecting a font applies it immediately and saves the setting.\r\n\r\n> **Note on fonts:** Typography fonts are loaded from Google Fonts and require an internet connection the first time each font is used. After the initial load they are cached and work offline.\r\n\r\n**Settings (Settings \u2192 Typography):**\r\n\r\n| Setting | Description |\r\n|---------|-------------|\r\n| Font family | Choose from the curated font list or enter a custom font name |\r\n| Custom font name | Used when **Custom font name\u2026** is selected above |\r\n| Max line length | Characters per line (55\u201380); constrains the editor column width |\r\n| Font size | Editor font size in pixels |\r\n| Line height | Multiplier; default 1.7 |\r\n| Letter spacing | CSS `letter-spacing` value (e.g. `normal`, `0.02em`) |\r\n| Persist across sessions | Restore Typography Mode when Writing Studio next launches |\r\n\r\n**Available fonts:**\r\n\r\n| Option | Font |\r\n|--------|------|\r\n| Monospaced | iA Writer Mono (falls back to Roboto Mono / Courier New) |\r\n| Serif | iA Writer Duo Serif (falls back to Georgia) |\r\n| Sans-serif | iA Writer Quattro (falls back to system sans-serif) |\r\n| Cormorant Garamond | Elegant display serif |\r\n| Crimson Text | Classic book serif |\r\n| EB Garamond | Traditional Garamond revival |\r\n| Libre Baskerville | Readable web serif |\r\n| Libre Caslon Text | Clean slab serif |\r\n| Literata | Designed for long-form reading |\r\n| Lora | Contemporary calligraphic serif |\r\n| Inter | Modern humanist sans-serif |\r\n| Lato | Friendly rounded sans-serif |\r\n| Source Sans 3 | Clean UI sans-serif |\r\n| Custom font name\u2026 | Use any font installed on your system |\r\n\r\n---\r\n\r\n### Tracking Your Progress\r\n\r\n#### Writing Sprint Timer\r\n\r\nThe Sprint Timer runs a timed writing session. When a sprint is active, a floating overlay displays the countdown and gives you full control \u2014 without requiring you to stay on the dashboard.\r\n\r\n**To set up a sprint:**\r\n\r\n- Click **Set up sprint** in the Launcher panel to open the sprint configuration modal.\r\n- Or click one of the **Quick Sprint Options** preset buttons (10 m, 15 m, 25 m) in the Launcher panel to load a duration directly.\r\n\r\nEither path opens the floating overlay in a ready state \u2014 the timer does not start until you press \u25B6 on the overlay itself. This gives you time to navigate to your draft or open the Binder before the clock begins.\r\n\r\n**Sprint configuration modal:**\r\n\r\nThe modal lets you set:\r\n\r\n- Duration (preset or custom, in minutes)\r\n- Word count goal for the session\r\n- Scope (current file or entire project)\r\n\r\nClick **Launch sprint timer** to open the overlay in ready state.\r\n\r\n**Using the floating overlay:**\r\n\r\n| Control | Action |\r\n|---------|--------|\r\n| \u25B6 | Start or resume the sprint |\r\n| \u23F8 | Pause the sprint |\r\n| \u25A0 | Stop and end the sprint |\r\n\r\nThe overlay is draggable \u2014 click and drag the header to reposition it anywhere on screen. It stays on top regardless of writing mode or Focus Mode. The current countdown is also shown in the Obsidian status bar (`\u23F1 MM:SS`) and, when Focus Mode is active, in the focus toolbar.\r\n\r\nWhen the sprint ends, a summary modal shows words written, duration, and words-per-minute. The session is logged to sprint history and optionally appended to your Daily Note.\r\n\r\n**Settings (Settings \u2192 Sprint & goals):**\r\n\r\n| Setting | Description |\r\n|---------|-------------|\r\n| Default sprint duration | Starting value in the sprint modal (minutes) |\r\n| Default daily word goal | Target used in the Writing Dashboard and Launcher |\r\n| Sound notifications | Play a tone when the sprint ends |\r\n| Sprint history retention | Days to keep sprint records before purging |\r\n| Inline goal banner | Show a progress bar below the editor toolbar when a document has a word count goal set |\r\n\r\n---\r\n\r\n#### Word Count Goal\r\n\r\nA per-document word count goal can be set and tracked inline.\r\n\r\n**To set a goal:**\r\n- Use the command **Set word count goal** from the command palette.\r\n- Right-click inside the editor and choose **Set word count goal** under **Writing studio options**.\r\n\r\nWhen a goal is set and **Inline goal banner** is enabled, a progress bar appears below the editor toolbar showing current words, goal, and percentage. It updates in real time as you type.\r\n\r\n---\r\n\r\n#### Session Word Count\r\n\r\nThe status bar shows a `(+N)` delta next to the current file\'s word count, indicating how many words you have added since opening that file this session. The Launcher\'s **Today** card also shows a cumulative session total across all files opened during the current Obsidian session. Both counts reset when Obsidian restarts.\r\n\r\n---\r\n\r\n#### Project Word Count Goal\r\n\r\nWhen an active project has a total word count goal set, a dedicated status bar item shows `{current} / {goal} project words`. This updates automatically as you write. Set a project goal in the Project modal when creating or editing a project.\r\n\r\n---\r\n\r\n#### Writing Dashboard\r\n\r\nThe Writing Dashboard shows session statistics (words written, sprints completed, time), sprint history, daily progress toward your goal, and per-project word counts with reading time.\r\n\r\n**To open:** Use the command **Open writing dashboard** from the command palette, or click the **Writing dashboard** button in the Launcher panel.\r\n\r\n---\r\n\r\n#### Targets Dashboard\r\n\r\nThe Targets Dashboard lets you assign word count goals to individual documents in the active project\'s binder and track progress across the whole project at a glance. Goals can be edited inline in the table. Rows are sortable and filterable by status.\r\n\r\n**To open:** Use the command **Open targets dashboard**, click the **Targets dashboard** button in the Launcher panel, or assign a hotkey in Settings \u2192 Hotkeys.\r\n\r\n---\r\n\r\n#### Daily Writing Log\r\n\r\nThe Writing Log is a sidebar panel that shows your writing history at a glance.\r\n\r\n**To open:** Use the command **Open writing log** from the command palette, or click the **Writing log** button in the Launcher panel.\r\n\r\n**The Writing Log shows:**\r\n- Current streak (days in a row with at least one sprint)\r\n- This session: total session words, sprint words, sprints completed, and minutes written\r\n- Last 30 days: a bar chart with one row per day showing word count, sprints completed, and a visual bar proportional to the day\'s output\r\n\r\nWhen **Append to daily note** is enabled (Settings \u2192 Writing log), a summary of each completed sprint is also appended to today\'s Daily Note.\r\n\r\n---\r\n\r\n### Getting Your Work Out\r\n\r\n#### Export Engine\r\n\r\nWhen your draft is ready, the Export Engine converts it to a finished file in your chosen format \u2014 no reformatting required.\r\n\r\n**Supported formats:** Manuscript (HTML) \xB7 PDF \xB7 Word (.docx) \xB7 RTF \xB7 HTML \xB7 Markdown \xB7 EPUB\r\n\r\n**To export:**\r\n- Right-click inside the editor and choose **Export this document** under **Writing studio options**.\r\n- Use the command **Export document** from the command palette.\r\n- Click the **Export** button in the Launcher panel.\r\n- Assign a hotkey to **Export document** in Settings \u2192 Hotkeys.\r\n\r\n**Manuscript format**\r\n\r\nThe Manuscript format produces a self-contained HTML file formatted to industry-standard manuscript conventions:\r\n- Courier New 12 pt, double-spaced, 1-inch margins\r\n- Title page with project title, author name, approximate word count, and optional contact information\r\n- Chapter headings in uppercase, page-break before each\r\n- Scene breaks rendered as `#` (the standard manuscript convention)\r\n\r\nNo external tools are required for manuscript export.\r\n\r\n**Settings (Settings \u2192 Export):**\r\n\r\n| Setting | Description |\r\n|---------|-------------|\r\n| Default export format | Pre-selected format in the export modal |\r\n| Default paper size | Letter (US) or A4 |\r\n| Export font | Font name used in PDF/DOCX output (e.g. `Georgia`) |\r\n| Export font size | Point size for PDF/DOCX output |\r\n| Pandoc path | Full path to the `pandoc` binary if it is not on your system PATH |\r\n| EPUB language | BCP 47 language tag (e.g. `en`, `fr`, `de`) |\r\n| EPUB include cover | Generate a text cover page when no cover image is provided |\r\n\r\n> **Requirement:** Pandoc must be installed for PDF, DOCX, RTF, HTML, and EPUB export. Download from [pandoc.org](https://pandoc.org/installing.html). For PDF export, a LaTeX distribution (e.g. TeX Live or MiKTeX) is also required. Manuscript (HTML) export does not require Pandoc.\r\n>\r\n> **Formatting note:** the built-in converter used for HTML, Manuscript, and EPUB output supports headings, paragraphs, lists, blockquotes, fenced code blocks, tables, images, and links. Nested lists, setext (underline-style) headings, and footnotes are not converted \u2014 use a Pandoc format (PDF, DOCX, RTF) if your manuscript depends on them.\r\n\r\n---\r\n\r\n#### WordPress Publishing\r\n\r\nPublish your finished draft directly to WordPress without leaving Obsidian. The modal lets you choose the target site, set the post title, status, categories, tags, excerpt, and an optional scheduled publication date.\r\n\r\n**To publish:**\r\n- Right-click inside the editor and choose **Publish to WordPress** under **Writing studio options**.\r\n- Use the command **Publish to WordPress** from the command palette.\r\n- Click the **Publish to WordPress** button in the Launcher panel.\r\n- Assign a hotkey to **Publish to WordPress** in Settings \u2192 Hotkeys.\r\n\r\n**Setting up a site (Settings \u2192 WordPress):**\r\n\r\n1. Click **+ add WordPress site**.\r\n2. Enter a nickname, the site URL (e.g. `https://yourblog.com`), and your WordPress username.\r\n3. Generate an application password in WordPress under **Users \u2192 Profile \u2192 Application passwords** and paste it into the **Application password** field.\r\n4. Click **Test connection** to verify.\r\n\r\n**Per-site options:**\r\n\r\n| Setting | Description |\r\n|---------|-------------|\r\n| Default post status | Draft \xB7 Pending Review \xB7 Published |\r\n| Wikilink handling | **Strip** removes `[[...]]` syntax, leaving plain text \xB7 **Convert** turns wikilinks into URLs |\r\n\r\n**Preserving your credentials across updates**\r\n\r\nWriting Studio stores your WordPress site credentials in your vault\'s `.obsidian/plugins/writing-studio/data.json` file. Obsidian\'s in-app update process does not touch this file \u2014 your credentials are preserved automatically. However, if you uninstall and reinstall the plugin manually, or if a vault sync conflict overwrites `data.json`, credentials will be lost and will need to be re-entered. To avoid this, always use Obsidian\'s built-in Update button rather than uninstalling manually.\r\n\r\n---\r\n\r\n### Supporting Tools\r\n\r\n#### Frontmatter Manager\r\n\r\nWriting Studio automatically manages YAML frontmatter in your documents when **Frontmatter auto-update** is enabled. On every save it updates:\r\n\r\n- `word-count` \u2014 current word count\r\n- `modified` \u2014 last-modified date\r\n\r\nThe `word-count-goal` frontmatter field is read by the inline goal banner and the Word Count Goal modal.\r\n\r\n---\r\n\r\n## Context Menus\r\n\r\nWriting Studio adds items to Obsidian\'s right-click context menus. All Writing Studio items are grouped together under the heading **Writing studio options** to distinguish them from other plugins and Obsidian\'s built-in options.\r\n\r\n### Right-click inside an open document (editor menu)\r\n\r\n| Option | Action |\r\n|--------|--------|\r\n| Export this document | Open the export modal for the current file |\r\n| Publish to WordPress | Open the WordPress publish modal for the current file |\r\n| Set word count goal | Set a word count target for the current document |\r\n| Switch writing mode \u2192 | Open a mode-switcher menu (Draft / Edit / Review / None) |\r\n| Typography font \u2192 | Open a font picker menu to change the typography font (visible only when Typography Mode is active) |\r\n\r\n### Right-click a Markdown file in the file explorer\r\n\r\n| Option | Action |\r\n|--------|--------|\r\n| Add to writing project | Open a project picker and add the file to the selected project |\r\n\r\n### Right-click a folder in the file explorer\r\n\r\n| Option | Action |\r\n|--------|--------|\r\n| Open in sidebar explorer | Open the folder in the Folder Sidebar Explorer panel |\r\n\r\n---\r\n\r\n## Commands Reference\r\n\r\nNo default hotkeys are assigned. All commands can be given a hotkey in **Settings \u2192 Hotkeys**.\r\n\r\n| Command | Description |\r\n|---------|-------------|\r\n| Open launcher | Open the launcher sidebar panel |\r\n| Open binder | Open the writing binder sidebar panel |\r\n| Open writing log | Open the daily writing log panel |\r\n| Toggle focus mode | Enable or disable focus mode |\r\n| Toggle typography mode | Enable or disable typography mode |\r\n| Switch to draft mode | Activate draft writing mode |\r\n| Switch to edit mode | Activate edit writing mode |\r\n| Switch to review mode | Activate review writing mode |\r\n| Start writing sprint | Open the sprint timer modal |\r\n| Export document | Export the current document |\r\n| Export project | Export the full project |\r\n| Preview compiled manuscript | Open the compile preview pane |\r\n| Publish to WordPress | Publish the current document to WordPress |\r\n| Create new writing project | Create a new writing project |\r\n| Open writing dashboard | Open the statistics dashboard |\r\n| Open targets dashboard | Open the word count targets panel |\r\n| Set word count goal | Set a per-document word count goal |\r\n| Open folder in sidebar explorer | Search and open a vault folder in the sidebar |\r\n| Scan project folder for new files | Scan the active project folder for files not in the binder and import selected files |\r\n\r\n---\r\n\r\n## Settings Overview\r\n\r\nOpen via **Settings \u2192 Writing Studio**.\r\n\r\n| Tab | What it controls |\r\n|-----|-----------------|\r\n| General | Open on startup, default project folder, author name, document type, frontmatter auto-update |\r\n| Focus mode | Focus unit, dim opacity, font override, sidebar behavior, typewriter scroll |\r\n| Typography | Font family, custom font name, line length, font size, line height, letter spacing, persistence |\r\n| Sprint & goals | Sprint duration, daily goal, sound notifications, history retention, inline banner |\r\n| Export | Format, paper size, font, font size, Pandoc path, EPUB language, EPUB cover |\r\n| Writing log | Append sprint summaries to Daily Note |\r\n| WordPress | Site credentials, default post status, wikilink handling |\r\n\r\n---\r\n\r\n## Ribbon Icon\r\n\r\nWriting Studio adds a single icon to the Obsidian ribbon.\r\n\r\n| Icon | Action |\r\n|------|--------|\r\n| Feather | Open the Writing Studio Launcher panel |\r\n\r\nAll other features are accessible from the Launcher panel, the command palette, context menus, or assigned hotkeys.\r\n\r\n---\r\n\r\n## Installation\r\n\r\n1. Download `main.js`, `manifest.json`, and `styles.css` from the latest [GitHub release](../../releases/latest).\r\n2. Create the folder `<vault>/.obsidian/plugins/writing-studio/` if it does not exist.\r\n3. Copy the three files into that folder.\r\n4. In Obsidian, go to **Settings \u2192 Community Plugins**, find **Writing Studio**, and enable it.\r\n\r\n> **Building from source:** Clone the repository, run `npm install`, then `npm run build`. Copy the three output files as above.\r\n\r\n---\r\n\r\n## Requirements\r\n\r\nMost features work out of the box. A few require additional software for specific functions, noted below.\r\n\r\n| Requirement | When needed |\r\n|-------------|-------------|\r\n| Obsidian 1.8.7 or later | Always |\r\n| Desktop (Windows, macOS, Linux) | Always \u2014 this plugin does not run on mobile |\r\n| Internet connection | First use of each Typography Mode font (cached after that) |\r\n| [Pandoc](https://pandoc.org/installing.html) | Export to PDF, DOCX, RTF, HTML, EPUB |\r\n| LaTeX (TeX Live / MiKTeX) | Export to PDF only |\r\n| WordPress 5.6+ with REST API enabled | WordPress publishing |\r\n| WordPress Application Password | WordPress publishing |\r\n\r\n---\r\n\r\n## Reporting a Bug\r\n\r\nIf something isn\'t working, please open an issue on GitHub:\r\n\r\n**[Submit a bug report](https://github.com/writerP-777/obsidian-writing-studio/issues/new)**\r\n\r\nInclude the following when you report:\r\n\r\n- Writing Studio version (visible in **Settings \u2192 Community Plugins**)\r\n- Obsidian version (visible in **Settings \u2192 About**)\r\n- Operating system (Windows / macOS / Linux) and version\r\n- What you expected to happen\r\n- What actually happened, and any steps to reproduce it\r\n\r\nFeature requests are welcome in the same place \u2014 please label them as **[Feature Request]** in the issue title.\r\n\r\n---\r\n\r\n## Security\r\n\r\n[![CodeQL](https://github.com/writerP-777/obsidian-writing-studio/actions/workflows/codeql.yml/badge.svg)](https://github.com/writerP-777/obsidian-writing-studio/actions/workflows/codeql.yml)\r\n[![OpenSSF Scorecard](https://api.securityscorecards.dev/projects/github.com/writerP-777/obsidian-writing-studio/badge)](https://securityscorecards.dev/viewer/?uri=github.com/writerP-777/obsidian-writing-studio)\r\n[![OpenSSF Baseline](https://www.bestpractices.dev/projects/12832/baseline)](https://www.bestpractices.dev/projects/12832)\r\n[![ESLint](https://github.com/writerP-777/obsidian-writing-studio/actions/workflows/eslint.yml/badge.svg)](https://github.com/writerP-777/obsidian-writing-studio/actions/workflows/eslint.yml)\r\n[![ORCID](https://img.shields.io/badge/ORCID-0009--0009--8598--2069-brightgreen?logo=orcid&logoColor=white)](https://orcid.org/0009-0009-8598-2069)\r\n\r\nEvery push and pull request is scanned automatically:\r\n\r\n| Tool | What it checks |\r\n|------|----------------|\r\n| **CodeQL** | Static analysis for security vulnerabilities (XSS, injection, unsafe patterns) in TypeScript/JavaScript source |\r\n| **OpenSSF Scorecard** | Supply-chain security posture: dependency hygiene, branch protection, signed releases, and more |\r\n| **ESLint** (`eslint-plugin-obsidianmd`) | Obsidian plugin guideline compliance \u2014 fails on any warning or error |\r\n\r\nResults are published to the **Security** tab of this repository (GitHub code scanning).\r\n\r\nFor local development, a pre-commit hook runs ESLint (blocking) and a pre-push hook runs a full CodeQL scan (blocks the push if any HIGH or CRITICAL findings are present). Install the [CodeQL CLI](https://github.com/github/codeql-cli-binaries/releases) to enable local scanning (`winget install GitHub.CodeQL` on Windows).\r\n';
 
 // src/HelpContent.ts
 var start = README_default.indexOf("\n## Features");
@@ -17162,7 +17412,7 @@ content = content.replace(/^!\[[^\]]*\]\((?!https?:\/\/)[^)]*\)[ \t]*$/gm, "");
 var HELP_CONTENT = content;
 
 // src/SettingsTab.ts
-var WritingStudioSettingsTab = class extends import_obsidian27.PluginSettingTab {
+var WritingStudioSettingsTab = class extends import_obsidian28.PluginSettingTab {
   constructor(app, plugin) {
     super(app, plugin);
     this.activeTab = "general";
@@ -17247,57 +17497,57 @@ var WritingStudioSettingsTab = class extends import_obsidian27.PluginSettingTab 
     }
   }
   renderGeneral(el) {
-    new import_obsidian27.Setting(el).setName(t2("settings.general.openOnStartup")).setDesc(t2("settings.general.openOnStartupDesc")).addToggle((toggle) => toggle.setValue(this.plugin.settings.openOnStartup).onChange(async (v) => {
+    new import_obsidian28.Setting(el).setName(t2("settings.general.openOnStartup")).setDesc(t2("settings.general.openOnStartupDesc")).addToggle((toggle) => toggle.setValue(this.plugin.settings.openOnStartup).onChange(async (v) => {
       this.plugin.settings.openOnStartup = v;
       await this.plugin.saveSettings();
     }));
-    new import_obsidian27.Setting(el).setName(t2("settings.general.defaultProjectFolder")).setDesc(t2("settings.general.defaultProjectFolderDesc")).addText((text) => text.setPlaceholder(t2("settings.general.defaultProjectFolderPlaceholder")).setValue(this.plugin.settings.defaultProjectFolder).onChange(async (v) => {
+    new import_obsidian28.Setting(el).setName(t2("settings.general.defaultProjectFolder")).setDesc(t2("settings.general.defaultProjectFolderDesc")).addText((text) => text.setPlaceholder(t2("settings.general.defaultProjectFolderPlaceholder")).setValue(this.plugin.settings.defaultProjectFolder).onChange(async (v) => {
       this.plugin.settings.defaultProjectFolder = v;
       await this.plugin.saveSettings();
     }));
-    new import_obsidian27.Setting(el).setName(t2("settings.general.authorName")).setDesc(t2("settings.general.authorNameDesc")).addText((text) => text.setPlaceholder(t2("settings.general.authorNamePlaceholder")).setValue(this.plugin.settings.authorName).onChange(async (v) => {
+    new import_obsidian28.Setting(el).setName(t2("settings.general.authorName")).setDesc(t2("settings.general.authorNameDesc")).addText((text) => text.setPlaceholder(t2("settings.general.authorNamePlaceholder")).setValue(this.plugin.settings.authorName).onChange(async (v) => {
       this.plugin.settings.authorName = v;
       await this.plugin.saveSettings();
     }));
-    new import_obsidian27.Setting(el).setName(t2("settings.general.defaultDocumentType")).addDropdown((d) => d.addOption("chapter", t2("settings.general.docType.chapter")).addOption("section", t2("settings.general.docType.section")).addOption("article", t2("settings.general.docType.article")).addOption("note", t2("settings.general.docType.note")).setValue(this.plugin.settings.defaultDocumentType).onChange(async (v) => {
+    new import_obsidian28.Setting(el).setName(t2("settings.general.defaultDocumentType")).addDropdown((d) => d.addOption("chapter", t2("settings.general.docType.chapter")).addOption("section", t2("settings.general.docType.section")).addOption("article", t2("settings.general.docType.article")).addOption("note", t2("settings.general.docType.note")).setValue(this.plugin.settings.defaultDocumentType).onChange(async (v) => {
       this.plugin.settings.defaultDocumentType = v;
       await this.plugin.saveSettings();
     }));
-    new import_obsidian27.Setting(el).setName(t2("settings.general.frontmatterAutoUpdate")).setDesc(t2("settings.general.frontmatterAutoUpdateDesc")).addToggle((toggle) => toggle.setValue(this.plugin.settings.frontmatterAutoUpdate).onChange(async (v) => {
+    new import_obsidian28.Setting(el).setName(t2("settings.general.frontmatterAutoUpdate")).setDesc(t2("settings.general.frontmatterAutoUpdateDesc")).addToggle((toggle) => toggle.setValue(this.plugin.settings.frontmatterAutoUpdate).onChange(async (v) => {
       this.plugin.settings.frontmatterAutoUpdate = v;
       await this.plugin.saveSettings();
     }));
   }
   renderFocusMode(el) {
-    new import_obsidian27.Setting(el).setName(t2("settings.focus.heading")).setHeading();
-    new import_obsidian27.Setting(el).setName(t2("settings.focus.focusUnit")).setDesc(t2("settings.focus.focusUnitDesc")).addDropdown((d) => d.addOption("paragraph", t2("settings.focus.paragraph")).addOption("sentence", t2("settings.focus.sentence")).setValue(this.plugin.settings.focusUnit).onChange(async (v) => {
+    new import_obsidian28.Setting(el).setName(t2("settings.focus.heading")).setHeading();
+    new import_obsidian28.Setting(el).setName(t2("settings.focus.focusUnit")).setDesc(t2("settings.focus.focusUnitDesc")).addDropdown((d) => d.addOption("paragraph", t2("settings.focus.paragraph")).addOption("sentence", t2("settings.focus.sentence")).setValue(this.plugin.settings.focusUnit).onChange(async (v) => {
       this.plugin.settings.focusUnit = v;
       await this.plugin.saveSettings();
     }));
-    new import_obsidian27.Setting(el).setName(t2("settings.focus.dimOpacity")).setDesc(t2("settings.focus.dimOpacityDesc")).addSlider((s) => s.setLimits(10, 50, 5).setValue(this.plugin.settings.dimOpacity).onChange(async (v) => {
+    new import_obsidian28.Setting(el).setName(t2("settings.focus.dimOpacity")).setDesc(t2("settings.focus.dimOpacityDesc")).addSlider((s) => s.setLimits(10, 50, 5).setValue(this.plugin.settings.dimOpacity).onChange(async (v) => {
       this.plugin.settings.dimOpacity = v;
       await this.plugin.saveSettings();
       this.plugin.focusMode.applyDimOpacity();
     }));
-    new import_obsidian27.Setting(el).setName(t2("settings.focus.fontSizeOverride")).setDesc(t2("settings.focus.fontSizeOverrideDesc")).addText((text) => text.setValue(String(this.plugin.settings.focusFontSize || 0)).onChange(async (v) => {
+    new import_obsidian28.Setting(el).setName(t2("settings.focus.fontSizeOverride")).setDesc(t2("settings.focus.fontSizeOverrideDesc")).addText((text) => text.setValue(String(this.plugin.settings.focusFontSize || 0)).onChange(async (v) => {
       const n = Number(v.trim());
       if (!Number.isInteger(n) || n !== 0 && (n < 8 || n > 72)) return;
       this.plugin.settings.focusFontSize = n;
       await this.plugin.saveSettings();
       this.plugin.focusMode.applyFontSize();
     }));
-    new import_obsidian27.Setting(el).setName(t2("settings.focus.autoHideSidebars")).addToggle((toggle) => toggle.setValue(this.plugin.settings.focusAutoHideSidebars).onChange(async (v) => {
+    new import_obsidian28.Setting(el).setName(t2("settings.focus.autoHideSidebars")).addToggle((toggle) => toggle.setValue(this.plugin.settings.focusAutoHideSidebars).onChange(async (v) => {
       this.plugin.settings.focusAutoHideSidebars = v;
       await this.plugin.saveSettings();
     }));
-    new import_obsidian27.Setting(el).setName(t2("settings.focus.typewriterScroll")).setDesc(t2("settings.focus.typewriterScrollDesc")).addToggle((toggle) => toggle.setValue(this.plugin.settings.typewriterScroll).onChange(async (v) => {
+    new import_obsidian28.Setting(el).setName(t2("settings.focus.typewriterScroll")).setDesc(t2("settings.focus.typewriterScrollDesc")).addToggle((toggle) => toggle.setValue(this.plugin.settings.typewriterScroll).onChange(async (v) => {
       this.plugin.settings.typewriterScroll = v;
       await this.plugin.saveSettings();
     }));
   }
   renderTypography(el) {
-    new import_obsidian27.Setting(el).setName(t2("settings.typography.heading")).setHeading();
-    new import_obsidian27.Setting(el).setName(t2("settings.typography.fontFamily")).addDropdown((d) => {
+    new import_obsidian28.Setting(el).setName(t2("settings.typography.heading")).setHeading();
+    new import_obsidian28.Setting(el).setName(t2("settings.typography.fontFamily")).addDropdown((d) => {
       d.addOption("mono", t2("settings.typography.font.mono"));
       d.addOption("serif", t2("settings.typography.font.serif"));
       d.addOption("sans", t2("settings.typography.font.sans"));
@@ -17319,110 +17569,110 @@ var WritingStudioSettingsTab = class extends import_obsidian27.PluginSettingTab 
         if (this.plugin.typographyMode.isActive()) this.plugin.typographyMode.refreshStyles();
       });
     });
-    new import_obsidian27.Setting(el).setName(t2("settings.typography.customFontName")).setDesc(t2("settings.typography.customFontNameDesc")).addText((text) => text.setPlaceholder(t2("settings.typography.customFontNamePlaceholder")).setValue(this.plugin.settings.customFontName).onChange(async (v) => {
+    new import_obsidian28.Setting(el).setName(t2("settings.typography.customFontName")).setDesc(t2("settings.typography.customFontNameDesc")).addText((text) => text.setPlaceholder(t2("settings.typography.customFontNamePlaceholder")).setValue(this.plugin.settings.customFontName).onChange(async (v) => {
       this.plugin.settings.customFontName = v;
       await this.plugin.saveSettings();
     }));
-    new import_obsidian27.Setting(el).setName(t2("settings.typography.maxLineLength")).setDesc(t2("settings.typography.maxLineLengthDesc")).addSlider((s) => s.setLimits(55, 80, 1).setValue(this.plugin.settings.maxLineLength).onChange(async (v) => {
+    new import_obsidian28.Setting(el).setName(t2("settings.typography.maxLineLength")).setDesc(t2("settings.typography.maxLineLengthDesc")).addSlider((s) => s.setLimits(55, 80, 1).setValue(this.plugin.settings.maxLineLength).onChange(async (v) => {
       this.plugin.settings.maxLineLength = v;
       await this.plugin.saveSettings();
     }));
-    new import_obsidian27.Setting(el).setName(t2("settings.typography.fontSize")).addText((text) => text.setValue(String(this.plugin.settings.typographyFontSize)).onChange(async (v) => {
+    new import_obsidian28.Setting(el).setName(t2("settings.typography.fontSize")).addText((text) => text.setValue(String(this.plugin.settings.typographyFontSize)).onChange(async (v) => {
       const n = Number(v.trim());
       if (!Number.isInteger(n) || n < 8 || n > 72) return;
       this.plugin.settings.typographyFontSize = n;
       await this.plugin.saveSettings();
     }));
-    new import_obsidian27.Setting(el).setName(t2("settings.typography.lineHeight")).setDesc(t2("settings.typography.lineHeightDesc")).addText((text) => text.setValue(String(this.plugin.settings.lineHeight)).onChange(async (v) => {
+    new import_obsidian28.Setting(el).setName(t2("settings.typography.lineHeight")).setDesc(t2("settings.typography.lineHeightDesc")).addText((text) => text.setValue(String(this.plugin.settings.lineHeight)).onChange(async (v) => {
       this.plugin.settings.lineHeight = parseFloat(v) || 1.7;
       await this.plugin.saveSettings();
     }));
-    new import_obsidian27.Setting(el).setName(t2("settings.typography.letterSpacing")).setDesc(t2("settings.typography.letterSpacingDesc")).addText((text) => text.setValue(this.plugin.settings.letterSpacing).onChange(async (v) => {
+    new import_obsidian28.Setting(el).setName(t2("settings.typography.letterSpacing")).setDesc(t2("settings.typography.letterSpacingDesc")).addText((text) => text.setValue(this.plugin.settings.letterSpacing).onChange(async (v) => {
       this.plugin.settings.letterSpacing = v;
       await this.plugin.saveSettings();
     }));
-    new import_obsidian27.Setting(el).setName(t2("settings.typography.persistAcrossSessions")).setDesc(t2("settings.typography.persistAcrossSessionsDesc")).addToggle((toggle) => toggle.setValue(this.plugin.settings.persistTypography).onChange(async (v) => {
+    new import_obsidian28.Setting(el).setName(t2("settings.typography.persistAcrossSessions")).setDesc(t2("settings.typography.persistAcrossSessionsDesc")).addToggle((toggle) => toggle.setValue(this.plugin.settings.persistTypography).onChange(async (v) => {
       this.plugin.settings.persistTypography = v;
       await this.plugin.saveSettings();
     }));
   }
   renderSprint(el) {
-    new import_obsidian27.Setting(el).setName(t2("settings.sprint.heading")).setHeading();
-    new import_obsidian27.Setting(el).setName(t2("settings.sprint.defaultDuration")).addText((text) => text.setValue(String(this.plugin.settings.defaultSprintDuration)).onChange(async (v) => {
+    new import_obsidian28.Setting(el).setName(t2("settings.sprint.heading")).setHeading();
+    new import_obsidian28.Setting(el).setName(t2("settings.sprint.defaultDuration")).addText((text) => text.setValue(String(this.plugin.settings.defaultSprintDuration)).onChange(async (v) => {
       const n = Number(v.trim());
       if (!Number.isInteger(n) || n < 1 || n > 600) return;
       this.plugin.settings.defaultSprintDuration = n;
       await this.plugin.saveSettings();
     }));
-    new import_obsidian27.Setting(el).setName(t2("settings.sprint.defaultDailyGoal")).addText((text) => text.setValue(String(this.plugin.settings.defaultDailyWordGoal)).onChange(async (v) => {
+    new import_obsidian28.Setting(el).setName(t2("settings.sprint.defaultDailyGoal")).addText((text) => text.setValue(String(this.plugin.settings.defaultDailyWordGoal)).onChange(async (v) => {
       const n = Number(v.trim());
       if (!Number.isInteger(n) || n < 0 || n > 1e6) return;
       this.plugin.settings.defaultDailyWordGoal = n;
       await this.plugin.saveSettings();
     }));
-    new import_obsidian27.Setting(el).setName(t2("settings.sprint.soundNotifications")).setDesc(t2("settings.sprint.soundNotificationsDesc")).addToggle((toggle) => toggle.setValue(this.plugin.settings.soundNotifications).onChange(async (v) => {
+    new import_obsidian28.Setting(el).setName(t2("settings.sprint.soundNotifications")).setDesc(t2("settings.sprint.soundNotificationsDesc")).addToggle((toggle) => toggle.setValue(this.plugin.settings.soundNotifications).onChange(async (v) => {
       this.plugin.settings.soundNotifications = v;
       await this.plugin.saveSettings();
     }));
-    new import_obsidian27.Setting(el).setName(t2("settings.sprint.historyRetention")).addText((text) => text.setValue(String(this.plugin.settings.sprintHistoryRetention)).onChange(async (v) => {
+    new import_obsidian28.Setting(el).setName(t2("settings.sprint.historyRetention")).addText((text) => text.setValue(String(this.plugin.settings.sprintHistoryRetention)).onChange(async (v) => {
       const n = Number(v.trim());
       if (!Number.isInteger(n) || n < 1 || n > 3650) return;
       this.plugin.settings.sprintHistoryRetention = n;
       await this.plugin.saveSettings();
     }));
-    new import_obsidian27.Setting(el).setName(t2("settings.sprint.inlineGoalBanner")).setDesc(t2("settings.sprint.inlineGoalBannerDesc")).addToggle((toggle) => toggle.setValue(this.plugin.settings.inlineGoalBanner).onChange(async (v) => {
+    new import_obsidian28.Setting(el).setName(t2("settings.sprint.inlineGoalBanner")).setDesc(t2("settings.sprint.inlineGoalBannerDesc")).addToggle((toggle) => toggle.setValue(this.plugin.settings.inlineGoalBanner).onChange(async (v) => {
       this.plugin.settings.inlineGoalBanner = v;
       await this.plugin.saveSettings();
     }));
   }
   renderExport(el) {
-    new import_obsidian27.Setting(el).setName(t2("settings.export.heading")).setHeading();
-    new import_obsidian27.Setting(el).setName(t2("settings.export.defaultFormat")).addDropdown((d) => d.addOption("md", t2("settings.export.format.md")).addOption("html", t2("settings.export.format.html")).addOption("manuscript", t2("exportModal.format.manuscript")).addOption("epub", t2("exportModal.format.epub")).addOption("pdf", t2("settings.export.format.pdf")).addOption("docx", t2("settings.export.format.docx")).addOption("rtf", t2("settings.export.format.rtf")).setValue(this.plugin.settings.defaultExportFormat).onChange(async (v) => {
+    new import_obsidian28.Setting(el).setName(t2("settings.export.heading")).setHeading();
+    new import_obsidian28.Setting(el).setName(t2("settings.export.defaultFormat")).addDropdown((d) => d.addOption("md", t2("settings.export.format.md")).addOption("html", t2("settings.export.format.html")).addOption("manuscript", t2("exportModal.format.manuscript")).addOption("epub", t2("exportModal.format.epub")).addOption("pdf", t2("settings.export.format.pdf")).addOption("docx", t2("settings.export.format.docx")).addOption("rtf", t2("settings.export.format.rtf")).setValue(this.plugin.settings.defaultExportFormat).onChange(async (v) => {
       this.plugin.settings.defaultExportFormat = v;
       await this.plugin.saveSettings();
     }));
-    new import_obsidian27.Setting(el).setName(t2("settings.export.defaultPaperSize")).addDropdown((d) => d.addOption("letter", t2("settings.export.paperSize.letter")).addOption("a4", t2("settings.export.paperSize.a4")).setValue(this.plugin.settings.defaultPaperSize).onChange(async (v) => {
+    new import_obsidian28.Setting(el).setName(t2("settings.export.defaultPaperSize")).addDropdown((d) => d.addOption("letter", t2("settings.export.paperSize.letter")).addOption("a4", t2("settings.export.paperSize.a4")).setValue(this.plugin.settings.defaultPaperSize).onChange(async (v) => {
       this.plugin.settings.defaultPaperSize = v;
       await this.plugin.saveSettings();
     }));
-    new import_obsidian27.Setting(el).setName(t2("settings.export.exportFont")).addText((text) => text.setPlaceholder("Georgia").setValue(this.plugin.settings.defaultExportFont).onChange(async (v) => {
+    new import_obsidian28.Setting(el).setName(t2("settings.export.exportFont")).addText((text) => text.setPlaceholder("Georgia").setValue(this.plugin.settings.defaultExportFont).onChange(async (v) => {
       this.plugin.settings.defaultExportFont = v;
       await this.plugin.saveSettings();
     }));
-    new import_obsidian27.Setting(el).setName(t2("settings.export.exportFontSize")).addText((text) => text.setValue(String(this.plugin.settings.defaultExportFontSize)).onChange(async (v) => {
+    new import_obsidian28.Setting(el).setName(t2("settings.export.exportFontSize")).addText((text) => text.setValue(String(this.plugin.settings.defaultExportFontSize)).onChange(async (v) => {
       const n = Number(v.trim());
       if (!Number.isInteger(n) || n < 6 || n > 72) return;
       this.plugin.settings.defaultExportFontSize = n;
       await this.plugin.saveSettings();
     }));
-    new import_obsidian27.Setting(el).setName(t2("settings.export.pandocPath")).setDesc(t2("settings.export.pandocPathDesc")).addText((text) => text.setPlaceholder("Pandoc").setValue(this.plugin.settings.pandocPath).onChange(async (v) => {
+    new import_obsidian28.Setting(el).setName(t2("settings.export.pandocPath")).setDesc(t2("settings.export.pandocPathDesc")).addText((text) => text.setPlaceholder("Pandoc").setValue(this.plugin.settings.pandocPath).onChange(async (v) => {
       this.plugin.settings.pandocPath = v;
       await this.plugin.saveSettings();
     }));
-    new import_obsidian27.Setting(el).setName(t2("settings.export.epubHeading")).setHeading();
-    new import_obsidian27.Setting(el).setName(t2("settings.export.epubLanguage")).setDesc(t2("settings.export.epubLanguageDesc")).addText((text) => text.setPlaceholder("en").setValue(this.plugin.settings.epubLanguage).onChange(async (v) => {
+    new import_obsidian28.Setting(el).setName(t2("settings.export.epubHeading")).setHeading();
+    new import_obsidian28.Setting(el).setName(t2("settings.export.epubLanguage")).setDesc(t2("settings.export.epubLanguageDesc")).addText((text) => text.setPlaceholder("en").setValue(this.plugin.settings.epubLanguage).onChange(async (v) => {
       this.plugin.settings.epubLanguage = v.trim() || "en";
       await this.plugin.saveSettings();
     }));
-    new import_obsidian27.Setting(el).setName(t2("settings.export.includeCover")).setDesc(t2("settings.export.includeCoverDesc")).addToggle((toggle) => toggle.setValue(this.plugin.settings.epubIncludeCover).onChange(async (v) => {
+    new import_obsidian28.Setting(el).setName(t2("settings.export.includeCover")).setDesc(t2("settings.export.includeCoverDesc")).addToggle((toggle) => toggle.setValue(this.plugin.settings.epubIncludeCover).onChange(async (v) => {
       this.plugin.settings.epubIncludeCover = v;
       await this.plugin.saveSettings();
     }));
   }
   renderLog(el) {
-    new import_obsidian27.Setting(el).setName(t2("settings.log.heading")).setHeading();
-    new import_obsidian27.Setting(el).setName(t2("settings.log.appendToDailyNote")).setDesc(t2("settings.log.appendToDailyNoteDesc")).addToggle((toggle) => toggle.setValue(this.plugin.settings.appendToDailyNote).onChange(async (v) => {
+    new import_obsidian28.Setting(el).setName(t2("settings.log.heading")).setHeading();
+    new import_obsidian28.Setting(el).setName(t2("settings.log.appendToDailyNote")).setDesc(t2("settings.log.appendToDailyNoteDesc")).addToggle((toggle) => toggle.setValue(this.plugin.settings.appendToDailyNote).onChange(async (v) => {
       this.plugin.settings.appendToDailyNote = v;
       await this.plugin.saveSettings();
     }));
   }
   renderWordPress(el) {
-    new import_obsidian27.Setting(el).setName(t2("settings.wordpress.sitesHeading")).setHeading();
+    new import_obsidian28.Setting(el).setName(t2("settings.wordpress.sitesHeading")).setHeading();
     const sites = this.plugin.settings.wordPressSites;
     for (let i = 0; i < sites.length; i++) {
       this.renderSiteConfig(el, sites[i], i);
     }
-    new import_obsidian27.Setting(el).addButton((b) => b.setButtonText(t2("settings.wordpress.addSite")).onClick(async () => {
+    new import_obsidian28.Setting(el).addButton((b) => b.setButtonText(t2("settings.wordpress.addSite")).onClick(async () => {
       this.plugin.settings.wordPressSites.push({
         id: `site-${Date.now()}`,
         nickname: t2("settings.wordpress.newSiteName"),
@@ -17439,8 +17689,8 @@ var WritingStudioSettingsTab = class extends import_obsidian27.PluginSettingTab 
         this.renderWordPress(contentEl);
       }
     }));
-    new import_obsidian27.Setting(el).setName(t2("settings.wordpress.wikilinksHeading")).setHeading();
-    new import_obsidian27.Setting(el).setName(t2("settings.wordpress.defaultWikilinkHandling")).addDropdown((d) => d.addOption("strip", t2("settings.wordpress.wikilinkStrip")).addOption("convert", t2("settings.wordpress.wikilinkConvert")).setValue(this.plugin.settings.wikilinkHandling).onChange(async (v) => {
+    new import_obsidian28.Setting(el).setName(t2("settings.wordpress.wikilinksHeading")).setHeading();
+    new import_obsidian28.Setting(el).setName(t2("settings.wordpress.defaultWikilinkHandling")).addDropdown((d) => d.addOption("strip", t2("settings.wordpress.wikilinkStrip")).addOption("convert", t2("settings.wordpress.wikilinkConvert")).setValue(this.plugin.settings.wikilinkHandling).onChange(async (v) => {
       this.plugin.settings.wikilinkHandling = v;
       await this.plugin.saveSettings();
     }));
@@ -17448,35 +17698,35 @@ var WritingStudioSettingsTab = class extends import_obsidian27.PluginSettingTab 
   renderSiteConfig(container, site, index) {
     const siteEl = container.createDiv("ws-wp-site-config");
     const heading = t2("settings.wordpress.siteHeading", { nickname: site.nickname || t2("settings.wordpress.siteUnnamed") });
-    new import_obsidian27.Setting(siteEl).setName(heading).setHeading();
-    new import_obsidian27.Setting(siteEl).setName(t2("settings.wordpress.nickname")).addText((text) => text.setValue(site.nickname).onChange(async (v) => {
+    new import_obsidian28.Setting(siteEl).setName(heading).setHeading();
+    new import_obsidian28.Setting(siteEl).setName(t2("settings.wordpress.nickname")).addText((text) => text.setValue(site.nickname).onChange(async (v) => {
       site.nickname = v;
       await this.plugin.saveSettings();
     }));
-    new import_obsidian27.Setting(siteEl).setName(t2("settings.wordpress.siteUrl")).addText((text) => text.setPlaceholder("https://example.com").setValue(site.url).onChange(async (v) => {
+    new import_obsidian28.Setting(siteEl).setName(t2("settings.wordpress.siteUrl")).addText((text) => text.setPlaceholder("https://example.com").setValue(site.url).onChange(async (v) => {
       site.url = v;
       await this.plugin.saveSettings();
     }));
-    new import_obsidian27.Setting(siteEl).setName(t2("settings.wordpress.username")).addText((text) => text.setValue(site.username).onChange(async (v) => {
+    new import_obsidian28.Setting(siteEl).setName(t2("settings.wordpress.username")).addText((text) => text.setValue(site.username).onChange(async (v) => {
       site.username = v;
       await this.plugin.saveSettings();
     }));
-    new import_obsidian27.Setting(siteEl).setName(t2("settings.wordpress.appPassword")).setDesc(t2("settings.wordpress.appPasswordDesc")).addText((text) => {
+    new import_obsidian28.Setting(siteEl).setName(t2("settings.wordpress.appPassword")).setDesc(t2("settings.wordpress.appPasswordDesc")).addText((text) => {
       text.inputEl.type = "password";
       text.setValue(site.appPassword).onChange(async (v) => {
         site.appPassword = v;
         await this.plugin.saveSettings();
       });
     });
-    new import_obsidian27.Setting(siteEl).setName(t2("settings.wordpress.defaultPostStatus")).addDropdown((d) => d.addOption("draft", t2("settings.wordpress.postStatus.draft")).addOption("pending", t2("settings.wordpress.postStatus.pending")).addOption("publish", t2("settings.wordpress.postStatus.publish")).setValue(site.defaultStatus).onChange(async (v) => {
+    new import_obsidian28.Setting(siteEl).setName(t2("settings.wordpress.defaultPostStatus")).addDropdown((d) => d.addOption("draft", t2("settings.wordpress.postStatus.draft")).addOption("pending", t2("settings.wordpress.postStatus.pending")).addOption("publish", t2("settings.wordpress.postStatus.publish")).setValue(site.defaultStatus).onChange(async (v) => {
       site.defaultStatus = v;
       await this.plugin.saveSettings();
     }));
-    new import_obsidian27.Setting(siteEl).setName(t2("settings.wordpress.wikilinkHandling")).addDropdown((d) => d.addOption("strip", t2("settings.wordpress.wikilinkHandlingStrip")).addOption("convert", t2("settings.wordpress.wikilinkHandlingConvert")).setValue(site.wikilinkHandling).onChange(async (v) => {
+    new import_obsidian28.Setting(siteEl).setName(t2("settings.wordpress.wikilinkHandling")).addDropdown((d) => d.addOption("strip", t2("settings.wordpress.wikilinkHandlingStrip")).addOption("convert", t2("settings.wordpress.wikilinkHandlingConvert")).setValue(site.wikilinkHandling).onChange(async (v) => {
       site.wikilinkHandling = v;
       await this.plugin.saveSettings();
     }));
-    const testRow = new import_obsidian27.Setting(siteEl).setName(t2("settings.wordpress.testConnection")).setDesc(t2("settings.wordpress.testConnectionDesc"));
+    const testRow = new import_obsidian28.Setting(siteEl).setName(t2("settings.wordpress.testConnection")).setDesc(t2("settings.wordpress.testConnectionDesc"));
     const statusEl = siteEl.createDiv("ws-wp-test-status");
     testRow.addButton((b) => b.setButtonText(t2("settings.wordpress.testConnection")).onClick(async () => {
       statusEl.textContent = t2("settings.wordpress.testing");
@@ -17485,7 +17735,7 @@ var WritingStudioSettingsTab = class extends import_obsidian27.PluginSettingTab 
       statusEl.textContent = result.message;
       statusEl.className = `ws-wp-test-status ${result.success ? "ws-wp-test-ok" : "ws-wp-test-err"}`;
     }));
-    new import_obsidian27.Setting(siteEl).addButton((b) => {
+    new import_obsidian28.Setting(siteEl).addButton((b) => {
       b.setButtonText(t2("settings.wordpress.removeSite"));
       b.buttonEl.addClass("mod-warning");
       b.onClick(async () => {
@@ -17500,10 +17750,10 @@ var WritingStudioSettingsTab = class extends import_obsidian27.PluginSettingTab 
     });
   }
   async renderHelp(el) {
-    this.helpComponent = new import_obsidian27.Component();
+    this.helpComponent = new import_obsidian28.Component();
     this.helpComponent.load();
     el.addClass("ws-help-content");
-    await import_obsidian27.MarkdownRenderer.render(this.app, HELP_CONTENT, el, "", this.helpComponent);
+    await import_obsidian28.MarkdownRenderer.render(this.app, HELP_CONTENT, el, "", this.helpComponent);
     const supportDiv = el.createDiv({ cls: "ws-support-footer" });
     supportDiv.createEl("a", {
       href: "https://buymeacoffee.com/writerp777",
@@ -17519,9 +17769,9 @@ var WritingStudioSettingsTab = class extends import_obsidian27.PluginSettingTab 
 };
 
 // src/WritingLogView.ts
-var import_obsidian28 = require("obsidian");
+var import_obsidian29 = require("obsidian");
 var WRITING_LOG_VIEW_TYPE = "writing-studio-writing-log";
-var WritingLogView = class extends import_obsidian28.ItemView {
+var WritingLogView = class extends import_obsidian29.ItemView {
   constructor(leaf, plugin) {
     super(leaf);
     this.plugin = plugin;
@@ -17548,7 +17798,7 @@ var WritingLogView = class extends import_obsidian28.ItemView {
     const root = this.containerEl.children[1];
     root.empty();
     root.addClass("ws-log-root");
-    const lang = (0, import_obsidian28.getLanguage)();
+    const lang = (0, import_obsidian29.getLanguage)();
     const header = root.createDiv("ws-log-header");
     header.createDiv({ text: t2("log.title"), cls: "ws-log-title" });
     header.createDiv({
@@ -17745,7 +17995,7 @@ var StatusBar = class {
 };
 
 // src/GoalBanner.ts
-var import_obsidian29 = require("obsidian");
+var import_obsidian30 = require("obsidian");
 var GoalBanner = class {
   constructor(plugin) {
     this.generation = 0;
@@ -17771,7 +18021,7 @@ var GoalBanner = class {
     const leaf = this.plugin.app.workspace.getMostRecentLeaf();
     if (!leaf) return;
     const view = leaf.view;
-    if (!(view instanceof import_obsidian29.MarkdownView)) return;
+    if (!(view instanceof import_obsidian30.MarkdownView)) return;
     const file = view.file;
     if (!file) return;
     const goal = await this.plugin.projectManager.getWordCountGoalForFile(file);
@@ -17800,18 +18050,18 @@ var GoalBanner = class {
 };
 
 // src/VaultFiles.ts
-var import_obsidian30 = require("obsidian");
+var import_obsidian31 = require("obsidian");
 var ObsidianVaultFiles = class {
   constructor(app) {
     this.app = app;
   }
   async readText(path) {
     const file = this.app.vault.getAbstractFileByPath(path);
-    return file instanceof import_obsidian30.TFile ? this.app.vault.read(file) : null;
+    return file instanceof import_obsidian31.TFile ? this.app.vault.read(file) : null;
   }
   async writeText(path, content2) {
     const existing = this.app.vault.getAbstractFileByPath(path);
-    if (existing instanceof import_obsidian30.TFile) {
+    if (existing instanceof import_obsidian31.TFile) {
       await this.app.vault.modify(existing, content2);
     } else {
       await this.app.vault.create(path, content2);
@@ -17819,18 +18069,18 @@ var ObsidianVaultFiles = class {
   }
   async readBinary(path) {
     const file = this.app.vault.getAbstractFileByPath(path);
-    return file instanceof import_obsidian30.TFile ? this.app.vault.readBinary(file) : null;
+    return file instanceof import_obsidian31.TFile ? this.app.vault.readBinary(file) : null;
   }
   async writeBinary(path, data) {
     const existing = this.app.vault.getAbstractFileByPath(path);
-    if (existing instanceof import_obsidian30.TFile) {
+    if (existing instanceof import_obsidian31.TFile) {
       await this.app.vault.modifyBinary(existing, data);
     } else {
       await this.app.vault.createBinary(path, data);
     }
   }
   async remove(path) {
-    if (this.app.vault.getAbstractFileByPath(path) instanceof import_obsidian30.TFile) {
+    if (this.app.vault.getAbstractFileByPath(path) instanceof import_obsidian31.TFile) {
       await this.app.vault.adapter.remove(path);
     }
   }
@@ -17844,18 +18094,55 @@ var ObsidianVaultFiles = class {
   }
   listSubfolders(path) {
     const folder = this.app.vault.getAbstractFileByPath(path);
-    if (!(folder instanceof import_obsidian30.TFolder)) return [];
-    return folder.children.filter((c) => c instanceof import_obsidian30.TFolder).map((c) => c.path);
+    if (!(folder instanceof import_obsidian31.TFolder)) return [];
+    return folder.children.filter((c) => c instanceof import_obsidian31.TFolder).map((c) => c.path);
   }
   absolutePath(path) {
     const adapter = this.app.vault.adapter;
-    return adapter instanceof import_obsidian30.FileSystemAdapter ? adapter.getFullPath(path) : path;
+    return adapter instanceof import_obsidian31.FileSystemAdapter ? adapter.getFullPath(path) : path;
+  }
+};
+
+// src/StudioEvents.ts
+var import_obsidian32 = require("obsidian");
+var StudioEvents = class extends import_obsidian32.Events {
+  onModeChanged(cb) {
+    return this.on("mode-changed", (...data) => {
+      cb(data[0]);
+    });
+  }
+  onFocusChanged(cb) {
+    return this.on("focus-changed", (...data) => {
+      cb(data[0]);
+    });
+  }
+  onTypographyChanged(cb) {
+    return this.on("typography-changed", (...data) => {
+      cb(data[0]);
+    });
+  }
+  onSprintChanged(cb) {
+    return this.on("sprint-changed", () => {
+      cb();
+    });
+  }
+  announceModeChanged(mode) {
+    this.trigger("mode-changed", mode);
+  }
+  announceFocusChanged(active) {
+    this.trigger("focus-changed", active);
+  }
+  announceTypographyChanged(active) {
+    this.trigger("typography-changed", active);
+  }
+  announceSprintChanged() {
+    this.trigger("sprint-changed");
   }
 };
 
 // modals/AddToProjectModal.ts
-var import_obsidian31 = require("obsidian");
-var AddToProjectModal = class extends import_obsidian31.Modal {
+var import_obsidian33 = require("obsidian");
+var AddToProjectModal = class extends import_obsidian33.Modal {
   constructor(app, plugin, file, onConfirm) {
     super(app);
     this.selectedProjectId = "";
@@ -17877,7 +18164,7 @@ var AddToProjectModal = class extends import_obsidian31.Modal {
     }
     this.selectedProjectId = projects[0].id;
     contentEl.createEl("p", { text: t2("addToProject.file", { path: this.file.path }), cls: "ws-add-to-project-path" });
-    new import_obsidian31.Setting(contentEl).setName(t2("addToProject.projectName")).setDesc(t2("addToProject.projectDesc")).addDropdown((d) => {
+    new import_obsidian33.Setting(contentEl).setName(t2("addToProject.projectName")).setDesc(t2("addToProject.projectDesc")).addDropdown((d) => {
       projects.forEach((p) => {
         d.addOption(p.id, p.title);
       });
@@ -17954,7 +18241,7 @@ var DEFAULT_SETTINGS = {
   currentWritingMode: "none",
   removedProjectIds: []
 };
-var WritingStudioPlugin = class extends import_obsidian32.Plugin {
+var WritingStudioPlugin = class extends import_obsidian34.Plugin {
   constructor() {
     super(...arguments);
     this.wordCountUpdateTimer = null;
@@ -17965,6 +18252,7 @@ var WritingStudioPlugin = class extends import_obsidian32.Plugin {
   async onload() {
     await initI18n();
     await this.loadSettings();
+    this.studioEvents = new StudioEvents();
     this.vaultFiles = new ObsidianVaultFiles(this.app);
     this.fmManager = new FrontmatterManager(this);
     this.projectManager = new ProjectManager(this, this.vaultFiles);
@@ -18022,7 +18310,7 @@ var WritingStudioPlugin = class extends import_obsidian32.Plugin {
     );
     this.registerEvent(
       this.app.workspace.on("file-menu", (menu, file) => {
-        if (file instanceof import_obsidian32.TFile && file.extension === "md") {
+        if (file instanceof import_obsidian34.TFile && file.extension === "md") {
           menu.addItem((i) => i.setTitle(t2("main.menu.studioOptions")).setSection("writing-studio").setDisabled(true));
           menu.addItem(
             (i) => i.setTitle(t2("main.menu.addToProject")).setIcon("book-open").setSection("writing-studio").onClick(() => {
@@ -18030,7 +18318,7 @@ var WritingStudioPlugin = class extends import_obsidian32.Plugin {
             })
           );
         }
-        if (file instanceof import_obsidian32.TFolder) {
+        if (file instanceof import_obsidian34.TFolder) {
           menu.addItem((i) => i.setTitle(t2("main.menu.studioOptions")).setSection("writing-studio").setDisabled(true));
           menu.addItem(
             (i) => i.setTitle(t2("main.menu.openSidebar")).setIcon("folder").setSection("writing-studio").onClick(() => {
@@ -18042,7 +18330,7 @@ var WritingStudioPlugin = class extends import_obsidian32.Plugin {
     );
     this.registerEvent(
       this.app.vault.on("modify", (file) => {
-        if (file instanceof import_obsidian32.TFile) {
+        if (file instanceof import_obsidian34.TFile) {
           this.fmManager.scheduleUpdate(file);
           this.statsTracker.invalidateWordCountCache();
           if (this.studioActivated) {
@@ -18054,7 +18342,7 @@ var WritingStudioPlugin = class extends import_obsidian32.Plugin {
     );
     this.registerEvent(
       this.app.vault.on("rename", (file, oldPath) => {
-        if (!(file instanceof import_obsidian32.TFile)) return;
+        if (!(file instanceof import_obsidian34.TFile)) return;
         if (file.extension === "md") {
           void this.repairBinderPaths(oldPath, file.path, file.basename);
         }
@@ -18225,9 +18513,9 @@ var WritingStudioPlugin = class extends import_obsidian32.Plugin {
   publishCurrentFile() {
     const leaf = this.app.workspace.getMostRecentLeaf();
     const view = leaf == null ? void 0 : leaf.view;
-    const file = view instanceof import_obsidian32.MarkdownView ? view.file : null;
-    if (!(file instanceof import_obsidian32.TFile)) {
-      new import_obsidian32.Notice(t2("main.notice.noMarkdownOpen"));
+    const file = view instanceof import_obsidian34.MarkdownView ? view.file : null;
+    if (!(file instanceof import_obsidian34.TFile)) {
+      new import_obsidian34.Notice(t2("main.notice.noMarkdownOpen"));
       return;
     }
     new PublishModal(this.app, this, file.path).open();
@@ -18269,7 +18557,7 @@ var WritingStudioPlugin = class extends import_obsidian32.Plugin {
     }
   }
   showModeSwitcher(e) {
-    const menu = new import_obsidian32.Menu();
+    const menu = new import_obsidian34.Menu();
     menu.addItem((i) => i.setTitle(t2("main.menu.draftMode")).setIcon("pencil").onClick(() => this.writingModes.switchMode("draft")));
     menu.addItem((i) => i.setTitle(t2("main.menu.editMode")).setIcon("edit-3").onClick(() => this.writingModes.switchMode("edit")));
     menu.addItem((i) => i.setTitle(t2("main.menu.reviewMode")).setIcon("eye").onClick(() => this.writingModes.switchMode("review")));
@@ -18278,7 +18566,7 @@ var WritingStudioPlugin = class extends import_obsidian32.Plugin {
     if (e instanceof MouseEvent) menu.showAtMouseEvent(e);
   }
   showFontPicker(e) {
-    const menu = new import_obsidian32.Menu();
+    const menu = new import_obsidian34.Menu();
     TYPOGRAPHY_FONT_OPTIONS.forEach(({ key }) => {
       menu.addItem((i) => {
         i.setTitle(t2(`settings.typography.font.${key}`)).onClick(() => {
@@ -18296,7 +18584,7 @@ var WritingStudioPlugin = class extends import_obsidian32.Plugin {
   addFileToProject(file) {
     const projects = this.projectManager.getProjects();
     if (projects.length === 0) {
-      new import_obsidian32.Notice(t2("addToProject.noProjects"));
+      new import_obsidian34.Notice(t2("addToProject.noProjects"));
       return;
     }
     new AddToProjectModal(this.app, this, file, async (projectId) => {
@@ -18314,7 +18602,7 @@ var WritingStudioPlugin = class extends import_obsidian32.Plugin {
       };
       binder.items.push(item);
       await this.projectManager.saveBinder(binder);
-      new import_obsidian32.Notice(t2("main.notice.addedToProject", { file: file.basename, project: project.title }));
+      new import_obsidian34.Notice(t2("main.notice.addedToProject", { file: file.basename, project: project.title }));
     }).open();
   }
   scheduleLauncherRefresh() {
@@ -18334,7 +18622,7 @@ var WritingStudioPlugin = class extends import_obsidian32.Plugin {
   async updateWordCount() {
     const leaf = this.app.workspace.getMostRecentLeaf();
     const view = leaf == null ? void 0 : leaf.view;
-    if (!(view instanceof import_obsidian32.MarkdownView) || !view.editor) {
+    if (!(view instanceof import_obsidian34.MarkdownView) || !view.editor) {
       this.statusBar.clearWordCount();
       return;
     }
@@ -18359,7 +18647,7 @@ var WritingStudioPlugin = class extends import_obsidian32.Plugin {
     }
   }
 };
-var SprintSummaryModal = class extends import_obsidian32.Modal {
+var SprintSummaryModal = class extends import_obsidian34.Modal {
   constructor(app, session) {
     super(app);
     this.session = session;
@@ -18390,7 +18678,7 @@ var SprintSummaryModal = class extends import_obsidian32.Modal {
     this.contentEl.empty();
   }
 };
-var WordCountGoalModal = class extends import_obsidian32.Modal {
+var WordCountGoalModal = class extends import_obsidian34.Modal {
   constructor(app, plugin, file) {
     super(app);
     this.goal = 0;
@@ -18414,7 +18702,7 @@ var WordCountGoalModal = class extends import_obsidian32.Modal {
       const cache = this.app.metadataCache.getFileCache(this.file);
       this.goal = Number((_b2 = cache == null ? void 0 : cache.frontmatter) == null ? void 0 : _b2["word-count-goal"]) || 0;
     }
-    new import_obsidian32.Setting(contentEl).setName(t2("wordCountGoal.name")).setDesc(t2("wordCountGoal.desc")).addText((tx) => tx.setValue(String(this.goal || "")).setPlaceholder(t2("wordCountGoal.placeholder")).onChange((v) => {
+    new import_obsidian34.Setting(contentEl).setName(t2("wordCountGoal.name")).setDesc(t2("wordCountGoal.desc")).addText((tx) => tx.setValue(String(this.goal || "")).setPlaceholder(t2("wordCountGoal.placeholder")).onChange((v) => {
       this.goal = parseInt(v) || 0;
     }));
     const btnRow = contentEl.createDiv("ws-modal-btn-row");

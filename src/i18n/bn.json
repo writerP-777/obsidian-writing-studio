@@ -204,7 +204,16 @@
     },
     "newGroupOrPart": "নতুন গ্রুপ বা পার্ট",
     "untitledGroup": "শিরোনামহীন গ্রুপ",
-    "untitledPart": "শিরোনামহীন পার্ট"
+    "untitledPart": "শিরোনামহীন পার্ট",
+    "strip": {
+      "focus": "ফোকাস",
+      "typography": "টাইপোগ্রাফি",
+      "sprint": "স্প্রিন্ট",
+      "sprintReady": "প্রস্তুত · {{minutes}} মি",
+      "sprintRunning": "স্প্রিন্ট চলছে",
+      "quickStart": "দ্রুত শুরু: {{minutes}} মিনিট",
+      "moreActions": "আরও ক্রিয়া"
+    }
   },
   "launcher": {
     "displayText": "লেখার স্টুডিও",

@@ -219,6 +219,10 @@ Each document shows its title, type (Chapter, Section, Article, Note), status (D
 
 **To open:** Use the command **Open binder** from the command palette, or assign a hotkey in Settings → Hotkeys.
 
+**Control strip:**
+
+A two-row control strip at the top of the binder keeps the high-frequency writing controls next to your documents, so the daily loop doesn't require switching to the launcher tab. The top row is a Draft / Edit / Review segmented control (clicking the active mode switches back to normal). The bottom row holds Focus and Typography toggles, a sprint chip (its menu offers the set-up modal and 10/15/25-minute quick starts; an armed sprint shows a ready chip with the duration), and a **...** menu with the occasional actions: export, publish, preview manuscript, targets dashboard, writing dashboard, and writing log. The launcher keeps its own copies of all controls, and every surface stays in sync no matter where a change is made.
+
 **Keyboard navigation:**
 
 The binder tree is fully keyboard-operable. Tab to focus the list, then:

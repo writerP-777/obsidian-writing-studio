@@ -1,11 +1,10 @@
-import { App, ItemView, MarkdownView, WorkspaceLeaf, TFile, Notice, setIcon } from 'obsidian';
+import { App, ItemView, WorkspaceLeaf, setIcon } from 'obsidian';
 import type WritingStudioPlugin from '../main';
 import { WritingModeType } from '../models/WritingMode';
 import { ProjectModal } from '../modals/ProjectModal';
 import { TargetsDashboardModal } from '../modals/TargetsDashboardModal';
 import { WritingDashboardModal } from '../modals/WritingDashboardModal';
 import { ExportModal } from '../modals/ExportModal';
-import { PublishModal } from '../modals/PublishModal';
 import { SprintModal } from '../modals/SprintModal';
 import { confirmDeleteProject } from '../modals/confirmDeleteProject';
 import { t } from './i18n';
@@ -47,6 +46,13 @@ export class LauncherView extends ItemView {
     this.registerEvent(this.plugin.projectManager.onProjectsChanged(() => {
       void this.refresh();
     }));
+    // Environment changes re-render the whole panel — they may originate in
+    // the binder control strip, commands, or the ribbon, and the mode/toggle
+    // cards have no patch-in-place path
+    this.registerEvent(this.plugin.studioEvents.onModeChanged(() => { void this.refresh(); }));
+    this.registerEvent(this.plugin.studioEvents.onFocusChanged(() => { void this.refresh(); }));
+    this.registerEvent(this.plugin.studioEvents.onTypographyChanged(() => { void this.refresh(); }));
+    this.registerEvent(this.plugin.studioEvents.onSprintChanged(() => { void this.refresh(); }));
     await this.render();
     // Patch dynamic values in place every 10 seconds — a full re-render here
     // rebuilt the whole panel, snapping open dropdowns shut mid-selection and
@@ -232,21 +238,16 @@ export class LauncherView extends ItemView {
       });
       setIcon(btn.createSpan('ws-mode-icon'), mode.icon);
       btn.createSpan({ text: mode.label, cls: 'ws-mode-label' });
-      btn.onclick = async () => {
-        if (current === mode.id) {
-          await this.plugin.writingModes.switchMode('none');
-        } else {
-          await this.plugin.writingModes.switchMode(mode.id);
-        }
-        await this.render();
+      // The mode-changed event re-renders this panel — no manual refresh
+      btn.onclick = () => {
+        void this.plugin.writingModes.switchMode(current === mode.id ? 'none' : mode.id);
       };
     }
 
     if (current !== 'none') {
       const clearBtn = card.createEl('button', { cls: 'ws-launcher-text-btn ws-launcher-clear-mode', text: t('launcher.mode.clearMode') });
-      clearBtn.onclick = async () => {
-        await this.plugin.writingModes.switchMode('none');
-        await this.render();
+      clearBtn.onclick = () => {
+        void this.plugin.writingModes.switchMode('none');
       };
     }
   }
@@ -257,16 +258,17 @@ export class LauncherView extends ItemView {
     const card = root.createDiv('ws-launcher-card');
     card.createDiv({ text: t('launcher.focusTypography'), cls: 'ws-launcher-card-label' });
 
+    // The focus/typography-changed events re-render this panel
     const toggles: Array<{ label: string; isOn: () => boolean; toggle: () => void }> = [
       {
         label: t('launcher.focusMode'),
         isOn: () => this.plugin.focusMode.isActive(),
-        toggle: () => { this.plugin.focusMode.toggle(); void this.render(); },
+        toggle: () => { this.plugin.focusMode.toggle(); },
       },
       {
         label: t('launcher.typographyMode'),
         isOn: () => this.plugin.typographyMode.isActive(),
-        toggle: () => { void this.plugin.typographyMode.toggle(); void this.render(); },
+        toggle: () => { void this.plugin.typographyMode.toggle(); },
       },
     ];
 
@@ -323,16 +325,7 @@ export class LauncherView extends ItemView {
       {
         icon: 'globe',
         label: t('launcher.action.publishToWordPress'),
-        action: () => {
-          const leaf = this.app.workspace.getMostRecentLeaf();
-          const view = leaf?.view;
-          const file = view instanceof MarkdownView ? view.file : null;
-          if (file instanceof TFile) {
-            new PublishModal(this.app, this.plugin, file.path).open();
-          } else {
-            new Notice(t('launcher.openDocumentFirst'));
-          }
-        },
+        action: () => { this.plugin.publishCurrentFile(); },
       },
     ];
 
@@ -366,10 +359,8 @@ export class LauncherView extends ItemView {
     presets.createSpan({ text: t('launcher.quickStart'), cls: 'ws-launcher-preset-label' });
     for (const mins of [10, 15, 25]) {
       const btn = presets.createEl('button', { cls: 'ws-launcher-preset-btn', text: `${mins}m` });
-      btn.onclick = () => {
-        this.plugin.sprintTimer.setup(mins);
-        void this.render();
-      };
+      // The sprint-changed event re-renders this panel
+      btn.onclick = () => { this.plugin.sprintTimer.setup(mins); };
     }
   }
 

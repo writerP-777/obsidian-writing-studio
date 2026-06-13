@@ -68,6 +68,7 @@ export class WritingModes {
     }
 
     this.updateStatusBar();
+    this.plugin.studioEvents.announceModeChanged(mode);
     this.plugin.settings.currentWritingMode = mode;
     await this.plugin.saveSettings();
 
