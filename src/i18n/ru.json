@@ -439,7 +439,8 @@
     "scopeProject": "Весь проект",
     "startBtn": "Запустить таймер спринта",
     "errorDuration": "Укажите допустимую длительность.",
-    "cancel": "Отмена"
+    "cancel": "Отмена",
+    "wordGoalPlaceholder": "0 = без цели"
   },
   "exportModal": {
     "title": "Экспорт документа",

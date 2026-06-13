@@ -435,7 +435,8 @@
     "scopeProject": "পুরো প্রকল্প",
     "startBtn": "স্প্রিন্ট টাইমার চালু করুন",
     "errorDuration": "অনুগ্রহ করে একটি বৈধ সময়কাল সেট করুন।",
-    "cancel": "বাতিল"
+    "cancel": "বাতিল",
+    "wordGoalPlaceholder": "0 = কোনো লক্ষ্য নেই"
   },
   "exportModal": {
     "title": "নথি রপ্তানি করুন",

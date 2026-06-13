@@ -442,7 +442,8 @@
     "scopeProject": "المشروع بالكامل",
     "startBtn": "تشغيل مؤقت السباق",
     "errorDuration": "يُرجى تحديد مدة صالحة.",
-    "cancel": "إلغاء"
+    "cancel": "إلغاء",
+    "wordGoalPlaceholder": "0 = بلا هدف"
   },
   "exportModal": {
     "title": "تصدير المستند",

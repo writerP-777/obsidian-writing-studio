@@ -435,7 +435,8 @@
     "scopeProject": "Projeto inteiro",
     "startBtn": "Iniciar cronômetro de sprint",
     "errorDuration": "Por favor, defina uma duração válida.",
-    "cancel": "Cancelar"
+    "cancel": "Cancelar",
+    "wordGoalPlaceholder": "0 = sem meta"
   },
   "exportModal": {
     "title": "Exportar documento",

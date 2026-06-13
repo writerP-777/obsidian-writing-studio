@@ -435,7 +435,8 @@
     "scopeProject": "プロジェクト全体",
     "startBtn": "スプリントタイマーを起動",
     "errorDuration": "有効な時間を設定してください。",
-    "cancel": "キャンセル"
+    "cancel": "キャンセル",
+    "wordGoalPlaceholder": "0 = 目標なし"
   },
   "exportModal": {
     "title": "ドキュメントをエクスポート",
