@@ -319,7 +319,7 @@
     "manuscriptExported": "原稿を {{path}} にエクスポートしました",
     "exportedTo": "{{path}} にエクスポートしました",
     "exportedHtmlTo": "HTMLを {{path}} にエクスポートしました",
-    "pdfRequiresPandoc": "PDFエクスポートにはpandocが必要です。pandocをインストールして設定でパスを指定してください。",
+    "pdfRequiresPandoc": "PDFエクスポートにはPandocが必要です。Pandocをインストールして設定でパスを指定してください。",
     "noActiveDocument": "開いているドキュメントがありません。ファイルを開くか、エクスポート範囲を「プロジェクト全体」に変更してください。",
     "byAuthor": "著者：{{author}}",
     "approxWords": "約 {{n}} 語",
@@ -449,9 +449,9 @@
       "html": "HTML",
       "manuscript": "原稿（HTML）",
       "epub": "EPUB (.epub)",
-      "pdf": "PDF（pandocが必要）",
-      "docx": "Word (.docx)（pandocが必要）",
-      "rtf": "RTF（pandocが必要）"
+      "pdf": "PDF（Pandocが必要）",
+      "docx": "Word (.docx)（Pandocが必要）",
+      "rtf": "RTF（Pandocが必要）"
     },
     "coverImageName": "カバー画像のパス",
     "coverImageDesc": "JPGまたはPNGのカバー画像のVaultパス。生成されたテキストカバーには空のままにしてください。",
@@ -507,7 +507,7 @@
     "actionNotice": "{{action}}！投稿を表示：{{url}}"
   },
   "targetsDashboard": {
-    "title": "章のターゲットダッシュボード",
+    "title": "ターゲットダッシュボード",
     "noProject": "プロジェクトが選択されていません。",
     "filterLabel": "フィルター：",
     "allStatuses": "すべてのステータス",

@@ -325,7 +325,7 @@
     "manuscriptExported": "تم تصدير المخطوطة إلى {{path}}",
     "exportedTo": "تم التصدير إلى {{path}}",
     "exportedHtmlTo": "تم تصدير HTML إلى {{path}}",
-    "pdfRequiresPandoc": "يتطلب تصدير PDF تثبيت pandoc. ثبّت pandoc وحدد المسار في الإعدادات.",
+    "pdfRequiresPandoc": "يتطلب تصدير PDF تثبيت Pandoc. ثبّت Pandoc وحدد المسار في الإعدادات.",
     "noActiveDocument": "لا يوجد مستند مفتوح. افتح ملفاً أو غيّر نطاق التصدير إلى «المشروع بأكمله».",
     "byAuthor": "بقلم {{author}}",
     "approxWords": "حوالي {{n}} كلمة",
@@ -459,9 +459,9 @@
       "html": "HTML",
       "manuscript": "مخطوطة (HTML)",
       "epub": "EPUB (.epub)",
-      "pdf": "PDF (يتطلب pandoc)",
-      "docx": "Word (.docx) (يتطلب pandoc)",
-      "rtf": "RTF (يتطلب pandoc)"
+      "pdf": "PDF (يتطلب Pandoc)",
+      "docx": "Word (.docx) (يتطلب Pandoc)",
+      "rtf": "RTF (يتطلب Pandoc)"
     },
     "coverImageName": "مسار صورة الغلاف",
     "coverImageDesc": "مسار vault لصورة غلاف JPG أو PNG. اتركه فارغًا لإنشاء غلاف نصي.",
@@ -517,7 +517,7 @@
     "actionNotice": "{{action}}! عرض المنشور: {{url}}"
   },
   "targetsDashboard": {
-    "title": "لوحة أهداف الفصول",
+    "title": "لوحة الأهداف",
     "noProject": "لم يُحدَّد مشروع.",
     "filterLabel": "تصفية: ",
     "allStatuses": "جميع الحالات",

@@ -319,7 +319,7 @@
     "manuscriptExported": "Manuscript exported to {{path}}",
     "exportedTo": "Exported to {{path}}",
     "exportedHtmlTo": "Exported HTML to {{path}}",
-    "pdfRequiresPandoc": "PDF export requires pandoc. Install pandoc and set path in settings.",
+    "pdfRequiresPandoc": "PDF export requires Pandoc. Install Pandoc and set path in settings.",
     "noActiveDocument": "No document is open. Open a file or switch the export scope to \"Entire project\".",
     "byAuthor": "By {{author}}",
     "approxWords": "Approx. {{n}} words",
@@ -449,9 +449,9 @@
       "html": "HTML",
       "manuscript": "Manuscript (HTML)",
       "epub": "EPUB (.epub)",
-      "pdf": "PDF (requires pandoc)",
-      "docx": "Word (.docx) (requires pandoc)",
-      "rtf": "RTF (requires pandoc)"
+      "pdf": "PDF (requires Pandoc)",
+      "docx": "Word (.docx) (requires Pandoc)",
+      "rtf": "RTF (requires Pandoc)"
     },
     "coverImageName": "Cover image path",
     "coverImageDesc": "Vault path to a JPG or PNG cover image. Leave empty for a generated text cover.",
@@ -507,7 +507,7 @@
     "actionNotice": "{{action}}! View post: {{url}}"
   },
   "targetsDashboard": {
-    "title": "Chapter targets dashboard",
+    "title": "Targets dashboard",
     "noProject": "No project selected.",
     "filterLabel": "Filter: ",
     "allStatuses": "All statuses",

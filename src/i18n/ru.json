@@ -323,7 +323,7 @@
     "manuscriptExported": "Рукопись экспортирована в {{path}}",
     "exportedTo": "Экспортировано в {{path}}",
     "exportedHtmlTo": "HTML экспортирован в {{path}}",
-    "pdfRequiresPandoc": "Для экспорта в PDF требуется pandoc. Установите pandoc и укажите путь в настройках.",
+    "pdfRequiresPandoc": "Для экспорта в PDF требуется Pandoc. Установите Pandoc и укажите путь в настройках.",
     "noActiveDocument": "Нет открытого документа. Откройте файл или смените область экспорта на «Весь проект».",
     "byAuthor": "Автор: {{author}}",
     "approxWords": "Примерно {{n}} слов",
@@ -455,9 +455,9 @@
       "html": "HTML",
       "manuscript": "Рукопись (HTML)",
       "epub": "EPUB (.epub)",
-      "pdf": "PDF (требуется pandoc)",
-      "docx": "Word (.docx) (требуется pandoc)",
-      "rtf": "RTF (требуется pandoc)"
+      "pdf": "PDF (требуется Pandoc)",
+      "docx": "Word (.docx) (требуется Pandoc)",
+      "rtf": "RTF (требуется Pandoc)"
     },
     "coverImageName": "Путь к обложке",
     "coverImageDesc": "Путь в хранилище к изображению JPG или PNG. Оставьте пустым для текстовой обложки.",
@@ -513,7 +513,7 @@
     "actionNotice": "{{action}}! Посмотреть запись: {{url}}"
   },
   "targetsDashboard": {
-    "title": "Панель целей по главам",
+    "title": "Панель целей",
     "noProject": "Проект не выбран.",
     "filterLabel": "Фильтр: ",
     "allStatuses": "Все статусы",

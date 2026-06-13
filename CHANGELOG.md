@@ -29,6 +29,7 @@ UX improvement cycle from the 2026-06-12 product-experience review (issues #153�
 - The binder's "drop here to promote to root" zone now appears only while a drag is in progress, instead of sitting permanently under the document list. (#161)
 
 ### Changed
+- Copy fixes from the review. The targets dashboard modal is now titled "Targets dashboard" (was "Chapter targets dashboard") to match the glossary term used everywhere else — binder items are not only chapters. "Pandoc" is now capitalized as the proper noun it is in the three export format labels (PDF / Word / RTF) and the PDF-requires-Pandoc notice, across all 12 locales. (#171)
 - Clicking a document in the binder now opens it immediately — the 250 ms disambiguation delay is gone. Rename moved from double-click to the context menu and the F2 key (when a row has keyboard focus), matching Obsidian's file explorer; the inline edit itself is unchanged (Enter commits, Escape cancels, file and frontmatter renamed as before). (#159)
 - Launcher mode buttons, binder document type icons, and the status bar mode pill now use Lucide icons instead of emoji, matching the icon language of the rest of the plugin. The status bar pill is hidden when no writing mode is active rather than reading "— mode". (#163)
 
