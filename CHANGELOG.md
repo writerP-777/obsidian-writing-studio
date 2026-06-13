@@ -6,6 +6,8 @@ All notable changes to Writing Studio are documented here.
 
 ## [Unreleased]
 
+## [2.8.0] - 2026-06-13
+
 UX improvement cycle from the 2026-06-12 product-experience review (issues #153–#171).
 
 ### Added
