@@ -14,7 +14,6 @@
   --ws-sprint-bg: var(--background-primary);
   --ws-sprint-border: var(--background-modifier-border);
   --ws-accent: var(--interactive-accent);
-  --ws-toolbar-bg: rgba(var(--background-primary-rgb, 30, 30, 30), 0.92);
 }
 
 /* ── Focus Mode ─────────────────────────────────────────────────── */
@@ -40,18 +39,17 @@ body.ws-focus-fontsize.writing-studio-focus-mode .cm-content {
 
 /* Focus floating toolbar */
 .ws-focus-toolbar {
+  /* Anchored bottom-right in the editor margin with an opaque background —
+     centered at bottom it floated mid-column over dimmed draft lines */
   position: fixed;
-  bottom: 24px;
-  left: 50%;
-  transform: translateX(-50%);
+  bottom: 8px;
+  right: 16px;
   z-index: 1000;
   display: flex;
   align-items: center;
   gap: 12px;
   padding: 8px 20px;
-  background: var(--ws-toolbar-bg);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
+  background: var(--background-primary);
   border: 1px solid var(--ws-sprint-border);
   border-radius: 32px;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
@@ -61,6 +59,12 @@ body.ws-focus-fontsize.writing-studio-focus-mode .cm-content {
 
 .ws-focus-toolbar .ws-focus-wordcount {
   font-variant-numeric: tabular-nums;
+}
+
+/* Reserve scroll room so the end of the document can always be scrolled
+   clear of the anchored toolbar — with or without typewriter scroll */
+body.writing-studio-focus-mode .cm-scroller {
+  padding-bottom: 72px;
 }
 
 .ws-focus-toolbar .ws-focus-sprint-time {
