@@ -268,7 +268,12 @@
     "sessionWordsTyped": "الجلسة: +{{n}} كلمة مكتوبة",
     "dailyGoal": "الهدف اليومي: {{written}} / {{goal}} كلمة",
     "sprintInProgress": "السباق جارٍ",
-    "switchProject": "تبديل المشروع"
+    "switchProject": "تبديل المشروع",
+    "firstRun": {
+      "intro": "ينظّم Writing Studio كتابتك في مشاريع، لكل منها ملزمة خاصة بالفصول والمستندات.",
+      "hint": "أنشئ مشروعًا لإعداد مجلده وابدأ الكتابة.",
+      "cta": "أنشئ مشروعك الأول"
+    }
   },
   "log": {
     "displayText": "سجل الكتابة",

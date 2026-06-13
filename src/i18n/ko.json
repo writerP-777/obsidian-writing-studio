@@ -268,7 +268,12 @@
     "sessionWordsTyped": "세션: +{{n}} 단어 입력",
     "dailyGoal": "일일 목표: {{written}} / {{goal}} 단어",
     "sprintInProgress": "스프린트 진행 중",
-    "switchProject": "프로젝트 전환"
+    "switchProject": "프로젝트 전환",
+    "firstRun": {
+      "intro": "Writing Studio는 글쓰기를 프로젝트로 정리합니다. 각 프로젝트에는 장과 문서로 이루어진 바인더가 있습니다.",
+      "hint": "프로젝트를 만들면 폴더가 준비되어 바로 글쓰기를 시작할 수 있습니다.",
+      "cta": "첫 프로젝트 만들기"
+    }
   },
   "log": {
     "displayText": "글쓰기 로그",

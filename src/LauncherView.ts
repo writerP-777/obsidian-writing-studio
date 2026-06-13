@@ -132,10 +132,13 @@ export class LauncherView extends ItemView {
     const cardHeader = card.createDiv('ws-launcher-card-header');
     cardHeader.createSpan({ text: t('launcher.project'), cls: 'ws-launcher-card-label' });
 
-    const newProjectBtn = cardHeader.createEl('button', { cls: 'ws-launcher-text-btn', text: t('launcher.newProject') });
-    newProjectBtn.onclick = () => {
-      new ProjectModal(this.app, this.plugin).open();
-    };
+    // First run: the empty-state CTA below replaces the small "+ new" button
+    if (this.plugin.projectManager.getProjects().length > 0) {
+      const newProjectBtn = cardHeader.createEl('button', { cls: 'ws-launcher-text-btn', text: t('launcher.newProject') });
+      newProjectBtn.onclick = () => {
+        new ProjectModal(this.app, this.plugin).open();
+      };
+    }
 
     if (project) {
       const editBtn = cardHeader.createEl('button', { cls: 'ws-launcher-icon-btn', title: t('projectModal.editTitle') });
@@ -152,10 +155,23 @@ export class LauncherView extends ItemView {
     }
 
     if (!project) {
+      const projects = this.plugin.projectManager.getProjects();
+
+      // Fresh install — orient toward the create → binder → write loop
+      if (projects.length === 0) {
+        const intro = card.createDiv('ws-launcher-first-run');
+        intro.createDiv({ text: t('launcher.firstRun.intro'), cls: 'ws-launcher-first-run-text' });
+        intro.createDiv({ text: t('launcher.firstRun.hint'), cls: 'ws-launcher-first-run-text' });
+        const cta = card.createEl('button', { cls: 'ws-launcher-action-btn mod-cta', text: t('launcher.firstRun.cta') });
+        cta.onclick = () => {
+          new ProjectModal(this.app, this.plugin).open();
+        };
+        return;
+      }
+
       const emptyRow = card.createDiv('ws-launcher-empty');
       emptyRow.textContent = t('launcher.noProjectSelected');
 
-      const projects = this.plugin.projectManager.getProjects();
       if (projects.length > 0) {
         const sel = card.createEl('select', { cls: 'ws-launcher-project-sel' });
         sel.createEl('option', { text: t('launcher.chooseProject'), value: '' });

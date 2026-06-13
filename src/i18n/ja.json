@@ -268,7 +268,12 @@
     "sessionWordsTyped": "セッション：+{{n}} 語",
     "dailyGoal": "1日の目標：{{written}} / {{goal}} 語",
     "sprintInProgress": "スプリント実行中",
-    "switchProject": "プロジェクトを切り替え"
+    "switchProject": "プロジェクトを切り替え",
+    "firstRun": {
+      "intro": "Writing Studioは執筆をプロジェクトとして整理します。各プロジェクトには章とドキュメントのバインダーがあります。",
+      "hint": "プロジェクトを作成するとフォルダが用意され、執筆を始められます。",
+      "cta": "最初のプロジェクトを作成"
+    }
   },
   "log": {
     "displayText": "執筆ログ",

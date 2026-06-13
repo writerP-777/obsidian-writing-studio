@@ -1968,3 +1968,18 @@ body .ws-launcher select {
 .ws-strip-overflow:hover {
   background: var(--background-secondary);
 }
+
+/* ── Launcher first-run empty state ─────────────────────────── */
+
+.ws-launcher-first-run {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 10px;
+}
+
+.ws-launcher-first-run-text {
+  color: var(--text-muted);
+  font-size: 12px;
+  line-height: 1.4;
+}
