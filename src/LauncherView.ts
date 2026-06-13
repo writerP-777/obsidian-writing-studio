@@ -1,4 +1,4 @@
-import { App, ItemView, WorkspaceLeaf, setIcon } from 'obsidian';
+import { App, ItemView, Menu, WorkspaceLeaf, setIcon, setTooltip } from 'obsidian';
 import type WritingStudioPlugin from '../main';
 import { WritingModeType } from '../models/WritingMode';
 import { ProjectModal } from '../modals/ProjectModal';
@@ -172,20 +172,28 @@ export class LauncherView extends ItemView {
       return;
     }
 
-    // Project name + switcher
+    // Project name + switcher — the name renders once; with multiple
+    // projects an icon-only menu handles switching (a select here echoed
+    // the title a second time)
     const nameRow = card.createDiv('ws-launcher-project-name-row');
     nameRow.createEl('strong', { text: project.title, cls: 'ws-launcher-project-name' });
 
     const projects = this.plugin.projectManager.getProjects();
     if (projects.length > 1) {
-      const sel = nameRow.createEl('select', { cls: 'ws-launcher-project-mini-sel' });
-      for (const p of projects) {
-        const opt = sel.createEl('option', { text: p.title, value: p.id });
-        if (p.id === project.id) opt.selected = true;
-      }
-      sel.onchange = async () => {
-        await this.plugin.projectManager.setActiveProject(sel.value);
-        await this.refresh();
+      const switchBtn = nameRow.createEl('button', { cls: 'ws-launcher-icon-btn' });
+      setIcon(switchBtn, 'chevrons-up-down');
+      setTooltip(switchBtn, t('launcher.switchProject'));
+      switchBtn.onclick = (e) => {
+        const menu = new Menu();
+        for (const p of projects) {
+          menu.addItem(i => {
+            i.setTitle(p.title).setChecked(p.id === project.id).onClick(async () => {
+              // The active-project-changed event re-renders this panel
+              await this.plugin.projectManager.setActiveProject(p.id);
+            });
+          });
+        }
+        menu.showAtMouseEvent(e);
       };
     }
 

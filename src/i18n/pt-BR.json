@@ -267,7 +267,8 @@
     },
     "sessionWordsTyped": "Sessão: +{{n}} palavras digitadas",
     "dailyGoal": "Meta diária: {{written}} / {{goal}} palavras",
-    "sprintInProgress": "Sprint em andamento"
+    "sprintInProgress": "Sprint em andamento",
+    "switchProject": "Trocar de projeto"
   },
   "log": {
     "displayText": "Diário de escrita",

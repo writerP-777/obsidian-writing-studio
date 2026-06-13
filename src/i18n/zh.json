@@ -267,7 +267,8 @@
     },
     "sessionWordsTyped": "本次：+{{n}} 字",
     "dailyGoal": "每日目标：{{written}} / {{goal}} 字",
-    "sprintInProgress": "冲刺进行中"
+    "sprintInProgress": "冲刺进行中",
+    "switchProject": "切换项目"
   },
   "log": {
     "displayText": "写作日志",

@@ -267,7 +267,8 @@
     },
     "sessionWordsTyped": "Сеанс: +{{n}} написанных слов",
     "dailyGoal": "Дневная цель: {{written}} / {{goal}} слов",
-    "sprintInProgress": "Спринт идёт"
+    "sprintInProgress": "Спринт идёт",
+    "switchProject": "Сменить проект"
   },
   "log": {
     "displayText": "Журнал письма",
