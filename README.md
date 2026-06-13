@@ -4,7 +4,7 @@
 
 # Writing Studio
 
-**Version 2.7.0** · Desktop only
+**Version 2.8.0** · Desktop only
 
 ![GitHub all releases](https://img.shields.io/github/downloads/writerP-777/obsidian-writing-studio/total)
 [![OpenSSF Best Practices](https://www.bestpractices.dev/projects/12832/badge)](https://www.bestpractices.dev/projects/12832)
@@ -74,12 +74,14 @@ Writing Studio turns Obsidian into a dedicated environment for serious nonfictio
 Writing Studio is available in the following languages in addition to English:
 
 - Arabic
+- Bengali
+- Brazilian Portuguese
 - Chinese (Simplified)
 - French
 - German
+- Hindi
 - Japanese
 - Korean
-- Portuguese (Brazil)
 - Russian
 - Spanish
 
@@ -91,9 +93,23 @@ Writing Studio is available in the following languages in addition to English:
 
 The Launcher is your home base in Writing Studio — a sidebar panel that shows your active project, progress toward your goals, and one-click access to every major feature.
 
+<p align="center">
+  <img src="assets/launcher-project-card.png" alt="The Launcher project card showing the active project name, switcher, edit and delete controls, word count, and a progress bar toward the project goal" width="520">
+  <br>
+  <em>The Launcher project card — active project, word count, and progress toward the project goal.</em>
+</p>
+
 By default Writing Studio launches automatically when Obsidian loads — the Launcher opens and your last session's writing mode and typography are restored. To disable this, turn off **Open on startup** in **Settings → General**: Obsidian then opens clean, with no Writing Studio status bar items or restored modes, and the studio stays dormant until you launch it yourself. Launching it manually restores your last session state the same way.
 
 **To open manually:** Click the feather ribbon icon, or assign a hotkey to **Open launcher** in Settings → Hotkeys.
+
+**First run:** In a vault with no projects yet, the Launcher shows an orientation card explaining how projects work, with a **Create your first project** button to get started.
+
+<p align="center">
+  <img src="assets/launcher-first-run.png" alt="The Launcher first-run orientation card with an explanation of projects and a Create your first project button" width="520">
+  <br>
+  <em>First run — the orientation card shown before any project exists.</em>
+</p>
 
 **The Launcher includes:**
 - Active project name, total word count, and progress toward your project word count goal
@@ -108,6 +124,12 @@ By default Writing Studio launches automatically when Obsidian loads — the Lau
 ### Folder Sidebar Explorer
 
 The Folder Sidebar Explorer opens any vault folder in a right-sidebar panel, letting you browse reference material, research notes, or any folder outside your active project without leaving your draft. Unlike the Binder — which is scoped to your writing project — the sidebar explorer works with any folder in your vault.
+
+<p align="center">
+  <img src="assets/folder-sidebar-explorer.png" alt="The Folder Sidebar Explorer panel with a Markdown file open in preview, showing the breadcrumb trail, back and root buttons, and the insert selection button" width="340">
+  <br>
+  <em>The Folder Sidebar Explorer with a research file open in preview — select text and click insert selection to pull it into your draft.</em>
+</p>
 
 **To open:**
 - Use the command **Open folder in sidebar explorer** from the command palette — a folder picker appears so you can choose which folder to explore.
@@ -192,6 +214,14 @@ Projects group a set of documents (binder items) and act as the scope for export
 
 **To edit a project:** Click the pencil icon in the Launcher project card or next to the project selector in the Binder. You can change the title, author, description, and total word count goal. The project folder keeps its original name — renaming the title does not move any files.
 
+**To delete a project:** Click the trash icon in the Launcher project card or next to the project selector in the Binder, then confirm. This removes the project from Writing Studio's list only — the project folder and all its documents stay untouched in your vault.
+
+<p align="center">
+  <img src="assets/edit-project-modal.png" alt="The Edit project modal with fields for project title, author name, total word count goal, and description, and a Save button" width="560">
+  <br>
+  <em>The Edit project modal — change the title, author, description, and total word count goal.</em>
+</p>
+
 Each project stores:
 - Title, type, author, and description
 - Ordered binder with chapters, sections, articles, and notes
@@ -223,6 +253,18 @@ Each document shows its title, type (Chapter, Section, Article, Note), status (D
 
 A two-row control strip at the top of the binder keeps the high-frequency writing controls next to your documents, so the daily loop doesn't require switching to the launcher tab. The top row is a Draft / Edit / Review segmented control (clicking the active mode switches back to normal). The bottom row holds Focus and Typography toggles, a sprint chip (its menu offers the set-up modal and 10/15/25-minute quick starts; an armed sprint shows a ready chip with the duration), and a **...** menu with the occasional actions: export, publish, preview manuscript, targets dashboard, writing dashboard, and writing log. The launcher keeps its own copies of all controls, and every surface stays in sync no matter where a change is made.
 
+<p align="center">
+  <img src="assets/binder-control-strip.png" alt="The binder control strip with Draft, Edit, and Review on the top row and Focus, Typography, Sprint, and an overflow menu on the bottom row, above the document tree" width="520">
+  <br>
+  <em>The binder control strip — writing modes on top; focus, typography, sprint, and overflow controls below.</em>
+</p>
+
+<p align="center">
+  <img src="assets/binder-strip-overflow.png" alt="The binder overflow menu open, showing export, publish to WordPress, preview manuscript, targets dashboard, writing dashboard, and writing log" width="520">
+  <br>
+  <em>The overflow menu holds the less frequent actions: export, publish, preview, and the dashboards and log.</em>
+</p>
+
 **Keyboard navigation:**
 
 The binder tree is fully keyboard-operable. Tab to focus the list, then:
@@ -236,6 +278,24 @@ The binder tree is fully keyboard-operable. Tab to focus the list, then:
 | `F2` | Rename the focused item inline (Enter commits, Escape cancels) |
 | `Shift+F10` or menu key | Open the item's right-click menu |
 
+**Opening and renaming documents:**
+
+A single click on a document opens it immediately. Renaming has moved off the single click: rename an item from its right-click menu, or by pressing **F2** while it is focused (Enter commits, Escape cancels). This keeps opening a document fast while keeping rename deliberate.
+
+**Creating new documents:**
+
+When you create a new document, Writing Studio prompts you for a title up front rather than naming the file "Untitled." Type the title and the document is created and added to the binder in one step.
+
+**Right-click menu:**
+
+Right-click any item in the binder for its full set of actions — open, rename, create a child document, group, or part beneath it, set status, change the item's type, remove it from the binder without deleting the file, or delete the document and its file.
+
+<p align="center">
+  <img src="assets/binder-context-menu.png" alt="The binder right-click menu showing open, rename, new child document/group/part, set status options, change type options, remove from binder, and delete document and file" width="360">
+  <br>
+  <em>The binder right-click menu — full per-item actions, including change type and remove from binder.</em>
+</p>
+
 **Organizing with groups and parts:**
 
 Groups and parts are structural entries — they organize the binder tree but have no file behind them. The book template creates parts for you, and you can build the same structure by hand: the folder-plus button in the binder toolbar creates a group or part at the root, and an item's right-click menu offers **New child group** / **New child part** beneath it. Clicking a group or part expands or collapses it. A document's type (chapter, section, article, note) can be changed at any time from the same menu via **Change type**.
@@ -244,6 +304,10 @@ Groups and parts are structural entries — they organize the binder tree but ha
 1. Right-click any Markdown file in the file explorer and choose **Add to writing project** under **Writing studio options**.
 2. A modal appears with a dropdown listing all your writing projects.
 3. Select the target project and click **Add to project**.
+
+**Removing a document from the binder:**
+
+To take a document out of the binder without deleting its file, choose **Remove from binder** from the item's right-click menu. The document leaves the binder; the file stays in your vault.
 
 **Adding files copied directly to the project folder:**
 
@@ -439,7 +503,7 @@ The Writing Log is a sidebar panel that shows your writing history at a glance.
 **The Writing Log shows:**
 - Current streak (days in a row with at least one sprint)
 - This session: total session words, sprint words, sprints completed, and minutes written
-- Last 30 days: a bar chart with one row per day showing word count, sprints completed, and a visual bar proportional to the day's output
+- Recent activity: a bar chart with one row per day you wrote, each showing word count, sprints completed, and a visual bar proportional to the day's output. Days with no writing are collapsed rather than shown as empty rows, so the log stays focused on the days you actually worked.
 
 When **Append to daily note** is enabled (Settings → Writing log), a summary of each completed sprint is also appended to today's Daily Note.
 
