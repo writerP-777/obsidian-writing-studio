@@ -2002,3 +2002,66 @@ body .ws-launcher select {
   width: max-content;
   max-width: 100%;
 }
+
+/* ── Light-mode selected-state contrast ───────────────────────────────────
+   Selected / active / toggle-on states fill with the accent token and use
+   white text. In themes/accents that resolve --interactive-accent to a pale
+   colour, white-on-pale becomes invisible in light mode. These rules pin an
+   explicit, high-contrast violet (#6d28d9 + white text, 7.08:1) for light
+   mode only. Theme-class rules (0,3,0) outrank the prefers-color-scheme
+   fallbacks (0,2,0), so a dark Obsidian under an OS-light setting never picks
+   up the light fill. Dark mode keeps its theme-adaptive accent unchanged. */
+
+/* (a) Obsidian set to Light, or System resolving to light */
+.theme-light .ws-settings-tab.is-active,
+.theme-light .ws-launcher-mode-btn.is-active,
+.theme-light .ws-launcher-toggle.is-on,
+.theme-light .ws-launcher-action-btn.mod-cta,
+.theme-light .ws-strip-mode-btn.is-active,
+.theme-light .ws-strip-pill.is-on,
+.theme-light .ws-strip-chip.is-running {
+  background-color: #6d28d9;
+  border-color: #6d28d9;
+  color: #ffffff;
+}
+
+.theme-light .ws-binder-item.is-keyboard-focused {
+  outline-color: #6d28d9;
+}
+
+/* (b) Fallback: OS in light mode, used only if the body theme class is absent */
+@media (prefers-color-scheme: light) {
+  .ws-settings-tab.is-active,
+  .ws-launcher-mode-btn.is-active,
+  .ws-launcher-toggle.is-on,
+  .ws-launcher-action-btn.mod-cta,
+  .ws-strip-mode-btn.is-active,
+  .ws-strip-pill.is-on,
+  .ws-strip-chip.is-running {
+    background-color: #6d28d9;
+    border-color: #6d28d9;
+    color: #ffffff;
+  }
+
+  .ws-binder-item.is-keyboard-focused {
+    outline-color: #6d28d9;
+  }
+}
+
+/* (c) Dark mode: unchanged appearance, re-asserted so it always outranks the
+   prefers-color-scheme:light fallback above (e.g. dark Obsidian on a light OS) */
+.theme-dark .ws-settings-tab.is-active,
+.theme-dark .ws-launcher-mode-btn.is-active,
+.theme-dark .ws-launcher-toggle.is-on,
+.theme-dark .ws-launcher-action-btn.mod-cta,
+.theme-dark .ws-strip-mode-btn.is-active,
+.theme-dark .ws-strip-pill.is-on,
+.theme-dark .ws-strip-chip.is-running {
+  background-color: var(--interactive-accent);
+  border-color: var(--interactive-accent);
+  color: var(--text-on-accent);
+}
+
+.theme-dark .ws-binder-item.is-keyboard-focused {
+  outline-color: var(--interactive-accent);
+}
