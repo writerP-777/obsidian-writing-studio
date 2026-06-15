@@ -15,11 +15,11 @@
   },
   "overrides": {
     "@codemirror/state": "6.5.0",
-    "@codemirror/view": "6.38.6"
+    "@codemirror/view": "6.43.1"
   },
   "devDependencies": {
     "@codemirror/state": "6.5.0",
-    "@codemirror/view": "6.38.6",
+    "@codemirror/view": "6.43.1",
     "@types/jest": "^30.0.0",
     "@types/node": "^25.9.2",
     "esbuild": "0.28.0",
