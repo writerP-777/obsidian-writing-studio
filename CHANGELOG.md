@@ -6,6 +6,8 @@ All notable changes to Writing Studio are documented here.
 
 ## [Unreleased]
 
+## [2.9.0] - 2026-06-16
+
 ### Changed
 - Reworded input placeholders for clarity and nonfiction fit. The new-project title placeholder is now "Name your project" instead of the fiction-oriented "My novel", and the project word count goal placeholder reads "Optional (no goal if blank)" instead of a bare "50000" that could be mistaken for a saved value. Example placeholders across the plugin (per-document word count goal, custom font name, export cover image) now use a consistent full-word "Example:" cue, translated and sentence-cased in all 12 locales, replacing the mixed "E.g."/"e.g."/"Ex." abbreviations. Placeholders that intentionally echo a real default (project folder, PDF font, Pandoc path, locale, WordPress URL) are unchanged. (#194)
 
