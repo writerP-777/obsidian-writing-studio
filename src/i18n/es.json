@@ -65,7 +65,7 @@
       },
       "customFontName": "Nombre de fuente personalizado",
       "customFontNameDesc": "Nombre de la fuente si se seleccionó “personalizado” arriba.",
-      "customFontNamePlaceholder": "Ej. Merriweather",
+      "customFontNamePlaceholder": "Ejemplo: Merriweather",
       "maxLineLength": "Longitud máxima de línea (caracteres)",
       "maxLineLengthDesc": "Se recomiendan 55–80 caracteres.",
       "fontSize": "Tamaño de fuente (px)",
@@ -393,7 +393,8 @@
   "projectModal": {
     "title": "Nuevo proyecto de escritura",
     "projectTitle": "Título del proyecto",
-    "titlePlaceholder": "Mi novela",
+    "titlePlaceholder": "Nombra tu proyecto",
+    "goalPlaceholder": "Opcional (sin meta si se deja vacío)",
     "template": "Plantilla",
     "templateDesc": "Elige una estructura de proyecto preconfigurada.",
     "templateOption": {
@@ -460,7 +461,7 @@
     },
     "coverImageName": "Ruta de imagen de portada",
     "coverImageDesc": "Ruta del vault a una imagen JPG o PNG. Deja vacío para una portada de texto generada.",
-    "coverImagePlaceholder": "p. ej. Assets/cover.jpg",
+    "coverImagePlaceholder": "Ejemplo: Assets/cover.jpg",
     "contactInfoName": "Información de contacto (opcional)",
     "contactInfoDesc": "Aparece en la portada — nombre, correo electrónico o dirección postal.",
     "contactInfoPlaceholder": "Nombre, correo electrónico o dirección postal",
@@ -655,7 +656,7 @@
     "title": "Establecer objetivo de recuento de palabras",
     "name": "Objetivo de recuento de palabras",
     "desc": "Recuento de palabras objetivo para este documento. Establecer en 0 para eliminar.",
-    "placeholder": "Ej. 1500",
+    "placeholder": "Ejemplo: 1500",
     "save": "Guardar",
     "cancel": "Cancelar"
   },

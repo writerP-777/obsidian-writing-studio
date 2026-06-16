@@ -65,7 +65,7 @@
       },
       "customFontName": "কাস্টম ফন্ট নাম",
       "customFontNameDesc": "উপরে 'কাস্টম' নির্বাচন করলে ফন্টের নাম দিন।",
-      "customFontNamePlaceholder": "যেমন: Merriweather",
+      "customFontNamePlaceholder": "উদাহরণ: Merriweather",
       "maxLineLength": "সর্বাধিক লাইন দৈর্ঘ্য (অক্ষর)",
       "maxLineLengthDesc": "55–80 অক্ষর প্রস্তাবিত।",
       "fontSize": "ফন্ট সাইজ (px)",
@@ -393,7 +393,8 @@
   "projectModal": {
     "title": "নতুন লেখার প্রকল্প",
     "projectTitle": "প্রকল্পের শিরোনাম",
-    "titlePlaceholder": "আমার উপন্যাস",
+    "titlePlaceholder": "আপনার প্রকল্পের নাম দিন",
+    "goalPlaceholder": "ঐচ্ছিক (খালি থাকলে কোনো লক্ষ্য নেই)",
     "template": "টেমপ্লেট",
     "templateDesc": "পূর্ব-কনফিগার করা প্রকল্প কাঠামো বেছে নিন।",
     "templateOption": {
@@ -460,7 +461,7 @@
     },
     "coverImageName": "প্রচ্ছদ ছবির পথ",
     "coverImageDesc": "JPG বা PNG প্রচ্ছদ ছবির Vault পথ। টেক্সট প্রচ্ছদ তৈরির জন্য ফাঁকা রাখুন।",
-    "coverImagePlaceholder": "যেমন Assets/cover.jpg",
+    "coverImagePlaceholder": "উদাহরণ: Assets/cover.jpg",
     "contactInfoName": "যোগাযোগের তথ্য (ঐচ্ছিক)",
     "contactInfoDesc": "শিরোনাম পৃষ্ঠায় প্রদর্শিত — নাম, ইমেইল বা ডাক ঠিকানা।",
     "contactInfoPlaceholder": "নাম, ইমেইল বা ডাক ঠিকানা",
@@ -655,7 +656,7 @@
     "title": "শব্দ সংখ্যার লক্ষ্য নির্ধারণ করুন",
     "name": "শব্দ সংখ্যার লক্ষ্য",
     "desc": "এই ডকুমেন্টের লক্ষ্য শব্দ সংখ্যা। সরাতে 0 সেট করুন।",
-    "placeholder": "যেমন: 1500",
+    "placeholder": "উদাহরণ: 1500",
     "save": "সংরক্ষণ করুন",
     "cancel": "বাতিল করুন"
   },

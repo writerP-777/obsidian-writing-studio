@@ -79,7 +79,7 @@ export class ProjectModal extends Modal {
       .setName(t('projectModal.goalLabel'))
       .setDesc(t('projectModal.goalDesc'))
       .addText(tx => tx
-        .setPlaceholder('50000')
+        .setPlaceholder(t('projectModal.goalPlaceholder'))
         .setValue(this.goalRaw)
         .onChange(v => { this.goalRaw = v; }));
 

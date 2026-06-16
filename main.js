@@ -2388,7 +2388,7 @@ var en_default = {
       },
       customFontName: "Custom font name",
       customFontNameDesc: "Font name if \u201Ccustom\u201D is selected above.",
-      customFontNamePlaceholder: "E.g. Merriweather",
+      customFontNamePlaceholder: "Example: Merriweather",
       maxLineLength: "Max line length (characters)",
       maxLineLengthDesc: "55\u201380 characters recommended.",
       fontSize: "Font size (px)",
@@ -2716,7 +2716,8 @@ var en_default = {
   projectModal: {
     title: "New writing project",
     projectTitle: "Project title",
-    titlePlaceholder: "My novel",
+    titlePlaceholder: "Name your project",
+    goalPlaceholder: "Optional (no goal if blank)",
     template: "Template",
     templateDesc: "Choose a pre-configured project structure.",
     templateOption: {
@@ -2783,7 +2784,7 @@ var en_default = {
     },
     coverImageName: "Cover image path",
     coverImageDesc: "Vault path to a JPG or PNG cover image. Leave empty for a generated text cover.",
-    coverImagePlaceholder: "e.g. Assets/cover.jpg",
+    coverImagePlaceholder: "Example: Assets/cover.jpg",
     contactInfoName: "Contact info (optional)",
     contactInfoDesc: "Appears on the title page \u2014 name, email, or mailing address.",
     contactInfoPlaceholder: "Name, email, or mailing address",
@@ -2978,7 +2979,7 @@ var en_default = {
     title: "Set word count goal",
     name: "Word count goal",
     desc: "Target word count for this document. Set to 0 to remove.",
-    placeholder: "E.g. 1500",
+    placeholder: "Example: 1500",
     save: "Save",
     cancel: "Cancel"
   },
@@ -3076,7 +3077,7 @@ var zh_default = {
       },
       customFontName: "\u81EA\u5B9A\u4E49\u5B57\u4F53\u540D\u79F0",
       customFontNameDesc: "\u9009\u62E9\u201C\u81EA\u5B9A\u4E49\u201D\u65F6\u8F93\u5165\u5B57\u4F53\u540D\u79F0\u3002",
-      customFontNamePlaceholder: "\u4F8B\u5982\uFF1AMerriweather",
+      customFontNamePlaceholder: "\u793A\u4F8B\uFF1AMerriweather",
       maxLineLength: "\u6700\u5927\u884C\u957F\u5EA6\uFF08\u5B57\u7B26\uFF09",
       maxLineLengthDesc: "\u5EFA\u8BAE 55\u201380 \u4E2A\u5B57\u7B26\u3002",
       fontSize: "\u5B57\u4F53\u5927\u5C0F\uFF08px\uFF09",
@@ -3404,7 +3405,8 @@ var zh_default = {
   projectModal: {
     title: "\u65B0\u5EFA\u5199\u4F5C\u9879\u76EE",
     projectTitle: "\u9879\u76EE\u6807\u9898",
-    titlePlaceholder: "\u6211\u7684\u5C0F\u8BF4",
+    titlePlaceholder: "\u4E3A\u9879\u76EE\u547D\u540D",
+    goalPlaceholder: "\u53EF\u9009\uFF08\u7559\u7A7A\u5219\u65E0\u76EE\u6807\uFF09",
     template: "\u6A21\u677F",
     templateDesc: "\u9009\u62E9\u9884\u914D\u7F6E\u7684\u9879\u76EE\u7ED3\u6784\u3002",
     templateOption: {
@@ -3471,7 +3473,7 @@ var zh_default = {
     },
     coverImageName: "\u5C01\u9762\u56FE\u7247\u8DEF\u5F84",
     coverImageDesc: "JPG \u6216 PNG \u5C01\u9762\u56FE\u7247\u7684 Vault \u8DEF\u5F84\u3002\u7559\u7A7A\u5C06\u751F\u6210\u6587\u5B57\u5C01\u9762\u3002",
-    coverImagePlaceholder: "\u4F8B\u5982 Assets/cover.jpg",
+    coverImagePlaceholder: "\u793A\u4F8B\uFF1AAssets/cover.jpg",
     contactInfoName: "\u8054\u7CFB\u4FE1\u606F\uFF08\u53EF\u9009\uFF09",
     contactInfoDesc: "\u663E\u793A\u5728\u6807\u9898\u9875\u4E0A \u2014 \u59D3\u540D\u3001\u7535\u5B50\u90AE\u4EF6\u6216\u90AE\u5BC4\u5730\u5740\u3002",
     contactInfoPlaceholder: "\u59D3\u540D\u3001\u7535\u5B50\u90AE\u4EF6\u6216\u90AE\u5BC4\u5730\u5740",
@@ -3666,7 +3668,7 @@ var zh_default = {
     title: "\u8BBE\u7F6E\u5B57\u6570\u76EE\u6807",
     name: "\u5B57\u6570\u76EE\u6807",
     desc: "\u6B64\u6587\u6863\u7684\u76EE\u6807\u5B57\u6570\u3002\u8BBE\u7F6E\u4E3A 0 \u53EF\u79FB\u9664\u76EE\u6807\u3002",
-    placeholder: "\u4F8B\u5982\uFF1A1500",
+    placeholder: "\u793A\u4F8B\uFF1A1500",
     save: "\u4FDD\u5B58",
     cancel: "\u53D6\u6D88"
   },
@@ -3764,7 +3766,7 @@ var hi_default = {
       },
       customFontName: "\u0915\u0938\u094D\u091F\u092E \u092B\u093C\u0949\u0928\u094D\u091F \u0928\u093E\u092E",
       customFontNameDesc: "\u090A\u092A\u0930 '\u0915\u0938\u094D\u091F\u092E' \u091A\u0941\u0928\u0928\u0947 \u092A\u0930 \u092B\u093C\u0949\u0928\u094D\u091F \u0928\u093E\u092E \u0926\u0930\u094D\u091C \u0915\u0930\u0947\u0902\u0964",
-      customFontNamePlaceholder: "\u0909\u0926\u093E. Merriweather",
+      customFontNamePlaceholder: "\u0909\u0926\u093E\u0939\u0930\u0923: Merriweather",
       maxLineLength: "\u0905\u0927\u093F\u0915\u0924\u092E \u092A\u0902\u0915\u094D\u0924\u093F \u0932\u0902\u092C\u093E\u0908 (\u0935\u0930\u094D\u0923)",
       maxLineLengthDesc: "55\u201380 \u0935\u0930\u094D\u0923 \u0905\u0928\u0941\u0936\u0902\u0938\u093F\u0924\u0964",
       fontSize: "\u092B\u093C\u0949\u0928\u094D\u091F \u0906\u0915\u093E\u0930 (px)",
@@ -4092,7 +4094,8 @@ var hi_default = {
   projectModal: {
     title: "\u0928\u0908 \u0932\u0947\u0916\u0928 \u092A\u0930\u093F\u092F\u094B\u091C\u0928\u093E",
     projectTitle: "\u092A\u0930\u093F\u092F\u094B\u091C\u0928\u093E \u0936\u0940\u0930\u094D\u0937\u0915",
-    titlePlaceholder: "\u092E\u0947\u0930\u093E \u0909\u092A\u0928\u094D\u092F\u093E\u0938",
+    titlePlaceholder: "\u0905\u092A\u0928\u0940 \u092A\u0930\u093F\u092F\u094B\u091C\u0928\u093E \u0915\u093E \u0928\u093E\u092E \u0926\u0947\u0902",
+    goalPlaceholder: "\u0935\u0948\u0915\u0932\u094D\u092A\u093F\u0915 (\u0916\u093E\u0932\u0940 \u0924\u094B \u0915\u094B\u0908 \u0932\u0915\u094D\u0937\u094D\u092F \u0928\u0939\u0940\u0902)",
     template: "\u091F\u0947\u092E\u094D\u092A\u0932\u0947\u091F",
     templateDesc: "\u092A\u0942\u0930\u094D\u0935-\u0915\u0949\u0928\u094D\u092B\u093C\u093F\u0917\u0930 \u0915\u0940 \u0917\u0908 \u092A\u0930\u093F\u092F\u094B\u091C\u0928\u093E \u0938\u0902\u0930\u091A\u0928\u093E \u091A\u0941\u0928\u0947\u0902\u0964",
     templateOption: {
@@ -4159,7 +4162,7 @@ var hi_default = {
     },
     coverImageName: "\u0915\u0935\u0930 \u091B\u0935\u093F \u092A\u0925",
     coverImageDesc: "JPG \u092F\u093E PNG \u0915\u0935\u0930 \u091B\u0935\u093F \u0915\u093E Vault \u092A\u0925\u0964 \u0909\u0924\u094D\u092A\u0928\u094D\u0928 \u091F\u0947\u0915\u094D\u0938\u094D\u091F \u0915\u0935\u0930 \u0915\u0947 \u0932\u093F\u090F \u0916\u093E\u0932\u0940 \u091B\u094B\u0921\u093C\u0947\u0902\u0964",
-    coverImagePlaceholder: "\u0909\u0926\u093E. Assets/cover.jpg",
+    coverImagePlaceholder: "\u0909\u0926\u093E\u0939\u0930\u0923: Assets/cover.jpg",
     contactInfoName: "\u0938\u0902\u092A\u0930\u094D\u0915 \u091C\u093E\u0928\u0915\u093E\u0930\u0940 (\u0935\u0948\u0915\u0932\u094D\u092A\u093F\u0915)",
     contactInfoDesc: "\u0936\u0940\u0930\u094D\u0937\u0915 \u092A\u0943\u0937\u094D\u0920 \u092A\u0930 \u0926\u093F\u0916\u093E\u0908 \u0926\u0947\u0924\u0940 \u0939\u0948 \u2014 \u0928\u093E\u092E, \u0908\u092E\u0947\u0932, \u092F\u093E \u0921\u093E\u0915 \u092A\u0924\u093E\u0964",
     contactInfoPlaceholder: "\u0928\u093E\u092E, \u0908\u092E\u0947\u0932, \u092F\u093E \u0921\u093E\u0915 \u092A\u0924\u093E",
@@ -4354,7 +4357,7 @@ var hi_default = {
     title: "\u0936\u092C\u094D\u0926 \u0938\u0902\u0916\u094D\u092F\u093E \u0932\u0915\u094D\u0937\u094D\u092F \u0938\u0947\u091F \u0915\u0930\u0947\u0902",
     name: "\u0936\u092C\u094D\u0926 \u0938\u0902\u0916\u094D\u092F\u093E \u0932\u0915\u094D\u0937\u094D\u092F",
     desc: "\u0907\u0938 \u0926\u0938\u094D\u0924\u093E\u0935\u0947\u091C\u093C \u0915\u093E \u0932\u0915\u094D\u0937\u094D\u092F \u0936\u092C\u094D\u0926 \u0938\u0902\u0916\u094D\u092F\u093E\u0964 \u0939\u091F\u093E\u0928\u0947 \u0915\u0947 \u0932\u093F\u090F 0 \u0938\u0947\u091F \u0915\u0930\u0947\u0902\u0964",
-    placeholder: "\u091C\u0948\u0938\u0947 1500",
+    placeholder: "\u0909\u0926\u093E\u0939\u0930\u0923: 1500",
     save: "\u0938\u0939\u0947\u091C\u0947\u0902",
     cancel: "\u0930\u0926\u094D\u0926 \u0915\u0930\u0947\u0902"
   },
@@ -4452,7 +4455,7 @@ var es_default = {
       },
       customFontName: "Nombre de fuente personalizado",
       customFontNameDesc: "Nombre de la fuente si se seleccion\xF3 \u201Cpersonalizado\u201D arriba.",
-      customFontNamePlaceholder: "Ej. Merriweather",
+      customFontNamePlaceholder: "Ejemplo: Merriweather",
       maxLineLength: "Longitud m\xE1xima de l\xEDnea (caracteres)",
       maxLineLengthDesc: "Se recomiendan 55\u201380 caracteres.",
       fontSize: "Tama\xF1o de fuente (px)",
@@ -4780,7 +4783,8 @@ var es_default = {
   projectModal: {
     title: "Nuevo proyecto de escritura",
     projectTitle: "T\xEDtulo del proyecto",
-    titlePlaceholder: "Mi novela",
+    titlePlaceholder: "Nombra tu proyecto",
+    goalPlaceholder: "Opcional (sin meta si se deja vac\xEDo)",
     template: "Plantilla",
     templateDesc: "Elige una estructura de proyecto preconfigurada.",
     templateOption: {
@@ -4847,7 +4851,7 @@ var es_default = {
     },
     coverImageName: "Ruta de imagen de portada",
     coverImageDesc: "Ruta del vault a una imagen JPG o PNG. Deja vac\xEDo para una portada de texto generada.",
-    coverImagePlaceholder: "p. ej. Assets/cover.jpg",
+    coverImagePlaceholder: "Ejemplo: Assets/cover.jpg",
     contactInfoName: "Informaci\xF3n de contacto (opcional)",
     contactInfoDesc: "Aparece en la portada \u2014 nombre, correo electr\xF3nico o direcci\xF3n postal.",
     contactInfoPlaceholder: "Nombre, correo electr\xF3nico o direcci\xF3n postal",
@@ -5042,7 +5046,7 @@ var es_default = {
     title: "Establecer objetivo de recuento de palabras",
     name: "Objetivo de recuento de palabras",
     desc: "Recuento de palabras objetivo para este documento. Establecer en 0 para eliminar.",
-    placeholder: "Ej. 1500",
+    placeholder: "Ejemplo: 1500",
     save: "Guardar",
     cancel: "Cancelar"
   },
@@ -5478,7 +5482,8 @@ var ar_default = {
   projectModal: {
     title: "\u0645\u0634\u0631\u0648\u0639 \u0643\u062A\u0627\u0628\u0629 \u062C\u062F\u064A\u062F",
     projectTitle: "\u0639\u0646\u0648\u0627\u0646 \u0627\u0644\u0645\u0634\u0631\u0648\u0639",
-    titlePlaceholder: "\u0631\u0648\u0627\u064A\u062A\u064A",
+    titlePlaceholder: "\u0627\u0633\u0645 \u0645\u0634\u0631\u0648\u0639\u0643",
+    goalPlaceholder: "\u0627\u062E\u062A\u064A\u0627\u0631\u064A (\u0628\u062F\u0648\u0646 \u0647\u062F\u0641 \u0625\u0630\u0627 \u062A\u064F\u0631\u0643 \u0641\u0627\u0631\u063A\u064B\u0627)",
     template: "\u0642\u0627\u0644\u0628",
     templateDesc: "\u0627\u062E\u062A\u0631 \u0647\u064A\u0643\u0644 \u0645\u0634\u0631\u0648\u0639 \u0645\u064F\u0639\u062F\u064B\u0651\u0627 \u0645\u0633\u0628\u0642\u064B\u0627.",
     templateOption: {
@@ -5842,7 +5847,7 @@ var fr_default = {
       },
       customFontName: "Nom de police personnalis\xE9",
       customFontNameDesc: "Nom de la police si \xAB\xA0personnalis\xE9\xA0\xBB est s\xE9lectionn\xE9 ci-dessus.",
-      customFontNamePlaceholder: "Ex. Merriweather",
+      customFontNamePlaceholder: "Exemple : Merriweather",
       maxLineLength: "Longueur maximale de ligne (caract\xE8res)",
       maxLineLengthDesc: "55\u201380 caract\xE8res recommand\xE9s.",
       fontSize: "Taille de police (px)",
@@ -6170,7 +6175,8 @@ var fr_default = {
   projectModal: {
     title: "Nouveau projet d'\xE9criture",
     projectTitle: "Titre du projet",
-    titlePlaceholder: "Mon roman",
+    titlePlaceholder: "Nommez votre projet",
+    goalPlaceholder: "Facultatif (aucun objectif si vide)",
     template: "Mod\xE8le",
     templateDesc: "Choisissez une structure de projet pr\xE9configur\xE9e.",
     templateOption: {
@@ -6237,7 +6243,7 @@ var fr_default = {
     },
     coverImageName: "Chemin de l'image de couverture",
     coverImageDesc: "Chemin vault vers une image JPG ou PNG. Laissez vide pour une couverture texte g\xE9n\xE9r\xE9e.",
-    coverImagePlaceholder: "ex. Assets/cover.jpg",
+    coverImagePlaceholder: "Exemple : Assets/cover.jpg",
     contactInfoName: "Informations de contact (facultatif)",
     contactInfoDesc: "Appara\xEEt sur la page de titre \u2014 nom, e-mail ou adresse postale.",
     contactInfoPlaceholder: "Nom, e-mail ou adresse postale",
@@ -6432,7 +6438,7 @@ var fr_default = {
     title: "D\xE9finir un objectif de nombre de mots",
     name: "Objectif de nombre de mots",
     desc: "Nombre de mots cible pour ce document. Mettre \xE0 0 pour supprimer.",
-    placeholder: "Ex. 1500",
+    placeholder: "Exemple : 1500",
     save: "Enregistrer",
     cancel: "Annuler"
   },
@@ -6530,7 +6536,7 @@ var bn_default = {
       },
       customFontName: "\u0995\u09BE\u09B8\u09CD\u099F\u09AE \u09AB\u09A8\u09CD\u099F \u09A8\u09BE\u09AE",
       customFontNameDesc: "\u0989\u09AA\u09B0\u09C7 '\u0995\u09BE\u09B8\u09CD\u099F\u09AE' \u09A8\u09BF\u09B0\u09CD\u09AC\u09BE\u099A\u09A8 \u0995\u09B0\u09B2\u09C7 \u09AB\u09A8\u09CD\u099F\u09C7\u09B0 \u09A8\u09BE\u09AE \u09A6\u09BF\u09A8\u0964",
-      customFontNamePlaceholder: "\u09AF\u09C7\u09AE\u09A8: Merriweather",
+      customFontNamePlaceholder: "\u0989\u09A6\u09BE\u09B9\u09B0\u09A3: Merriweather",
       maxLineLength: "\u09B8\u09B0\u09CD\u09AC\u09BE\u09A7\u09BF\u0995 \u09B2\u09BE\u0987\u09A8 \u09A6\u09C8\u09B0\u09CD\u0998\u09CD\u09AF (\u0985\u0995\u09CD\u09B7\u09B0)",
       maxLineLengthDesc: "55\u201380 \u0985\u0995\u09CD\u09B7\u09B0 \u09AA\u09CD\u09B0\u09B8\u09CD\u09A4\u09BE\u09AC\u09BF\u09A4\u0964",
       fontSize: "\u09AB\u09A8\u09CD\u099F \u09B8\u09BE\u0987\u099C (px)",
@@ -6858,7 +6864,8 @@ var bn_default = {
   projectModal: {
     title: "\u09A8\u09A4\u09C1\u09A8 \u09B2\u09C7\u0996\u09BE\u09B0 \u09AA\u09CD\u09B0\u0995\u09B2\u09CD\u09AA",
     projectTitle: "\u09AA\u09CD\u09B0\u0995\u09B2\u09CD\u09AA\u09C7\u09B0 \u09B6\u09BF\u09B0\u09CB\u09A8\u09BE\u09AE",
-    titlePlaceholder: "\u0986\u09AE\u09BE\u09B0 \u0989\u09AA\u09A8\u09CD\u09AF\u09BE\u09B8",
+    titlePlaceholder: "\u0986\u09AA\u09A8\u09BE\u09B0 \u09AA\u09CD\u09B0\u0995\u09B2\u09CD\u09AA\u09C7\u09B0 \u09A8\u09BE\u09AE \u09A6\u09BF\u09A8",
+    goalPlaceholder: "\u0990\u099A\u09CD\u099B\u09BF\u0995 (\u0996\u09BE\u09B2\u09BF \u09A5\u09BE\u0995\u09B2\u09C7 \u0995\u09CB\u09A8\u09CB \u09B2\u0995\u09CD\u09B7\u09CD\u09AF \u09A8\u09C7\u0987)",
     template: "\u099F\u09C7\u09AE\u09AA\u09CD\u09B2\u09C7\u099F",
     templateDesc: "\u09AA\u09C2\u09B0\u09CD\u09AC-\u0995\u09A8\u09AB\u09BF\u0997\u09BE\u09B0 \u0995\u09B0\u09BE \u09AA\u09CD\u09B0\u0995\u09B2\u09CD\u09AA \u0995\u09BE\u09A0\u09BE\u09AE\u09CB \u09AC\u09C7\u099B\u09C7 \u09A8\u09BF\u09A8\u0964",
     templateOption: {
@@ -6925,7 +6932,7 @@ var bn_default = {
     },
     coverImageName: "\u09AA\u09CD\u09B0\u099A\u09CD\u099B\u09A6 \u099B\u09AC\u09BF\u09B0 \u09AA\u09A5",
     coverImageDesc: "JPG \u09AC\u09BE PNG \u09AA\u09CD\u09B0\u099A\u09CD\u099B\u09A6 \u099B\u09AC\u09BF\u09B0 Vault \u09AA\u09A5\u0964 \u099F\u09C7\u0995\u09CD\u09B8\u099F \u09AA\u09CD\u09B0\u099A\u09CD\u099B\u09A6 \u09A4\u09C8\u09B0\u09BF\u09B0 \u099C\u09A8\u09CD\u09AF \u09AB\u09BE\u0981\u0995\u09BE \u09B0\u09BE\u0996\u09C1\u09A8\u0964",
-    coverImagePlaceholder: "\u09AF\u09C7\u09AE\u09A8 Assets/cover.jpg",
+    coverImagePlaceholder: "\u0989\u09A6\u09BE\u09B9\u09B0\u09A3: Assets/cover.jpg",
     contactInfoName: "\u09AF\u09CB\u0997\u09BE\u09AF\u09CB\u0997\u09C7\u09B0 \u09A4\u09A5\u09CD\u09AF (\u0990\u099A\u09CD\u099B\u09BF\u0995)",
     contactInfoDesc: "\u09B6\u09BF\u09B0\u09CB\u09A8\u09BE\u09AE \u09AA\u09C3\u09B7\u09CD\u09A0\u09BE\u09AF\u09BC \u09AA\u09CD\u09B0\u09A6\u09B0\u09CD\u09B6\u09BF\u09A4 \u2014 \u09A8\u09BE\u09AE, \u0987\u09AE\u09C7\u0987\u09B2 \u09AC\u09BE \u09A1\u09BE\u0995 \u09A0\u09BF\u0995\u09BE\u09A8\u09BE\u0964",
     contactInfoPlaceholder: "\u09A8\u09BE\u09AE, \u0987\u09AE\u09C7\u0987\u09B2 \u09AC\u09BE \u09A1\u09BE\u0995 \u09A0\u09BF\u0995\u09BE\u09A8\u09BE",
@@ -7120,7 +7127,7 @@ var bn_default = {
     title: "\u09B6\u09AC\u09CD\u09A6 \u09B8\u0982\u0996\u09CD\u09AF\u09BE\u09B0 \u09B2\u0995\u09CD\u09B7\u09CD\u09AF \u09A8\u09BF\u09B0\u09CD\u09A7\u09BE\u09B0\u09A3 \u0995\u09B0\u09C1\u09A8",
     name: "\u09B6\u09AC\u09CD\u09A6 \u09B8\u0982\u0996\u09CD\u09AF\u09BE\u09B0 \u09B2\u0995\u09CD\u09B7\u09CD\u09AF",
     desc: "\u098F\u0987 \u09A1\u0995\u09C1\u09AE\u09C7\u09A8\u09CD\u099F\u09C7\u09B0 \u09B2\u0995\u09CD\u09B7\u09CD\u09AF \u09B6\u09AC\u09CD\u09A6 \u09B8\u0982\u0996\u09CD\u09AF\u09BE\u0964 \u09B8\u09B0\u09BE\u09A4\u09C7 0 \u09B8\u09C7\u099F \u0995\u09B0\u09C1\u09A8\u0964",
-    placeholder: "\u09AF\u09C7\u09AE\u09A8: 1500",
+    placeholder: "\u0989\u09A6\u09BE\u09B9\u09B0\u09A3: 1500",
     save: "\u09B8\u0982\u09B0\u0995\u09CD\u09B7\u09A3 \u0995\u09B0\u09C1\u09A8",
     cancel: "\u09AC\u09BE\u09A4\u09BF\u09B2 \u0995\u09B0\u09C1\u09A8"
   },
@@ -7218,7 +7225,7 @@ var pt_BR_default = {
       },
       customFontName: "Nome de fonte personalizado",
       customFontNameDesc: 'Nome da fonte se "personalizado" estiver selecionado acima.',
-      customFontNamePlaceholder: "Ex.: Merriweather",
+      customFontNamePlaceholder: "Exemplo: Merriweather",
       maxLineLength: "Comprimento m\xE1ximo de linha (caracteres)",
       maxLineLengthDesc: "Recomendado 55\u201380 caracteres.",
       fontSize: "Tamanho da fonte (px)",
@@ -7546,7 +7553,8 @@ var pt_BR_default = {
   projectModal: {
     title: "Novo projeto de escrita",
     projectTitle: "T\xEDtulo do projeto",
-    titlePlaceholder: "Meu romance",
+    titlePlaceholder: "D\xEA um nome ao projeto",
+    goalPlaceholder: "Opcional (sem meta se vazio)",
     template: "Modelo",
     templateDesc: "Escolha uma estrutura de projeto pr\xE9-configurada.",
     templateOption: {
@@ -7613,7 +7621,7 @@ var pt_BR_default = {
     },
     coverImageName: "Caminho da imagem de capa",
     coverImageDesc: "Caminho no vault para uma imagem JPG ou PNG. Deixe vazio para uma capa de texto gerada.",
-    coverImagePlaceholder: "ex. Assets/cover.jpg",
+    coverImagePlaceholder: "Exemplo: Assets/cover.jpg",
     contactInfoName: "Informa\xE7\xF5es de contato (opcional)",
     contactInfoDesc: "Aparece na p\xE1gina de t\xEDtulo \u2014 nome, e-mail ou endere\xE7o postal.",
     contactInfoPlaceholder: "Nome, e-mail ou endere\xE7o postal",
@@ -7808,7 +7816,7 @@ var pt_BR_default = {
     title: "Definir meta de contagem de palavras",
     name: "Meta de contagem de palavras",
     desc: "Contagem de palavras alvo para este documento. Defina como 0 para remover.",
-    placeholder: "Ex.: 1500",
+    placeholder: "Exemplo: 1500",
     save: "Salvar",
     cancel: "Cancelar"
   },
@@ -7906,7 +7914,7 @@ var ru_default = {
       },
       customFontName: "\u0421\u043E\u0431\u0441\u0442\u0432\u0435\u043D\u043D\u043E\u0435 \u043D\u0430\u0437\u0432\u0430\u043D\u0438\u0435 \u0448\u0440\u0438\u0444\u0442\u0430",
       customFontNameDesc: "\u041D\u0430\u0437\u0432\u0430\u043D\u0438\u0435 \u0448\u0440\u0438\u0444\u0442\u0430, \u0435\u0441\u043B\u0438 \u0432\u044B\u0448\u0435 \u0432\u044B\u0431\u0440\u0430\u043D\u043E \xAB\u0441\u043E\u0431\u0441\u0442\u0432\u0435\u043D\u043D\u044B\u0439\xBB.",
-      customFontNamePlaceholder: "\u041D\u0430\u043F\u0440\u0438\u043C\u0435\u0440: Merriweather",
+      customFontNamePlaceholder: "\u041F\u0440\u0438\u043C\u0435\u0440: Merriweather",
       maxLineLength: "\u041C\u0430\u043A\u0441\u0438\u043C\u0430\u043B\u044C\u043D\u0430\u044F \u0434\u043B\u0438\u043D\u0430 \u0441\u0442\u0440\u043E\u043A\u0438 (\u0441\u0438\u043C\u0432\u043E\u043B\u043E\u0432)",
       maxLineLengthDesc: "\u0420\u0435\u043A\u043E\u043C\u0435\u043D\u0434\u0443\u0435\u0442\u0441\u044F 55\u201380 \u0441\u0438\u043C\u0432\u043E\u043B\u043E\u0432.",
       fontSize: "\u0420\u0430\u0437\u043C\u0435\u0440 \u0448\u0440\u0438\u0444\u0442\u0430 (px)",
@@ -8240,7 +8248,8 @@ var ru_default = {
   projectModal: {
     title: "\u041D\u043E\u0432\u044B\u0439 \u043F\u0438\u0441\u044C\u043C\u0435\u043D\u043D\u044B\u0439 \u043F\u0440\u043E\u0435\u043A\u0442",
     projectTitle: "\u041D\u0430\u0437\u0432\u0430\u043D\u0438\u0435 \u043F\u0440\u043E\u0435\u043A\u0442\u0430",
-    titlePlaceholder: "\u041C\u043E\u0439 \u0440\u043E\u043C\u0430\u043D",
+    titlePlaceholder: "\u041D\u0430\u0437\u043E\u0432\u0438\u0442\u0435 \u043F\u0440\u043E\u0435\u043A\u0442",
+    goalPlaceholder: "\u041D\u0435\u043E\u0431\u044F\u0437\u0430\u0442\u0435\u043B\u044C\u043D\u043E (\u0431\u0435\u0437 \u0446\u0435\u043B\u0438, \u0435\u0441\u043B\u0438 \u043F\u0443\u0441\u0442\u043E)",
     template: "\u0428\u0430\u0431\u043B\u043E\u043D",
     templateDesc: "\u0412\u044B\u0431\u0435\u0440\u0438\u0442\u0435 \u043F\u0440\u0435\u0434\u043D\u0430\u0441\u0442\u0440\u043E\u0435\u043D\u043D\u0443\u044E \u0441\u0442\u0440\u0443\u043A\u0442\u0443\u0440\u0443 \u043F\u0440\u043E\u0435\u043A\u0442\u0430.",
     templateOption: {
@@ -8307,7 +8316,7 @@ var ru_default = {
     },
     coverImageName: "\u041F\u0443\u0442\u044C \u043A \u043E\u0431\u043B\u043E\u0436\u043A\u0435",
     coverImageDesc: "\u041F\u0443\u0442\u044C \u0432 \u0445\u0440\u0430\u043D\u0438\u043B\u0438\u0449\u0435 \u043A \u0438\u0437\u043E\u0431\u0440\u0430\u0436\u0435\u043D\u0438\u044E JPG \u0438\u043B\u0438 PNG. \u041E\u0441\u0442\u0430\u0432\u044C\u0442\u0435 \u043F\u0443\u0441\u0442\u044B\u043C \u0434\u043B\u044F \u0442\u0435\u043A\u0441\u0442\u043E\u0432\u043E\u0439 \u043E\u0431\u043B\u043E\u0436\u043A\u0438.",
-    coverImagePlaceholder: "\u043D\u0430\u043F\u0440. Assets/cover.jpg",
+    coverImagePlaceholder: "\u041F\u0440\u0438\u043C\u0435\u0440: Assets/cover.jpg",
     contactInfoName: "\u041A\u043E\u043D\u0442\u0430\u043A\u0442\u043D\u0430\u044F \u0438\u043D\u0444\u043E\u0440\u043C\u0430\u0446\u0438\u044F (\u043D\u0435\u043E\u0431\u044F\u0437\u0430\u0442\u0435\u043B\u044C\u043D\u043E)",
     contactInfoDesc: "\u041E\u0442\u043E\u0431\u0440\u0430\u0436\u0430\u0435\u0442\u0441\u044F \u043D\u0430 \u0442\u0438\u0442\u0443\u043B\u044C\u043D\u043E\u0439 \u0441\u0442\u0440\u0430\u043D\u0438\u0446\u0435 \u2014 \u0438\u043C\u044F, e-mail \u0438\u043B\u0438 \u043F\u043E\u0447\u0442\u043E\u0432\u044B\u0439 \u0430\u0434\u0440\u0435\u0441.",
     contactInfoPlaceholder: "\u0418\u043C\u044F, e-mail \u0438\u043B\u0438 \u043F\u043E\u0447\u0442\u043E\u0432\u044B\u0439 \u0430\u0434\u0440\u0435\u0441",
@@ -8504,7 +8513,7 @@ var ru_default = {
     title: "\u0423\u0441\u0442\u0430\u043D\u043E\u0432\u0438\u0442\u044C \u0446\u0435\u043B\u044C \u043F\u043E \u043A\u043E\u043B\u0438\u0447\u0435\u0441\u0442\u0432\u0443 \u0441\u043B\u043E\u0432",
     name: "\u0426\u0435\u043B\u044C \u043F\u043E \u043A\u043E\u043B\u0438\u0447\u0435\u0441\u0442\u0432\u0443 \u0441\u043B\u043E\u0432",
     desc: "\u0426\u0435\u043B\u0435\u0432\u043E\u0435 \u043A\u043E\u043B\u0438\u0447\u0435\u0441\u0442\u0432\u043E \u0441\u043B\u043E\u0432 \u0434\u043B\u044F \u044D\u0442\u043E\u0433\u043E \u0434\u043E\u043A\u0443\u043C\u0435\u043D\u0442\u0430. \u0423\u0441\u0442\u0430\u043D\u043E\u0432\u0438\u0442\u0435 0 \u0434\u043B\u044F \u0443\u0434\u0430\u043B\u0435\u043D\u0438\u044F.",
-    placeholder: "\u041D\u0430\u043F\u0440. 1500",
+    placeholder: "\u041F\u0440\u0438\u043C\u0435\u0440: 1500",
     save: "\u0421\u043E\u0445\u0440\u0430\u043D\u0438\u0442\u044C",
     cancel: "\u041E\u0442\u043C\u0435\u043D\u0430"
   },
@@ -8930,7 +8939,8 @@ var ja_default = {
   projectModal: {
     title: "\u65B0\u898F\u57F7\u7B46\u30D7\u30ED\u30B8\u30A7\u30AF\u30C8",
     projectTitle: "\u30D7\u30ED\u30B8\u30A7\u30AF\u30C8\u30BF\u30A4\u30C8\u30EB",
-    titlePlaceholder: "\u79C1\u306E\u5C0F\u8AAC",
+    titlePlaceholder: "\u30D7\u30ED\u30B8\u30A7\u30AF\u30C8\u540D\u3092\u5165\u529B",
+    goalPlaceholder: "\u4EFB\u610F\uFF08\u7A7A\u6B04\u306A\u3089\u76EE\u6A19\u306A\u3057\uFF09",
     template: "\u30C6\u30F3\u30D7\u30EC\u30FC\u30C8",
     templateDesc: "\u4E8B\u524D\u8A2D\u5B9A\u3055\u308C\u305F\u30D7\u30ED\u30B8\u30A7\u30AF\u30C8\u69CB\u9020\u3092\u9078\u629E\u3057\u3066\u304F\u3060\u3055\u3044\u3002",
     templateOption: {
@@ -9290,7 +9300,7 @@ var de_default = {
       },
       customFontName: "Benutzerdefinierter Schriftname",
       customFontNameDesc: "Schriftname, wenn oben \u201EBenutzerdefiniert\u201C ausgew\xE4hlt ist.",
-      customFontNamePlaceholder: "z.B. Merriweather",
+      customFontNamePlaceholder: "Beispiel: Merriweather",
       maxLineLength: "Maximale Zeilenl\xE4nge (Zeichen)",
       maxLineLengthDesc: "55\u201380 Zeichen empfohlen.",
       fontSize: "Schriftgr\xF6\xDFe (px)",
@@ -9618,7 +9628,8 @@ var de_default = {
   projectModal: {
     title: "Neues Schreibprojekt",
     projectTitle: "Projekttitel",
-    titlePlaceholder: "Mein Roman",
+    titlePlaceholder: "Benenne dein Projekt",
+    goalPlaceholder: "Optional (kein Ziel, wenn leer)",
     template: "Vorlage",
     templateDesc: "Eine vorkonfigurierte Projektstruktur ausw\xE4hlen.",
     templateOption: {
@@ -9685,7 +9696,7 @@ var de_default = {
     },
     coverImageName: "Cover-Bildpfad",
     coverImageDesc: "Vault-Pfad zu einem JPG- oder PNG-Cover-Bild. Leer lassen f\xFCr ein generiertes Text-Cover.",
-    coverImagePlaceholder: "z.B. Assets/cover.jpg",
+    coverImagePlaceholder: "Beispiel: Assets/cover.jpg",
     contactInfoName: "Kontaktinformationen (optional)",
     contactInfoDesc: "Erscheint auf der Titelseite \u2014 Name, E-Mail oder Postadresse.",
     contactInfoPlaceholder: "Name, E-Mail oder Postadresse",
@@ -9880,7 +9891,7 @@ var de_default = {
     title: "Wortziel festlegen",
     name: "Wortziel",
     desc: "Ziel-Wortanzahl f\xFCr dieses Dokument. Auf 0 setzen, um es zu entfernen.",
-    placeholder: "z.B. 1500",
+    placeholder: "Beispiel: 1500",
     save: "Speichern",
     cancel: "Abbrechen"
   },
@@ -9978,7 +9989,7 @@ var ko_default = {
       },
       customFontName: "\uC0AC\uC6A9\uC790 \uC815\uC758 \uAE00\uAF34 \uC774\uB984",
       customFontNameDesc: "\uC704\uC5D0\uC11C '\uC0AC\uC6A9\uC790 \uC815\uC758'\uB97C \uC120\uD0DD\uD55C \uACBD\uC6B0 \uAE00\uAF34 \uC774\uB984.",
-      customFontNamePlaceholder: "\uC608: Merriweather",
+      customFontNamePlaceholder: "\uC608\uC2DC: Merriweather",
       maxLineLength: "\uCD5C\uB300 \uC904 \uAE38\uC774 (\uBB38\uC790)",
       maxLineLengthDesc: "55\u201380\uC790 \uAD8C\uC7A5.",
       fontSize: "\uAE00\uAF34 \uD06C\uAE30 (px)",
@@ -10306,7 +10317,8 @@ var ko_default = {
   projectModal: {
     title: "\uC0C8 \uAE00\uC4F0\uAE30 \uD504\uB85C\uC81D\uD2B8",
     projectTitle: "\uD504\uB85C\uC81D\uD2B8 \uC81C\uBAA9",
-    titlePlaceholder: "\uB0B4 \uC18C\uC124",
+    titlePlaceholder: "\uD504\uB85C\uC81D\uD2B8 \uC774\uB984 \uC785\uB825",
+    goalPlaceholder: "\uC120\uD0DD \uC0AC\uD56D(\uBE44\uC6CC \uB450\uBA74 \uBAA9\uD45C \uC5C6\uC74C)",
     template: "\uD15C\uD50C\uB9BF",
     templateDesc: "\uC0AC\uC804 \uAD6C\uC131\uB41C \uD504\uB85C\uC81D\uD2B8 \uAD6C\uC870\uB97C \uC120\uD0DD\uD558\uC138\uC694.",
     templateOption: {
@@ -10373,7 +10385,7 @@ var ko_default = {
     },
     coverImageName: "\uD45C\uC9C0 \uC774\uBBF8\uC9C0 \uACBD\uB85C",
     coverImageDesc: "JPG \uB610\uB294 PNG \uD45C\uC9C0 \uC774\uBBF8\uC9C0\uC758 \uBCFC\uD2B8 \uACBD\uB85C. \uC0DD\uC131\uB41C \uD14D\uC2A4\uD2B8 \uD45C\uC9C0\uC758 \uACBD\uC6B0 \uBE44\uC6CC \uB450\uC138\uC694.",
-    coverImagePlaceholder: "\uC608: Assets/cover.jpg",
+    coverImagePlaceholder: "\uC608\uC2DC: Assets/cover.jpg",
     contactInfoName: "\uC5F0\uB77D\uCC98 \uC815\uBCF4 (\uC120\uD0DD\uC0AC\uD56D)",
     contactInfoDesc: "\uD45C\uC9C0\uC5D0 \uD45C\uC2DC \u2014 \uC774\uB984, \uC774\uBA54\uC77C \uB610\uB294 \uC8FC\uC18C.",
     contactInfoPlaceholder: "\uC774\uB984, \uC774\uBA54\uC77C \uB610\uB294 \uC8FC\uC18C",
@@ -10568,7 +10580,7 @@ var ko_default = {
     title: "\uB2E8\uC5B4 \uC218 \uBAA9\uD45C \uC124\uC815",
     name: "\uB2E8\uC5B4 \uC218 \uBAA9\uD45C",
     desc: "\uC774 \uBB38\uC11C\uC758 \uBAA9\uD45C \uB2E8\uC5B4 \uC218. \uC81C\uAC70\uD558\uB824\uBA74 0\uC73C\uB85C \uC124\uC815\uD558\uC138\uC694.",
-    placeholder: "\uC608: 1500",
+    placeholder: "\uC608\uC2DC: 1500",
     save: "\uC800\uC7A5",
     cancel: "\uCDE8\uC18C"
   },
@@ -10667,7 +10679,7 @@ var ProjectModal = class extends import_obsidian2.Modal {
     new import_obsidian2.Setting(contentEl).setName(t2("settings.general.authorName")).addText((tx) => tx.setValue(this.author).onChange((v) => {
       this.author = v;
     }));
-    new import_obsidian2.Setting(contentEl).setName(t2("projectModal.goalLabel")).setDesc(t2("projectModal.goalDesc")).addText((tx) => tx.setPlaceholder("50000").setValue(this.goalRaw).onChange((v) => {
+    new import_obsidian2.Setting(contentEl).setName(t2("projectModal.goalLabel")).setDesc(t2("projectModal.goalDesc")).addText((tx) => tx.setPlaceholder(t2("projectModal.goalPlaceholder")).setValue(this.goalRaw).onChange((v) => {
       this.goalRaw = v;
     }));
     new import_obsidian2.Setting(contentEl).setName(t2("projectModal.descriptionLabel")).addTextArea((tx) => tx.setPlaceholder(t2("projectModal.descriptionPlaceholder")).setValue(this.description).onChange((v) => {

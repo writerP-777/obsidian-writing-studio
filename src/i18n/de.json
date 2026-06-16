@@ -65,7 +65,7 @@
       },
       "customFontName": "Benutzerdefinierter Schriftname",
       "customFontNameDesc": "Schriftname, wenn oben „Benutzerdefiniert“ ausgewählt ist.",
-      "customFontNamePlaceholder": "z.B. Merriweather",
+      "customFontNamePlaceholder": "Beispiel: Merriweather",
       "maxLineLength": "Maximale Zeilenlänge (Zeichen)",
       "maxLineLengthDesc": "55–80 Zeichen empfohlen.",
       "fontSize": "Schriftgröße (px)",
@@ -393,7 +393,8 @@
   "projectModal": {
     "title": "Neues Schreibprojekt",
     "projectTitle": "Projekttitel",
-    "titlePlaceholder": "Mein Roman",
+    "titlePlaceholder": "Benenne dein Projekt",
+    "goalPlaceholder": "Optional (kein Ziel, wenn leer)",
     "template": "Vorlage",
     "templateDesc": "Eine vorkonfigurierte Projektstruktur auswählen.",
     "templateOption": {
@@ -460,7 +461,7 @@
     },
     "coverImageName": "Cover-Bildpfad",
     "coverImageDesc": "Vault-Pfad zu einem JPG- oder PNG-Cover-Bild. Leer lassen für ein generiertes Text-Cover.",
-    "coverImagePlaceholder": "z.B. Assets/cover.jpg",
+    "coverImagePlaceholder": "Beispiel: Assets/cover.jpg",
     "contactInfoName": "Kontaktinformationen (optional)",
     "contactInfoDesc": "Erscheint auf der Titelseite — Name, E-Mail oder Postadresse.",
     "contactInfoPlaceholder": "Name, E-Mail oder Postadresse",
@@ -655,7 +656,7 @@
     "title": "Wortziel festlegen",
     "name": "Wortziel",
     "desc": "Ziel-Wortanzahl für dieses Dokument. Auf 0 setzen, um es zu entfernen.",
-    "placeholder": "z.B. 1500",
+    "placeholder": "Beispiel: 1500",
     "save": "Speichern",
     "cancel": "Abbrechen"
   },

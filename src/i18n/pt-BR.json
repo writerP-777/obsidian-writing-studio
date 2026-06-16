@@ -65,7 +65,7 @@
       },
       "customFontName": "Nome de fonte personalizado",
       "customFontNameDesc": "Nome da fonte se \"personalizado\" estiver selecionado acima.",
-      "customFontNamePlaceholder": "Ex.: Merriweather",
+      "customFontNamePlaceholder": "Exemplo: Merriweather",
       "maxLineLength": "Comprimento máximo de linha (caracteres)",
       "maxLineLengthDesc": "Recomendado 55–80 caracteres.",
       "fontSize": "Tamanho da fonte (px)",
@@ -393,7 +393,8 @@
   "projectModal": {
     "title": "Novo projeto de escrita",
     "projectTitle": "Título do projeto",
-    "titlePlaceholder": "Meu romance",
+    "titlePlaceholder": "Dê um nome ao projeto",
+    "goalPlaceholder": "Opcional (sem meta se vazio)",
     "template": "Modelo",
     "templateDesc": "Escolha uma estrutura de projeto pré-configurada.",
     "templateOption": {
@@ -460,7 +461,7 @@
     },
     "coverImageName": "Caminho da imagem de capa",
     "coverImageDesc": "Caminho no vault para uma imagem JPG ou PNG. Deixe vazio para uma capa de texto gerada.",
-    "coverImagePlaceholder": "ex. Assets/cover.jpg",
+    "coverImagePlaceholder": "Exemplo: Assets/cover.jpg",
     "contactInfoName": "Informações de contato (opcional)",
     "contactInfoDesc": "Aparece na página de título — nome, e-mail ou endereço postal.",
     "contactInfoPlaceholder": "Nome, e-mail ou endereço postal",
@@ -655,7 +656,7 @@
     "title": "Definir meta de contagem de palavras",
     "name": "Meta de contagem de palavras",
     "desc": "Contagem de palavras alvo para este documento. Defina como 0 para remover.",
-    "placeholder": "Ex.: 1500",
+    "placeholder": "Exemplo: 1500",
     "save": "Salvar",
     "cancel": "Cancelar"
   },

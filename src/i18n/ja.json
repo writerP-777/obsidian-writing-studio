@@ -393,7 +393,8 @@
   "projectModal": {
     "title": "新規執筆プロジェクト",
     "projectTitle": "プロジェクトタイトル",
-    "titlePlaceholder": "私の小説",
+    "titlePlaceholder": "プロジェクト名を入力",
+    "goalPlaceholder": "任意（空欄なら目標なし）",
     "template": "テンプレート",
     "templateDesc": "事前設定されたプロジェクト構造を選択してください。",
     "templateOption": {

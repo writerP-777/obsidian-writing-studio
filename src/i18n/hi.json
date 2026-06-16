@@ -65,7 +65,7 @@
       },
       "customFontName": "कस्टम फ़ॉन्ट नाम",
       "customFontNameDesc": "ऊपर 'कस्टम' चुनने पर फ़ॉन्ट नाम दर्ज करें।",
-      "customFontNamePlaceholder": "उदा. Merriweather",
+      "customFontNamePlaceholder": "उदाहरण: Merriweather",
       "maxLineLength": "अधिकतम पंक्ति लंबाई (वर्ण)",
       "maxLineLengthDesc": "55–80 वर्ण अनुशंसित।",
       "fontSize": "फ़ॉन्ट आकार (px)",
@@ -393,7 +393,8 @@
   "projectModal": {
     "title": "नई लेखन परियोजना",
     "projectTitle": "परियोजना शीर्षक",
-    "titlePlaceholder": "मेरा उपन्यास",
+    "titlePlaceholder": "अपनी परियोजना का नाम दें",
+    "goalPlaceholder": "वैकल्पिक (खाली तो कोई लक्ष्य नहीं)",
     "template": "टेम्पलेट",
     "templateDesc": "पूर्व-कॉन्फ़िगर की गई परियोजना संरचना चुनें।",
     "templateOption": {
@@ -460,7 +461,7 @@
     },
     "coverImageName": "कवर छवि पथ",
     "coverImageDesc": "JPG या PNG कवर छवि का Vault पथ। उत्पन्न टेक्स्ट कवर के लिए खाली छोड़ें।",
-    "coverImagePlaceholder": "उदा. Assets/cover.jpg",
+    "coverImagePlaceholder": "उदाहरण: Assets/cover.jpg",
     "contactInfoName": "संपर्क जानकारी (वैकल्पिक)",
     "contactInfoDesc": "शीर्षक पृष्ठ पर दिखाई देती है — नाम, ईमेल, या डाक पता।",
     "contactInfoPlaceholder": "नाम, ईमेल, या डाक पता",
@@ -655,7 +656,7 @@
     "title": "शब्द संख्या लक्ष्य सेट करें",
     "name": "शब्द संख्या लक्ष्य",
     "desc": "इस दस्तावेज़ का लक्ष्य शब्द संख्या। हटाने के लिए 0 सेट करें।",
-    "placeholder": "जैसे 1500",
+    "placeholder": "उदाहरण: 1500",
     "save": "सहेजें",
     "cancel": "रद्द करें"
   },

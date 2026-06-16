@@ -65,7 +65,7 @@
       },
       "customFontName": "Собственное название шрифта",
       "customFontNameDesc": "Название шрифта, если выше выбрано «собственный».",
-      "customFontNamePlaceholder": "Например: Merriweather",
+      "customFontNamePlaceholder": "Пример: Merriweather",
       "maxLineLength": "Максимальная длина строки (символов)",
       "maxLineLengthDesc": "Рекомендуется 55–80 символов.",
       "fontSize": "Размер шрифта (px)",
@@ -399,7 +399,8 @@
   "projectModal": {
     "title": "Новый письменный проект",
     "projectTitle": "Название проекта",
-    "titlePlaceholder": "Мой роман",
+    "titlePlaceholder": "Назовите проект",
+    "goalPlaceholder": "Необязательно (без цели, если пусто)",
     "template": "Шаблон",
     "templateDesc": "Выберите преднастроенную структуру проекта.",
     "templateOption": {
@@ -466,7 +467,7 @@
     },
     "coverImageName": "Путь к обложке",
     "coverImageDesc": "Путь в хранилище к изображению JPG или PNG. Оставьте пустым для текстовой обложки.",
-    "coverImagePlaceholder": "напр. Assets/cover.jpg",
+    "coverImagePlaceholder": "Пример: Assets/cover.jpg",
     "contactInfoName": "Контактная информация (необязательно)",
     "contactInfoDesc": "Отображается на титульной странице — имя, e-mail или почтовый адрес.",
     "contactInfoPlaceholder": "Имя, e-mail или почтовый адрес",
@@ -663,7 +664,7 @@
     "title": "Установить цель по количеству слов",
     "name": "Цель по количеству слов",
     "desc": "Целевое количество слов для этого документа. Установите 0 для удаления.",
-    "placeholder": "Напр. 1500",
+    "placeholder": "Пример: 1500",
     "save": "Сохранить",
     "cancel": "Отмена"
   },

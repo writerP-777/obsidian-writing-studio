@@ -65,7 +65,7 @@
       },
       "customFontName": "Custom font name",
       "customFontNameDesc": "Font name if “custom” is selected above.",
-      "customFontNamePlaceholder": "E.g. Merriweather",
+      "customFontNamePlaceholder": "Example: Merriweather",
       "maxLineLength": "Max line length (characters)",
       "maxLineLengthDesc": "55–80 characters recommended.",
       "fontSize": "Font size (px)",
@@ -393,7 +393,8 @@
   "projectModal": {
     "title": "New writing project",
     "projectTitle": "Project title",
-    "titlePlaceholder": "My novel",
+    "titlePlaceholder": "Name your project",
+    "goalPlaceholder": "Optional (no goal if blank)",
     "template": "Template",
     "templateDesc": "Choose a pre-configured project structure.",
     "templateOption": {
@@ -460,7 +461,7 @@
     },
     "coverImageName": "Cover image path",
     "coverImageDesc": "Vault path to a JPG or PNG cover image. Leave empty for a generated text cover.",
-    "coverImagePlaceholder": "e.g. Assets/cover.jpg",
+    "coverImagePlaceholder": "Example: Assets/cover.jpg",
     "contactInfoName": "Contact info (optional)",
     "contactInfoDesc": "Appears on the title page — name, email, or mailing address.",
     "contactInfoPlaceholder": "Name, email, or mailing address",
@@ -655,7 +656,7 @@
     "title": "Set word count goal",
     "name": "Word count goal",
     "desc": "Target word count for this document. Set to 0 to remove.",
-    "placeholder": "E.g. 1500",
+    "placeholder": "Example: 1500",
     "save": "Save",
     "cancel": "Cancel"
   },

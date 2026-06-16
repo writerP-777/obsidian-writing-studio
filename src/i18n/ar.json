@@ -403,7 +403,8 @@
   "projectModal": {
     "title": "مشروع كتابة جديد",
     "projectTitle": "عنوان المشروع",
-    "titlePlaceholder": "روايتي",
+    "titlePlaceholder": "اسم مشروعك",
+    "goalPlaceholder": "اختياري (بدون هدف إذا تُرك فارغًا)",
     "template": "قالب",
     "templateDesc": "اختر هيكل مشروع مُعدًّا مسبقًا.",
     "templateOption": {

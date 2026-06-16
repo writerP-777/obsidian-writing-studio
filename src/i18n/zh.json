@@ -65,7 +65,7 @@
       },
       "customFontName": "自定义字体名称",
       "customFontNameDesc": "选择“自定义”时输入字体名称。",
-      "customFontNamePlaceholder": "例如：Merriweather",
+      "customFontNamePlaceholder": "示例：Merriweather",
       "maxLineLength": "最大行长度（字符）",
       "maxLineLengthDesc": "建议 55–80 个字符。",
       "fontSize": "字体大小（px）",
@@ -393,7 +393,8 @@
   "projectModal": {
     "title": "新建写作项目",
     "projectTitle": "项目标题",
-    "titlePlaceholder": "我的小说",
+    "titlePlaceholder": "为项目命名",
+    "goalPlaceholder": "可选（留空则无目标）",
     "template": "模板",
     "templateDesc": "选择预配置的项目结构。",
     "templateOption": {
@@ -460,7 +461,7 @@
     },
     "coverImageName": "封面图片路径",
     "coverImageDesc": "JPG 或 PNG 封面图片的 Vault 路径。留空将生成文字封面。",
-    "coverImagePlaceholder": "例如 Assets/cover.jpg",
+    "coverImagePlaceholder": "示例：Assets/cover.jpg",
     "contactInfoName": "联系信息（可选）",
     "contactInfoDesc": "显示在标题页上 — 姓名、电子邮件或邮寄地址。",
     "contactInfoPlaceholder": "姓名、电子邮件或邮寄地址",
@@ -655,7 +656,7 @@
     "title": "设置字数目标",
     "name": "字数目标",
     "desc": "此文档的目标字数。设置为 0 可移除目标。",
-    "placeholder": "例如：1500",
+    "placeholder": "示例：1500",
     "save": "保存",
     "cancel": "取消"
   },
