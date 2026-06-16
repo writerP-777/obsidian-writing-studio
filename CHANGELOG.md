@@ -6,6 +6,9 @@ All notable changes to Writing Studio are documented here.
 
 ## [Unreleased]
 
+### Fixed
+- PDF export now selects a LaTeX engine that matches the requested font instead of relying on Pandoc's `pdflatex` default. When a custom font is set it prefers `xelatex`, then `lualatex`, so the font is actually applied; if only `pdflatex` is available it still produces the PDF and notifies that the font was dropped rather than failing. When no LaTeX engine is installed, the error now names the missing PDF engine and points to a LaTeX distribution (MiKTeX / TeX Live) instead of blaming Pandoc, which had already run successfully. DOCX and RTF export are unchanged. A configurable preferred-engine setting, including a non-LaTeX `wkhtmltopdf` path, is tracked separately in #203. (#201)
+
 ## [2.8.0] - 2026-06-13
 
 UX improvement cycle from the 2026-06-12 product-experience review (issues #153–#171).

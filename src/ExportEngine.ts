@@ -29,6 +29,63 @@ export interface ExportOptions {
   authorContact?: string;
 }
 
+export type PdfEngine = 'xelatex' | 'lualatex' | 'pdflatex';
+
+export interface PdfEngineDecision {
+  // The engine to pass to pandoc, or null when no LaTeX engine is installed.
+  engine: PdfEngine | null;
+  // Whether the requested mainfont can be honored (only xelatex/lualatex can).
+  keepFont: boolean;
+}
+
+// Pure decision: given which LaTeX engines are installed and whether the export
+// requests a custom font, pick the PDF engine and whether the font survives.
+// With a font, prefer fontspec-capable engines (xelatex, then lualatex); fall back
+// to pdflatex with the font dropped rather than failing the export. Without a font,
+// keep the historic pdflatex-first default so the common path is unchanged, using
+// xelatex/lualatex only when pdflatex is absent.
+export function selectPdfEngine(
+  available: Record<PdfEngine, boolean>,
+  fontRequested: boolean,
+): PdfEngineDecision {
+  const order: PdfEngine[] = fontRequested
+    ? ['xelatex', 'lualatex', 'pdflatex']
+    : ['pdflatex', 'xelatex', 'lualatex'];
+  for (const engine of order) {
+    if (available[engine]) {
+      return { engine, keepFont: fontRequested && engine !== 'pdflatex' };
+    }
+  }
+  return { engine: null, keepFont: false };
+}
+
+export type PandocFailureKind = 'pandoc-missing' | 'engine-missing' | 'other';
+
+// Pure classification of a failed pandoc invocation's error text. Engine cues are
+// checked first: a missing-engine failure still echoes the pandoc command, so only a
+// genuine spawn failure (ENOENT on the pandoc binary) means pandoc itself is missing.
+export function classifyPandocFailure(message: string): PandocFailureKind {
+  const m = message.toLowerCase();
+  if (
+    m.includes('pdf-engine') ||
+    m.includes('pdflatex not found') ||
+    m.includes('xelatex not found') ||
+    m.includes('lualatex not found') ||
+    m.includes('latex')
+  ) {
+    return 'engine-missing';
+  }
+  if (
+    m.includes('spawn pandoc') ||
+    m.includes('pandoc enoent') ||
+    m.includes("'pandoc' is not recognized") ||
+    m.includes('enoent')
+  ) {
+    return 'pandoc-missing';
+  }
+  return 'other';
+}
+
 const MANUSCRIPT_CSS = `
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body {
@@ -460,7 +517,24 @@ ${markdownToHtml(content)}
     }
   }
 
-  private async exportPandoc(content: string, outputPath: string, opts: ExportOptions): Promise<string> {
+  // Probe which LaTeX engines pandoc could use for PDF output. Mirrors
+  // isPandocAvailable: each probe never throws, so a missing engine is just false.
+  private async detectPdfEngines(): Promise<Record<PdfEngine, boolean>> {
+    const probe = async (bin: PdfEngine): Promise<boolean> => {
+      try {
+        await execFileAsync(bin, ['--version']);
+        return true;
+      } catch {
+        return false;
+      }
+    };
+    const [xelatex, lualatex, pdflatex] = await Promise.all([
+      probe('xelatex'), probe('lualatex'), probe('pdflatex'),
+    ]);
+    return { xelatex, lualatex, pdflatex };
+  }
+
+  private async exportPandoc(content: string, outputPath: string, opts: ExportOptions, pdf?: { engine: PdfEngine; keepFont: boolean }): Promise<string> {
     const pandocPath = this.plugin.settings.pandocPath || 'pandoc';
     const tempMdPath = outputPath.replace(/\.[^.]+$/, '.tmp.md');
 
@@ -470,11 +544,18 @@ ${markdownToHtml(content)}
       const absOutput = this.files.absolutePath(outputPath);
       const absInput = this.files.absolutePath(tempMdPath);
 
-      // No --pdf-engine flag: pandoc defaults to LaTeX for PDF output, which
-      // is what the README tells users to install (TeX Live / MiKTeX)
       const args = [absInput, '--from', 'markdown', '-o', absOutput];
 
-      if (opts.font) {
+      // For PDF the engine is chosen explicitly (selectPdfEngine), since mainfont
+      // is only honored by xelatex/lualatex. docx/rtf pass no pdf arg and are unchanged.
+      if (pdf) {
+        args.push(`--pdf-engine=${pdf.engine}`);
+      }
+
+      // Skip mainfont when degrading to pdflatex so the export still succeeds
+      // instead of erroring on a font the engine cannot apply.
+      const keepFont = !pdf || pdf.keepFont;
+      if (opts.font && keepFont) {
         const safeFont = opts.font.replace(/["'`\\$]/g, '');
         args.push('-V', `mainfont=${safeFont}`);
       }
@@ -485,7 +566,11 @@ ${markdownToHtml(content)}
       new Notice(t('exportEngine.exportedTo', { path: outputPath }));
       return outputPath;
     } catch (e) {
-      throw new Error(`Pandoc export failed: ${e instanceof Error ? e.message : String(e)}\nEnsure pandoc is installed.`);
+      const raw = e instanceof Error ? e.message : String(e);
+      const hint = classifyPandocFailure(raw) === 'engine-missing'
+        ? t('exportEngine.pdfEngineMissingHint')
+        : t('exportEngine.pandocMissingHint');
+      throw new Error(`Pandoc export failed: ${raw}\n${hint}`);
     } finally {
       // Remove the temp file outright — trashing it accumulated a .tmp.md
       // in .trash/ on every pandoc export
@@ -494,10 +579,27 @@ ${markdownToHtml(content)}
   }
 
   private async exportPdf(content: string, outputPath: string, opts: ExportOptions): Promise<string> {
+    const decision = selectPdfEngine(await this.detectPdfEngines(), !!opts.font);
+
+    if (!decision.engine) {
+      const msg = t('exportEngine.pdfEngineRequired');
+      new Notice(msg);
+      throw new Error(msg);
+    }
+
+    // Font requested but only pdflatex is available: tell the user the font was
+    // dropped rather than silently producing an unstyled PDF.
+    if (opts.font && !decision.keepFont) {
+      new Notice(t('exportEngine.pdfFontNeedsXelatex'));
+    }
+
     try {
-      return await this.exportPandoc(content, outputPath, opts);
+      return await this.exportPandoc(content, outputPath, opts, { engine: decision.engine, keepFont: decision.keepFont });
     } catch (e) {
-      new Notice(t('exportEngine.pdfRequiresPandoc'));
+      const raw = e instanceof Error ? e.message : String(e);
+      new Notice(classifyPandocFailure(raw) === 'engine-missing'
+        ? t('exportEngine.pdfEngineRequired')
+        : t('exportEngine.pdfRequiresPandoc'));
       throw e; // preserve the original pandoc error for the Export modal to display
     }
   }
