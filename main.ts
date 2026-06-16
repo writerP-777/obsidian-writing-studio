@@ -42,6 +42,7 @@ import { TargetsDashboardModal } from './modals/TargetsDashboardModal';
 import { WritingDashboardModal } from './modals/WritingDashboardModal';
 
 import { WordPressSite } from './models/WordPressSite';
+import { resolveDefaultDocumentType } from './models/Project';
 import { WritingModeType } from './models/WritingMode';
 import type { BinderData, BinderItem } from './models/BinderItem';
 
@@ -611,7 +612,7 @@ export default class WritingStudioPlugin extends Plugin {
         id: `item-${Date.now()}`,
         title: file.basename,
         filePath: file.path,
-        type: this.settings.defaultDocumentType,
+        type: resolveDefaultDocumentType(project.type, this.settings.defaultDocumentType),
         order: binder.items.length + 1,
         status: 'draft' as const,
         includeInExport: true,

@@ -71,6 +71,10 @@ Prefer: *writing project* or *project*. Avoid: *workspace*, *document set*.
 **Project type** (`ProjectType`)
 The kind of writing a project represents: `book`, `series`, `blog`, `journal-article`, `magazine-article`, or `blank`.
 Each non-blank type scaffolds an opinionated folder and document structure via a template.
+Each non-blank type also declares a **default document type** for documents created or added after
+scaffolding: book → `chapter`, series → `article`, blog → `article`, journal-article → `section`,
+magazine-article → `section`. The project type's declared default wins; the global
+`defaultDocumentType` setting is the fallback used only for `blank` projects (which have no template).
 
 **Binder** (`BinderData` + `BinderView`)
 The ordered, hierarchical list of documents that belong to a writing project.

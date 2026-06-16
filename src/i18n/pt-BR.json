@@ -20,6 +20,7 @@
       "authorNameDesc": "Usado em exportações e páginas de título.",
       "authorNamePlaceholder": "Seu nome",
       "defaultDocumentType": "Tipo de documento padrão",
+      "defaultDocumentTypeDesc": "Valor de reserva para novos documentos em projetos em branco. Projetos com um tipo definido usam um padrão correspondente a esse tipo.",
       "docType": {
         "chapter": "Capítulo",
         "section": "Seção",

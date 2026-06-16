@@ -20,6 +20,7 @@
       "authorNameDesc": "Wird in Exporten und Titelseiten verwendet.",
       "authorNamePlaceholder": "Dein Name",
       "defaultDocumentType": "Standard-Dokumenttyp",
+      "defaultDocumentTypeDesc": "Ausweichwert für neue Dokumente in leeren Projekten. Projekte mit festgelegtem Typ verwenden einen passenden Standardwert.",
       "docType": {
         "chapter": "Kapitel",
         "section": "Abschnitt",

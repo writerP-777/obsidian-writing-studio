@@ -20,6 +20,7 @@
       "authorNameDesc": "내보내기 및 표지에 사용됩니다.",
       "authorNamePlaceholder": "이름 입력",
       "defaultDocumentType": "기본 문서 유형",
+      "defaultDocumentTypeDesc": "빈 프로젝트의 새 문서에 사용되는 대체 값입니다. 유형이 설정된 프로젝트는 해당 유형에 맞는 기본값을 사용합니다.",
       "docType": {
         "chapter": "챕터",
         "section": "섹션",

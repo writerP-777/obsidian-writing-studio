@@ -20,6 +20,7 @@
       "authorNameDesc": "Utilisé dans les exports et les pages de titre.",
       "authorNamePlaceholder": "Votre nom",
       "defaultDocumentType": "Type de document par défaut",
+      "defaultDocumentTypeDesc": "Valeur de repli pour les nouveaux documents dans les projets vierges. Les projets ayant un type défini utilisent une valeur par défaut correspondant à ce type.",
       "docType": {
         "chapter": "Chapitre",
         "section": "Section",

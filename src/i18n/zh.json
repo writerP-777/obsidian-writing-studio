@@ -20,6 +20,7 @@
       "authorNameDesc": "用于导出文件和标题页。",
       "authorNamePlaceholder": "您的姓名",
       "defaultDocumentType": "默认文档类型",
+      "defaultDocumentTypeDesc": "空白项目中新文档的回退类型。设置了类型的项目使用与该类型匹配的默认值。",
       "docType": {
         "chapter": "章节",
         "section": "小节",

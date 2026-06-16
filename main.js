@@ -40,6 +40,19 @@ var STATUS_COLORS = {
   published: "#3b82f6"
 };
 
+// models/Project.ts
+var PROJECT_TYPE_DEFAULT_DOC_TYPE = {
+  book: "chapter",
+  series: "article",
+  blog: "article",
+  "journal-article": "section",
+  "magazine-article": "section"
+};
+function resolveDefaultDocumentType(projectType, globalDefault) {
+  var _a2;
+  return (_a2 = PROJECT_TYPE_DEFAULT_DOC_TYPE[projectType]) != null ? _a2 : globalDefault;
+}
+
 // modals/ProjectModal.ts
 var import_obsidian2 = require("obsidian");
 
@@ -2330,6 +2343,7 @@ var en_default = {
       authorNameDesc: "Used in exports and title pages.",
       authorNamePlaceholder: "Your name",
       defaultDocumentType: "Default document type",
+      defaultDocumentTypeDesc: "Fallback for new documents in blank projects. Projects with a set type use a default that matches that type.",
       docType: {
         chapter: "Chapter",
         section: "Section",
@@ -3017,6 +3031,7 @@ var zh_default = {
       authorNameDesc: "\u7528\u4E8E\u5BFC\u51FA\u6587\u4EF6\u548C\u6807\u9898\u9875\u3002",
       authorNamePlaceholder: "\u60A8\u7684\u59D3\u540D",
       defaultDocumentType: "\u9ED8\u8BA4\u6587\u6863\u7C7B\u578B",
+      defaultDocumentTypeDesc: "\u7A7A\u767D\u9879\u76EE\u4E2D\u65B0\u6587\u6863\u7684\u56DE\u9000\u7C7B\u578B\u3002\u8BBE\u7F6E\u4E86\u7C7B\u578B\u7684\u9879\u76EE\u4F7F\u7528\u4E0E\u8BE5\u7C7B\u578B\u5339\u914D\u7684\u9ED8\u8BA4\u503C\u3002",
       docType: {
         chapter: "\u7AE0\u8282",
         section: "\u5C0F\u8282",
@@ -3704,6 +3719,7 @@ var hi_default = {
       authorNameDesc: "\u0928\u093F\u0930\u094D\u092F\u093E\u0924 \u0914\u0930 \u0936\u0940\u0930\u094D\u0937\u0915 \u092A\u0943\u0937\u094D\u0920\u094B\u0902 \u092E\u0947\u0902 \u0909\u092A\u092F\u094B\u0917 \u0915\u093F\u092F\u093E \u091C\u093E\u0924\u093E \u0939\u0948\u0964",
       authorNamePlaceholder: "\u0906\u092A\u0915\u093E \u0928\u093E\u092E",
       defaultDocumentType: "\u0921\u093F\u092B\u093C\u0949\u0932\u094D\u091F \u0926\u0938\u094D\u0924\u093E\u0935\u0947\u091C\u093C \u092A\u094D\u0930\u0915\u093E\u0930",
+      defaultDocumentTypeDesc: "\u0916\u093E\u0932\u0940 \u092A\u0930\u093F\u092F\u094B\u091C\u0928\u093E\u0913\u0902 \u092E\u0947\u0902 \u0928\u090F \u0926\u0938\u094D\u0924\u093E\u0935\u0947\u091C\u093C\u094B\u0902 \u0915\u0947 \u0932\u093F\u090F \u092B\u093C\u0949\u0932\u092C\u0948\u0915\u0964 \u091C\u093F\u0928 \u092A\u0930\u093F\u092F\u094B\u091C\u0928\u093E\u0913\u0902 \u092E\u0947\u0902 \u092A\u094D\u0930\u0915\u093E\u0930 \u0938\u0947\u091F \u0939\u0948, \u0935\u0947 \u0909\u0938 \u092A\u094D\u0930\u0915\u093E\u0930 \u0938\u0947 \u092E\u0947\u0932 \u0916\u093E\u0928\u0947 \u0935\u093E\u0932\u093E \u0921\u093F\u092B\u093C\u0949\u0932\u094D\u091F \u0909\u092A\u092F\u094B\u0917 \u0915\u0930\u0924\u0940 \u0939\u0948\u0902\u0964",
       docType: {
         chapter: "\u0905\u0927\u094D\u092F\u093E\u092F",
         section: "\u0905\u0928\u0941\u092D\u093E\u0917",
@@ -4391,6 +4407,7 @@ var es_default = {
       authorNameDesc: "Utilizado en exportaciones y p\xE1ginas de t\xEDtulo.",
       authorNamePlaceholder: "Tu nombre",
       defaultDocumentType: "Tipo de documento predeterminado",
+      defaultDocumentTypeDesc: "Valor de reserva para los documentos nuevos en proyectos en blanco. Los proyectos con un tipo definido usan un valor predeterminado acorde a ese tipo.",
       docType: {
         chapter: "Cap\xEDtulo",
         section: "Secci\xF3n",
@@ -5078,6 +5095,7 @@ var ar_default = {
       authorNameDesc: "\u064A\u064F\u0633\u062A\u062E\u062F\u0645 \u0641\u064A \u0627\u0644\u0635\u0627\u062F\u0631\u0627\u062A \u0648\u0635\u0641\u062D\u0627\u062A \u0627\u0644\u0639\u0646\u0648\u0627\u0646.",
       authorNamePlaceholder: "\u0627\u0633\u0645\u0643",
       defaultDocumentType: "\u0646\u0648\u0639 \u0627\u0644\u0645\u0633\u062A\u0646\u062F \u0627\u0644\u0627\u0641\u062A\u0631\u0627\u0636\u064A",
+      defaultDocumentTypeDesc: "\u0627\u0644\u0642\u064A\u0645\u0629 \u0627\u0644\u0627\u062D\u062A\u064A\u0627\u0637\u064A\u0629 \u0644\u0644\u0645\u0633\u062A\u0646\u062F\u0627\u062A \u0627\u0644\u062C\u062F\u064A\u062F\u0629 \u0641\u064A \u0627\u0644\u0645\u0634\u0627\u0631\u064A\u0639 \u0627\u0644\u0641\u0627\u0631\u063A\u0629. \u0627\u0644\u0645\u0634\u0627\u0631\u064A\u0639 \u0627\u0644\u062A\u064A \u0644\u0647\u0627 \u0646\u0648\u0639 \u0645\u062D\u062F\u062F \u062A\u0633\u062A\u062E\u062F\u0645 \u0642\u064A\u0645\u0629 \u0627\u0641\u062A\u0631\u0627\u0636\u064A\u0629 \u062A\u062A\u0648\u0627\u0641\u0642 \u0645\u0639 \u0630\u0644\u0643 \u0627\u0644\u0646\u0648\u0639.",
       docType: {
         chapter: "\u0641\u0635\u0644",
         section: "\u0642\u0633\u0645",
@@ -5779,6 +5797,7 @@ var fr_default = {
       authorNameDesc: "Utilis\xE9 dans les exports et les pages de titre.",
       authorNamePlaceholder: "Votre nom",
       defaultDocumentType: "Type de document par d\xE9faut",
+      defaultDocumentTypeDesc: "Valeur de repli pour les nouveaux documents dans les projets vierges. Les projets ayant un type d\xE9fini utilisent une valeur par d\xE9faut correspondant \xE0 ce type.",
       docType: {
         chapter: "Chapitre",
         section: "Section",
@@ -6466,6 +6485,7 @@ var bn_default = {
       authorNameDesc: "\u09B0\u09AA\u09CD\u09A4\u09BE\u09A8\u09BF \u098F\u09AC\u0982 \u09B6\u09BF\u09B0\u09CB\u09A8\u09BE\u09AE \u09AA\u09C3\u09B7\u09CD\u09A0\u09BE\u09AF\u09BC \u09AC\u09CD\u09AF\u09AC\u09B9\u09C3\u09A4 \u09B9\u09AF\u09BC\u0964",
       authorNamePlaceholder: "\u0986\u09AA\u09A8\u09BE\u09B0 \u09A8\u09BE\u09AE",
       defaultDocumentType: "\u09A1\u09BF\u09AB\u09B2\u09CD\u099F \u09A8\u09A5\u09BF\u09B0 \u09A7\u09B0\u09A8",
+      defaultDocumentTypeDesc: "\u09AB\u09BE\u0981\u0995\u09BE \u09AA\u09CD\u09B0\u0995\u09B2\u09CD\u09AA\u09C7 \u09A8\u09A4\u09C1\u09A8 \u09A8\u09A5\u09BF\u09B0 \u099C\u09A8\u09CD\u09AF \u09AB\u09B2\u09AC\u09CD\u09AF\u09BE\u0995\u0964 \u09AF\u09C7 \u09AA\u09CD\u09B0\u0995\u09B2\u09CD\u09AA\u0997\u09C1\u09B2\u09BF\u09B0 \u098F\u0995\u099F\u09BF \u09A7\u09B0\u09A8 \u09B8\u09C7\u099F \u0995\u09B0\u09BE \u0986\u099B\u09C7 \u09B8\u09C7\u0997\u09C1\u09B2\u09BF \u09B8\u09C7\u0987 \u09A7\u09B0\u09A8\u09C7\u09B0 \u09B8\u09BE\u09A5\u09C7 \u09AE\u09BF\u09B2\u09C7 \u09AF\u09BE\u0993\u09AF\u09BC\u09BE \u09A1\u09BF\u09AB\u09B2\u09CD\u099F \u09AC\u09CD\u09AF\u09AC\u09B9\u09BE\u09B0 \u0995\u09B0\u09C7\u0964",
       docType: {
         chapter: "\u0985\u09A7\u09CD\u09AF\u09BE\u09AF\u09BC",
         section: "\u09AC\u09BF\u09AD\u09BE\u0997",
@@ -7153,6 +7173,7 @@ var pt_BR_default = {
       authorNameDesc: "Usado em exporta\xE7\xF5es e p\xE1ginas de t\xEDtulo.",
       authorNamePlaceholder: "Seu nome",
       defaultDocumentType: "Tipo de documento padr\xE3o",
+      defaultDocumentTypeDesc: "Valor de reserva para novos documentos em projetos em branco. Projetos com um tipo definido usam um padr\xE3o correspondente a esse tipo.",
       docType: {
         chapter: "Cap\xEDtulo",
         section: "Se\xE7\xE3o",
@@ -7840,6 +7861,7 @@ var ru_default = {
       authorNameDesc: "\u0418\u0441\u043F\u043E\u043B\u044C\u0437\u0443\u0435\u0442\u0441\u044F \u0432 \u044D\u043A\u0441\u043F\u043E\u0440\u0442\u0430\u0445 \u0438 \u0442\u0438\u0442\u0443\u043B\u044C\u043D\u044B\u0445 \u0441\u0442\u0440\u0430\u043D\u0438\u0446\u0430\u0445.",
       authorNamePlaceholder: "\u0412\u0430\u0448\u0435 \u0438\u043C\u044F",
       defaultDocumentType: "\u0422\u0438\u043F \u0434\u043E\u043A\u0443\u043C\u0435\u043D\u0442\u0430 \u043F\u043E \u0443\u043C\u043E\u043B\u0447\u0430\u043D\u0438\u044E",
+      defaultDocumentTypeDesc: "\u0417\u0430\u043F\u0430\u0441\u043D\u043E\u0439 \u0432\u0430\u0440\u0438\u0430\u043D\u0442 \u0434\u043B\u044F \u043D\u043E\u0432\u044B\u0445 \u0434\u043E\u043A\u0443\u043C\u0435\u043D\u0442\u043E\u0432 \u0432 \u043F\u0443\u0441\u0442\u044B\u0445 \u043F\u0440\u043E\u0435\u043A\u0442\u0430\u0445. \u041F\u0440\u043E\u0435\u043A\u0442\u044B \u0441 \u0437\u0430\u0434\u0430\u043D\u043D\u044B\u043C \u0442\u0438\u043F\u043E\u043C \u0438\u0441\u043F\u043E\u043B\u044C\u0437\u0443\u044E\u0442 \u0437\u043D\u0430\u0447\u0435\u043D\u0438\u0435 \u043F\u043E \u0443\u043C\u043E\u043B\u0447\u0430\u043D\u0438\u044E, \u0441\u043E\u043E\u0442\u0432\u0435\u0442\u0441\u0442\u0432\u0443\u044E\u0449\u0435\u0435 \u044D\u0442\u043E\u043C\u0443 \u0442\u0438\u043F\u0443.",
       docType: {
         chapter: "\u0413\u043B\u0430\u0432\u0430",
         section: "\u0420\u0430\u0437\u0434\u0435\u043B",
@@ -8535,6 +8557,7 @@ var ja_default = {
       authorNameDesc: "\u30A8\u30AF\u30B9\u30DD\u30FC\u30C8\u3068\u30BF\u30A4\u30C8\u30EB\u30DA\u30FC\u30B8\u306B\u4F7F\u7528\u3055\u308C\u307E\u3059\u3002",
       authorNamePlaceholder: "\u304A\u540D\u524D",
       defaultDocumentType: "\u30C7\u30D5\u30A9\u30EB\u30C8\u306E\u30C9\u30AD\u30E5\u30E1\u30F3\u30C8\u30BF\u30A4\u30D7",
+      defaultDocumentTypeDesc: "\u7A7A\u306E\u30D7\u30ED\u30B8\u30A7\u30AF\u30C8\u3067\u65B0\u898F\u30C9\u30AD\u30E5\u30E1\u30F3\u30C8\u306B\u4F7F\u3046\u30D5\u30A9\u30FC\u30EB\u30D0\u30C3\u30AF\u3067\u3059\u3002\u30BF\u30A4\u30D7\u304C\u8A2D\u5B9A\u3055\u308C\u305F\u30D7\u30ED\u30B8\u30A7\u30AF\u30C8\u306F\u3001\u305D\u306E\u30BF\u30A4\u30D7\u306B\u5408\u3063\u305F\u65E2\u5B9A\u5024\u3092\u4F7F\u7528\u3057\u307E\u3059\u3002",
       docType: {
         chapter: "\u7AE0",
         section: "\u30BB\u30AF\u30B7\u30E7\u30F3",
@@ -9222,6 +9245,7 @@ var de_default = {
       authorNameDesc: "Wird in Exporten und Titelseiten verwendet.",
       authorNamePlaceholder: "Dein Name",
       defaultDocumentType: "Standard-Dokumenttyp",
+      defaultDocumentTypeDesc: "Ausweichwert f\xFCr neue Dokumente in leeren Projekten. Projekte mit festgelegtem Typ verwenden einen passenden Standardwert.",
       docType: {
         chapter: "Kapitel",
         section: "Abschnitt",
@@ -9909,6 +9933,7 @@ var ko_default = {
       authorNameDesc: "\uB0B4\uBCF4\uB0B4\uAE30 \uBC0F \uD45C\uC9C0\uC5D0 \uC0AC\uC6A9\uB429\uB2C8\uB2E4.",
       authorNamePlaceholder: "\uC774\uB984 \uC785\uB825",
       defaultDocumentType: "\uAE30\uBCF8 \uBB38\uC11C \uC720\uD615",
+      defaultDocumentTypeDesc: "\uBE48 \uD504\uB85C\uC81D\uD2B8\uC758 \uC0C8 \uBB38\uC11C\uC5D0 \uC0AC\uC6A9\uB418\uB294 \uB300\uCCB4 \uAC12\uC785\uB2C8\uB2E4. \uC720\uD615\uC774 \uC124\uC815\uB41C \uD504\uB85C\uC81D\uD2B8\uB294 \uD574\uB2F9 \uC720\uD615\uC5D0 \uB9DE\uB294 \uAE30\uBCF8\uAC12\uC744 \uC0AC\uC6A9\uD569\uB2C8\uB2E4.",
       docType: {
         chapter: "\uCC55\uD130",
         section: "\uC139\uC158",
@@ -13124,7 +13149,7 @@ var BinderView = class extends import_obsidian16.ItemView {
         await this.plugin.projectManager.addDocumentToBinder(
           project,
           title,
-          this.plugin.settings.defaultDocumentType,
+          resolveDefaultDocumentType(project.type, this.plugin.settings.defaultDocumentType),
           parentId
         );
       }
@@ -13360,13 +13385,14 @@ var BinderView = class extends import_obsidian16.ItemView {
       if (selected.length === 0) return;
       if (!this.activeProject) return;
       const binder = await this.plugin.projectManager.loadBinder(this.activeProject);
+      const defaultType = resolveDefaultDocumentType(this.activeProject.type, this.plugin.settings.defaultDocumentType);
       let order = binder.items.length + 1;
       for (const file of selected) {
         binder.items.push({
           id: `item-${Date.now()}-${order}`,
           title: file.basename,
           filePath: file.path,
-          type: this.plugin.settings.defaultDocumentType,
+          type: defaultType,
           order: order++,
           status: "draft",
           includeInExport: true,
@@ -17810,7 +17836,7 @@ var WritingStudioSettingsTab = class extends import_obsidian28.PluginSettingTab 
       this.plugin.settings.authorName = v;
       await this.plugin.saveSettings();
     }));
-    new import_obsidian28.Setting(el).setName(t2("settings.general.defaultDocumentType")).addDropdown((d) => d.addOption("chapter", t2("settings.general.docType.chapter")).addOption("section", t2("settings.general.docType.section")).addOption("article", t2("settings.general.docType.article")).addOption("note", t2("settings.general.docType.note")).setValue(this.plugin.settings.defaultDocumentType).onChange(async (v) => {
+    new import_obsidian28.Setting(el).setName(t2("settings.general.defaultDocumentType")).setDesc(t2("settings.general.defaultDocumentTypeDesc")).addDropdown((d) => d.addOption("chapter", t2("settings.general.docType.chapter")).addOption("section", t2("settings.general.docType.section")).addOption("article", t2("settings.general.docType.article")).addOption("note", t2("settings.general.docType.note")).setValue(this.plugin.settings.defaultDocumentType).onChange(async (v) => {
       this.plugin.settings.defaultDocumentType = v;
       await this.plugin.saveSettings();
     }));
@@ -18923,7 +18949,7 @@ var WritingStudioPlugin = class extends import_obsidian34.Plugin {
         id: `item-${Date.now()}`,
         title: file.basename,
         filePath: file.path,
-        type: this.settings.defaultDocumentType,
+        type: resolveDefaultDocumentType(project.type, this.settings.defaultDocumentType),
         order: binder.items.length + 1,
         status: "draft",
         includeInExport: true

@@ -20,6 +20,7 @@
       "authorNameDesc": "エクスポートとタイトルページに使用されます。",
       "authorNamePlaceholder": "お名前",
       "defaultDocumentType": "デフォルトのドキュメントタイプ",
+      "defaultDocumentTypeDesc": "空のプロジェクトで新規ドキュメントに使うフォールバックです。タイプが設定されたプロジェクトは、そのタイプに合った既定値を使用します。",
       "docType": {
         "chapter": "章",
         "section": "セクション",

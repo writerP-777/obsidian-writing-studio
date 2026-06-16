@@ -20,6 +20,7 @@
       "authorNameDesc": "يُستخدم في الصادرات وصفحات العنوان.",
       "authorNamePlaceholder": "اسمك",
       "defaultDocumentType": "نوع المستند الافتراضي",
+      "defaultDocumentTypeDesc": "القيمة الاحتياطية للمستندات الجديدة في المشاريع الفارغة. المشاريع التي لها نوع محدد تستخدم قيمة افتراضية تتوافق مع ذلك النوع.",
       "docType": {
         "chapter": "فصل",
         "section": "قسم",

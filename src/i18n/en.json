@@ -20,6 +20,7 @@
       "authorNameDesc": "Used in exports and title pages.",
       "authorNamePlaceholder": "Your name",
       "defaultDocumentType": "Default document type",
+      "defaultDocumentTypeDesc": "Fallback for new documents in blank projects. Projects with a set type use a default that matches that type.",
       "docType": {
         "chapter": "Chapter",
         "section": "Section",

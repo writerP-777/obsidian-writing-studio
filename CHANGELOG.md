@@ -7,6 +7,7 @@ All notable changes to Writing Studio are documented here.
 ## [Unreleased]
 
 ### Fixed
+- New and added documents now default to a document type that matches the project type instead of always being created as chapters: book → chapter, series → article, blog → article, journal article → section, magazine article → section. This applies wherever a document enters a binder — creating one in the binder, adding an existing file, and the folder-scan import. The global default document type setting is now the fallback for blank projects only and is labeled as such; the per-project default takes precedence for typed projects. "Change type" recovery is unchanged. The book-centric `Chapters/` folder name is tracked separately in #204. (#193)
 - PDF export now selects a LaTeX engine that matches the requested font instead of relying on Pandoc's `pdflatex` default. When a custom font is set it prefers `xelatex`, then `lualatex`, so the font is actually applied; if only `pdflatex` is available it still produces the PDF and notifies that the font was dropped rather than failing. When no LaTeX engine is installed, the error now names the missing PDF engine and points to a LaTeX distribution (MiKTeX / TeX Live) instead of blaming Pandoc, which had already run successfully. DOCX and RTF export are unchanged. A configurable preferred-engine setting, including a non-LaTeX `wkhtmltopdf` path, is tracked separately in #203. (#201)
 
 ## [2.8.0] - 2026-06-13
