@@ -2,7 +2,7 @@
 
 An Obsidian community plugin that turns the vault into a professional writing environment.
 Inspired by Scrivener's project/binder model but lives entirely inside Obsidian.
-Desktop-only (`isDesktopOnly: true`). Plugin ID: `writing-studio`, current version: `2.8.0`.
+Desktop-only (`isDesktopOnly: true`). Plugin ID: `writing-studio`, current version: `2.9.0`.
 
 ---
 
@@ -71,6 +71,10 @@ Prefer: *writing project* or *project*. Avoid: *workspace*, *document set*.
 **Project type** (`ProjectType`)
 The kind of writing a project represents: `book`, `series`, `blog`, `journal-article`, `magazine-article`, or `blank`.
 Each non-blank type scaffolds an opinionated folder and document structure via a template.
+Each non-blank type also declares a **default document type** for documents created or added after
+scaffolding: book → `chapter`, series → `article`, blog → `article`, journal-article → `section`,
+magazine-article → `section`. The project type's declared default wins; the global
+`defaultDocumentType` setting is the fallback used only for `blank` projects (which have no template).
 
 **Binder** (`BinderData` + `BinderView`)
 The ordered, hierarchical list of documents that belong to a writing project.

@@ -8,7 +8,7 @@ const STATUS_DOT_KEY: Record<DocumentStatus, string> = {
   complete: 'targetsDashboard.status.complete',
   published: 'targetsDashboard.status.published',
 };
-import { WritingProject } from '../models/Project';
+import { WritingProject, resolveDefaultDocumentType } from '../models/Project';
 import { ProjectModal } from '../modals/ProjectModal';
 import { TargetsDashboardModal } from '../modals/TargetsDashboardModal';
 import { PublishModal } from '../modals/PublishModal';
@@ -673,7 +673,7 @@ export class BinderView extends ItemView {
         await this.plugin.projectManager.addDocumentToBinder(
           project,
           title,
-          this.plugin.settings.defaultDocumentType,
+          resolveDefaultDocumentType(project.type, this.plugin.settings.defaultDocumentType),
           parentId
         );
       }
@@ -937,13 +937,14 @@ export class BinderView extends ItemView {
       if (selected.length === 0) return;
       if (!this.activeProject) return;
       const binder = await this.plugin.projectManager.loadBinder(this.activeProject);
+      const defaultType = resolveDefaultDocumentType(this.activeProject.type, this.plugin.settings.defaultDocumentType);
       let order = binder.items.length + 1;
       for (const file of selected) {
         binder.items.push({
           id: `item-${Date.now()}-${order}`,
           title: file.basename,
           filePath: file.path,
-          type: this.plugin.settings.defaultDocumentType,
+          type: defaultType,
           order: order++,
           status: 'draft',
           includeInExport: true,

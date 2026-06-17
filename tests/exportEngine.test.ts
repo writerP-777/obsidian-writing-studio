@@ -1,4 +1,4 @@
-import { ExportEngine, ExportOptions } from '../src/ExportEngine';
+import { ExportEngine, ExportOptions, selectPdfEngine, classifyPandocFailure, PdfEngine } from '../src/ExportEngine';
 import { ProjectManager } from '../src/ProjectManager';
 import { InMemoryVaultFiles } from './inMemoryVaultFiles';
 
@@ -116,6 +116,73 @@ describe('ExportEngine.compileContent through the vault seam', () => {
     const compiled = await engine.compileContent(projectOpts({ addTitlePage: true }));
 
     expect(compiled).toContain('# My Book');
+  });
+});
+
+describe('selectPdfEngine', () => {
+  const all = (o: Partial<Record<PdfEngine, boolean>> = {}): Record<PdfEngine, boolean> =>
+    ({ xelatex: false, lualatex: false, pdflatex: false, ...o });
+
+  describe('with a custom font requested', () => {
+    it('prefers xelatex and keeps the font when xelatex is available', () => {
+      expect(selectPdfEngine(all({ xelatex: true, lualatex: true, pdflatex: true }), true))
+        .toEqual({ engine: 'xelatex', keepFont: true });
+    });
+
+    it('falls back to lualatex and keeps the font when xelatex is absent', () => {
+      expect(selectPdfEngine(all({ lualatex: true, pdflatex: true }), true))
+        .toEqual({ engine: 'lualatex', keepFont: true });
+    });
+
+    it('degrades to pdflatex and drops the font when only pdflatex is available', () => {
+      expect(selectPdfEngine(all({ pdflatex: true }), true))
+        .toEqual({ engine: 'pdflatex', keepFont: false });
+    });
+
+    it('returns no engine when no LaTeX engine is installed', () => {
+      expect(selectPdfEngine(all(), true)).toEqual({ engine: null, keepFont: false });
+    });
+  });
+
+  describe('with no custom font', () => {
+    it('keeps the historic pdflatex-first default', () => {
+      expect(selectPdfEngine(all({ xelatex: true, pdflatex: true }), false))
+        .toEqual({ engine: 'pdflatex', keepFont: false });
+    });
+
+    it('uses xelatex when pdflatex is absent', () => {
+      expect(selectPdfEngine(all({ xelatex: true, lualatex: true }), false))
+        .toEqual({ engine: 'xelatex', keepFont: false });
+    });
+
+    it('returns no engine when nothing is installed', () => {
+      expect(selectPdfEngine(all(), false)).toEqual({ engine: null, keepFont: false });
+    });
+  });
+});
+
+describe('classifyPandocFailure', () => {
+  it('classifies the real "pdflatex not found" failure as a missing engine', () => {
+    const msg = 'Command failed: pandoc tmp.md --from markdown -o out.pdf -V mainfont=Georgia\n'
+      + 'pdflatex not found. Please select a different --pdf-engine or install pdflatex';
+    expect(classifyPandocFailure(msg)).toBe('engine-missing');
+  });
+
+  it('classifies a missing xelatex as a missing engine', () => {
+    expect(classifyPandocFailure('xelatex not found')).toBe('engine-missing');
+  });
+
+  it('classifies a node spawn ENOENT as pandoc missing', () => {
+    expect(classifyPandocFailure('Error: spawn pandoc ENOENT')).toBe('pandoc-missing');
+  });
+
+  it('classifies the Windows "not recognized" error as pandoc missing', () => {
+    expect(classifyPandocFailure("'pandoc' is not recognized as an internal or external command"))
+      .toBe('pandoc-missing');
+  });
+
+  it('classifies an unrelated failure as other', () => {
+    expect(classifyPandocFailure('YAML parse error in metadata block')).toBe('other');
   });
 });
 

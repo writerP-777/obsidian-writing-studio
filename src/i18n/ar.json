@@ -20,6 +20,7 @@
       "authorNameDesc": "يُستخدم في الصادرات وصفحات العنوان.",
       "authorNamePlaceholder": "اسمك",
       "defaultDocumentType": "نوع المستند الافتراضي",
+      "defaultDocumentTypeDesc": "القيمة الاحتياطية للمستندات الجديدة في المشاريع الفارغة. المشاريع التي لها نوع محدد تستخدم قيمة افتراضية تتوافق مع ذلك النوع.",
       "docType": {
         "chapter": "فصل",
         "section": "قسم",
@@ -326,6 +327,10 @@
     "exportedTo": "تم التصدير إلى {{path}}",
     "exportedHtmlTo": "تم تصدير HTML إلى {{path}}",
     "pdfRequiresPandoc": "يتطلب تصدير PDF تثبيت Pandoc. ثبّت Pandoc وحدد المسار في الإعدادات.",
+    "pdfEngineRequired": "يتطلب تصدير PDF محرك LaTeX. ثبّت توزيعة LaTeX مثل MiKTeX (ويندوز) أو TeX Live ثم أعد المحاولة.",
+    "pdfFontNeedsXelatex": "تتطلب الخطوط المخصصة في PDF محرك xelatex أو lualatex. تم التصدير باستخدام المحرك الافتراضي والخط القياسي.",
+    "pandocMissingHint": "تأكد من تثبيت Pandoc وتعيين مساره في الإعدادات.",
+    "pdfEngineMissingHint": "يتطلب تصدير PDF محرك LaTeX. ثبّت MiKTeX (ويندوز) أو TeX Live.",
     "noActiveDocument": "لا يوجد مستند مفتوح. افتح ملفاً أو غيّر نطاق التصدير إلى «المشروع بأكمله».",
     "byAuthor": "بقلم {{author}}",
     "approxWords": "حوالي {{n}} كلمة",
@@ -398,7 +403,8 @@
   "projectModal": {
     "title": "مشروع كتابة جديد",
     "projectTitle": "عنوان المشروع",
-    "titlePlaceholder": "روايتي",
+    "titlePlaceholder": "اسم مشروعك",
+    "goalPlaceholder": "اختياري (بدون هدف إذا تُرك فارغًا)",
     "template": "قالب",
     "templateDesc": "اختر هيكل مشروع مُعدًّا مسبقًا.",
     "templateOption": {

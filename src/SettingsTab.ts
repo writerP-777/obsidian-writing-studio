@@ -112,6 +112,7 @@ export class WritingStudioSettingsTab extends PluginSettingTab {
 
     new Setting(el)
       .setName(t('settings.general.defaultDocumentType'))
+      .setDesc(t('settings.general.defaultDocumentTypeDesc'))
       .addDropdown(d => d
         .addOption('chapter', t('settings.general.docType.chapter'))
         .addOption('section', t('settings.general.docType.section'))

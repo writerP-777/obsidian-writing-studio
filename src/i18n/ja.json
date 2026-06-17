@@ -20,6 +20,7 @@
       "authorNameDesc": "エクスポートとタイトルページに使用されます。",
       "authorNamePlaceholder": "お名前",
       "defaultDocumentType": "デフォルトのドキュメントタイプ",
+      "defaultDocumentTypeDesc": "空のプロジェクトで新規ドキュメントに使うフォールバックです。タイプが設定されたプロジェクトは、そのタイプに合った既定値を使用します。",
       "docType": {
         "chapter": "章",
         "section": "セクション",
@@ -320,6 +321,10 @@
     "exportedTo": "{{path}} にエクスポートしました",
     "exportedHtmlTo": "HTMLを {{path}} にエクスポートしました",
     "pdfRequiresPandoc": "PDFエクスポートにはPandocが必要です。Pandocをインストールして設定でパスを指定してください。",
+    "pdfEngineRequired": "PDF 書き出しには LaTeX エンジンが必要です。MiKTeX（Windows）または TeX Live などの LaTeX ディストリビューションをインストールしてから再試行してください。",
+    "pdfFontNeedsXelatex": "PDF のカスタムフォントには xelatex または lualatex が必要です。既定のエンジンと標準フォントで書き出しました。",
+    "pandocMissingHint": "Pandoc がインストールされ、設定でパスが指定されていることを確認してください。",
+    "pdfEngineMissingHint": "PDF 書き出しには LaTeX エンジンが必要です。MiKTeX（Windows）または TeX Live をインストールしてください。",
     "noActiveDocument": "開いているドキュメントがありません。ファイルを開くか、エクスポート範囲を「プロジェクト全体」に変更してください。",
     "byAuthor": "著者：{{author}}",
     "approxWords": "約 {{n}} 語",
@@ -388,7 +393,8 @@
   "projectModal": {
     "title": "新規執筆プロジェクト",
     "projectTitle": "プロジェクトタイトル",
-    "titlePlaceholder": "私の小説",
+    "titlePlaceholder": "プロジェクト名を入力",
+    "goalPlaceholder": "任意（空欄なら目標なし）",
     "template": "テンプレート",
     "templateDesc": "事前設定されたプロジェクト構造を選択してください。",
     "templateOption": {

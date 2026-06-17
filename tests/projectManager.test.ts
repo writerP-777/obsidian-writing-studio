@@ -1,6 +1,6 @@
 import { ProjectManager } from '../src/ProjectManager';
 import { Notice } from 'obsidian';
-import { WritingProject } from '../models/Project';
+import { WritingProject, resolveDefaultDocumentType } from '../models/Project';
 import { InMemoryVaultFiles } from './inMemoryVaultFiles';
 
 function makePlugin() {
@@ -27,6 +27,40 @@ function makeProject(): WritingProject {
 
 beforeEach(() => {
   Notice.messages = [];
+});
+
+describe('resolveDefaultDocumentType', () => {
+  it('uses the project type default for each typed project', () => {
+    expect(resolveDefaultDocumentType('book', 'note')).toBe('chapter');
+    expect(resolveDefaultDocumentType('series', 'note')).toBe('article');
+    expect(resolveDefaultDocumentType('blog', 'note')).toBe('article');
+    expect(resolveDefaultDocumentType('journal-article', 'note')).toBe('section');
+    expect(resolveDefaultDocumentType('magazine-article', 'note')).toBe('section');
+  });
+
+  it('falls back to the global default for blank projects', () => {
+    expect(resolveDefaultDocumentType('blank', 'section')).toBe('section');
+    expect(resolveDefaultDocumentType('blank', 'chapter')).toBe('chapter');
+  });
+
+  it('ignores the global default for typed projects', () => {
+    // A user who set the global to "section" still gets article in a series project.
+    expect(resolveDefaultDocumentType('series', 'section')).toBe('article');
+  });
+});
+
+describe('addDocumentToBinder honors the resolved project-type default', () => {
+  it('adds an article-typed item in a series project', async () => {
+    const files = new InMemoryVaultFiles();
+    const pm = new ProjectManager(makePlugin(), files);
+    const series: WritingProject = { ...makeProject(), id: 'series-1', title: 'My Series', type: 'series', folderPath: 'Projects/My Series' };
+    await pm.saveBinder({ version: '2.0', projectId: series.id, items: [] });
+
+    const resolved = resolveDefaultDocumentType(series.type, 'chapter');
+    const item = await pm.addDocumentToBinder(series, 'Article Two', resolved);
+
+    expect(item.type).toBe('article');
+  });
 });
 
 describe('ProjectManager.createProject name collision', () => {
