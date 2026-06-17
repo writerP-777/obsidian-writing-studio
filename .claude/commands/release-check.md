@@ -18,10 +18,12 @@ Check each item below and report PASS or FAIL. Do not tag until all twelve pass.
 12. **No stale previous-version markers** — Determine PREV, the previous version, as the **second** key in versions.json (the entry directly below the new top entry, e.g. if the top is `2.9.0` then PREV is `2.8.0`). Then scan the repo for PREV:
 
     ```
-    rg -n --fixed-strings "<PREV>" -g '!node_modules' -g '!.git' -g '!CHANGELOG.md' -g '!versions.json' -g '!package-lock.json' -g '!main.js' -g '!styles.css' -g '!*.sarif'
+    git grep -n -F "<PREV>" -- ':!CHANGELOG.md' ':!versions.json' ':!package-lock.json' ':!main.js' ':!styles.css' ':!*.sarif'
     ```
 
-    Expected: **no matches**. Any match is a stale current-version marker (a file that still advertises the previous version) and **FAILS the release** — bump it to `$ARGUMENTS`. This catches version markers in files not explicitly named by the other checks (docs, source comments, ADRs, etc.).
+    (`git grep` searches only tracked files, so `node_modules`/`.git` need no exclusion. If `rg` is on PATH it works too, but add `-g '!node_modules' -g '!.git'`.)
+
+    Expected: **no matches** (`git grep` exits non-zero when nothing is found — that is the PASS case). Any match is a stale current-version marker (a file that still advertises the previous version) and **FAILS the release** — bump it to `$ARGUMENTS`. This catches version markers in files not explicitly named by the other checks (docs, source comments, ADRs, etc.).
 
     Allowlist rationale — the excluded paths legitimately contain a non-marker occurrence of PREV: `CHANGELOG.md` and `versions.json` retain historical version numbers by design; `package-lock.json`, `main.js`, and `styles.css` are generated/lock artifacts that may pin third-party version strings coincidentally equal to PREV (the plugin's own version in these is already covered by check #6 and the production rebuild). If a future authored file gains a legitimate, non-marker reference to PREV, add it to this allowlist with a comment explaining why — do not silence the check by other means.
 
