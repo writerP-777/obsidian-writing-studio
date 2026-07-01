@@ -4,7 +4,9 @@ All notable changes to Writing Studio are documented here.
 
 ---
 
-## [Unreleased]
+## [2.10.0] - 2026-07-01
+
+Also updates the bundled runtime dependencies (i18next 26.3.3, CodeMirror view 6.43.4 / state 6.7.0).
 
 ### Added
 - A PDF engine setting (Settings → Export) for choosing the engine Pandoc uses for PDF export: auto (the default, unchanged behavior — an installed LaTeX engine picked to match the requested font), or a pinned `xelatex`, `lualatex`, `pdflatex`, or `wkhtmltopdf`. Pinning `wkhtmltopdf` produces PDFs without any LaTeX installation; since it takes its typography from HTML/CSS rather than LaTeX's `mainfont`, the export font setting does not apply on that path and a notice says so when a font is set. A pinned engine is strict: if it is not installed, the export fails with a message naming that engine instead of silently substituting another. (#203)

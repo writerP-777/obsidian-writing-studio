@@ -2,7 +2,7 @@
 
 An Obsidian community plugin that turns the vault into a professional writing environment.
 Inspired by Scrivener's project/binder model but lives entirely inside Obsidian.
-Desktop-only (`isDesktopOnly: true`). Plugin ID: `writing-studio`, current version: `2.9.0`.
+Desktop-only (`isDesktopOnly: true`). Plugin ID: `writing-studio`, current version: `2.10.0`.
 
 ---
 
