@@ -109,7 +109,10 @@
       "epubLanguage": "EPUB-Sprache",
       "epubLanguageDesc": "BCP 47-Sprachtag (z.B. en, fr, de).",
       "includeCover": "Umschlag einschließen",
-      "includeCoverDesc": "Eine Text-Umschlagseite generieren, wenn kein Umschlagbild vorhanden ist."
+      "includeCoverDesc": "Eine Text-Umschlagseite generieren, wenn kein Umschlagbild vorhanden ist.",
+      "pdfEngine": "PDF-Engine",
+      "pdfEngineDesc": "Engine für den PDF-Export. Auto wählt eine installierte LaTeX-Engine. wkhtmltopdf funktioniert ohne LaTeX, die Exportschriftart gilt dort jedoch nicht.",
+      "pdfEngineAuto": "Automatisch (empfohlen)"
     },
     "log": {
       "heading": "Tägliches Schreibprotokoll",
@@ -328,7 +331,9 @@
     "noActiveDocument": "Kein Dokument geöffnet. Öffne eine Datei oder wechsle den Exportbereich zu „Gesamtes Projekt“.",
     "byAuthor": "Von {{author}}",
     "approxWords": "Ca. {{n}} Wörter",
-    "byline": "von"
+    "byline": "von",
+    "pdfPinnedEngineMissing": "Die gewählte PDF-Engine ({{engine}}) ist nicht installiert oder nicht im PATH. Installiere sie oder stelle die PDF-Engine in den Einstellungen auf Automatisch.",
+    "pdfFontIgnoredWkhtmltopdf": "wkhtmltopdf verwendet die Exportschriftart nicht. Das PDF wurde mit der Standardformatierung exportiert."
   },
   "wpClient": {
     "authFailed": "Authentifizierung fehlgeschlagen. Bitte Benutzername und Anwendungspasswort überprüfen.",

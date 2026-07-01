@@ -109,7 +109,10 @@
       "epubLanguage": "لغة EPUB",
       "epubLanguageDesc": "علامة لغة BCP 47 (مثال: en، fr، de).",
       "includeCover": "تضمين الغلاف",
-      "includeCoverDesc": "إنشاء صفحة غلاف نصية عند عدم توفر صورة غلاف."
+      "includeCoverDesc": "إنشاء صفحة غلاف نصية عند عدم توفر صورة غلاف.",
+      "pdfEngine": "محرك PDF",
+      "pdfEngineDesc": "المحرك المستخدم لتصدير PDF. يختار الوضع التلقائي محرك LaTeX مثبتًا. يعمل wkhtmltopdf دون LaTeX، لكن إعداد خط التصدير لا ينطبق عليه.",
+      "pdfEngineAuto": "تلقائي (موصى به)"
     },
     "log": {
       "heading": "سجل الكتابة اليومي",
@@ -334,7 +337,9 @@
     "noActiveDocument": "لا يوجد مستند مفتوح. افتح ملفاً أو غيّر نطاق التصدير إلى «المشروع بأكمله».",
     "byAuthor": "بقلم {{author}}",
     "approxWords": "حوالي {{n}} كلمة",
-    "byline": "بقلم"
+    "byline": "بقلم",
+    "pdfPinnedEngineMissing": "محرك PDF المحدد ({{engine}}) غير مثبت أو غير موجود في PATH. ثبّته أو غيّر محرك PDF إلى تلقائي في الإعدادات.",
+    "pdfFontIgnoredWkhtmltopdf": "لا يستخدم wkhtmltopdf إعداد خط التصدير. صُدِّر ملف PDF بالتنسيق الافتراضي."
   },
   "wpClient": {
     "authFailed": "فشل التحقق. تحقق من اسم المستخدم وكلمة مرور التطبيق.",

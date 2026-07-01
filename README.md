@@ -542,10 +542,13 @@ No external tools are required for manuscript export.
 | Export font | Font name used in PDF/DOCX output (e.g. `Georgia`) |
 | Export font size | Point size for PDF/DOCX output |
 | Pandoc path | Full path to the `pandoc` binary if it is not on your system PATH |
+| PDF engine | Engine Pandoc uses for PDF export. **Auto** (default) picks an installed LaTeX engine — `xelatex` or `lualatex` when a custom font is set, `pdflatex` otherwise. Pin a specific engine to always use it; if a pinned engine is not installed the export fails with a message naming it rather than silently substituting another |
 | EPUB language | BCP 47 language tag (e.g. `en`, `fr`, `de`) |
 | EPUB include cover | Generate a text cover page when no cover image is provided |
 
-> **Requirement:** Pandoc must be installed for PDF, DOCX, RTF, HTML, and EPUB export. Download from [pandoc.org](https://pandoc.org/installing.html). For PDF export, a LaTeX distribution (e.g. TeX Live or MiKTeX) is also required. Manuscript (HTML) export does not require Pandoc.
+> **Requirement:** Pandoc must be installed for PDF, DOCX, RTF, HTML, and EPUB export. Download from [pandoc.org](https://pandoc.org/installing.html). For PDF export, a LaTeX distribution (e.g. TeX Live or MiKTeX) is also required — unless the PDF engine setting is pinned to [wkhtmltopdf](https://wkhtmltopdf.org/), which renders PDFs without LaTeX. Manuscript (HTML) export does not require Pandoc.
+>
+> **Font note:** the export font setting applies only to the LaTeX PDF path (`xelatex`/`lualatex`; `pdflatex` cannot apply custom fonts either). The `wkhtmltopdf` path takes its typography from Pandoc's HTML/CSS output, so the export font setting is ignored there — the plugin tells you when a font was skipped for this reason.
 >
 > **Formatting note:** the built-in converter used for HTML, Manuscript, and EPUB output supports headings, paragraphs, lists, blockquotes, fenced code blocks, tables, images, and links. Nested lists, setext (underline-style) headings, and footnotes are not converted — use a Pandoc format (PDF, DOCX, RTF) if your manuscript depends on them.
 
@@ -699,7 +702,7 @@ Most features work out of the box. A few require additional software for specifi
 | Desktop (Windows, macOS, Linux) | Always — this plugin does not run on mobile |
 | Internet connection | First use of each Typography Mode font (cached after that) |
 | [Pandoc](https://pandoc.org/installing.html) | Export to PDF, DOCX, RTF, HTML, EPUB |
-| LaTeX (TeX Live / MiKTeX) | Export to PDF only |
+| LaTeX (TeX Live / MiKTeX) or [wkhtmltopdf](https://wkhtmltopdf.org/) | Export to PDF only (wkhtmltopdf must be pinned in the PDF engine setting) |
 | WordPress 5.6+ with REST API enabled | WordPress publishing |
 | WordPress Application Password | WordPress publishing |
 

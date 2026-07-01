@@ -29,31 +29,48 @@ export interface ExportOptions {
   authorContact?: string;
 }
 
-export type PdfEngine = 'xelatex' | 'lualatex' | 'pdflatex';
+export type PdfEngine = 'xelatex' | 'lualatex' | 'pdflatex' | 'wkhtmltopdf';
+
+// A pinned engine from settings, or 'auto' for the historic LaTeX auto-selection.
+export type PdfEnginePreference = 'auto' | PdfEngine;
+
+// Engines that honor pandoc's -V mainfont (fontspec-capable LaTeX engines).
+// pdflatex errors on it; wkhtmltopdf takes styling from CSS, not mainfont.
+const FONT_CAPABLE: ReadonlySet<PdfEngine> = new Set(['xelatex', 'lualatex']);
 
 export interface PdfEngineDecision {
-  // The engine to pass to pandoc, or null when no LaTeX engine is installed.
+  // The engine to pass to pandoc, or null when the pinned engine (or, on auto,
+  // every LaTeX engine) is not installed.
   engine: PdfEngine | null;
   // Whether the requested mainfont can be honored (only xelatex/lualatex can).
   keepFont: boolean;
 }
 
-// Pure decision: given which LaTeX engines are installed and whether the export
-// requests a custom font, pick the PDF engine and whether the font survives.
-// With a font, prefer fontspec-capable engines (xelatex, then lualatex); fall back
-// to pdflatex with the font dropped rather than failing the export. Without a font,
-// keep the historic pdflatex-first default so the common path is unchanged, using
-// xelatex/lualatex only when pdflatex is absent.
+// Pure decision: given which engines are installed, whether the export requests a
+// custom font, and the user's engine preference, pick the PDF engine and whether
+// the font survives. A pinned engine is strict — used if installed, otherwise the
+// export fails rather than silently substituting another engine (a user who pinned
+// wkhtmltopdf to avoid LaTeX must not get a LaTeX export). On auto, with a font,
+// prefer fontspec-capable engines (xelatex, then lualatex); fall back to pdflatex
+// with the font dropped rather than failing the export. Without a font, keep the
+// historic pdflatex-first default so the common path is unchanged. wkhtmltopdf is
+// never auto-selected — only used when pinned.
 export function selectPdfEngine(
   available: Record<PdfEngine, boolean>,
   fontRequested: boolean,
+  preferred: PdfEnginePreference = 'auto',
 ): PdfEngineDecision {
+  if (preferred !== 'auto') {
+    return available[preferred]
+      ? { engine: preferred, keepFont: fontRequested && FONT_CAPABLE.has(preferred) }
+      : { engine: null, keepFont: false };
+  }
   const order: PdfEngine[] = fontRequested
     ? ['xelatex', 'lualatex', 'pdflatex']
     : ['pdflatex', 'xelatex', 'lualatex'];
   for (const engine of order) {
     if (available[engine]) {
-      return { engine, keepFont: fontRequested && engine !== 'pdflatex' };
+      return { engine, keepFont: fontRequested && FONT_CAPABLE.has(engine) };
     }
   }
   return { engine: null, keepFont: false };
@@ -71,6 +88,7 @@ export function classifyPandocFailure(message: string): PandocFailureKind {
     m.includes('pdflatex not found') ||
     m.includes('xelatex not found') ||
     m.includes('lualatex not found') ||
+    m.includes('wkhtmltopdf') ||
     m.includes('latex')
   ) {
     return 'engine-missing';
@@ -517,8 +535,8 @@ ${markdownToHtml(content)}
     }
   }
 
-  // Probe which LaTeX engines pandoc could use for PDF output. Mirrors
-  // isPandocAvailable: each probe never throws, so a missing engine is just false.
+  // Probe which PDF engines pandoc could use. Mirrors isPandocAvailable:
+  // each probe never throws, so a missing engine is just false.
   private async detectPdfEngines(): Promise<Record<PdfEngine, boolean>> {
     const probe = async (bin: PdfEngine): Promise<boolean> => {
       try {
@@ -528,10 +546,10 @@ ${markdownToHtml(content)}
         return false;
       }
     };
-    const [xelatex, lualatex, pdflatex] = await Promise.all([
-      probe('xelatex'), probe('lualatex'), probe('pdflatex'),
+    const [xelatex, lualatex, pdflatex, wkhtmltopdf] = await Promise.all([
+      probe('xelatex'), probe('lualatex'), probe('pdflatex'), probe('wkhtmltopdf'),
     ]);
-    return { xelatex, lualatex, pdflatex };
+    return { xelatex, lualatex, pdflatex, wkhtmltopdf };
   }
 
   private async exportPandoc(content: string, outputPath: string, opts: ExportOptions, pdf?: { engine: PdfEngine; keepFont: boolean }): Promise<string> {
@@ -567,9 +585,13 @@ ${markdownToHtml(content)}
       return outputPath;
     } catch (e) {
       const raw = e instanceof Error ? e.message : String(e);
-      const hint = classifyPandocFailure(raw) === 'engine-missing'
-        ? t('exportEngine.pdfEngineMissingHint')
-        : t('exportEngine.pandocMissingHint');
+      let hint = t('exportEngine.pandocMissingHint');
+      if (classifyPandocFailure(raw) === 'engine-missing') {
+        // The LaTeX-distribution hint is wrong for wkhtmltopdf — name the engine instead.
+        hint = pdf?.engine === 'wkhtmltopdf'
+          ? t('exportEngine.pdfPinnedEngineMissing', { engine: pdf.engine })
+          : t('exportEngine.pdfEngineMissingHint');
+      }
       throw new Error(`Pandoc export failed: ${raw}\n${hint}`);
     } finally {
       // Remove the temp file outright — trashing it accumulated a .tmp.md
@@ -579,27 +601,38 @@ ${markdownToHtml(content)}
   }
 
   private async exportPdf(content: string, outputPath: string, opts: ExportOptions): Promise<string> {
-    const decision = selectPdfEngine(await this.detectPdfEngines(), !!opts.font);
+    const preferred = this.plugin.settings.pdfEngine ?? 'auto';
+    const decision = selectPdfEngine(await this.detectPdfEngines(), !!opts.font, preferred);
 
     if (!decision.engine) {
-      const msg = t('exportEngine.pdfEngineRequired');
+      // A pinned engine fails by name — no silent substitution; auto keeps the
+      // historic install-a-LaTeX-distribution message.
+      const msg = preferred !== 'auto'
+        ? t('exportEngine.pdfPinnedEngineMissing', { engine: preferred })
+        : t('exportEngine.pdfEngineRequired');
       new Notice(msg);
       throw new Error(msg);
     }
 
-    // Font requested but only pdflatex is available: tell the user the font was
-    // dropped rather than silently producing an unstyled PDF.
+    // Font requested but the engine cannot apply it: tell the user the font was
+    // dropped rather than silently producing a differently styled PDF.
     if (opts.font && !decision.keepFont) {
-      new Notice(t('exportEngine.pdfFontNeedsXelatex'));
+      new Notice(decision.engine === 'wkhtmltopdf'
+        ? t('exportEngine.pdfFontIgnoredWkhtmltopdf')
+        : t('exportEngine.pdfFontNeedsXelatex'));
     }
 
     try {
       return await this.exportPandoc(content, outputPath, opts, { engine: decision.engine, keepFont: decision.keepFont });
     } catch (e) {
       const raw = e instanceof Error ? e.message : String(e);
-      new Notice(classifyPandocFailure(raw) === 'engine-missing'
-        ? t('exportEngine.pdfEngineRequired')
-        : t('exportEngine.pdfRequiresPandoc'));
+      let msg = t('exportEngine.pdfRequiresPandoc');
+      if (classifyPandocFailure(raw) === 'engine-missing') {
+        msg = preferred !== 'auto'
+          ? t('exportEngine.pdfPinnedEngineMissing', { engine: preferred })
+          : t('exportEngine.pdfEngineRequired');
+      }
+      new Notice(msg);
       throw e; // preserve the original pandoc error for the Export modal to display
     }
   }

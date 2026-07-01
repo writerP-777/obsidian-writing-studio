@@ -1,6 +1,6 @@
 import { App, Component, MarkdownRenderer, PluginSettingTab, Setting } from 'obsidian';
 import type WritingStudioPlugin from '../main';
-import type { ExportFormat } from './ExportEngine';
+import type { ExportFormat, PdfEnginePreference } from './ExportEngine';
 import { WordPressSite, WPPostStatus } from '../models/WordPressSite';
 import { HELP_CONTENT } from './HelpContent';
 import { t } from './i18n';
@@ -369,6 +369,18 @@ export class WritingStudioSettingsTab extends PluginSettingTab {
         .setPlaceholder('Pandoc')
         .setValue(this.plugin.settings.pandocPath)
         .onChange(async v => { this.plugin.settings.pandocPath = v; await this.plugin.saveSettings(); }));
+
+    new Setting(el)
+      .setName(t('settings.export.pdfEngine'))
+      .setDesc(t('settings.export.pdfEngineDesc'))
+      .addDropdown(d => d
+        .addOption('auto', t('settings.export.pdfEngineAuto'))
+        .addOption('xelatex', 'xelatex')
+        .addOption('lualatex', 'lualatex')
+        .addOption('pdflatex', 'pdflatex')
+        .addOption('wkhtmltopdf', 'wkhtmltopdf')
+        .setValue(this.plugin.settings.pdfEngine)
+        .onChange(async v => { this.plugin.settings.pdfEngine = v as PdfEnginePreference; await this.plugin.saveSettings(); }));
 
     new Setting(el).setName(t('settings.export.epubHeading')).setHeading();
 
