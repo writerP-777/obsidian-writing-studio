@@ -15,7 +15,7 @@ Check each item below and report PASS or FAIL. Do not tag until all twelve pass.
 9. **Branch name** — Run `git branch --show-current` and confirm the current branch is `release/$ARGUMENTS`.
 10. **No eslint-disable for no-deprecated** — Run `grep -rn "eslint-disable.*no-deprecated" src/ modals/ main.ts` — must return no matches.
 11. **CONTEXT.md current version** — Read CONTEXT.md and confirm the "current version" line equals `$ARGUMENTS` exactly (e.g. ``current version: `2.4.5` ``).
-12. **No stale previous-version markers** — Determine PREV, the previous version, as the **second** key in versions.json (the entry directly below the new top entry, e.g. if the top is `2.9.0` then PREV is `2.8.0`). Then scan the repo for PREV:
+12. **No stale previous-version markers** — Determine PREV, the previous version, as the **second** key in versions.json (the entry directly below the new top entry — if the top is the new `X.Y.Z`, PREV is the key right below it; keep version examples out of this file so they never collide with a real PREV). Then scan the repo for PREV:
 
     ```
     git grep -n -F "<PREV>" -- ':!CHANGELOG.md' ':!versions.json' ':!package-lock.json' ':!main.js' ':!styles.css' ':!*.sarif'
