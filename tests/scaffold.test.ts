@@ -60,6 +60,28 @@ describe('TemplateScaffolder', () => {
     expect(post.filePath).toMatch(new RegExp(`^Projects/My Book/Chapters/${year}/.*-first-post\\.md$`));
     expect(binder.items[0].includeInExport).toBe(false);
   });
+
+  it('scaffolds into the project documentFolder when set', async () => {
+    const files = new InMemoryVaultFiles();
+    const project: WritingProject = { ...makeProject(), type: 'series', documentFolder: 'Articles' };
+
+    const binder = await new TemplateScaffolder(files).apply(
+      project, TEMPLATE_MANIFESTS.series!(project));
+
+    expect(files.files.has('Projects/My Book/Articles/Series Overview.md')).toBe(true);
+    expect(files.files.has('Projects/My Book/Articles/Article 1.md')).toBe(true);
+    const paths = binder.items.flatMap(i => [i, ...(i.children ?? [])]).map(i => i.filePath).filter(Boolean);
+    expect(paths.every(p => p.startsWith('Projects/My Book/Articles/'))).toBe(true);
+  });
+
+  it('scaffolds into Chapters when documentFolder is absent (legacy projects)', async () => {
+    const files = new InMemoryVaultFiles();
+
+    await new TemplateScaffolder(files).apply(
+      makeProject(), TEMPLATE_MANIFESTS.book!(makeProject()));
+
+    expect(files.files.has('Projects/My Book/Chapters/Front Matter.md')).toBe(true);
+  });
 });
 
 describe('template manifests', () => {

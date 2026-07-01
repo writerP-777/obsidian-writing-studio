@@ -1,6 +1,6 @@
 import { ProjectManager } from '../src/ProjectManager';
 import { Notice } from 'obsidian';
-import { WritingProject, resolveDefaultDocumentType } from '../models/Project';
+import { WritingProject, resolveDefaultDocumentType, defaultDocumentFolder, resolveDocumentFolder } from '../models/Project';
 import { InMemoryVaultFiles } from './inMemoryVaultFiles';
 
 function makePlugin() {
@@ -46,6 +46,75 @@ describe('resolveDefaultDocumentType', () => {
   it('ignores the global default for typed projects', () => {
     // A user who set the global to "section" still gets article in a series project.
     expect(resolveDefaultDocumentType('series', 'section')).toBe('article');
+  });
+});
+
+describe('document folder resolution', () => {
+  it('maps each project type to its document folder for new projects', () => {
+    expect(defaultDocumentFolder('book')).toBe('Chapters');
+    expect(defaultDocumentFolder('series')).toBe('Articles');
+    expect(defaultDocumentFolder('blog')).toBe('Posts');
+    expect(defaultDocumentFolder('journal-article')).toBe('Sections');
+    expect(defaultDocumentFolder('magazine-article')).toBe('Sections');
+    expect(defaultDocumentFolder('blank')).toBe('Documents');
+  });
+
+  it('falls back to Chapters when the field is absent (pre-existing projects)', () => {
+    expect(resolveDocumentFolder({})).toBe('Chapters');
+    expect(resolveDocumentFolder(makeProject())).toBe('Chapters');
+  });
+
+  it('uses the stored documentFolder when present', () => {
+    expect(resolveDocumentFolder({ documentFolder: 'Posts' })).toBe('Posts');
+  });
+});
+
+describe('createProject sets the per-type document folder', () => {
+  it('creates the type-named folder and persists documentFolder', async () => {
+    const files = new InMemoryVaultFiles();
+    const pm = new ProjectManager(makePlugin(), files);
+
+    const project = await pm.createProject('My Series', 'series', '', '');
+
+    expect(project.documentFolder).toBe('Articles');
+    expect(files.folders).toContain('Projects/My Series/Articles');
+    const saved = JSON.parse(files.files.get('Projects/My Series/_project.json') ?? '{}') as WritingProject;
+    expect(saved.documentFolder).toBe('Articles');
+  });
+
+  it('blank projects use Documents', async () => {
+    const files = new InMemoryVaultFiles();
+    const pm = new ProjectManager(makePlugin(), files);
+
+    const project = await pm.createProject('Scratch', 'blank', '', '');
+
+    expect(project.documentFolder).toBe('Documents');
+    expect(files.folders).toContain('Projects/Scratch/Documents');
+  });
+});
+
+describe('addDocumentToBinder places files in the project document folder', () => {
+  it('writes to the stored folder when the field is set', async () => {
+    const files = new InMemoryVaultFiles();
+    const pm = new ProjectManager(makePlugin(), files);
+    const blog: WritingProject = { ...makeProject(), id: 'blog-1', type: 'blog', documentFolder: 'Posts' };
+    await pm.saveBinder({ version: '2.0', projectId: blog.id, items: [] });
+
+    const item = await pm.addDocumentToBinder(blog, 'New Post', 'article');
+
+    expect(item.filePath).toBe('Projects/My Book/Posts/New Post.md');
+    expect(files.files.has('Projects/My Book/Posts/New Post.md')).toBe(true);
+  });
+
+  it('writes to Chapters for legacy projects without the field', async () => {
+    const files = new InMemoryVaultFiles();
+    const pm = new ProjectManager(makePlugin(), files);
+    const legacy = makeProject();
+    await pm.saveBinder({ version: '2.0', projectId: legacy.id, items: [] });
+
+    const item = await pm.addDocumentToBinder(legacy, 'New Chapter', 'chapter');
+
+    expect(item.filePath).toBe('Projects/My Book/Chapters/New Chapter.md');
   });
 });
 
