@@ -52,6 +52,21 @@ function resolveDefaultDocumentType(projectType, globalDefault) {
   var _a2;
   return (_a2 = PROJECT_TYPE_DEFAULT_DOC_TYPE[projectType]) != null ? _a2 : globalDefault;
 }
+var PROJECT_TYPE_DOCUMENT_FOLDER = {
+  book: "Chapters",
+  series: "Articles",
+  blog: "Posts",
+  "journal-article": "Sections",
+  "magazine-article": "Sections",
+  blank: "Documents"
+};
+function defaultDocumentFolder(projectType) {
+  return PROJECT_TYPE_DOCUMENT_FOLDER[projectType];
+}
+function resolveDocumentFolder(project) {
+  var _a2;
+  return (_a2 = project.documentFolder) != null ? _a2 : "Chapters";
+}
 
 // modals/ProjectModal.ts
 var import_obsidian2 = require("obsidian");
@@ -1466,10 +1481,14 @@ var Formatter = class {
   format(value, format, lng, options = {}) {
     if (!format) return value;
     if (value == null) return value;
-    const formats = format.split(this.formatSeparator);
-    if (formats.length > 1 && formats[0].indexOf("(") > 1 && !formats[0].includes(")") && formats.find((f) => f.includes(")"))) {
-      const lastIndex = formats.findIndex((f) => f.includes(")"));
-      formats[0] = [formats[0], ...formats.splice(1, lastIndex)].join(this.formatSeparator);
+    const rawFormats = format.split(this.formatSeparator);
+    const formats = [];
+    for (let i2 = 0; i2 < rawFormats.length; i2++) {
+      let f = rawFormats[i2];
+      while (f.indexOf("(") > -1 && !f.includes(")") && i2 + 1 < rawFormats.length) {
+        f = `${f}${this.formatSeparator}${rawFormats[++i2]}`;
+      }
+      formats.push(f);
     }
     const result = formats.reduce((mem, f) => {
       var _a2;
@@ -16685,21 +16704,21 @@ var TemplateScaffolder = class {
   }
   async apply(project, manifest) {
     var _a2;
-    const chapters = (0, import_obsidian24.normalizePath)(`${project.folderPath}/Chapters`);
+    const container = (0, import_obsidian24.normalizePath)(`${project.folderPath}/${resolveDocumentFolder(project)}`);
     for (const folder of (_a2 = manifest.folders) != null ? _a2 : []) {
-      await this.files.ensureFolder((0, import_obsidian24.normalizePath)(`${chapters}/${folder}`));
+      await this.files.ensureFolder((0, import_obsidian24.normalizePath)(`${container}/${folder}`));
     }
-    const items = await this.buildItems(manifest.items, chapters);
+    const items = await this.buildItems(manifest.items, container);
     return { version: "2.0", projectId: project.id, items };
   }
-  async buildItems(nodes, chapters) {
+  async buildItems(nodes, container) {
     var _a2, _b2;
     const items = [];
     let order = 1;
     for (const node of nodes) {
       let filePath = "";
       if (node.fileName) {
-        filePath = (0, import_obsidian24.normalizePath)(`${chapters}/${node.fileName}.md`);
+        filePath = (0, import_obsidian24.normalizePath)(`${container}/${node.fileName}.md`);
         if (!this.files.exists(filePath)) {
           await this.files.writeText(filePath, (_a2 = node.content) != null ? _a2 : "");
         }
@@ -16714,7 +16733,7 @@ var TemplateScaffolder = class {
         includeInExport: (_b2 = node.includeInExport) != null ? _b2 : true
       };
       if (node.wordCountGoal) item.wordCountGoal = node.wordCountGoal;
-      if (node.children) item.children = await this.buildItems(node.children, chapters);
+      if (node.children) item.children = await this.buildItems(node.children, container);
       items.push(item);
     }
     return items;
@@ -17162,8 +17181,9 @@ var ProjectManager = class extends import_obsidian25.Events {
     if (this.files.exists(folderPath)) {
       throw new Error(t2("projectManager.errorFolderExists", { folder: folderName }));
     }
+    const documentFolder = defaultDocumentFolder(type);
     await this.files.ensureFolder(folderPath);
-    await this.files.ensureFolder((0, import_obsidian25.normalizePath)(`${folderPath}/Chapters`));
+    await this.files.ensureFolder((0, import_obsidian25.normalizePath)(`${folderPath}/${documentFolder}`));
     await this.files.ensureFolder((0, import_obsidian25.normalizePath)(`${folderPath}/Research`));
     await this.files.ensureFolder((0, import_obsidian25.normalizePath)(`${folderPath}/Exports`));
     const now = localDateString();
@@ -17176,6 +17196,7 @@ var ProjectManager = class extends import_obsidian25.Events {
       modified: now,
       description,
       folderPath,
+      documentFolder,
       goals: {}
     };
     const manifestBuilder = TEMPLATE_MANIFESTS[type];
@@ -17239,9 +17260,10 @@ var ProjectManager = class extends import_obsidian25.Events {
     const binder = await this.loadBinder(project);
     const now = localDateString();
     const baseName = title.replace(/[\\/:*?"<>|]/g, "-");
-    let filePath = (0, import_obsidian25.normalizePath)(`${project.folderPath}/Chapters/${baseName}.md`);
+    const docFolder = resolveDocumentFolder(project);
+    let filePath = (0, import_obsidian25.normalizePath)(`${project.folderPath}/${docFolder}/${baseName}.md`);
     for (let n = 2; this.files.exists(filePath); n++) {
-      filePath = (0, import_obsidian25.normalizePath)(`${project.folderPath}/Chapters/${baseName} ${n}.md`);
+      filePath = (0, import_obsidian25.normalizePath)(`${project.folderPath}/${docFolder}/${baseName} ${n}.md`);
     }
     const item = {
       id: this.uniqueId("item"),

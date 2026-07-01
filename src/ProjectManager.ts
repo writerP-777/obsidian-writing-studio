@@ -3,7 +3,7 @@ import type WritingStudioPlugin from '../main';
 import type { VaultFiles } from './VaultFiles';
 import { t } from './i18n';
 import { localDateString } from './dates';
-import { WritingProject, ProjectType } from '../models/Project';
+import { WritingProject, ProjectType, defaultDocumentFolder, resolveDocumentFolder } from '../models/Project';
 import { BinderData, BinderItem } from '../models/BinderItem';
 import { SprintSession } from '../models/SprintSession';
 import { TemplateScaffolder } from './scaffold';
@@ -96,8 +96,9 @@ export class ProjectManager extends Events {
     }
 
     // Create folder structure
+    const documentFolder = defaultDocumentFolder(type);
     await this.files.ensureFolder(folderPath);
-    await this.files.ensureFolder(normalizePath(`${folderPath}/Chapters`));
+    await this.files.ensureFolder(normalizePath(`${folderPath}/${documentFolder}`));
     await this.files.ensureFolder(normalizePath(`${folderPath}/Research`));
     await this.files.ensureFolder(normalizePath(`${folderPath}/Exports`));
 
@@ -111,6 +112,7 @@ export class ProjectManager extends Events {
       modified: now,
       description,
       folderPath,
+      documentFolder,
       goals: {},
     };
 
@@ -198,9 +200,10 @@ export class ProjectManager extends Events {
     const binder = await this.loadBinder(project);
     const now = localDateString();
     const baseName = title.replace(/[\\/:*?"<>|]/g, '-');
-    let filePath = normalizePath(`${project.folderPath}/Chapters/${baseName}.md`);
+    const docFolder = resolveDocumentFolder(project);
+    let filePath = normalizePath(`${project.folderPath}/${docFolder}/${baseName}.md`);
     for (let n = 2; this.files.exists(filePath); n++) {
-      filePath = normalizePath(`${project.folderPath}/Chapters/${baseName} ${n}.md`);
+      filePath = normalizePath(`${project.folderPath}/${docFolder}/${baseName} ${n}.md`);
     }
 
     const item: BinderItem = {

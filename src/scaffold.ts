@@ -1,6 +1,6 @@
 import { normalizePath } from 'obsidian';
 import type { VaultFiles } from './VaultFiles';
-import { WritingProject } from '../models/Project';
+import { WritingProject, resolveDocumentFolder } from '../models/Project';
 import { BinderData, BinderItem } from '../models/BinderItem';
 
 // A project template as data: the folders and documents to scaffold and the
@@ -10,7 +10,7 @@ export interface ManifestNode {
   id: string;
   title: string;
   type: BinderItem['type'];
-  // Path relative to the project's Chapters folder, without the .md
+  // Path relative to the project's document folder, without the .md
   // extension. Structural nodes (group/part) omit it and carry no file.
   fileName?: string;
   // Full file content; required when fileName is present.
@@ -21,7 +21,7 @@ export interface ManifestNode {
 }
 
 export interface TemplateManifest {
-  // Extra folders relative to the Chapters folder (e.g. a year folder).
+  // Extra folders relative to the document folder (e.g. a year folder).
   folders?: string[];
   items: ManifestNode[];
 }
@@ -81,21 +81,21 @@ export class TemplateScaffolder {
   }
 
   async apply(project: WritingProject, manifest: TemplateManifest): Promise<BinderData> {
-    const chapters = normalizePath(`${project.folderPath}/Chapters`);
+    const container = normalizePath(`${project.folderPath}/${resolveDocumentFolder(project)}`);
     for (const folder of manifest.folders ?? []) {
-      await this.files.ensureFolder(normalizePath(`${chapters}/${folder}`));
+      await this.files.ensureFolder(normalizePath(`${container}/${folder}`));
     }
-    const items = await this.buildItems(manifest.items, chapters);
+    const items = await this.buildItems(manifest.items, container);
     return { version: '2.0', projectId: project.id, items };
   }
 
-  private async buildItems(nodes: ManifestNode[], chapters: string): Promise<BinderItem[]> {
+  private async buildItems(nodes: ManifestNode[], container: string): Promise<BinderItem[]> {
     const items: BinderItem[] = [];
     let order = 1;
     for (const node of nodes) {
       let filePath = '';
       if (node.fileName) {
-        filePath = normalizePath(`${chapters}/${node.fileName}.md`);
+        filePath = normalizePath(`${container}/${node.fileName}.md`);
         // Never overwrite — a user file with the same name wins.
         if (!this.files.exists(filePath)) {
           await this.files.writeText(filePath, node.content ?? '');
@@ -111,7 +111,7 @@ export class TemplateScaffolder {
         includeInExport: node.includeInExport ?? true,
       };
       if (node.wordCountGoal) item.wordCountGoal = node.wordCountGoal;
-      if (node.children) item.children = await this.buildItems(node.children, chapters);
+      if (node.children) item.children = await this.buildItems(node.children, container);
       items.push(item);
     }
     return items;

@@ -6,6 +6,9 @@ All notable changes to Writing Studio are documented here.
 
 ## [Unreleased]
 
+### Fixed
+- New writing projects now store their documents in a folder named for the project type instead of a folder always called `Chapters/`: book → Chapters, series → Articles, blog → Posts (with the year subfolder unchanged, e.g. `Posts/2026/`), journal article → Sections, magazine article → Sections, blank → Documents. The folder name is stored per project (`documentFolder` in `_project.json`), and everything that creates documents — template scaffolding and adding documents to the binder — respects it. **Existing projects are untouched:** a project without the stored field keeps using `Chapters/` exactly as before, and no files are moved. An optional migration for existing projects remains tracked in #204. (#204, Phase 1)
+
 ## [2.9.0] - 2026-06-16
 
 ### Changed

@@ -25,6 +25,29 @@ export function resolveDefaultDocumentType(
   return PROJECT_TYPE_DEFAULT_DOC_TYPE[projectType] ?? globalDefault;
 }
 
+// Each project type declares the folder that holds its documents. Applied to
+// new projects only — existing projects predate the documentFolder field and
+// must keep resolving to 'Chapters' (see resolveDocumentFolder), because
+// their files physically live there.
+const PROJECT_TYPE_DOCUMENT_FOLDER: Record<ProjectType, string> = {
+  book: 'Chapters',
+  series: 'Articles',
+  blog: 'Posts',
+  'journal-article': 'Sections',
+  'magazine-article': 'Sections',
+  blank: 'Documents',
+};
+
+export function defaultDocumentFolder(projectType: ProjectType): string {
+  return PROJECT_TYPE_DOCUMENT_FOLDER[projectType];
+}
+
+// Absent field → 'Chapters'. Never fall back to the project type's default
+// here — that would repoint existing binders at folders that don't exist.
+export function resolveDocumentFolder(project: Pick<WritingProject, 'documentFolder'>): string {
+  return project.documentFolder ?? 'Chapters';
+}
+
 export interface ProjectGoals {
   totalWordCount?: number;
 }
@@ -38,6 +61,10 @@ export interface WritingProject {
   modified: string;
   description: string;
   folderPath: string;
+  // Name of the folder holding the project's documents. Absent on projects
+  // created before the field existed — resolveDocumentFolder falls back to
+  // 'Chapters' for those.
+  documentFolder?: string;
   goals: ProjectGoals;
   wordPressSite?: string;
   wordPressCategory?: string;
