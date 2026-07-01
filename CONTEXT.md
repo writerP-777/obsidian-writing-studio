@@ -177,7 +177,11 @@ A modal for viewing session stats, sprint history, and word-count trends.
 
 **Export engine** (`ExportEngine`)
 Handles single-document and full-project export to `md`, `html`, `docx`, `rtf`, `pdf`.
-PDF/docx/rtf require `pandoc` on PATH (configurable).
+PDF/docx/rtf require `pandoc` on PATH (configurable). The PDF engine is selectable
+(`pdfEngine` setting): `auto` (default) picks an installed LaTeX engine to match the
+requested font; a pinned engine (`xelatex`/`lualatex`/`pdflatex`/`wkhtmltopdf`) is strict —
+missing means the export fails by name, never a silent substitute. `wkhtmltopdf` is the
+non-LaTeX path and ignores the export font (typography comes from HTML/CSS).
 
 **Epub engine** (`EpubEngine`)
 Handles epub export separately from the main export engine.

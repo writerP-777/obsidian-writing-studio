@@ -109,7 +109,10 @@
       "epubLanguage": "Langue EPUB",
       "epubLanguageDesc": "Balise de langue BCP 47 (ex. en, fr, de).",
       "includeCover": "Inclure une couverture",
-      "includeCoverDesc": "Générer une page de couverture texte si aucune image de couverture n’est fournie."
+      "includeCoverDesc": "Générer une page de couverture texte si aucune image de couverture n’est fournie.",
+      "pdfEngine": "Moteur PDF",
+      "pdfEngineDesc": "Moteur utilisé pour l'export PDF. Auto choisit un moteur LaTeX installé. wkhtmltopdf fonctionne sans LaTeX, mais la police d'export ne s'y applique pas.",
+      "pdfEngineAuto": "Auto (recommandé)"
     },
     "log": {
       "heading": "Journal quotidien d’écriture",
@@ -328,7 +331,9 @@
     "noActiveDocument": "Aucun document ouvert. Ouvrez un fichier ou changez la portée d'export en « Projet entier ».",
     "byAuthor": "Par {{author}}",
     "approxWords": "Environ {{n}} mots",
-    "byline": "par"
+    "byline": "par",
+    "pdfPinnedEngineMissing": "Le moteur PDF sélectionné ({{engine}}) n'est pas installé ou absent du PATH. Installez-le ou réglez le moteur PDF sur auto dans les réglages.",
+    "pdfFontIgnoredWkhtmltopdf": "wkhtmltopdf n'utilise pas la police d'export. Le PDF a été exporté avec son style par défaut."
   },
   "wpClient": {
     "authFailed": "Échec de l'authentification. Vérifiez le nom d'utilisateur et le mot de passe de l'application.",

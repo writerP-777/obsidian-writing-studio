@@ -109,7 +109,10 @@
       "epubLanguage": "EPUB language",
       "epubLanguageDesc": "BCP 47 language tag (e.g. en, fr, de).",
       "includeCover": "Include cover",
-      "includeCoverDesc": "Generate a text cover page when no cover image is provided."
+      "includeCoverDesc": "Generate a text cover page when no cover image is provided.",
+      "pdfEngine": "PDF engine",
+      "pdfEngineDesc": "Engine used for PDF export. Auto picks an installed LaTeX engine. wkhtmltopdf works without LaTeX, but the export font setting does not apply to it.",
+      "pdfEngineAuto": "Auto (recommended)"
     },
     "log": {
       "heading": "Daily writing log",
@@ -328,7 +331,9 @@
     "noActiveDocument": "No document is open. Open a file or switch the export scope to \"Entire project\".",
     "byAuthor": "By {{author}}",
     "approxWords": "Approx. {{n}} words",
-    "byline": "by"
+    "byline": "by",
+    "pdfPinnedEngineMissing": "The selected PDF engine ({{engine}}) is not installed or not on PATH. Install it, or set the PDF engine to auto in settings.",
+    "pdfFontIgnoredWkhtmltopdf": "wkhtmltopdf does not use the export font setting. The PDF was exported with its default styling."
   },
   "wpClient": {
     "authFailed": "Authentication failed. Check username and application password.",

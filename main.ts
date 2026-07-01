@@ -18,7 +18,7 @@ import { FocusMode } from './src/FocusMode';
 import { TypographyMode } from './src/TypographyMode';
 import { WritingModes } from './src/WritingModes';
 import { SprintTimer } from './src/SprintTimer';
-import { ExportEngine, type ExportFormat } from './src/ExportEngine';
+import { ExportEngine, type ExportFormat, type PdfEnginePreference } from './src/ExportEngine';
 import { WordPressClient } from './src/WordPressClient';
 import { ProjectManager } from './src/ProjectManager';
 import { StatsTracker } from './src/StatsTracker';
@@ -118,6 +118,7 @@ export interface WritingStudioSettings {
   defaultExportFont: string;
   defaultExportFontSize: number;
   pandocPath: string;
+  pdfEngine: PdfEnginePreference;
   epubLanguage: string;
   epubIncludeCover: boolean;
   // WordPress
@@ -161,6 +162,7 @@ const DEFAULT_SETTINGS: WritingStudioSettings = {
   defaultExportFont: 'Georgia',
   defaultExportFontSize: 12,
   pandocPath: 'pandoc',
+  pdfEngine: 'auto',
   epubLanguage: 'en',
   epubIncludeCover: true,
   wordPressSites: [],

@@ -109,7 +109,10 @@
       "epubLanguage": "Idioma del EPUB",
       "epubLanguageDesc": "Etiqueta de idioma BCP 47 (ej. en, fr, de).",
       "includeCover": "Incluir portada",
-      "includeCoverDesc": "Generar una portada de texto cuando no se proporciona imagen de portada."
+      "includeCoverDesc": "Generar una portada de texto cuando no se proporciona imagen de portada.",
+      "pdfEngine": "Motor de PDF",
+      "pdfEngineDesc": "Motor usado para exportar a PDF. Auto elige un motor LaTeX instalado. wkhtmltopdf funciona sin LaTeX, pero la fuente de exportación no se aplica con él.",
+      "pdfEngineAuto": "Auto (recomendado)"
     },
     "log": {
       "heading": "Registro diario de escritura",
@@ -328,7 +331,9 @@
     "noActiveDocument": "No hay ningún documento abierto. Abra un archivo o cambie el alcance de exportación a \"Proyecto completo\".",
     "byAuthor": "Por {{author}}",
     "approxWords": "Aprox. {{n}} palabras",
-    "byline": "por"
+    "byline": "por",
+    "pdfPinnedEngineMissing": "El motor de PDF seleccionado ({{engine}}) no está instalado o no está en el PATH. Instálalo o cambia el motor de PDF a auto en los ajustes.",
+    "pdfFontIgnoredWkhtmltopdf": "wkhtmltopdf no usa la fuente de exportación. El PDF se exportó con su estilo predeterminado."
   },
   "wpClient": {
     "authFailed": "Autenticación fallida. Verifique el nombre de usuario y la contraseña de aplicación.",

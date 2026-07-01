@@ -109,7 +109,10 @@
       "epubLanguage": "EPUB 语言",
       "epubLanguageDesc": "BCP 47 语言标签（例如 en、fr、de）。",
       "includeCover": "包含封面",
-      "includeCoverDesc": "未提供封面图片时自动生成文字封面页。"
+      "includeCoverDesc": "未提供封面图片时自动生成文字封面页。",
+      "pdfEngine": "PDF 引擎",
+      "pdfEngineDesc": "用于 PDF 导出的引擎。自动模式会选择已安装的 LaTeX 引擎。wkhtmltopdf 无需 LaTeX 即可使用，但导出字体设置对其无效。",
+      "pdfEngineAuto": "自动（推荐）"
     },
     "log": {
       "heading": "每日写作日志",
@@ -328,7 +331,9 @@
     "noActiveDocument": "没有打开的文档。请打开文件，或将导出范围切换为「整个项目」。",
     "byAuthor": "作者：{{author}}",
     "approxWords": "约 {{n}} 字",
-    "byline": "作者"
+    "byline": "作者",
+    "pdfPinnedEngineMissing": "所选 PDF 引擎（{{engine}}）未安装或不在 PATH 中。请安装它，或在设置中将 PDF 引擎改为自动。",
+    "pdfFontIgnoredWkhtmltopdf": "wkhtmltopdf 不使用导出字体设置。PDF 已按默认样式导出。"
   },
   "wpClient": {
     "authFailed": "身份验证失败。请检查用户名和应用程序密码。",

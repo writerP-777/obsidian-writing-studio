@@ -6,6 +6,9 @@ All notable changes to Writing Studio are documented here.
 
 ## [Unreleased]
 
+### Added
+- A PDF engine setting (Settings → Export) for choosing the engine Pandoc uses for PDF export: auto (the default, unchanged behavior — an installed LaTeX engine picked to match the requested font), or a pinned `xelatex`, `lualatex`, `pdflatex`, or `wkhtmltopdf`. Pinning `wkhtmltopdf` produces PDFs without any LaTeX installation; since it takes its typography from HTML/CSS rather than LaTeX's `mainfont`, the export font setting does not apply on that path and a notice says so when a font is set. A pinned engine is strict: if it is not installed, the export fails with a message naming that engine instead of silently substituting another. (#203)
+
 ### Fixed
 - New writing projects now store their documents in a folder named for the project type instead of a folder always called `Chapters/`: book → Chapters, series → Articles, blog → Posts (with the year subfolder unchanged, e.g. `Posts/2026/`), journal article → Sections, magazine article → Sections, blank → Documents. The folder name is stored per project (`documentFolder` in `_project.json`), and everything that creates documents — template scaffolding and adding documents to the binder — respects it. **Existing projects are untouched:** a project without the stored field keeps using `Chapters/` exactly as before, and no files are moved. An optional migration for existing projects remains tracked in #204. (#204, Phase 1)
 

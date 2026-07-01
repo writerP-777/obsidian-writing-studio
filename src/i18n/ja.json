@@ -109,7 +109,10 @@
       "epubLanguage": "EPUB言語",
       "epubLanguageDesc": "BCP 47言語タグ（例：en、fr、de）。",
       "includeCover": "カバーを含める",
-      "includeCoverDesc": "カバー画像がない場合、テキストカバーページを自動生成します。"
+      "includeCoverDesc": "カバー画像がない場合、テキストカバーページを自動生成します。",
+      "pdfEngine": "PDF エンジン",
+      "pdfEngineDesc": "PDF 書き出しに使うエンジンです。自動ではインストール済みの LaTeX エンジンを選びます。wkhtmltopdf は LaTeX 不要ですが、書き出しフォント設定は適用されません。",
+      "pdfEngineAuto": "自動（推奨）"
     },
     "log": {
       "heading": "毎日の執筆ログ",
@@ -328,7 +331,9 @@
     "noActiveDocument": "開いているドキュメントがありません。ファイルを開くか、エクスポート範囲を「プロジェクト全体」に変更してください。",
     "byAuthor": "著者：{{author}}",
     "approxWords": "約 {{n}} 語",
-    "byline": "著"
+    "byline": "著",
+    "pdfPinnedEngineMissing": "選択した PDF エンジン（{{engine}}）がインストールされていないか、PATH にありません。インストールするか、設定で PDF エンジンを自動に戻してください。",
+    "pdfFontIgnoredWkhtmltopdf": "wkhtmltopdf は書き出しフォント設定を使用しません。PDF は既定のスタイルで書き出されました。"
   },
   "wpClient": {
     "authFailed": "認証に失敗しました。ユーザー名とアプリケーションパスワードを確認してください。",

@@ -121,7 +121,7 @@ describe('ExportEngine.compileContent through the vault seam', () => {
 
 describe('selectPdfEngine', () => {
   const all = (o: Partial<Record<PdfEngine, boolean>> = {}): Record<PdfEngine, boolean> =>
-    ({ xelatex: false, lualatex: false, pdflatex: false, ...o });
+    ({ xelatex: false, lualatex: false, pdflatex: false, wkhtmltopdf: false, ...o });
 
   describe('with a custom font requested', () => {
     it('prefers xelatex and keeps the font when xelatex is available', () => {
@@ -158,6 +158,51 @@ describe('selectPdfEngine', () => {
     it('returns no engine when nothing is installed', () => {
       expect(selectPdfEngine(all(), false)).toEqual({ engine: null, keepFont: false });
     });
+
+    it('never auto-selects wkhtmltopdf even when it is the only engine installed', () => {
+      expect(selectPdfEngine(all({ wkhtmltopdf: true }), false))
+        .toEqual({ engine: null, keepFont: false });
+      expect(selectPdfEngine(all({ wkhtmltopdf: true }), true))
+        .toEqual({ engine: null, keepFont: false });
+    });
+  });
+
+  describe('with a pinned engine preference', () => {
+    it('uses pinned wkhtmltopdf without needing any LaTeX engine, dropping the font', () => {
+      expect(selectPdfEngine(all({ wkhtmltopdf: true }), true, 'wkhtmltopdf'))
+        .toEqual({ engine: 'wkhtmltopdf', keepFont: false });
+    });
+
+    it('keeps the font on a pinned fontspec-capable engine', () => {
+      expect(selectPdfEngine(all({ xelatex: true, pdflatex: true }), true, 'xelatex'))
+        .toEqual({ engine: 'xelatex', keepFont: true });
+      expect(selectPdfEngine(all({ lualatex: true }), true, 'lualatex'))
+        .toEqual({ engine: 'lualatex', keepFont: true });
+    });
+
+    it('drops the font on pinned pdflatex even when xelatex is installed', () => {
+      expect(selectPdfEngine(all({ xelatex: true, pdflatex: true }), true, 'pdflatex'))
+        .toEqual({ engine: 'pdflatex', keepFont: false });
+    });
+
+    it('fails rather than substituting when the pinned engine is missing', () => {
+      expect(selectPdfEngine(all({ xelatex: true, lualatex: true, pdflatex: true }), true, 'wkhtmltopdf'))
+        .toEqual({ engine: null, keepFont: false });
+      expect(selectPdfEngine(all({ pdflatex: true, wkhtmltopdf: true }), false, 'xelatex'))
+        .toEqual({ engine: null, keepFont: false });
+    });
+
+    it('does not request the font on a pinned engine when no font is set', () => {
+      expect(selectPdfEngine(all({ xelatex: true }), false, 'xelatex'))
+        .toEqual({ engine: 'xelatex', keepFont: false });
+    });
+
+    it('treats an explicit auto preference exactly like the default', () => {
+      expect(selectPdfEngine(all({ xelatex: true, pdflatex: true }), false, 'auto'))
+        .toEqual({ engine: 'pdflatex', keepFont: false });
+      expect(selectPdfEngine(all({ xelatex: true, pdflatex: true }), true, 'auto'))
+        .toEqual({ engine: 'xelatex', keepFont: true });
+    });
   });
 });
 
@@ -170,6 +215,11 @@ describe('classifyPandocFailure', () => {
 
   it('classifies a missing xelatex as a missing engine', () => {
     expect(classifyPandocFailure('xelatex not found')).toBe('engine-missing');
+  });
+
+  it('classifies a missing wkhtmltopdf as a missing engine', () => {
+    expect(classifyPandocFailure('wkhtmltopdf not found. Please select a different --pdf-engine or install wkhtmltopdf'))
+      .toBe('engine-missing');
   });
 
   it('classifies a node spawn ENOENT as pandoc missing', () => {
