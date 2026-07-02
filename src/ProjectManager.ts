@@ -8,6 +8,14 @@ import { BinderData, BinderItem } from '../models/BinderItem';
 import { SprintSession } from '../models/SprintSession';
 import { TemplateScaffolder } from './scaffold';
 import { TEMPLATE_MANIFESTS } from '../templates/manifests';
+import {
+  anyBinderPathUnder,
+  baseName,
+  parentPath,
+  pathAtOrUnder,
+  rewriteBinderPaths,
+  rewritePathPrefix,
+} from './folderRename';
 
 export class ProjectManager extends Events {
   private plugin: WritingStudioPlugin;
@@ -469,6 +477,76 @@ tags: [writing-studio]
       }
     }
     return undefined;
+  }
+
+  // Follows a vault folder rename. Obsidian moved the files; this updates the
+  // plugin's records to match: binder filePaths under the old prefix are
+  // batch-rewritten (one save per affected binder), folderPath is repointed
+  // for projects at or under the renamed path, and documentFolder is renamed
+  // along with the folder it names. Idempotent — a replayed event, or one
+  // arriving after the per-child TFile events already repaired the paths,
+  // finds nothing left to rewrite.
+  async handleFolderRename(oldPath: string, newPath: string): Promise<void> {
+    for (const project of this.getProjects()) {
+      // Repoint folderPath before touching the binder — when the project
+      // folder itself or an ancestor moved, the binder file now lives at the
+      // new location and must be read from and saved to it. documentFolder
+      // is a bare name relative to folderPath, so it is untouched here.
+      const folderPathChanged = pathAtOrUnder(project.folderPath, oldPath);
+      if (folderPathChanged) {
+        project.folderPath = rewritePathPrefix(project.folderPath, oldPath, newPath);
+        await this.saveProject(project);
+      }
+
+      const binder = await this.loadBinder(project);
+      const binderChanged = rewriteBinderPaths(binder.items, oldPath, newPath);
+      // A moved project folder needs its binder written at the new location
+      // even when per-child TFile events already repaired the paths.
+      if (binderChanged || folderPathChanged) await this.saveBinder(binder);
+
+      if (this.isDocumentFolderRename(project, oldPath, newPath, binder.items, binderChanged)
+          && project.documentFolder !== baseName(newPath)) {
+        project.documentFolder = baseName(newPath);
+        await this.saveProject(project);
+      }
+    }
+  }
+
+  // The renamed folder is a project's document folder when it is a direct
+  // child of the project folder and either carries the recorded name, or —
+  // when the recorded name is stale (renamed while the plugin was off) — it
+  // held binder documents and the recorded folder no longer exists.
+  private isDocumentFolderRename(
+    project: WritingProject,
+    oldPath: string,
+    newPath: string,
+    items: BinderItem[],
+    binderChanged: boolean,
+  ): boolean {
+    if (parentPath(oldPath) !== project.folderPath) return false;
+    const recorded = resolveDocumentFolder(project);
+    if (baseName(oldPath).toLowerCase() === recorded.toLowerCase()) return true;
+    // The rewrite pass already moved matching paths under newPath, so a
+    // binder that held this folder's documents shows it either way.
+    const heldDocuments = binderChanged || anyBinderPathUnder(items, newPath);
+    return heldDocuments && !this.files.exists(normalizePath(`${project.folderPath}/${recorded}`));
+  }
+
+  // A single .md rename or move. Only rewrite the title when the basename
+  // actually changed — a folder rename fires this once per child with the
+  // basename intact, and user-set titles must survive that.
+  async repairBinderPaths(oldPath: string, newPath: string, newBasename: string): Promise<void> {
+    const oldBasename = baseName(oldPath).replace(/\.md$/, '');
+    for (const project of this.getProjects()) {
+      const binder = await this.loadBinder(project);
+      const item = this.findBinderItemByPath(binder.items, oldPath);
+      if (item) {
+        item.filePath = newPath;
+        if (oldBasename !== newBasename) item.title = newBasename;
+        await this.saveBinder(binder);
+        break;
+      }
+    }
   }
 
   // The goal modal needs the writable binder entry, not just the resolved

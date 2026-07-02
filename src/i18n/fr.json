@@ -434,7 +434,16 @@
     "deleteTitle": "Supprimer le projet",
     "deleteMessage": "Retirer « {{title}} » de Writing Studio ? Le dossier du projet et tous ses fichiers restent dans votre coffre.",
     "deleteBtn": "Retirer le projet",
-    "deleted": "Projet « {{title}} » retiré. Ses fichiers restent dans votre coffre."
+    "deleted": "Projet « {{title}} » retiré. Ses fichiers restent dans votre coffre.",
+    "documentFolder": "Dossier des documents",
+    "documentFolderDesc": "Le dossier du projet qui contient ses documents. Modifier le nom renomme le dossier dans votre coffre et déplace ses fichiers avec lui.",
+    "folderNameEmpty": "Le nom du dossier ne peut pas être vide.",
+    "folderNameInvalidChars": "Le nom du dossier ne peut pas contenir ces caractères : \\ / : * ? \" < > |",
+    "folderNameTrailing": "Le nom du dossier ne peut pas se terminer par une espace ou un point.",
+    "folderNameReserved": "« {{name}} » est un dossier réservé du projet.",
+    "folderNameExists": "Un dossier nommé « {{name}} » existe déjà dans ce projet.",
+    "folderMissing": "Le dossier des documents « {{name}} » est introuvable dans le coffre.",
+    "folderRenameFailed": "Impossible de renommer le dossier des documents : {{error}}"
   },
   "sprintModal": {
     "setupTitle": "Configurer un sprint",

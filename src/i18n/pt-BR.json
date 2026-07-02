@@ -434,7 +434,16 @@
     "deleteTitle": "Excluir projeto",
     "deleteMessage": "Remover \"{{title}}\" do Writing Studio? A pasta do projeto e todos os seus arquivos permanecem no seu vault.",
     "deleteBtn": "Remover projeto",
-    "deleted": "Projeto \"{{title}}\" removido. Os arquivos permanecem no seu vault."
+    "deleted": "Projeto \"{{title}}\" removido. Os arquivos permanecem no seu vault.",
+    "documentFolder": "Pasta de documentos",
+    "documentFolderDesc": "A pasta dentro do projeto que contém seus documentos. Alterar o nome renomeia a pasta no cofre e move seus arquivos junto.",
+    "folderNameEmpty": "O nome da pasta não pode ficar vazio.",
+    "folderNameInvalidChars": "O nome da pasta não pode conter estes caracteres: \\ / : * ? \" < > |",
+    "folderNameTrailing": "O nome da pasta não pode terminar com espaço ou ponto.",
+    "folderNameReserved": "\"{{name}}\" é uma pasta reservada do projeto.",
+    "folderNameExists": "Já existe uma pasta chamada \"{{name}}\" neste projeto.",
+    "folderMissing": "A pasta de documentos \"{{name}}\" não foi encontrada no cofre.",
+    "folderRenameFailed": "Não foi possível renomear a pasta de documentos: {{error}}"
   },
   "sprintModal": {
     "setupTitle": "Configurar sprint",

@@ -434,7 +434,16 @@
     "deleteTitle": "Eliminar proyecto",
     "deleteMessage": "¿Quitar «{{title}}» de Writing Studio? La carpeta del proyecto y todos sus archivos permanecen en tu vault.",
     "deleteBtn": "Quitar proyecto",
-    "deleted": "Proyecto «{{title}}» quitado. Sus archivos permanecen en tu vault."
+    "deleted": "Proyecto «{{title}}» quitado. Sus archivos permanecen en tu vault.",
+    "documentFolder": "Carpeta de documentos",
+    "documentFolderDesc": "La carpeta dentro del proyecto que contiene sus documentos. Cambiar el nombre renombra la carpeta en tu bóveda y mueve sus archivos con ella.",
+    "folderNameEmpty": "El nombre de la carpeta no puede estar vacío.",
+    "folderNameInvalidChars": "El nombre de la carpeta no puede contener estos caracteres: \\ / : * ? \" < > |",
+    "folderNameTrailing": "El nombre de la carpeta no puede terminar con un espacio o un punto.",
+    "folderNameReserved": "\"{{name}}\" es una carpeta reservada del proyecto.",
+    "folderNameExists": "Ya existe una carpeta llamada \"{{name}}\" en este proyecto.",
+    "folderMissing": "No se encontró la carpeta de documentos \"{{name}}\" en la bóveda.",
+    "folderRenameFailed": "No se pudo renombrar la carpeta de documentos: {{error}}"
   },
   "sprintModal": {
     "setupTitle": "Configurar sprint",

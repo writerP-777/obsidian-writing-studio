@@ -434,7 +434,16 @@
     "deleteTitle": "删除项目",
     "deleteMessage": "从 Writing Studio 中移除「{{title}}」？项目文件夹及其所有文件将保留在库中。",
     "deleteBtn": "移除项目",
-    "deleted": "项目「{{title}}」已移除。文件仍保留在库中。"
+    "deleted": "项目「{{title}}」已移除。文件仍保留在库中。",
+    "documentFolder": "文档文件夹",
+    "documentFolderDesc": "项目中存放文档的文件夹。更改名称会在仓库中重命名该文件夹，其中的文件也会随之移动。",
+    "folderNameEmpty": "文件夹名称不能为空。",
+    "folderNameInvalidChars": "文件夹名称不能包含以下字符：\\ / : * ? \" < > |",
+    "folderNameTrailing": "文件夹名称不能以空格或句点结尾。",
+    "folderNameReserved": "“{{name}}”是项目保留的文件夹。",
+    "folderNameExists": "此项目中已存在名为“{{name}}”的文件夹。",
+    "folderMissing": "在仓库中未找到文档文件夹“{{name}}”。",
+    "folderRenameFailed": "无法重命名文档文件夹：{{error}}"
   },
   "sprintModal": {
     "setupTitle": "设置冲刺",

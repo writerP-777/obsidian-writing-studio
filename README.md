@@ -212,7 +212,7 @@ Projects group a set of documents (binder items) and act as the scope for export
 
 **To switch projects:** Use the Launcher panel or the project selector at the top of the Binder panel.
 
-**To edit a project:** Click the pencil icon in the Launcher project card or next to the project selector in the Binder. You can change the title, author, description, and total word count goal. The project folder keeps its original name — renaming the title does not move any files.
+**To edit a project:** Click the pencil icon in the Launcher project card or next to the project selector in the Binder. You can change the title, author, description, total word count goal, and the document folder — the folder inside the project that holds its documents (for example, renaming a book project's `Chapters/` to `Scenes/` renames the folder and moves its files with it; the binder follows automatically, as it also does when you rename the folder directly in the file explorer). The project folder itself keeps its original name — renaming the title does not move any files.
 
 **To delete a project:** Click the trash icon in the Launcher project card or next to the project selector in the Binder, then confirm. This removes the project from Writing Studio's list only — the project folder and all its documents stay untouched in your vault.
 

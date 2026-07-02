@@ -434,7 +434,16 @@
     "deleteTitle": "Projekt löschen",
     "deleteMessage": "„{{title}}“ aus Writing Studio entfernen? Der Projektordner und alle seine Dateien bleiben im Vault.",
     "deleteBtn": "Projekt entfernen",
-    "deleted": "Projekt „{{title}}“ entfernt. Die Dateien bleiben im Vault."
+    "deleted": "Projekt „{{title}}“ entfernt. Die Dateien bleiben im Vault.",
+    "documentFolder": "Dokumentenordner",
+    "documentFolderDesc": "Der Ordner innerhalb des Projekts, der die Dokumente enthält. Eine Namensänderung benennt den Ordner im Vault um und verschiebt seine Dateien mit.",
+    "folderNameEmpty": "Der Ordnername darf nicht leer sein.",
+    "folderNameInvalidChars": "Der Ordnername darf diese Zeichen nicht enthalten: \\ / : * ? \" < > |",
+    "folderNameTrailing": "Der Ordnername darf nicht mit einem Leerzeichen oder Punkt enden.",
+    "folderNameReserved": "\"{{name}}\" ist ein reservierter Projektordner.",
+    "folderNameExists": "Ein Ordner namens \"{{name}}\" existiert bereits in diesem Projekt.",
+    "folderMissing": "Der Dokumentenordner \"{{name}}\" wurde im Vault nicht gefunden.",
+    "folderRenameFailed": "Der Dokumentenordner konnte nicht umbenannt werden: {{error}}"
   },
   "sprintModal": {
     "setupTitle": "Sprint einrichten",
