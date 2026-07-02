@@ -13906,12 +13906,14 @@ var LauncherView = class extends import_obsidian18.ItemView {
   }
   async patchTodayCard() {
     if (this.todayVals.length < 4) return;
+    const vals = this.todayVals;
     const stats = this.plugin.statsTracker.getSessionStats();
     const streak = await this.plugin.statsTracker.getStreak();
-    this.todayVals[0].textContent = stats.wordsWritten.toLocaleString();
-    this.todayVals[1].textContent = String(stats.sprintsCompleted);
-    this.todayVals[2].textContent = String(stats.totalMinutes);
-    this.todayVals[3].textContent = t2("launcher.stat.streakDays", { streak });
+    if (vals !== this.todayVals) return;
+    vals[0].textContent = stats.wordsWritten.toLocaleString();
+    vals[1].textContent = String(stats.sprintsCompleted);
+    vals[2].textContent = String(stats.totalMinutes);
+    vals[3].textContent = t2("launcher.stat.streakDays", { streak });
   }
   onClose() {
     if (this.refreshTimer !== null) {
