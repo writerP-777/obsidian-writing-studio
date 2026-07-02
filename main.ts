@@ -314,12 +314,16 @@ export default class WritingStudioPlugin extends Plugin {
       })
     );
 
-    // Keep binder in sync when a file is renamed outside the binder
+    // Keep project records in sync when files or folders are renamed outside
+    // the plugin. A folder rename fires one TFolder event plus one TFile
+    // event per child; both handlers are idempotent, so the outcome is the
+    // same whichever order Obsidian delivers them in.
     this.registerEvent(
       this.app.vault.on('rename', (file, oldPath) => {
-        if (!(file instanceof TFile)) return;
-        if (file.extension === 'md') {
-          void this.repairBinderPaths(oldPath, file.path, file.basename);
+        if (file instanceof TFolder) {
+          void this.projectManager.handleFolderRename(oldPath, file.path);
+        } else if (file instanceof TFile && file.extension === 'md') {
+          void this.projectManager.repairBinderPaths(oldPath, file.path, file.basename);
         }
       })
     );
@@ -456,21 +460,6 @@ export default class WritingStudioPlugin extends Plugin {
     if (leaf) {
       await leaf.setViewState({ type: BINDER_VIEW_TYPE, active: true });
       void this.app.workspace.revealLeaf(leaf);
-    }
-  }
-
-  private async repairBinderPaths(oldPath: string, newPath: string, newBasename: string): Promise<void> {
-    const projects = this.projectManager.getProjects();
-    for (const project of projects) {
-      const binder = await this.projectManager.loadBinder(project);
-      const flat = this.projectManager.flattenBinder(binder.items);
-      const item = flat.find(i => i.filePath === oldPath);
-      if (item) {
-        item.filePath = newPath;
-        item.title = newBasename;
-        await this.projectManager.saveBinder(binder);
-        break;
-      }
     }
   }
 

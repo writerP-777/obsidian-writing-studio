@@ -434,7 +434,16 @@
     "deleteTitle": "Delete project",
     "deleteMessage": "Remove \"{{title}}\" from Writing Studio? The project folder and all of its files stay in your vault.",
     "deleteBtn": "Remove project",
-    "deleted": "Project \"{{title}}\" removed. Its files remain in your vault."
+    "deleted": "Project \"{{title}}\" removed. Its files remain in your vault.",
+    "documentFolder": "Document folder",
+    "documentFolderDesc": "The folder inside the project that holds its documents. Changing the name renames the folder in your vault and moves its files with it.",
+    "folderNameEmpty": "Folder name cannot be empty.",
+    "folderNameInvalidChars": "Folder name cannot contain these characters: \\ / : * ? \" < > |",
+    "folderNameTrailing": "Folder name cannot end with a space or a period.",
+    "folderNameReserved": "\"{{name}}\" is a reserved project folder.",
+    "folderNameExists": "A folder named \"{{name}}\" already exists in this project.",
+    "folderMissing": "The document folder \"{{name}}\" was not found in the vault.",
+    "folderRenameFailed": "Could not rename the document folder: {{error}}"
   },
   "sprintModal": {
     "setupTitle": "Set up sprint",

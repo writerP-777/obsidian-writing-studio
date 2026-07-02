@@ -4,6 +4,15 @@ All notable changes to Writing Studio are documented here.
 
 ---
 
+## [Unreleased]
+
+### Added
+- The document folder of an existing project can now be renamed. The edit-project modal gains a "Document folder" field (prefilled with the project's current folder, `Chapters/` for projects created before 2.10.0); changing it renames the folder in the vault and moves its files with it. Invalid names are rejected with a specific message — empty, the reserved `Research`/`Exports` names, filesystem-forbidden characters, trailing spaces or periods, or a folder that already exists (a change of capitalization only is allowed). A failed rename is always reported, never silent. (#204, Phase 2)
+
+### Fixed
+- Renaming a folder in the file explorer now updates the plugin's records to match: binder entries pointing under the renamed folder are rewritten in one pass, a project's stored location follows when the project folder or one of its ancestors is renamed, and the stored document folder name follows when the document folder itself is renamed — so new documents no longer re-create the old folder. Previously the binder healed itself file by file but the project records went stale. (#204, Phase 2)
+- Moving a document to a different folder no longer overwrites its binder title with the file name. The title now only updates when the file itself is renamed, so custom binder titles (for example "Chapter One" on a file named `Part 1 - Chapter 1.md`) survive folder renames and moves. (#204, Phase 2)
+
 ## [2.10.0] - 2026-07-01
 
 Also updates the bundled runtime dependencies (i18next 26.3.3, CodeMirror view 6.43.4 / state 6.7.0).

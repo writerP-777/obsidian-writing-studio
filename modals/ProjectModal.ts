@@ -1,7 +1,16 @@
-import { App, Modal, Setting, Notice } from 'obsidian';
+import { App, Modal, Setting, Notice, normalizePath } from 'obsidian';
 import type WritingStudioPlugin from '../main';
-import { ProjectType, WritingProject } from '../models/Project';
+import { ProjectType, WritingProject, resolveDocumentFolder } from '../models/Project';
+import { validateDocumentFolderName, FolderNameRejection } from '../src/folderRename';
 import { t } from '../src/i18n';
+
+const FOLDER_REJECTION_KEYS: Record<FolderNameRejection, string> = {
+  empty: 'projectModal.folderNameEmpty',
+  'invalid-chars': 'projectModal.folderNameInvalidChars',
+  trailing: 'projectModal.folderNameTrailing',
+  reserved: 'projectModal.folderNameReserved',
+  exists: 'projectModal.folderNameExists',
+};
 
 export class ProjectModal extends Modal {
   private plugin: WritingStudioPlugin;
@@ -14,6 +23,7 @@ export class ProjectModal extends Modal {
   private author = '';
   private goalRaw = '';
   private description = '';
+  private documentFolder = '';
 
   // Most callers need no callback — ProjectManager announces the new project
   // itself. Pass onDone only for work beyond refreshing project state.
@@ -35,6 +45,7 @@ export class ProjectModal extends Modal {
       this.author = this.edit.author;
       this.description = this.edit.description;
       this.goalRaw = String(this.edit.goals?.totalWordCount || '');
+      this.documentFolder = resolveDocumentFolder(this.edit);
     } else {
       // Author was previously taken silently from settings — surfacing it
       // means the manuscript title page never gets a blank author unnoticed
@@ -74,6 +85,15 @@ export class ProjectModal extends Modal {
       .addText(tx => tx
         .setValue(this.author)
         .onChange(v => { this.author = v; }));
+
+    if (this.edit) {
+      new Setting(contentEl)
+        .setName(t('projectModal.documentFolder'))
+        .setDesc(t('projectModal.documentFolderDesc'))
+        .addText(tx => tx
+          .setValue(this.documentFolder)
+          .onChange(v => { this.documentFolder = v; }));
+    }
 
     new Setting(contentEl)
       .setName(t('projectModal.goalLabel'))
@@ -143,9 +163,19 @@ export class ProjectModal extends Modal {
     }
   }
 
-  // Display title only — the project folder keeps the name it was scaffolded
-  // with, so nothing in the vault moves when a project is renamed.
+  // Retitling is display-only — the project folder keeps the name it was
+  // scaffolded with. Only the document folder can be renamed here, and that
+  // rename happens in the vault; the rename-event handler updates the
+  // project record and binder, exactly as for a manual rename.
   private async saveEdit(project: WritingProject, submitBtn: HTMLButtonElement): Promise<void> {
+    const currentFolder = resolveDocumentFolder(project);
+    if (this.documentFolder !== currentFolder) {
+      const renamed = await this.renameDocumentFolder(project, currentFolder);
+      if (!renamed) {
+        submitBtn.disabled = false;
+        return;
+      }
+    }
     try {
       project.title = this.title.trim();
       project.author = this.author.trim();
@@ -163,6 +193,30 @@ export class ProjectModal extends Modal {
     } catch (e) {
       new Notice(t('main.operationFailed', { error: e instanceof Error ? e.message : String(e) }));
       submitBtn.disabled = false;
+    }
+  }
+
+  // False (with a notice shown) when validation rejects the name or the
+  // vault rename fails — a failed rename never passes silently.
+  private async renameDocumentFolder(project: WritingProject, currentFolder: string): Promise<boolean> {
+    const target = normalizePath(`${project.folderPath}/${this.documentFolder}`);
+    const targetExists = this.app.vault.getAbstractFileByPath(target) !== null;
+    const verdict = validateDocumentFolderName(this.documentFolder, currentFolder, targetExists);
+    if (!verdict.ok) {
+      new Notice(t(FOLDER_REJECTION_KEYS[verdict.reason ?? 'empty'], { name: this.documentFolder }));
+      return false;
+    }
+    const source = this.app.vault.getFolderByPath(normalizePath(`${project.folderPath}/${currentFolder}`));
+    if (!source) {
+      new Notice(t('projectModal.folderMissing', { name: currentFolder }));
+      return false;
+    }
+    try {
+      await this.app.fileManager.renameFile(source, target);
+      return true;
+    } catch (e) {
+      new Notice(t('projectModal.folderRenameFailed', { error: e instanceof Error ? e.message : String(e) }));
+      return false;
     }
   }
 

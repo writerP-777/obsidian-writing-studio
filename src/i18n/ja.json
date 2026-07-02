@@ -434,7 +434,16 @@
     "deleteTitle": "プロジェクトを削除",
     "deleteMessage": "「{{title}}」をWriting Studioから削除しますか？プロジェクトフォルダとそのすべてのファイルはVaultに残ります。",
     "deleteBtn": "プロジェクトを削除",
-    "deleted": "プロジェクト「{{title}}」を削除しました。ファイルはVaultに残っています。"
+    "deleted": "プロジェクト「{{title}}」を削除しました。ファイルはVaultに残っています。",
+    "documentFolder": "ドキュメントフォルダ",
+    "documentFolderDesc": "プロジェクト内でドキュメントを保管するフォルダです。名前を変更すると、保管庫内のフォルダの名前が変わり、ファイルも一緒に移動します。",
+    "folderNameEmpty": "フォルダ名を空にすることはできません。",
+    "folderNameInvalidChars": "フォルダ名に次の文字は使用できません: \\ / : * ? \" < > |",
+    "folderNameTrailing": "フォルダ名の末尾にスペースやピリオドは使用できません。",
+    "folderNameReserved": "「{{name}}」はプロジェクト用に予約されたフォルダです。",
+    "folderNameExists": "「{{name}}」という名前のフォルダはこのプロジェクトに既に存在します。",
+    "folderMissing": "ドキュメントフォルダ「{{name}}」が保管庫内に見つかりませんでした。",
+    "folderRenameFailed": "ドキュメントフォルダの名前を変更できませんでした: {{error}}"
   },
   "sprintModal": {
     "setupTitle": "スプリントを設定",
