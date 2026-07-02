@@ -72,12 +72,16 @@ export class LauncherView extends ItemView {
 
   private async patchTodayCard(): Promise<void> {
     if (this.todayVals.length < 4) return;
+    const vals = this.todayVals;
     const stats = this.plugin.statsTracker.getSessionStats();
     const streak = await this.plugin.statsTracker.getStreak();
-    this.todayVals[0].textContent = stats.wordsWritten.toLocaleString();
-    this.todayVals[1].textContent = String(stats.sprintsCompleted);
-    this.todayVals[2].textContent = String(stats.totalMinutes);
-    this.todayVals[3].textContent = t('launcher.stat.streakDays', { streak });
+    // A full render during the await replaces todayVals with a fresh array —
+    // these elements are detached by then and the new array may still be empty
+    if (vals !== this.todayVals) return;
+    vals[0].textContent = stats.wordsWritten.toLocaleString();
+    vals[1].textContent = String(stats.sprintsCompleted);
+    vals[2].textContent = String(stats.totalMinutes);
+    vals[3].textContent = t('launcher.stat.streakDays', { streak });
   }
 
   onClose(): Promise<void> {
