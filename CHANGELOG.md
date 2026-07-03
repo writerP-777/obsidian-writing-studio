@@ -4,7 +4,7 @@ All notable changes to Writing Studio are documented here.
 
 ---
 
-## [Unreleased]
+## [2.11.0] - 2026-07-03
 
 ### Added
 - The document folder of an existing project can now be renamed. The edit-project modal gains a "Document folder" field (prefilled with the project's current folder, `Chapters/` for projects created before 2.10.0); changing it renames the folder in the vault and moves its files with it. Invalid names are rejected with a specific message — empty, the reserved `Research`/`Exports` names, filesystem-forbidden characters, trailing spaces or periods, or a folder that already exists (a change of capitalization only is allowed). A failed rename is always reported, never silent. (#204, Phase 2)
@@ -236,10 +236,6 @@ Consolidated release covering all 15 fix units from the June 2026 full code audi
 
 ### Fixed
 - **Folder sidebar explorer:** "Open in sidebar explorer" context menu item on folders now reliably opens the sidebar panel. Previously, the command silently did nothing when the right sidebar was collapsed or empty (`getRightLeaf(false)` returned `null`). Now uses `ensureSideLeaf` (Obsidian 1.7.2+), which always creates or reveals the right sidebar leaf.
-
----
-
-## [Unreleased]
 
 ---
 
