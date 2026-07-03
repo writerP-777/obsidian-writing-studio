@@ -80,6 +80,9 @@ magazine-article → `section`. The project type's declared default wins; the gl
 The ordered, hierarchical list of documents that belong to a writing project.
 Stored as `_binder.json` in the project folder. Rendered in the left sidebar as `BinderView`.
 Prefer: *binder*. Avoid: *outline*, *table of contents*, *file list*.
+> **Redesign accepted (ADR 0001, not yet implemented):** the binder becomes a live rendering
+> of the project folder tree — `_binder.json` leaves runtime, and the vocabulary in
+> "Binder redesign terms" below applies. Until that ships, this entry describes the code.
 
 **Binder item** (`BinderItem`)
 One entry in the binder. Has a `type` (chapter, section, article, note, group, part),
@@ -113,6 +116,39 @@ A left-sidebar view showing daily writing-activity records.
 
 **Folder sidebar** (`FolderSidebarView`, view type `writing-studio-folder-sidebar`)
 A right-sidebar view scoped to a single vault folder. Opened via file-menu or command.
+
+### Binder redesign terms (accepted — see docs/adr/0001; not yet implemented)
+
+Use these exact terms in redesign issues, PRs, and code. They describe the accepted
+filesystem-owned binder, not the shipped `_binder.json` model.
+
+**Manuscript zone**
+The upper binder zone: the project folder tree minus Research and Exports. Its depth-first
+binder order is the compile order — the zone boundary is the compile boundary.
+Prefer: *manuscript zone*. Avoid: *outline area*, *main list*.
+
+**Resources zone** / **drawer**
+The lower binder zone: Research and Exports pinned as drawer tabs with document counts.
+Research is two-way for `.md` files; Exports is output-only (written by the export engine).
+Non-markdown files are visible and openable but never promotable into the manuscript.
+
+**`binder-order`**
+Integer frontmatter key holding a document's position among its siblings. Written lazily on
+reorder (gaps of 10, midpoint insertion). Folders carry order as a numeric name prefix
+(`020 Part One`) instead, stripped in binder display. Anything without a value natural-sorts
+at the end of its group. Prefer: *order* / *binder-order*. Avoid: *rank*, *index*, *sort key*.
+
+**`binder-status`**, **`binder-type`**, **`binder-compile`**
+Frontmatter homes for per-document metadata: lifecycle status (values unchanged), optional
+document type (icon/menu only), and `binder-compile: false` to exclude a document from
+compile (rendered dimmed). `word-count-goal` (existing key) becomes the sole goal authority.
+The separate binder title is removed — the filename is the title.
+
+**Carry-over**
+The per-project, opt-in migration from a legacy `_binder.json`: Preview (dry run listing
+every operation) → one atomic rename per item plus idempotent frontmatter writes, all targets
+computed deterministically from the immutable legacy file. `_binder.json` is never deleted.
+Prefer: *carry-over*. Avoid: *migration* in UI copy (fine in code/issues), *import*, *conversion*.
 
 ### Writing environment modes
 
