@@ -384,18 +384,8 @@ export class FilesystemBinderView extends ItemView {
 
     const pref = this.drawerPref();
 
-    if (pref.open) {
-      const zoneDef = DRAWER_ZONES.find(z => z.zone === pref.tab) ?? DRAWER_ZONES[0];
-      const zone = model.zones[zoneDef.zone];
-      const panel = drawerEl.createDiv('ws-fsb-drawer-panel');
-      panel.setAttribute('role', 'tree');
-      if (zone.nodes.length === 0) {
-        panel.createDiv('ws-binder-empty').textContent = t(zoneDef.emptyKey);
-      } else {
-        this.renderNodes(panel, zone.nodes, 0, false);
-      }
-    }
-
+    // Prototype variant C order: the tab bar is the divider under the
+    // manuscript, and the selected zone opens downward BELOW the tabs
     const tabs = drawerEl.createDiv('ws-fsb-drawer-tabs');
     for (const zoneDef of DRAWER_ZONES) {
       const zone = model.zones[zoneDef.zone];
@@ -406,6 +396,18 @@ export class FilesystemBinderView extends ItemView {
       // On-disk truth: the tab label is UI text, the tooltip is the folder
       setTooltip(tab, zone.folder?.name ?? zoneDef.folderName);
       tab.onclick = () => { void this.selectDrawerTab(zoneDef.zone); };
+    }
+
+    if (pref.open) {
+      const zoneDef = DRAWER_ZONES.find(z => z.zone === pref.tab) ?? DRAWER_ZONES[0];
+      const zone = model.zones[zoneDef.zone];
+      const panel = drawerEl.createDiv('ws-fsb-drawer-panel');
+      panel.setAttribute('role', 'tree');
+      if (zone.nodes.length === 0) {
+        panel.createDiv('ws-binder-empty').textContent = t(zoneDef.emptyKey);
+      } else {
+        this.renderNodes(panel, zone.nodes, 0, false);
+      }
     }
   }
 
