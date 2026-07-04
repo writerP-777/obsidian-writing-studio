@@ -2612,7 +2612,13 @@ var en_default = {
       moreActions: "More actions"
     },
     toggleCounts: "Show document counts",
-    fsEmpty: "This project folder has no documents yet. Files added to it appear here automatically."
+    fsEmpty: "This project folder has no documents yet. Files added to it appear here automatically.",
+    drawer: {
+      research: "Research",
+      exports: "Exports",
+      emptyResearch: "No research files yet. Anything you put in the Research folder appears here.",
+      emptyExports: "No exports yet. Exported files land here."
+    }
   },
   launcher: {
     displayText: "Writing studio",
@@ -3320,7 +3326,13 @@ var zh_default = {
       moreActions: "\u66F4\u591A\u64CD\u4F5C"
     },
     toggleCounts: "\u663E\u793A\u6587\u6863\u6570\u91CF",
-    fsEmpty: "\u6B64\u9879\u76EE\u6587\u4EF6\u5939\u8FD8\u6CA1\u6709\u6587\u6863\u3002\u6DFB\u52A0\u5230\u5176\u4E2D\u7684\u6587\u4EF6\u4F1A\u81EA\u52A8\u663E\u793A\u5728\u8FD9\u91CC\u3002"
+    fsEmpty: "\u6B64\u9879\u76EE\u6587\u4EF6\u5939\u8FD8\u6CA1\u6709\u6587\u6863\u3002\u6DFB\u52A0\u5230\u5176\u4E2D\u7684\u6587\u4EF6\u4F1A\u81EA\u52A8\u663E\u793A\u5728\u8FD9\u91CC\u3002",
+    drawer: {
+      research: "\u8D44\u6599",
+      exports: "\u5BFC\u51FA",
+      emptyResearch: "\u8FD8\u6CA1\u6709\u8D44\u6599\u6587\u4EF6\u3002\u653E\u5165 Research \u6587\u4EF6\u5939\u7684\u5185\u5BB9\u4F1A\u663E\u793A\u5728\u8FD9\u91CC\u3002",
+      emptyExports: "\u8FD8\u6CA1\u6709\u5BFC\u51FA\u6587\u4EF6\u3002\u5BFC\u51FA\u7684\u6587\u4EF6\u4F1A\u51FA\u73B0\u5728\u8FD9\u91CC\u3002"
+    }
   },
   launcher: {
     displayText: "\u5199\u4F5C\u5DE5\u4F5C\u5BA4",
@@ -4028,7 +4040,13 @@ var hi_default = {
       moreActions: "\u0905\u0927\u093F\u0915 \u0915\u094D\u0930\u093F\u092F\u093E\u090F\u0901"
     },
     toggleCounts: "\u0926\u0938\u094D\u0924\u093E\u0935\u0947\u091C\u093C \u0938\u0902\u0916\u094D\u092F\u093E \u0926\u093F\u0916\u093E\u090F\u0901",
-    fsEmpty: "\u0907\u0938 \u092A\u094D\u0930\u094B\u091C\u0947\u0915\u094D\u091F \u092B\u093C\u094B\u0932\u094D\u0921\u0930 \u092E\u0947\u0902 \u0905\u092D\u0940 \u0915\u094B\u0908 \u0926\u0938\u094D\u0924\u093E\u0935\u0947\u091C\u093C \u0928\u0939\u0940\u0902 \u0939\u0948\u0964 \u0907\u0938\u092E\u0947\u0902 \u091C\u094B\u0921\u093C\u0940 \u0917\u0908 \u092B\u093C\u093E\u0907\u0932\u0947\u0902 \u092F\u0939\u093E\u0901 \u0905\u092A\u0928\u0947 \u0906\u092A \u0926\u093F\u0916\u093E\u0908 \u0926\u0947\u0924\u0940 \u0939\u0948\u0902\u0964"
+    fsEmpty: "\u0907\u0938 \u092A\u094D\u0930\u094B\u091C\u0947\u0915\u094D\u091F \u092B\u093C\u094B\u0932\u094D\u0921\u0930 \u092E\u0947\u0902 \u0905\u092D\u0940 \u0915\u094B\u0908 \u0926\u0938\u094D\u0924\u093E\u0935\u0947\u091C\u093C \u0928\u0939\u0940\u0902 \u0939\u0948\u0964 \u0907\u0938\u092E\u0947\u0902 \u091C\u094B\u0921\u093C\u0940 \u0917\u0908 \u092B\u093C\u093E\u0907\u0932\u0947\u0902 \u092F\u0939\u093E\u0901 \u0905\u092A\u0928\u0947 \u0906\u092A \u0926\u093F\u0916\u093E\u0908 \u0926\u0947\u0924\u0940 \u0939\u0948\u0902\u0964",
+    drawer: {
+      research: "\u0936\u094B\u0927 \u0938\u093E\u092E\u0917\u094D\u0930\u0940",
+      exports: "\u0928\u093F\u0930\u094D\u092F\u093E\u0924",
+      emptyResearch: "\u0905\u092D\u0940 \u0915\u094B\u0908 \u0936\u094B\u0927 \u092B\u093C\u093E\u0907\u0932 \u0928\u0939\u0940\u0902 \u0939\u0948\u0964 Research \u092B\u093C\u094B\u0932\u094D\u0921\u0930 \u092E\u0947\u0902 \u0930\u0916\u0940 \u0917\u0908 \u091A\u0940\u091C\u093C\u0947\u0902 \u092F\u0939\u093E\u0901 \u0926\u093F\u0916\u093E\u0908 \u0926\u0947\u0924\u0940 \u0939\u0948\u0902\u0964",
+      emptyExports: "\u0905\u092D\u0940 \u0915\u094B\u0908 \u0928\u093F\u0930\u094D\u092F\u093E\u0924 \u0928\u0939\u0940\u0902 \u0939\u0948\u0964 \u0928\u093F\u0930\u094D\u092F\u093E\u0924 \u0915\u0940 \u0917\u0908 \u092B\u093C\u093E\u0907\u0932\u0947\u0902 \u092F\u0939\u093E\u0901 \u0906\u0924\u0940 \u0939\u0948\u0902\u0964"
+    }
   },
   launcher: {
     displayText: "\u0930\u093E\u0907\u091F\u093F\u0902\u0917 \u0938\u094D\u091F\u0942\u0921\u093F\u092F\u094B",
@@ -4736,7 +4754,13 @@ var es_default = {
       moreActions: "M\xE1s acciones"
     },
     toggleCounts: "Mostrar n\xFAmero de documentos",
-    fsEmpty: "Esta carpeta de proyecto a\xFAn no tiene documentos. Los archivos que se a\xF1adan aparecer\xE1n aqu\xED autom\xE1ticamente."
+    fsEmpty: "Esta carpeta de proyecto a\xFAn no tiene documentos. Los archivos que se a\xF1adan aparecer\xE1n aqu\xED autom\xE1ticamente.",
+    drawer: {
+      research: "Investigaci\xF3n",
+      exports: "Exportaciones",
+      emptyResearch: "A\xFAn no hay archivos de investigaci\xF3n. Lo que pongas en la carpeta Research aparece aqu\xED.",
+      emptyExports: "A\xFAn no hay exportaciones. Los archivos exportados llegan aqu\xED."
+    }
   },
   launcher: {
     displayText: "Estudio de escritura",
@@ -5444,7 +5468,13 @@ var ar_default = {
       moreActions: "\u0645\u0632\u064A\u062F \u0645\u0646 \u0627\u0644\u0625\u062C\u0631\u0627\u0621\u0627\u062A"
     },
     toggleCounts: "\u0625\u0638\u0647\u0627\u0631 \u0639\u062F\u062F \u0627\u0644\u0645\u0633\u062A\u0646\u062F\u0627\u062A",
-    fsEmpty: "\u0644\u0627 \u064A\u062D\u062A\u0648\u064A \u0645\u062C\u0644\u062F \u0627\u0644\u0645\u0634\u0631\u0648\u0639 \u0647\u0630\u0627 \u0639\u0644\u0649 \u0645\u0633\u062A\u0646\u062F\u0627\u062A \u0628\u0639\u062F. \u0627\u0644\u0645\u0644\u0641\u0627\u062A \u0627\u0644\u0645\u0636\u0627\u0641\u0629 \u0625\u0644\u064A\u0647 \u062A\u0638\u0647\u0631 \u0647\u0646\u0627 \u062A\u0644\u0642\u0627\u0626\u064A\u064B\u0627."
+    fsEmpty: "\u0644\u0627 \u064A\u062D\u062A\u0648\u064A \u0645\u062C\u0644\u062F \u0627\u0644\u0645\u0634\u0631\u0648\u0639 \u0647\u0630\u0627 \u0639\u0644\u0649 \u0645\u0633\u062A\u0646\u062F\u0627\u062A \u0628\u0639\u062F. \u0627\u0644\u0645\u0644\u0641\u0627\u062A \u0627\u0644\u0645\u0636\u0627\u0641\u0629 \u0625\u0644\u064A\u0647 \u062A\u0638\u0647\u0631 \u0647\u0646\u0627 \u062A\u0644\u0642\u0627\u0626\u064A\u064B\u0627.",
+    drawer: {
+      research: "\u0645\u0648\u0627\u062F \u0627\u0644\u0628\u062D\u062B",
+      exports: "\u0627\u0644\u0635\u0627\u062F\u0631\u0627\u062A",
+      emptyResearch: "\u0644\u0627 \u062A\u0648\u062C\u062F \u0645\u0644\u0641\u0627\u062A \u0628\u062D\u062B \u0628\u0639\u062F. \u0643\u0644 \u0645\u0627 \u062A\u0636\u0639\u0647 \u0641\u064A \u0645\u062C\u0644\u062F Research \u064A\u0638\u0647\u0631 \u0647\u0646\u0627.",
+      emptyExports: "\u0644\u0627 \u062A\u0648\u062C\u062F \u0635\u0627\u062F\u0631\u0627\u062A \u0628\u0639\u062F. \u0627\u0644\u0645\u0644\u0641\u0627\u062A \u0627\u0644\u0645\u0635\u062F\u064E\u0651\u0631\u0629 \u062A\u0635\u0644 \u0625\u0644\u0649 \u0647\u0646\u0627."
+    }
   },
   launcher: {
     displayText: "\u0627\u0633\u062A\u0648\u062F\u064A\u0648 \u0627\u0644\u0643\u062A\u0627\u0628\u0629",
@@ -6166,7 +6196,13 @@ var fr_default = {
       moreActions: "Plus d'actions"
     },
     toggleCounts: "Afficher le nombre de documents",
-    fsEmpty: "Ce dossier de projet ne contient encore aucun document. Les fichiers qui y sont ajout\xE9s apparaissent ici automatiquement."
+    fsEmpty: "Ce dossier de projet ne contient encore aucun document. Les fichiers qui y sont ajout\xE9s apparaissent ici automatiquement.",
+    drawer: {
+      research: "Recherche",
+      exports: "Exports",
+      emptyResearch: "Aucun fichier de recherche pour l\u2019instant. Ce que vous placez dans le dossier Research appara\xEEt ici.",
+      emptyExports: "Aucun export pour l\u2019instant. Les fichiers export\xE9s arrivent ici."
+    }
   },
   launcher: {
     displayText: "Studio d'\xE9criture",
@@ -6874,7 +6910,13 @@ var bn_default = {
       moreActions: "\u0986\u09B0\u0993 \u0995\u09CD\u09B0\u09BF\u09AF\u09BC\u09BE"
     },
     toggleCounts: "\u09A8\u09A5\u09BF\u09B0 \u09B8\u0982\u0996\u09CD\u09AF\u09BE \u09A6\u09C7\u0996\u09BE\u09A8",
-    fsEmpty: "\u098F\u0987 \u09AA\u09CD\u09B0\u09CB\u099C\u09C7\u0995\u09CD\u099F \u09AB\u09CB\u09B2\u09CD\u09A1\u09BE\u09B0\u09C7 \u098F\u0996\u09A8\u0993 \u0995\u09CB\u09A8\u09CB \u09A8\u09A5\u09BF \u09A8\u09C7\u0987\u0964 \u098F\u09A4\u09C7 \u09AF\u09CB\u0997 \u0995\u09B0\u09BE \u09AB\u09BE\u0987\u09B2 \u098F\u0996\u09BE\u09A8\u09C7 \u09B8\u09CD\u09AC\u09AF\u09BC\u0982\u0995\u09CD\u09B0\u09BF\u09AF\u09BC\u09AD\u09BE\u09AC\u09C7 \u09A6\u09C7\u0996\u09BE \u09AF\u09BE\u09AC\u09C7\u0964"
+    fsEmpty: "\u098F\u0987 \u09AA\u09CD\u09B0\u09CB\u099C\u09C7\u0995\u09CD\u099F \u09AB\u09CB\u09B2\u09CD\u09A1\u09BE\u09B0\u09C7 \u098F\u0996\u09A8\u0993 \u0995\u09CB\u09A8\u09CB \u09A8\u09A5\u09BF \u09A8\u09C7\u0987\u0964 \u098F\u09A4\u09C7 \u09AF\u09CB\u0997 \u0995\u09B0\u09BE \u09AB\u09BE\u0987\u09B2 \u098F\u0996\u09BE\u09A8\u09C7 \u09B8\u09CD\u09AC\u09AF\u09BC\u0982\u0995\u09CD\u09B0\u09BF\u09AF\u09BC\u09AD\u09BE\u09AC\u09C7 \u09A6\u09C7\u0996\u09BE \u09AF\u09BE\u09AC\u09C7\u0964",
+    drawer: {
+      research: "\u0997\u09AC\u09C7\u09B7\u09A3\u09BE",
+      exports: "\u09B0\u09AA\u09CD\u09A4\u09BE\u09A8\u09BF",
+      emptyResearch: "\u098F\u0996\u09A8\u0993 \u0995\u09CB\u09A8\u09CB \u0997\u09AC\u09C7\u09B7\u09A3\u09BE \u09AB\u09BE\u0987\u09B2 \u09A8\u09C7\u0987\u0964 Research \u09AB\u09CB\u09B2\u09CD\u09A1\u09BE\u09B0\u09C7 \u09B0\u09BE\u0996\u09BE \u099C\u09BF\u09A8\u09BF\u09B8 \u098F\u0996\u09BE\u09A8\u09C7 \u09A6\u09C7\u0996\u09BE \u09AF\u09BE\u09AF\u09BC\u0964",
+      emptyExports: "\u098F\u0996\u09A8\u0993 \u0995\u09CB\u09A8\u09CB \u09B0\u09AA\u09CD\u09A4\u09BE\u09A8\u09BF \u09A8\u09C7\u0987\u0964 \u09B0\u09AA\u09CD\u09A4\u09BE\u09A8\u09BF \u0995\u09B0\u09BE \u09AB\u09BE\u0987\u09B2 \u098F\u0996\u09BE\u09A8\u09C7 \u0986\u09B8\u09C7\u0964"
+    }
   },
   launcher: {
     displayText: "\u09B2\u09C7\u0996\u09BE\u09B0 \u09B8\u09CD\u099F\u09C1\u09A1\u09BF\u0993",
@@ -7582,7 +7624,13 @@ var pt_BR_default = {
       moreActions: "Mais a\xE7\xF5es"
     },
     toggleCounts: "Mostrar contagem de documentos",
-    fsEmpty: "Esta pasta de projeto ainda n\xE3o tem documentos. Arquivos adicionados a ela aparecem aqui automaticamente."
+    fsEmpty: "Esta pasta de projeto ainda n\xE3o tem documentos. Arquivos adicionados a ela aparecem aqui automaticamente.",
+    drawer: {
+      research: "Pesquisa",
+      exports: "Exporta\xE7\xF5es",
+      emptyResearch: "Ainda n\xE3o h\xE1 arquivos de pesquisa. O que voc\xEA colocar na pasta Research aparece aqui.",
+      emptyExports: "Ainda n\xE3o h\xE1 exporta\xE7\xF5es. Arquivos exportados chegam aqui."
+    }
   },
   launcher: {
     displayText: "Est\xFAdio de escrita",
@@ -8290,7 +8338,13 @@ var ru_default = {
       moreActions: "\u0414\u0440\u0443\u0433\u0438\u0435 \u0434\u0435\u0439\u0441\u0442\u0432\u0438\u044F"
     },
     toggleCounts: "\u041F\u043E\u043A\u0430\u0437\u044B\u0432\u0430\u0442\u044C \u043A\u043E\u043B\u0438\u0447\u0435\u0441\u0442\u0432\u043E \u0434\u043E\u043A\u0443\u043C\u0435\u043D\u0442\u043E\u0432",
-    fsEmpty: "\u0412 \u044D\u0442\u043E\u0439 \u043F\u0430\u043F\u043A\u0435 \u043F\u0440\u043E\u0435\u043A\u0442\u0430 \u043F\u043E\u043A\u0430 \u043D\u0435\u0442 \u0434\u043E\u043A\u0443\u043C\u0435\u043D\u0442\u043E\u0432. \u0414\u043E\u0431\u0430\u0432\u043B\u0435\u043D\u043D\u044B\u0435 \u0432 \u043D\u0435\u0451 \u0444\u0430\u0439\u043B\u044B \u043F\u043E\u044F\u0432\u043B\u044F\u044E\u0442\u0441\u044F \u0437\u0434\u0435\u0441\u044C \u0430\u0432\u0442\u043E\u043C\u0430\u0442\u0438\u0447\u0435\u0441\u043A\u0438."
+    fsEmpty: "\u0412 \u044D\u0442\u043E\u0439 \u043F\u0430\u043F\u043A\u0435 \u043F\u0440\u043E\u0435\u043A\u0442\u0430 \u043F\u043E\u043A\u0430 \u043D\u0435\u0442 \u0434\u043E\u043A\u0443\u043C\u0435\u043D\u0442\u043E\u0432. \u0414\u043E\u0431\u0430\u0432\u043B\u0435\u043D\u043D\u044B\u0435 \u0432 \u043D\u0435\u0451 \u0444\u0430\u0439\u043B\u044B \u043F\u043E\u044F\u0432\u043B\u044F\u044E\u0442\u0441\u044F \u0437\u0434\u0435\u0441\u044C \u0430\u0432\u0442\u043E\u043C\u0430\u0442\u0438\u0447\u0435\u0441\u043A\u0438.",
+    drawer: {
+      research: "\u041C\u0430\u0442\u0435\u0440\u0438\u0430\u043B\u044B",
+      exports: "\u042D\u043A\u0441\u043F\u043E\u0440\u0442",
+      emptyResearch: "\u0424\u0430\u0439\u043B\u043E\u0432 \u0441 \u043C\u0430\u0442\u0435\u0440\u0438\u0430\u043B\u0430\u043C\u0438 \u043F\u043E\u043A\u0430 \u043D\u0435\u0442. \u0412\u0441\u0451, \u0447\u0442\u043E \u0432\u044B \u043F\u043E\u043B\u043E\u0436\u0438\u0442\u0435 \u0432 \u043F\u0430\u043F\u043A\u0443 Research, \u043F\u043E\u044F\u0432\u0438\u0442\u0441\u044F \u0437\u0434\u0435\u0441\u044C.",
+      emptyExports: "\u042D\u043A\u0441\u043F\u043E\u0440\u0442\u0438\u0440\u043E\u0432\u0430\u043D\u043D\u044B\u0445 \u0444\u0430\u0439\u043B\u043E\u0432 \u043F\u043E\u043A\u0430 \u043D\u0435\u0442. \u041E\u043D\u0438 \u043F\u043E\u044F\u0432\u043B\u044F\u044E\u0442\u0441\u044F \u0437\u0434\u0435\u0441\u044C."
+    }
   },
   launcher: {
     displayText: "\u0421\u0442\u0443\u0434\u0438\u044F \u043F\u0438\u0441\u044C\u043C\u0430",
@@ -9006,7 +9060,13 @@ var ja_default = {
       moreActions: "\u305D\u306E\u4ED6\u306E\u64CD\u4F5C"
     },
     toggleCounts: "\u6587\u66F8\u6570\u3092\u8868\u793A",
-    fsEmpty: "\u3053\u306E\u30D7\u30ED\u30B8\u30A7\u30AF\u30C8\u30D5\u30A9\u30EB\u30C0\u306B\u306F\u307E\u3060\u6587\u66F8\u304C\u3042\u308A\u307E\u305B\u3093\u3002\u8FFD\u52A0\u3055\u308C\u305F\u30D5\u30A1\u30A4\u30EB\u306F\u81EA\u52D5\u7684\u306B\u3053\u3053\u306B\u8868\u793A\u3055\u308C\u307E\u3059\u3002"
+    fsEmpty: "\u3053\u306E\u30D7\u30ED\u30B8\u30A7\u30AF\u30C8\u30D5\u30A9\u30EB\u30C0\u306B\u306F\u307E\u3060\u6587\u66F8\u304C\u3042\u308A\u307E\u305B\u3093\u3002\u8FFD\u52A0\u3055\u308C\u305F\u30D5\u30A1\u30A4\u30EB\u306F\u81EA\u52D5\u7684\u306B\u3053\u3053\u306B\u8868\u793A\u3055\u308C\u307E\u3059\u3002",
+    drawer: {
+      research: "\u8CC7\u6599",
+      exports: "\u30A8\u30AF\u30B9\u30DD\u30FC\u30C8",
+      emptyResearch: "\u8CC7\u6599\u30D5\u30A1\u30A4\u30EB\u306F\u307E\u3060\u3042\u308A\u307E\u305B\u3093\u3002Research \u30D5\u30A9\u30EB\u30C0\u306B\u5165\u308C\u305F\u3082\u306E\u304C\u3053\u3053\u306B\u8868\u793A\u3055\u308C\u307E\u3059\u3002",
+      emptyExports: "\u30A8\u30AF\u30B9\u30DD\u30FC\u30C8\u306F\u307E\u3060\u3042\u308A\u307E\u305B\u3093\u3002\u66F8\u304D\u51FA\u3057\u305F\u30D5\u30A1\u30A4\u30EB\u306F\u3053\u3053\u306B\u5C4A\u304D\u307E\u3059\u3002"
+    }
   },
   launcher: {
     displayText: "\u30E9\u30A4\u30C6\u30A3\u30F3\u30B0\u30B9\u30BF\u30B8\u30AA",
@@ -9714,7 +9774,13 @@ var de_default = {
       moreActions: "Weitere Aktionen"
     },
     toggleCounts: "Dokumentanzahl anzeigen",
-    fsEmpty: "Dieser Projektordner enth\xE4lt noch keine Dokumente. Hinzugef\xFCgte Dateien erscheinen hier automatisch."
+    fsEmpty: "Dieser Projektordner enth\xE4lt noch keine Dokumente. Hinzugef\xFCgte Dateien erscheinen hier automatisch.",
+    drawer: {
+      research: "Recherche",
+      exports: "Exporte",
+      emptyResearch: "Noch keine Recherchedateien. Was im Ordner Research liegt, erscheint hier.",
+      emptyExports: "Noch keine Exporte. Exportierte Dateien landen hier."
+    }
   },
   launcher: {
     displayText: "Schreibstudio",
@@ -10422,7 +10488,13 @@ var ko_default = {
       moreActions: "\uCD94\uAC00 \uC791\uC5C5"
     },
     toggleCounts: "\uBB38\uC11C \uC218 \uD45C\uC2DC",
-    fsEmpty: "\uC774 \uD504\uB85C\uC81D\uD2B8 \uD3F4\uB354\uC5D0\uB294 \uC544\uC9C1 \uBB38\uC11C\uAC00 \uC5C6\uC2B5\uB2C8\uB2E4. \uCD94\uAC00\uB41C \uD30C\uC77C\uC740 \uC5EC\uAE30\uC5D0 \uC790\uB3D9\uC73C\uB85C \uD45C\uC2DC\uB429\uB2C8\uB2E4."
+    fsEmpty: "\uC774 \uD504\uB85C\uC81D\uD2B8 \uD3F4\uB354\uC5D0\uB294 \uC544\uC9C1 \uBB38\uC11C\uAC00 \uC5C6\uC2B5\uB2C8\uB2E4. \uCD94\uAC00\uB41C \uD30C\uC77C\uC740 \uC5EC\uAE30\uC5D0 \uC790\uB3D9\uC73C\uB85C \uD45C\uC2DC\uB429\uB2C8\uB2E4.",
+    drawer: {
+      research: "\uC790\uB8CC",
+      exports: "\uB0B4\uBCF4\uB0B4\uAE30",
+      emptyResearch: "\uC544\uC9C1 \uC790\uB8CC \uD30C\uC77C\uC774 \uC5C6\uC2B5\uB2C8\uB2E4. Research \uD3F4\uB354\uC5D0 \uB123\uC740 \uD56D\uBAA9\uC774 \uC5EC\uAE30\uC5D0 \uD45C\uC2DC\uB429\uB2C8\uB2E4.",
+      emptyExports: "\uC544\uC9C1 \uB0B4\uBCF4\uB0B8 \uD30C\uC77C\uC774 \uC5C6\uC2B5\uB2C8\uB2E4. \uB0B4\uBCF4\uB0B8 \uD30C\uC77C\uC774 \uC5EC\uAE30\uC5D0 \uB3C4\uCC29\uD569\uB2C8\uB2E4."
+    }
   },
   launcher: {
     displayText: "\uAE00\uC4F0\uAE30 \uC2A4\uD29C\uB514\uC624",
@@ -13776,6 +13848,9 @@ function parseFolderPrefix(name) {
   if (!m) return { order: null, displayName: name };
   return { order: parseInt(m[1], 10), displayName: m[2] };
 }
+function isHiddenName(name) {
+  return name.startsWith("_") || name.startsWith(".");
+}
 function parseBinderOrder(value) {
   return typeof value === "number" && Number.isFinite(value) ? value : null;
 }
@@ -13810,11 +13885,17 @@ function sortSiblings(entries) {
 
 // src/FilesystemBinderView.ts
 var TOOLTIP_KEYS = ["binder-order", "binder-status", "binder-type", "binder-compile", "word-count-goal"];
+var DRAWER_ZONES = [
+  { zone: "research", folderName: "Research", labelKey: "binder.drawer.research", emptyKey: "binder.drawer.emptyResearch" },
+  { zone: "exports", folderName: "Exports", labelKey: "binder.drawer.exports", emptyKey: "binder.drawer.emptyExports" }
+];
 var FilesystemBinderView = class extends import_obsidian17.ItemView {
   constructor(leaf, plugin) {
     super(leaf);
     this.activeProject = null;
     this.listEl = null;
+    this.drawerEl = null;
+    this.model = null;
     this.controlStrip = null;
     // View-local presentation state — deliberately unpersisted in this slice.
     this.collapsed = /* @__PURE__ */ new Set();
@@ -13871,9 +13952,8 @@ var FilesystemBinderView = class extends import_obsidian17.ItemView {
     if (this.refreshTimer !== null) window.clearTimeout(this.refreshTimer);
     this.refreshTimer = window.setTimeout(() => {
       this.refreshTimer = null;
-      const tree = this.buildTree();
-      const signature = this.treeSignature(tree);
-      if (signature !== this.lastSignature) this.renderList(tree);
+      const model = this.buildModel();
+      if (this.modelSignature(model) !== this.lastSignature) this.renderList(model);
     }, 120);
   }
   render() {
@@ -13924,7 +14004,7 @@ var FilesystemBinderView = class extends import_obsidian17.ItemView {
     countsBtn.onclick = () => {
       this.showCounts = !this.showCounts;
       countsBtn.toggleClass("is-active", this.showCounts);
-      this.renderList(this.buildTree());
+      this.renderList(this.buildModel());
     };
     const dashBtn = toolbar.createEl("button", { cls: "ws-binder-btn", title: t2("binder.targetsDashboard") });
     (0, import_obsidian17.setIcon)(dashBtn, "target");
@@ -13935,23 +14015,52 @@ var FilesystemBinderView = class extends import_obsidian17.ItemView {
     this.listEl.setAttribute("tabindex", "0");
     this.listEl.setAttribute("role", "tree");
     this.listEl.addEventListener("keydown", (e) => this.handleTreeKey(e));
-    this.renderList(this.buildTree());
+    this.drawerEl = container.createDiv("ws-fsb-drawer");
+    this.renderList(this.buildModel());
   }
   // ─── Tree construction ─────────────────────────────────────────────────────
-  // The manuscript zone: the project folder tree minus the reserved
-  // resource folders at the root (drawer — slice 2) and plugin plumbing
-  // (underscore- and dot-prefixed entries) at every level.
-  buildTree() {
+  // The manuscript zone is the project folder tree minus the reserved
+  // resource folders at the root — those render in the drawer — and plugin
+  // plumbing (underscore- and dot-prefixed entries) at every level.
+  buildModel() {
+    const model = {
+      manuscript: [],
+      zones: {
+        research: { folder: null, nodes: [], fileCount: 0 },
+        exports: { folder: null, nodes: [], fileCount: 0 }
+      }
+    };
     const project = this.activeProject;
-    if (!project) return [];
+    if (!project) return model;
     const root = this.app.vault.getAbstractFileByPath(project.folderPath);
-    if (!(root instanceof import_obsidian17.TFolder)) return [];
-    return this.buildChildren(root, true);
+    if (!(root instanceof import_obsidian17.TFolder)) return model;
+    model.manuscript = this.buildChildren(root, true);
+    for (const { zone, folderName } of DRAWER_ZONES) {
+      const folder = root.children.find((c) => c instanceof import_obsidian17.TFolder && c.name.toLowerCase() === folderName.toLowerCase());
+      if (!folder) continue;
+      model.zones[zone] = {
+        folder,
+        nodes: this.buildChildren(folder, false),
+        fileCount: this.countVisibleFiles(folder)
+      };
+    }
+    return model;
+  }
+  // Drawer tab counts: every visible file in the zone's subtree, markdown or
+  // not — the resource folders mostly hold non-markdown material
+  countVisibleFiles(folder) {
+    let n = 0;
+    for (const child of folder.children) {
+      if (isHiddenName(child.name)) continue;
+      if (child instanceof import_obsidian17.TFolder) n += this.countVisibleFiles(child);
+      else n++;
+    }
+    return n;
   }
   buildChildren(folder, isRoot) {
     const nodes = [];
     for (const child of folder.children) {
-      if (child.name.startsWith("_") || child.name.startsWith(".")) continue;
+      if (isHiddenName(child.name)) continue;
       if (isRoot && child instanceof import_obsidian17.TFolder && RESERVED_PROJECT_FOLDERS.some((r) => r.toLowerCase() === child.name.toLowerCase())) {
         continue;
       }
@@ -14014,36 +14123,101 @@ var FilesystemBinderView = class extends import_obsidian17.ItemView {
       }
     ).join("\n");
   }
+  modelSignature(model) {
+    return [
+      this.treeSignature(model.manuscript),
+      ...DRAWER_ZONES.map(({ zone }) => `##${zone}|${model.zones[zone].fileCount}
+` + this.treeSignature(model.zones[zone].nodes))
+    ].join("\n");
+  }
   // ─── Rendering ─────────────────────────────────────────────────────────────
-  renderList(tree) {
+  renderList(model) {
     const listEl = this.listEl;
     if (!listEl) return;
-    this.lastSignature = this.treeSignature(tree);
+    this.model = model;
+    this.lastSignature = this.modelSignature(model);
     listEl.empty();
     this.navRows = [];
+    this.renderDrawer();
     if (!this.activeProject) {
       listEl.createDiv("ws-binder-empty").textContent = t2("binder.noProjectSelected");
       return;
     }
-    if (tree.length === 0) {
+    if (model.manuscript.length === 0) {
       listEl.createDiv("ws-binder-empty").textContent = t2("binder.fsEmpty");
       return;
     }
-    this.renderNodes(listEl, tree, 0);
+    this.renderNodes(listEl, model.manuscript, 0);
     const focusIdx = this.navRows.findIndex((r) => r.node.file.path === this.navFocusPath);
     if (focusIdx >= 0 && activeDocument.activeElement === activeDocument.body) {
       listEl.focus();
       applyFocus(this.navRows.map((r) => r.el), focusIdx);
     }
   }
-  renderNodes(container, nodes, depth) {
+  // ─── Resources drawer (slice 2) ────────────────────────────────────────────
+  renderDrawer() {
+    var _a2, _b2, _c;
+    const drawerEl = this.drawerEl;
+    const model = this.model;
+    if (!drawerEl) return;
+    drawerEl.empty();
+    if (!this.activeProject || !model) return;
+    const pref = this.drawerPref();
+    if (pref.open) {
+      const zoneDef = (_a2 = DRAWER_ZONES.find((z) => z.zone === pref.tab)) != null ? _a2 : DRAWER_ZONES[0];
+      const zone = model.zones[zoneDef.zone];
+      const panel = drawerEl.createDiv("ws-fsb-drawer-panel");
+      panel.setAttribute("role", "tree");
+      if (zone.nodes.length === 0) {
+        panel.createDiv("ws-binder-empty").textContent = t2(zoneDef.emptyKey);
+      } else {
+        this.renderNodes(panel, zone.nodes, 0, false);
+      }
+    }
+    const tabs = drawerEl.createDiv("ws-fsb-drawer-tabs");
+    for (const zoneDef of DRAWER_ZONES) {
+      const zone = model.zones[zoneDef.zone];
+      const tab = tabs.createEl("button", { cls: "ws-fsb-drawer-tab" });
+      tab.toggleClass("is-active", pref.open && pref.tab === zoneDef.zone);
+      tab.createSpan({ cls: "ws-fsb-drawer-tab-label", text: t2(zoneDef.labelKey) });
+      tab.createSpan({ cls: "ws-fsb-count", text: String(zone.fileCount) });
+      (0, import_obsidian17.setTooltip)(tab, (_c = (_b2 = zone.folder) == null ? void 0 : _b2.name) != null ? _c : zoneDef.folderName);
+      tab.onclick = () => {
+        void this.selectDrawerTab(zoneDef.zone);
+      };
+    }
+  }
+  // Clicking the open tab closes the drawer; any other click opens it there
+  async selectDrawerTab(zone) {
+    const pref = this.drawerPref();
+    const next = pref.open && pref.tab === zone ? { ...pref, open: false } : { open: true, tab: zone };
+    await this.setDrawerPref(next);
+    this.renderDrawer();
+  }
+  drawerPref() {
+    var _a2, _b2;
+    const id = (_a2 = this.activeProject) == null ? void 0 : _a2.id;
+    return (_b2 = id ? this.plugin.settings.binderDrawer[id] : void 0) != null ? _b2 : { open: false, tab: "research" };
+  }
+  // A view preference — persists per project in plugin settings, never in
+  // the vault (ADR 0001: not manuscript state)
+  async setDrawerPref(pref) {
+    var _a2;
+    const id = (_a2 = this.activeProject) == null ? void 0 : _a2.id;
+    if (!id) return;
+    this.plugin.settings.binderDrawer[id] = pref;
+    await this.plugin.saveSettings();
+  }
+  // `nav` gates keyboard-navigation tracking: manuscript rows join navRows,
+  // drawer rows are click-only in this slice
+  renderNodes(container, nodes, depth, nav = true) {
     for (const node of nodes) {
       const isExpanded = !this.collapsed.has(node.file.path);
       const row = container.createDiv({ cls: `ws-fsb-row ws-binder-depth-${depth}` });
       row.setAttribute("role", "treeitem");
       row.setAttribute("aria-level", String(depth + 1));
       if (node.children.length) row.setAttribute("aria-expanded", String(isExpanded));
-      this.navRows.push({ el: row, node, depth, hasChildren: node.children.length > 0, isExpanded });
+      if (nav) this.navRows.push({ el: row, node, depth, hasChildren: node.children.length > 0, isExpanded });
       if (depth > 0) {
         row.setCssProps({ "--ws-binder-depth": `${depth * 16 + 8}px` });
       }
@@ -14067,7 +14241,7 @@ var FilesystemBinderView = class extends import_obsidian17.ItemView {
       }
       (0, import_obsidian17.setTooltip)(row, [node.name, ...node.fmLines].join("\n"));
       row.onclick = () => {
-        this.navFocusPath = node.file.path;
+        if (nav) this.navFocusPath = node.file.path;
         if (node.isFolder) {
           this.toggleCollapse(node.file.path);
           return;
@@ -14075,17 +14249,23 @@ var FilesystemBinderView = class extends import_obsidian17.ItemView {
         if (node.file instanceof import_obsidian17.TFile) void this.openFile(node.file);
       };
       if (node.children.length && isExpanded) {
-        this.renderNodes(container, node.children, depth + 1);
+        this.renderNodes(container, node.children, depth + 1, nav);
       }
     }
   }
   toggleCollapse(path) {
     if (this.collapsed.has(path)) this.collapsed.delete(path);
     else this.collapsed.add(path);
-    this.renderList(this.buildTree());
+    this.renderList(this.buildModel());
   }
   async openFile(file) {
+    var _a2;
+    const internals = this.app;
     try {
+      if (file.extension !== "md" && ((_a2 = internals.viewRegistry) == null ? void 0 : _a2.isExtensionRegistered(file.extension)) === false && internals.openWithDefaultApp) {
+        await internals.openWithDefaultApp(file.path);
+        return;
+      }
       const leaf = this.app.workspace.getLeaf(false);
       await leaf.openFile(file);
     } catch (e) {
@@ -14109,13 +14289,13 @@ var FilesystemBinderView = class extends import_obsidian17.ItemView {
       case "expand":
         if (row) {
           this.collapsed.delete(row.node.file.path);
-          this.renderList(this.buildTree());
+          this.renderList(this.buildModel());
         }
         break;
       case "collapse":
         if (row) {
           this.collapsed.add(row.node.file.path);
-          this.renderList(this.buildTree());
+          this.renderList(this.buildModel());
         }
         break;
       case "to-parent":
@@ -19404,6 +19584,7 @@ var DEFAULT_SETTINGS = {
   wordPressSites: [],
   wikilinkHandling: "strip",
   filesystemBinder: false,
+  binderDrawer: {},
   activeProjectId: null,
   currentWritingMode: "none",
   removedProjectIds: []

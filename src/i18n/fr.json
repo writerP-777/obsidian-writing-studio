@@ -222,7 +222,13 @@
       "moreActions": "Plus d'actions"
     },
     "toggleCounts": "Afficher le nombre de documents",
-    "fsEmpty": "Ce dossier de projet ne contient encore aucun document. Les fichiers qui y sont ajoutés apparaissent ici automatiquement."
+    "fsEmpty": "Ce dossier de projet ne contient encore aucun document. Les fichiers qui y sont ajoutés apparaissent ici automatiquement.",
+    "drawer": {
+      "research": "Recherche",
+      "exports": "Exports",
+      "emptyResearch": "Aucun fichier de recherche pour l’instant. Ce que vous placez dans le dossier Research apparaît ici.",
+      "emptyExports": "Aucun export pour l’instant. Les fichiers exportés arrivent ici."
+    }
   },
   "launcher": {
     "displayText": "Studio d'écriture",

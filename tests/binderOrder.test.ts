@@ -3,6 +3,7 @@ import {
   parseBinderOrder,
   effectiveOrder,
   entryDisplayName,
+  isHiddenName,
   naturalCompare,
   sortSiblings,
   SiblingEntry,
@@ -90,6 +91,19 @@ describe('entryDisplayName', () => {
 
   it('keeps the full name of non-markdown files', () => {
     expect(entryDisplayName(doc('map.png'))).toBe('map.png');
+  });
+});
+
+describe('isHiddenName', () => {
+  it('hides plugin plumbing and dotfiles', () => {
+    expect(isHiddenName('_project.json')).toBe(true);
+    expect(isHiddenName('_binder.json')).toBe(true);
+    expect(isHiddenName('.DS_Store')).toBe(true);
+  });
+
+  it('keeps ordinary names visible', () => {
+    expect(isHiddenName('Chapter One.md')).toBe(false);
+    expect(isHiddenName('map_of_realm.png')).toBe(false);
   });
 });
 

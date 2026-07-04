@@ -222,7 +222,13 @@
       "moreActions": "Más acciones"
     },
     "toggleCounts": "Mostrar número de documentos",
-    "fsEmpty": "Esta carpeta de proyecto aún no tiene documentos. Los archivos que se añadan aparecerán aquí automáticamente."
+    "fsEmpty": "Esta carpeta de proyecto aún no tiene documentos. Los archivos que se añadan aparecerán aquí automáticamente.",
+    "drawer": {
+      "research": "Investigación",
+      "exports": "Exportaciones",
+      "emptyResearch": "Aún no hay archivos de investigación. Lo que pongas en la carpeta Research aparece aquí.",
+      "emptyExports": "Aún no hay exportaciones. Los archivos exportados llegan aquí."
+    }
   },
   "launcher": {
     "displayText": "Estudio de escritura",

@@ -33,6 +33,12 @@ export function parseFolderPrefix(name: string): FolderPrefixParse {
   return { order: parseInt(m[1], 10), displayName: m[2] };
 }
 
+// Plugin plumbing (`_project.json`, `_binder.json`) and dotfiles are hidden
+// from every binder zone and excluded from all counts.
+export function isHiddenName(name: string): boolean {
+  return name.startsWith('_') || name.startsWith('.');
+}
+
 // Frontmatter arrives untyped; only a finite number is an order value.
 // Anything else (strings, arrays, booleans) means unordered — never guess.
 export function parseBinderOrder(value: unknown): number | null {

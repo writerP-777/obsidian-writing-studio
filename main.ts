@@ -12,7 +12,7 @@ import {
 } from 'obsidian';
 
 import { BinderView, BINDER_VIEW_TYPE } from './src/BinderView';
-import { FilesystemBinderView } from './src/FilesystemBinderView';
+import { FilesystemBinderView, BinderDrawerPref } from './src/FilesystemBinderView';
 import { CompilePreviewView, COMPILE_PREVIEW_VIEW_TYPE } from './src/CompilePreview';
 import { LauncherView, LAUNCHER_VIEW_TYPE } from './src/LauncherView';
 import { FocusMode } from './src/FocusMode';
@@ -129,6 +129,9 @@ export interface WritingStudioSettings {
   // ADR 0001 preview: the binder renders the project folder tree read-only
   // instead of _binder.json. Off = the shipped binder, untouched.
   filesystemBinder: boolean;
+  // Resources-drawer open state and active tab, per project id — a view
+  // preference, deliberately kept out of the vault
+  binderDrawer: Record<string, BinderDrawerPref>;
   // State
   activeProjectId: string | null;
   currentWritingMode: WritingModeType;
@@ -173,6 +176,7 @@ const DEFAULT_SETTINGS: WritingStudioSettings = {
   wordPressSites: [],
   wikilinkHandling: 'strip',
   filesystemBinder: false,
+  binderDrawer: {},
   activeProjectId: null,
   currentWritingMode: 'none',
   removedProjectIds: [],

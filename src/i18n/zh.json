@@ -222,7 +222,13 @@
       "moreActions": "更多操作"
     },
     "toggleCounts": "显示文档数量",
-    "fsEmpty": "此项目文件夹还没有文档。添加到其中的文件会自动显示在这里。"
+    "fsEmpty": "此项目文件夹还没有文档。添加到其中的文件会自动显示在这里。",
+    "drawer": {
+      "research": "资料",
+      "exports": "导出",
+      "emptyResearch": "还没有资料文件。放入 Research 文件夹的内容会显示在这里。",
+      "emptyExports": "还没有导出文件。导出的文件会出现在这里。"
+    }
   },
   "launcher": {
     "displayText": "写作工作室",
