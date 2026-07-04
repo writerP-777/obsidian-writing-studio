@@ -228,6 +228,10 @@
       "exports": "내보내기",
       "emptyResearch": "아직 자료 파일이 없습니다. Research 폴더에 넣은 항목이 여기에 표시됩니다.",
       "emptyExports": "아직 내보낸 파일이 없습니다. 내보낸 파일이 여기에 도착합니다."
+    },
+    "fs": {
+      "exportsDropBlocked": "내보내기는 출력 전용입니다 — 내보낸 파일이 자동으로 여기에 표시됩니다.",
+      "folderZoneBlocked": "폴더는 영역 간에 이동할 수 없습니다. 문서를 개별적으로 이동하세요."
     }
   },
   "launcher": {

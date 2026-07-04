@@ -228,6 +228,10 @@
       "exports": "Exporte",
       "emptyResearch": "Noch keine Recherchedateien. Was im Ordner Research liegt, erscheint hier.",
       "emptyExports": "Noch keine Exporte. Exportierte Dateien landen hier."
+    },
+    "fs": {
+      "exportsDropBlocked": "Exporte ist nur für Ausgaben – exportierte Dateien landen hier automatisch.",
+      "folderZoneBlocked": "Ordner können nicht zwischen Zonen verschoben werden. Verschiebe Dokumente einzeln."
     }
   },
   "launcher": {

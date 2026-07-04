@@ -228,6 +228,10 @@
       "exports": "Exportaciones",
       "emptyResearch": "Aún no hay archivos de investigación. Lo que pongas en la carpeta Research aparece aquí.",
       "emptyExports": "Aún no hay exportaciones. Los archivos exportados llegan aquí."
+    },
+    "fs": {
+      "exportsDropBlocked": "Exportaciones es solo de salida: los archivos exportados llegan aquí automáticamente.",
+      "folderZoneBlocked": "Las carpetas no pueden moverse entre zonas. Mueve los documentos individualmente."
     }
   },
   "launcher": {

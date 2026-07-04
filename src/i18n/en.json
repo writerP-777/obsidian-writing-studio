@@ -228,6 +228,10 @@
       "exports": "Exports",
       "emptyResearch": "No research files yet. Anything you put in the Research folder appears here.",
       "emptyExports": "No exports yet. Exported files land here."
+    },
+    "fs": {
+      "exportsDropBlocked": "Exports is output-only — exported files land here automatically.",
+      "folderZoneBlocked": "Folders cannot move between zones. Move documents individually."
     }
   },
   "launcher": {

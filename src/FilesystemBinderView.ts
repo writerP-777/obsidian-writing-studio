@@ -4,7 +4,8 @@ import { WritingProject } from '../models/Project';
 import { STATUS_COLORS, DocumentStatus } from '../models/BinderItem';
 import { BINDER_VIEW_TYPE } from './BinderView';
 import { RESERVED_PROJECT_FOLDERS } from './folderRename';
-import { SiblingEntry, sortSiblings, entryDisplayName, isHiddenName, parseBinderOrder, canCarryOrder, planReorder, folderNameWithPrefix } from './binderOrder';
+import { SiblingEntry, sortSiblings, entryDisplayName, isHiddenName, parseBinderOrder } from './binderOrder';
+import { BinderZone, DropRegion, DragSource, MoveEntry, MoveOp, dropRegion, canStartDrag, evaluateDrop, planMove } from './binderMove';
 import { ProjectModal } from '../modals/ProjectModal';
 import { TargetsDashboardModal } from '../modals/TargetsDashboardModal';
 import { confirmDeleteProject } from '../modals/confirmDeleteProject';
@@ -52,6 +53,18 @@ interface TreeNode extends SiblingEntry {
   mdCount: number;
 }
 
+// How long a drag must linger before a collapsed folder expands or a closed
+// drawer tab opens (#228 hover-to-expand).
+const HOVER_EXPAND_MS = 600;
+
+const toMoveEntry = (n: TreeNode): MoveEntry => ({
+  name: n.name,
+  isFolder: n.isFolder,
+  extension: n.extension,
+  binderOrder: n.binderOrder,
+  path: n.file.path,
+});
+
 // Everything one render pass needs, built in a single scan so the manuscript,
 // the drawer, and the change signature all see the same snapshot.
 interface BinderModel {
@@ -59,11 +72,12 @@ interface BinderModel {
   zones: Record<DrawerZone, { folder: TFolder | null; nodes: TreeNode[]; fileCount: number }>;
 }
 
-// Read-only rendering of the active project's folder tree as the manuscript
-// zone (ADR 0001, tracer slice 1 — #225). The filesystem is the only source:
-// this view never writes a file, a folder, or a frontmatter key. It registers
-// under the same view type as the classic binder and is chosen by the
-// experimental setting at leaf creation.
+// Live rendering of the active project's folder tree (ADR 0001, tracer
+// slices 1–4 — #225–#228). The filesystem is the only source of structure;
+// every mutation is a filesystem operation executed through
+// fileManager.renameFile (links heal) or processFrontMatter (binder-order).
+// It registers under the same view type as the classic binder and is chosen
+// by the experimental setting at leaf creation.
 export class FilesystemBinderView extends ItemView {
   private plugin: WritingStudioPlugin;
   private activeProject: WritingProject | null = null;
@@ -76,11 +90,13 @@ export class FilesystemBinderView extends ItemView {
   private showCounts = true;
   private navRows: Array<{ el: HTMLElement; node: TreeNode; depth: number; hasChildren: boolean; isExpanded: boolean }> = [];
   private navFocusPath: string | null = null;
-  // Sibling-reorder drag state (#227): source path plus its parent path so
-  // targets outside the sibling group show no indicator and accept no drop
-  private dragSource: { path: string; parentPath: string } | null = null;
+  // Drag state (#227/#228): the source is plain data so a mid-drag
+  // re-render (hover-to-expand) cannot invalidate it
+  private dragSource: DragSource | null = null;
   private dragOverEl: HTMLElement | null = null;
-  private dropBefore = false;
+  private dropRegionState: DropRegion = 'before';
+  private hoverExpandTimer: number | null = null;
+  private hoverExpandKey: string | null = null;
   private refreshTimer: number | null = null;
   // Serialized snapshot of everything render-relevant, so vault and metadata
   // events that changed nothing visible (e.g. body edits) skip the rebuild.
@@ -123,6 +139,11 @@ export class FilesystemBinderView extends ItemView {
     // Frontmatter edits (binder-order, binder-status, …) change the tree
     // without any vault event; the signature check discards body-only edits.
     this.registerEvent(this.app.metadataCache.on('changed', (f) => this.onVaultEvent(f.path)));
+
+    // Hover-to-expand re-renders mid-drag, which replaces the source row —
+    // its own dragend can no longer fire, so cleanup lives on the document.
+    this.registerDomEvent(activeDocument, 'dragend', () => this.endDrag());
+    this.registerDomEvent(activeDocument, 'drop', () => this.endDrag());
 
     this.render();
   }
@@ -214,6 +235,10 @@ export class FilesystemBinderView extends ItemView {
     this.listEl.setAttribute('tabindex', '0');
     this.listEl.setAttribute('role', 'tree');
     this.listEl.addEventListener('keydown', (e) => this.handleTreeKey(e));
+    // The empty space below the last row is the root drop target — the only
+    // way to promote an item back to the top level (#228)
+    this.listEl.addEventListener('dragover', (e) => this.onRootDragOver(e));
+    this.listEl.addEventListener('drop', (e) => this.onRootDrop(e));
 
     // Resources drawer — pinned below the manuscript list (slice 2, #226)
     this.drawerEl = container.createDiv('ws-fsb-drawer');
@@ -367,7 +392,7 @@ export class FilesystemBinderView extends ItemView {
       return;
     }
 
-    this.renderNodes(listEl, model.manuscript, 0);
+    this.renderNodes(listEl, model.manuscript, 0, 'manuscript');
 
     // Restore keyboard focus after an event-driven rebuild — only when focus
     // fell to the body, never stealing it from the editor.
@@ -388,6 +413,7 @@ export class FilesystemBinderView extends ItemView {
     if (!this.activeProject || !model) return;
 
     const pref = this.drawerPref();
+    const project = this.activeProject;
 
     // Prototype variant C order: the tab bar is the divider under the
     // manuscript, and the selected zone opens downward BELOW the tabs
@@ -401,6 +427,44 @@ export class FilesystemBinderView extends ItemView {
       // On-disk truth: the tab label is UI text, the tooltip is the folder
       setTooltip(tab, zone.folder?.name ?? zoneDef.folderName);
       tab.onclick = () => { void this.selectDrawerTab(zoneDef.zone); };
+
+      // The tab is the zone's root drop target (#228): Research accepts .md
+      // documents; Exports explains its refusal (output-only). Lingering over
+      // an acceptable tab opens it so subfolders become reachable.
+      const zoneFolderPath = zone.folder?.path
+        ?? normalizePath(`${project.folderPath}/${zoneDef.folderName}`);
+      tab.addEventListener('dragover', (e) => {
+        const src = this.dragSource;
+        if (!src) return;
+        const verdict = evaluateDrop(src, zoneFolderPath, zoneDef.zone);
+        if (verdict.kind === 'refuse') return;
+        e.preventDefault();
+        if (verdict.kind !== 'accept') return;
+        tab.addClass('ws-fsb-drop-into');
+        if (!pref.open || pref.tab !== zoneDef.zone) {
+          this.scheduleHoverExpand('tab:' + zoneDef.zone, () => { void this.openDrawerTab(zoneDef.zone); });
+        }
+      });
+      tab.addEventListener('dragleave', (e) => {
+        if (tab.contains(e.relatedTarget as Node)) return;
+        tab.removeClass('ws-fsb-drop-into');
+        this.cancelHoverExpand();
+      });
+      tab.addEventListener('drop', (e) => {
+        const src = this.dragSource;
+        if (!src) return;
+        const verdict = evaluateDrop(src, zoneFolderPath, zoneDef.zone);
+        if (verdict.kind === 'refuse') return;
+        e.preventDefault();
+        tab.removeClass('ws-fsb-drop-into');
+        this.cancelHoverExpand();
+        if (verdict.kind === 'notice') {
+          new Notice(t(verdict.messageKey));
+          return;
+        }
+        const group = zone.nodes.filter(n => n.file.path !== src.path).map(toMoveEntry);
+        void this.executeZoneDrop(src, zoneFolderPath, group);
+      });
     }
 
     if (pref.open) {
@@ -411,7 +475,7 @@ export class FilesystemBinderView extends ItemView {
       if (zone.nodes.length === 0) {
         panel.createDiv('ws-binder-empty').textContent = t(zoneDef.emptyKey);
       } else {
-        this.renderNodes(panel, zone.nodes, 0, false);
+        this.renderNodes(panel, zone.nodes, 0, zoneDef.zone);
       }
     }
   }
@@ -440,9 +504,10 @@ export class FilesystemBinderView extends ItemView {
     await this.plugin.saveSettings();
   }
 
-  // `nav` gates keyboard-navigation tracking: manuscript rows join navRows,
-  // drawer rows are click-only in this slice
-  private renderNodes(container: HTMLElement, nodes: TreeNode[], depth: number, nav = true): void {
+  // Keyboard-navigation tracking is manuscript-only: manuscript rows join
+  // navRows, drawer rows are pointer-only
+  private renderNodes(container: HTMLElement, nodes: TreeNode[], depth: number, zone: BinderZone): void {
+    const nav = zone === 'manuscript';
     for (const node of nodes) {
       const isExpanded = !this.collapsed.has(node.file.path);
       const row = container.createDiv({ cls: `ws-fsb-row ws-binder-depth-${depth}` });
@@ -493,92 +558,206 @@ export class FilesystemBinderView extends ItemView {
         if (node.file instanceof TFile) void this.openFile(node.file);
       };
 
-      // Sibling reorder (#227) — manuscript zone only; drop-into and
-      // cross-parent moves are slice 4
-      if (nav) this.wireReorderDrag(row, node, nodes);
+      // Reorder (#227) and structural moves (#228) — every zone wires drops;
+      // what may start a drag or receive one is decided in binderMove
+      this.wireDrag(row, node, nodes, zone);
 
       if (node.children.length && isExpanded) {
-        this.renderNodes(container, node.children, depth + 1, nav);
+        this.renderNodes(container, node.children, depth + 1, zone);
       }
     }
   }
 
-  private wireReorderDrag(row: HTMLElement, node: TreeNode, siblings: TreeNode[]): void {
+  // Drag wiring for one row (#227 reorder + #228 structural moves). What may
+  // start a drag and whether a drop is accepted, refused, or explained is
+  // decided by the pure helpers in binderMove; this only reads the pointer.
+  private wireDrag(row: HTMLElement, node: TreeNode, siblings: TreeNode[], zone: BinderZone): void {
     const parentPath = node.file.parent?.path ?? '';
 
-    // Only order carriers start a drag — non-markdown files are permanently
-    // unordered, so there is nothing a drag of one could write
-    if (canCarryOrder(node)) {
+    if (canStartDrag(node, zone)) {
       row.setAttribute('draggable', 'true');
       row.ondragstart = (e) => {
-        this.dragSource = { path: node.file.path, parentPath };
+        this.dragSource = {
+          path: node.file.path,
+          name: node.name,
+          isFolder: node.isFolder,
+          extension: node.extension,
+          binderOrder: node.binderOrder,
+          zone,
+        };
         row.addClass('ws-fsb-dragging');
         e.dataTransfer?.setData('text/plain', node.file.path);
       };
-      row.ondragend = () => {
-        row.removeClass('ws-fsb-dragging');
-        this.dragSource = null;
-        this.clearDropIndicator();
-      };
     }
+
+    // Outside the manuscript, position is meaningless (order is never
+    // written there), so every drop means containment: into the folder row
+    // itself, or into a document row's parent.
+    const regionFor = (e: DragEvent): DropRegion => {
+      if (zone !== 'manuscript') return 'into';
+      const rect = row.getBoundingClientRect();
+      return dropRegion(node.isFolder, e.clientY - rect.top, rect.height);
+    };
+    const destParentFor = (region: DropRegion): string =>
+      region === 'into' && node.isFolder ? node.file.path : parentPath;
 
     row.ondragover = (e) => {
       const src = this.dragSource;
-      // No indicator outside the source's sibling group — the drop is not
-      // accepted, so nothing suggests it would be
-      if (!src || src.path === node.file.path || src.parentPath !== parentPath) return;
+      if (!src || src.path === node.file.path) return;
+      const region = regionFor(e);
+      const verdict = evaluateDrop(src, destParentFor(region), zone);
+      if (verdict.kind === 'refuse') {
+        this.clearDropIndicator();
+        this.cancelHoverExpand();
+        return;
+      }
       e.preventDefault();
-      if (this.dragOverEl && this.dragOverEl !== row) this.clearDropIndicator();
+      if (this.dragOverEl !== row) this.clearDropIndicator();
       this.dragOverEl = row;
-      const rect = row.getBoundingClientRect();
-      this.dropBefore = (e.clientY - rect.top) < rect.height / 2;
-      row.toggleClass('ws-fsb-drop-before', this.dropBefore);
-      row.toggleClass('ws-fsb-drop-after', !this.dropBefore);
+      this.dropRegionState = region;
+      const accepted = verdict.kind === 'accept';
+      row.toggleClass('ws-fsb-drop-before', accepted && region === 'before');
+      row.toggleClass('ws-fsb-drop-after', accepted && region === 'after');
+      row.toggleClass('ws-fsb-drop-into', accepted && region === 'into');
+      // Lingering over a collapsed folder while aiming into it expands it
+      if (accepted && region === 'into' && node.isFolder && node.children.length && this.collapsed.has(node.file.path)) {
+        this.scheduleHoverExpand('row:' + node.file.path, () => {
+          this.collapsed.delete(node.file.path);
+          this.renderList(this.buildModel());
+        });
+      } else {
+        this.cancelHoverExpand();
+      }
     };
     row.ondragleave = (e) => {
-      if (!row.contains(e.relatedTarget as Node) && this.dragOverEl === row) this.clearDropIndicator();
+      if (!row.contains(e.relatedTarget as Node) && this.dragOverEl === row) {
+        this.clearDropIndicator();
+        this.cancelHoverExpand();
+      }
     };
     row.ondrop = (e) => {
       const src = this.dragSource;
-      if (!src || src.path === node.file.path || src.parentPath !== parentPath) return;
+      if (!src || src.path === node.file.path) return;
+      const region = this.dropRegionState;
+      const destParent = destParentFor(region);
+      const verdict = evaluateDrop(src, destParent, zone);
+      if (verdict.kind === 'refuse') return;
       e.preventDefault();
-      const before = this.dropBefore;
       this.clearDropIndicator();
-      void this.performReorder(src.path, siblings, node, before);
+      this.cancelHoverExpand();
+      if (verdict.kind === 'notice') {
+        new Notice(t(verdict.messageKey));
+        return;
+      }
+      const intoFolder = region === 'into' && node.isFolder;
+      const group = (intoFolder ? node.children : siblings)
+        .filter(n => n.file.path !== src.path)
+        .map(toMoveEntry);
+      let insertAt: number | 'end' = 'end';
+      if (region !== 'into') {
+        const tgtIdx = group.findIndex(m => m.path === node.file.path);
+        if (tgtIdx < 0) return;
+        insertAt = region === 'before' ? tgtIdx : tgtIdx + 1;
+      }
+      void this.executeMove(planMove(src, destParent, group, insertAt, zone === 'manuscript'));
     };
+  }
+
+  private onRootDragOver(e: DragEvent): void {
+    const src = this.dragSource;
+    const project = this.activeProject;
+    if (!src || !project || e.target !== this.listEl) return;
+    if (evaluateDrop(src, project.folderPath, 'manuscript').kind !== 'accept') return;
+    e.preventDefault();
+    this.clearDropIndicator();
+    this.listEl?.addClass('ws-fsb-drop-root');
+  }
+
+  private onRootDrop(e: DragEvent): void {
+    const src = this.dragSource;
+    const project = this.activeProject;
+    const model = this.model;
+    this.listEl?.removeClass('ws-fsb-drop-root');
+    if (!src || !project || !model || e.target !== this.listEl) return;
+    if (evaluateDrop(src, project.folderPath, 'manuscript').kind !== 'accept') return;
+    e.preventDefault();
+    const group = model.manuscript.filter(n => n.file.path !== src.path).map(toMoveEntry);
+    void this.executeMove(planMove(src, project.folderPath, group, 'end', true));
   }
 
   private clearDropIndicator(): void {
     this.dragOverEl?.removeClass('ws-fsb-drop-before');
     this.dragOverEl?.removeClass('ws-fsb-drop-after');
+    this.dragOverEl?.removeClass('ws-fsb-drop-into');
     this.dragOverEl = null;
+    this.listEl?.removeClass('ws-fsb-drop-root');
   }
 
-  // Applies the planned order writes: documents get binder-order via
-  // processFrontMatter, folders get their name prefix renamed (links
-  // auto-heal). Re-render arrives through the vault/metadata event path.
-  private async performReorder(srcPath: string, siblings: TreeNode[], target: TreeNode, before: boolean): Promise<void> {
-    const srcIdx = siblings.findIndex(n => n.file.path === srcPath);
-    if (srcIdx < 0) return;
-    const seq = [...siblings];
-    const [moved] = seq.splice(srcIdx, 1);
-    const tgtIdx = seq.findIndex(n => n.file.path === target.file.path);
-    if (tgtIdx < 0) return;
-    const insertAt = before ? tgtIdx : tgtIdx + 1;
-    seq.splice(insertAt, 0, moved);
+  // Document-level safety net: a mid-drag re-render can replace the source
+  // row, so per-row dragend cannot be relied on for cleanup.
+  private endDrag(): void {
+    this.dragSource = null;
+    this.clearDropIndicator();
+    this.cancelHoverExpand();
+    this.containerEl.querySelectorAll<HTMLElement>('.ws-fsb-dragging, .ws-fsb-drop-into').forEach((el) => {
+      el.removeClass('ws-fsb-dragging');
+      el.removeClass('ws-fsb-drop-into');
+    });
+  }
 
-    const writes = planReorder(seq, insertAt);
+  private scheduleHoverExpand(key: string, action: () => void): void {
+    if (this.hoverExpandKey === key) return;
+    this.cancelHoverExpand();
+    this.hoverExpandKey = key;
+    this.hoverExpandTimer = window.setTimeout(() => {
+      this.hoverExpandTimer = null;
+      this.hoverExpandKey = null;
+      action();
+    }, HOVER_EXPAND_MS);
+  }
+
+  private cancelHoverExpand(): void {
+    if (this.hoverExpandTimer !== null) window.clearTimeout(this.hoverExpandTimer);
+    this.hoverExpandTimer = null;
+    this.hoverExpandKey = null;
+  }
+
+  // Opens (never toggles closed) a drawer tab — the hover-to-expand path.
+  private async openDrawerTab(zone: DrawerZone): Promise<void> {
+    await this.setDrawerPref({ open: true, tab: zone });
+    this.renderDrawer();
+  }
+
+  // A drop on a zone tab: the zone folder may not exist yet on a young
+  // project — create it, then move to its root. Research never gets order
+  // writes, so the plan is the bare rename.
+  private async executeZoneDrop(src: DragSource, zoneFolderPath: string, group: MoveEntry[]): Promise<void> {
     try {
-      for (const w of writes) {
-        const entry = seq[w.index];
-        if (entry.file instanceof TFolder) {
-          const newName = folderNameWithPrefix(entry.name, w.order);
-          if (newName === entry.name) continue;
-          const parent = entry.file.parent?.path ?? '';
-          await this.app.fileManager.renameFile(entry.file, normalizePath(parent ? `${parent}/${newName}` : newName));
-        } else if (entry.file instanceof TFile) {
-          await this.app.fileManager.processFrontMatter(entry.file, (fm: Record<string, unknown>) => {
-            fm['binder-order'] = w.order;
+      if (!(this.app.vault.getAbstractFileByPath(zoneFolderPath) instanceof TFolder)) {
+        await this.app.vault.createFolder(zoneFolderPath);
+      }
+    } catch (e) {
+      new Notice(t('main.operationFailed', { error: e instanceof Error ? e.message : String(e) }));
+      return;
+    }
+    await this.executeMove(planMove(src, zoneFolderPath, group, 'end', false));
+  }
+
+  // Executes a move plan: renames go through fileManager.renameFile so links
+  // heal, order writes through processFrontMatter. Re-render arrives via the
+  // vault/metadata event path. A failure (e.g. a name collision at the
+  // destination) stops the plan and surfaces as a notice — each rename is
+  // atomic, so nothing is left half-moved.
+  private async executeMove(ops: MoveOp[]): Promise<void> {
+    try {
+      for (const op of ops) {
+        const file = this.app.vault.getAbstractFileByPath(op.path);
+        if (!file) continue;
+        if (op.kind === 'rename') {
+          await this.app.fileManager.renameFile(file, normalizePath(op.newPath));
+        } else if (file instanceof TFile) {
+          await this.app.fileManager.processFrontMatter(file, (fm: Record<string, unknown>) => {
+            fm['binder-order'] = op.order;
           });
         }
       }
@@ -645,7 +824,7 @@ export class FilesystemBinderView extends ItemView {
         break;
       case 'menu':
       case 'rename':
-        // Mutations arrive in later slices — this view is read-only
+        // Context menu and rename arrive with slice 5 (#229)
         break;
     }
   }
@@ -658,5 +837,6 @@ export class FilesystemBinderView extends ItemView {
 
   async onClose(): Promise<void> {
     if (this.refreshTimer !== null) window.clearTimeout(this.refreshTimer);
+    this.cancelHoverExpand();
   }
 }

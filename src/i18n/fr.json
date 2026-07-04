@@ -228,6 +228,10 @@
       "exports": "Exports",
       "emptyResearch": "Aucun fichier de recherche pour l’instant. Ce que vous placez dans le dossier Research apparaît ici.",
       "emptyExports": "Aucun export pour l’instant. Les fichiers exportés arrivent ici."
+    },
+    "fs": {
+      "exportsDropBlocked": "Exports est en sortie seule — les fichiers exportés y arrivent automatiquement.",
+      "folderZoneBlocked": "Les dossiers ne peuvent pas passer d'une zone à l'autre. Déplacez les documents individuellement."
     }
   },
   "launcher": {
