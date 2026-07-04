@@ -2618,6 +2618,10 @@ var en_default = {
       exports: "Exports",
       emptyResearch: "No research files yet. Anything you put in the Research folder appears here.",
       emptyExports: "No exports yet. Exported files land here."
+    },
+    fs: {
+      exportsDropBlocked: "Exports is output-only \u2014 exported files land here automatically.",
+      folderZoneBlocked: "Folders cannot move between zones. Move documents individually."
     }
   },
   launcher: {
@@ -3332,6 +3336,10 @@ var zh_default = {
       exports: "\u5BFC\u51FA",
       emptyResearch: "\u8FD8\u6CA1\u6709\u8D44\u6599\u6587\u4EF6\u3002\u653E\u5165 Research \u6587\u4EF6\u5939\u7684\u5185\u5BB9\u4F1A\u663E\u793A\u5728\u8FD9\u91CC\u3002",
       emptyExports: "\u8FD8\u6CA1\u6709\u5BFC\u51FA\u6587\u4EF6\u3002\u5BFC\u51FA\u7684\u6587\u4EF6\u4F1A\u51FA\u73B0\u5728\u8FD9\u91CC\u3002"
+    },
+    fs: {
+      exportsDropBlocked: "\u5BFC\u51FA\u533A\u4EC5\u7528\u4E8E\u8F93\u51FA\u2014\u2014\u5BFC\u51FA\u7684\u6587\u4EF6\u4F1A\u81EA\u52A8\u51FA\u73B0\u5728\u8FD9\u91CC\u3002",
+      folderZoneBlocked: "\u6587\u4EF6\u5939\u4E0D\u80FD\u5728\u533A\u57DF\u4E4B\u95F4\u79FB\u52A8\u3002\u8BF7\u5355\u72EC\u79FB\u52A8\u6587\u6863\u3002"
     }
   },
   launcher: {
@@ -4046,6 +4054,10 @@ var hi_default = {
       exports: "\u0928\u093F\u0930\u094D\u092F\u093E\u0924",
       emptyResearch: "\u0905\u092D\u0940 \u0915\u094B\u0908 \u0936\u094B\u0927 \u092B\u093C\u093E\u0907\u0932 \u0928\u0939\u0940\u0902 \u0939\u0948\u0964 Research \u092B\u093C\u094B\u0932\u094D\u0921\u0930 \u092E\u0947\u0902 \u0930\u0916\u0940 \u0917\u0908 \u091A\u0940\u091C\u093C\u0947\u0902 \u092F\u0939\u093E\u0901 \u0926\u093F\u0916\u093E\u0908 \u0926\u0947\u0924\u0940 \u0939\u0948\u0902\u0964",
       emptyExports: "\u0905\u092D\u0940 \u0915\u094B\u0908 \u0928\u093F\u0930\u094D\u092F\u093E\u0924 \u0928\u0939\u0940\u0902 \u0939\u0948\u0964 \u0928\u093F\u0930\u094D\u092F\u093E\u0924 \u0915\u0940 \u0917\u0908 \u092B\u093C\u093E\u0907\u0932\u0947\u0902 \u092F\u0939\u093E\u0901 \u0906\u0924\u0940 \u0939\u0948\u0902\u0964"
+    },
+    fs: {
+      exportsDropBlocked: "\u090F\u0915\u094D\u0938\u092A\u094B\u0930\u094D\u091F \u0915\u0947\u0935\u0932 \u0906\u0909\u091F\u092A\u0941\u091F \u0915\u0947 \u0932\u093F\u090F \u0939\u0948 \u2014 \u090F\u0915\u094D\u0938\u092A\u094B\u0930\u094D\u091F \u0915\u0940 \u0917\u0908 \u092B\u093C\u093E\u0907\u0932\u0947\u0902 \u092F\u0939\u093E\u0901 \u0905\u092A\u0928\u0947 \u0906\u092A \u0906\u0924\u0940 \u0939\u0948\u0902\u0964",
+      folderZoneBlocked: "\u092B\u093C\u094B\u0932\u094D\u0921\u0930 \u091C\u093C\u094B\u0928 \u0915\u0947 \u092C\u0940\u091A \u0928\u0939\u0940\u0902 \u0932\u0947 \u091C\u093E\u090F \u091C\u093E \u0938\u0915\u0924\u0947\u0964 \u0926\u0938\u094D\u0924\u093E\u0935\u0947\u091C\u093C\u094B\u0902 \u0915\u094B \u0905\u0932\u0917-\u0905\u0932\u0917 \u0932\u0947 \u091C\u093E\u090F\u0901\u0964"
     }
   },
   launcher: {
@@ -4760,6 +4772,10 @@ var es_default = {
       exports: "Exportaciones",
       emptyResearch: "A\xFAn no hay archivos de investigaci\xF3n. Lo que pongas en la carpeta Research aparece aqu\xED.",
       emptyExports: "A\xFAn no hay exportaciones. Los archivos exportados llegan aqu\xED."
+    },
+    fs: {
+      exportsDropBlocked: "Exportaciones es solo de salida: los archivos exportados llegan aqu\xED autom\xE1ticamente.",
+      folderZoneBlocked: "Las carpetas no pueden moverse entre zonas. Mueve los documentos individualmente."
     }
   },
   launcher: {
@@ -5474,6 +5490,10 @@ var ar_default = {
       exports: "\u0627\u0644\u0635\u0627\u062F\u0631\u0627\u062A",
       emptyResearch: "\u0644\u0627 \u062A\u0648\u062C\u062F \u0645\u0644\u0641\u0627\u062A \u0628\u062D\u062B \u0628\u0639\u062F. \u0643\u0644 \u0645\u0627 \u062A\u0636\u0639\u0647 \u0641\u064A \u0645\u062C\u0644\u062F Research \u064A\u0638\u0647\u0631 \u0647\u0646\u0627.",
       emptyExports: "\u0644\u0627 \u062A\u0648\u062C\u062F \u0635\u0627\u062F\u0631\u0627\u062A \u0628\u0639\u062F. \u0627\u0644\u0645\u0644\u0641\u0627\u062A \u0627\u0644\u0645\u0635\u062F\u064E\u0651\u0631\u0629 \u062A\u0635\u0644 \u0625\u0644\u0649 \u0647\u0646\u0627."
+    },
+    fs: {
+      exportsDropBlocked: "\u0627\u0644\u062A\u0635\u062F\u064A\u0631 \u0644\u0644\u0625\u062E\u0631\u0627\u062C \u0641\u0642\u0637 \u2014 \u0627\u0644\u0645\u0644\u0641\u0627\u062A \u0627\u0644\u0645\u0635\u062F\u064E\u0651\u0631\u0629 \u062A\u0635\u0644 \u0647\u0646\u0627 \u062A\u0644\u0642\u0627\u0626\u064A\u064B\u0627.",
+      folderZoneBlocked: "\u0644\u0627 \u064A\u0645\u0643\u0646 \u0646\u0642\u0644 \u0627\u0644\u0645\u062C\u0644\u062F\u0627\u062A \u0628\u064A\u0646 \u0627\u0644\u0645\u0646\u0627\u0637\u0642. \u0627\u0646\u0642\u0644 \u0627\u0644\u0645\u0633\u062A\u0646\u062F\u0627\u062A \u0641\u0631\u062F\u064A\u064B\u0627."
     }
   },
   launcher: {
@@ -6202,6 +6222,10 @@ var fr_default = {
       exports: "Exports",
       emptyResearch: "Aucun fichier de recherche pour l\u2019instant. Ce que vous placez dans le dossier Research appara\xEEt ici.",
       emptyExports: "Aucun export pour l\u2019instant. Les fichiers export\xE9s arrivent ici."
+    },
+    fs: {
+      exportsDropBlocked: "Exports est en sortie seule \u2014 les fichiers export\xE9s y arrivent automatiquement.",
+      folderZoneBlocked: "Les dossiers ne peuvent pas passer d'une zone \xE0 l'autre. D\xE9placez les documents individuellement."
     }
   },
   launcher: {
@@ -6916,6 +6940,10 @@ var bn_default = {
       exports: "\u09B0\u09AA\u09CD\u09A4\u09BE\u09A8\u09BF",
       emptyResearch: "\u098F\u0996\u09A8\u0993 \u0995\u09CB\u09A8\u09CB \u0997\u09AC\u09C7\u09B7\u09A3\u09BE \u09AB\u09BE\u0987\u09B2 \u09A8\u09C7\u0987\u0964 Research \u09AB\u09CB\u09B2\u09CD\u09A1\u09BE\u09B0\u09C7 \u09B0\u09BE\u0996\u09BE \u099C\u09BF\u09A8\u09BF\u09B8 \u098F\u0996\u09BE\u09A8\u09C7 \u09A6\u09C7\u0996\u09BE \u09AF\u09BE\u09AF\u09BC\u0964",
       emptyExports: "\u098F\u0996\u09A8\u0993 \u0995\u09CB\u09A8\u09CB \u09B0\u09AA\u09CD\u09A4\u09BE\u09A8\u09BF \u09A8\u09C7\u0987\u0964 \u09B0\u09AA\u09CD\u09A4\u09BE\u09A8\u09BF \u0995\u09B0\u09BE \u09AB\u09BE\u0987\u09B2 \u098F\u0996\u09BE\u09A8\u09C7 \u0986\u09B8\u09C7\u0964"
+    },
+    fs: {
+      exportsDropBlocked: "\u098F\u0995\u09CD\u09B8\u09AA\u09CB\u09B0\u09CD\u099F \u09B6\u09C1\u09A7\u09C1\u09AE\u09BE\u09A4\u09CD\u09B0 \u0986\u0989\u099F\u09AA\u09C1\u099F\u09C7\u09B0 \u099C\u09A8\u09CD\u09AF \u2014 \u098F\u0995\u09CD\u09B8\u09AA\u09CB\u09B0\u09CD\u099F \u0995\u09B0\u09BE \u09AB\u09BE\u0987\u09B2 \u09B8\u09CD\u09AC\u09AF\u09BC\u0982\u0995\u09CD\u09B0\u09BF\u09AF\u09BC\u09AD\u09BE\u09AC\u09C7 \u098F\u0996\u09BE\u09A8\u09C7 \u0986\u09B8\u09C7\u0964",
+      folderZoneBlocked: "\u09AB\u09CB\u09B2\u09CD\u09A1\u09BE\u09B0 \u099C\u09CB\u09A8\u09C7\u09B0 \u09AE\u09A7\u09CD\u09AF\u09C7 \u09B8\u09B0\u09BE\u09A8\u09CB \u09AF\u09BE\u09AF\u09BC \u09A8\u09BE\u0964 \u09A1\u0995\u09C1\u09AE\u09C7\u09A8\u09CD\u099F\u0997\u09C1\u09B2\u09BF \u0986\u09B2\u09BE\u09A6\u09BE\u09AD\u09BE\u09AC\u09C7 \u09B8\u09B0\u09BE\u09A8\u0964"
     }
   },
   launcher: {
@@ -7630,6 +7658,10 @@ var pt_BR_default = {
       exports: "Exporta\xE7\xF5es",
       emptyResearch: "Ainda n\xE3o h\xE1 arquivos de pesquisa. O que voc\xEA colocar na pasta Research aparece aqui.",
       emptyExports: "Ainda n\xE3o h\xE1 exporta\xE7\xF5es. Arquivos exportados chegam aqui."
+    },
+    fs: {
+      exportsDropBlocked: "Exporta\xE7\xF5es \xE9 somente sa\xEDda \u2014 arquivos exportados chegam aqui automaticamente.",
+      folderZoneBlocked: "Pastas n\xE3o podem se mover entre zonas. Mova os documentos individualmente."
     }
   },
   launcher: {
@@ -8344,6 +8376,10 @@ var ru_default = {
       exports: "\u042D\u043A\u0441\u043F\u043E\u0440\u0442",
       emptyResearch: "\u0424\u0430\u0439\u043B\u043E\u0432 \u0441 \u043C\u0430\u0442\u0435\u0440\u0438\u0430\u043B\u0430\u043C\u0438 \u043F\u043E\u043A\u0430 \u043D\u0435\u0442. \u0412\u0441\u0451, \u0447\u0442\u043E \u0432\u044B \u043F\u043E\u043B\u043E\u0436\u0438\u0442\u0435 \u0432 \u043F\u0430\u043F\u043A\u0443 Research, \u043F\u043E\u044F\u0432\u0438\u0442\u0441\u044F \u0437\u0434\u0435\u0441\u044C.",
       emptyExports: "\u042D\u043A\u0441\u043F\u043E\u0440\u0442\u0438\u0440\u043E\u0432\u0430\u043D\u043D\u044B\u0445 \u0444\u0430\u0439\u043B\u043E\u0432 \u043F\u043E\u043A\u0430 \u043D\u0435\u0442. \u041E\u043D\u0438 \u043F\u043E\u044F\u0432\u043B\u044F\u044E\u0442\u0441\u044F \u0437\u0434\u0435\u0441\u044C."
+    },
+    fs: {
+      exportsDropBlocked: "\u042D\u043A\u0441\u043F\u043E\u0440\u0442 \u2014 \u0442\u043E\u043B\u044C\u043A\u043E \u0434\u043B\u044F \u0432\u044B\u0432\u043E\u0434\u0430: \u044D\u043A\u0441\u043F\u043E\u0440\u0442\u0438\u0440\u043E\u0432\u0430\u043D\u043D\u044B\u0435 \u0444\u0430\u0439\u043B\u044B \u043F\u043E\u043F\u0430\u0434\u0430\u044E\u0442 \u0441\u044E\u0434\u0430 \u0430\u0432\u0442\u043E\u043C\u0430\u0442\u0438\u0447\u0435\u0441\u043A\u0438.",
+      folderZoneBlocked: "\u041F\u0430\u043F\u043A\u0438 \u043D\u0435\u043B\u044C\u0437\u044F \u043F\u0435\u0440\u0435\u043C\u0435\u0449\u0430\u0442\u044C \u043C\u0435\u0436\u0434\u0443 \u0437\u043E\u043D\u0430\u043C\u0438. \u041F\u0435\u0440\u0435\u043C\u0435\u0449\u0430\u0439\u0442\u0435 \u0434\u043E\u043A\u0443\u043C\u0435\u043D\u0442\u044B \u043F\u043E \u043E\u0442\u0434\u0435\u043B\u044C\u043D\u043E\u0441\u0442\u0438."
     }
   },
   launcher: {
@@ -9066,6 +9102,10 @@ var ja_default = {
       exports: "\u30A8\u30AF\u30B9\u30DD\u30FC\u30C8",
       emptyResearch: "\u8CC7\u6599\u30D5\u30A1\u30A4\u30EB\u306F\u307E\u3060\u3042\u308A\u307E\u305B\u3093\u3002Research \u30D5\u30A9\u30EB\u30C0\u306B\u5165\u308C\u305F\u3082\u306E\u304C\u3053\u3053\u306B\u8868\u793A\u3055\u308C\u307E\u3059\u3002",
       emptyExports: "\u30A8\u30AF\u30B9\u30DD\u30FC\u30C8\u306F\u307E\u3060\u3042\u308A\u307E\u305B\u3093\u3002\u66F8\u304D\u51FA\u3057\u305F\u30D5\u30A1\u30A4\u30EB\u306F\u3053\u3053\u306B\u5C4A\u304D\u307E\u3059\u3002"
+    },
+    fs: {
+      exportsDropBlocked: "\u66F8\u304D\u51FA\u3057\u306F\u51FA\u529B\u5C02\u7528\u3067\u3059 \u2014 \u66F8\u304D\u51FA\u3057\u305F\u30D5\u30A1\u30A4\u30EB\u306F\u81EA\u52D5\u7684\u306B\u3053\u3053\u306B\u5165\u308A\u307E\u3059\u3002",
+      folderZoneBlocked: "\u30D5\u30A9\u30EB\u30C0\u306F\u30BE\u30FC\u30F3\u9593\u3092\u79FB\u52D5\u3067\u304D\u307E\u305B\u3093\u3002\u30C9\u30AD\u30E5\u30E1\u30F3\u30C8\u3092\u500B\u5225\u306B\u79FB\u52D5\u3057\u3066\u304F\u3060\u3055\u3044\u3002"
     }
   },
   launcher: {
@@ -9780,6 +9820,10 @@ var de_default = {
       exports: "Exporte",
       emptyResearch: "Noch keine Recherchedateien. Was im Ordner Research liegt, erscheint hier.",
       emptyExports: "Noch keine Exporte. Exportierte Dateien landen hier."
+    },
+    fs: {
+      exportsDropBlocked: "Exporte ist nur f\xFCr Ausgaben \u2013 exportierte Dateien landen hier automatisch.",
+      folderZoneBlocked: "Ordner k\xF6nnen nicht zwischen Zonen verschoben werden. Verschiebe Dokumente einzeln."
     }
   },
   launcher: {
@@ -10494,6 +10538,10 @@ var ko_default = {
       exports: "\uB0B4\uBCF4\uB0B4\uAE30",
       emptyResearch: "\uC544\uC9C1 \uC790\uB8CC \uD30C\uC77C\uC774 \uC5C6\uC2B5\uB2C8\uB2E4. Research \uD3F4\uB354\uC5D0 \uB123\uC740 \uD56D\uBAA9\uC774 \uC5EC\uAE30\uC5D0 \uD45C\uC2DC\uB429\uB2C8\uB2E4.",
       emptyExports: "\uC544\uC9C1 \uB0B4\uBCF4\uB0B8 \uD30C\uC77C\uC774 \uC5C6\uC2B5\uB2C8\uB2E4. \uB0B4\uBCF4\uB0B8 \uD30C\uC77C\uC774 \uC5EC\uAE30\uC5D0 \uB3C4\uCC29\uD569\uB2C8\uB2E4."
+    },
+    fs: {
+      exportsDropBlocked: "\uB0B4\uBCF4\uB0B4\uAE30\uB294 \uCD9C\uB825 \uC804\uC6A9\uC785\uB2C8\uB2E4 \u2014 \uB0B4\uBCF4\uB0B8 \uD30C\uC77C\uC774 \uC790\uB3D9\uC73C\uB85C \uC5EC\uAE30\uC5D0 \uD45C\uC2DC\uB429\uB2C8\uB2E4.",
+      folderZoneBlocked: "\uD3F4\uB354\uB294 \uC601\uC5ED \uAC04\uC5D0 \uC774\uB3D9\uD560 \uC218 \uC5C6\uC2B5\uB2C8\uB2E4. \uBB38\uC11C\uB97C \uAC1C\uBCC4\uC801\uC73C\uB85C \uC774\uB3D9\uD558\uC138\uC694."
     }
   },
   launcher: {
@@ -13921,12 +13969,80 @@ function planReorder(sequence, movedIndex) {
   return writes;
 }
 
+// src/binderMove.ts
+function dropRegion(targetIsFolder, offsetY, height) {
+  if (!targetIsFolder) return offsetY < height / 2 ? "before" : "after";
+  if (offsetY < height * 0.25) return "before";
+  if (offsetY >= height * 0.75) return "after";
+  return "into";
+}
+function canStartDrag(entry, zone) {
+  if (zone === "exports") return false;
+  if (entry.isFolder) return zone === "manuscript";
+  return entry.extension === "md";
+}
+function evaluateDrop(source, destParentPath, destZone) {
+  if (destZone === "exports") return { kind: "notice", messageKey: "binder.fs.exportsDropBlocked" };
+  if (source.isFolder && destZone !== source.zone) {
+    return { kind: "notice", messageKey: "binder.fs.folderZoneBlocked" };
+  }
+  if (source.isFolder && (destParentPath === source.path || destParentPath.startsWith(source.path + "/"))) {
+    return { kind: "refuse" };
+  }
+  return { kind: "accept" };
+}
+function parentOf(path) {
+  const i2 = path.lastIndexOf("/");
+  return i2 < 0 ? "" : path.slice(0, i2);
+}
+function joinPath(parent, name) {
+  return parent ? `${parent}/${name}` : name;
+}
+function planMove(source, destParentPath, destSiblings, insertAt, writeOrder) {
+  var _a2;
+  const index = insertAt === "end" ? destSiblings.length : insertAt;
+  const seq = [...destSiblings];
+  seq.splice(index, 0, source);
+  const writes = writeOrder ? planReorder(seq, index) : [];
+  const ops = [];
+  const sourceWrite = (_a2 = writes.find((w) => w.index === index)) != null ? _a2 : null;
+  const sourceName = source.isFolder && sourceWrite ? folderNameWithPrefix(source.name, sourceWrite.order) : source.name;
+  const sourceNewPath = joinPath(destParentPath, sourceName);
+  if (sourceNewPath !== source.path) {
+    ops.push({ kind: "rename", path: source.path, newPath: sourceNewPath });
+  }
+  if (!source.isFolder && sourceWrite) {
+    ops.push({ kind: "set-order", path: sourceNewPath, order: sourceWrite.order });
+  }
+  for (const w of writes) {
+    if (w.index === index) continue;
+    const entry = seq[w.index];
+    if (!canCarryOrder(entry)) continue;
+    if (entry.isFolder) {
+      const newName = folderNameWithPrefix(entry.name, w.order);
+      if (newName === entry.name) continue;
+      ops.push({ kind: "rename", path: entry.path, newPath: joinPath(parentOf(entry.path), newName) });
+    } else {
+      ops.push({ kind: "set-order", path: entry.path, order: w.order });
+    }
+  }
+  return ops;
+}
+
 // src/FilesystemBinderView.ts
 var TOOLTIP_KEYS = ["binder-order", "binder-status", "binder-type", "binder-compile", "word-count-goal"];
 var DRAWER_ZONES = [
   { zone: "research", folderName: "Research", labelKey: "binder.drawer.research", emptyKey: "binder.drawer.emptyResearch" },
   { zone: "exports", folderName: "Exports", labelKey: "binder.drawer.exports", emptyKey: "binder.drawer.emptyExports" }
 ];
+var HOVER_EXPAND_MS = 600;
+var toMoveEntry = (n) => ({
+  name: n.name,
+  isFolder: n.isFolder,
+  extension: n.extension,
+  binderOrder: n.binderOrder,
+  path: n.file.path
+});
 var FilesystemBinderView = class extends import_obsidian17.ItemView {
   constructor(leaf, plugin) {
     super(leaf);
@@ -13940,11 +14056,13 @@ var FilesystemBinderView = class extends import_obsidian17.ItemView {
     this.showCounts = true;
     this.navRows = [];
     this.navFocusPath = null;
-    // Sibling-reorder drag state (#227): source path plus its parent path so
-    // targets outside the sibling group show no indicator and accept no drop
+    // Drag state (#227/#228): the source is plain data so a mid-drag
+    // re-render (hover-to-expand) cannot invalidate it
     this.dragSource = null;
     this.dragOverEl = null;
-    this.dropBefore = false;
+    this.dropRegionState = "before";
+    this.hoverExpandTimer = null;
+    this.hoverExpandKey = null;
     this.refreshTimer = null;
     // Serialized snapshot of everything render-relevant, so vault and metadata
     // events that changed nothing visible (e.g. body edits) skip the rebuild.
@@ -13986,6 +14104,8 @@ var FilesystemBinderView = class extends import_obsidian17.ItemView {
       this.onVaultEvent(oldPath);
     }));
     this.registerEvent(this.app.metadataCache.on("changed", (f) => this.onVaultEvent(f.path)));
+    this.registerDomEvent(activeDocument, "dragend", () => this.endDrag());
+    this.registerDomEvent(activeDocument, "drop", () => this.endDrag());
     this.render();
   }
   onVaultEvent(path) {
@@ -14058,6 +14178,8 @@ var FilesystemBinderView = class extends import_obsidian17.ItemView {
     this.listEl.setAttribute("tabindex", "0");
     this.listEl.setAttribute("role", "tree");
     this.listEl.addEventListener("keydown", (e) => this.handleTreeKey(e));
+    this.listEl.addEventListener("dragover", (e) => this.onRootDragOver(e));
+    this.listEl.addEventListener("drop", (e) => this.onRootDrop(e));
     this.drawerEl = container.createDiv("ws-fsb-drawer");
     this.renderList(this.buildModel());
   }
@@ -14190,7 +14312,7 @@ var FilesystemBinderView = class extends import_obsidian17.ItemView {
       listEl.createDiv("ws-binder-empty").textContent = t2("binder.fsEmpty");
       return;
     }
-    this.renderNodes(listEl, model.manuscript, 0);
+    this.renderNodes(listEl, model.manuscript, 0, "manuscript");
     const focusIdx = this.navRows.findIndex((r) => r.node.file.path === this.navFocusPath);
     if (focusIdx >= 0 && activeDocument.activeElement === activeDocument.body) {
       listEl.focus();
@@ -14199,13 +14321,14 @@ var FilesystemBinderView = class extends import_obsidian17.ItemView {
   }
   // ─── Resources drawer (slice 2) ────────────────────────────────────────────
   renderDrawer() {
-    var _a2, _b2, _c;
+    var _a2, _b2, _c, _d, _e;
     const drawerEl = this.drawerEl;
     const model = this.model;
     if (!drawerEl) return;
     drawerEl.empty();
     if (!this.activeProject || !model) return;
     const pref = this.drawerPref();
+    const project = this.activeProject;
     const tabs = drawerEl.createDiv("ws-fsb-drawer-tabs");
     for (const zoneDef of DRAWER_ZONES) {
       const zone = model.zones[zoneDef.zone];
@@ -14217,16 +14340,51 @@ var FilesystemBinderView = class extends import_obsidian17.ItemView {
       tab.onclick = () => {
         void this.selectDrawerTab(zoneDef.zone);
       };
+      const zoneFolderPath = (_d = (_c = zone.folder) == null ? void 0 : _c.path) != null ? _d : (0, import_obsidian17.normalizePath)(`${project.folderPath}/${zoneDef.folderName}`);
+      tab.addEventListener("dragover", (e) => {
+        const src = this.dragSource;
+        if (!src) return;
+        const verdict = evaluateDrop(src, zoneFolderPath, zoneDef.zone);
+        if (verdict.kind === "refuse") return;
+        e.preventDefault();
+        if (verdict.kind !== "accept") return;
+        tab.addClass("ws-fsb-drop-into");
+        if (!pref.open || pref.tab !== zoneDef.zone) {
+          this.scheduleHoverExpand("tab:" + zoneDef.zone, () => {
+            void this.openDrawerTab(zoneDef.zone);
+          });
+        }
+      });
+      tab.addEventListener("dragleave", (e) => {
+        if (tab.contains(e.relatedTarget)) return;
+        tab.removeClass("ws-fsb-drop-into");
+        this.cancelHoverExpand();
+      });
+      tab.addEventListener("drop", (e) => {
+        const src = this.dragSource;
+        if (!src) return;
+        const verdict = evaluateDrop(src, zoneFolderPath, zoneDef.zone);
+        if (verdict.kind === "refuse") return;
+        e.preventDefault();
+        tab.removeClass("ws-fsb-drop-into");
+        this.cancelHoverExpand();
+        if (verdict.kind === "notice") {
+          new import_obsidian17.Notice(t2(verdict.messageKey));
+          return;
+        }
+        const group = zone.nodes.filter((n) => n.file.path !== src.path).map(toMoveEntry);
+        void this.executeZoneDrop(src, zoneFolderPath, group);
+      });
     }
     if (pref.open) {
-      const zoneDef = (_c = DRAWER_ZONES.find((z) => z.zone === pref.tab)) != null ? _c : DRAWER_ZONES[0];
+      const zoneDef = (_e = DRAWER_ZONES.find((z) => z.zone === pref.tab)) != null ? _e : DRAWER_ZONES[0];
       const zone = model.zones[zoneDef.zone];
       const panel = drawerEl.createDiv("ws-fsb-drawer-panel");
       panel.setAttribute("role", "tree");
       if (zone.nodes.length === 0) {
         panel.createDiv("ws-binder-empty").textContent = t2(zoneDef.emptyKey);
       } else {
-        this.renderNodes(panel, zone.nodes, 0, false);
+        this.renderNodes(panel, zone.nodes, 0, zoneDef.zone);
       }
     }
   }
@@ -14251,9 +14409,10 @@ var FilesystemBinderView = class extends import_obsidian17.ItemView {
     this.plugin.settings.binderDrawer[id] = pref;
     await this.plugin.saveSettings();
   }
-  // `nav` gates keyboard-navigation tracking: manuscript rows join navRows,
-  // drawer rows are click-only in this slice
-  renderNodes(container, nodes, depth, nav = true) {
+  // Keyboard-navigation tracking is manuscript-only: manuscript rows join
+  // navRows, drawer rows are pointer-only
+  renderNodes(container, nodes, depth, zone) {
+    const nav = zone === "manuscript";
     for (const node of nodes) {
       const isExpanded = !this.collapsed.has(node.file.path);
       const row = container.createDiv({ cls: `ws-fsb-row ws-binder-depth-${depth}` });
@@ -14291,83 +14450,188 @@ var FilesystemBinderView = class extends import_obsidian17.ItemView {
         }
         if (node.file instanceof import_obsidian17.TFile) void this.openFile(node.file);
       };
-      if (nav) this.wireReorderDrag(row, node, nodes);
+      this.wireDrag(row, node, nodes, zone);
       if (node.children.length && isExpanded) {
-        this.renderNodes(container, node.children, depth + 1, nav);
+        this.renderNodes(container, node.children, depth + 1, zone);
       }
     }
   }
-  wireReorderDrag(row, node, siblings) {
+  // Drag wiring for one row (#227 reorder + #228 structural moves). What may
+  // start a drag and whether a drop is accepted, refused, or explained is
+  // decided by the pure helpers in binderMove; this only reads the pointer.
+  wireDrag(row, node, siblings, zone) {
     var _a2, _b2;
     const parentPath2 = (_b2 = (_a2 = node.file.parent) == null ? void 0 : _a2.path) != null ? _b2 : "";
-    if (canCarryOrder(node)) {
+    if (canStartDrag(node, zone)) {
       row.setAttribute("draggable", "true");
       row.ondragstart = (e) => {
         var _a3;
-        this.dragSource = { path: node.file.path, parentPath: parentPath2 };
+        this.dragSource = {
+          path: node.file.path,
+          name: node.name,
+          isFolder: node.isFolder,
+          extension: node.extension,
+          binderOrder: node.binderOrder,
+          zone
+        };
         row.addClass("ws-fsb-dragging");
         (_a3 = e.dataTransfer) == null ? void 0 : _a3.setData("text/plain", node.file.path);
       };
-      row.ondragend = () => {
-        row.removeClass("ws-fsb-dragging");
-        this.dragSource = null;
-        this.clearDropIndicator();
-      };
     }
+    const regionFor = (e) => {
+      if (zone !== "manuscript") return "into";
+      const rect = row.getBoundingClientRect();
+      return dropRegion(node.isFolder, e.clientY - rect.top, rect.height);
+    };
+    const destParentFor = (region) => region === "into" && node.isFolder ? node.file.path : parentPath2;
     row.ondragover = (e) => {
       const src = this.dragSource;
-      if (!src || src.path === node.file.path || src.parentPath !== parentPath2) return;
+      if (!src || src.path === node.file.path) return;
+      const region = regionFor(e);
+      const verdict = evaluateDrop(src, destParentFor(region), zone);
+      if (verdict.kind === "refuse") {
+        this.clearDropIndicator();
+        this.cancelHoverExpand();
+        return;
+      }
       e.preventDefault();
-      if (this.dragOverEl && this.dragOverEl !== row) this.clearDropIndicator();
+      if (this.dragOverEl !== row) this.clearDropIndicator();
       this.dragOverEl = row;
-      const rect = row.getBoundingClientRect();
-      this.dropBefore = e.clientY - rect.top < rect.height / 2;
-      row.toggleClass("ws-fsb-drop-before", this.dropBefore);
-      row.toggleClass("ws-fsb-drop-after", !this.dropBefore);
+      this.dropRegionState = region;
+      const accepted = verdict.kind === "accept";
+      row.toggleClass("ws-fsb-drop-before", accepted && region === "before");
+      row.toggleClass("ws-fsb-drop-after", accepted && region === "after");
+      row.toggleClass("ws-fsb-drop-into", accepted && region === "into");
+      if (accepted && region === "into" && node.isFolder && node.children.length && this.collapsed.has(node.file.path)) {
+        this.scheduleHoverExpand("row:" + node.file.path, () => {
+          this.collapsed.delete(node.file.path);
+          this.renderList(this.buildModel());
+        });
+      } else {
+        this.cancelHoverExpand();
+      }
     };
     row.ondragleave = (e) => {
-      if (!row.contains(e.relatedTarget) && this.dragOverEl === row) this.clearDropIndicator();
+      if (!row.contains(e.relatedTarget) && this.dragOverEl === row) {
+        this.clearDropIndicator();
+        this.cancelHoverExpand();
+      }
     };
     row.ondrop = (e) => {
       const src = this.dragSource;
-      if (!src || src.path === node.file.path || src.parentPath !== parentPath2) return;
+      if (!src || src.path === node.file.path) return;
+      const region = this.dropRegionState;
+      const destParent = destParentFor(region);
+      const verdict = evaluateDrop(src, destParent, zone);
+      if (verdict.kind === "refuse") return;
       e.preventDefault();
-      const before = this.dropBefore;
       this.clearDropIndicator();
-      void this.performReorder(src.path, siblings, node, before);
+      this.cancelHoverExpand();
+      if (verdict.kind === "notice") {
+        new import_obsidian17.Notice(t2(verdict.messageKey));
+        return;
+      }
+      const intoFolder = region === "into" && node.isFolder;
+      const group = (intoFolder ? node.children : siblings).filter((n) => n.file.path !== src.path).map(toMoveEntry);
+      let insertAt = "end";
+      if (region !== "into") {
+        const tgtIdx = group.findIndex((m) => m.path === node.file.path);
+        if (tgtIdx < 0) return;
+        insertAt = region === "before" ? tgtIdx : tgtIdx + 1;
+      }
+      void this.executeMove(planMove(src, destParent, group, insertAt, zone === "manuscript"));
     };
   }
+  onRootDragOver(e) {
+    var _a2;
+    const src = this.dragSource;
+    const project = this.activeProject;
+    if (!src || !project || e.target !== this.listEl) return;
+    if (evaluateDrop(src, project.folderPath, "manuscript").kind !== "accept") return;
+    e.preventDefault();
+    this.clearDropIndicator();
+    (_a2 = this.listEl) == null ? void 0 : _a2.addClass("ws-fsb-drop-root");
+  }
+  onRootDrop(e) {
+    var _a2;
+    const src = this.dragSource;
+    const project = this.activeProject;
+    const model = this.model;
+    (_a2 = this.listEl) == null ? void 0 : _a2.removeClass("ws-fsb-drop-root");
+    if (!src || !project || !model || e.target !== this.listEl) return;
+    if (evaluateDrop(src, project.folderPath, "manuscript").kind !== "accept") return;
+    e.preventDefault();
+    const group = model.manuscript.filter((n) => n.file.path !== src.path).map(toMoveEntry);
+    void this.executeMove(planMove(src, project.folderPath, group, "end", true));
+  }
   clearDropIndicator() {
-    var _a2, _b2;
+    var _a2, _b2, _c, _d;
     (_a2 = this.dragOverEl) == null ? void 0 : _a2.removeClass("ws-fsb-drop-before");
     (_b2 = this.dragOverEl) == null ? void 0 : _b2.removeClass("ws-fsb-drop-after");
+    (_c = this.dragOverEl) == null ? void 0 : _c.removeClass("ws-fsb-drop-into");
     this.dragOverEl = null;
+    (_d = this.listEl) == null ? void 0 : _d.removeClass("ws-fsb-drop-root");
   }
-  // Applies the planned order writes: documents get binder-order via
-  // processFrontMatter, folders get their name prefix renamed (links
-  // auto-heal). Re-render arrives through the vault/metadata event path.
-  async performReorder(srcPath, siblings, target, before) {
-    var _a2, _b2;
-    const srcIdx = siblings.findIndex((n) => n.file.path === srcPath);
-    if (srcIdx < 0) return;
-    const seq = [...siblings];
-    const [moved] = seq.splice(srcIdx, 1);
-    const tgtIdx = seq.findIndex((n) => n.file.path === target.file.path);
-    if (tgtIdx < 0) return;
-    const insertAt = before ? tgtIdx : tgtIdx + 1;
-    seq.splice(insertAt, 0, moved);
-    const writes = planReorder(seq, insertAt);
+  // Document-level safety net: a mid-drag re-render can replace the source
+  // row, so per-row dragend cannot be relied on for cleanup.
+  endDrag() {
+    this.dragSource = null;
+    this.clearDropIndicator();
+    this.cancelHoverExpand();
+    this.containerEl.querySelectorAll(".ws-fsb-dragging, .ws-fsb-drop-into").forEach((el) => {
+      el.removeClass("ws-fsb-dragging");
+      el.removeClass("ws-fsb-drop-into");
+    });
+  }
+  scheduleHoverExpand(key, action) {
+    if (this.hoverExpandKey === key) return;
+    this.cancelHoverExpand();
+    this.hoverExpandKey = key;
+    this.hoverExpandTimer = window.setTimeout(() => {
+      this.hoverExpandTimer = null;
+      this.hoverExpandKey = null;
+      action();
+    }, HOVER_EXPAND_MS);
+  }
+  cancelHoverExpand() {
+    if (this.hoverExpandTimer !== null) window.clearTimeout(this.hoverExpandTimer);
+    this.hoverExpandTimer = null;
+    this.hoverExpandKey = null;
+  }
+  // Opens (never toggles closed) a drawer tab — the hover-to-expand path.
+  async openDrawerTab(zone) {
+    await this.setDrawerPref({ open: true, tab: zone });
+    this.renderDrawer();
+  }
+  // A drop on a zone tab: the zone folder may not exist yet on a young
+  // project — create it, then move to its root. Research never gets order
+  // writes, so the plan is the bare rename.
+  async executeZoneDrop(src, zoneFolderPath, group) {
     try {
-      for (const w of writes) {
-        const entry = seq[w.index];
-        if (entry.file instanceof import_obsidian17.TFolder) {
-          const newName = folderNameWithPrefix(entry.name, w.order);
-          if (newName === entry.name) continue;
-          const parent = (_b2 = (_a2 = entry.file.parent) == null ? void 0 : _a2.path) != null ? _b2 : "";
-          await this.app.fileManager.renameFile(entry.file, (0, import_obsidian17.normalizePath)(parent ? `${parent}/${newName}` : newName));
-        } else if (entry.file instanceof import_obsidian17.TFile) {
-          await this.app.fileManager.processFrontMatter(entry.file, (fm) => {
-            fm["binder-order"] = w.order;
+      if (!(this.app.vault.getAbstractFileByPath(zoneFolderPath) instanceof import_obsidian17.TFolder)) {
+        await this.app.vault.createFolder(zoneFolderPath);
+      }
+    } catch (e) {
+      new import_obsidian17.Notice(t2("main.operationFailed", { error: e instanceof Error ? e.message : String(e) }));
+      return;
+    }
+    await this.executeMove(planMove(src, zoneFolderPath, group, "end", false));
+  }
+  // Executes a move plan: renames go through fileManager.renameFile so links
+  // heal, order writes through processFrontMatter. Re-render arrives via the
+  // vault/metadata event path. A failure (e.g. a name collision at the
+  // destination) stops the plan and surfaces as a notice — each rename is
+  // atomic, so nothing is left half-moved.
+  async executeMove(ops) {
+    try {
+      for (const op of ops) {
+        const file = this.app.vault.getAbstractFileByPath(op.path);
+        if (!file) continue;
+        if (op.kind === "rename") {
+          await this.app.fileManager.renameFile(file, (0, import_obsidian17.normalizePath)(op.newPath));
+        } else if (file instanceof import_obsidian17.TFile) {
+          await this.app.fileManager.processFrontMatter(file, (fm) => {
+            fm["binder-order"] = op.order;
           });
         }
       }
@@ -14443,6 +14707,7 @@ var FilesystemBinderView = class extends import_obsidian17.ItemView {
   }
   async onClose() {
     if (this.refreshTimer !== null) window.clearTimeout(this.refreshTimer);
+    this.cancelHoverExpand();
   }
 };
 

@@ -2133,6 +2133,16 @@ body .ws-launcher select {
   box-shadow: inset 0 -2px 0 var(--interactive-accent);
 }
 
+/* Structural moves (#228): nesting highlight on folder rows and drawer tabs,
+   and the root drop target on the list's empty space */
+.ws-fsb-drop-into {
+  box-shadow: inset 0 0 0 2px var(--interactive-accent);
+}
+
+.ws-fsb-list.ws-fsb-drop-root {
+  box-shadow: inset 0 -3px 0 var(--interactive-accent);
+}
+
 .ws-fsb-count {
   flex-shrink: 0;
   font-size: 10px;

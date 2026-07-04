@@ -228,6 +228,10 @@
       "exports": "Exportações",
       "emptyResearch": "Ainda não há arquivos de pesquisa. O que você colocar na pasta Research aparece aqui.",
       "emptyExports": "Ainda não há exportações. Arquivos exportados chegam aqui."
+    },
+    "fs": {
+      "exportsDropBlocked": "Exportações é somente saída — arquivos exportados chegam aqui automaticamente.",
+      "folderZoneBlocked": "Pastas não podem se mover entre zonas. Mova os documentos individualmente."
     }
   },
   "launcher": {
