@@ -222,7 +222,13 @@
       "moreActions": "추가 작업"
     },
     "toggleCounts": "문서 수 표시",
-    "fsEmpty": "이 프로젝트 폴더에는 아직 문서가 없습니다. 추가된 파일은 여기에 자동으로 표시됩니다."
+    "fsEmpty": "이 프로젝트 폴더에는 아직 문서가 없습니다. 추가된 파일은 여기에 자동으로 표시됩니다.",
+    "drawer": {
+      "research": "자료",
+      "exports": "내보내기",
+      "emptyResearch": "아직 자료 파일이 없습니다. Research 폴더에 넣은 항목이 여기에 표시됩니다.",
+      "emptyExports": "아직 내보낸 파일이 없습니다. 내보낸 파일이 여기에 도착합니다."
+    }
   },
   "launcher": {
     "displayText": "글쓰기 스튜디오",

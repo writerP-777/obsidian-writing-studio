@@ -222,7 +222,13 @@
       "moreActions": "Mais ações"
     },
     "toggleCounts": "Mostrar contagem de documentos",
-    "fsEmpty": "Esta pasta de projeto ainda não tem documentos. Arquivos adicionados a ela aparecem aqui automaticamente."
+    "fsEmpty": "Esta pasta de projeto ainda não tem documentos. Arquivos adicionados a ela aparecem aqui automaticamente.",
+    "drawer": {
+      "research": "Pesquisa",
+      "exports": "Exportações",
+      "emptyResearch": "Ainda não há arquivos de pesquisa. O que você colocar na pasta Research aparece aqui.",
+      "emptyExports": "Ainda não há exportações. Arquivos exportados chegam aqui."
+    }
   },
   "launcher": {
     "displayText": "Estúdio de escrita",

@@ -222,7 +222,13 @@
       "moreActions": "More actions"
     },
     "toggleCounts": "Show document counts",
-    "fsEmpty": "This project folder has no documents yet. Files added to it appear here automatically."
+    "fsEmpty": "This project folder has no documents yet. Files added to it appear here automatically.",
+    "drawer": {
+      "research": "Research",
+      "exports": "Exports",
+      "emptyResearch": "No research files yet. Anything you put in the Research folder appears here.",
+      "emptyExports": "No exports yet. Exported files land here."
+    }
   },
   "launcher": {
     "displayText": "Writing studio",

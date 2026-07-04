@@ -222,7 +222,13 @@
       "moreActions": "Weitere Aktionen"
     },
     "toggleCounts": "Dokumentanzahl anzeigen",
-    "fsEmpty": "Dieser Projektordner enthält noch keine Dokumente. Hinzugefügte Dateien erscheinen hier automatisch."
+    "fsEmpty": "Dieser Projektordner enthält noch keine Dokumente. Hinzugefügte Dateien erscheinen hier automatisch.",
+    "drawer": {
+      "research": "Recherche",
+      "exports": "Exporte",
+      "emptyResearch": "Noch keine Recherchedateien. Was im Ordner Research liegt, erscheint hier.",
+      "emptyExports": "Noch keine Exporte. Exportierte Dateien landen hier."
+    }
   },
   "launcher": {
     "displayText": "Schreibstudio",
