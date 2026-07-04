@@ -12,6 +12,7 @@ import {
 } from 'obsidian';
 
 import { BinderView, BINDER_VIEW_TYPE } from './src/BinderView';
+import { FilesystemBinderView } from './src/FilesystemBinderView';
 import { CompilePreviewView, COMPILE_PREVIEW_VIEW_TYPE } from './src/CompilePreview';
 import { LauncherView, LAUNCHER_VIEW_TYPE } from './src/LauncherView';
 import { FocusMode } from './src/FocusMode';
@@ -124,6 +125,10 @@ export interface WritingStudioSettings {
   // WordPress
   wordPressSites: WordPressSite[];
   wikilinkHandling: 'strip' | 'convert';
+  // Experimental
+  // ADR 0001 preview: the binder renders the project folder tree read-only
+  // instead of _binder.json. Off = the shipped binder, untouched.
+  filesystemBinder: boolean;
   // State
   activeProjectId: string | null;
   currentWritingMode: WritingModeType;
@@ -167,6 +172,7 @@ const DEFAULT_SETTINGS: WritingStudioSettings = {
   epubIncludeCover: true,
   wordPressSites: [],
   wikilinkHandling: 'strip',
+  filesystemBinder: false,
   activeProjectId: null,
   currentWritingMode: 'none',
   removedProjectIds: [],
@@ -229,7 +235,11 @@ export default class WritingStudioPlugin extends Plugin {
 
     // Register views
     this.registerView(LAUNCHER_VIEW_TYPE, (leaf) => new LauncherView(leaf, this));
-    this.registerView(BINDER_VIEW_TYPE, (leaf) => new BinderView(leaf, this));
+    // The experimental setting picks the binder implementation at leaf
+    // creation; both classes share the view type so every entry point
+    // (ribbon, commands, launcher, workspace restore) works unchanged
+    this.registerView(BINDER_VIEW_TYPE, (leaf) =>
+      this.settings.filesystemBinder ? new FilesystemBinderView(leaf, this) : new BinderView(leaf, this));
     this.registerView(COMPILE_PREVIEW_VIEW_TYPE, (leaf) => new CompilePreviewView(leaf, this));
     this.registerView(FOLDER_SIDEBAR_VIEW_TYPE, (leaf) => new FolderSidebarView(leaf));
     this.registerView(WRITING_LOG_VIEW_TYPE, (leaf) => new WritingLogView(leaf, this));
@@ -447,6 +457,15 @@ export default class WritingStudioPlugin extends Plugin {
         await leaf.view.refresh();
       }
     }
+  }
+
+  // Rebuilds open binder leaves so the experimental-binder toggle takes
+  // effect immediately — the view class is chosen at leaf creation
+  async reopenBinderViews(): Promise<void> {
+    const leaves = this.app.workspace.getLeavesOfType(BINDER_VIEW_TYPE);
+    if (leaves.length === 0) return;
+    for (const leaf of leaves) leaf.detach();
+    await this.openBinder();
   }
 
   async openBinder(): Promise<void> {

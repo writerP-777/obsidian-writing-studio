@@ -28,7 +28,10 @@
         "note": "Nota"
       },
       "frontmatterAutoUpdate": "Actualización automática del frontmatter",
-      "frontmatterAutoUpdateDesc": "Actualizar automáticamente el recuento de palabras y la fecha de modificación al guardar."
+      "frontmatterAutoUpdateDesc": "Actualizar automáticamente el recuento de palabras y la fecha de modificación al guardar.",
+      "experimentalHeading": "Experimental",
+      "filesystemBinder": "Carpeta de anillas del sistema de archivos",
+      "filesystemBinderDesc": "Vista previa de la carpeta de anillas rediseñada: muestra directamente el árbol de carpetas del proyecto, en modo de solo lectura. Desactívala para volver a la carpeta de anillas clásica."
     },
     "focus": {
       "heading": "Modo de enfoque",
@@ -217,7 +220,9 @@
       "sprintRunning": "Sprint en curso",
       "quickStart": "Inicio rápido: {{minutes}} minutos",
       "moreActions": "Más acciones"
-    }
+    },
+    "toggleCounts": "Mostrar número de documentos",
+    "fsEmpty": "Esta carpeta de proyecto aún no tiene documentos. Los archivos que se añadan aparecerán aquí automáticamente."
   },
   "launcher": {
     "displayText": "Estudio de escritura",
