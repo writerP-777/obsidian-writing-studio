@@ -2144,19 +2144,21 @@ body .ws-launcher select {
   border-top: 1px solid var(--background-modifier-border);
 }
 
+/* Panel sits BELOW the tab bar (prototype variant C: the drawer opens
+   downward; the tab bar is the divider under the manuscript) */
 .ws-fsb-drawer-panel {
   max-height: 220px;
   overflow-y: auto;
   padding: 4px 0;
-  border-bottom: 1px solid var(--background-modifier-border);
 }
 
 .ws-fsb-drawer-tabs {
   display: flex;
 }
 
-/* Active tab = accent top border + normal text on a normal background —
-   readable under any theme accent (see light-theme fix above) */
+/* Active tab = accent bottom border (pointing at the panel below) + normal
+   text on a normal background — readable under any theme accent (see
+   light-theme fix above) */
 .ws-fsb-drawer-tab {
   flex: 1;
   display: flex;
@@ -2166,7 +2168,7 @@ body .ws-launcher select {
   padding: 6px 8px;
   background: none;
   border: none;
-  border-top: 2px solid transparent;
+  border-bottom: 2px solid transparent;
   border-radius: 0;
   font-size: 12px;
   color: var(--text-muted);
@@ -2178,7 +2180,7 @@ body .ws-launcher select {
 }
 
 .ws-fsb-drawer-tab.is-active {
-  border-top-color: var(--interactive-accent);
+  border-bottom-color: var(--interactive-accent);
   color: var(--text-normal);
   background: var(--background-secondary);
 }

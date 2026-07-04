@@ -14163,8 +14163,20 @@ var FilesystemBinderView = class extends import_obsidian17.ItemView {
     drawerEl.empty();
     if (!this.activeProject || !model) return;
     const pref = this.drawerPref();
+    const tabs = drawerEl.createDiv("ws-fsb-drawer-tabs");
+    for (const zoneDef of DRAWER_ZONES) {
+      const zone = model.zones[zoneDef.zone];
+      const tab = tabs.createEl("button", { cls: "ws-fsb-drawer-tab" });
+      tab.toggleClass("is-active", pref.open && pref.tab === zoneDef.zone);
+      tab.createSpan({ cls: "ws-fsb-drawer-tab-label", text: t2(zoneDef.labelKey) });
+      tab.createSpan({ cls: "ws-fsb-count", text: String(zone.fileCount) });
+      (0, import_obsidian17.setTooltip)(tab, (_b2 = (_a2 = zone.folder) == null ? void 0 : _a2.name) != null ? _b2 : zoneDef.folderName);
+      tab.onclick = () => {
+        void this.selectDrawerTab(zoneDef.zone);
+      };
+    }
     if (pref.open) {
-      const zoneDef = (_a2 = DRAWER_ZONES.find((z) => z.zone === pref.tab)) != null ? _a2 : DRAWER_ZONES[0];
+      const zoneDef = (_c = DRAWER_ZONES.find((z) => z.zone === pref.tab)) != null ? _c : DRAWER_ZONES[0];
       const zone = model.zones[zoneDef.zone];
       const panel = drawerEl.createDiv("ws-fsb-drawer-panel");
       panel.setAttribute("role", "tree");
@@ -14173,18 +14185,6 @@ var FilesystemBinderView = class extends import_obsidian17.ItemView {
       } else {
         this.renderNodes(panel, zone.nodes, 0, false);
       }
-    }
-    const tabs = drawerEl.createDiv("ws-fsb-drawer-tabs");
-    for (const zoneDef of DRAWER_ZONES) {
-      const zone = model.zones[zoneDef.zone];
-      const tab = tabs.createEl("button", { cls: "ws-fsb-drawer-tab" });
-      tab.toggleClass("is-active", pref.open && pref.tab === zoneDef.zone);
-      tab.createSpan({ cls: "ws-fsb-drawer-tab-label", text: t2(zoneDef.labelKey) });
-      tab.createSpan({ cls: "ws-fsb-count", text: String(zone.fileCount) });
-      (0, import_obsidian17.setTooltip)(tab, (_c = (_b2 = zone.folder) == null ? void 0 : _b2.name) != null ? _c : zoneDef.folderName);
-      tab.onclick = () => {
-        void this.selectDrawerTab(zoneDef.zone);
-      };
     }
   }
   // Clicking the open tab closes the drawer; any other click opens it there
