@@ -1466,7 +1466,8 @@ body .ws-launcher select {
 }
 
 .ws-folder-item.is-keyboard-focused,
-.ws-binder-item.is-keyboard-focused {
+.ws-binder-item.is-keyboard-focused,
+.ws-fsb-row.is-keyboard-focused {
   background: var(--interactive-hover);
   outline: 2px solid var(--interactive-accent);
   outline-offset: -2px;
@@ -2025,7 +2026,8 @@ body .ws-launcher select {
   color: #ffffff;
 }
 
-.theme-light .ws-binder-item.is-keyboard-focused {
+.theme-light .ws-binder-item.is-keyboard-focused,
+.theme-light .ws-fsb-row.is-keyboard-focused {
   outline-color: #6d28d9;
 }
 
@@ -2043,7 +2045,8 @@ body .ws-launcher select {
     color: #ffffff;
   }
 
-  .ws-binder-item.is-keyboard-focused {
+  .ws-binder-item.is-keyboard-focused,
+  .ws-fsb-row.is-keyboard-focused {
     outline-color: #6d28d9;
   }
 }
@@ -2062,6 +2065,73 @@ body .ws-launcher select {
   color: var(--text-on-accent);
 }
 
-.theme-dark .ws-binder-item.is-keyboard-focused {
+.theme-dark .ws-binder-item.is-keyboard-focused,
+.theme-dark .ws-fsb-row.is-keyboard-focused {
   outline-color: var(--interactive-accent);
+}
+
+/* ─── Filesystem binder (experimental, ADR 0001 slice 1 — #225) ─────────────
+   Compact outliner: dense single-line rows, status as a left-edge stripe,
+   no type icons, no order gutter. */
+
+.ws-fsb-row {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 12px 2px var(--ws-binder-depth, 8px);
+  cursor: pointer;
+  border-radius: 4px;
+  margin: 0 4px;
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.ws-fsb-row:hover {
+  background: var(--background-modifier-hover);
+}
+
+/* Status stripe — the row's only status signal (variant C) */
+.ws-fsb-has-status::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 2px;
+  bottom: 2px;
+  width: 3px;
+  border-radius: 2px;
+  background: var(--ws-status-color);
+}
+
+.ws-fsb-title {
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.ws-fsb-folder > .ws-fsb-title {
+  font-weight: 600;
+}
+
+/* Excluded from compile (binder-compile: false) or non-markdown */
+.ws-fsb-dimmed {
+  opacity: 0.5;
+}
+
+.ws-fsb-count {
+  flex-shrink: 0;
+  font-size: 10px;
+  color: var(--text-muted);
+  background: var(--background-modifier-border);
+  border-radius: 8px;
+  padding: 0 6px;
+  line-height: 16px;
+}
+
+/* Count-badge toggle: active = accent border + text on a normal background,
+   so it stays readable under any theme accent (see light-theme fix above) */
+.ws-fsb-counts-btn.is-active {
+  border-color: var(--interactive-accent);
+  color: var(--text-accent);
 }

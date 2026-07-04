@@ -4,6 +4,11 @@ All notable changes to Writing Studio are documented here.
 
 ---
 
+## [Unreleased]
+
+### Added
+- Experimental filesystem binder (Settings → General → Experimental, off by default): a read-only preview of the redesigned binder that renders the active project's folder tree directly instead of `_binder.json`. Documents order by an integer `binder-order` frontmatter key and folders by a numeric name prefix (`020 Part One`, stripped in display) on one shared number line; anything without a value sorts naturally at the end of its group. Files created, renamed, or deleted outside the app — including in Windows Explorer — appear correctly with no scan. Rows show status as a left-edge stripe (from `binder-status`), documents excluded from compile (`binder-compile: false`) and non-markdown files render dimmed, folders carry document-count badges behind a toggle, and hovering shows the on-disk name plus the frontmatter the binder reads. The preview writes nothing — no file, folder, or frontmatter changes; the classic binder is unchanged and returns when the toggle is off. (#225, ADR 0001 slice 1)
+
 ## [2.11.0] - 2026-07-03
 
 ### Added

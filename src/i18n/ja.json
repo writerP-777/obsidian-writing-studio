@@ -28,7 +28,10 @@
         "note": "ノート"
       },
       "frontmatterAutoUpdate": "フロントマター自動更新",
-      "frontmatterAutoUpdateDesc": "保存時に語数と更新日を自動的に更新します。"
+      "frontmatterAutoUpdateDesc": "保存時に語数と更新日を自動的に更新します。",
+      "experimentalHeading": "実験的機能",
+      "filesystemBinder": "ファイルシステムバインダー",
+      "filesystemBinderDesc": "再設計されたバインダーのプレビュー：プロジェクトフォルダのツリーを直接、読み取り専用で表示します。オフにするとクラシックバインダーに戻ります。"
     },
     "focus": {
       "heading": "フォーカスモード",
@@ -217,7 +220,9 @@
       "sprintRunning": "スプリント中",
       "quickStart": "クイックスタート：{{minutes}}分",
       "moreActions": "その他の操作"
-    }
+    },
+    "toggleCounts": "文書数を表示",
+    "fsEmpty": "このプロジェクトフォルダにはまだ文書がありません。追加されたファイルは自動的にここに表示されます。"
   },
   "launcher": {
     "displayText": "ライティングスタジオ",

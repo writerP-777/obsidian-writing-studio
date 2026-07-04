@@ -28,7 +28,10 @@
         "note": "노트"
       },
       "frontmatterAutoUpdate": "프론트매터 자동 업데이트",
-      "frontmatterAutoUpdateDesc": "저장 시 단어 수와 수정 날짜를 자동으로 업데이트합니다."
+      "frontmatterAutoUpdateDesc": "저장 시 단어 수와 수정 날짜를 자동으로 업데이트합니다.",
+      "experimentalHeading": "실험적 기능",
+      "filesystemBinder": "파일 시스템 바인더",
+      "filesystemBinderDesc": "재설계된 바인더 미리보기: 프로젝트 폴더 트리를 읽기 전용으로 직접 표시합니다. 끄면 기존 바인더로 돌아갑니다."
     },
     "focus": {
       "heading": "집중 모드",
@@ -217,7 +220,9 @@
       "sprintRunning": "스프린트 진행 중",
       "quickStart": "빠른 시작: {{minutes}}분",
       "moreActions": "추가 작업"
-    }
+    },
+    "toggleCounts": "문서 수 표시",
+    "fsEmpty": "이 프로젝트 폴더에는 아직 문서가 없습니다. 추가된 파일은 여기에 자동으로 표시됩니다."
   },
   "launcher": {
     "displayText": "글쓰기 스튜디오",

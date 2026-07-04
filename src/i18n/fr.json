@@ -28,7 +28,10 @@
         "note": "Note"
       },
       "frontmatterAutoUpdate": "Mise à jour automatique du frontmatter",
-      "frontmatterAutoUpdateDesc": "Mettre à jour automatiquement le nombre de mots et la date de modification lors de l’enregistrement."
+      "frontmatterAutoUpdateDesc": "Mettre à jour automatiquement le nombre de mots et la date de modification lors de l’enregistrement.",
+      "experimentalHeading": "Expérimental",
+      "filesystemBinder": "Classeur du système de fichiers",
+      "filesystemBinderDesc": "Aperçu du classeur repensé : affiche directement l’arborescence du dossier de projet, en lecture seule. Désactivez pour revenir au classeur classique."
     },
     "focus": {
       "heading": "Mode concentration",
@@ -217,7 +220,9 @@
       "sprintRunning": "Sprint en cours",
       "quickStart": "Démarrage rapide : {{minutes}} minutes",
       "moreActions": "Plus d'actions"
-    }
+    },
+    "toggleCounts": "Afficher le nombre de documents",
+    "fsEmpty": "Ce dossier de projet ne contient encore aucun document. Les fichiers qui y sont ajoutés apparaissent ici automatiquement."
   },
   "launcher": {
     "displayText": "Studio d'écriture",
