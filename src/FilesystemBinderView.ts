@@ -1,10 +1,10 @@
-import { App, ItemView, WorkspaceLeaf, TAbstractFile, TFile, TFolder, Notice, setIcon, setTooltip } from 'obsidian';
+import { App, ItemView, WorkspaceLeaf, TAbstractFile, TFile, TFolder, Notice, setIcon, setTooltip, normalizePath } from 'obsidian';
 import type WritingStudioPlugin from '../main';
 import { WritingProject } from '../models/Project';
 import { STATUS_COLORS, DocumentStatus } from '../models/BinderItem';
 import { BINDER_VIEW_TYPE } from './BinderView';
 import { RESERVED_PROJECT_FOLDERS } from './folderRename';
-import { SiblingEntry, sortSiblings, entryDisplayName, isHiddenName, parseBinderOrder } from './binderOrder';
+import { SiblingEntry, sortSiblings, entryDisplayName, isHiddenName, parseBinderOrder, canCarryOrder, planReorder, folderNameWithPrefix } from './binderOrder';
 import { ProjectModal } from '../modals/ProjectModal';
 import { TargetsDashboardModal } from '../modals/TargetsDashboardModal';
 import { confirmDeleteProject } from '../modals/confirmDeleteProject';
@@ -76,6 +76,11 @@ export class FilesystemBinderView extends ItemView {
   private showCounts = true;
   private navRows: Array<{ el: HTMLElement; node: TreeNode; depth: number; hasChildren: boolean; isExpanded: boolean }> = [];
   private navFocusPath: string | null = null;
+  // Sibling-reorder drag state (#227): source path plus its parent path so
+  // targets outside the sibling group show no indicator and accept no drop
+  private dragSource: { path: string; parentPath: string } | null = null;
+  private dragOverEl: HTMLElement | null = null;
+  private dropBefore = false;
   private refreshTimer: number | null = null;
   // Serialized snapshot of everything render-relevant, so vault and metadata
   // events that changed nothing visible (e.g. body edits) skip the rebuild.
@@ -488,9 +493,97 @@ export class FilesystemBinderView extends ItemView {
         if (node.file instanceof TFile) void this.openFile(node.file);
       };
 
+      // Sibling reorder (#227) — manuscript zone only; drop-into and
+      // cross-parent moves are slice 4
+      if (nav) this.wireReorderDrag(row, node, nodes);
+
       if (node.children.length && isExpanded) {
         this.renderNodes(container, node.children, depth + 1, nav);
       }
+    }
+  }
+
+  private wireReorderDrag(row: HTMLElement, node: TreeNode, siblings: TreeNode[]): void {
+    const parentPath = node.file.parent?.path ?? '';
+
+    // Only order carriers start a drag — non-markdown files are permanently
+    // unordered, so there is nothing a drag of one could write
+    if (canCarryOrder(node)) {
+      row.setAttribute('draggable', 'true');
+      row.ondragstart = (e) => {
+        this.dragSource = { path: node.file.path, parentPath };
+        row.addClass('ws-fsb-dragging');
+        e.dataTransfer?.setData('text/plain', node.file.path);
+      };
+      row.ondragend = () => {
+        row.removeClass('ws-fsb-dragging');
+        this.dragSource = null;
+        this.clearDropIndicator();
+      };
+    }
+
+    row.ondragover = (e) => {
+      const src = this.dragSource;
+      // No indicator outside the source's sibling group — the drop is not
+      // accepted, so nothing suggests it would be
+      if (!src || src.path === node.file.path || src.parentPath !== parentPath) return;
+      e.preventDefault();
+      if (this.dragOverEl && this.dragOverEl !== row) this.clearDropIndicator();
+      this.dragOverEl = row;
+      const rect = row.getBoundingClientRect();
+      this.dropBefore = (e.clientY - rect.top) < rect.height / 2;
+      row.toggleClass('ws-fsb-drop-before', this.dropBefore);
+      row.toggleClass('ws-fsb-drop-after', !this.dropBefore);
+    };
+    row.ondragleave = (e) => {
+      if (!row.contains(e.relatedTarget as Node) && this.dragOverEl === row) this.clearDropIndicator();
+    };
+    row.ondrop = (e) => {
+      const src = this.dragSource;
+      if (!src || src.path === node.file.path || src.parentPath !== parentPath) return;
+      e.preventDefault();
+      const before = this.dropBefore;
+      this.clearDropIndicator();
+      void this.performReorder(src.path, siblings, node, before);
+    };
+  }
+
+  private clearDropIndicator(): void {
+    this.dragOverEl?.removeClass('ws-fsb-drop-before');
+    this.dragOverEl?.removeClass('ws-fsb-drop-after');
+    this.dragOverEl = null;
+  }
+
+  // Applies the planned order writes: documents get binder-order via
+  // processFrontMatter, folders get their name prefix renamed (links
+  // auto-heal). Re-render arrives through the vault/metadata event path.
+  private async performReorder(srcPath: string, siblings: TreeNode[], target: TreeNode, before: boolean): Promise<void> {
+    const srcIdx = siblings.findIndex(n => n.file.path === srcPath);
+    if (srcIdx < 0) return;
+    const seq = [...siblings];
+    const [moved] = seq.splice(srcIdx, 1);
+    const tgtIdx = seq.findIndex(n => n.file.path === target.file.path);
+    if (tgtIdx < 0) return;
+    const insertAt = before ? tgtIdx : tgtIdx + 1;
+    seq.splice(insertAt, 0, moved);
+
+    const writes = planReorder(seq, insertAt);
+    try {
+      for (const w of writes) {
+        const entry = seq[w.index];
+        if (entry.file instanceof TFolder) {
+          const newName = folderNameWithPrefix(entry.name, w.order);
+          if (newName === entry.name) continue;
+          const parent = entry.file.parent?.path ?? '';
+          await this.app.fileManager.renameFile(entry.file, normalizePath(parent ? `${parent}/${newName}` : newName));
+        } else if (entry.file instanceof TFile) {
+          await this.app.fileManager.processFrontMatter(entry.file, (fm: Record<string, unknown>) => {
+            fm['binder-order'] = w.order;
+          });
+        }
+      }
+    } catch (e) {
+      new Notice(t('main.operationFailed', { error: e instanceof Error ? e.message : String(e) }));
     }
   }
 

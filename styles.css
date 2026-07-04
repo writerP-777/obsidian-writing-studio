@@ -2119,6 +2119,20 @@ body .ws-launcher select {
   opacity: 0.5;
 }
 
+/* Sibling-reorder drag states (#227). Inset shadows, not pseudo-elements —
+   ::before already carries the status stripe. */
+.ws-fsb-dragging {
+  opacity: 0.4;
+}
+
+.ws-fsb-drop-before {
+  box-shadow: inset 0 2px 0 var(--interactive-accent);
+}
+
+.ws-fsb-drop-after {
+  box-shadow: inset 0 -2px 0 var(--interactive-accent);
+}
+
 .ws-fsb-count {
   flex-shrink: 0;
   font-size: 10px;

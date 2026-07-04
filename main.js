@@ -13882,6 +13882,44 @@ function compareSiblings(a, b) {
 function sortSiblings(entries) {
   return [...entries].sort(compareSiblings);
 }
+function canCarryOrder(entry) {
+  return entry.isFolder || entry.extension === "md";
+}
+function folderNameWithPrefix(name, order) {
+  return String(order).padStart(3, "0") + " " + parseFolderPrefix(name).displayName;
+}
+function planReorder(sequence, movedIndex) {
+  const moved = sequence[movedIndex];
+  if (!moved || !canCarryOrder(moved)) return [];
+  const prev = movedIndex > 0 ? sequence[movedIndex - 1] : null;
+  const next = movedIndex < sequence.length - 1 ? sequence[movedIndex + 1] : null;
+  const prevOrder = prev ? effectiveOrder(prev) : null;
+  const nextOrder = next ? effectiveOrder(next) : null;
+  if (!prev && !next) {
+    return effectiveOrder(moved) === 10 ? [] : [{ index: movedIndex, order: 10 }];
+  }
+  if (!prev) {
+    const order = nextOrder !== null ? nextOrder - 10 : 10;
+    return effectiveOrder(moved) === order ? [] : [{ index: movedIndex, order }];
+  }
+  if (prevOrder !== null && (!next || nextOrder === null)) {
+    const order = prevOrder + 10;
+    return effectiveOrder(moved) === order ? [] : [{ index: movedIndex, order }];
+  }
+  if (prevOrder !== null && nextOrder !== null && nextOrder - prevOrder >= 2) {
+    const order = Math.floor((prevOrder + nextOrder) / 2);
+    return effectiveOrder(moved) === order ? [] : [{ index: movedIndex, order }];
+  }
+  const writes = [];
+  let value = 10;
+  for (let i2 = 0; i2 < sequence.length; i2++) {
+    const entry = sequence[i2];
+    if (!canCarryOrder(entry)) continue;
+    if (effectiveOrder(entry) !== value) writes.push({ index: i2, order: value });
+    value += 10;
+  }
+  return writes;
+}
 
 // src/FilesystemBinderView.ts
 var TOOLTIP_KEYS = ["binder-order", "binder-status", "binder-type", "binder-compile", "word-count-goal"];
@@ -13902,6 +13940,11 @@ var FilesystemBinderView = class extends import_obsidian17.ItemView {
     this.showCounts = true;
     this.navRows = [];
     this.navFocusPath = null;
+    // Sibling-reorder drag state (#227): source path plus its parent path so
+    // targets outside the sibling group show no indicator and accept no drop
+    this.dragSource = null;
+    this.dragOverEl = null;
+    this.dropBefore = false;
     this.refreshTimer = null;
     // Serialized snapshot of everything render-relevant, so vault and metadata
     // events that changed nothing visible (e.g. body edits) skip the rebuild.
@@ -14248,9 +14291,88 @@ var FilesystemBinderView = class extends import_obsidian17.ItemView {
         }
         if (node.file instanceof import_obsidian17.TFile) void this.openFile(node.file);
       };
+      if (nav) this.wireReorderDrag(row, node, nodes);
       if (node.children.length && isExpanded) {
         this.renderNodes(container, node.children, depth + 1, nav);
       }
+    }
+  }
+  wireReorderDrag(row, node, siblings) {
+    var _a2, _b2;
+    const parentPath2 = (_b2 = (_a2 = node.file.parent) == null ? void 0 : _a2.path) != null ? _b2 : "";
+    if (canCarryOrder(node)) {
+      row.setAttribute("draggable", "true");
+      row.ondragstart = (e) => {
+        var _a3;
+        this.dragSource = { path: node.file.path, parentPath: parentPath2 };
+        row.addClass("ws-fsb-dragging");
+        (_a3 = e.dataTransfer) == null ? void 0 : _a3.setData("text/plain", node.file.path);
+      };
+      row.ondragend = () => {
+        row.removeClass("ws-fsb-dragging");
+        this.dragSource = null;
+        this.clearDropIndicator();
+      };
+    }
+    row.ondragover = (e) => {
+      const src = this.dragSource;
+      if (!src || src.path === node.file.path || src.parentPath !== parentPath2) return;
+      e.preventDefault();
+      if (this.dragOverEl && this.dragOverEl !== row) this.clearDropIndicator();
+      this.dragOverEl = row;
+      const rect = row.getBoundingClientRect();
+      this.dropBefore = e.clientY - rect.top < rect.height / 2;
+      row.toggleClass("ws-fsb-drop-before", this.dropBefore);
+      row.toggleClass("ws-fsb-drop-after", !this.dropBefore);
+    };
+    row.ondragleave = (e) => {
+      if (!row.contains(e.relatedTarget) && this.dragOverEl === row) this.clearDropIndicator();
+    };
+    row.ondrop = (e) => {
+      const src = this.dragSource;
+      if (!src || src.path === node.file.path || src.parentPath !== parentPath2) return;
+      e.preventDefault();
+      const before = this.dropBefore;
+      this.clearDropIndicator();
+      void this.performReorder(src.path, siblings, node, before);
+    };
+  }
+  clearDropIndicator() {
+    var _a2, _b2;
+    (_a2 = this.dragOverEl) == null ? void 0 : _a2.removeClass("ws-fsb-drop-before");
+    (_b2 = this.dragOverEl) == null ? void 0 : _b2.removeClass("ws-fsb-drop-after");
+    this.dragOverEl = null;
+  }
+  // Applies the planned order writes: documents get binder-order via
+  // processFrontMatter, folders get their name prefix renamed (links
+  // auto-heal). Re-render arrives through the vault/metadata event path.
+  async performReorder(srcPath, siblings, target, before) {
+    var _a2, _b2;
+    const srcIdx = siblings.findIndex((n) => n.file.path === srcPath);
+    if (srcIdx < 0) return;
+    const seq = [...siblings];
+    const [moved] = seq.splice(srcIdx, 1);
+    const tgtIdx = seq.findIndex((n) => n.file.path === target.file.path);
+    if (tgtIdx < 0) return;
+    const insertAt = before ? tgtIdx : tgtIdx + 1;
+    seq.splice(insertAt, 0, moved);
+    const writes = planReorder(seq, insertAt);
+    try {
+      for (const w of writes) {
+        const entry = seq[w.index];
+        if (entry.file instanceof import_obsidian17.TFolder) {
+          const newName = folderNameWithPrefix(entry.name, w.order);
+          if (newName === entry.name) continue;
+          const parent = (_b2 = (_a2 = entry.file.parent) == null ? void 0 : _a2.path) != null ? _b2 : "";
+          await this.app.fileManager.renameFile(entry.file, (0, import_obsidian17.normalizePath)(parent ? `${parent}/${newName}` : newName));
+        } else if (entry.file instanceof import_obsidian17.TFile) {
+          await this.app.fileManager.processFrontMatter(entry.file, (fm) => {
+            fm["binder-order"] = w.order;
+          });
+        }
+      }
+    } catch (e) {
+      new import_obsidian17.Notice(t2("main.operationFailed", { error: e instanceof Error ? e.message : String(e) }));
     }
   }
   toggleCollapse(path) {

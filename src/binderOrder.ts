@@ -83,3 +83,71 @@ export function compareSiblings(a: SiblingEntry, b: SiblingEntry): number {
 export function sortSiblings<T extends SiblingEntry>(entries: T[]): T[] {
   return [...entries].sort(compareSiblings);
 }
+
+// ─── Reorder planning (#227) ─────────────────────────────────────────────────
+
+// Only markdown documents (frontmatter) and folders (name prefix) can carry
+// an order value; everything else is permanently unordered.
+export function canCarryOrder(entry: SiblingEntry): boolean {
+  return entry.isFolder || entry.extension === 'md';
+}
+
+// The on-disk folder name for a given order: three-digit zero-padded prefix
+// (`020 Part One`), replacing any existing prefix. Never touches documents.
+export function folderNameWithPrefix(name: string, order: number): string {
+  return String(order).padStart(3, '0') + ' ' + parseFolderPrefix(name).displayName;
+}
+
+export interface ReorderWrite {
+  /** Index into the new sequence of the entry receiving a value. */
+  index: number;
+  order: number;
+}
+
+// Given the desired sibling sequence (the dragged entry already placed at
+// movedIndex), compute the minimal order writes that make sortSiblings
+// reproduce it. Lazy by design: one write when the position is expressible
+// against ordered neighbors — midpoint in a gap ≥ 2, `next − 10` at the
+// start (negative values are valid and sort correctly), `prev + 10` at the
+// end or against the unordered tail. When the position is not expressible
+// (unordered neighbors, exhausted gap, duplicate values), the whole group
+// materializes as 10/20/30 in sequence order — writing only entries whose
+// value actually differs, and never a non-carrier.
+export function planReorder(sequence: SiblingEntry[], movedIndex: number): ReorderWrite[] {
+  const moved = sequence[movedIndex];
+  if (!moved || !canCarryOrder(moved)) return [];
+
+  const prev = movedIndex > 0 ? sequence[movedIndex - 1] : null;
+  const next = movedIndex < sequence.length - 1 ? sequence[movedIndex + 1] : null;
+  const prevOrder = prev ? effectiveOrder(prev) : null;
+  const nextOrder = next ? effectiveOrder(next) : null;
+
+  if (!prev && !next) {
+    return effectiveOrder(moved) === 10 ? [] : [{ index: movedIndex, order: 10 }];
+  }
+  if (!prev) {
+    // Any ordered value sorts before the unordered tail, so a missing
+    // nextOrder still admits a single write
+    const order = nextOrder !== null ? nextOrder - 10 : 10;
+    return effectiveOrder(moved) === order ? [] : [{ index: movedIndex, order }];
+  }
+  if (prevOrder !== null && (!next || nextOrder === null)) {
+    const order = prevOrder + 10;
+    return effectiveOrder(moved) === order ? [] : [{ index: movedIndex, order }];
+  }
+  if (prevOrder !== null && nextOrder !== null && nextOrder - prevOrder >= 2) {
+    const order = Math.floor((prevOrder + nextOrder) / 2);
+    return effectiveOrder(moved) === order ? [] : [{ index: movedIndex, order }];
+  }
+
+  // Unordered neighbors or exhausted gap: materialize the sibling group
+  const writes: ReorderWrite[] = [];
+  let value = 10;
+  for (let i = 0; i < sequence.length; i++) {
+    const entry = sequence[i];
+    if (!canCarryOrder(entry)) continue;
+    if (effectiveOrder(entry) !== value) writes.push({ index: i, order: value });
+    value += 10;
+  }
+  return writes;
+}
