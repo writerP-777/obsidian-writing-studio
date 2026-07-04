@@ -6,6 +6,10 @@ import {
   isHiddenName,
   naturalCompare,
   sortSiblings,
+  canCarryOrder,
+  folderNameWithPrefix,
+  planReorder,
+  ReorderWrite,
   SiblingEntry,
 } from '../src/binderOrder';
 
@@ -202,5 +206,143 @@ describe('sortSiblings', () => {
     const before = [...input];
     sortSiblings(input);
     expect(input).toEqual(before);
+  });
+});
+
+describe('canCarryOrder', () => {
+  it('allows folders and markdown, rejects everything else', () => {
+    expect(canCarryOrder(folder('Part One'))).toBe(true);
+    expect(canCarryOrder(doc('Chapter.md'))).toBe(true);
+    expect(canCarryOrder(doc('map.png'))).toBe(false);
+  });
+});
+
+describe('folderNameWithPrefix', () => {
+  it('prepends a three-digit prefix to a prefix-less name', () => {
+    expect(folderNameWithPrefix('Part One', 20)).toBe('020 Part One');
+  });
+
+  it('replaces an existing prefix, keeping the display name', () => {
+    expect(folderNameWithPrefix('030 Part One', 20)).toBe('020 Part One');
+  });
+
+  it('does not pad beyond three digits', () => {
+    expect(folderNameWithPrefix('Appendix', 1010)).toBe('1010 Appendix');
+  });
+});
+
+describe('planReorder', () => {
+  // Applies planned writes, then verifies sortSiblings reproduces the
+  // dropped sequence — the reload/external-move integration criterion:
+  // order is derived from persisted values alone.
+  const applyAndSort = (sequence: SiblingEntry[], writes: ReorderWrite[]): SiblingEntry[] => {
+    const applied = sequence.map(e => ({ ...e }));
+    for (const w of writes) {
+      const entry = applied[w.index];
+      if (entry.isFolder) entry.name = folderNameWithPrefix(entry.name, w.order);
+      else entry.binderOrder = w.order;
+    }
+    return sortSiblings(applied);
+  };
+
+  it('writes exactly one midpoint value when a gap exists', () => {
+    const seq = [doc('A.md', 10), doc('C.md'), doc('B.md', 30)];
+    const writes = planReorder(seq, 1);
+    expect(writes).toEqual([{ index: 1, order: 20 }]);
+    expect(applyAndSort(seq, writes).map(e => e.name)).toEqual(['A.md', 'C.md', 'B.md']);
+  });
+
+  it('writes next − 10 at the start of the group, even below zero', () => {
+    const seq = [doc('C.md'), doc('A.md', 5), doc('B.md', 15)];
+    const writes = planReorder(seq, 0);
+    expect(writes).toEqual([{ index: 0, order: -5 }]);
+    expect(applyAndSort(seq, writes).map(e => e.name)).toEqual(['C.md', 'A.md', 'B.md']);
+  });
+
+  it('writes prev + 10 at the end of the group', () => {
+    const seq = [doc('A.md', 10), doc('B.md', 20), doc('C.md', 12)];
+    const writes = planReorder(seq, 2);
+    expect(writes).toEqual([{ index: 2, order: 30 }]);
+    expect(applyAndSort(seq, writes).map(e => e.name)).toEqual(['A.md', 'B.md', 'C.md']);
+  });
+
+  it('writes prev + 10 when dropped before the unordered tail', () => {
+    const seq = [doc('A.md', 10), doc('C.md'), doc('Beta.md', null), doc('map.png')];
+    const writes = planReorder(seq, 1);
+    expect(writes).toEqual([{ index: 1, order: 20 }]);
+    expect(applyAndSort(seq, writes).map(e => e.name)).toEqual(['A.md', 'C.md', 'Beta.md', 'map.png']);
+  });
+
+  it('renumbers only the group when the gap is exhausted, skipping values already in place', () => {
+    const seq = [doc('A.md', 10), doc('C.md'), doc('B.md', 11)];
+    const writes = planReorder(seq, 1);
+    // A already sits at its 10 target — renumbering writes only C and B
+    expect(writes).toEqual([
+      { index: 1, order: 20 },
+      { index: 2, order: 30 },
+    ]);
+    expect(applyAndSort(seq, writes).map(e => e.name)).toEqual(['A.md', 'C.md', 'B.md']);
+  });
+
+  it('renumbers on duplicate neighbor values', () => {
+    const seq = [doc('A.md', 10), doc('C.md'), doc('B.md', 10)];
+    const writes = planReorder(seq, 1);
+    expect(applyAndSort(seq, writes).map(e => e.name)).toEqual(['A.md', 'C.md', 'B.md']);
+  });
+
+  it('materializes a never-ordered group as 10/20/30 on first reorder', () => {
+    const seq = [doc('B.md'), doc('A.md'), folder('Part One')];
+    const writes = planReorder(seq, 1);
+    expect(writes).toEqual([
+      { index: 0, order: 10 },
+      { index: 1, order: 20 },
+      { index: 2, order: 30 },
+    ]);
+    const sorted = applyAndSort(seq, writes);
+    expect(sorted.map(e => entryDisplayName(e))).toEqual(['B', 'A', 'Part One']);
+    expect(sorted[2].name).toBe('030 Part One');
+  });
+
+  it('never writes to non-markdown files during materialization', () => {
+    const seq = [doc('B.md'), doc('map.png'), doc('A.md')];
+    const writes = planReorder(seq, 2);
+    expect(writes).toEqual([
+      { index: 0, order: 10 },
+      { index: 2, order: 20 },
+    ]);
+    // The non-md file stays permanently unordered — it sorts to the tail
+    expect(applyAndSort(seq, writes).map(e => e.name)).toEqual(['B.md', 'A.md', 'map.png']);
+  });
+
+  it('renumbers across mixed docs and folders, skipping values already in place', () => {
+    // B dropped between C(20) and the folder at 21 — gap exhausted
+    const moved = [doc('A.md', 10), doc('C.md', 20), doc('B.md', 31), folder('021 Part')];
+    const writes = planReorder(moved, 2);
+    // Targets 10/20/30/40: A and C already sit at theirs
+    expect(writes).toEqual([
+      { index: 2, order: 30 },
+      { index: 3, order: 40 },
+    ]);
+    const sorted = applyAndSort(moved, writes);
+    expect(sorted.map(e => entryDisplayName(e))).toEqual(['A', 'C', 'B', 'Part']);
+    expect(sorted[3].name).toBe('040 Part');
+  });
+
+  it('places a document between ordered siblings via midpoint even next to a folder', () => {
+    const moved = [doc('A.md', 10), doc('C.md', 20), doc('B.md', 31), folder('030 Part')];
+    expect(planReorder(moved, 2)).toEqual([{ index: 2, order: 25 }]);
+  });
+
+  it('assigns 10 to a lone item', () => {
+    expect(planReorder([doc('Only.md')], 0)).toEqual([{ index: 0, order: 10 }]);
+  });
+
+  it('returns no writes when the moved item cannot carry order', () => {
+    expect(planReorder([doc('A.md', 10), doc('map.png')], 1)).toEqual([]);
+  });
+
+  it('returns no writes when the position already holds', () => {
+    const seq = [doc('A.md', 10), doc('B.md', 20), doc('C.md', 30)];
+    expect(planReorder(seq, 1)).toEqual([]);
   });
 });
