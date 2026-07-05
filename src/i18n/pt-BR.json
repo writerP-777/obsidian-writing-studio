@@ -231,7 +231,22 @@
     },
     "fs": {
       "exportsDropBlocked": "Exportações é somente saída — arquivos exportados chegam aqui automaticamente.",
-      "folderZoneBlocked": "Pastas não podem se mover entre zonas. Mova os documentos individualmente."
+      "folderZoneBlocked": "Pastas não podem se mover entre zonas. Mova os documentos individualmente.",
+      "newFolder": "Nova pasta",
+      "untitledFolder": "Pasta sem título",
+      "clearStatus": "Limpar status",
+      "clearType": "Limpar tipo",
+      "excludeFromCompile": "Excluir da compilação",
+      "includeInCompile": "Incluir na compilação",
+      "delete": "Excluir",
+      "deleteFolderTitle": "Excluir pasta",
+      "deleteDocMessage": "Mover \"{{name}}\" para a lixeira?",
+      "deleteFolderMessage_one": "Mover \"{{name}}\" e o arquivo dentro dela para a lixeira?",
+      "deleteFolderMessage_other": "Mover \"{{name}}\" e os {{count}} arquivos dentro dela para a lixeira?",
+      "nameEmpty": "O nome não pode estar vazio.",
+      "nameInvalidChars": "Os nomes não podem conter \\ / : * ? \" < > |",
+      "nameTrailing": "Os nomes não podem terminar com espaço ou ponto.",
+      "nameExists": "Já existe algo chamado \"{{name}}\" aqui."
     }
   },
   "launcher": {

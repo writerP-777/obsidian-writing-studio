@@ -1,4 +1,4 @@
-import { App, ItemView, WorkspaceLeaf, TAbstractFile, TFile, TFolder, Notice, setIcon, setTooltip, normalizePath } from 'obsidian';
+import { App, ItemView, Menu, WorkspaceLeaf, TAbstractFile, TFile, TFolder, Notice, setIcon, setTooltip, normalizePath } from 'obsidian';
 import type WritingStudioPlugin from '../main';
 import { WritingProject } from '../models/Project';
 import { STATUS_COLORS, DocumentStatus } from '../models/BinderItem';
@@ -6,8 +6,11 @@ import { BINDER_VIEW_TYPE } from './BinderView';
 import { RESERVED_PROJECT_FOLDERS } from './folderRename';
 import { SiblingEntry, sortSiblings, entryDisplayName, isHiddenName, parseBinderOrder } from './binderOrder';
 import { BinderZone, DropRegion, DragSource, MoveEntry, MoveOp, dropRegion, canStartDrag, evaluateDrop, planMove } from './binderMove';
+import { BinderDocType, BINDER_TYPES, ItemNameRejection, menuActionsFor, parseBinderStatus, parseBinderType, renamePrefill, renameTargetName, validateItemName } from './binderMenu';
 import { ProjectModal } from '../modals/ProjectModal';
 import { TargetsDashboardModal } from '../modals/TargetsDashboardModal';
+import { TitlePromptModal } from '../modals/TitlePromptModal';
+import { ConfirmModal } from '../modals/ConfirmModal';
 import { confirmDeleteProject } from '../modals/confirmDeleteProject';
 import { ControlStrip } from './ControlStrip';
 import { t } from './i18n';
@@ -16,6 +19,14 @@ import { applyFocus } from './FolderSidebarView';
 
 // The frontmatter keys the tooltip surfaces, in display order.
 const TOOLTIP_KEYS = ['binder-order', 'binder-status', 'binder-type', 'binder-compile', 'word-count-goal'];
+
+// Context-menu status entries — reuses the classic binder's labels.
+const STATUS_MENU: Array<{ value: DocumentStatus; key: string }> = [
+  { value: 'draft', key: 'binder.menu.setStatusDraft' },
+  { value: 'in-progress', key: 'binder.menu.setStatusInProgress' },
+  { value: 'complete', key: 'binder.menu.setStatusComplete' },
+  { value: 'published', key: 'binder.menu.setStatusPublished' },
+];
 
 // The resources zone: the reserved folders pinned below the manuscript as
 // drawer tabs. On-disk folder names are fixed (RESERVED_PROJECT_FOLDERS);
@@ -45,6 +56,7 @@ interface TreeNode extends SiblingEntry {
   file: TFile | TFolder;
   displayName: string;
   status: DocumentStatus | null;
+  docType: BinderDocType | null;
   compileExcluded: boolean;
   /** Raw frontmatter lines for the tooltip (documents only). */
   fmLines: string[];
@@ -210,9 +222,17 @@ export class FilesystemBinderView extends ItemView {
       };
     }
 
-    // Toolbar — read-only slice: creation buttons arrive with the first
-    // mutation slice; here only presentation controls and the dashboard
+    // Toolbar — creation targets the manuscript root (#229); presentation
+    // controls and the dashboard follow
     const toolbar = header.createDiv('ws-binder-toolbar');
+
+    const newDocBtn = toolbar.createEl('button', { cls: 'ws-binder-btn', title: t('binder.titlePrompt.heading') });
+    setIcon(newDocBtn, 'file-plus');
+    newDocBtn.onclick = () => this.promptCreateAtRoot(false);
+
+    const newFolderBtn = toolbar.createEl('button', { cls: 'ws-binder-btn', title: t('binder.fs.newFolder') });
+    setIcon(newFolderBtn, 'folder-plus');
+    newFolderBtn.onclick = () => this.promptCreateAtRoot(true);
 
     const countsBtn = toolbar.createEl('button', { cls: 'ws-binder-btn ws-fsb-counts-btn' });
     countsBtn.ariaLabel = t('binder.toggleCounts');
@@ -312,6 +332,7 @@ export class FilesystemBinderView extends ItemView {
         file,
         displayName: entryDisplayName(entry),
         status: null,
+        docType: null,
         compileExcluded: false,
         fmLines: [],
         children,
@@ -323,10 +344,7 @@ export class FilesystemBinderView extends ItemView {
     const fm = file.extension === 'md'
       ? this.app.metadataCache.getFileCache(file)?.frontmatter
       : undefined;
-    const rawStatus: unknown = fm?.['binder-status'];
-    const status = typeof rawStatus === 'string' && rawStatus in STATUS_COLORS
-      ? (rawStatus as DocumentStatus)
-      : null;
+    const status = parseBinderStatus(fm?.['binder-status']);
     const fmLines: string[] = [];
     for (const key of TOOLTIP_KEYS) {
       const value: unknown = fm?.[key];
@@ -347,6 +365,7 @@ export class FilesystemBinderView extends ItemView {
       file,
       displayName: entryDisplayName(entry),
       status,
+      docType: parseBinderType(fm?.['binder-type']),
       compileExcluded: fm?.['binder-compile'] === false,
       fmLines,
       children: [],
@@ -556,6 +575,14 @@ export class FilesystemBinderView extends ItemView {
           return;
         }
         if (node.file instanceof TFile) void this.openFile(node.file);
+      };
+
+      // Mutation surface (slice 5, #229): right-click on every zone's rows;
+      // keyboard parity (Shift+F10, F2) is manuscript-only like all nav
+      row.oncontextmenu = (e) => {
+        e.preventDefault();
+        if (nav) this.navFocusPath = node.file.path;
+        this.buildContextMenu(node, zone).showAtMouseEvent(e);
       };
 
       // Reorder (#227) and structural moves (#228) — every zone wires drops;
@@ -789,6 +816,219 @@ export class FilesystemBinderView extends ItemView {
     }
   }
 
+  // ─── Mutation surface (slice 5, #229) ──────────────────────────────────────
+
+  // Every mutation is a filesystem or frontmatter write; the binder re-renders
+  // through the vault/metadata event path, never by a manual refresh call.
+
+  private buildContextMenu(node: TreeNode, zone: BinderZone): Menu {
+    const menu = new Menu();
+    const actions = new Set(menuActionsFor(node, zone));
+    const doc = node.file instanceof TFile && node.extension === 'md' ? node.file : null;
+
+    if (actions.has('rename')) {
+      menu.addItem(i => i.setTitle(t('binder.menu.rename')).setIcon('pencil')
+        .onClick(() => this.promptRename(node)));
+    }
+
+    if (actions.has('status') && doc) {
+      menu.addSeparator();
+      for (const s of STATUS_MENU) {
+        menu.addItem(i => i.setTitle(t(s.key)).setChecked(node.status === s.value)
+          .onClick(() => { void this.writeDocMeta(doc, fm => { fm['binder-status'] = s.value; }); }));
+      }
+      if (node.status) {
+        menu.addItem(i => i.setTitle(t('binder.fs.clearStatus'))
+          .onClick(() => { void this.writeDocMeta(doc, fm => { delete fm['binder-status']; }); }));
+      }
+    }
+
+    if (actions.has('goal') && doc) {
+      menu.addSeparator();
+      menu.addItem(i => i.setTitle(t('main.menu.setGoal')).setIcon('target')
+        .onClick(() => { this.plugin.setWordCountGoal(doc); }));
+    }
+
+    if (actions.has('type') && doc) {
+      for (const v of BINDER_TYPES) {
+        menu.addItem(i => i.setTitle(t('binder.menu.changeType', { type: t(`targetsDashboard.typeLabel.${v}`) }))
+          .setChecked(node.docType === v)
+          .onClick(() => { void this.writeDocMeta(doc, fm => { fm['binder-type'] = v; }); }));
+      }
+      if (node.docType) {
+        menu.addItem(i => i.setTitle(t('binder.fs.clearType'))
+          .onClick(() => { void this.writeDocMeta(doc, fm => { delete fm['binder-type']; }); }));
+      }
+    }
+
+    if (actions.has('compile') && doc) {
+      const excluded = node.compileExcluded;
+      menu.addSeparator();
+      // Re-including removes the key rather than writing `true` (#229 ruling)
+      menu.addItem(i => i.setTitle(t(excluded ? 'binder.fs.includeInCompile' : 'binder.fs.excludeFromCompile'))
+        .setIcon(excluded ? 'file-check' : 'file-x')
+        .onClick(() => { void this.writeDocMeta(doc, fm => {
+          if (excluded) delete fm['binder-compile'];
+          else fm['binder-compile'] = false;
+        }); }));
+    }
+
+    if (actions.has('newDoc') || actions.has('newFolder')) {
+      // A folder row creates inside itself; a document row creates in its
+      // own parent folder (#229 ruling on "beside")
+      const parent = node.file instanceof TFolder ? node.file : node.file.parent;
+      if (parent) {
+        menu.addSeparator();
+        if (actions.has('newDoc')) {
+          menu.addItem(i => i.setTitle(t('binder.titlePrompt.heading')).setIcon('file-plus')
+            .onClick(() => this.promptCreate(parent, false)));
+        }
+        if (actions.has('newFolder')) {
+          menu.addItem(i => i.setTitle(t('binder.fs.newFolder')).setIcon('folder-plus')
+            .onClick(() => this.promptCreate(parent, true)));
+        }
+      }
+    }
+
+    if (actions.has('delete')) {
+      menu.addSeparator();
+      menu.addItem(i => i.setTitle(t('binder.fs.delete')).setIcon('trash')
+        .onClick(() => this.confirmDelete(node)));
+    }
+
+    return menu;
+  }
+
+  private promptRename(node: TreeNode): void {
+    new TitlePromptModal(
+      this.app,
+      t('binder.menu.rename'),
+      renamePrefill(node),
+      t('binder.menu.rename'),
+      t('binder.deleteConfirm.cancel'),
+      async (typed) => {
+        const target = renameTargetName(node, typed);
+        if (target === node.file.name) return;
+        const siblings = (node.file.parent?.children ?? [])
+          .filter(c => c !== node.file)
+          .map(c => c.name);
+        const verdict = validateItemName(typed, target, siblings);
+        if (!verdict.ok) {
+          this.rejectName(verdict.reason, target);
+          return;
+        }
+        const parent = node.file.parent?.path ?? '';
+        const newPath = parent === '' || parent === '/' ? target : `${parent}/${target}`;
+        try {
+          // One atomic rename; links heal, and a document's binder-order
+          // rides inside the file untouched
+          await this.app.fileManager.renameFile(node.file, normalizePath(newPath));
+        } catch (e) {
+          new Notice(t('main.operationFailed', { error: e instanceof Error ? e.message : String(e) }));
+        }
+      }
+    ).open();
+  }
+
+  private promptCreateAtRoot(isFolder: boolean): void {
+    const project = this.activeProject;
+    const root = project ? this.app.vault.getAbstractFileByPath(project.folderPath) : null;
+    if (!(root instanceof TFolder)) {
+      new Notice(t('binder.selectProjectFirst'));
+      return;
+    }
+    this.promptCreate(root, isFolder);
+  }
+
+  private promptCreate(parent: TFolder, isFolder: boolean): void {
+    // The prefill must itself be a valid filename (typed names are rejected,
+    // never silently altered), so the time uses dots rather than colons
+    const now = new Date();
+    const time = [now.getHours(), now.getMinutes(), now.getSeconds()]
+      .map(n => String(n).padStart(2, '0')).join('.');
+    const prefill = isFolder ? t('binder.fs.untitledFolder') : t('binder.untitledDocument', { time });
+    new TitlePromptModal(
+      this.app,
+      isFolder ? t('binder.fs.newFolder') : t('binder.titlePrompt.heading'),
+      prefill,
+      t('binder.titlePrompt.create'),
+      t('binder.deleteConfirm.cancel'),
+      async (typed) => {
+        // No order write at creation (#229 ruling): the new item lands
+        // unordered in natural-sort position; order emerges on first drag
+        const target = isFolder
+          ? typed
+          : renameTargetName({ name: '', isFolder: false, extension: 'md', binderOrder: null }, typed);
+        const verdict = validateItemName(typed, target, parent.children.map(c => c.name));
+        if (!verdict.ok) {
+          this.rejectName(verdict.reason, target);
+          return;
+        }
+        const path = normalizePath(`${parent.path}/${target}`);
+        try {
+          if (isFolder) {
+            await this.app.vault.createFolder(path);
+          } else {
+            const created = await this.app.vault.create(path, '');
+            await this.openFile(created);
+          }
+        } catch (e) {
+          new Notice(t('main.operationFailed', { error: e instanceof Error ? e.message : String(e) }));
+        }
+      }
+    ).open();
+  }
+
+  private confirmDelete(node: TreeNode): void {
+    const folder = node.file instanceof TFolder ? node.file : null;
+    new ConfirmModal(
+      this.app,
+      folder ? t('binder.fs.deleteFolderTitle') : t('binder.deleteConfirm.title'),
+      folder
+        ? t('binder.fs.deleteFolderMessage', { name: node.displayName, count: this.countAllFiles(folder) })
+        : t('binder.fs.deleteDocMessage', { name: node.displayName }),
+      t('binder.deleteConfirm.delete'),
+      t('binder.deleteConfirm.cancel'),
+      async () => {
+        try {
+          // Respects the user's "Deleted files" preference
+          await this.app.fileManager.trashFile(node.file);
+        } catch (e) {
+          new Notice(t('main.operationFailed', { error: e instanceof Error ? e.message : String(e) }));
+        }
+      }
+    ).open();
+  }
+
+  // Everything in the subtree goes to the trash, hidden plumbing included —
+  // the confirm states the honest total, not the visible count
+  private countAllFiles(folder: TFolder): number {
+    let n = 0;
+    for (const child of folder.children) {
+      if (child instanceof TFolder) n += this.countAllFiles(child);
+      else n++;
+    }
+    return n;
+  }
+
+  private async writeDocMeta(file: TFile, mutate: (fm: Record<string, unknown>) => void): Promise<void> {
+    try {
+      await this.app.fileManager.processFrontMatter(file, mutate);
+    } catch (e) {
+      new Notice(t('main.operationFailed', { error: e instanceof Error ? e.message : String(e) }));
+    }
+  }
+
+  private rejectName(reason: ItemNameRejection | undefined, target: string): void {
+    const keys: Record<ItemNameRejection, string> = {
+      empty: 'binder.fs.nameEmpty',
+      'invalid-chars': 'binder.fs.nameInvalidChars',
+      trailing: 'binder.fs.nameTrailing',
+      exists: 'binder.fs.nameExists',
+    };
+    new Notice(t(keys[reason ?? 'empty'], { name: target }));
+  }
+
   // ─── Keyboard ──────────────────────────────────────────────────────────────
 
   private handleTreeKey(e: KeyboardEvent): void {
@@ -823,8 +1063,13 @@ export class FilesystemBinderView extends ItemView {
         }
         break;
       case 'menu':
+        if (row) {
+          const rect = row.el.getBoundingClientRect();
+          this.buildContextMenu(row.node, 'manuscript').showAtPosition({ x: rect.left, y: rect.bottom });
+        }
+        break;
       case 'rename':
-        // Context menu and rename arrive with slice 5 (#229)
+        if (row) this.promptRename(row.node);
         break;
     }
   }

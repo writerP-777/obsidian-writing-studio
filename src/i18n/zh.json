@@ -231,7 +231,22 @@
     },
     "fs": {
       "exportsDropBlocked": "导出区仅用于输出——导出的文件会自动出现在这里。",
-      "folderZoneBlocked": "文件夹不能在区域之间移动。请单独移动文档。"
+      "folderZoneBlocked": "文件夹不能在区域之间移动。请单独移动文档。",
+      "newFolder": "新建文件夹",
+      "untitledFolder": "未命名文件夹",
+      "clearStatus": "清除状态",
+      "clearType": "清除类型",
+      "excludeFromCompile": "从编译中排除",
+      "includeInCompile": "包含在编译中",
+      "delete": "删除",
+      "deleteFolderTitle": "删除文件夹",
+      "deleteDocMessage": "将“{{name}}”移至回收站？",
+      "deleteFolderMessage_one": "将“{{name}}”及其中的 {{count}} 个文件移至回收站？",
+      "deleteFolderMessage_other": "将“{{name}}”及其中的 {{count}} 个文件移至回收站？",
+      "nameEmpty": "名称不能为空。",
+      "nameInvalidChars": "名称不能包含 \\ / : * ? \" < > |",
+      "nameTrailing": "名称不能以空格或句点结尾。",
+      "nameExists": "此处已存在名为“{{name}}”的项目。"
     }
   },
   "launcher": {

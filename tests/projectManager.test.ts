@@ -353,6 +353,46 @@ describe('ProjectManager.findBinderEntryForFile', () => {
   });
 });
 
+describe('getWordCountGoalForFile — goal single-authority gate (#229)', () => {
+  function makePluginWithFm(filesystemBinder: boolean, fm: Record<string, unknown> | undefined) {
+    return {
+      app: { metadataCache: { getFileCache: () => (fm ? { frontmatter: fm } : null) } },
+      settings: { defaultProjectFolder: 'Projects', authorName: '', removedProjectIds: [] as string[], filesystemBinder },
+      saveSettings: jest.fn().mockResolvedValue(undefined),
+    } as never;
+  }
+
+  async function seedBinder(pm: ProjectManager): Promise<void> {
+    await pm.saveProject(makeProject());
+    await pm.setActiveProject('project-1');
+    await pm.saveBinder({
+      version: '2.0', projectId: 'project-1', items: [
+        { id: 'c1', title: 'Ch 1', filePath: 'Projects/My Book/Chapters/Ch 1.md', type: 'chapter', order: 1, status: 'draft', includeInExport: true, wordCountGoal: 250 },
+      ],
+    });
+  }
+
+  const file = { path: 'Projects/My Book/Chapters/Ch 1.md' } as never;
+
+  it('classic mode: the binder item wins over frontmatter (regression lock)', async () => {
+    const pm = new ProjectManager(makePluginWithFm(false, { 'word-count-goal': 300 }), new InMemoryVaultFiles());
+    await seedBinder(pm);
+    expect(await pm.getWordCountGoalForFile(file)).toBe(250);
+  });
+
+  it('experimental binder: frontmatter is the sole authority — the dormant binder item is ignored', async () => {
+    const pm = new ProjectManager(makePluginWithFm(true, { 'word-count-goal': 300 }), new InMemoryVaultFiles());
+    await seedBinder(pm);
+    expect(await pm.getWordCountGoalForFile(file)).toBe(300);
+  });
+
+  it('experimental binder: no frontmatter goal means no goal, even when the binder item has one', async () => {
+    const pm = new ProjectManager(makePluginWithFm(true, undefined), new InMemoryVaultFiles());
+    await seedBinder(pm);
+    expect(await pm.getWordCountGoalForFile(file)).toBeUndefined();
+  });
+});
+
 describe('ProjectManager.deleteProject', () => {
   function seededFiles(): InMemoryVaultFiles {
     const files = new InMemoryVaultFiles();

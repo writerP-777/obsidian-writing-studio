@@ -231,7 +231,22 @@
     },
     "fs": {
       "exportsDropBlocked": "Exporte ist nur für Ausgaben – exportierte Dateien landen hier automatisch.",
-      "folderZoneBlocked": "Ordner können nicht zwischen Zonen verschoben werden. Verschiebe Dokumente einzeln."
+      "folderZoneBlocked": "Ordner können nicht zwischen Zonen verschoben werden. Verschiebe Dokumente einzeln.",
+      "newFolder": "Neuer Ordner",
+      "untitledFolder": "Unbenannter Ordner",
+      "clearStatus": "Status entfernen",
+      "clearType": "Typ entfernen",
+      "excludeFromCompile": "Von der Kompilierung ausschließen",
+      "includeInCompile": "In die Kompilierung einbeziehen",
+      "delete": "Löschen",
+      "deleteFolderTitle": "Ordner löschen",
+      "deleteDocMessage": "„{{name}}“ in den Papierkorb verschieben?",
+      "deleteFolderMessage_one": "„{{name}}“ und die darin enthaltene Datei in den Papierkorb verschieben?",
+      "deleteFolderMessage_other": "„{{name}}“ und die {{count}} darin enthaltenen Dateien in den Papierkorb verschieben?",
+      "nameEmpty": "Der Name darf nicht leer sein.",
+      "nameInvalidChars": "Namen dürfen nicht \\ / : * ? \" < > | enthalten",
+      "nameTrailing": "Namen dürfen nicht mit einem Leerzeichen oder Punkt enden.",
+      "nameExists": "Etwas mit dem Namen „{{name}}“ existiert hier bereits."
     }
   },
   "launcher": {

@@ -560,7 +560,9 @@ tags: [writing-studio]
   }
 
   async getWordCountGoalForFile(file: TFile): Promise<number | undefined> {
-    const project = this.getActiveProject();
+    // With the experimental binder on, frontmatter `word-count-goal` is the
+    // sole goal authority (#229) — the dormant binder item is never consulted
+    const project = this.plugin.settings.filesystemBinder ? null : this.getActiveProject();
     if (project) {
       const binder = await this.loadBinder(project);
       const item = this.findBinderItemByPath(binder.items, file.path);

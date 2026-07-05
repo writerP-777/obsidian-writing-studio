@@ -231,7 +231,25 @@
     },
     "fs": {
       "exportsDropBlocked": "التصدير للإخراج فقط — الملفات المصدَّرة تصل هنا تلقائيًا.",
-      "folderZoneBlocked": "لا يمكن نقل المجلدات بين المناطق. انقل المستندات فرديًا."
+      "folderZoneBlocked": "لا يمكن نقل المجلدات بين المناطق. انقل المستندات فرديًا.",
+      "newFolder": "مجلد جديد",
+      "untitledFolder": "مجلد بدون عنوان",
+      "clearStatus": "مسح الحالة",
+      "clearType": "مسح النوع",
+      "excludeFromCompile": "استبعاد من التجميع",
+      "includeInCompile": "تضمين في التجميع",
+      "delete": "حذف",
+      "deleteFolderTitle": "حذف المجلد",
+      "deleteDocMessage": "هل تريد نقل \"{{name}}\" إلى سلة المهملات؟",
+      "deleteFolderMessage_one": "هل تريد نقل \"{{name}}\" والملف الموجود بداخله إلى سلة المهملات؟",
+      "deleteFolderMessage_two": "هل تريد نقل \"{{name}}\" والملفين الموجودين بداخله إلى سلة المهملات؟",
+      "deleteFolderMessage_few": "هل تريد نقل \"{{name}}\" و{{count}} ملفات بداخله إلى سلة المهملات؟",
+      "deleteFolderMessage_many": "هل تريد نقل \"{{name}}\" و{{count}} ملفاً بداخله إلى سلة المهملات؟",
+      "deleteFolderMessage_other": "هل تريد نقل \"{{name}}\" و{{count}} ملف بداخله إلى سلة المهملات؟",
+      "nameEmpty": "لا يمكن أن يكون الاسم فارغاً.",
+      "nameInvalidChars": "لا يمكن أن تحتوي الأسماء على \\ / : * ? \" < > |",
+      "nameTrailing": "لا يمكن أن تنتهي الأسماء بمسافة أو نقطة.",
+      "nameExists": "يوجد بالفعل عنصر باسم \"{{name}}\" هنا."
     }
   },
   "launcher": {
