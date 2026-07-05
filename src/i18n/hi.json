@@ -231,7 +231,22 @@
     },
     "fs": {
       "exportsDropBlocked": "एक्सपोर्ट केवल आउटपुट के लिए है — एक्सपोर्ट की गई फ़ाइलें यहाँ अपने आप आती हैं।",
-      "folderZoneBlocked": "फ़ोल्डर ज़ोन के बीच नहीं ले जाए जा सकते। दस्तावेज़ों को अलग-अलग ले जाएँ।"
+      "folderZoneBlocked": "फ़ोल्डर ज़ोन के बीच नहीं ले जाए जा सकते। दस्तावेज़ों को अलग-अलग ले जाएँ।",
+      "newFolder": "नया फ़ोल्डर",
+      "untitledFolder": "बिना शीर्षक फ़ोल्डर",
+      "clearStatus": "स्थिति हटाएं",
+      "clearType": "प्रकार हटाएं",
+      "excludeFromCompile": "संकलन से बाहर रखें",
+      "includeInCompile": "संकलन में शामिल करें",
+      "delete": "हटाएं",
+      "deleteFolderTitle": "फ़ोल्डर हटाएं",
+      "deleteDocMessage": "\"{{name}}\" को ट्रैश में ले जाएं?",
+      "deleteFolderMessage_one": "\"{{name}}\" और उसके अंदर की {{count}} फ़ाइल को ट्रैश में ले जाएं?",
+      "deleteFolderMessage_other": "\"{{name}}\" और उसके अंदर की {{count}} फ़ाइलों को ट्रैश में ले जाएं?",
+      "nameEmpty": "नाम खाली नहीं हो सकता।",
+      "nameInvalidChars": "नामों में \\ / : * ? \" < > | नहीं हो सकते",
+      "nameTrailing": "नाम स्पेस या बिंदु से समाप्त नहीं हो सकते।",
+      "nameExists": "यहां \"{{name}}\" नाम की कोई चीज़ पहले से मौजूद है।"
     }
   },
   "launcher": {

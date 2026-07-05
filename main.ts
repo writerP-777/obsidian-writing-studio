@@ -737,7 +737,9 @@ class WordCountGoalModal extends Modal {
   private goal = 0;
   // Non-null when the file is in the active project's binder — the binder
   // item is then the authoritative goal store (CONTEXT.md invariant 1) and
-  // frontmatter is neither read nor written.
+  // frontmatter is neither read nor written. With the experimental
+  // filesystem binder on, frontmatter is the sole authority instead (#229)
+  // and this stays null.
   private binderEntry: { binder: BinderData; item: BinderItem } | null = null;
 
   constructor(app: App, plugin: WritingStudioPlugin, file: TFile) {
@@ -752,7 +754,9 @@ class WordCountGoalModal extends Modal {
     contentEl.addClass('ws-goal-modal');
     contentEl.createEl('h2', { text: t('wordCountGoal.title') });
 
-    this.binderEntry = await this.plugin.projectManager.findBinderEntryForFile(this.file.path);
+    this.binderEntry = this.plugin.settings.filesystemBinder
+      ? null
+      : await this.plugin.projectManager.findBinderEntryForFile(this.file.path);
     if (this.binderEntry) {
       this.goal = this.binderEntry.item.wordCountGoal ?? 0;
     } else {

@@ -231,7 +231,22 @@
     },
     "fs": {
       "exportsDropBlocked": "Exports est en sortie seule — les fichiers exportés y arrivent automatiquement.",
-      "folderZoneBlocked": "Les dossiers ne peuvent pas passer d'une zone à l'autre. Déplacez les documents individuellement."
+      "folderZoneBlocked": "Les dossiers ne peuvent pas passer d'une zone à l'autre. Déplacez les documents individuellement.",
+      "newFolder": "Nouveau dossier",
+      "untitledFolder": "Dossier sans titre",
+      "clearStatus": "Effacer le statut",
+      "clearType": "Effacer le type",
+      "excludeFromCompile": "Exclure de la compilation",
+      "includeInCompile": "Inclure dans la compilation",
+      "delete": "Supprimer",
+      "deleteFolderTitle": "Supprimer le dossier",
+      "deleteDocMessage": "Déplacer « {{name}} » vers la corbeille ?",
+      "deleteFolderMessage_one": "Déplacer « {{name}} » et le fichier qu'il contient vers la corbeille ?",
+      "deleteFolderMessage_other": "Déplacer « {{name}} » et les {{count}} fichiers qu'il contient vers la corbeille ?",
+      "nameEmpty": "Le nom ne peut pas être vide.",
+      "nameInvalidChars": "Les noms ne peuvent pas contenir \\ / : * ? \" < > |",
+      "nameTrailing": "Les noms ne peuvent pas se terminer par une espace ou un point.",
+      "nameExists": "Un élément nommé « {{name}} » existe déjà ici."
     }
   },
   "launcher": {

@@ -231,7 +231,22 @@
     },
     "fs": {
       "exportsDropBlocked": "এক্সপোর্ট শুধুমাত্র আউটপুটের জন্য — এক্সপোর্ট করা ফাইল স্বয়ংক্রিয়ভাবে এখানে আসে।",
-      "folderZoneBlocked": "ফোল্ডার জোনের মধ্যে সরানো যায় না। ডকুমেন্টগুলি আলাদাভাবে সরান।"
+      "folderZoneBlocked": "ফোল্ডার জোনের মধ্যে সরানো যায় না। ডকুমেন্টগুলি আলাদাভাবে সরান।",
+      "newFolder": "নতুন ফোল্ডার",
+      "untitledFolder": "শিরোনামহীন ফোল্ডার",
+      "clearStatus": "স্থিতি মুছুন",
+      "clearType": "ধরন মুছুন",
+      "excludeFromCompile": "সংকলন থেকে বাদ দিন",
+      "includeInCompile": "সংকলনে অন্তর্ভুক্ত করুন",
+      "delete": "মুছে ফেলুন",
+      "deleteFolderTitle": "ফোল্ডার মুছুন",
+      "deleteDocMessage": "\"{{name}}\" ট্র্যাশে সরাবেন?",
+      "deleteFolderMessage_one": "\"{{name}}\" এবং এর ভিতরের {{count}}টি ফাইল ট্র্যাশে সরাবেন?",
+      "deleteFolderMessage_other": "\"{{name}}\" এবং এর ভিতরের {{count}}টি ফাইল ট্র্যাশে সরাবেন?",
+      "nameEmpty": "নাম খালি হতে পারে না।",
+      "nameInvalidChars": "নামে \\ / : * ? \" < > | থাকতে পারে না",
+      "nameTrailing": "নাম স্পেস বা বিন্দু দিয়ে শেষ হতে পারে না।",
+      "nameExists": "এখানে \"{{name}}\" নামে কিছু ইতিমধ্যে আছে।"
     }
   },
   "launcher": {

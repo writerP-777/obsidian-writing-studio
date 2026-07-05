@@ -231,7 +231,22 @@
     },
     "fs": {
       "exportsDropBlocked": "書き出しは出力専用です — 書き出したファイルは自動的にここに入ります。",
-      "folderZoneBlocked": "フォルダはゾーン間を移動できません。ドキュメントを個別に移動してください。"
+      "folderZoneBlocked": "フォルダはゾーン間を移動できません。ドキュメントを個別に移動してください。",
+      "newFolder": "新規フォルダ",
+      "untitledFolder": "無題のフォルダ",
+      "clearStatus": "ステータスをクリア",
+      "clearType": "タイプをクリア",
+      "excludeFromCompile": "コンパイルから除外",
+      "includeInCompile": "コンパイルに含める",
+      "delete": "削除",
+      "deleteFolderTitle": "フォルダを削除",
+      "deleteDocMessage": "「{{name}}」をゴミ箱に移動しますか？",
+      "deleteFolderMessage_one": "「{{name}}」とその中の {{count}} 個のファイルをゴミ箱に移動しますか？",
+      "deleteFolderMessage_other": "「{{name}}」とその中の {{count}} 個のファイルをゴミ箱に移動しますか？",
+      "nameEmpty": "名前を空にすることはできません。",
+      "nameInvalidChars": "名前に \\ / : * ? \" < > | は使用できません",
+      "nameTrailing": "名前の末尾にスペースやピリオドは使用できません。",
+      "nameExists": "「{{name}}」という名前の項目がすでにここに存在します。"
     }
   },
   "launcher": {

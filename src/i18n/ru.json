@@ -231,7 +231,24 @@
     },
     "fs": {
       "exportsDropBlocked": "Экспорт — только для вывода: экспортированные файлы попадают сюда автоматически.",
-      "folderZoneBlocked": "Папки нельзя перемещать между зонами. Перемещайте документы по отдельности."
+      "folderZoneBlocked": "Папки нельзя перемещать между зонами. Перемещайте документы по отдельности.",
+      "newFolder": "Новая папка",
+      "untitledFolder": "Папка без названия",
+      "clearStatus": "Убрать статус",
+      "clearType": "Убрать тип",
+      "excludeFromCompile": "Исключить из компиляции",
+      "includeInCompile": "Включить в компиляцию",
+      "delete": "Удалить",
+      "deleteFolderTitle": "Удалить папку",
+      "deleteDocMessage": "Переместить «{{name}}» в корзину?",
+      "deleteFolderMessage_one": "Переместить «{{name}}» и {{count}} файл внутри в корзину?",
+      "deleteFolderMessage_few": "Переместить «{{name}}» и {{count}} файла внутри в корзину?",
+      "deleteFolderMessage_many": "Переместить «{{name}}» и {{count}} файлов внутри в корзину?",
+      "deleteFolderMessage_other": "Переместить «{{name}}» и {{count}} файлов внутри в корзину?",
+      "nameEmpty": "Имя не может быть пустым.",
+      "nameInvalidChars": "Имена не могут содержать \\ / : * ? \" < > |",
+      "nameTrailing": "Имена не могут заканчиваться пробелом или точкой.",
+      "nameExists": "Здесь уже есть элемент с именем «{{name}}»."
     }
   },
   "launcher": {

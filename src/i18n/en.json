@@ -231,7 +231,22 @@
     },
     "fs": {
       "exportsDropBlocked": "Exports is output-only — exported files land here automatically.",
-      "folderZoneBlocked": "Folders cannot move between zones. Move documents individually."
+      "folderZoneBlocked": "Folders cannot move between zones. Move documents individually.",
+      "newFolder": "New folder",
+      "untitledFolder": "Untitled folder",
+      "clearStatus": "Clear status",
+      "clearType": "Clear type",
+      "excludeFromCompile": "Exclude from compile",
+      "includeInCompile": "Include in compile",
+      "delete": "Delete",
+      "deleteFolderTitle": "Delete folder",
+      "deleteDocMessage": "Move \"{{name}}\" to the trash?",
+      "deleteFolderMessage_one": "Move \"{{name}}\" and the file inside it to the trash?",
+      "deleteFolderMessage_other": "Move \"{{name}}\" and the {{count}} files inside it to the trash?",
+      "nameEmpty": "Name cannot be empty.",
+      "nameInvalidChars": "Names cannot contain \\ / : * ? \" < > |",
+      "nameTrailing": "Names cannot end with a space or period.",
+      "nameExists": "Something named \"{{name}}\" already exists here."
     }
   },
   "launcher": {

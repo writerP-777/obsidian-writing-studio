@@ -231,7 +231,22 @@
     },
     "fs": {
       "exportsDropBlocked": "내보내기는 출력 전용입니다 — 내보낸 파일이 자동으로 여기에 표시됩니다.",
-      "folderZoneBlocked": "폴더는 영역 간에 이동할 수 없습니다. 문서를 개별적으로 이동하세요."
+      "folderZoneBlocked": "폴더는 영역 간에 이동할 수 없습니다. 문서를 개별적으로 이동하세요.",
+      "newFolder": "새 폴더",
+      "untitledFolder": "제목 없는 폴더",
+      "clearStatus": "상태 지우기",
+      "clearType": "유형 지우기",
+      "excludeFromCompile": "컴파일에서 제외",
+      "includeInCompile": "컴파일에 포함",
+      "delete": "삭제",
+      "deleteFolderTitle": "폴더 삭제",
+      "deleteDocMessage": "\"{{name}}\"을(를) 휴지통으로 이동하시겠습니까?",
+      "deleteFolderMessage_one": "\"{{name}}\"과(와) 그 안의 파일 {{count}}개를 휴지통으로 이동하시겠습니까?",
+      "deleteFolderMessage_other": "\"{{name}}\"과(와) 그 안의 파일 {{count}}개를 휴지통으로 이동하시겠습니까?",
+      "nameEmpty": "이름은 비워둘 수 없습니다.",
+      "nameInvalidChars": "이름에는 \\ / : * ? \" < > | 를 사용할 수 없습니다",
+      "nameTrailing": "이름은 공백이나 마침표로 끝날 수 없습니다.",
+      "nameExists": "\"{{name}}\"(이)라는 이름의 항목이 이미 여기에 있습니다."
     }
   },
   "launcher": {

@@ -1,6 +1,8 @@
 import { App, Modal, TFile } from 'obsidian';
 import type WritingStudioPlugin from '../main';
-import { BinderItem, STATUS_COLORS, DocumentStatus } from '../models/BinderItem';
+import { STATUS_COLORS, DocumentStatus } from '../models/BinderItem';
+import { parseBinderStatus, parseBinderType } from '../src/binderMenu';
+import { listManuscriptDocs } from '../src/manuscriptTree';
 
 const STATUS_KEY: Record<DocumentStatus, string> = {
   draft: 'targetsDashboard.status.draft',
@@ -19,8 +21,19 @@ const TYPE_KEY: Record<string, string> = {
 };
 import { t } from '../src/i18n';
 
+// One dashboard row, source-agnostic: a classic binder item (binderItemId
+// set, goal writes go to the binder) or an experimental-binder document
+// (binderItemId null, frontmatter `word-count-goal` is the sole authority —
+// #229). Classic rows always carry a type and status; experimental rows may
+// have neither.
 interface DocStats {
-  item: BinderItem;
+  title: string;
+  filePath: string;
+  type: string | null;
+  status: DocumentStatus | null;
+  goal: number | undefined;
+  order: number;
+  binderItemId: string | null;
   wordCount: number;
   readingTime: string;
 }
@@ -77,24 +90,73 @@ export class TargetsDashboardModal extends Modal {
 
   private async loadStats(project: ReturnType<typeof this.plugin.projectManager.getActiveProject>): Promise<void> {
     if (!project) return;
-    const binder = await this.plugin.projectManager.loadBinder(project);
-    const items = this.plugin.projectManager.flattenBinder(binder.items);
     this.stats = [];
 
+    if (this.plugin.settings.filesystemBinder) {
+      // Experimental binder: the manuscript zone in binder order, goals and
+      // metadata read from frontmatter (#229 goal single-authority)
+      const docs = listManuscriptDocs(this.app, project.folderPath);
+      for (let i = 0; i < docs.length; i++) {
+        const file = docs[i];
+        const fm = this.app.metadataCache.getFileCache(file)?.frontmatter;
+        const rawGoal = Number(fm?.['word-count-goal']);
+        this.stats.push({
+          title: file.basename,
+          filePath: file.path,
+          type: parseBinderType(fm?.['binder-type']),
+          status: parseBinderStatus(fm?.['binder-status']),
+          goal: Number.isFinite(rawGoal) && rawGoal > 0 ? rawGoal : undefined,
+          order: i,
+          binderItemId: null,
+          ...(await this.countFor(file)),
+        });
+      }
+      return;
+    }
+
+    const binder = await this.plugin.projectManager.loadBinder(project);
+    const items = this.plugin.projectManager.flattenBinder(binder.items);
     for (const item of items) {
       if (item.type === 'group' || item.type === 'part') continue;
       const file = this.app.vault.getAbstractFileByPath(item.filePath);
-      let wordCount = 0;
-      if (file instanceof TFile) {
-        const content = await this.app.vault.read(file);
-        wordCount = this.plugin.fmManager.countWords(content);
-      }
       this.stats.push({
-        item,
-        wordCount,
-        readingTime: this.plugin.statsTracker.calculateReadingTime(wordCount),
+        title: item.title,
+        filePath: item.filePath,
+        type: item.type,
+        status: item.status,
+        goal: item.wordCountGoal,
+        order: item.order,
+        binderItemId: item.id,
+        ...(file instanceof TFile ? await this.countFor(file) : { wordCount: 0, readingTime: this.plugin.statsTracker.calculateReadingTime(0) }),
       });
     }
+  }
+
+  private async countFor(file: TFile): Promise<{ wordCount: number; readingTime: string }> {
+    const content = await this.app.vault.read(file);
+    const wordCount = this.plugin.fmManager.countWords(content);
+    return { wordCount, readingTime: this.plugin.statsTracker.calculateReadingTime(wordCount) };
+  }
+
+  private async saveGoal(stat: DocStats, goal: number | undefined): Promise<void> {
+    stat.goal = goal;
+    if (stat.binderItemId !== null) {
+      const project = this.plugin.projectManager.getActiveProject();
+      if (!project) return;
+      const binder = await this.plugin.projectManager.loadBinder(project);
+      const found = this.plugin.projectManager.findItem(binder.items, stat.binderItemId);
+      if (found) {
+        found.wordCountGoal = goal;
+        await this.plugin.projectManager.saveBinder(binder);
+      }
+      return;
+    }
+    const file = this.app.vault.getAbstractFileByPath(stat.filePath);
+    if (!(file instanceof TFile)) return;
+    await this.app.fileManager.processFrontMatter(file, (fm: Record<string, unknown>) => {
+      if (goal === undefined) delete fm['word-count-goal'];
+      else fm['word-count-goal'] = goal;
+    });
   }
 
   private renderTable(container: HTMLElement): void {
@@ -133,20 +195,20 @@ export class TargetsDashboardModal extends Modal {
     }
 
     // Filter & sort
-    let filtered = this.stats.filter(s =>
-      this.statusFilter === 'all' || s.item.status === this.statusFilter
+    const filtered = this.stats.filter(s =>
+      this.statusFilter === 'all' || s.status === this.statusFilter
     );
 
     filtered.sort((a, b) => {
       let av: string | number = 0, bv: string | number = 0;
       switch (this.sortCol) {
-        case 'title': av = a.item.title.toLowerCase(); bv = b.item.title.toLowerCase(); break;
-        case 'type': av = a.item.type; bv = b.item.type; break;
-        case 'status': av = a.item.status; bv = b.item.status; break;
+        case 'title': av = a.title.toLowerCase(); bv = b.title.toLowerCase(); break;
+        case 'type': av = a.type ?? ''; bv = b.type ?? ''; break;
+        case 'status': av = a.status ?? ''; bv = b.status ?? ''; break;
         case 'wordCount': av = a.wordCount; bv = b.wordCount; break;
-        case 'goal': av = a.item.wordCountGoal || 0; bv = b.item.wordCountGoal || 0; break;
+        case 'goal': av = a.goal || 0; bv = b.goal || 0; break;
         case 'readingTime': av = a.wordCount; bv = b.wordCount; break;
-        default: av = a.item.order; bv = b.item.order;
+        default: av = a.order; bv = b.order;
       }
       if (av < bv) return this.sortAsc ? -1 : 1;
       if (av > bv) return this.sortAsc ? 1 : -1;
@@ -160,11 +222,11 @@ export class TargetsDashboardModal extends Modal {
 
       // Title (clickable)
       const titleTd = tr.createEl('td', { cls: 'ws-dash-title' });
-      const titleLink = titleTd.createEl('a', { text: stat.item.title });
+      const titleLink = titleTd.createEl('a', { text: stat.title });
       titleLink.href = '#';
       titleLink.onclick = async (e) => {
         e.preventDefault();
-        const file = this.app.vault.getAbstractFileByPath(stat.item.filePath);
+        const file = this.app.vault.getAbstractFileByPath(stat.filePath);
         if (file instanceof TFile) {
           const leaf = this.app.workspace.getLeaf(false);
           await leaf.openFile(file);
@@ -172,38 +234,33 @@ export class TargetsDashboardModal extends Modal {
         }
       };
 
-      tr.createEl('td', { text: t(TYPE_KEY[stat.item.type] ?? stat.item.type) });
+      tr.createEl('td', { text: stat.type ? t(TYPE_KEY[stat.type] ?? stat.type) : '—' });
 
       const statusTd = tr.createEl('td');
-      const badge = statusTd.createSpan('ws-status-badge');
-      badge.textContent = t(STATUS_KEY[stat.item.status]);
-      badge.setCssProps({ '--ws-status-color': STATUS_COLORS[stat.item.status] });
+      if (stat.status) {
+        const badge = statusTd.createSpan('ws-status-badge');
+        badge.textContent = t(STATUS_KEY[stat.status]);
+        badge.setCssProps({ '--ws-status-color': STATUS_COLORS[stat.status] });
+      } else {
+        statusTd.textContent = '—';
+      }
 
       tr.createEl('td', { text: String(stat.wordCount) });
 
       // Goal (editable)
       const goalTd = tr.createEl('td');
       const goalInput = goalTd.createEl('input', { type: 'number', cls: 'ws-dash-goal-input' });
-      goalInput.value = String(stat.item.wordCountGoal || '');
+      goalInput.value = String(stat.goal || '');
       goalInput.placeholder = '—';
       goalInput.onchange = async () => {
         const val = parseInt(goalInput.value) || 0;
-        stat.item.wordCountGoal = val || undefined;
-        const project = this.plugin.projectManager.getActiveProject();
-        if (project) {
-          const binder = await this.plugin.projectManager.loadBinder(project);
-          const found = this.plugin.projectManager.findItem(binder.items, stat.item.id);
-          if (found) {
-            found.wordCountGoal = stat.item.wordCountGoal;
-            await this.plugin.projectManager.saveBinder(binder);
-          }
-        }
+        await this.saveGoal(stat, val || undefined);
         this.renderTable(container);
       };
 
       // Progress bar
       const progressTd = tr.createEl('td');
-      const goal = stat.item.wordCountGoal;
+      const goal = stat.goal;
       if (goal && goal > 0) {
         const pct = Math.min(100, Math.round((stat.wordCount / goal) * 100));
         const barWrap = progressTd.createDiv('ws-progress-wrap');
@@ -221,7 +278,7 @@ export class TargetsDashboardModal extends Modal {
     const tfoot = table.createEl('tfoot');
     const sumRow = tfoot.createEl('tr', { cls: 'ws-dash-summary' });
     const totalWords = filtered.reduce((s, d) => s + d.wordCount, 0);
-    const totalGoal = filtered.reduce((s, d) => s + (d.item.wordCountGoal || 0), 0);
+    const totalGoal = filtered.reduce((s, d) => s + (d.goal || 0), 0);
     const overallPct = totalGoal > 0 ? Math.round((totalWords / totalGoal) * 100) : 0;
 
     sumRow.createEl('td', { text: t('targetsDashboard.total') });
