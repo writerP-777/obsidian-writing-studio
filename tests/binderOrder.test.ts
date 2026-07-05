@@ -29,27 +29,59 @@ const folder = (name: string): SiblingEntry => ({
 const names = (entries: SiblingEntry[]) => sortSiblings(entries).map(e => e.name);
 
 describe('parseFolderPrefix', () => {
-  it('parses a numeric prefix and strips it from the display name', () => {
-    expect(parseFolderPrefix('020 Part One')).toEqual({ order: 20, displayName: 'Part One' });
+  it('parses a tilde-delimited marker and strips it from the display name', () => {
+    expect(parseFolderPrefix('020~ Part One')).toEqual({ order: 20, displayName: 'Part One' });
   });
 
   it('parses without leading zeros', () => {
-    expect(parseFolderPrefix('5 Interlude')).toEqual({ order: 5, displayName: 'Interlude' });
+    expect(parseFolderPrefix('5~ Interlude')).toEqual({ order: 5, displayName: 'Interlude' });
   });
 
-  it('treats a purely numeric name as a name, not a prefix', () => {
+  it('parses a negative marker (legal from front insertion)', () => {
+    expect(parseFolderPrefix('-010~ Recall')).toEqual({ order: -10, displayName: 'Recall' });
+  });
+
+  it('parses a marker beyond three digits', () => {
+    expect(parseFolderPrefix('1010~ Appendix')).toEqual({ order: 1010, displayName: 'Appendix' });
+  });
+
+  // The accepted residual (#239 ruling): a user who deliberately types the
+  // marker syntax is read as ordered. Regression-locked by AC.
+  it('reads a user-typed marker-syntax name as ordered', () => {
+    expect(parseFolderPrefix('007~ Bond')).toEqual({ order: 7, displayName: 'Bond' });
+  });
+
+  it('treats a typed name starting with a number as a plain name (#239 bug case)', () => {
+    expect(parseFolderPrefix('2023 files')).toEqual({ order: null, displayName: '2023 files' });
+  });
+
+  it('treats the legacy space-delimited form as a plain name — no fallback ships', () => {
+    expect(parseFolderPrefix('020 Part One')).toEqual({ order: null, displayName: '020 Part One' });
+  });
+
+  it('treats a purely numeric name as a name, not a marker', () => {
     expect(parseFolderPrefix('2026')).toEqual({ order: null, displayName: '2026' });
   });
 
-  it('treats digits with no following text as no prefix', () => {
-    expect(parseFolderPrefix('020 ')).toEqual({ order: null, displayName: '020 ' });
+  it('treats a marker with no following text as no marker', () => {
+    expect(parseFolderPrefix('020~')).toEqual({ order: null, displayName: '020~' });
+    expect(parseFolderPrefix('020~ ')).toEqual({ order: null, displayName: '020~ ' });
+  });
+
+  it('requires exactly one space after the tilde', () => {
+    expect(parseFolderPrefix('020~Part One')).toEqual({ order: null, displayName: '020~Part One' });
+    expect(parseFolderPrefix('020~  Part One')).toEqual({ order: null, displayName: '020~  Part One' });
+  });
+
+  it('does not treat a leading tilde as a marker', () => {
+    expect(parseFolderPrefix('~020 Part One')).toEqual({ order: null, displayName: '~020 Part One' });
   });
 
   it('leaves names starting with words untouched', () => {
     expect(parseFolderPrefix('Part One')).toEqual({ order: null, displayName: 'Part One' });
   });
 
-  it('does not treat digits inside the name as a prefix', () => {
+  it('does not treat digits inside the name as a marker', () => {
     expect(parseFolderPrefix('Book 2 Notes')).toEqual({ order: null, displayName: 'Book 2 Notes' });
   });
 });
@@ -73,8 +105,8 @@ describe('parseBinderOrder', () => {
 });
 
 describe('effectiveOrder', () => {
-  it('reads a folder order from its name prefix', () => {
-    expect(effectiveOrder(folder('020 Part One'))).toBe(20);
+  it('reads a folder order from its name marker', () => {
+    expect(effectiveOrder(folder('020~ Part One'))).toBe(20);
     expect(effectiveOrder(folder('Part One'))).toBeNull();
   });
 
@@ -85,8 +117,8 @@ describe('effectiveOrder', () => {
 });
 
 describe('entryDisplayName', () => {
-  it('strips the prefix from folders', () => {
-    expect(entryDisplayName(folder('020 Part One'))).toBe('Part One');
+  it('strips the marker from folders', () => {
+    expect(entryDisplayName(folder('020~ Part One'))).toBe('Part One');
   });
 
   it('strips .md from markdown files', () => {
@@ -124,10 +156,10 @@ describe('naturalCompare', () => {
 describe('sortSiblings', () => {
   it('interleaves documents and folders on one number line', () => {
     expect(names([
-      folder('020 Part One'),
+      folder('020~ Part One'),
       doc('Prologue.md', 15),
       doc('Foreword.md', 5),
-    ])).toEqual(['Foreword.md', 'Prologue.md', '020 Part One']);
+    ])).toEqual(['Foreword.md', 'Prologue.md', '020~ Part One']);
   });
 
   it('places unordered items at end-of-group after every ordered sibling', () => {
@@ -156,9 +188,9 @@ describe('sortSiblings', () => {
 
   it('resolves a full tie with documents before folders', () => {
     expect(names([
-      folder('010 Alpha'),
+      folder('010~ Alpha'),
       doc('Alpha.md', 10),
-    ])).toEqual(['Alpha.md', '010 Alpha']);
+    ])).toEqual(['Alpha.md', '010~ Alpha']);
   });
 
   it('resolves an unordered display-name tie with documents before folders', () => {
@@ -168,12 +200,12 @@ describe('sortSiblings', () => {
     ])).toEqual(['Alpha.md', 'Alpha']);
   });
 
-  it('sorts prefix-less folders as unordered, after ordered siblings', () => {
+  it('sorts marker-less folders as unordered, after ordered siblings', () => {
     expect(names([
       folder('Appendices'),
-      folder('020 Part Two'),
-      folder('010 Part One'),
-    ])).toEqual(['010 Part One', '020 Part Two', 'Appendices']);
+      folder('020~ Part Two'),
+      folder('010~ Part One'),
+    ])).toEqual(['010~ Part One', '020~ Part Two', 'Appendices']);
   });
 
   it('sorts external copies adjacent to their original (duplicate values are benign)', () => {
@@ -218,16 +250,31 @@ describe('canCarryOrder', () => {
 });
 
 describe('folderNameWithPrefix', () => {
-  it('prepends a three-digit prefix to a prefix-less name', () => {
-    expect(folderNameWithPrefix('Part One', 20)).toBe('020 Part One');
+  it('prepends a three-digit marker to an unmarked name', () => {
+    expect(folderNameWithPrefix('Part One', 20)).toBe('020~ Part One');
   });
 
-  it('replaces an existing prefix, keeping the display name', () => {
-    expect(folderNameWithPrefix('030 Part One', 20)).toBe('020 Part One');
+  it('replaces an existing marker, typed remainder byte-identical', () => {
+    expect(folderNameWithPrefix('030~ Part One', 20)).toBe('020~ Part One');
+  });
+
+  it('keeps a typed numeric name fully intact — mints in front of it', () => {
+    expect(folderNameWithPrefix('2023 files', 30)).toBe('030~ 2023 files');
   });
 
   it('does not pad beyond three digits', () => {
-    expect(folderNameWithPrefix('Appendix', 1010)).toBe('1010 Appendix');
+    expect(folderNameWithPrefix('Appendix', 1010)).toBe('1010~ Appendix');
+  });
+
+  it('pads the magnitude of a negative order', () => {
+    expect(folderNameWithPrefix('Recall', -10)).toBe('-010~ Recall');
+  });
+
+  it('round-trips every minted form through parseFolderPrefix', () => {
+    for (const order of [-110, -5, 0, 7, 20, 999, 1010]) {
+      const name = folderNameWithPrefix('Part One', order);
+      expect(parseFolderPrefix(name)).toEqual({ order, displayName: 'Part One' });
+    }
   });
 });
 
@@ -300,7 +347,7 @@ describe('planReorder', () => {
     ]);
     const sorted = applyAndSort(seq, writes);
     expect(sorted.map(e => entryDisplayName(e))).toEqual(['B', 'A', 'Part One']);
-    expect(sorted[2].name).toBe('030 Part One');
+    expect(sorted[2].name).toBe('030~ Part One');
   });
 
   it('never writes to non-markdown files during materialization', () => {
@@ -316,7 +363,7 @@ describe('planReorder', () => {
 
   it('renumbers across mixed docs and folders, skipping values already in place', () => {
     // B dropped between C(20) and the folder at 21 — gap exhausted
-    const moved = [doc('A.md', 10), doc('C.md', 20), doc('B.md', 31), folder('021 Part')];
+    const moved = [doc('A.md', 10), doc('C.md', 20), doc('B.md', 31), folder('021~ Part')];
     const writes = planReorder(moved, 2);
     // Targets 10/20/30/40: A and C already sit at theirs
     expect(writes).toEqual([
@@ -325,11 +372,11 @@ describe('planReorder', () => {
     ]);
     const sorted = applyAndSort(moved, writes);
     expect(sorted.map(e => entryDisplayName(e))).toEqual(['A', 'C', 'B', 'Part']);
-    expect(sorted[3].name).toBe('040 Part');
+    expect(sorted[3].name).toBe('040~ Part');
   });
 
   it('places a document between ordered siblings via midpoint even next to a folder', () => {
-    const moved = [doc('A.md', 10), doc('C.md', 20), doc('B.md', 31), folder('030 Part')];
+    const moved = [doc('A.md', 10), doc('C.md', 20), doc('B.md', 31), folder('030~ Part')];
     expect(planReorder(moved, 2)).toEqual([{ index: 2, order: 25 }]);
   });
 

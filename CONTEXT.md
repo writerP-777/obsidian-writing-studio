@@ -134,9 +134,11 @@ Non-markdown files are visible and openable but never promotable into the manusc
 
 **`binder-order`**
 Integer frontmatter key holding a document's position among its siblings. Written lazily on
-reorder (gaps of 10, midpoint insertion). Folders carry order as a numeric name prefix
-(`020 Part One`) instead, stripped in binder display. Anything without a value natural-sorts
-at the end of its group. Prefer: *order* / *binder-order*. Avoid: *rank*, *index*, *sort key*.
+reorder (gaps of 10, midpoint insertion). Folders carry order as a tilde-delimited name
+marker (`020~ Part One`) instead, stripped in binder display; strict parse — a typed name
+without the `NNN~ ` marker (`2023 files`, `020 Part One`) is a plain name, shown in full and
+never rewritten. Anything without a value natural-sorts at the end of its group.
+Prefer: *order* / *binder-order* / *order marker*. Avoid: *rank*, *index*, *sort key*.
 
 **`binder-status`**, **`binder-type`**, **`binder-compile`**
 Frontmatter homes for per-document metadata: lifecycle status (values unchanged), optional

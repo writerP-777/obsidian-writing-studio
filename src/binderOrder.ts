@@ -2,7 +2,7 @@
 //
 // One number line per sibling group: a document's `binder-order` frontmatter
 // value and a folder's numeric name prefix compete on the same axis, so
-// `binder-order: 15` sorts before a folder named `020 Part One`. Anything
+// `binder-order: 15` sorts before a folder named `020~ Part One`. Anything
 // without a value natural-sorts at the end of its group, after every ordered
 // sibling — an untouched folder is therefore pure natural sort. Ties resolve
 // by natural display-name comparison, then documents before folders.
@@ -24,11 +24,14 @@ export interface FolderPrefixParse {
   displayName: string;
 }
 
-// `020 Part One` → order 20, display "Part One". The prefix is digits
-// followed by whitespace followed by a non-empty rest — a purely numeric
-// name like `2026` (blog year folders) is a name, not a prefix.
+// `020~ Part One` → order 20, display "Part One". The tilde delimiter is the
+// collision guard (#239): no human numbering convention produces
+// `digits + ~ + space`, so a typed name like `2023 files` or `020 Part One`
+// is always a plain name — displayed in full, never rewritten. The one
+// accepted residual (ruling on #239): a user who deliberately types the
+// marker syntax (`007~ Bond`) is read as ordered.
 export function parseFolderPrefix(name: string): FolderPrefixParse {
-  const m = /^(\d+)\s+(\S.*)$/.exec(name);
+  const m = /^(-?\d+)~ (\S.*)$/.exec(name);
   if (!m) return { order: null, displayName: name };
   return { order: parseInt(m[1], 10), displayName: m[2] };
 }
@@ -92,10 +95,16 @@ export function canCarryOrder(entry: SiblingEntry): boolean {
   return entry.isFolder || entry.extension === 'md';
 }
 
-// The on-disk folder name for a given order: three-digit zero-padded prefix
-// (`020 Part One`), replacing any existing prefix. Never touches documents.
+// The on-disk folder name for a given order: three-digit zero-padded marker
+// (`020~ Part One`), replacing any existing marker — the typed remainder is
+// never altered. Negative orders (legal from planReorder's front insertion)
+// pad the magnitude so they round-trip through parseFolderPrefix. Never
+// touches documents.
 export function folderNameWithPrefix(name: string, order: number): string {
-  return String(order).padStart(3, '0') + ' ' + parseFolderPrefix(name).displayName;
+  const marker = order < 0
+    ? '-' + String(-order).padStart(3, '0')
+    : String(order).padStart(3, '0');
+  return marker + '~ ' + parseFolderPrefix(name).displayName;
 }
 
 export interface ReorderWrite {
