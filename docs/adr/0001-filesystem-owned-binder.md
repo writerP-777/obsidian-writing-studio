@@ -38,10 +38,11 @@ holds no hidden structural state. `_binder.json` is not consulted at runtime.
 - **Documents:** integer `binder-order` frontmatter key, written via `processFrontMatter`.
   Document filenames are never touched for ordering; the plugin never mints filenames
   containing position numbers (scaffolds use position-neutral names).
-- **Folders:** numeric name prefix (`020 Part One`), stripped in binder display; on-disk name
-  shown on hover.
+- **Folders:** tilde-delimited numeric name marker (`020~ Part One`), stripped in binder
+  display; on-disk name shown on hover. *(Amended 2026-07-05, #239 — originally a bare
+  `NNN ` prefix; see the amendment below.)*
 - One number line per sibling group (a document's `binder-order: 15` sorts before a folder
-  prefixed `020`). Ties: natural display-name comparison, then documents before folders.
+  marked `020~`). Ties: natural display-name comparison, then documents before folders.
 - Base order is natural sort (numeric-aware). Values are written lazily — only on reorder —
   in gaps of 10, midpoint insertion, renumbering a sibling group only when its gaps exhaust.
 - Unordered items (including externally dropped files) place at end-of-group, after ordered
@@ -56,6 +57,40 @@ Rejected alternatives: document filename prefixes (visible numbers in tab header
 titles — vetoed); a stable-ID-per-document plus ID-keyed order overlay (a central mutable
 state file recreates the `_binder.json` failure class: sync-conflict scramble, no folder
 coverage, ID collisions on copy); any path-keyed sidecar (the original failure mode).
+
+#### Amendment — folder order marker (2026-07-05, #239)
+
+Live testing exposed a collision in the original bare `NNN ` prefix: a typed folder name
+like `2023 files` parsed as order 2023 + name "files" — displayed wrong, sorted wrong, and
+a reorder would have renamed away the typed text. The marker is now **tilde-delimited**:
+`NNN~ Name`, strict parse `^(-?\d+)~ (\S.*)$`, minted three-digit zero-padded (magnitude
+padded for negative orders, unpadded beyond three digits). The tilde is the collision
+guard — no human numbering convention produces `digits + ~ + space` — so any typed name,
+including `2023 files` and the old `020 Part One` form, is a plain name: displayed in
+full, natural-sorted, never rewritten. Re-minting replaces only the marker; the typed
+remainder is byte-identical.
+
+**Requirement bend, accepted:** "folder names are never altered" relaxes to "the typed
+text is never destroyed or hidden" — an ordered folder's on-disk name carries a machine
+marker, hidden in binder display, with the typed text fully intact. This bend is forced:
+order data that must survive every sync method *and* never surface in search or graph can
+only live in the folder's own name, the sole per-folder attribute all sync methods carry.
+
+**Rejected for the marker role:** a per-folder non-markdown order file (previous lead —
+Obsidian Sync skips unrecognized file types at default settings, silently diverging folder
+order across devices for community users; a markdown order file surfaces in search/graph;
+a dotfile is invisible to the vault API); `.` `)` `-` `_` delimiters (established human
+numbering conventions — they rebuild the collision); alphanumeric prefixes (unreadable,
+still collide).
+
+**Known residual, accepted by ruling:** a user who deliberately types the marker syntax
+(`007~ Bond`) is read as ordered — the binder shows "Bond" and a reorder rewrites the
+marker. The pattern is unreachable by accident; regression-locked in tests.
+
+**No legacy read path:** the parser recognizes the tilde form only. The bare `NNN ` form
+shipped in no release (verified absent at tag 2.11.0; the experimental toggle was also
+default-off) — the only three prefixed folders, in the maintainer's test vault, were
+renamed out-of-band at install time.
 
 ### Per-document metadata
 

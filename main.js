@@ -13892,7 +13892,7 @@ var import_obsidian17 = require("obsidian");
 
 // src/binderOrder.ts
 function parseFolderPrefix(name) {
-  const m = /^(\d+)\s+(\S.*)$/.exec(name);
+  const m = /^(-?\d+)~ (\S.*)$/.exec(name);
   if (!m) return { order: null, displayName: name };
   return { order: parseInt(m[1], 10), displayName: m[2] };
 }
@@ -13934,7 +13934,8 @@ function canCarryOrder(entry) {
   return entry.isFolder || entry.extension === "md";
 }
 function folderNameWithPrefix(name, order) {
-  return String(order).padStart(3, "0") + " " + parseFolderPrefix(name).displayName;
+  const marker = order < 0 ? "-" + String(-order).padStart(3, "0") : String(order).padStart(3, "0");
+  return marker + "~ " + parseFolderPrefix(name).displayName;
 }
 function planReorder(sequence, movedIndex) {
   const moved = sequence[movedIndex];

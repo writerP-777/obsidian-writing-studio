@@ -130,47 +130,58 @@ describe('planMove', () => {
 
   it('moves a document cross-parent and writes its order at the new path', () => {
     const ops = planMove(
-      src(doc('P/C.md')), 'P/010 Part',
-      [doc('P/010 Part/A.md', 10), doc('P/010 Part/B.md', 30)],
+      src(doc('P/C.md')), 'P/010~ Part',
+      [doc('P/010~ Part/A.md', 10), doc('P/010~ Part/B.md', 30)],
       1, true,
     );
     expect(ops).toEqual([
-      { kind: 'rename', path: 'P/C.md', newPath: 'P/010 Part/C.md' },
-      { kind: 'set-order', path: 'P/010 Part/C.md', order: 20 },
+      { kind: 'rename', path: 'P/C.md', newPath: 'P/010~ Part/C.md' },
+      { kind: 'set-order', path: 'P/010~ Part/C.md', order: 20 },
     ]);
   });
 
   it('places a drop-into at end-of-group with a single prev + 10 write', () => {
     const ops = planMove(
-      src(doc('P/C.md')), 'P/010 Part',
-      [doc('P/010 Part/A.md', 10)],
+      src(doc('P/C.md')), 'P/010~ Part',
+      [doc('P/010~ Part/A.md', 10)],
       'end', true,
     );
     expect(ops).toEqual([
-      { kind: 'rename', path: 'P/C.md', newPath: 'P/010 Part/C.md' },
-      { kind: 'set-order', path: 'P/010 Part/C.md', order: 20 },
+      { kind: 'rename', path: 'P/C.md', newPath: 'P/010~ Part/C.md' },
+      { kind: 'set-order', path: 'P/010~ Part/C.md', order: 20 },
     ]);
   });
 
-  it('folds a folder move and its new prefix into one atomic rename', () => {
+  it('folds a folder move and its new marker into one atomic rename', () => {
     const ops = planMove(
-      src(folder('P/005 Part')), 'P/Book',
+      src(folder('P/005~ Part')), 'P/Book',
       [doc('P/Book/X.md', 10)],
       'end', true,
     );
     expect(ops).toEqual([
-      { kind: 'rename', path: 'P/005 Part', newPath: 'P/Book/020 Part' },
+      { kind: 'rename', path: 'P/005~ Part', newPath: 'P/Book/020~ Part' },
     ]);
   });
 
   it('moves a folder without touching its name when its order already fits', () => {
     const ops = planMove(
-      src(folder('P/020 Part')), 'P/Book',
+      src(folder('P/020~ Part')), 'P/Book',
       [doc('P/Book/A.md', 10), doc('P/Book/B.md', 30)],
       1, true,
     );
     expect(ops).toEqual([
-      { kind: 'rename', path: 'P/020 Part', newPath: 'P/Book/020 Part' },
+      { kind: 'rename', path: 'P/020~ Part', newPath: 'P/Book/020~ Part' },
+    ]);
+  });
+
+  it('mints in front of a typed numeric folder name — typed text intact (#239 bug case)', () => {
+    const ops = planMove(
+      src(folder('P/2023 files')), 'P/Book',
+      [doc('P/Book/X.md', 10)],
+      'end', true,
+    );
+    expect(ops).toEqual([
+      { kind: 'rename', path: 'P/2023 files', newPath: 'P/Book/020~ 2023 files' },
     ]);
   });
 
@@ -218,7 +229,7 @@ describe('planMove', () => {
       { kind: 'rename', path: 'P/D.md', newPath: 'P/Book/D.md' },
       { kind: 'set-order', path: 'P/Book/D.md', order: 30 },
       { kind: 'set-order', path: 'P/Book/A.md', order: 10 },
-      { kind: 'rename', path: 'P/Book/Part', newPath: 'P/Book/020 Part' },
+      { kind: 'rename', path: 'P/Book/Part', newPath: 'P/Book/020~ Part' },
     ]);
   });
 
@@ -238,12 +249,12 @@ describe('planMove', () => {
 
   it('promotes a nested document to the project root', () => {
     const ops = planMove(
-      src(doc('P/010 Part/C.md')), 'P',
+      src(doc('P/010~ Part/C.md')), 'P',
       [doc('P/A.md', 10)],
       'end', true,
     );
     expect(ops).toEqual([
-      { kind: 'rename', path: 'P/010 Part/C.md', newPath: 'P/C.md' },
+      { kind: 'rename', path: 'P/010~ Part/C.md', newPath: 'P/C.md' },
       { kind: 'set-order', path: 'P/C.md', order: 20 },
     ]);
   });
