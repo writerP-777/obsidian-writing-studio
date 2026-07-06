@@ -1,14 +1,20 @@
-// Vault-facing glue for the carry-over preview (#230): builds the pure
-// engine's DiskState from the live vault, reads the legacy binder without
-// touching the runtime loader (loadBinder caches and writes a .bak on
-// corrupt input — a dry run must be provably read-only), and owns the
-// one-time per-project notice. Execution lives in #231.
+// Vault-facing glue for silent migration and the layout restore (#231).
+// Builds the pure engine's DiskState from the live vault, reads the legacy
+// binder without touching the runtime loader (loadBinder caches and writes a
+// .bak on corrupt input — migration must be provably read-only toward
+// _binder.json), runs the passes, and owns the graduated failure ledger
+// (R2): first failure silent + logged, second consecutive run's failure
+// notices once per signature, success clears the record.
 
 import { App, Notice, TFile, TFolder, normalizePath } from 'obsidian';
 import type WritingStudioPlugin from '../main';
 import { WritingProject } from '../models/Project';
-import { CarryOverPlan, DiskState, parseLegacyBinder, planCarryOver, planHasWork } from './carryOver';
-import { CarryOverPreviewModal } from '../modals/CarryOverPreviewModal';
+import { BinderData } from '../models/BinderItem';
+import {
+  CarryOverIO, DiskState, PassFailure,
+  parseLegacyBinder, planCarryOver, planHasWork, planRestore, restoreHasWork,
+  runMigrationPass, runRestorePass,
+} from './carryOver';
 import { t } from './i18n';
 
 export function buildDiskState(app: App): DiskState {
@@ -22,8 +28,8 @@ export function buildDiskState(app: App): DiskState {
       return folder.children.filter((c): c is TFolder => c instanceof TFolder).map(c => c.name);
     },
     // The metadata cache can be cold right after vault open; a key it has
-    // not indexed yet merely previews as "will write" — execution (#231)
-    // re-checks at write time, so nothing user-set is ever overwritten.
+    // not indexed yet merely plans as "will write" — the processFrontMatter
+    // callback re-checks live, so nothing user-set is ever overwritten.
     frontmatter: (path) => {
       const file = at(path);
       if (!(file instanceof TFile)) return null;
@@ -32,65 +38,151 @@ export function buildDiskState(app: App): DiskState {
   };
 }
 
-export type CarryOverPlanResult =
-  | { kind: 'plan'; plan: CarryOverPlan }
-  | { kind: 'missing' }
-  | { kind: 'corrupt' };
-
-export async function computeCarryOverPlan(
-  app: App,
-  project: WritingProject,
-): Promise<CarryOverPlanResult> {
-  const file = app.vault.getAbstractFileByPath(normalizePath(`${project.folderPath}/_binder.json`));
-  if (!(file instanceof TFile)) return { kind: 'missing' };
-  const legacy = parseLegacyBinder(await app.vault.cachedRead(file));
-  if (!legacy) return { kind: 'corrupt' };
-  return { kind: 'plan', plan: planCarryOver(legacy.items, project.folderPath, buildDiskState(app)) };
+function obsidianIO(app: App): CarryOverIO {
+  return {
+    createFolder: async (path) => {
+      await app.vault.createFolder(normalizePath(path));
+    },
+    rename: async (fromPath, toPath) => {
+      const file = app.vault.getAbstractFileByPath(normalizePath(fromPath));
+      if (!file) throw new Error(`not found: ${fromPath}`);
+      await app.fileManager.renameFile(file, normalizePath(toPath));
+    },
+    writeFrontmatter: async (path, mutate) => {
+      const file = app.vault.getAbstractFileByPath(normalizePath(path));
+      if (!(file instanceof TFile)) throw new Error(`not found: ${path}`);
+      await app.fileManager.processFrontMatter(file, mutate);
+    },
+  };
 }
 
-export async function openCarryOverPreview(
+async function readLegacyBinder(app: App, project: WritingProject): Promise<BinderData | null> {
+  const file = app.vault.getAbstractFileByPath(normalizePath(`${project.folderPath}/_binder.json`));
+  if (!(file instanceof TFile)) return null;
+  return parseLegacyBinder(await app.vault.cachedRead(file));
+}
+
+// Common failure causes in plain language (R2); the raw message is the
+// fallback, not the default.
+function describeReason(reason: string): string {
+  if (reason === 'name-taken') return t('binder.migration.reasonNameTaken');
+  if (/EBUSY|ETXTBSY|locked|being used|in use/i.test(reason)) return t('binder.migration.reasonInUse');
+  if (/EACCES|EPERM|permission/i.test(reason)) return t('binder.migration.reasonPermission');
+  return reason;
+}
+
+function failureNoticeKey(kind: PassFailure['kind']): string {
+  if (kind === 'folder') return 'binder.migration.couldntRename';
+  if (kind === 'frontmatter') return 'binder.migration.couldntUpdate';
+  return 'binder.migration.couldntMove'; // move + leftover
+}
+
+// R2 ledger, persisted in data.json: signature → consecutive-fail count and
+// whether its one notice has fired. Success clears the entry, so a fresh
+// failure of the same item can notice again.
+export interface FailureLedgerEntry {
+  count: number;
+  noticed: boolean;
+}
+
+export async function updateFailureLedger(
   plugin: WritingStudioPlugin,
   project: WritingProject,
+  failures: PassFailure[],
 ): Promise<void> {
-  const result = await computeCarryOverPlan(plugin.app, project);
-  if (result.kind === 'missing') {
-    new Notice(t('binder.carryOver.nothingToPreview'));
-    return;
+  const ledger = plugin.settings.carryOverFailures;
+  const prefix = `${project.id}|`;
+  const seen = new Set<string>();
+  let changed = false;
+
+  for (const f of failures) {
+    const sig = prefix + f.signature;
+    seen.add(sig);
+    const entry = ledger[sig] ?? { count: 0, noticed: false };
+    entry.count += 1;
+    console.warn(`Writing Studio migration: ${f.kind} failed for ${f.name} — ${f.reason}`);
+    if (entry.count >= 2 && !entry.noticed) {
+      new Notice(t(failureNoticeKey(f.kind), { name: f.name, reason: describeReason(f.reason) }));
+      entry.noticed = true;
+    }
+    ledger[sig] = entry;
+    changed = true;
   }
-  if (result.kind === 'corrupt') {
-    new Notice(t('binder.carryOver.readFailed'));
-    return;
+  // Success clears: any of this project's signatures not failing this run
+  for (const sig of Object.keys(ledger)) {
+    if (sig.startsWith(prefix) && !seen.has(sig)) {
+      delete ledger[sig];
+      changed = true;
+    }
   }
-  new CarryOverPreviewModal(plugin.app, project.title, project.folderPath, result.plan).open();
+  if (changed) await plugin.saveSettings();
 }
 
-// The one-time per-project offer (#230 Q3): fires on project activation only
-// when the experimental binder is on, a legacy binder exists, and its plan
-// still has work. Shown once — the seen flag persists in data.json (a view
-// preference, never in the vault); the command and the binder's project-row
-// button re-offer it any time.
-export async function maybeOfferCarryOver(plugin: WritingStudioPlugin): Promise<void> {
+// One run at a time per project — activation and startup can overlap.
+const inFlight = new Set<string>();
+
+// Silent migration (#231): no notice, no consent, no user action. Gated on
+// the experimental toggle until the #233 cutover. Steady state is a no-op:
+// a migrated project's plan has no work and nothing is touched.
+export async function runSilentMigration(plugin: WritingStudioPlugin): Promise<void> {
   if (!plugin.settings.filesystemBinder) return;
   const project = plugin.projectManager.getActiveProject();
-  if (!project || plugin.settings.carryOverNoticeSeen[project.id]) return;
-  const result = await computeCarryOverPlan(plugin.app, project);
-  if (result.kind !== 'plan' || !planHasWork(result.plan)) return;
+  if (!project || inFlight.has(project.id)) return;
 
-  plugin.settings.carryOverNoticeSeen[project.id] = true;
-  await plugin.saveSettings();
+  const legacy = await readLegacyBinder(plugin.app, project);
+  if (!legacy) return; // absent, or corrupt (logged path is 2.x's concern)
 
-  const plan = result.plan;
-  const notice = new Notice(createFragment((frag) => {
-    const box = frag.createDiv('ws-co-notice');
-    box.createDiv({ cls: 'ws-co-notice-name', text: 'Writing Studio' });
-    box.createDiv({ text: t('binder.carryOver.noticeBody', { project: project.title }) });
-    const buttons = box.createDiv('ws-co-notice-buttons');
-    const previewBtn = buttons.createEl('button', { text: t('binder.carryOver.noticePreview') });
-    previewBtn.onclick = () => {
-      notice.hide();
-      new CarryOverPreviewModal(plugin.app, project.title, project.folderPath, plan).open();
-    };
-    const notNowBtn = buttons.createEl('button', { text: t('binder.carryOver.noticeNotNow') });
-    notNowBtn.onclick = () => notice.hide();
-  }), 0);
+  const compute = () => {
+    const disk = buildDiskState(plugin.app);
+    return { plan: planCarryOver(legacy.items, project.folderPath, disk), disk };
+  };
+  if (!planHasWork(compute().plan)) return;
+
+  inFlight.add(project.id);
+  try {
+    const result = await runMigrationPass(compute, obsidianIO(plugin.app));
+    await updateFailureLedger(plugin, project, result.failures);
+  } finally {
+    inFlight.delete(project.id);
+  }
+}
+
+// "Restore previous binder layout" (#231 inverse pass) — user-invoked, so
+// it reports directly rather than through the graduated ledger. Layout-only
+// by ruling: frontmatter is untouched and nothing is ever deleted.
+export async function runRestoreLayout(plugin: WritingStudioPlugin): Promise<void> {
+  const project = plugin.projectManager.getActiveProject();
+  if (!plugin.settings.filesystemBinder || !project) {
+    new Notice(t('binder.migration.restoreUnavailable'));
+    return;
+  }
+  if (inFlight.has(project.id)) return;
+  const legacy = await readLegacyBinder(plugin.app, project);
+  if (!legacy) {
+    new Notice(t('binder.migration.restoreNothing'));
+    return;
+  }
+
+  const compute = () => {
+    const disk = buildDiskState(plugin.app);
+    return { plan: planRestore(legacy.items, project.folderPath, disk), disk };
+  };
+  if (!restoreHasWork(compute().plan)) {
+    new Notice(t('binder.migration.restoreNothing'));
+    return;
+  }
+
+  inFlight.add(project.id);
+  try {
+    const result = await runRestorePass(compute, obsidianIO(plugin.app));
+    for (const f of result.failures) {
+      console.warn(`Writing Studio restore: failed for ${f.name} — ${f.reason}`);
+    }
+    const leftBehind = result.skipped + result.failures.length;
+    new Notice(leftBehind > 0
+      ? t('binder.migration.restorePartial', { count: leftBehind })
+      : t('binder.migration.restoreDone'));
+  } finally {
+    inFlight.delete(project.id);
+  }
 }
