@@ -18,9 +18,9 @@ describe('menuActionsFor — zone and kind rulings (#229)', () => {
       ['rename', 'status', 'goal', 'type', 'compile', 'newDoc', 'newFolder', 'delete']);
   });
 
-  it('manuscript folders get rename, creation, and delete — no document metadata', () => {
+  it('manuscript folders get rename, subtree export, creation, and delete — no document metadata', () => {
     expect(menuActionsFor(folder('020~ Part One'), 'manuscript')).toEqual(
-      ['rename', 'newDoc', 'newFolder', 'delete']);
+      ['rename', 'export', 'newDoc', 'newFolder', 'delete']);
   });
 
   it('non-markdown files are rename and delete only', () => {

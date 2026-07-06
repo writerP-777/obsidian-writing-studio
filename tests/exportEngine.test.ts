@@ -1,3 +1,4 @@
+import { TFile, TFolder } from 'obsidian';
 import { ExportEngine, ExportOptions, selectPdfEngine, classifyPandocFailure, PdfEngine } from '../src/ExportEngine';
 import { ProjectManager } from '../src/ProjectManager';
 import { InMemoryVaultFiles } from './inMemoryVaultFiles';
@@ -46,6 +47,89 @@ async function makeWorld() {
   });
 
   return { files, pm, engine };
+}
+
+// A world where the experimental binder owns compile (#232): the manuscript
+// zone lives in a mock vault folder tree + metadata cache, document contents
+// in the in-memory adapter, and settings.filesystemBinder is on.
+async function makeFsWorld(flat = false) {
+  const files = new InMemoryVaultFiles();
+  const byPath = new Map<string, TFile | TFolder>();
+  const fmByPath = new Map<string, Record<string, unknown>>();
+
+  const root = new TFolder('Projects/My Book');
+  byPath.set(root.path, root);
+  const addFolder = (parent: TFolder, name: string): TFolder => {
+    const f = new TFolder(`${parent.path}/${name}`);
+    parent.children.push(f);
+    byPath.set(f.path, f);
+    return f;
+  };
+  const addDoc = (parent: TFolder, name: string, body: string, fm?: Record<string, unknown>): TFile => {
+    const f = new TFile(`${parent.path}/${name}`, 'md');
+    parent.children.push(f);
+    byPath.set(f.path, f);
+    if (fm) fmByPath.set(f.path, fm);
+    files.files.set(f.path, body);
+    return f;
+  };
+
+  const plugin = {
+    app: {
+      vault: { getAbstractFileByPath: (p: string) => byPath.get(p) ?? null },
+      metadataCache: {
+        getFileCache: (f: TFile) => {
+          const fm = fmByPath.get(f.path);
+          return fm ? { frontmatter: fm } : null;
+        },
+      },
+    },
+    settings: { defaultProjectFolder: 'Projects', authorName: 'Avery', filesystemBinder: true },
+    saveSettings: jest.fn().mockResolvedValue(undefined),
+  } as { projectManager?: ProjectManager; settings: { filesystemBinder: boolean } };
+  const pm = new ProjectManager(plugin as never, files);
+  plugin.projectManager = pm;
+  const engine = new ExportEngine(plugin as never, files);
+
+  await pm.saveProject({
+    id: 'project-1',
+    title: 'My Book',
+    type: 'book',
+    author: 'Avery',
+    created: '2026-07-05',
+    modified: '2026-07-05',
+    description: '',
+    folderPath: 'Projects/My Book',
+    goals: {},
+  });
+  await pm.setActiveProject('project-1');
+
+  if (flat) {
+    addDoc(root, 'One.md', 'First body.');
+    addDoc(root, 'Two.md', 'Second body.');
+    // A classic binder over the same documents (titles = basenames, same
+    // order) so the toggle-off run has a source to read
+    await pm.saveBinder({
+      version: '2.0',
+      projectId: 'project-1',
+      items: [
+        { id: 'i1', title: 'One', filePath: 'Projects/My Book/One.md', type: 'chapter', order: 1, status: 'draft', includeInExport: true },
+        { id: 'i2', title: 'Two', filePath: 'Projects/My Book/Two.md', type: 'chapter', order: 2, status: 'draft', includeInExport: true },
+      ],
+    });
+  } else {
+    addDoc(root, 'Opening.md', 'Opening body.', { 'binder-order': 15 });
+    addDoc(root, 'Zeta.md', 'Zeta body.'); // unordered → after ordered siblings
+    const part = addFolder(root, '020~ Part One');
+    addDoc(part, 'Chapter 1.md', 'Chapter body.', { 'binder-order': 10 });
+    addDoc(part, 'Cut.md', 'Cut body.', { 'binder-compile': false });
+    const act = addFolder(part, 'Act 2');
+    addDoc(act, 'Scene.md', 'Scene body.');
+    const research = addFolder(root, 'Research');
+    addDoc(research, 'Notes.md', 'Research notes body.');
+  }
+
+  return { files, pm, engine, plugin };
 }
 
 function projectOpts(overrides: Partial<ExportOptions> = {}): ExportOptions {
@@ -233,6 +317,83 @@ describe('classifyPandocFailure', () => {
 
   it('classifies an unrelated failure as other', () => {
     expect(classifyPandocFailure('YAML parse error in metadata block')).toBe('other');
+  });
+});
+
+describe('ExportEngine.compileContent from the manuscript zone (#232)', () => {
+  it('compiles the zone depth-first in binder order without reading _binder.json', async () => {
+    const { engine, pm } = await makeFsWorld();
+    const loadBinder = jest.spyOn(pm, 'loadBinder');
+
+    const compiled = engine.toMarkdown(await engine.compileContent(projectOpts()));
+
+    const order = ['# Opening', '# Chapter 1', '# Scene', '# Zeta'].map(h => compiled.indexOf(h));
+    expect(order.every(i => i >= 0)).toBe(true);
+    expect([...order].sort((a, b) => a - b)).toEqual(order);
+    expect(loadBinder).not.toHaveBeenCalled();
+  });
+
+  it('never compiles the Research zone and excludes binder-compile: false documents', async () => {
+    const { engine } = await makeFsWorld();
+
+    // includeResearch is a classic-only option — the zone boundary is the
+    // compile boundary regardless
+    const compiled = await engine.compileContent(projectOpts({ includeResearch: true }));
+
+    expect(compiled).not.toContain('Research notes body.');
+    expect(compiled).not.toContain('Cut body.');
+  });
+
+  it('emits folder display names as headings at depth, documents one below', async () => {
+    const { engine } = await makeFsWorld();
+
+    const compiled = engine.toMarkdown(await engine.compileContent(
+      projectOpts({ includeFolderNamesAsHeadings: true })));
+
+    expect(compiled).toContain('# Part One'); // order marker stripped
+    expect(compiled).toContain('## Chapter 1');
+    expect(compiled).toContain('## Act 2');
+    expect(compiled).toContain('### Scene');
+    expect(compiled).toContain('# Opening'); // loose at the root stays h1
+  });
+
+  it('rebases a subtree export to the right-clicked folder, which emits no heading', async () => {
+    const { engine } = await makeFsWorld();
+
+    const compiled = engine.toMarkdown(await engine.compileContent(projectOpts({
+      subtreeRoot: 'Projects/My Book/020~ Part One',
+      includeFolderNamesAsHeadings: true,
+    })));
+
+    expect(compiled).toContain('# Chapter 1'); // parent depth rebased to 0
+    expect(compiled).toContain('# Act 2');
+    expect(compiled).toContain('## Scene');
+    expect(compiled).not.toContain('Part One');
+    expect(compiled).not.toContain('Opening body.');
+    expect(compiled).not.toContain('Zeta body.');
+  });
+
+  it('produces byte-identical output to the classic compile for a flat project', async () => {
+    const { engine, plugin } = await makeFsWorld(true);
+
+    plugin.settings.filesystemBinder = false;
+    const classic = await engine.compileContent(projectOpts({ addTitlePage: true }));
+    plugin.settings.filesystemBinder = true;
+    const zone = await engine.compileContent(projectOpts({ addTitlePage: true }));
+
+    expect(zone).toBe(classic);
+    expect(zone).toContain('# One');
+  });
+
+  it('names a subtree export file after the folder display name', async () => {
+    const { engine, files } = await makeFsWorld();
+
+    const outputPath = await engine.export(projectOpts({
+      subtreeRoot: 'Projects/My Book/020~ Part One',
+    }));
+
+    expect(outputPath).toMatch(/^Projects\/My Book\/Exports\/My Book-Part One-.*\.md$/);
+    expect(files.files.get(outputPath)).toContain('Chapter body.');
   });
 });
 

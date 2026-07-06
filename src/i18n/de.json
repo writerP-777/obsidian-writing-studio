@@ -246,7 +246,8 @@
       "nameEmpty": "Der Name darf nicht leer sein.",
       "nameInvalidChars": "Namen dürfen nicht \\ / : * ? \" < > | enthalten",
       "nameTrailing": "Namen dürfen nicht mit einem Leerzeichen oder Punkt enden.",
-      "nameExists": "Etwas mit dem Namen „{{name}}“ existiert hier bereits."
+      "nameExists": "Etwas mit dem Namen „{{name}}“ existiert hier bereits.",
+      "exportFolder": "Ordner exportieren"
     }
   },
   "launcher": {
@@ -522,7 +523,8 @@
     "exporting": "Exportiere…",
     "exportFailed": "Export fehlgeschlagen: {{error}}",
     "cancel": "Abbrechen",
-    "pandocWarning": "Pandoc wurde nicht gefunden. Prüfe das Feld „Pandoc-Pfad“ in den Export-Einstellungen — dieser Export wird voraussichtlich fehlschlagen."
+    "pandocWarning": "Pandoc wurde nicht gefunden. Prüfe das Feld „Pandoc-Pfad“ in den Export-Einstellungen — dieser Export wird voraussichtlich fehlschlagen.",
+    "includeFolderHeadings": "Ordnernamen als Überschriften einfügen"
   },
   "publishModal": {
     "title": "Auf WordPress veröffentlichen",

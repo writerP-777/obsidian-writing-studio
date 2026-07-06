@@ -246,7 +246,8 @@
       "nameEmpty": "名称不能为空。",
       "nameInvalidChars": "名称不能包含 \\ / : * ? \" < > |",
       "nameTrailing": "名称不能以空格或句点结尾。",
-      "nameExists": "此处已存在名为“{{name}}”的项目。"
+      "nameExists": "此处已存在名为“{{name}}”的项目。",
+      "exportFolder": "导出文件夹"
     }
   },
   "launcher": {
@@ -522,7 +523,8 @@
     "exporting": "导出中…",
     "exportFailed": "导出失败：{{error}}",
     "cancel": "取消",
-    "pandocWarning": "未找到 Pandoc。请检查导出设置中的\"Pandoc 路径\"字段——此次导出很可能失败。"
+    "pandocWarning": "未找到 Pandoc。请检查导出设置中的\"Pandoc 路径\"字段——此次导出很可能失败。",
+    "includeFolderHeadings": "将文件夹名称作为标题包含"
   },
   "publishModal": {
     "title": "发布到 WordPress",

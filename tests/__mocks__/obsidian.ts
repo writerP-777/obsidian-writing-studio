@@ -30,17 +30,21 @@ export class Events {
 export class TFile {
   path: string;
   extension: string;
+  name: string;
   constructor(path = '', extension = 'md') {
     this.path = path;
     this.extension = extension;
+    this.name = path.split('/').pop() ?? '';
   }
 }
 
 export class TFolder {
   path: string;
+  name: string;
   children: (TFile | TFolder)[] = [];
   constructor(path = '') {
     this.path = path;
+    this.name = path.split('/').pop() ?? '';
   }
 }
 

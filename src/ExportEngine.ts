@@ -7,6 +7,8 @@ import { EpubEngine, EpubChapter } from './EpubEngine';
 import { t } from './i18n';
 import { localDateString } from './dates';
 import { markdownToHtml } from './markdown';
+import { buildManuscriptTree, planCompile, CompilePlanItem } from './manuscriptTree';
+import { parseFolderPrefix } from './binderOrder';
 
 const execFileAsync = promisify(execFile);
 
@@ -20,6 +22,10 @@ export interface ExportOptions {
   includeFrontmatter: boolean;
   includeResearch: boolean;
   includeTitlesAsHeadings: boolean;
+  /** Folder display names become headings at folder depth (fs binder only). */
+  includeFolderNamesAsHeadings?: boolean;
+  /** Manuscript-zone folder to compile instead of the whole zone (fs binder only). */
+  subtreeRoot?: string;
   paperSize: 'letter' | 'a4';
   font: string;
   fontSize: number;
@@ -221,7 +227,13 @@ export class ExportEngine {
 
     const timestamp = new Date().toISOString().replace(/[:.]/g, '-').slice(0, 19);
     const projectTitle = project?.title.replace(/[\\/:*?"<>|]/g, '-') || 'export';
-    const baseFile = normalizePath(`${outputDir}/${projectTitle}-${timestamp}`);
+    // A subtree export carries the folder's display name in the filename —
+    // the rebased compile emits no heading for the folder itself (#232), so
+    // this is where its name survives.
+    const subtreeName = opts.subtreeRoot
+      ? '-' + parseFolderPrefix(opts.subtreeRoot.split('/').pop() ?? '').displayName.replace(/[\\/:*?"<>|]/g, '-')
+      : '';
+    const baseFile = normalizePath(`${outputDir}/${projectTitle}${subtreeName}-${timestamp}`);
 
     if (opts.format === 'epub') {
       return this.exportEpub(opts, baseFile);
@@ -277,6 +289,24 @@ export class ExportEngine {
       content = this.preprocessObsidianMarkdown(content.trim());
       const htmlContent = this.htmlToXhtml(markdownToHtml(content));
       chapters.push({ id: 'chapter-1', title: file.basename, htmlContent });
+    } else if (opts.scope === 'project' && project && this.plugin.settings.filesystemBinder) {
+      // Folder headings have no chapter home in epub — the option is ignored
+      // (ruling on #232); chapters are the zone's documents in binder order.
+      let idx = 1;
+      for (const item of this.manuscriptPlan(project.folderPath, opts, false)) {
+        if (item.kind !== 'doc') continue;
+        let content = await this.files.readText(item.path);
+        if (content === null) continue;
+        if (!opts.includeFrontmatter) {
+          content = content.replace(/^---\r?\n[\s\S]*?\r?\n---\r?\n?/, '');
+        }
+        content = this.preprocessObsidianMarkdown(content.trim());
+        if (opts.includeTitlesAsHeadings) {
+          content = content.replace(/^# [^\n]*\n+/, '').trim();
+        }
+        const htmlContent = this.htmlToXhtml(markdownToHtml(content));
+        chapters.push({ id: `chapter-${idx++}`, title: item.title, htmlContent });
+      }
     } else if (opts.scope === 'project' && project) {
       const binder = await this.plugin.projectManager.loadBinder(project);
       const flatItems = this.plugin.projectManager.flattenBinder(binder.items);
@@ -357,6 +387,23 @@ export class ExportEngine {
         throw new Error(t('exportEngine.noActiveDocument'));
       }
       parts.push(content);
+    } else if (opts.scope === 'project' && project && this.plugin.settings.filesystemBinder) {
+      for (const item of this.manuscriptPlan(project.folderPath, opts, opts.includeFolderNamesAsHeadings === true)) {
+        if (item.kind === 'heading') {
+          parts.push(`${'#'.repeat(item.level)} ${item.title}`);
+          continue;
+        }
+        const content = await this.processPath(item.path, opts);
+        if (content === null) continue;
+        if (item.headingLevel !== null) {
+          // Same canonical-heading rule as the classic branch: the title
+          // heading replaces any leading in-document h1
+          const body = content.replace(/^# [^\n]*\n+/, '').trim();
+          parts.push(`${'#'.repeat(item.headingLevel)} ${item.title}\n\n${body}`);
+        } else {
+          parts.push(content);
+        }
+      }
     } else if (opts.scope === 'project' && project) {
       const binder = await this.plugin.projectManager.loadBinder(project);
       const flatItems = this.plugin.projectManager.flattenBinder(binder.items);
@@ -396,6 +443,24 @@ export class ExportEngine {
     // last document and eliminates the double blank lines that came from
     // pushing '\n\n---\n\n' as a separate array element then joining with '\n\n'.
     return parts.join(SECTION_BREAK);
+  }
+
+  // The manuscript zone is the compile source under the experimental binder
+  // (#232) — the dormant _binder.json is never read. Depth is rebased to the
+  // compile root, so a subtree export is the whole-zone walk with a different
+  // root (which is also why reserved-folder filtering only applies when the
+  // root is the project folder itself).
+  private manuscriptPlan(
+    projectFolderPath: string,
+    opts: ExportOptions,
+    includeFolderNames: boolean,
+  ): CompilePlanItem[] {
+    const root = opts.subtreeRoot ?? projectFolderPath;
+    const tree = buildManuscriptTree(this.app, root, { excludeReservedAtRoot: !opts.subtreeRoot });
+    return planCompile(tree.nodes, {
+      includeFolderNames,
+      includeTitlesAsHeadings: opts.includeTitlesAsHeadings,
+    });
   }
 
   // Resolves to null when the file does not exist.
