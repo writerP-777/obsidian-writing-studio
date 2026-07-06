@@ -142,8 +142,95 @@ export function planCarryOver(
 ): CarryOverPlan {
   const plan: CarryOverPlan = { folderOps: [], docOps: [] };
   walkGroup(items, projectFolderPath, disk, plan);
+  planContentFolders(plan, projectFolderPath, disk);
   assignLeftoverOrders(plan, disk);
   return plan;
+}
+
+const parentOf = (path: string): string => path.split('/').slice(0, -1).join('/');
+
+// #263: a physical folder the legacy binder recorded documents inside is
+// invisible to the legacy file as an item — the classic binder was a flat
+// document list — so migration previously left it unordered and the
+// unordered-below-ordered rule sank it beneath every ordered sibling. Such a
+// folder receives a marker placing it just before its earliest recorded
+// document (position − 5), minted only when that document's order lands in
+// the folder's own sibling group (the narrow trigger — a folder alone in its
+// group needs no order). Matching is marker-aware like structural adoption:
+// a folder already carrying a marker plans as 'none', which keeps the pass
+// idempotent and makes the marker strippable by restore.
+function planContentFolders(
+  plan: CarryOverPlan,
+  projectFolderPath: string,
+  disk: DiskState,
+): void {
+  const claimed = new Set<string>();
+  for (const op of plan.folderOps) {
+    claimed.add(op.targetPath);
+    if (op.currentPath !== null) claimed.add(op.currentPath);
+  }
+
+  // A pending or leftover document still physically sits inside its
+  // recorded folder — renaming that folder would move the document's path
+  // out from under its planned operations, stranding it as 'missing'. Such
+  // folders are untouchable until every resident document has landed; the
+  // resumable model converges on a later phase or run.
+  const blocked = new Set<string>();
+  for (const op of plan.docOps) {
+    if ((op.state === 'pending' || op.state === 'leftover') && op.originalPath !== '') {
+      blocked.add(parentOf(op.originalPath));
+    }
+  }
+
+  // Earliest target-group position per recorded parent folder — 'done'
+  // documents only (leftovers rank in their actual folder; missing docs
+  // write nothing).
+  const earliest = new Map<string, number>();
+  for (const op of plan.docOps) {
+    if (op.state !== 'done') continue;
+    if (op.originalPath === '') continue;
+    const recordedParent = parentOf(op.originalPath);
+    if (blocked.has(recordedParent)) continue;
+    if (!(recordedParent.length > projectFolderPath.length
+        && recordedParent.startsWith(projectFolderPath + '/'))) continue;
+    // Same sibling group: the document's order lands where the folder sits
+    if (parentOf(op.finalPath) !== parentOf(recordedParent)) continue;
+    const current = earliest.get(recordedParent);
+    if (current === undefined || op.order < current) earliest.set(recordedParent, op.order);
+  }
+
+  for (const [recordedParent, position] of [...earliest.entries()].sort()) {
+    const parent = parentOf(recordedParent);
+    const plainName = recordedParent.split('/').pop() as string;
+    const candidates = disk.subfolderNames(parent).filter(n =>
+      !claimed.has(`${parent}/${n}`) &&
+      parseFolderPrefix(n).displayName.toLowerCase() === plainName.toLowerCase());
+    if (candidates.length === 0) continue; // folder gone or renamed — never guess
+    candidates.sort((a, b) => {
+      const aMarked = parseFolderPrefix(a).order !== null;
+      const bMarked = parseFolderPrefix(b).order !== null;
+      if (aMarked !== bMarked) return aMarked ? -1 : 1;
+      return naturalCompare(a, b);
+    });
+    const name = candidates[0];
+    claimed.add(`${parent}/${name}`);
+
+    if (parseFolderPrefix(name).order !== null) {
+      plan.folderOps.push({
+        kind: 'folder', legacyTitle: plainName,
+        displayName: parseFolderPrefix(name).displayName,
+        currentPath: null, targetName: name,
+        targetPath: `${parent}/${name}`, action: 'none',
+      });
+      continue;
+    }
+    const attached = folderNameWithPrefix(name, position - 5);
+    plan.folderOps.push({
+      kind: 'folder', legacyTitle: plainName, displayName: name,
+      currentPath: `${parent}/${name}`, targetName: attached,
+      targetPath: `${parent}/${attached}`, action: 'attach-marker',
+    });
+  }
 }
 
 function walkGroup(
@@ -353,15 +440,59 @@ export function planRestore(
   disk: DiskState,
 ): RestorePlan {
   const forward = planCarryOver(items, projectFolderPath, disk);
-  const docOps: RestoreDocOp[] = [];
 
+  // Markers come off folders matched to legacy items or recorded homes. The
+  // forward plan computed against today's disk already found them (action
+  // 'none' with a marker-carrying name); minted-but-uncreated folders
+  // (action 'create') do not exist and need nothing.
+  const folderOps: RestoreFolderOp[] = [];
+  // Rewrites a legacy (plain-named) path onto today's marker-carrying
+  // folders: a document returning "into Chapters" must physically move into
+  // `005~ Chapters` — the folder strip then renames it back, carrying the
+  // contents. Keyed by rewritten parent + lowercased plain name.
+  const stripByPlain = new Map<string, string>();
+  for (const op of forward.folderOps) {
+    if (op.action !== 'none') continue;
+    const parsed = parseFolderPrefix(op.targetName);
+    if (parsed.order === null) continue; // adopted plain folder — no marker to strip
+    const parent = parentOf(op.targetPath);
+    const toPath = `${parent}/${parsed.displayName}`;
+    const occupied = disk.folderExists(toPath) || disk.fileExists(toPath);
+    folderOps.push({
+      kind: 'restore-folder',
+      fromPath: op.targetPath,
+      toPath,
+      state: occupied ? 'skipped' : 'pending',
+      skipReason: occupied ? 'target-occupied' : undefined,
+    });
+    if (!occupied) {
+      stripByPlain.set(`${parent}|${parsed.displayName.toLowerCase()}`, op.targetName);
+    }
+  }
+
+  const rewriteThroughStrips = (plainPath: string): string => {
+    const segments = plainPath.split('/');
+    let current = '';
+    for (const segment of segments) {
+      const marked = current === '' ? undefined : stripByPlain.get(`${current}|${segment.toLowerCase()}`);
+      const name = marked ?? segment;
+      current = current === '' ? name : `${current}/${name}`;
+    }
+    return current;
+  };
+
+  const docOps: RestoreDocOp[] = [];
   for (const op of forward.docOps) {
     if (op.originalPath === '' || op.finalPath === op.originalPath) continue;
+    const toPath = rewriteThroughStrips(op.originalPath);
+    // The legacy home is a folder whose marker comes off this run — the
+    // document is already inside it and rides the folder strip; no move.
+    if (toPath === op.finalPath) continue;
     const atFinal = disk.fileExists(op.finalPath);
-    const atOriginal = disk.fileExists(op.originalPath);
+    const atHome = disk.fileExists(toPath) || disk.fileExists(op.originalPath);
     let state: RestoreDocOp['state'];
     let skipReason: RestoreDocOp['skipReason'];
-    if (atOriginal) {
+    if (atHome) {
       // At its legacy home already — a leftover that never moved, or a
       // previous restore run's work. Nothing to do.
       state = 'done';
@@ -374,31 +505,10 @@ export function planRestore(
     docOps.push({
       kind: 'restore-doc',
       fromPath: op.finalPath,
-      toPath: op.originalPath,
-      ensureFolders: ancestorsWithin(op.originalPath, projectFolderPath),
+      toPath,
+      ensureFolders: ancestorsWithin(toPath, projectFolderPath),
       state,
       skipReason,
-    });
-  }
-
-  // Markers come off folders matched to legacy structural items. The forward
-  // plan computed against today's disk already found them (action 'none'
-  // with a marker-carrying name); minted-but-uncreated folders (action
-  // 'create') do not exist and need nothing.
-  const folderOps: RestoreFolderOp[] = [];
-  for (const op of forward.folderOps) {
-    if (op.action !== 'none') continue;
-    const parsed = parseFolderPrefix(op.targetName);
-    if (parsed.order === null) continue; // adopted plain folder — no marker to strip
-    const parent = op.targetPath.split('/').slice(0, -1).join('/');
-    const toPath = `${parent}/${parsed.displayName}`;
-    const occupied = disk.folderExists(toPath) || disk.fileExists(toPath);
-    folderOps.push({
-      kind: 'restore-folder',
-      fromPath: op.targetPath,
-      toPath,
-      state: occupied ? 'skipped' : 'pending',
-      skipReason: occupied ? 'target-occupied' : undefined,
     });
   }
 
@@ -462,24 +572,42 @@ export async function runMigrationPass(
   const failedRoots: string[] = [];
   const underFailedRoot = (path: string): boolean =>
     failedRoots.some(root => path === root || path.startsWith(root + '/'));
+  // Every folder op attempted this run, success or failure — a re-plan sees
+  // successes as 'none', and failures must not retry within the run (the
+  // graduated notice ledger counts runs, not attempts).
+  const attemptedFolders = new Set<string>();
+
+  // One folder op at a time, re-planned after each: an attach-marker rename
+  // shifts every path beneath it, so a nested folder's adoption must see its
+  // parent's post-rename reality. (Executing a whole stale plan created a
+  // minted duplicate beside a plain nested folder and stranded the documents
+  // inside it as 'missing'.)
+  const runFolderOps = async (): Promise<void> => {
+    for (;;) {
+      const op = compute().plan.folderOps.find(o =>
+        o.action !== 'none'
+        && !underFailedRoot(o.targetPath)
+        && !attemptedFolders.has(`folder|${o.targetPath}`));
+      if (!op) return;
+      attemptedFolders.add(`folder|${op.targetPath}`);
+      try {
+        if (op.action === 'create') await io.createFolder(op.targetPath);
+        else await io.rename(op.currentPath as string, op.targetPath);
+        result.changed += 1;
+      } catch (e) {
+        failedRoots.push(op.targetPath);
+        result.failures.push({
+          signature: `folder|${op.targetPath}`,
+          name: op.displayName,
+          reason: e instanceof Error ? e.message : String(e),
+          kind: 'folder',
+        });
+      }
+    }
+  };
 
   // Phase 1 — folders, parents before children (plan walk order)
-  for (const op of compute().plan.folderOps) {
-    if (op.action === 'none' || underFailedRoot(op.targetPath)) continue;
-    try {
-      if (op.action === 'create') await io.createFolder(op.targetPath);
-      else await io.rename(op.currentPath as string, op.targetPath);
-      result.changed += 1;
-    } catch (e) {
-      failedRoots.push(op.targetPath);
-      result.failures.push({
-        signature: `folder|${op.targetPath}`,
-        name: op.displayName,
-        reason: e instanceof Error ? e.message : String(e),
-        kind: 'folder',
-      });
-    }
-  }
+  await runFolderOps();
 
   // Phase 2 — document moves, against post-folder reality
   const afterFolders = compute();
@@ -544,6 +672,12 @@ export async function runMigrationPass(
     }
   }
 
+  // Phase 4 — content-folder markers that became plannable only after the
+  // moves landed (#263): a folder whose recorded documents were still inside
+  // it at phase 1 gains its marker once they are out, so a single pass
+  // reaches steady state.
+  await runFolderOps();
+
   return result;
 }
 
@@ -587,7 +721,16 @@ export async function runRestorePass(
     }
   }
 
-  for (const op of compute().plan.folderOps) {
+  // Strips come from the FIRST plan: the doc moves above returned documents
+  // to their (marker-carrying) homes, which flips their forward state and
+  // would erase content-folder ops from a recomputed plan (#263) — but the
+  // marker folders themselves have not moved. Deepest first: a child
+  // folder's marker comes off while its parent's marker-carrying path is
+  // still valid; the parent's strip then carries the already-stripped child
+  // along.
+  const strips = [...first.plan.folderOps]
+    .sort((a, b) => b.fromPath.split('/').length - a.fromPath.split('/').length);
+  for (const op of strips) {
     if (op.state !== 'pending') {
       if (op.state === 'skipped') result.skipped += 1;
       continue;
