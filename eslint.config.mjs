@@ -12,7 +12,11 @@ export default [
       },
     },
     rules: {
-      "obsidianmd/ui/sentence-case": "off"
+      "obsidianmd/ui/sentence-case": "off",
+      // Advisory rule new in 0.4.1: adopting getSettingDefinitions() is a
+      // real refactor of the tabbed settings surface, tracked as its own
+      // issue — off until that ships, not suppressed inline.
+      "obsidianmd/settings-tab/prefer-setting-definitions": "off"
     }
   },
 ];
