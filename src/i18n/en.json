@@ -246,7 +246,8 @@
       "nameEmpty": "Name cannot be empty.",
       "nameInvalidChars": "Names cannot contain \\ / : * ? \" < > |",
       "nameTrailing": "Names cannot end with a space or period.",
-      "nameExists": "Something named \"{{name}}\" already exists here."
+      "nameExists": "Something named \"{{name}}\" already exists here.",
+      "exportFolder": "Export folder"
     }
   },
   "launcher": {
@@ -522,7 +523,8 @@
     "exporting": "Exporting…",
     "exportFailed": "Export failed: {{error}}",
     "cancel": "Cancel",
-    "pandocWarning": "Pandoc was not found. Check the \"Pandoc path\" field in the export settings — this export will likely fail."
+    "pandocWarning": "Pandoc was not found. Check the \"Pandoc path\" field in the export settings — this export will likely fail.",
+    "includeFolderHeadings": "Include folder names as headings"
   },
   "publishModal": {
     "title": "Publish to WordPress",

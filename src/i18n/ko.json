@@ -246,7 +246,8 @@
       "nameEmpty": "이름은 비워둘 수 없습니다.",
       "nameInvalidChars": "이름에는 \\ / : * ? \" < > | 를 사용할 수 없습니다",
       "nameTrailing": "이름은 공백이나 마침표로 끝날 수 없습니다.",
-      "nameExists": "\"{{name}}\"(이)라는 이름의 항목이 이미 여기에 있습니다."
+      "nameExists": "\"{{name}}\"(이)라는 이름의 항목이 이미 여기에 있습니다.",
+      "exportFolder": "폴더 내보내기"
     }
   },
   "launcher": {
@@ -522,7 +523,8 @@
     "exporting": "내보내는 중…",
     "exportFailed": "내보내기 실패: {{error}}",
     "cancel": "취소",
-    "pandocWarning": "Pandoc을 찾을 수 없습니다. 내보내기 설정의 \"Pandoc 경로\" 필드를 확인하세요 — 이 내보내기는 실패할 가능성이 높습니다."
+    "pandocWarning": "Pandoc을 찾을 수 없습니다. 내보내기 설정의 \"Pandoc 경로\" 필드를 확인하세요 — 이 내보내기는 실패할 가능성이 높습니다.",
+    "includeFolderHeadings": "폴더 이름을 제목으로 포함"
   },
   "publishModal": {
     "title": "WordPress에 게시",

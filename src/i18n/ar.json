@@ -249,7 +249,8 @@
       "nameEmpty": "لا يمكن أن يكون الاسم فارغاً.",
       "nameInvalidChars": "لا يمكن أن تحتوي الأسماء على \\ / : * ? \" < > |",
       "nameTrailing": "لا يمكن أن تنتهي الأسماء بمسافة أو نقطة.",
-      "nameExists": "يوجد بالفعل عنصر باسم \"{{name}}\" هنا."
+      "nameExists": "يوجد بالفعل عنصر باسم \"{{name}}\" هنا.",
+      "exportFolder": "تصدير المجلد"
     }
   },
   "launcher": {
@@ -535,7 +536,8 @@
     "exporting": "جارٍ التصدير…",
     "exportFailed": "فشل التصدير: {{error}}",
     "cancel": "إلغاء",
-    "pandocWarning": "لم يتم العثور على Pandoc. تحقق من حقل \"مسار Pandoc\" في إعدادات التصدير — من المرجح أن يفشل هذا التصدير."
+    "pandocWarning": "لم يتم العثور على Pandoc. تحقق من حقل \"مسار Pandoc\" في إعدادات التصدير — من المرجح أن يفشل هذا التصدير.",
+    "includeFolderHeadings": "تضمين أسماء المجلدات كعناوين"
   },
   "publishModal": {
     "title": "نشر إلى WordPress",

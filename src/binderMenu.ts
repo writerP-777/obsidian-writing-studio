@@ -8,7 +8,7 @@ import { DocumentStatus, STATUS_COLORS } from '../models/BinderItem';
 
 export type MenuAction =
   | 'rename' | 'status' | 'goal' | 'type' | 'compile'
-  | 'newDoc' | 'newFolder' | 'delete';
+  | 'export' | 'newDoc' | 'newFolder' | 'delete';
 
 // The optional `binder-type` document types — group/part are structural
 // legacy concepts with no place in a filesystem-owned binder.
@@ -30,10 +30,14 @@ export function parseBinderStatus(value: unknown): DocumentStatus | null {
 // Rulings on #229: Exports rows are delete-only (the zone is output-only);
 // Research rows offer rename/delete/new-document/new-folder but never the
 // manuscript metadata actions; non-markdown files are rename+delete wherever
-// they are mutable at all.
+// they are mutable at all. Manuscript folders additionally offer subtree
+// export (#232) — Research folders never do, the zone never compiles.
 export function menuActionsFor(entry: SiblingEntry, zone: BinderZone): MenuAction[] {
   if (zone === 'exports') return ['delete'];
   if (!entry.isFolder && entry.extension !== 'md') return ['rename', 'delete'];
+  if (entry.isFolder && zone === 'manuscript') {
+    return ['rename', 'export', 'newDoc', 'newFolder', 'delete'];
+  }
   if (zone === 'research' || entry.isFolder) {
     return ['rename', 'newDoc', 'newFolder', 'delete'];
   }

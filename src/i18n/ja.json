@@ -246,7 +246,8 @@
       "nameEmpty": "名前を空にすることはできません。",
       "nameInvalidChars": "名前に \\ / : * ? \" < > | は使用できません",
       "nameTrailing": "名前の末尾にスペースやピリオドは使用できません。",
-      "nameExists": "「{{name}}」という名前の項目がすでにここに存在します。"
+      "nameExists": "「{{name}}」という名前の項目がすでにここに存在します。",
+      "exportFolder": "フォルダーをエクスポート"
     }
   },
   "launcher": {
@@ -522,7 +523,8 @@
     "exporting": "エクスポート中…",
     "exportFailed": "エクスポートに失敗しました：{{error}}",
     "cancel": "キャンセル",
-    "pandocWarning": "Pandocが見つかりません。エクスポート設定の「Pandocのパス」を確認してください — このエクスポートは失敗する可能性が高いです。"
+    "pandocWarning": "Pandocが見つかりません。エクスポート設定の「Pandocのパス」を確認してください — このエクスポートは失敗する可能性が高いです。",
+    "includeFolderHeadings": "フォルダー名を見出しとして含める"
   },
   "publishModal": {
     "title": "WordPressに公開",

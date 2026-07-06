@@ -10,7 +10,11 @@ export class ExportModal extends Modal {
   private includeFrontmatter = false;
   private includeResearch = false;
   private includeTitlesAsHeadings = true;
+  private includeFolderNames = false;
   private addTitlePage = true;
+  // A manuscript-zone folder to export instead of the whole zone (#232) —
+  // set when the modal is opened from a folder's context menu
+  private subtreeRoot?: string;
   private coverImagePath = '';
   private authorContact = '';
   private pandocWarningEl: HTMLElement | null = null;
@@ -18,11 +22,12 @@ export class ExportModal extends Modal {
   private pandocAvailable: boolean | null = null;
   private static readonly PANDOC_FORMATS: ReadonlySet<string> = new Set(['pdf', 'docx', 'rtf']);
 
-  constructor(app: App, plugin: WritingStudioPlugin, initialScope: ExportScope = 'current') {
+  constructor(app: App, plugin: WritingStudioPlugin, initialScope: ExportScope = 'current', subtreeRoot?: string) {
     super(app);
     this.plugin = plugin;
     this.format = plugin.settings.defaultExportFormat;
     this.exportScope = initialScope;
+    this.subtreeRoot = subtreeRoot;
   }
 
   onOpen(): void {
@@ -73,25 +78,40 @@ export class ExportModal extends Modal {
         .onChange(v => { this.authorContact = v; }));
     contactSetting.settingEl.toggleClass('ws-hidden', this.format !== 'manuscript');
 
-    new Setting(contentEl)
-      .setName(t('exportModal.scopeName'))
-      .addDropdown(d => d
-        .addOption('current', t('exportModal.scopeCurrent'))
-        .addOption('project', t('exportModal.scopeProject'))
-        .setValue(this.exportScope)
-        .onChange(v => { this.exportScope = v as ExportScope; }));
+    // A subtree export IS its scope — the dropdown would only contradict it
+    if (!this.subtreeRoot) {
+      new Setting(contentEl)
+        .setName(t('exportModal.scopeName'))
+        .addDropdown(d => d
+          .addOption('current', t('exportModal.scopeCurrent'))
+          .addOption('project', t('exportModal.scopeProject'))
+          .setValue(this.exportScope)
+          .onChange(v => { this.exportScope = v as ExportScope; }));
+    }
 
     new Setting(contentEl)
       .setName(t('exportModal.includeFrontmatter'))
       .addToggle(tx => tx.setValue(this.includeFrontmatter).onChange(v => { this.includeFrontmatter = v; }));
 
-    new Setting(contentEl)
-      .setName(t('exportModal.includeResearch'))
-      .addToggle(tx => tx.setValue(this.includeResearch).onChange(v => { this.includeResearch = v; }));
+    // Under the experimental binder the zone boundary is the compile boundary
+    // (ADR 0001) — Research never compiles, so the option disappears
+    if (!this.plugin.settings.filesystemBinder) {
+      new Setting(contentEl)
+        .setName(t('exportModal.includeResearch'))
+        .addToggle(tx => tx.setValue(this.includeResearch).onChange(v => { this.includeResearch = v; }));
+    }
 
     new Setting(contentEl)
       .setName(t('exportModal.includeTitlesAsHeadings'))
       .addToggle(tx => tx.setValue(this.includeTitlesAsHeadings).onChange(v => { this.includeTitlesAsHeadings = v; }));
+
+    // Folder names only exist as a compile concept in the filesystem binder;
+    // the classic compile skips structural items entirely
+    if (this.plugin.settings.filesystemBinder) {
+      new Setting(contentEl)
+        .setName(t('exportModal.includeFolderHeadings'))
+        .addToggle(tx => tx.setValue(this.includeFolderNames).onChange(v => { this.includeFolderNames = v; }));
+    }
 
     new Setting(contentEl)
       .setName(t('exportModal.addTitlePage'))
@@ -120,6 +140,8 @@ export class ExportModal extends Modal {
           includeFrontmatter: this.includeFrontmatter,
           includeResearch: this.includeResearch,
           includeTitlesAsHeadings: this.includeTitlesAsHeadings,
+          includeFolderNamesAsHeadings: this.includeFolderNames,
+          subtreeRoot: this.subtreeRoot,
           paperSize: this.plugin.settings.defaultPaperSize,
           font: this.plugin.settings.defaultExportFont,
           fontSize: this.plugin.settings.defaultExportFontSize,

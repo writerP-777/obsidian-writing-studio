@@ -246,7 +246,8 @@
       "nameEmpty": "El nombre no puede estar vacío.",
       "nameInvalidChars": "Los nombres no pueden contener \\ / : * ? \" < > |",
       "nameTrailing": "Los nombres no pueden terminar en espacio o punto.",
-      "nameExists": "Ya existe algo llamado \"{{name}}\" aquí."
+      "nameExists": "Ya existe algo llamado \"{{name}}\" aquí.",
+      "exportFolder": "Exportar carpeta"
     }
   },
   "launcher": {
@@ -522,7 +523,8 @@
     "exporting": "Exportando…",
     "exportFailed": "Error de exportación: {{error}}",
     "cancel": "Cancelar",
-    "pandocWarning": "No se encontró Pandoc. Revisa el campo \"Ruta de Pandoc\" en los ajustes de exportación: esta exportación probablemente fallará."
+    "pandocWarning": "No se encontró Pandoc. Revisa el campo \"Ruta de Pandoc\" en los ajustes de exportación: esta exportación probablemente fallará.",
+    "includeFolderHeadings": "Incluir nombres de carpetas como encabezados"
   },
   "publishModal": {
     "title": "Publicar en WordPress",

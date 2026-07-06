@@ -11,6 +11,7 @@ import { ProjectModal } from '../modals/ProjectModal';
 import { TargetsDashboardModal } from '../modals/TargetsDashboardModal';
 import { TitlePromptModal } from '../modals/TitlePromptModal';
 import { ConfirmModal } from '../modals/ConfirmModal';
+import { ExportModal } from '../modals/ExportModal';
 import { confirmDeleteProject } from '../modals/confirmDeleteProject';
 import { ControlStrip } from './ControlStrip';
 import { t } from './i18n';
@@ -829,6 +830,14 @@ export class FilesystemBinderView extends ItemView {
     if (actions.has('rename')) {
       menu.addItem(i => i.setTitle(t('binder.menu.rename')).setIcon('pencil')
         .onClick(() => this.promptRename(node)));
+    }
+
+    // Subtree export (#232): the export modal compiles this folder's
+    // documents in binder order, depth rebased to the folder
+    if (actions.has('export') && node.file instanceof TFolder) {
+      const folderPath = node.file.path;
+      menu.addItem(i => i.setTitle(t('binder.fs.exportFolder')).setIcon('download')
+        .onClick(() => { new ExportModal(this.app, this.plugin, 'project', folderPath).open(); }));
     }
 
     if (actions.has('status') && doc) {

@@ -2636,7 +2636,8 @@ var en_default = {
       nameEmpty: "Name cannot be empty.",
       nameInvalidChars: 'Names cannot contain \\ / : * ? " < > |',
       nameTrailing: "Names cannot end with a space or period.",
-      nameExists: 'Something named "{{name}}" already exists here.'
+      nameExists: 'Something named "{{name}}" already exists here.',
+      exportFolder: "Export folder"
     }
   },
   launcher: {
@@ -2912,7 +2913,8 @@ var en_default = {
     exporting: "Exporting\u2026",
     exportFailed: "Export failed: {{error}}",
     cancel: "Cancel",
-    pandocWarning: 'Pandoc was not found. Check the "Pandoc path" field in the export settings \u2014 this export will likely fail.'
+    pandocWarning: 'Pandoc was not found. Check the "Pandoc path" field in the export settings \u2014 this export will likely fail.',
+    includeFolderHeadings: "Include folder names as headings"
   },
   publishModal: {
     title: "Publish to WordPress",
@@ -3369,7 +3371,8 @@ var zh_default = {
       nameEmpty: "\u540D\u79F0\u4E0D\u80FD\u4E3A\u7A7A\u3002",
       nameInvalidChars: '\u540D\u79F0\u4E0D\u80FD\u5305\u542B \\ / : * ? " < > |',
       nameTrailing: "\u540D\u79F0\u4E0D\u80FD\u4EE5\u7A7A\u683C\u6216\u53E5\u70B9\u7ED3\u5C3E\u3002",
-      nameExists: "\u6B64\u5904\u5DF2\u5B58\u5728\u540D\u4E3A\u201C{{name}}\u201D\u7684\u9879\u76EE\u3002"
+      nameExists: "\u6B64\u5904\u5DF2\u5B58\u5728\u540D\u4E3A\u201C{{name}}\u201D\u7684\u9879\u76EE\u3002",
+      exportFolder: "\u5BFC\u51FA\u6587\u4EF6\u5939"
     }
   },
   launcher: {
@@ -3645,7 +3648,8 @@ var zh_default = {
     exporting: "\u5BFC\u51FA\u4E2D\u2026",
     exportFailed: "\u5BFC\u51FA\u5931\u8D25\uFF1A{{error}}",
     cancel: "\u53D6\u6D88",
-    pandocWarning: '\u672A\u627E\u5230 Pandoc\u3002\u8BF7\u68C0\u67E5\u5BFC\u51FA\u8BBE\u7F6E\u4E2D\u7684"Pandoc \u8DEF\u5F84"\u5B57\u6BB5\u2014\u2014\u6B64\u6B21\u5BFC\u51FA\u5F88\u53EF\u80FD\u5931\u8D25\u3002'
+    pandocWarning: '\u672A\u627E\u5230 Pandoc\u3002\u8BF7\u68C0\u67E5\u5BFC\u51FA\u8BBE\u7F6E\u4E2D\u7684"Pandoc \u8DEF\u5F84"\u5B57\u6BB5\u2014\u2014\u6B64\u6B21\u5BFC\u51FA\u5F88\u53EF\u80FD\u5931\u8D25\u3002',
+    includeFolderHeadings: "\u5C06\u6587\u4EF6\u5939\u540D\u79F0\u4F5C\u4E3A\u6807\u9898\u5305\u542B"
   },
   publishModal: {
     title: "\u53D1\u5E03\u5230 WordPress",
@@ -4102,7 +4106,8 @@ var hi_default = {
       nameEmpty: "\u0928\u093E\u092E \u0916\u093E\u0932\u0940 \u0928\u0939\u0940\u0902 \u0939\u094B \u0938\u0915\u0924\u093E\u0964",
       nameInvalidChars: '\u0928\u093E\u092E\u094B\u0902 \u092E\u0947\u0902 \\ / : * ? " < > | \u0928\u0939\u0940\u0902 \u0939\u094B \u0938\u0915\u0924\u0947',
       nameTrailing: "\u0928\u093E\u092E \u0938\u094D\u092A\u0947\u0938 \u092F\u093E \u092C\u093F\u0902\u0926\u0941 \u0938\u0947 \u0938\u092E\u093E\u092A\u094D\u0924 \u0928\u0939\u0940\u0902 \u0939\u094B \u0938\u0915\u0924\u0947\u0964",
-      nameExists: '\u092F\u0939\u093E\u0902 "{{name}}" \u0928\u093E\u092E \u0915\u0940 \u0915\u094B\u0908 \u091A\u0940\u091C\u093C \u092A\u0939\u0932\u0947 \u0938\u0947 \u092E\u094C\u091C\u0942\u0926 \u0939\u0948\u0964'
+      nameExists: '\u092F\u0939\u093E\u0902 "{{name}}" \u0928\u093E\u092E \u0915\u0940 \u0915\u094B\u0908 \u091A\u0940\u091C\u093C \u092A\u0939\u0932\u0947 \u0938\u0947 \u092E\u094C\u091C\u0942\u0926 \u0939\u0948\u0964',
+      exportFolder: "\u092B\u093C\u094B\u0932\u094D\u0921\u0930 \u0928\u093F\u0930\u094D\u092F\u093E\u0924 \u0915\u0930\u0947\u0902"
     }
   },
   launcher: {
@@ -4378,7 +4383,8 @@ var hi_default = {
     exporting: "\u0928\u093F\u0930\u094D\u092F\u093E\u0924 \u0939\u094B \u0930\u0939\u093E \u0939\u0948\u2026",
     exportFailed: "\u0928\u093F\u0930\u094D\u092F\u093E\u0924 \u0935\u093F\u092B\u0932: {{error}}",
     cancel: "\u0930\u0926\u094D\u0926 \u0915\u0930\u0947\u0902",
-    pandocWarning: 'Pandoc \u0928\u0939\u0940\u0902 \u092E\u093F\u0932\u093E\u0964 \u0928\u093F\u0930\u094D\u092F\u093E\u0924 \u0938\u0947\u091F\u093F\u0902\u0917\u094D\u0938 \u092E\u0947\u0902 "Pandoc \u092A\u0925" \u092B\u093C\u0940\u0932\u094D\u0921 \u091C\u093E\u0901\u091A\u0947\u0902 \u2014 \u092F\u0939 \u0928\u093F\u0930\u094D\u092F\u093E\u0924 \u0938\u0902\u092D\u0935\u0924\u0903 \u0935\u093F\u092B\u0932 \u0939\u094B\u0917\u093E\u0964'
+    pandocWarning: 'Pandoc \u0928\u0939\u0940\u0902 \u092E\u093F\u0932\u093E\u0964 \u0928\u093F\u0930\u094D\u092F\u093E\u0924 \u0938\u0947\u091F\u093F\u0902\u0917\u094D\u0938 \u092E\u0947\u0902 "Pandoc \u092A\u0925" \u092B\u093C\u0940\u0932\u094D\u0921 \u091C\u093E\u0901\u091A\u0947\u0902 \u2014 \u092F\u0939 \u0928\u093F\u0930\u094D\u092F\u093E\u0924 \u0938\u0902\u092D\u0935\u0924\u0903 \u0935\u093F\u092B\u0932 \u0939\u094B\u0917\u093E\u0964',
+    includeFolderHeadings: "\u092B\u093C\u094B\u0932\u094D\u0921\u0930 \u0928\u093E\u092E\u094B\u0902 \u0915\u094B \u0936\u0940\u0930\u094D\u0937\u0915 \u0915\u0947 \u0930\u0942\u092A \u092E\u0947\u0902 \u0936\u093E\u092E\u093F\u0932 \u0915\u0930\u0947\u0902"
   },
   publishModal: {
     title: "WordPress \u092A\u0930 \u092A\u094D\u0930\u0915\u093E\u0936\u093F\u0924 \u0915\u0930\u0947\u0902",
@@ -4835,7 +4841,8 @@ var es_default = {
       nameEmpty: "El nombre no puede estar vac\xEDo.",
       nameInvalidChars: 'Los nombres no pueden contener \\ / : * ? " < > |',
       nameTrailing: "Los nombres no pueden terminar en espacio o punto.",
-      nameExists: 'Ya existe algo llamado "{{name}}" aqu\xED.'
+      nameExists: 'Ya existe algo llamado "{{name}}" aqu\xED.',
+      exportFolder: "Exportar carpeta"
     }
   },
   launcher: {
@@ -5111,7 +5118,8 @@ var es_default = {
     exporting: "Exportando\u2026",
     exportFailed: "Error de exportaci\xF3n: {{error}}",
     cancel: "Cancelar",
-    pandocWarning: 'No se encontr\xF3 Pandoc. Revisa el campo "Ruta de Pandoc" en los ajustes de exportaci\xF3n: esta exportaci\xF3n probablemente fallar\xE1.'
+    pandocWarning: 'No se encontr\xF3 Pandoc. Revisa el campo "Ruta de Pandoc" en los ajustes de exportaci\xF3n: esta exportaci\xF3n probablemente fallar\xE1.',
+    includeFolderHeadings: "Incluir nombres de carpetas como encabezados"
   },
   publishModal: {
     title: "Publicar en WordPress",
@@ -5571,7 +5579,8 @@ var ar_default = {
       nameEmpty: "\u0644\u0627 \u064A\u0645\u0643\u0646 \u0623\u0646 \u064A\u0643\u0648\u0646 \u0627\u0644\u0627\u0633\u0645 \u0641\u0627\u0631\u063A\u0627\u064B.",
       nameInvalidChars: '\u0644\u0627 \u064A\u0645\u0643\u0646 \u0623\u0646 \u062A\u062D\u062A\u0648\u064A \u0627\u0644\u0623\u0633\u0645\u0627\u0621 \u0639\u0644\u0649 \\ / : * ? " < > |',
       nameTrailing: "\u0644\u0627 \u064A\u0645\u0643\u0646 \u0623\u0646 \u062A\u0646\u062A\u0647\u064A \u0627\u0644\u0623\u0633\u0645\u0627\u0621 \u0628\u0645\u0633\u0627\u0641\u0629 \u0623\u0648 \u0646\u0642\u0637\u0629.",
-      nameExists: '\u064A\u0648\u062C\u062F \u0628\u0627\u0644\u0641\u0639\u0644 \u0639\u0646\u0635\u0631 \u0628\u0627\u0633\u0645 "{{name}}" \u0647\u0646\u0627.'
+      nameExists: '\u064A\u0648\u062C\u062F \u0628\u0627\u0644\u0641\u0639\u0644 \u0639\u0646\u0635\u0631 \u0628\u0627\u0633\u0645 "{{name}}" \u0647\u0646\u0627.',
+      exportFolder: "\u062A\u0635\u062F\u064A\u0631 \u0627\u0644\u0645\u062C\u0644\u062F"
     }
   },
   launcher: {
@@ -5857,7 +5866,8 @@ var ar_default = {
     exporting: "\u062C\u0627\u0631\u064D \u0627\u0644\u062A\u0635\u062F\u064A\u0631\u2026",
     exportFailed: "\u0641\u0634\u0644 \u0627\u0644\u062A\u0635\u062F\u064A\u0631: {{error}}",
     cancel: "\u0625\u0644\u063A\u0627\u0621",
-    pandocWarning: '\u0644\u0645 \u064A\u062A\u0645 \u0627\u0644\u0639\u062B\u0648\u0631 \u0639\u0644\u0649 Pandoc. \u062A\u062D\u0642\u0642 \u0645\u0646 \u062D\u0642\u0644 "\u0645\u0633\u0627\u0631 Pandoc" \u0641\u064A \u0625\u0639\u062F\u0627\u062F\u0627\u062A \u0627\u0644\u062A\u0635\u062F\u064A\u0631 \u2014 \u0645\u0646 \u0627\u0644\u0645\u0631\u062C\u062D \u0623\u0646 \u064A\u0641\u0634\u0644 \u0647\u0630\u0627 \u0627\u0644\u062A\u0635\u062F\u064A\u0631.'
+    pandocWarning: '\u0644\u0645 \u064A\u062A\u0645 \u0627\u0644\u0639\u062B\u0648\u0631 \u0639\u0644\u0649 Pandoc. \u062A\u062D\u0642\u0642 \u0645\u0646 \u062D\u0642\u0644 "\u0645\u0633\u0627\u0631 Pandoc" \u0641\u064A \u0625\u0639\u062F\u0627\u062F\u0627\u062A \u0627\u0644\u062A\u0635\u062F\u064A\u0631 \u2014 \u0645\u0646 \u0627\u0644\u0645\u0631\u062C\u062D \u0623\u0646 \u064A\u0641\u0634\u0644 \u0647\u0630\u0627 \u0627\u0644\u062A\u0635\u062F\u064A\u0631.',
+    includeFolderHeadings: "\u062A\u0636\u0645\u064A\u0646 \u0623\u0633\u0645\u0627\u0621 \u0627\u0644\u0645\u062C\u0644\u062F\u0627\u062A \u0643\u0639\u0646\u0627\u0648\u064A\u0646"
   },
   publishModal: {
     title: "\u0646\u0634\u0631 \u0625\u0644\u0649 WordPress",
@@ -6318,7 +6328,8 @@ var fr_default = {
       nameEmpty: "Le nom ne peut pas \xEAtre vide.",
       nameInvalidChars: 'Les noms ne peuvent pas contenir \\ / : * ? " < > |',
       nameTrailing: "Les noms ne peuvent pas se terminer par une espace ou un point.",
-      nameExists: "Un \xE9l\xE9ment nomm\xE9 \xAB {{name}} \xBB existe d\xE9j\xE0 ici."
+      nameExists: "Un \xE9l\xE9ment nomm\xE9 \xAB {{name}} \xBB existe d\xE9j\xE0 ici.",
+      exportFolder: "Exporter le dossier"
     }
   },
   launcher: {
@@ -6594,7 +6605,8 @@ var fr_default = {
     exporting: "Export en cours\u2026",
     exportFailed: "\xC9chec de l'export : {{error}}",
     cancel: "Annuler",
-    pandocWarning: "Pandoc est introuvable. V\xE9rifiez le champ \xAB Chemin de Pandoc \xBB dans les r\xE9glages d'export \u2014 cet export \xE9chouera probablement."
+    pandocWarning: "Pandoc est introuvable. V\xE9rifiez le champ \xAB Chemin de Pandoc \xBB dans les r\xE9glages d'export \u2014 cet export \xE9chouera probablement.",
+    includeFolderHeadings: "Inclure les noms de dossiers comme titres"
   },
   publishModal: {
     title: "Publier sur WordPress",
@@ -7051,7 +7063,8 @@ var bn_default = {
       nameEmpty: "\u09A8\u09BE\u09AE \u0996\u09BE\u09B2\u09BF \u09B9\u09A4\u09C7 \u09AA\u09BE\u09B0\u09C7 \u09A8\u09BE\u0964",
       nameInvalidChars: '\u09A8\u09BE\u09AE\u09C7 \\ / : * ? " < > | \u09A5\u09BE\u0995\u09A4\u09C7 \u09AA\u09BE\u09B0\u09C7 \u09A8\u09BE',
       nameTrailing: "\u09A8\u09BE\u09AE \u09B8\u09CD\u09AA\u09C7\u09B8 \u09AC\u09BE \u09AC\u09BF\u09A8\u09CD\u09A6\u09C1 \u09A6\u09BF\u09AF\u09BC\u09C7 \u09B6\u09C7\u09B7 \u09B9\u09A4\u09C7 \u09AA\u09BE\u09B0\u09C7 \u09A8\u09BE\u0964",
-      nameExists: '\u098F\u0996\u09BE\u09A8\u09C7 "{{name}}" \u09A8\u09BE\u09AE\u09C7 \u0995\u09BF\u099B\u09C1 \u0987\u09A4\u09BF\u09AE\u09A7\u09CD\u09AF\u09C7 \u0986\u099B\u09C7\u0964'
+      nameExists: '\u098F\u0996\u09BE\u09A8\u09C7 "{{name}}" \u09A8\u09BE\u09AE\u09C7 \u0995\u09BF\u099B\u09C1 \u0987\u09A4\u09BF\u09AE\u09A7\u09CD\u09AF\u09C7 \u0986\u099B\u09C7\u0964',
+      exportFolder: "\u09AB\u09CB\u09B2\u09CD\u09A1\u09BE\u09B0 \u09B0\u09AA\u09CD\u09A4\u09BE\u09A8\u09BF \u0995\u09B0\u09C1\u09A8"
     }
   },
   launcher: {
@@ -7327,7 +7340,8 @@ var bn_default = {
     exporting: "\u09B0\u09AA\u09CD\u09A4\u09BE\u09A8\u09BF \u09B9\u099A\u09CD\u099B\u09C7\u2026",
     exportFailed: "\u09B0\u09AA\u09CD\u09A4\u09BE\u09A8\u09BF \u09AC\u09CD\u09AF\u09B0\u09CD\u09A5: {{error}}",
     cancel: "\u09AC\u09BE\u09A4\u09BF\u09B2",
-    pandocWarning: 'Pandoc \u09AA\u09BE\u0993\u09AF\u09BC\u09BE \u09AF\u09BE\u09AF\u09BC\u09A8\u09BF\u0964 \u09B0\u09AA\u09CD\u09A4\u09BE\u09A8\u09BF \u09B8\u09C7\u099F\u09BF\u0982\u09B8\u09C7 "Pandoc \u09AA\u09BE\u09A5" \u09AB\u09BF\u09B2\u09CD\u09A1\u099F\u09BF \u09A6\u09C7\u0996\u09C1\u09A8 \u2014 \u098F\u0987 \u09B0\u09AA\u09CD\u09A4\u09BE\u09A8\u09BF \u09B8\u09AE\u09CD\u09AD\u09AC\u09A4 \u09AC\u09CD\u09AF\u09B0\u09CD\u09A5 \u09B9\u09AC\u09C7\u0964'
+    pandocWarning: 'Pandoc \u09AA\u09BE\u0993\u09AF\u09BC\u09BE \u09AF\u09BE\u09AF\u09BC\u09A8\u09BF\u0964 \u09B0\u09AA\u09CD\u09A4\u09BE\u09A8\u09BF \u09B8\u09C7\u099F\u09BF\u0982\u09B8\u09C7 "Pandoc \u09AA\u09BE\u09A5" \u09AB\u09BF\u09B2\u09CD\u09A1\u099F\u09BF \u09A6\u09C7\u0996\u09C1\u09A8 \u2014 \u098F\u0987 \u09B0\u09AA\u09CD\u09A4\u09BE\u09A8\u09BF \u09B8\u09AE\u09CD\u09AD\u09AC\u09A4 \u09AC\u09CD\u09AF\u09B0\u09CD\u09A5 \u09B9\u09AC\u09C7\u0964',
+    includeFolderHeadings: "\u09AB\u09CB\u09B2\u09CD\u09A1\u09BE\u09B0\u09C7\u09B0 \u09A8\u09BE\u09AE\u0997\u09C1\u09B2\u09BF \u09B6\u09BF\u09B0\u09CB\u09A8\u09BE\u09AE \u09B9\u09BF\u09B8\u09C7\u09AC\u09C7 \u0985\u09A8\u09CD\u09A4\u09B0\u09CD\u09AD\u09C1\u0995\u09CD\u09A4 \u0995\u09B0\u09C1\u09A8"
   },
   publishModal: {
     title: "WordPress-\u098F \u09AA\u09CD\u09B0\u0995\u09BE\u09B6 \u0995\u09B0\u09C1\u09A8",
@@ -7784,7 +7798,8 @@ var pt_BR_default = {
       nameEmpty: "O nome n\xE3o pode estar vazio.",
       nameInvalidChars: 'Os nomes n\xE3o podem conter \\ / : * ? " < > |',
       nameTrailing: "Os nomes n\xE3o podem terminar com espa\xE7o ou ponto.",
-      nameExists: 'J\xE1 existe algo chamado "{{name}}" aqui.'
+      nameExists: 'J\xE1 existe algo chamado "{{name}}" aqui.',
+      exportFolder: "Exportar pasta"
     }
   },
   launcher: {
@@ -8060,7 +8075,8 @@ var pt_BR_default = {
     exporting: "Exportando\u2026",
     exportFailed: "Falha na exporta\xE7\xE3o: {{error}}",
     cancel: "Cancelar",
-    pandocWarning: 'O Pandoc n\xE3o foi encontrado. Verifique o campo "Caminho do Pandoc" nas configura\xE7\xF5es de exporta\xE7\xE3o \u2014 esta exporta\xE7\xE3o provavelmente falhar\xE1.'
+    pandocWarning: 'O Pandoc n\xE3o foi encontrado. Verifique o campo "Caminho do Pandoc" nas configura\xE7\xF5es de exporta\xE7\xE3o \u2014 esta exporta\xE7\xE3o provavelmente falhar\xE1.',
+    includeFolderHeadings: "Incluir nomes de pastas como t\xEDtulos"
   },
   publishModal: {
     title: "Publicar no WordPress",
@@ -8519,7 +8535,8 @@ var ru_default = {
       nameEmpty: "\u0418\u043C\u044F \u043D\u0435 \u043C\u043E\u0436\u0435\u0442 \u0431\u044B\u0442\u044C \u043F\u0443\u0441\u0442\u044B\u043C.",
       nameInvalidChars: '\u0418\u043C\u0435\u043D\u0430 \u043D\u0435 \u043C\u043E\u0433\u0443\u0442 \u0441\u043E\u0434\u0435\u0440\u0436\u0430\u0442\u044C \\ / : * ? " < > |',
       nameTrailing: "\u0418\u043C\u0435\u043D\u0430 \u043D\u0435 \u043C\u043E\u0433\u0443\u0442 \u0437\u0430\u043A\u0430\u043D\u0447\u0438\u0432\u0430\u0442\u044C\u0441\u044F \u043F\u0440\u043E\u0431\u0435\u043B\u043E\u043C \u0438\u043B\u0438 \u0442\u043E\u0447\u043A\u043E\u0439.",
-      nameExists: "\u0417\u0434\u0435\u0441\u044C \u0443\u0436\u0435 \u0435\u0441\u0442\u044C \u044D\u043B\u0435\u043C\u0435\u043D\u0442 \u0441 \u0438\u043C\u0435\u043D\u0435\u043C \xAB{{name}}\xBB."
+      nameExists: "\u0417\u0434\u0435\u0441\u044C \u0443\u0436\u0435 \u0435\u0441\u0442\u044C \u044D\u043B\u0435\u043C\u0435\u043D\u0442 \u0441 \u0438\u043C\u0435\u043D\u0435\u043C \xAB{{name}}\xBB.",
+      exportFolder: "\u042D\u043A\u0441\u043F\u043E\u0440\u0442\u0438\u0440\u043E\u0432\u0430\u0442\u044C \u043F\u0430\u043F\u043A\u0443"
     }
   },
   launcher: {
@@ -8801,7 +8818,8 @@ var ru_default = {
     exporting: "\u042D\u043A\u0441\u043F\u043E\u0440\u0442\u2026",
     exportFailed: "\u041E\u0448\u0438\u0431\u043A\u0430 \u044D\u043A\u0441\u043F\u043E\u0440\u0442\u0430: {{error}}",
     cancel: "\u041E\u0442\u043C\u0435\u043D\u0430",
-    pandocWarning: "Pandoc \u043D\u0435 \u043D\u0430\u0439\u0434\u0435\u043D. \u041F\u0440\u043E\u0432\u0435\u0440\u044C\u0442\u0435 \u043F\u043E\u043B\u0435 \xAB\u041F\u0443\u0442\u044C \u043A Pandoc\xBB \u0432 \u043D\u0430\u0441\u0442\u0440\u043E\u0439\u043A\u0430\u0445 \u044D\u043A\u0441\u043F\u043E\u0440\u0442\u0430 \u2014 \u044D\u043A\u0441\u043F\u043E\u0440\u0442, \u0441\u043A\u043E\u0440\u0435\u0435 \u0432\u0441\u0435\u0433\u043E, \u043D\u0435 \u0443\u0434\u0430\u0441\u0442\u0441\u044F."
+    pandocWarning: "Pandoc \u043D\u0435 \u043D\u0430\u0439\u0434\u0435\u043D. \u041F\u0440\u043E\u0432\u0435\u0440\u044C\u0442\u0435 \u043F\u043E\u043B\u0435 \xAB\u041F\u0443\u0442\u044C \u043A Pandoc\xBB \u0432 \u043D\u0430\u0441\u0442\u0440\u043E\u0439\u043A\u0430\u0445 \u044D\u043A\u0441\u043F\u043E\u0440\u0442\u0430 \u2014 \u044D\u043A\u0441\u043F\u043E\u0440\u0442, \u0441\u043A\u043E\u0440\u0435\u0435 \u0432\u0441\u0435\u0433\u043E, \u043D\u0435 \u0443\u0434\u0430\u0441\u0442\u0441\u044F.",
+    includeFolderHeadings: "\u0412\u043A\u043B\u044E\u0447\u0430\u0442\u044C \u0438\u043C\u0435\u043D\u0430 \u043F\u0430\u043F\u043E\u043A \u043A\u0430\u043A \u0437\u0430\u0433\u043E\u043B\u043E\u0432\u043A\u0438"
   },
   publishModal: {
     title: "\u041E\u043F\u0443\u0431\u043B\u0438\u043A\u043E\u0432\u0430\u0442\u044C \u0432 WordPress",
@@ -9260,7 +9278,8 @@ var ja_default = {
       nameEmpty: "\u540D\u524D\u3092\u7A7A\u306B\u3059\u308B\u3053\u3068\u306F\u3067\u304D\u307E\u305B\u3093\u3002",
       nameInvalidChars: '\u540D\u524D\u306B \\ / : * ? " < > | \u306F\u4F7F\u7528\u3067\u304D\u307E\u305B\u3093',
       nameTrailing: "\u540D\u524D\u306E\u672B\u5C3E\u306B\u30B9\u30DA\u30FC\u30B9\u3084\u30D4\u30EA\u30AA\u30C9\u306F\u4F7F\u7528\u3067\u304D\u307E\u305B\u3093\u3002",
-      nameExists: "\u300C{{name}}\u300D\u3068\u3044\u3046\u540D\u524D\u306E\u9805\u76EE\u304C\u3059\u3067\u306B\u3053\u3053\u306B\u5B58\u5728\u3057\u307E\u3059\u3002"
+      nameExists: "\u300C{{name}}\u300D\u3068\u3044\u3046\u540D\u524D\u306E\u9805\u76EE\u304C\u3059\u3067\u306B\u3053\u3053\u306B\u5B58\u5728\u3057\u307E\u3059\u3002",
+      exportFolder: "\u30D5\u30A9\u30EB\u30C0\u30FC\u3092\u30A8\u30AF\u30B9\u30DD\u30FC\u30C8"
     }
   },
   launcher: {
@@ -9536,7 +9555,8 @@ var ja_default = {
     exporting: "\u30A8\u30AF\u30B9\u30DD\u30FC\u30C8\u4E2D\u2026",
     exportFailed: "\u30A8\u30AF\u30B9\u30DD\u30FC\u30C8\u306B\u5931\u6557\u3057\u307E\u3057\u305F\uFF1A{{error}}",
     cancel: "\u30AD\u30E3\u30F3\u30BB\u30EB",
-    pandocWarning: "Pandoc\u304C\u898B\u3064\u304B\u308A\u307E\u305B\u3093\u3002\u30A8\u30AF\u30B9\u30DD\u30FC\u30C8\u8A2D\u5B9A\u306E\u300CPandoc\u306E\u30D1\u30B9\u300D\u3092\u78BA\u8A8D\u3057\u3066\u304F\u3060\u3055\u3044 \u2014 \u3053\u306E\u30A8\u30AF\u30B9\u30DD\u30FC\u30C8\u306F\u5931\u6557\u3059\u308B\u53EF\u80FD\u6027\u304C\u9AD8\u3044\u3067\u3059\u3002"
+    pandocWarning: "Pandoc\u304C\u898B\u3064\u304B\u308A\u307E\u305B\u3093\u3002\u30A8\u30AF\u30B9\u30DD\u30FC\u30C8\u8A2D\u5B9A\u306E\u300CPandoc\u306E\u30D1\u30B9\u300D\u3092\u78BA\u8A8D\u3057\u3066\u304F\u3060\u3055\u3044 \u2014 \u3053\u306E\u30A8\u30AF\u30B9\u30DD\u30FC\u30C8\u306F\u5931\u6557\u3059\u308B\u53EF\u80FD\u6027\u304C\u9AD8\u3044\u3067\u3059\u3002",
+    includeFolderHeadings: "\u30D5\u30A9\u30EB\u30C0\u30FC\u540D\u3092\u898B\u51FA\u3057\u3068\u3057\u3066\u542B\u3081\u308B"
   },
   publishModal: {
     title: "WordPress\u306B\u516C\u958B",
@@ -9993,7 +10013,8 @@ var de_default = {
       nameEmpty: "Der Name darf nicht leer sein.",
       nameInvalidChars: 'Namen d\xFCrfen nicht \\ / : * ? " < > | enthalten',
       nameTrailing: "Namen d\xFCrfen nicht mit einem Leerzeichen oder Punkt enden.",
-      nameExists: "Etwas mit dem Namen \u201E{{name}}\u201C existiert hier bereits."
+      nameExists: "Etwas mit dem Namen \u201E{{name}}\u201C existiert hier bereits.",
+      exportFolder: "Ordner exportieren"
     }
   },
   launcher: {
@@ -10269,7 +10290,8 @@ var de_default = {
     exporting: "Exportiere\u2026",
     exportFailed: "Export fehlgeschlagen: {{error}}",
     cancel: "Abbrechen",
-    pandocWarning: "Pandoc wurde nicht gefunden. Pr\xFCfe das Feld \u201EPandoc-Pfad\u201C in den Export-Einstellungen \u2014 dieser Export wird voraussichtlich fehlschlagen."
+    pandocWarning: "Pandoc wurde nicht gefunden. Pr\xFCfe das Feld \u201EPandoc-Pfad\u201C in den Export-Einstellungen \u2014 dieser Export wird voraussichtlich fehlschlagen.",
+    includeFolderHeadings: "Ordnernamen als \xDCberschriften einf\xFCgen"
   },
   publishModal: {
     title: "Auf WordPress ver\xF6ffentlichen",
@@ -10726,7 +10748,8 @@ var ko_default = {
       nameEmpty: "\uC774\uB984\uC740 \uBE44\uC6CC\uB458 \uC218 \uC5C6\uC2B5\uB2C8\uB2E4.",
       nameInvalidChars: '\uC774\uB984\uC5D0\uB294 \\ / : * ? " < > | \uB97C \uC0AC\uC6A9\uD560 \uC218 \uC5C6\uC2B5\uB2C8\uB2E4',
       nameTrailing: "\uC774\uB984\uC740 \uACF5\uBC31\uC774\uB098 \uB9C8\uCE68\uD45C\uB85C \uB05D\uB0A0 \uC218 \uC5C6\uC2B5\uB2C8\uB2E4.",
-      nameExists: '"{{name}}"(\uC774)\uB77C\uB294 \uC774\uB984\uC758 \uD56D\uBAA9\uC774 \uC774\uBBF8 \uC5EC\uAE30\uC5D0 \uC788\uC2B5\uB2C8\uB2E4.'
+      nameExists: '"{{name}}"(\uC774)\uB77C\uB294 \uC774\uB984\uC758 \uD56D\uBAA9\uC774 \uC774\uBBF8 \uC5EC\uAE30\uC5D0 \uC788\uC2B5\uB2C8\uB2E4.',
+      exportFolder: "\uD3F4\uB354 \uB0B4\uBCF4\uB0B4\uAE30"
     }
   },
   launcher: {
@@ -11002,7 +11025,8 @@ var ko_default = {
     exporting: "\uB0B4\uBCF4\uB0B4\uB294 \uC911\u2026",
     exportFailed: "\uB0B4\uBCF4\uB0B4\uAE30 \uC2E4\uD328: {{error}}",
     cancel: "\uCDE8\uC18C",
-    pandocWarning: 'Pandoc\uC744 \uCC3E\uC744 \uC218 \uC5C6\uC2B5\uB2C8\uB2E4. \uB0B4\uBCF4\uB0B4\uAE30 \uC124\uC815\uC758 "Pandoc \uACBD\uB85C" \uD544\uB4DC\uB97C \uD655\uC778\uD558\uC138\uC694 \u2014 \uC774 \uB0B4\uBCF4\uB0B4\uAE30\uB294 \uC2E4\uD328\uD560 \uAC00\uB2A5\uC131\uC774 \uB192\uC2B5\uB2C8\uB2E4.'
+    pandocWarning: 'Pandoc\uC744 \uCC3E\uC744 \uC218 \uC5C6\uC2B5\uB2C8\uB2E4. \uB0B4\uBCF4\uB0B4\uAE30 \uC124\uC815\uC758 "Pandoc \uACBD\uB85C" \uD544\uB4DC\uB97C \uD655\uC778\uD558\uC138\uC694 \u2014 \uC774 \uB0B4\uBCF4\uB0B4\uAE30\uB294 \uC2E4\uD328\uD560 \uAC00\uB2A5\uC131\uC774 \uB192\uC2B5\uB2C8\uB2E4.',
+    includeFolderHeadings: "\uD3F4\uB354 \uC774\uB984\uC744 \uC81C\uBAA9\uC73C\uB85C \uD3EC\uD568"
   },
   publishModal: {
     title: "WordPress\uC5D0 \uAC8C\uC2DC",
@@ -11516,6 +11540,9 @@ function parseBinderStatus(value) {
 function menuActionsFor(entry, zone) {
   if (zone === "exports") return ["delete"];
   if (!entry.isFolder && entry.extension !== "md") return ["rename", "delete"];
+  if (entry.isFolder && zone === "manuscript") {
+    return ["rename", "export", "newDoc", "newFolder", "delete"];
+  }
   if (zone === "research" || entry.isFolder) {
     return ["rename", "newDoc", "newFolder", "delete"];
   }
@@ -11546,28 +11573,77 @@ function validateItemName(typed, targetName, siblingNames) {
 
 // src/manuscriptTree.ts
 var import_obsidian3 = require("obsidian");
-function listManuscriptDocs(app, projectFolderPath) {
-  const root = app.vault.getAbstractFileByPath(projectFolderPath);
-  if (!(root instanceof import_obsidian3.TFolder)) return [];
-  const docs = [];
+function buildManuscriptTree(app, rootPath, opts = {}) {
+  const docFiles = [];
+  const root = app.vault.getAbstractFileByPath(rootPath);
+  if (!(root instanceof import_obsidian3.TFolder)) return { nodes: [], docFiles };
   const walk = (folder, isRoot) => {
-    const entries = folder.children.filter((c) => !isHiddenName(c.name)).filter((c) => !(isRoot && c instanceof import_obsidian3.TFolder && RESERVED_PROJECT_FOLDERS.some((r) => r.toLowerCase() === c.name.toLowerCase()))).map((file) => {
-      var _a2, _b2;
+    var _a2;
+    const entries = folder.children.filter((c) => !isHiddenName(c.name)).filter((c) => !(isRoot && opts.excludeReservedAtRoot !== false && c instanceof import_obsidian3.TFolder && RESERVED_PROJECT_FOLDERS.some((r) => r.toLowerCase() === c.name.toLowerCase()))).map((file) => {
+      var _a3, _b2;
       return {
         file,
         name: file.name,
         isFolder: file instanceof import_obsidian3.TFolder,
         extension: file instanceof import_obsidian3.TFile ? file.extension : void 0,
-        binderOrder: file instanceof import_obsidian3.TFile && file.extension === "md" ? parseBinderOrder((_b2 = (_a2 = app.metadataCache.getFileCache(file)) == null ? void 0 : _a2.frontmatter) == null ? void 0 : _b2["binder-order"]) : null
+        binderOrder: file instanceof import_obsidian3.TFile && file.extension === "md" ? parseBinderOrder((_b2 = (_a3 = app.metadataCache.getFileCache(file)) == null ? void 0 : _a3.frontmatter) == null ? void 0 : _b2["binder-order"]) : null
       };
     });
+    const nodes = [];
     for (const s of sortSiblings(entries)) {
-      if (s.file instanceof import_obsidian3.TFolder) walk(s.file, false);
-      else if (s.file instanceof import_obsidian3.TFile && s.file.extension === "md") docs.push(s.file);
+      if (s.file instanceof import_obsidian3.TFolder) {
+        nodes.push({
+          kind: "folder",
+          title: parseFolderPrefix(s.file.name).displayName,
+          children: walk(s.file, false)
+        });
+      } else if (s.file instanceof import_obsidian3.TFile && s.file.extension === "md") {
+        docFiles.push(s.file);
+        const fm = (_a2 = app.metadataCache.getFileCache(s.file)) == null ? void 0 : _a2.frontmatter;
+        nodes.push({
+          kind: "doc",
+          path: s.file.path,
+          title: s.file.name.slice(0, s.file.name.length - s.file.extension.length - 1),
+          compileExcluded: (fm == null ? void 0 : fm["binder-compile"]) === false
+        });
+      }
+    }
+    return nodes;
+  };
+  return { nodes: walk(root, true), docFiles };
+}
+function listManuscriptDocs(app, projectFolderPath) {
+  return buildManuscriptTree(app, projectFolderPath).docFiles;
+}
+var MAX_HEADING_LEVEL = 6;
+function hasCompiledDoc(nodes) {
+  return nodes.some((n) => n.kind === "doc" ? !n.compileExcluded : hasCompiledDoc(n.children));
+}
+function planCompile(nodes, opts) {
+  const out = [];
+  const docLevel = (parentDepth) => {
+    if (!opts.includeTitlesAsHeadings) return null;
+    return opts.includeFolderNames ? Math.min(parentDepth + 1, MAX_HEADING_LEVEL) : 1;
+  };
+  const walk = (children, parentDepth) => {
+    for (const node of children) {
+      if (node.kind === "doc") {
+        if (node.compileExcluded) continue;
+        out.push({ kind: "doc", path: node.path, title: node.title, headingLevel: docLevel(parentDepth) });
+      } else {
+        if (opts.includeFolderNames && hasCompiledDoc(node.children)) {
+          out.push({
+            kind: "heading",
+            level: Math.min(parentDepth + 1, MAX_HEADING_LEVEL),
+            title: node.title
+          });
+        }
+        walk(node.children, parentDepth + 1);
+      }
     }
   };
-  walk(root, true);
-  return docs;
+  walk(nodes, 0);
+  return out;
 }
 
 // modals/TargetsDashboardModal.ts
@@ -12177,12 +12253,13 @@ var import_obsidian15 = require("obsidian");
 // modals/ExportModal.ts
 var import_obsidian12 = require("obsidian");
 var _ExportModal = class _ExportModal extends import_obsidian12.Modal {
-  constructor(app, plugin, initialScope = "current") {
+  constructor(app, plugin, initialScope = "current", subtreeRoot) {
     super(app);
     this.exportScope = "current";
     this.includeFrontmatter = false;
     this.includeResearch = false;
     this.includeTitlesAsHeadings = true;
+    this.includeFolderNames = false;
     this.addTitlePage = true;
     this.coverImagePath = "";
     this.authorContact = "";
@@ -12192,6 +12269,7 @@ var _ExportModal = class _ExportModal extends import_obsidian12.Modal {
     this.plugin = plugin;
     this.format = plugin.settings.defaultExportFormat;
     this.exportScope = initialScope;
+    this.subtreeRoot = subtreeRoot;
   }
   onOpen() {
     const { contentEl } = this;
@@ -12216,18 +12294,27 @@ var _ExportModal = class _ExportModal extends import_obsidian12.Modal {
       this.authorContact = v;
     }));
     contactSetting.settingEl.toggleClass("ws-hidden", this.format !== "manuscript");
-    new import_obsidian12.Setting(contentEl).setName(t2("exportModal.scopeName")).addDropdown((d) => d.addOption("current", t2("exportModal.scopeCurrent")).addOption("project", t2("exportModal.scopeProject")).setValue(this.exportScope).onChange((v) => {
-      this.exportScope = v;
-    }));
+    if (!this.subtreeRoot) {
+      new import_obsidian12.Setting(contentEl).setName(t2("exportModal.scopeName")).addDropdown((d) => d.addOption("current", t2("exportModal.scopeCurrent")).addOption("project", t2("exportModal.scopeProject")).setValue(this.exportScope).onChange((v) => {
+        this.exportScope = v;
+      }));
+    }
     new import_obsidian12.Setting(contentEl).setName(t2("exportModal.includeFrontmatter")).addToggle((tx) => tx.setValue(this.includeFrontmatter).onChange((v) => {
       this.includeFrontmatter = v;
     }));
-    new import_obsidian12.Setting(contentEl).setName(t2("exportModal.includeResearch")).addToggle((tx) => tx.setValue(this.includeResearch).onChange((v) => {
-      this.includeResearch = v;
-    }));
+    if (!this.plugin.settings.filesystemBinder) {
+      new import_obsidian12.Setting(contentEl).setName(t2("exportModal.includeResearch")).addToggle((tx) => tx.setValue(this.includeResearch).onChange((v) => {
+        this.includeResearch = v;
+      }));
+    }
     new import_obsidian12.Setting(contentEl).setName(t2("exportModal.includeTitlesAsHeadings")).addToggle((tx) => tx.setValue(this.includeTitlesAsHeadings).onChange((v) => {
       this.includeTitlesAsHeadings = v;
     }));
+    if (this.plugin.settings.filesystemBinder) {
+      new import_obsidian12.Setting(contentEl).setName(t2("exportModal.includeFolderHeadings")).addToggle((tx) => tx.setValue(this.includeFolderNames).onChange((v) => {
+        this.includeFolderNames = v;
+      }));
+    }
     new import_obsidian12.Setting(contentEl).setName(t2("exportModal.addTitlePage")).setDesc(t2("exportModal.addTitlePageDesc")).addToggle((tx) => tx.setValue(this.addTitlePage).onChange((v) => {
       this.addTitlePage = v;
     }));
@@ -12251,6 +12338,8 @@ var _ExportModal = class _ExportModal extends import_obsidian12.Modal {
           includeFrontmatter: this.includeFrontmatter,
           includeResearch: this.includeResearch,
           includeTitlesAsHeadings: this.includeTitlesAsHeadings,
+          includeFolderNamesAsHeadings: this.includeFolderNames,
+          subtreeRoot: this.subtreeRoot,
           paperSize: this.plugin.settings.defaultPaperSize,
           font: this.plugin.settings.defaultExportFont,
           fontSize: this.plugin.settings.defaultExportFontSize,
@@ -14979,6 +15068,12 @@ var FilesystemBinderView = class extends import_obsidian18.ItemView {
     const doc = node.file instanceof import_obsidian18.TFile && node.extension === "md" ? node.file : null;
     if (actions.has("rename")) {
       menu.addItem((i2) => i2.setTitle(t2("binder.menu.rename")).setIcon("pencil").onClick(() => this.promptRename(node)));
+    }
+    if (actions.has("export") && node.file instanceof import_obsidian18.TFolder) {
+      const folderPath = node.file.path;
+      menu.addItem((i2) => i2.setTitle(t2("binder.fs.exportFolder")).setIcon("download").onClick(() => {
+        new ExportModal(this.app, this.plugin, "project", folderPath).open();
+      }));
     }
     if (actions.has("status") && doc) {
       menu.addSeparator();
@@ -17936,12 +18031,14 @@ var ExportEngine = class {
     return compiled.split(SECTION_BREAK).join("\n\n---\n\n");
   }
   async export(opts) {
+    var _a2;
     const project = this.plugin.projectManager.getActiveProject();
     const outputDir = project ? (0, import_obsidian24.normalizePath)(`${project.folderPath}/Exports`) : (0, import_obsidian24.normalizePath)("Exports");
     await this.files.ensureFolder(outputDir);
     const timestamp = (/* @__PURE__ */ new Date()).toISOString().replace(/[:.]/g, "-").slice(0, 19);
     const projectTitle = (project == null ? void 0 : project.title.replace(/[\\/:*?"<>|]/g, "-")) || "export";
-    const baseFile = (0, import_obsidian24.normalizePath)(`${outputDir}/${projectTitle}-${timestamp}`);
+    const subtreeName = opts.subtreeRoot ? "-" + parseFolderPrefix((_a2 = opts.subtreeRoot.split("/").pop()) != null ? _a2 : "").displayName.replace(/[\\/:*?"<>|]/g, "-") : "";
+    const baseFile = (0, import_obsidian24.normalizePath)(`${outputDir}/${projectTitle}${subtreeName}-${timestamp}`);
     if (opts.format === "epub") {
       return this.exportEpub(opts, baseFile);
     }
@@ -17989,6 +18086,22 @@ var ExportEngine = class {
       content2 = this.preprocessObsidianMarkdown(content2.trim());
       const htmlContent = this.htmlToXhtml(markdownToHtml(content2));
       chapters.push({ id: "chapter-1", title: file.basename, htmlContent });
+    } else if (opts.scope === "project" && project && this.plugin.settings.filesystemBinder) {
+      let idx = 1;
+      for (const item of this.manuscriptPlan(project.folderPath, opts, false)) {
+        if (item.kind !== "doc") continue;
+        let content2 = await this.files.readText(item.path);
+        if (content2 === null) continue;
+        if (!opts.includeFrontmatter) {
+          content2 = content2.replace(/^---\r?\n[\s\S]*?\r?\n---\r?\n?/, "");
+        }
+        content2 = this.preprocessObsidianMarkdown(content2.trim());
+        if (opts.includeTitlesAsHeadings) {
+          content2 = content2.replace(/^# [^\n]*\n+/, "").trim();
+        }
+        const htmlContent = this.htmlToXhtml(markdownToHtml(content2));
+        chapters.push({ id: `chapter-${idx++}`, title: item.title, htmlContent });
+      }
     } else if (opts.scope === "project" && project) {
       const binder = await this.plugin.projectManager.loadBinder(project);
       const flatItems = this.plugin.projectManager.flattenBinder(binder.items);
@@ -18054,6 +18167,23 @@ ${today}`);
         throw new Error(t2("exportEngine.noActiveDocument"));
       }
       parts.push(content2);
+    } else if (opts.scope === "project" && project && this.plugin.settings.filesystemBinder) {
+      for (const item of this.manuscriptPlan(project.folderPath, opts, opts.includeFolderNamesAsHeadings === true)) {
+        if (item.kind === "heading") {
+          parts.push(`${"#".repeat(item.level)} ${item.title}`);
+          continue;
+        }
+        const content2 = await this.processPath(item.path, opts);
+        if (content2 === null) continue;
+        if (item.headingLevel !== null) {
+          const body = content2.replace(/^# [^\n]*\n+/, "").trim();
+          parts.push(`${"#".repeat(item.headingLevel)} ${item.title}
+
+${body}`);
+        } else {
+          parts.push(content2);
+        }
+      }
     } else if (opts.scope === "project" && project) {
       const binder = await this.plugin.projectManager.loadBinder(project);
       const flatItems = this.plugin.projectManager.flattenBinder(binder.items);
@@ -18088,6 +18218,20 @@ ${body}`);
       }
     }
     return parts.join(SECTION_BREAK);
+  }
+  // The manuscript zone is the compile source under the experimental binder
+  // (#232) — the dormant _binder.json is never read. Depth is rebased to the
+  // compile root, so a subtree export is the whole-zone walk with a different
+  // root (which is also why reserved-folder filtering only applies when the
+  // root is the project folder itself).
+  manuscriptPlan(projectFolderPath, opts, includeFolderNames) {
+    var _a2;
+    const root = (_a2 = opts.subtreeRoot) != null ? _a2 : projectFolderPath;
+    const tree = buildManuscriptTree(this.app, root, { excludeReservedAtRoot: !opts.subtreeRoot });
+    return planCompile(tree.nodes, {
+      includeFolderNames,
+      includeTitlesAsHeadings: opts.includeTitlesAsHeadings
+    });
   }
   // Resolves to null when the file does not exist.
   async processPath(path, opts) {
