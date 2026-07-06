@@ -249,38 +249,18 @@
       "nameExists": "এখানে \"{{name}}\" নামে কিছু ইতিমধ্যে আছে।",
       "exportFolder": "ফোল্ডার রপ্তানি করুন"
     },
-    "carryOver": {
-      "action": "বাইন্ডার স্থানান্তরের প্রাকদর্শন",
-      "noticeBody": "\"{{project}}\"-এ একটি পুরোনো বাইন্ডার আছে যা এর ফাইলগুলির সাথে মেলে না। স্থানান্তরে কী বদলাবে তা আগে দেখে নিন — আপনার অনুমোদন ছাড়া কিছুই হবে না।",
-      "noticePreview": "প্রাকদর্শন",
-      "noticeNotNow": "এখন নয়",
-      "modalTitle": "\"{{project}}\" স্থানান্তর — প্রাকদর্শন",
-      "dryRun": "এটি একটি মহড়া। এখনও কিছু বদলানো হয়নি।",
-      "countsOperations_one": "{{count}}টি কাজ",
-      "countsOperations_other": "{{count}}টি কাজ",
-      "countsDone": "{{count}}টি সম্পন্ন",
-      "countsPending": "{{count}}টি অপেক্ষমাণ",
-      "countsAnomalies_one": "{{count}}টির দিকে নজর দরকার",
-      "countsAnomalies_other": "{{count}}টির দিকে নজর দরকার",
-      "sectionFolders": "ফোল্ডার",
-      "sectionDocuments": "নথি",
-      "sectionFrontmatter": "ফ্রন্টম্যাটার",
-      "keptNote": "আপনার আগে থেকে সেট করা কী-গুলি রাখা হবে",
-      "folderExists": "আগে থেকেই আছে:",
-      "folderCreate": "এই নামে তৈরি হবে:",
-      "docDone": "আগে থেকেই এখানে:",
-      "docMove": "এখানে সরবে:",
-      "anomalyMissing": "মূল বা নতুন কোনো জায়গাতেই নেই — অপরিবর্তিত থাকবে",
-      "anomalyOccupied": "নতুন জায়গাটি আগে থেকেই দখলে — অপরিবর্তিত থাকবে",
-      "badgeSuffixed": "নাম আগে থেকে আছে — প্রত্যয় যোগ হয়েছে",
-      "badgeReserved": "সংরক্ষিত নাম — প্রত্যয় যোগ হয়েছে",
-      "badgeTitleUnusable": "শিরোনাম ব্যবহারযোগ্য নয় — নাম রাখা হয়েছে",
-      "keptKey": "{{key}} রাখা হয়েছে (আগে থেকে সেট)",
-      "backupNote": "আপনার পুরোনো বাইন্ডার ফাইল (_binder.json) ব্যাকআপ হিসেবে রাখা হয় এবং কখনও মুছে ফেলা হয় না। পরে ডাউনগ্রেড করলে যতটা সম্ভব আগের অবস্থায় ফিরিয়ে আনা হয়।",
-      "close": "বন্ধ করুন",
-      "unavailable": "স্থানান্তরের প্রাকদর্শনের জন্য পরীক্ষামূলক ফাইল-সিস্টেম বাইন্ডার এবং একটি সক্রিয় প্রকল্প দরকার।",
-      "nothingToPreview": "এই প্রকল্পের জন্য কোনো পুরোনো বাইন্ডার পাওয়া যায়নি।",
-      "readFailed": "পুরোনো বাইন্ডার ফাইলটি পড়া যায়নি।"
+    "migration": {
+      "couldntMove": "Writing Studio \"{{name}}\" সরাতে পারেনি: {{reason}}।",
+      "couldntRename": "Writing Studio \"{{name}}\"-এর নাম বদলাতে পারেনি: {{reason}}।",
+      "couldntUpdate": "Writing Studio \"{{name}}\" হালনাগাদ করতে পারেনি: {{reason}}।",
+      "reasonNameTaken": "ওই নামের একটি ফাইল আগে থেকেই আছে",
+      "reasonInUse": "ফাইলটি ব্যবহারে আছে",
+      "reasonPermission": "অনুমতি প্রত্যাখ্যাত হয়েছে",
+      "restoreDone": "বাইন্ডারের আগের বিন্যাস ফিরিয়ে আনা হয়েছে।",
+      "restorePartial_one": "আগের বিন্যাস ফিরিয়ে আনা হয়েছে। {{count}}টি আইটেম ফেরানো যায়নি।",
+      "restorePartial_other": "আগের বিন্যাস ফিরিয়ে আনা হয়েছে। {{count}}টি আইটেম ফেরানো যায়নি।",
+      "restoreNothing": "ফিরিয়ে আনার কিছু নেই।",
+      "restoreUnavailable": "বিন্যাস ফেরাতে পরীক্ষামূলক ফাইল-সিস্টেম বাইন্ডার এবং একটি সক্রিয় প্রকল্প দরকার।"
     }
   },
   "launcher": {
@@ -693,7 +673,7 @@
       "openWritingLog": "রাইটিং লগ খুলুন",
       "openFolderSidebar": "সাইডবার এক্সপ্লোরারে ফোল্ডার খুলুন",
       "addFilesToBinder": "নতুন ফাইলের জন্য প্রকল্প ফোল্ডার স্ক্যান করুন",
-      "previewCarryOver": "বাইন্ডার স্থানান্তরের প্রাকদর্শন"
+      "restoreBinderLayout": "বাইন্ডারের আগের বিন্যাস ফিরিয়ে আনুন"
     },
     "menu": {
       "studioOptions": "রাইটিং স্টুডিও বিকল্প",

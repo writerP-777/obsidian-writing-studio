@@ -1,42 +1,117 @@
-// Carry-over plan engine and preview bridge (#230). The AC's locked
-// guarantees: identical plans across repeated runs, deterministic collision
-// suffixes by legacy order, pending/done/anomaly classification including
-// mid-pass states, write-if-absent precedence (Q1), foreign-file-at-target
-// anomalies (Q5), reserved Windows device names (Cowork addition 2), and a
-// provably read-only pass — _binder.json is never written.
+// Silent migration engine and executor (#230/#231). Locked guarantees:
+// deterministic plans, R1 leave-in-place collisions with the order fix,
+// write-if-absent precedence with live re-check (Q1/Q5), dependency-aware
+// skip (R3), kill-and-rerun resumability at every prefix length,
+// prose-safety, the layout-only restore round-trip, and a provably
+// untouched _binder.json.
 
-import { App, Notice, TFile, TFolder } from 'obsidian';
+import { Notice } from 'obsidian';
 import { BinderItem } from '../models/BinderItem';
 import {
-  CarryOverPlan,
-  DiskState,
-  fmRowState,
-  isReservedStem,
-  parseLegacyBinder,
-  planCarryOver,
-  planHasWork,
-  sanitizeTitle,
+  CarryOverIO, DiskState,
+  parseLegacyBinder, planCarryOver, planHasWork, planRestore, restoreHasWork,
+  runMigrationPass, runRestorePass, sanitizeTitle,
 } from '../src/carryOver';
-import { computeCarryOverPlan, openCarryOverPreview } from '../src/carryOverBridge';
-import { WritingProject } from '../models/Project';
+import { updateFailureLedger } from '../src/carryOverBridge';
 import type WritingStudioPlugin from '../main';
+import { WritingProject } from '../models/Project';
 
-const ROOT = 'Projects/Novel';
+const ROOT = 'P';
 
-function disk(state: {
-  files?: string[];
-  folders?: string[];
-  fm?: Record<string, Record<string, unknown>>;
-} = {}): DiskState {
-  const files = new Set(state.files ?? []);
-  const folders = new Set(state.folders ?? []);
+// ─── In-memory vault: real move semantics, ops logged ──────────────────────
+
+interface MemFile {
+  fm: Record<string, unknown>;
+  body: string;
+}
+
+class MemVault {
+  folders = new Set<string>(['']);
+  files = new Map<string, MemFile>();
+  oplog: string[] = [];
+
+  constructor(seed: { folders?: string[]; files?: Record<string, Partial<MemFile>> } = {}) {
+    for (const f of seed.folders ?? []) this.folders.add(f);
+    for (const [p, v] of Object.entries(seed.files ?? {})) {
+      this.files.set(p, { fm: v.fm ?? {}, body: v.body ?? `body of ${p}` });
+    }
+  }
+
+  private parentOf(p: string): string {
+    return p.split('/').slice(0, -1).join('/');
+  }
+
+  io(): CarryOverIO {
+    return {
+      createFolder: async (path) => {
+        this.oplog.push(`createFolder ${path}`);
+        if (this.folders.has(path)) throw new Error('EEXIST: folder exists');
+        if (!this.folders.has(this.parentOf(path))) throw new Error('ENOENT: parent missing');
+        this.folders.add(path);
+      },
+      rename: async (from, to) => {
+        this.oplog.push(`rename ${from} -> ${to}`);
+        if (this.files.has(to) || this.folders.has(to)) throw new Error('EEXIST: target exists');
+        if (!this.folders.has(this.parentOf(to))) throw new Error('ENOENT: parent missing');
+        if (this.files.has(from)) {
+          this.files.set(to, this.files.get(from) as MemFile);
+          this.files.delete(from);
+          return;
+        }
+        if (this.folders.has(from)) {
+          const prefix = from + '/';
+          for (const f of [...this.folders]) {
+            if (f === from || f.startsWith(prefix)) {
+              this.folders.delete(f);
+              this.folders.add(to + f.slice(from.length));
+            }
+          }
+          for (const p of [...this.files.keys()]) {
+            if (p.startsWith(prefix)) {
+              const v = this.files.get(p) as MemFile;
+              this.files.delete(p);
+              this.files.set(to + p.slice(from.length), v);
+            }
+          }
+          return;
+        }
+        throw new Error('ENOENT: source missing');
+      },
+      writeFrontmatter: async (path, mutate) => {
+        this.oplog.push(`fm ${path}`);
+        const f = this.files.get(path);
+        if (!f) throw new Error('ENOENT: file missing');
+        mutate(f.fm);
+      },
+    };
+  }
+
+  disk(): DiskState {
+    return {
+      fileExists: p => this.files.has(p),
+      folderExists: p => this.folders.has(p),
+      subfolderNames: parent => [...this.folders]
+        .filter(f => f !== '' && this.parentOf(f) === parent)
+        .map(f => f.split('/').pop() as string),
+      frontmatter: p => {
+        const f = this.files.get(p);
+        return f ? f.fm : null;
+      },
+    };
+  }
+}
+
+// Injected interruption: allow N operations, then every call throws.
+function faultyIO(io: CarryOverIO, allow: number): CarryOverIO {
+  let n = 0;
+  const gate = () => {
+    if (n >= allow) throw new Error('KILLED: injected interruption');
+    n += 1;
+  };
   return {
-    fileExists: p => files.has(p),
-    folderExists: p => folders.has(p),
-    subfolderNames: parent => [...folders]
-      .filter(f => f.startsWith(parent + '/') && !f.slice(parent.length + 1).includes('/'))
-      .map(f => f.slice(parent.length + 1)),
-    frontmatter: p => state.fm?.[p] ?? null,
+    createFolder: async (p) => { gate(); await io.createFolder(p); },
+    rename: async (f, t) => { gate(); await io.rename(f, t); },
+    writeFrontmatter: async (p, m) => { gate(); await io.writeFrontmatter(p, m); },
   };
 }
 
@@ -48,426 +123,470 @@ function part(title: string, children: BinderItem[] = []): BinderItem {
   return { id: `p${nextId++}`, title, filePath: '', type: 'part', order: 0, status: 'draft', children };
 }
 
-describe('sanitizeTitle', () => {
-  it('deletes each illegal character class', () => {
-    expect(sanitizeTitle('a\\b/c:d*e?f"g<h>i|j')).toBe('abcdefghij');
-  });
-  it('collapses whitespace runs to one space', () => {
-    expect(sanitizeTitle('The   Long\t Walk')).toBe('The Long Walk');
-  });
-  it('trims and strips trailing dots and spaces', () => {
-    expect(sanitizeTitle('  Chapter One... ')).toBe('Chapter One');
-  });
-  it('returns empty when nothing legal remains', () => {
-    expect(sanitizeTitle('???')).toBe('');
-    expect(sanitizeTitle(' . . ')).toBe('');
-  });
-});
+function migrate(vault: MemVault, items: BinderItem[]) {
+  return runMigrationPass(
+    () => ({ plan: planCarryOver(items, ROOT, vault.disk()), disk: vault.disk() }),
+    vault.io(),
+  );
+}
 
-describe('isReservedStem', () => {
-  it.each(['CON', 'con', 'PRN', 'AUX', 'NUL', 'COM1', 'COM9', 'LPT1', 'LPT9', 'lpt5'])(
-    'reserves %s', (stem) => expect(isReservedStem(stem)).toBe(true));
-  it.each(['CON1', 'COM0', 'COM10', 'LPT0', 'CONSOLE', 'Bond'])(
-    'does not reserve %s', (stem) => expect(isReservedStem(stem)).toBe(false));
+function restore(vault: MemVault, items: BinderItem[]) {
+  return runRestorePass(
+    () => ({ plan: planRestore(items, ROOT, vault.disk()), disk: vault.disk() }),
+    vault.io(),
+  );
+}
+
+// The canonical fixture: two binder-only parts over a flat Chapters folder,
+// plus a root document — full hierarchy fidelity requires creating folders
+// and moving documents.
+function nestedFixture() {
+  const items = [
+    doc('Foreword', `${ROOT}/Chapters/foreword.md`, { status: 'complete' }),
+    part('Part One', [
+      doc('Opening Night', `${ROOT}/Chapters/chapter-1.md`, { wordCountGoal: 2000 }),
+      doc('The Long Walk', `${ROOT}/Chapters/chapter-2.md`, { includeInExport: false }),
+    ]),
+    part('Part Two', [
+      doc('Endgame', `${ROOT}/Chapters/chapter-3.md`),
+    ]),
+  ];
+  const vault = new MemVault({
+    folders: [ROOT, `${ROOT}/Chapters`],
+    files: {
+      [`${ROOT}/Chapters/foreword.md`]: { body: 'FOREWORD BODY' },
+      [`${ROOT}/Chapters/chapter-1.md`]: { body: 'CH1 BODY' },
+      [`${ROOT}/Chapters/chapter-2.md`]: { body: 'CH2 BODY' },
+      [`${ROOT}/Chapters/chapter-3.md`]: { body: 'CH3 BODY' },
+      [`${ROOT}/_binder.json`]: { body: '{legacy}' },
+    },
+  });
+  return { items, vault };
+}
+
+describe('sanitizeTitle (folder names only)', () => {
+  it('deletes illegal characters, collapses whitespace, strips trailing dots', () => {
+    expect(sanitizeTitle('Part: One?')).toBe('Part One');
+    expect(sanitizeTitle('  A   B... ')).toBe('A B');
+    expect(sanitizeTitle('???')).toBe('');
+  });
 });
 
 describe('parseLegacyBinder', () => {
-  it('parses a valid binder', () => {
-    const data = parseLegacyBinder(JSON.stringify({ version: '2.0', projectId: 'x', items: [] }));
-    expect(data?.items).toEqual([]);
-  });
-  it('returns null for corrupt JSON and wrong shapes', () => {
+  it('parses valid input, rejects corrupt and mis-shaped input', () => {
+    expect(parseLegacyBinder('{"items":[]}')?.items).toEqual([]);
     expect(parseLegacyBinder('{nope')).toBeNull();
-    expect(parseLegacyBinder('{"items": "not-a-list"}')).toBeNull();
-    expect(parseLegacyBinder('null')).toBeNull();
+    expect(parseLegacyBinder('{"items":"x"}')).toBeNull();
   });
 });
 
-describe('planCarryOver — classification', () => {
-  it('classifies pending, done, and missing anomalies', () => {
+describe('planCarryOver — classification and R1', () => {
+  it('classifies done, pending, and missing', () => {
     const items = [
-      doc('Opening Night', `${ROOT}/Chapters/chapter-1.md`),
-      doc('The Long Walk', `${ROOT}/Chapters/chapter-2.md`),
-      doc('Ghost', `${ROOT}/Chapters/chapter-4.md`),
+      doc('A', `${ROOT}/a.md`),
+      doc('B', `${ROOT}/Chapters/b.md`),
+      doc('C', `${ROOT}/Chapters/c.md`),
     ];
-    const plan = planCarryOver(items, ROOT, disk({
-      files: [`${ROOT}/Opening Night.md`, `${ROOT}/Chapters/chapter-2.md`],
-    }));
-    expect(plan.docOps.map(op => op.state)).toEqual(['done', 'pending', 'anomaly']);
-    expect(plan.docOps[2].anomaly).toBe('missing');
-    expect(plan.docOps[2].frontmatter).toEqual([]);
+    const vault = new MemVault({
+      folders: [ROOT, `${ROOT}/Chapters`],
+      files: { [`${ROOT}/a.md`]: {}, [`${ROOT}/Chapters/b.md`]: {} },
+    });
+    const plan = planCarryOver(items, ROOT, vault.disk());
+    expect(plan.docOps.map(op => op.state)).toEqual(['done', 'pending', 'missing']);
   });
 
-  it('a file already at its final path with matching original is done', () => {
-    const items = [doc('Opening Night', `${ROOT}/Opening Night.md`)];
-    const plan = planCarryOver(items, ROOT, disk({ files: [`${ROOT}/Opening Night.md`] }));
-    expect(plan.docOps[0].state).toBe('done');
-    expect(plan.docOps[0].finalPath).toBe(`${ROOT}/Opening Night.md`);
+  it('R1: a later same-basename claimant is a permanent leftover ordered in its ACTUAL folder', () => {
+    const items = [
+      part('Part', [
+        doc('First', `${ROOT}/A/intro.md`),
+        doc('Second', `${ROOT}/B/intro.md`),
+        doc('Third', `${ROOT}/B/other.md`),
+      ]),
+    ];
+    const vault = new MemVault({
+      folders: [ROOT, `${ROOT}/A`, `${ROOT}/B`],
+      files: { [`${ROOT}/A/intro.md`]: {}, [`${ROOT}/B/intro.md`]: {}, [`${ROOT}/B/other.md`]: {} },
+    });
+    const plan = planCarryOver(items, ROOT, vault.disk());
+    expect(plan.docOps[0].state).toBe('pending');
+    expect(plan.docOps[1].state).toBe('leftover');
+    // Order fix: the leftover ranks within P/B, not the target group
+    expect(plan.docOps[1].order).toBe(10);
+    expect(plan.docOps[2].state).toBe('pending');
   });
 
-  it('a foreign file at a pending target is an anomaly, never a suffix (Q5)', () => {
-    const items = [doc('Opening Night', `${ROOT}/Chapters/chapter-1.md`)];
-    const plan = planCarryOver(items, ROOT, disk({
-      files: [`${ROOT}/Chapters/chapter-1.md`, `${ROOT}/Opening Night.md`],
-    }));
-    expect(plan.docOps[0].state).toBe('anomaly');
-    expect(plan.docOps[0].anomaly).toBe('target-occupied');
-    expect(plan.docOps[0].suffixed).toBe(false);
-    expect(plan.docOps[0].finalPath).toBe(`${ROOT}/Opening Night.md`);
+  it('R1: a foreign file at the target is a leftover, never displaced', () => {
+    const items = [doc('A', `${ROOT}/Chapters/a.md`)];
+    const vault = new MemVault({
+      folders: [ROOT, `${ROOT}/Chapters`],
+      files: { [`${ROOT}/Chapters/a.md`]: {}, [`${ROOT}/a.md`]: { body: 'FOREIGN' } },
+    });
+    const plan = planCarryOver(items, ROOT, vault.disk());
+    expect(plan.docOps[0].state).toBe('leftover');
   });
-});
 
-describe('planCarryOver — determinism and collisions', () => {
+  it('a missing document does not claim its basename', () => {
+    const items = [
+      doc('Gone', `${ROOT}/A/intro.md`),
+      doc('Here', `${ROOT}/B/intro.md`),
+    ];
+    const vault = new MemVault({
+      folders: [ROOT, `${ROOT}/A`, `${ROOT}/B`],
+      files: { [`${ROOT}/B/intro.md`]: {} },
+    });
+    const plan = planCarryOver(items, ROOT, vault.disk());
+    expect(plan.docOps[0].state).toBe('missing');
+    expect(plan.docOps[1].state).toBe('pending');
+  });
+
   it('computes identical plans across repeated runs', () => {
-    const items = [
-      part('Part One', [doc('Duplicate', `${ROOT}/Chapters/a.md`)]),
-      doc('Duplicate', `${ROOT}/Chapters/b.md`),
-      doc('Duplicate', `${ROOT}/Chapters/c.md`),
-    ];
-    const state = disk({ files: [`${ROOT}/Chapters/a.md`, `${ROOT}/Chapters/b.md`] });
-    expect(planCarryOver(items, ROOT, state)).toEqual(planCarryOver(items, ROOT, state));
-  });
-
-  it('suffixes plan-internal collisions by legacy order, case-insensitively', () => {
-    const items = [
-      doc('The Long Walk', `${ROOT}/Chapters/b.md`),
-      doc('the long walk', `${ROOT}/Chapters/c.md`),
-    ];
-    const plan = planCarryOver(items, ROOT, disk({
-      files: [`${ROOT}/Chapters/b.md`, `${ROOT}/Chapters/c.md`],
-    }));
-    expect(plan.docOps[0].finalPath).toBe(`${ROOT}/The Long Walk.md`);
-    expect(plan.docOps[0].suffixed).toBe(false);
-    expect(plan.docOps[1].finalPath).toBe(`${ROOT}/the long walk 2.md`);
-    expect(plan.docOps[1].suffixed).toBe(true);
-  });
-
-  it('siblings in different folders do not collide', () => {
-    const items = [
-      part('Part One', [doc('Intro', `${ROOT}/a.md`)]),
-      part('Part Two', [doc('Intro', `${ROOT}/b.md`)]),
-    ];
-    const plan = planCarryOver(items, ROOT, disk({ files: [`${ROOT}/a.md`, `${ROOT}/b.md`] }));
-    expect(plan.docOps[0].finalPath).toBe(`${ROOT}/010~ Part One/Intro.md`);
-    expect(plan.docOps[1].finalPath).toBe(`${ROOT}/020~ Part Two/Intro.md`);
+    const { items, vault } = nestedFixture();
+    expect(planCarryOver(items, ROOT, vault.disk()))
+      .toEqual(planCarryOver(items, ROOT, vault.disk()));
   });
 });
 
-describe('planCarryOver — reserved Windows device names', () => {
-  it('routes a reserved document title through the suffix series', () => {
-    const items = [doc('CON', `${ROOT}/Chapters/con-notes.md`)];
-    const plan = planCarryOver(items, ROOT, disk({ files: [`${ROOT}/Chapters/con-notes.md`] }));
-    expect(plan.docOps[0].finalPath).toBe(`${ROOT}/CON 2.md`);
-    expect(plan.docOps[0].reserved).toBe(true);
-  });
-
-  it('covers the extension case — CON.md is as illegal as CON', () => {
-    const items = [doc('con', `${ROOT}/x.md`)];
-    const plan = planCarryOver(items, ROOT, disk({ files: [`${ROOT}/x.md`] }));
-    expect(plan.docOps[0].finalPath).toBe(`${ROOT}/con 2.md`);
-  });
-
-  it('covers folders — a reserved part name is suffixed before minting', () => {
-    const items = [part('NUL')];
-    const plan = planCarryOver(items, ROOT, disk());
-    expect(plan.folderOps[0].targetName).toBe('010~ NUL 2');
-    expect(plan.folderOps[0].reserved).toBe(true);
-  });
-
-  it.each(['COM3', 'LPT9'])('covers the numbered class %s', (name) => {
-    const items = [doc(name, `${ROOT}/x.md`)];
-    const plan = planCarryOver(items, ROOT, disk({ files: [`${ROOT}/x.md`] }));
-    expect(plan.docOps[0].finalPath).toBe(`${ROOT}/${name} 2.md`);
-  });
-
-  it('leaves near-misses like CON1 alone', () => {
-    const items = [doc('CON1', `${ROOT}/x.md`)];
-    const plan = planCarryOver(items, ROOT, disk({ files: [`${ROOT}/x.md`] }));
-    expect(plan.docOps[0].finalPath).toBe(`${ROOT}/CON1.md`);
-    expect(plan.docOps[0].reserved).toBe(false);
-  });
-});
-
-describe('planCarryOver — titles and names', () => {
-  it('an unusable title keeps the original basename', () => {
-    const items = [doc('???', `${ROOT}/Chapters/chapter-7.md`)];
-    const plan = planCarryOver(items, ROOT, disk({ files: [`${ROOT}/Chapters/chapter-7.md`] }));
-    expect(plan.docOps[0].finalPath).toBe(`${ROOT}/chapter-7.md`);
-    expect(plan.docOps[0].titleUnusable).toBe(true);
-  });
-
-  it('preserves a non-md extension from the legacy path', () => {
-    const items = [doc('Notes', `${ROOT}/notes.txt`)];
-    const plan = planCarryOver(items, ROOT, disk({ files: [`${ROOT}/notes.txt`] }));
-    expect(plan.docOps[0].finalPath).toBe(`${ROOT}/Notes.txt`);
-  });
-});
-
-describe('planCarryOver — order minting (one number line per group)', () => {
-  it('assigns 10/20/30 across documents and folders in legacy order', () => {
-    const items = [
-      doc('One', `${ROOT}/a.md`),
-      part('Part', [doc('Nested', `${ROOT}/n.md`)]),
-      doc('Three', `${ROOT}/c.md`),
-    ];
-    const plan = planCarryOver(items, ROOT, disk({
-      files: [`${ROOT}/a.md`, `${ROOT}/c.md`, `${ROOT}/n.md`],
-    }));
-    const orderOf = (i: number) => plan.docOps[i].frontmatter.find(e => e.key === 'binder-order')?.value;
-    expect(orderOf(0)).toBe(10);
-    expect(plan.folderOps[0].targetName).toBe('020~ Part');
-    expect(orderOf(1)).toBe(10); // nested doc starts its own group
-    expect(orderOf(2)).toBe(30);
-  });
-
-  it("flattens a document's children into its own sibling group after it", () => {
-    const items = [
-      doc('Parent', `${ROOT}/p.md`, { children: [doc('Child', `${ROOT}/k.md`)] }),
-      doc('Next', `${ROOT}/n.md`),
-    ];
-    const plan = planCarryOver(items, ROOT, disk({
-      files: [`${ROOT}/p.md`, `${ROOT}/k.md`, `${ROOT}/n.md`],
-    }));
-    expect(plan.docOps.map(op => op.originalPath)).toEqual(
-      [`${ROOT}/p.md`, `${ROOT}/k.md`, `${ROOT}/n.md`]);
-    const orders = plan.docOps.map(op => op.frontmatter.find(e => e.key === 'binder-order')?.value);
-    expect(orders).toEqual([10, 20, 30]);
-  });
-});
-
-describe('planCarryOver — folder adoption (Q1 for folders)', () => {
-  it('adopts an existing marked folder without re-minting its marker', () => {
-    const items = [part('Part One')];
-    const plan = planCarryOver(items, ROOT, disk({ folders: [`${ROOT}/025~ Part One`] }));
-    expect(plan.folderOps[0].state).toBe('done');
-    expect(plan.folderOps[0].targetName).toBe('025~ Part One');
-  });
-
-  it('adopts a plain folder whose name matches the display name', () => {
-    const items = [part('Part One')];
-    const plan = planCarryOver(items, ROOT, disk({ folders: [`${ROOT}/Part One`] }));
-    expect(plan.folderOps[0].state).toBe('done');
-    expect(plan.folderOps[0].targetName).toBe('Part One');
-  });
-
-  it('never adopts the same folder twice — the duplicate suffixes and mints', () => {
-    const items = [part('Part'), part('Part')];
-    const plan = planCarryOver(items, ROOT, disk({ folders: [`${ROOT}/010~ Part`] }));
-    expect(plan.folderOps[0].state).toBe('done');
-    expect(plan.folderOps[0].targetName).toBe('010~ Part');
-    expect(plan.folderOps[1].state).toBe('pending');
-    expect(plan.folderOps[1].targetName).toBe('020~ Part 2');
-  });
-
-  it('nests children of an adopted folder under its on-disk name', () => {
-    const items = [part('Part One', [doc('Intro', `${ROOT}/i.md`)])];
-    const plan = planCarryOver(items, ROOT, disk({
-      folders: [`${ROOT}/025~ Part One`],
-      files: [`${ROOT}/i.md`],
-    }));
-    expect(plan.docOps[0].finalPath).toBe(`${ROOT}/025~ Part One/Intro.md`);
-  });
-});
-
-describe('planCarryOver — frontmatter precedence (Q1: write-if-absent)', () => {
-  const items = () => [doc('One', `${ROOT}/a.md`, {
-    status: 'in-progress',
-    wordCountGoal: 2000,
-    includeInExport: false,
-  })];
-
-  it('writes every key when none is set', () => {
-    const plan = planCarryOver(items(), ROOT, disk({ files: [`${ROOT}/a.md`] }));
-    const fm = plan.docOps[0].frontmatter;
-    expect(fm.map(e => [e.key, e.value, e.kept])).toEqual([
-      ['binder-order', 10, false],
-      ['binder-status', 'in-progress', false],
-      ['binder-type', 'chapter', false],
-      ['word-count-goal', 2000, false],
-      ['binder-compile', false, false],
+describe('planCarryOver — folders', () => {
+  it('mints markers for binder-only parts; two same titles need no suffix', () => {
+    const plan = planCarryOver([part('Part'), part('Part')], ROOT, new MemVault({ folders: [ROOT] }).disk());
+    expect(plan.folderOps.map(op => [op.action, op.targetName])).toEqual([
+      ['create', '010~ Part'],
+      ['create', '020~ Part'],
     ]);
   });
 
-  it('keeps every key the user already set — even with a different value', () => {
-    const plan = planCarryOver(items(), ROOT, disk({
-      files: [`${ROOT}/a.md`],
-      fm: { [`${ROOT}/a.md`]: {
-        'binder-order': 55, 'binder-status': 'complete', 'binder-type': 'note',
-        'word-count-goal': 1, 'binder-compile': false,
-      } },
-    }));
-    expect(plan.docOps[0].frontmatter.every(e => e.kept)).toBe(true);
-    expect(fmRowState(plan.docOps[0])).toBe('done');
+  it('a reserved title resolves via the marker itself — display unchanged, no suffix', () => {
+    const plan = planCarryOver([part('CON')], ROOT, new MemVault({ folders: [ROOT] }).disk());
+    expect(plan.folderOps[0].targetName).toBe('010~ CON');
+    expect(plan.folderOps[0].displayName).toBe('CON');
   });
 
-  it('treats a null value as absent', () => {
-    const plan = planCarryOver(items(), ROOT, disk({
-      files: [`${ROOT}/a.md`],
-      fm: { [`${ROOT}/a.md`]: { 'binder-status': null } },
-    }));
-    const status = plan.docOps[0].frontmatter.find(e => e.key === 'binder-status');
-    expect(status?.kept).toBe(false);
+  it('adopts a marker-carrying folder as-is and never re-mints (Q1)', () => {
+    const vault = new MemVault({ folders: [ROOT, `${ROOT}/025~ Part One`] });
+    const plan = planCarryOver([part('Part One')], ROOT, vault.disk());
+    expect(plan.folderOps[0].action).toBe('none');
+    expect(plan.folderOps[0].targetName).toBe('025~ Part One');
   });
 
-  it('reads the file where it currently is — pending at original, done at final', () => {
-    const two = [
-      doc('Pending', `${ROOT}/Chapters/p.md`),
-      doc('Done', `${ROOT}/Chapters/d.md`),
+  it('attaches the marker in place to an adopted plain folder, preserving the typed text', () => {
+    const vault = new MemVault({ folders: [ROOT, `${ROOT}/part one`] });
+    const plan = planCarryOver([part('Part One')], ROOT, vault.disk());
+    expect(plan.folderOps[0].action).toBe('attach-marker');
+    expect(plan.folderOps[0].targetName).toBe('010~ part one');
+  });
+
+  it('never adopts the same folder twice', () => {
+    const vault = new MemVault({ folders: [ROOT, `${ROOT}/010~ Part`] });
+    const plan = planCarryOver([part('Part'), part('Part')], ROOT, vault.disk());
+    expect(plan.folderOps[0].action).toBe('none');
+    expect(plan.folderOps[1].action).toBe('create');
+    expect(plan.folderOps[1].targetName).toBe('020~ Part');
+  });
+});
+
+describe('planCarryOver — order and metadata', () => {
+  it('one number line per group in legacy order, document children flattened', () => {
+    const items = [
+      doc('One', `${ROOT}/a.md`, { children: [doc('Child', `${ROOT}/k.md`)] }),
+      part('Part'),
+      doc('Three', `${ROOT}/c.md`),
     ];
-    const plan = planCarryOver(two, ROOT, disk({
-      files: [`${ROOT}/Chapters/p.md`, `${ROOT}/Done.md`],
-      fm: {
-        [`${ROOT}/Chapters/p.md`]: { 'binder-status': 'complete' },
-        [`${ROOT}/Done.md`]: { 'binder-status': 'complete' },
-      },
-    }));
-    expect(plan.docOps[0].frontmatter.find(e => e.key === 'binder-status')?.kept).toBe(true);
-    expect(plan.docOps[1].frontmatter.find(e => e.key === 'binder-status')?.kept).toBe(true);
+    const vault = new MemVault({
+      folders: [ROOT],
+      files: { [`${ROOT}/a.md`]: {}, [`${ROOT}/k.md`]: {}, [`${ROOT}/c.md`]: {} },
+    });
+    const plan = planCarryOver(items, ROOT, vault.disk());
+    expect(plan.docOps.map(op => op.order)).toEqual([10, 20, 40]);
+    expect(plan.folderOps[0].targetName).toBe('030~ Part');
   });
 
-  it('expresses inclusion by absence — includeInExport true or unset writes nothing', () => {
-    const included = [doc('A', `${ROOT}/a.md`, { includeInExport: true }), doc('B', `${ROOT}/b.md`)];
-    const plan = planCarryOver(included, ROOT, disk({ files: [`${ROOT}/a.md`, `${ROOT}/b.md`] }));
-    for (const op of plan.docOps) {
-      expect(op.frontmatter.find(e => e.key === 'binder-compile')).toBeUndefined();
+  it('write-if-absent: existing keys are kept even with different values; null counts as absent', () => {
+    const items = [doc('A', `${ROOT}/a.md`, { status: 'in-progress', wordCountGoal: 500 })];
+    const vault = new MemVault({
+      folders: [ROOT],
+      files: { [`${ROOT}/a.md`]: { fm: { 'binder-status': 'complete', 'binder-order': 99, 'binder-type': null } } },
+    });
+    const plan = planCarryOver(items, ROOT, vault.disk());
+    const op = plan.docOps[0];
+    expect(op.orderKept).toBe(true);
+    const byKey = Object.fromEntries(op.frontmatter.map(e => [e.key, e.kept]));
+    expect(byKey['binder-status']).toBe(true);
+    expect(byKey['binder-type']).toBe(false);
+    expect(byKey['word-count-goal']).toBe(false);
+  });
+
+  it('planHasWork is false for a fully migrated project', () => {
+    const items = [doc('A', `${ROOT}/a.md`)];
+    const vault = new MemVault({
+      folders: [ROOT],
+      files: { [`${ROOT}/a.md`]: { fm: { 'binder-order': 10, 'binder-status': 'draft', 'binder-type': 'chapter' } } },
+    });
+    expect(planHasWork(planCarryOver(items, ROOT, vault.disk()))).toBe(false);
+  });
+});
+
+describe('runMigrationPass — full fidelity', () => {
+  it('reproduces the legacy hierarchy: folders created, documents moved, metadata written', async () => {
+    const { items, vault } = nestedFixture();
+    const result = await migrate(vault, items);
+    expect(result.failures).toEqual([]);
+
+    expect(vault.folders.has(`${ROOT}/020~ Part One`)).toBe(true);
+    expect(vault.folders.has(`${ROOT}/030~ Part Two`)).toBe(true);
+    expect(vault.files.has(`${ROOT}/foreword.md`)).toBe(true);
+    expect(vault.files.has(`${ROOT}/020~ Part One/chapter-1.md`)).toBe(true);
+    expect(vault.files.has(`${ROOT}/020~ Part One/chapter-2.md`)).toBe(true);
+    expect(vault.files.has(`${ROOT}/030~ Part Two/chapter-3.md`)).toBe(true);
+
+    const fm = (p: string) => (vault.files.get(p) as MemFile).fm;
+    expect(fm(`${ROOT}/foreword.md`)['binder-order']).toBe(10);
+    expect(fm(`${ROOT}/foreword.md`)['binder-status']).toBe('complete');
+    expect(fm(`${ROOT}/020~ Part One/chapter-1.md`)['binder-order']).toBe(10);
+    expect(fm(`${ROOT}/020~ Part One/chapter-1.md`)['word-count-goal']).toBe(2000);
+    expect(fm(`${ROOT}/020~ Part One/chapter-2.md`)['binder-order']).toBe(20);
+    expect(fm(`${ROOT}/020~ Part One/chapter-2.md`)['binder-compile']).toBe(false);
+  });
+
+  it('prose-safety: body bytes identical before and after', async () => {
+    const { items, vault } = nestedFixture();
+    const before = new Map([...vault.files.entries()].map(([p, f]) => [p.split('/').pop(), f.body]));
+    await migrate(vault, items);
+    for (const [p, f] of vault.files) {
+      expect(f.body).toBe(before.get(p.split('/').pop()));
+    }
+  });
+
+  it('never touches _binder.json in any operation', async () => {
+    const { items, vault } = nestedFixture();
+    await migrate(vault, items);
+    await restore(vault, items);
+    expect(vault.oplog.some(line => line.includes('_binder.json'))).toBe(false);
+    expect((vault.files.get(`${ROOT}/_binder.json`) as MemFile).body).toBe('{legacy}');
+  });
+
+  it('steady state is a no-op: a second pass performs zero operations', async () => {
+    const { items, vault } = nestedFixture();
+    await migrate(vault, items);
+    expect(planHasWork(planCarryOver(items, ROOT, vault.disk()))).toBe(false);
+    vault.oplog = [];
+    const result = await migrate(vault, items);
+    expect(result.changed).toBe(0);
+    expect(vault.oplog).toEqual([]);
+  });
+
+  it('attaching a marker to an adopted plain folder carries its children — no document moves', async () => {
+    const items = [part('Part One', [doc('Ch', `${ROOT}/Part One/ch.md`)])];
+    const vault = new MemVault({
+      folders: [ROOT, `${ROOT}/Part One`],
+      files: { [`${ROOT}/Part One/ch.md`]: {} },
+    });
+    const result = await migrate(vault, items);
+    expect(result.failures).toEqual([]);
+    expect(vault.files.has(`${ROOT}/010~ Part One/ch.md`)).toBe(true);
+    // The folder rename carried the document — no per-document rename ran
+    expect(vault.oplog.filter(l => l.startsWith('rename') && l.includes('ch.md'))).toEqual([]);
+  });
+
+  it('Q5 live re-check: a value the plan thought absent (cold cache) is never overwritten', async () => {
+    const items = [doc('A', `${ROOT}/a.md`, { status: 'draft' })];
+    const vault = new MemVault({
+      folders: [ROOT],
+      files: { [`${ROOT}/a.md`]: { fm: { 'binder-status': 'complete', 'binder-order': 77 } } },
+    });
+    const coldDisk = (): DiskState => ({ ...vault.disk(), frontmatter: () => null });
+    await runMigrationPass(
+      () => ({ plan: planCarryOver(items, ROOT, coldDisk()), disk: coldDisk() }),
+      vault.io(),
+    );
+    const fm = (vault.files.get(`${ROOT}/a.md`) as MemFile).fm;
+    expect(fm['binder-status']).toBe('complete');
+    expect(fm['binder-order']).toBe(77);
+  });
+
+  it('R1 execution: the leftover stays put, gets in-place order, and reports name-taken', async () => {
+    const items = [
+      part('Part', [
+        doc('First', `${ROOT}/A/intro.md`),
+        doc('Second', `${ROOT}/B/intro.md`),
+      ]),
+    ];
+    const vault = new MemVault({
+      folders: [ROOT, `${ROOT}/A`, `${ROOT}/B`],
+      files: { [`${ROOT}/A/intro.md`]: {}, [`${ROOT}/B/intro.md`]: {} },
+    });
+    const result = await migrate(vault, items);
+    expect(vault.files.has(`${ROOT}/010~ Part/intro.md`)).toBe(true);
+    expect(vault.files.has(`${ROOT}/B/intro.md`)).toBe(true);
+    expect((vault.files.get(`${ROOT}/B/intro.md`) as MemFile).fm['binder-order']).toBe(10);
+    const leftover = result.failures.find(f => f.kind === 'leftover');
+    expect(leftover?.reason).toBe('name-taken');
+    expect(result.leftovers).toBe(1);
+  });
+
+  it('R3 dependency skip: a failed folder skips its subtree without cascade failures', async () => {
+    const items = [
+      part('Part One', [doc('Ch', `${ROOT}/Chapters/ch.md`)]),
+      doc('Root doc', `${ROOT}/Chapters/root.md`),
+    ];
+    const vault = new MemVault({
+      folders: [ROOT, `${ROOT}/Chapters`],
+      files: { [`${ROOT}/Chapters/ch.md`]: {}, [`${ROOT}/Chapters/root.md`]: {} },
+    });
+    const io = vault.io();
+    const failing: CarryOverIO = {
+      ...io,
+      createFolder: async (p) => {
+        if (p.includes('Part One')) throw new Error('EBUSY: locked');
+        await io.createFolder(p);
+      },
+    };
+    const result = await runMigrationPass(
+      () => ({ plan: planCarryOver(items, ROOT, vault.disk()), disk: vault.disk() }),
+      failing,
+    );
+    // One failure for the folder; the child document was not attempted
+    expect(result.failures.filter(f => f.kind === 'folder')).toHaveLength(1);
+    expect(result.failures.filter(f => f.kind === 'move')).toHaveLength(0);
+    expect(vault.files.has(`${ROOT}/Chapters/ch.md`)).toBe(true);
+    // The independent root document still migrated
+    expect(vault.files.has(`${ROOT}/root.md`)).toBe(true);
+  });
+
+  it('kill-and-rerun at every prefix length converges with zero duplicate destructive ops', async () => {
+    // Reference final state from an uninterrupted run
+    const ref = nestedFixture();
+    await migrate(ref.vault, ref.items);
+    const refFiles = [...ref.vault.files.keys()].sort();
+    const refFolders = [...ref.vault.folders].sort();
+
+    const total = ref.vault.oplog.length;
+    for (let allow = 0; allow <= total; allow++) {
+      const { items, vault } = nestedFixture();
+      await runMigrationPass(
+        () => ({ plan: planCarryOver(items, ROOT, vault.disk()), disk: vault.disk() }),
+        faultyIO(vault.io(), allow),
+      );
+      const second = await migrate(vault, items);
+      expect(second.failures).toEqual([]);
+      expect([...vault.files.keys()].sort()).toEqual(refFiles);
+      expect([...vault.folders].sort()).toEqual(refFolders);
+      // No successful rename ever ran twice from the same source
+      const renames = vault.oplog.filter(l => l.startsWith('rename'));
+      expect(new Set(renames).size).toBe(renames.length);
     }
   });
 });
 
-describe('planCarryOver — counts and planHasWork', () => {
-  it('reproduces the approved mock scenario: 9 operations, 2 done, 6 pending, 1 anomaly', () => {
-    // Two folders (one existing), five documents (one done, three pending
-    // incl. a suffix and a reserved name, one missing), two frontmatter rows
-    // (the pending docs carry no metadata worth writing beyond order — so
-    // the fm rows come from the done doc and the first pending doc).
-    const items = [
-      part('Part One', [
-        doc('Opening Night', `${ROOT}/Chapters/chapter-1.md`, { status: 'in-progress' }),
-        doc('The Long Walk', `${ROOT}/Chapters/chapter-2.md`, { wordCountGoal: 2000 }),
-      ]),
-      part('Part Two', [
-        doc('The Long Walk', `${ROOT}/Chapters/chapter-3.md`),
-        doc('CON', `${ROOT}/Chapters/con-notes.md`),
-        doc('Ghost', `${ROOT}/Chapters/chapter-4.md`),
-      ]),
-    ];
-    const state = disk({
-      folders: [`${ROOT}/010~ Part One`],
-      files: [
-        `${ROOT}/010~ Part One/Opening Night.md`,
-        `${ROOT}/Chapters/chapter-2.md`,
-        `${ROOT}/Chapters/chapter-3.md`,
-        `${ROOT}/Chapters/con-notes.md`,
-      ],
-      fm: { [`${ROOT}/010~ Part One/Opening Night.md`]: { 'binder-status': 'complete' } },
-    });
-    const plan = planCarryOver(items, ROOT, state);
-    // Part Two group: The Long Walk claims first, CON suffixes, Ghost missing
-    expect(plan.docOps[2].finalPath).toBe(`${ROOT}/020~ Part Two/The Long Walk.md`);
-    expect(plan.docOps[3].finalPath).toBe(`${ROOT}/020~ Part Two/CON 2.md`);
-    expect(plan.docOps[4].state).toBe('anomaly');
-    // Every non-anomaly doc has a frontmatter row (binder-order at minimum),
-    // so: 2 folders + 5 docs + 4 fm rows = 11 total
-    expect(plan.counts).toEqual({ total: 11, done: 2, pending: 8, anomalies: 1 });
-    expect(planHasWork(plan)).toBe(true);
+describe('runRestorePass — layout-only inverse', () => {
+  it('round-trip: documents return to legacy paths, markers stripped, created folders remain empty', async () => {
+    const { items, vault } = nestedFixture();
+    await migrate(vault, items);
+    const result = await restore(vault, items);
+    expect(result.failures).toEqual([]);
+
+    expect(vault.files.has(`${ROOT}/Chapters/foreword.md`)).toBe(true);
+    expect(vault.files.has(`${ROOT}/Chapters/chapter-1.md`)).toBe(true);
+    expect(vault.files.has(`${ROOT}/Chapters/chapter-3.md`)).toBe(true);
+    // Markers stripped; the folders themselves are never deleted
+    expect(vault.folders.has(`${ROOT}/Part One`)).toBe(true);
+    expect(vault.folders.has(`${ROOT}/020~ Part One`)).toBe(false);
+    // Layout-only: migration frontmatter persists
+    const fm = (vault.files.get(`${ROOT}/Chapters/chapter-1.md`) as MemFile).fm;
+    expect(fm['binder-order']).toBe(10);
+    expect(fm['word-count-goal']).toBe(2000);
   });
 
-  it('a fully carried project has no work', () => {
-    const items = [doc('One', `${ROOT}/One.md`)];
-    const plan = planCarryOver(items, ROOT, disk({
-      files: [`${ROOT}/One.md`],
-      fm: { [`${ROOT}/One.md`]: { 'binder-order': 10, 'binder-status': 'draft', 'binder-type': 'chapter' } },
-    }));
-    expect(planHasWork(plan)).toBe(false);
-    expect(plan.counts.pending).toBe(0);
+  it('recreates a deleted legacy parent folder on the way back', async () => {
+    const { items, vault } = nestedFixture();
+    await migrate(vault, items);
+    vault.folders.delete(`${ROOT}/Chapters`);
+    const result = await restore(vault, items);
+    expect(result.failures).toEqual([]);
+    expect(vault.files.has(`${ROOT}/Chapters/chapter-1.md`)).toBe(true);
   });
 
-  it('an empty legacy binder plans nothing', () => {
-    const plan = planCarryOver([], ROOT, disk());
-    expect(plan.counts.total).toBe(0);
-    expect(planHasWork(plan)).toBe(false);
+  it('skips a document the user moved after migration — never guessed, never displaced', async () => {
+    const { items, vault } = nestedFixture();
+    await migrate(vault, items);
+    const io = vault.io();
+    await io.rename(`${ROOT}/020~ Part One/chapter-1.md`, `${ROOT}/chapter-1-renamed.md`);
+    const result = await restore(vault, items);
+    expect(result.failures).toEqual([]);
+    expect(vault.files.has(`${ROOT}/chapter-1-renamed.md`)).toBe(true);
+    expect(result.skipped).toBeGreaterThan(0);
+  });
+
+  it('restore never deletes anything and is idempotent', async () => {
+    const { items, vault } = nestedFixture();
+    await migrate(vault, items);
+    const foldersBefore = [...vault.folders];
+    await restore(vault, items);
+    for (const f of foldersBefore.map(p => p.replace(/(^|\/)-?\d+~ /, '$1'))) {
+      // every pre-restore folder still exists, marker-stripped or not
+      expect(vault.folders.has(f) || foldersBefore.includes(f)).toBe(true);
+    }
+    expect(restoreHasWork(planRestore(items, ROOT, vault.disk()))).toBe(false);
+    vault.oplog = [];
+    const again = await restore(vault, items);
+    expect(again.moved).toBe(0);
+    expect(vault.oplog).toEqual([]);
   });
 });
 
-// ─── Bridge: read-only guarantee ────────────────────────────────────────────
+describe('failure ledger (R2 — graduated, once per signature)', () => {
+  const project = { id: 'proj-1', title: 'Novel', folderPath: ROOT } as WritingProject;
 
-function fakeApp(
-  files: Record<string, string>,
-  folders: string[] = [],
-  fm: Record<string, Record<string, unknown>> = {},
-): { app: App; writes: string[] } {
-  const writes: string[] = [];
-  const tfiles = new Map(Object.entries(files).map(([p]) => {
-    const ext = p.includes('.') ? p.split('.').pop() ?? '' : '';
-    return [p, new TFile(p, ext)];
-  }));
-  const tfolders = new Map(folders.map(p => [p, new TFolder(p)]));
-  for (const [p, f] of tfolders) {
-    const parent = p.split('/').slice(0, -1).join('/');
-    tfolders.get(parent)?.children.push(f);
+  function fakePlugin() {
+    const settings = { carryOverFailures: {} as Record<string, { count: number; noticed: boolean }> };
+    return {
+      settings,
+      saveSettings: async () => undefined,
+    } as unknown as WritingStudioPlugin;
   }
-  const recordWrite = (name: string) => () => {
-    writes.push(name);
-    throw new Error(`write attempted: ${name}`);
-  };
-  const app = {
-    vault: {
-      getAbstractFileByPath: (p: string) => tfiles.get(p) ?? tfolders.get(p) ?? null,
-      cachedRead: (f: TFile) => Promise.resolve(files[f.path]),
-      create: recordWrite('create'),
-      createFolder: recordWrite('createFolder'),
-      modify: recordWrite('modify'),
-      delete: recordWrite('delete'),
-      adapter: { write: recordWrite('adapter.write') },
-    },
-    metadataCache: { getFileCache: (f: TFile) => ({ frontmatter: fm[f.path] }) },
-  };
-  return { app: app as unknown as App, writes };
-}
 
-const project = { id: 'proj-1', title: 'Novel', folderPath: ROOT } as WritingProject;
-
-describe('carryOverBridge', () => {
-  it('computes a plan from the live vault without writing anything', async () => {
-    const legacy = JSON.stringify({
-      version: '2.0', projectId: 'proj-1',
-      items: [{ id: '1', title: 'One', filePath: `${ROOT}/Chapters/a.md`, type: 'chapter', order: 0, status: 'draft' }],
-    });
-    const { app, writes } = fakeApp(
-      { [`${ROOT}/_binder.json`]: legacy, [`${ROOT}/Chapters/a.md`]: '' },
-      [ROOT, `${ROOT}/Chapters`],
-    );
-    const result = await computeCarryOverPlan(app, project);
-    expect(result.kind).toBe('plan');
-    const plan = (result as { kind: 'plan'; plan: CarryOverPlan }).plan;
-    expect(plan.docOps[0].state).toBe('pending');
-    expect(plan.docOps[0].finalPath).toBe(`${ROOT}/One.md`);
-    expect(writes).toEqual([]);
+  const failure = (reason = 'EBUSY: resource busy') => ({
+    signature: 'move|P/Chapters/a.md',
+    name: 'a.md',
+    reason,
+    kind: 'move' as const,
   });
 
-  it('reports a missing legacy binder', async () => {
-    const { app, writes } = fakeApp({}, [ROOT]);
-    expect((await computeCarryOverPlan(app, project)).kind).toBe('missing');
-    expect(writes).toEqual([]);
-  });
-
-  it('reports a corrupt legacy binder WITHOUT the runtime loader backup write', async () => {
-    const { app, writes } = fakeApp({ [`${ROOT}/_binder.json`]: '{corrupt' }, [ROOT]);
-    expect((await computeCarryOverPlan(app, project)).kind).toBe('corrupt');
-    // loadBinder would have written _binder.json.bak here — the dry run must not
-    expect(writes).toEqual([]);
-  });
-
-  it('openCarryOverPreview surfaces missing and corrupt states as notices', async () => {
+  beforeEach(() => {
     Notice.messages.length = 0;
-    const missing = fakeApp({}, [ROOT]);
-    await openCarryOverPreview({ app: missing.app } as unknown as WritingStudioPlugin, project);
-    expect(Notice.messages).toContain('No legacy binder found for this project.');
+  });
 
+  it('first failure is silent, second consecutive failure notices exactly once', async () => {
+    const plugin = fakePlugin();
+    await updateFailureLedger(plugin, project, [failure()]);
+    expect(Notice.messages).toEqual([]);
+    await updateFailureLedger(plugin, project, [failure()]);
+    expect(Notice.messages).toHaveLength(1);
+    expect(Notice.messages[0]).toContain('the file is in use');
+    await updateFailureLedger(plugin, project, [failure()]);
+    expect(Notice.messages).toHaveLength(1);
+  });
+
+  it('success clears the record so a fresh failure can notice again', async () => {
+    const plugin = fakePlugin();
+    await updateFailureLedger(plugin, project, [failure()]);
+    await updateFailureLedger(plugin, project, [failure()]);
+    await updateFailureLedger(plugin, project, []); // pass with no failures
+    expect(plugin.settings.carryOverFailures).toEqual({});
     Notice.messages.length = 0;
-    const corrupt = fakeApp({ [`${ROOT}/_binder.json`]: '{corrupt' }, [ROOT]);
-    await openCarryOverPreview({ app: corrupt.app } as unknown as WritingStudioPlugin, project);
-    expect(Notice.messages).toContain('The legacy binder file could not be read.');
-    expect(corrupt.writes).toEqual([]);
+    await updateFailureLedger(plugin, project, [failure()]);
+    expect(Notice.messages).toEqual([]);
+  });
+
+  it('translates common causes and uses name-taken copy for leftovers', async () => {
+    const plugin = fakePlugin();
+    const leftover = { signature: 'leftover|P/B/intro.md', name: 'intro.md', reason: 'name-taken', kind: 'leftover' as const };
+    await updateFailureLedger(plugin, project, [leftover]);
+    await updateFailureLedger(plugin, project, [leftover]);
+    expect(Notice.messages[0]).toContain('a file with that name is already there');
+
+    const denied = { ...failure('EACCES: permission denied'), signature: 'move|P/x.md' };
+    await updateFailureLedger(plugin, project, [denied]);
+    await updateFailureLedger(plugin, project, [denied]);
+    expect(Notice.messages[1]).toContain('permission was denied');
   });
 });

@@ -146,11 +146,18 @@ document type (icon/menu only), and `binder-compile: false` to exclude a documen
 compile (rendered dimmed). `word-count-goal` (existing key) becomes the sole goal authority.
 The separate binder title is removed — the filename is the title.
 
-**Carry-over**
-The per-project, opt-in migration from a legacy `_binder.json`: Preview (dry run listing
-every operation) → one atomic rename per item plus idempotent frontmatter writes, all targets
-computed deterministically from the immutable legacy file. `_binder.json` is never deleted.
-Prefer: *carry-over*. Avoid: *migration* in UI copy (fine in code/issues), *import*, *conversion*.
+**Carry-over** / **silent migration**
+The per-project migration from a legacy `_binder.json`, run silently on project activation
+(amended 2026-07-06, #231 — no preview, no notice, no consent gate): legacy groups/parts
+become real folders (created with markers, or matched by name — a matched plain folder gets
+its marker attached in place), documents move in **keeping their filenames** (never renamed
+to a stored title; a same-basename collision leaves the later document in place, ordered in
+its actual folder), and metadata lands write-if-absent in frontmatter. Every target derives
+deterministically from the immutable legacy file; interruption recovers by re-running.
+`_binder.json` is never deleted or modified. The inverse is **Restore previous binder
+layout** — layout-only (frontmatter persists; never framed as a full revert), stateless,
+never deletes. UI copy never says *carry-over* or *migration* (the surfaces are silent;
+failure notices name files, not concepts). Avoid: *import*, *conversion*.
 
 ### Writing environment modes
 
