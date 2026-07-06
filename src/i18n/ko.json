@@ -115,11 +115,7 @@
       "includeCoverDesc": "표지 이미지가 없을 때 텍스트 표지 페이지를 생성합니다.",
       "pdfEngine": "PDF 엔진",
       "pdfEngineDesc": "PDF 내보내기에 사용할 엔진입니다. 자동은 설치된 LaTeX 엔진을 선택합니다. wkhtmltopdf는 LaTeX 없이 작동하지만 내보내기 글꼴 설정이 적용되지 않습니다.",
-      "pdfEngineAuto": "자동(권장)",
-      "subtreeTitleSource": "폴더 내보내기 제목",
-      "subtreeTitleSourceDesc": "폴더 내보내기의 제목 페이지와 메타데이터에 표시할 이름: 내보낸 폴더 또는 전체 프로젝트.",
-      "subtreeTitleFolder": "폴더 이름",
-      "subtreeTitleProject": "프로젝트 제목"
+      "pdfEngineAuto": "자동(권장)"
     },
     "log": {
       "heading": "일일 글쓰기 로그",
@@ -541,7 +537,14 @@
     "exportFailed": "내보내기 실패: {{error}}",
     "cancel": "취소",
     "pandocWarning": "Pandoc을 찾을 수 없습니다. 내보내기 설정의 \"Pandoc 경로\" 필드를 확인하세요 — 이 내보내기는 실패할 가능성이 높습니다.",
-    "includeFolderHeadings": "폴더 이름을 제목으로 포함"
+    "includeFolderHeadings": "폴더 이름을 제목으로 포함",
+    "titleName": "제목",
+    "titleFolder": "폴더 이름",
+    "titleProjectFolder": "프로젝트 — 폴더",
+    "titleProject": "프로젝트 이름",
+    "titleCustom": "직접 제목 입력",
+    "customTitleName": "사용자 지정 제목",
+    "customTitlePlaceholder": "제목 입력"
   },
   "publishModal": {
     "title": "WordPress에 게시",

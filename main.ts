@@ -19,7 +19,7 @@ import { FocusMode } from './src/FocusMode';
 import { TypographyMode } from './src/TypographyMode';
 import { WritingModes } from './src/WritingModes';
 import { SprintTimer } from './src/SprintTimer';
-import { ExportEngine, type ExportFormat, type PdfEnginePreference } from './src/ExportEngine';
+import { ExportEngine, type ExportFormat, type ExportUiState, type PdfEnginePreference } from './src/ExportEngine';
 import { WordPressClient } from './src/WordPressClient';
 import { ProjectManager } from './src/ProjectManager';
 import { StatsTracker } from './src/StatsTracker';
@@ -121,9 +121,6 @@ export interface WritingStudioSettings {
   defaultExportFontSize: number;
   pandocPath: string;
   pdfEngine: PdfEnginePreference;
-  // What a subtree ("Export folder") export's title page and metadata name
-  // across all formats (#244) — the exported folder or the whole project
-  subtreeExportTitleSource: 'folder' | 'project';
   epubLanguage: string;
   epubIncludeCover: boolean;
   // WordPress
@@ -178,7 +175,6 @@ const DEFAULT_SETTINGS: WritingStudioSettings = {
   defaultExportFontSize: 12,
   pandocPath: 'pandoc',
   pdfEngine: 'auto',
-  subtreeExportTitleSource: 'folder',
   epubLanguage: 'en',
   epubIncludeCover: true,
   wordPressSites: [],
@@ -500,7 +496,7 @@ export default class WritingStudioPlugin extends Plugin {
     }
   }
 
-  async openCompilePreview(): Promise<void> {
+  async openCompilePreview(state?: ExportUiState): Promise<void> {
     const existing = this.app.workspace.getLeavesOfType(COMPILE_PREVIEW_VIEW_TYPE);
 
     let leaf: WorkspaceLeaf;
@@ -514,7 +510,7 @@ export default class WritingStudioPlugin extends Plugin {
     void this.app.workspace.revealLeaf(leaf);
 
     if (leaf.view instanceof CompilePreviewView) {
-      await leaf.view.loadContent();
+      await leaf.view.loadContent(state);
     }
   }
 

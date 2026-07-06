@@ -115,11 +115,7 @@
       "includeCoverDesc": "Gerar uma capa de texto quando nenhuma imagem de capa for fornecida.",
       "pdfEngine": "Motor de PDF",
       "pdfEngineDesc": "Motor usado na exportação de PDF. Auto escolhe um motor LaTeX instalado. O wkhtmltopdf funciona sem LaTeX, mas a fonte de exportação não se aplica a ele.",
-      "pdfEngineAuto": "Auto (recomendado)",
-      "subtreeTitleSource": "Título ao exportar pasta",
-      "subtreeTitleSourceDesc": "O que a página de título e os metadados de uma exportação de pasta nomeiam: a pasta exportada ou o projeto inteiro.",
-      "subtreeTitleFolder": "Nome da pasta",
-      "subtreeTitleProject": "Título do projeto"
+      "pdfEngineAuto": "Auto (recomendado)"
     },
     "log": {
       "heading": "Log diário de escrita",
@@ -541,7 +537,14 @@
     "exportFailed": "Falha na exportação: {{error}}",
     "cancel": "Cancelar",
     "pandocWarning": "O Pandoc não foi encontrado. Verifique o campo \"Caminho do Pandoc\" nas configurações de exportação — esta exportação provavelmente falhará.",
-    "includeFolderHeadings": "Incluir nomes de pastas como títulos"
+    "includeFolderHeadings": "Incluir nomes de pastas como títulos",
+    "titleName": "Título",
+    "titleFolder": "Nome da pasta",
+    "titleProjectFolder": "Projeto — pasta",
+    "titleProject": "Nome do projeto",
+    "titleCustom": "Digite seu próprio título",
+    "customTitleName": "Título personalizado",
+    "customTitlePlaceholder": "Digite um título"
   },
   "publishModal": {
     "title": "Publicar no WordPress",

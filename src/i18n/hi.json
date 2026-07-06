@@ -115,11 +115,7 @@
       "includeCoverDesc": "कवर छवि न होने पर टेक्स्ट कवर पृष्ठ उत्पन्न करें।",
       "pdfEngine": "PDF इंजन",
       "pdfEngineDesc": "PDF निर्यात के लिए उपयोग होने वाला इंजन। स्वचालित मोड इंस्टॉल किया गया LaTeX इंजन चुनता है। wkhtmltopdf बिना LaTeX के काम करता है, लेकिन निर्यात फ़ॉन्ट सेटिंग उस पर लागू नहीं होती।",
-      "pdfEngineAuto": "स्वचालित (अनुशंसित)",
-      "subtreeTitleSource": "फ़ोल्डर निर्यात का शीर्षक",
-      "subtreeTitleSourceDesc": "फ़ोल्डर निर्यात का शीर्षक पृष्ठ और मेटाडेटा किसे दर्शाएँ: निर्यात किया गया फ़ोल्डर या पूरा प्रोजेक्ट।",
-      "subtreeTitleFolder": "फ़ोल्डर का नाम",
-      "subtreeTitleProject": "प्रोजेक्ट का शीर्षक"
+      "pdfEngineAuto": "स्वचालित (अनुशंसित)"
     },
     "log": {
       "heading": "दैनिक लेखन लॉग",
@@ -541,7 +537,14 @@
     "exportFailed": "निर्यात विफल: {{error}}",
     "cancel": "रद्द करें",
     "pandocWarning": "Pandoc नहीं मिला। निर्यात सेटिंग्स में \"Pandoc पथ\" फ़ील्ड जाँचें — यह निर्यात संभवतः विफल होगा।",
-    "includeFolderHeadings": "फ़ोल्डर नामों को शीर्षक के रूप में शामिल करें"
+    "includeFolderHeadings": "फ़ोल्डर नामों को शीर्षक के रूप में शामिल करें",
+    "titleName": "शीर्षक",
+    "titleFolder": "फ़ोल्डर नाम",
+    "titleProjectFolder": "प्रोजेक्ट — फ़ोल्डर",
+    "titleProject": "प्रोजेक्ट नाम",
+    "titleCustom": "अपना शीर्षक लिखें",
+    "customTitleName": "कस्टम शीर्षक",
+    "customTitlePlaceholder": "शीर्षक दर्ज करें"
   },
   "publishModal": {
     "title": "WordPress पर प्रकाशित करें",

@@ -392,20 +392,19 @@ describe('ExportEngine.compileContent from the manuscript zone (#232)', () => {
       subtreeRoot: 'Projects/My Book/020~ Part One',
     }));
 
-    expect(outputPath).toMatch(/^Projects\/My Book\/Exports\/My Book-Part One-.*\.md$/);
+    expect(outputPath).toMatch(/^Projects\/My Book\/Exports\/Part One-.*\.md$/);
     expect(files.files.get(outputPath)).toContain('Chapter body.');
   });
 });
 
-// #244: the "Export folder title" setting decides what a subtree export's
-// title page and metadata name — folder display name (default) or project.
-describe('subtree export title source (#244)', () => {
+// #260: one title names the export everywhere — filename, title page, and
+// metadata are identical. The engine default mirrors the dialog's: folder
+// display name for a folder export, else the project title.
+describe('export title authority (#260)', () => {
   const SUBTREE = 'Projects/My Book/020~ Part One';
 
-  it('folder mode is the default: the title page opens with the folder display name', async () => {
+  it('a folder export defaults to opening with only the folder display name', async () => {
     const { engine } = await makeFsWorld();
-    // The fake settings carry no subtreeExportTitleSource — proving the
-    // absent/default case behaves as folder mode
 
     const compiled = await engine.compileContent(projectOpts({
       subtreeRoot: SUBTREE,
@@ -413,17 +412,19 @@ describe('subtree export title source (#244)', () => {
     }));
 
     const today = new Date().toLocaleDateString();
-    expect(compiled.startsWith(`# Part One\n\nMy Book\n\nBy Avery\n\n${today}`)).toBe(true);
-    expect(compiled).not.toContain('# My Book');
+    // No project-title paragraph beneath the heading — the "Project — folder"
+    // dropdown choice is the home of that combined form (#260 mock, approved)
+    expect(compiled.startsWith(`# Part One\n\nBy Avery\n\n${today}`)).toBe(true);
+    expect(compiled).not.toContain('My Book');
   });
 
-  it('project mode reproduces the pre-#244 subtree title page byte-for-byte', async () => {
-    const { engine, plugin } = await makeFsWorld();
-    (plugin.settings as Record<string, unknown>).subtreeExportTitleSource = 'project';
+  it('an explicit project-name title reproduces the pre-#244 subtree title page byte-for-byte', async () => {
+    const { engine } = await makeFsWorld();
 
     const compiled = await engine.compileContent(projectOpts({
       subtreeRoot: SUBTREE,
       addTitlePage: true,
+      exportTitle: 'My Book',
     }));
 
     const today = new Date().toLocaleDateString();
@@ -431,15 +432,51 @@ describe('subtree export title source (#244)', () => {
     expect(compiled).not.toContain('Part One\n\nMy Book');
   });
 
-  it('an entire-project title page is identical in both modes', async () => {
-    const { engine, plugin } = await makeFsWorld();
+  it('a composed "Project — folder" title arrives as one heading', async () => {
+    const { engine } = await makeFsWorld();
 
-    const folderMode = await engine.compileContent(projectOpts({ addTitlePage: true }));
-    (plugin.settings as Record<string, unknown>).subtreeExportTitleSource = 'project';
-    const projectMode = await engine.compileContent(projectOpts({ addTitlePage: true }));
+    const compiled = await engine.compileContent(projectOpts({
+      subtreeRoot: SUBTREE,
+      addTitlePage: true,
+      exportTitle: 'My Book — Part One',
+    }));
 
-    expect(folderMode).toBe(projectMode);
-    expect(folderMode.startsWith('# My Book\n\n')).toBe(true);
+    expect(compiled.startsWith('# My Book — Part One\n\nBy Avery\n\n')).toBe(true);
+  });
+
+  it('a custom title names the filename, title page, and html metadata identically', async () => {
+    const { engine, files } = await makeFsWorld();
+
+    const outputPath = await engine.export(projectOpts({
+      format: 'html',
+      addTitlePage: true,
+      exportTitle: 'Early Drafts',
+    }));
+
+    expect(outputPath).toMatch(/^Projects\/My Book\/Exports\/Early Drafts-.*\.html$/);
+    const written = files.files.get(outputPath) ?? '';
+    expect(written).toContain('<title>Early Drafts</title>');
+    expect(written).toContain('Early Drafts</h1>');
+  });
+
+  it('reserved path characters in a custom title are sanitized in the filename only', async () => {
+    const { engine, files } = await makeFsWorld();
+
+    const outputPath = await engine.export(projectOpts({
+      addTitlePage: true,
+      exportTitle: 'Draft: v2?',
+    }));
+
+    expect(outputPath).toMatch(/^Projects\/My Book\/Exports\/Draft- v2--.*\.md$/);
+    expect(files.files.get(outputPath)).toContain('# Draft: v2?');
+  });
+
+  it('a whole-project export still defaults to the project title', async () => {
+    const { engine } = await makeFsWorld();
+
+    const compiled = await engine.compileContent(projectOpts({ addTitlePage: true }));
+
+    expect(compiled.startsWith('# My Book\n\n')).toBe(true);
   });
 });
 

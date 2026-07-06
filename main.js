@@ -213,7 +213,7 @@ var getPathWithDefaults = (data, defaultData, key) => {
 var deepExtend = (target, source, overwrite) => {
   for (const prop in source) {
     if (prop !== "__proto__" && prop !== "constructor") {
-      if (prop in target) {
+      if (Object.prototype.hasOwnProperty.call(target, prop)) {
         if (isString(target[prop]) || target[prop] instanceof String || isString(source[prop]) || source[prop] instanceof String) {
           if (overwrite) target[prop] = source[prop];
         } else {
@@ -2505,11 +2505,7 @@ var en_default = {
       includeCoverDesc: "Generate a text cover page when no cover image is provided.",
       pdfEngine: "PDF engine",
       pdfEngineDesc: "Engine used for PDF export. Auto picks an installed LaTeX engine. wkhtmltopdf works without LaTeX, but the export font setting does not apply to it.",
-      pdfEngineAuto: "Auto (recommended)",
-      subtreeTitleSource: "Export folder title",
-      subtreeTitleSourceDesc: "What a folder export's title page and metadata name: the exported folder or the whole project.",
-      subtreeTitleFolder: "Folder name",
-      subtreeTitleProject: "Project title"
+      pdfEngineAuto: "Auto (recommended)"
     },
     log: {
       heading: "Daily writing log",
@@ -2931,7 +2927,14 @@ var en_default = {
     exportFailed: "Export failed: {{error}}",
     cancel: "Cancel",
     pandocWarning: 'Pandoc was not found. Check the "Pandoc path" field in the export settings \u2014 this export will likely fail.',
-    includeFolderHeadings: "Include folder names as headings"
+    includeFolderHeadings: "Include folder names as headings",
+    titleName: "Title",
+    titleFolder: "Folder name",
+    titleProjectFolder: "Project \u2014 folder",
+    titleProject: "Project name",
+    titleCustom: "Type your own title",
+    customTitleName: "Custom title",
+    customTitlePlaceholder: "Enter a title"
   },
   publishModal: {
     title: "Publish to WordPress",
@@ -3258,11 +3261,7 @@ var zh_default = {
       includeCoverDesc: "\u672A\u63D0\u4F9B\u5C01\u9762\u56FE\u7247\u65F6\u81EA\u52A8\u751F\u6210\u6587\u5B57\u5C01\u9762\u9875\u3002",
       pdfEngine: "PDF \u5F15\u64CE",
       pdfEngineDesc: "\u7528\u4E8E PDF \u5BFC\u51FA\u7684\u5F15\u64CE\u3002\u81EA\u52A8\u6A21\u5F0F\u4F1A\u9009\u62E9\u5DF2\u5B89\u88C5\u7684 LaTeX \u5F15\u64CE\u3002wkhtmltopdf \u65E0\u9700 LaTeX \u5373\u53EF\u4F7F\u7528\uFF0C\u4F46\u5BFC\u51FA\u5B57\u4F53\u8BBE\u7F6E\u5BF9\u5176\u65E0\u6548\u3002",
-      pdfEngineAuto: "\u81EA\u52A8\uFF08\u63A8\u8350\uFF09",
-      subtreeTitleSource: "\u5BFC\u51FA\u6587\u4EF6\u5939\u7684\u6807\u9898",
-      subtreeTitleSourceDesc: "\u5BFC\u51FA\u6587\u4EF6\u5939\u65F6\u6807\u9898\u9875\u548C\u5143\u6570\u636E\u663E\u793A\u7684\u540D\u79F0\uFF1A\u5BFC\u51FA\u7684\u6587\u4EF6\u5939\u6216\u6574\u4E2A\u9879\u76EE\u3002",
-      subtreeTitleFolder: "\u6587\u4EF6\u5939\u540D\u79F0",
-      subtreeTitleProject: "\u9879\u76EE\u6807\u9898"
+      pdfEngineAuto: "\u81EA\u52A8\uFF08\u63A8\u8350\uFF09"
     },
     log: {
       heading: "\u6BCF\u65E5\u5199\u4F5C\u65E5\u5FD7",
@@ -3684,7 +3683,14 @@ var zh_default = {
     exportFailed: "\u5BFC\u51FA\u5931\u8D25\uFF1A{{error}}",
     cancel: "\u53D6\u6D88",
     pandocWarning: '\u672A\u627E\u5230 Pandoc\u3002\u8BF7\u68C0\u67E5\u5BFC\u51FA\u8BBE\u7F6E\u4E2D\u7684"Pandoc \u8DEF\u5F84"\u5B57\u6BB5\u2014\u2014\u6B64\u6B21\u5BFC\u51FA\u5F88\u53EF\u80FD\u5931\u8D25\u3002',
-    includeFolderHeadings: "\u5C06\u6587\u4EF6\u5939\u540D\u79F0\u4F5C\u4E3A\u6807\u9898\u5305\u542B"
+    includeFolderHeadings: "\u5C06\u6587\u4EF6\u5939\u540D\u79F0\u4F5C\u4E3A\u6807\u9898\u5305\u542B",
+    titleName: "\u6807\u9898",
+    titleFolder: "\u6587\u4EF6\u5939\u540D\u79F0",
+    titleProjectFolder: "\u9879\u76EE \u2014 \u6587\u4EF6\u5939",
+    titleProject: "\u9879\u76EE\u540D\u79F0",
+    titleCustom: "\u8F93\u5165\u81EA\u5DF1\u7684\u6807\u9898",
+    customTitleName: "\u81EA\u5B9A\u4E49\u6807\u9898",
+    customTitlePlaceholder: "\u8F93\u5165\u6807\u9898"
   },
   publishModal: {
     title: "\u53D1\u5E03\u5230 WordPress",
@@ -4011,11 +4017,7 @@ var hi_default = {
       includeCoverDesc: "\u0915\u0935\u0930 \u091B\u0935\u093F \u0928 \u0939\u094B\u0928\u0947 \u092A\u0930 \u091F\u0947\u0915\u094D\u0938\u094D\u091F \u0915\u0935\u0930 \u092A\u0943\u0937\u094D\u0920 \u0909\u0924\u094D\u092A\u0928\u094D\u0928 \u0915\u0930\u0947\u0902\u0964",
       pdfEngine: "PDF \u0907\u0902\u091C\u0928",
       pdfEngineDesc: "PDF \u0928\u093F\u0930\u094D\u092F\u093E\u0924 \u0915\u0947 \u0932\u093F\u090F \u0909\u092A\u092F\u094B\u0917 \u0939\u094B\u0928\u0947 \u0935\u093E\u0932\u093E \u0907\u0902\u091C\u0928\u0964 \u0938\u094D\u0935\u091A\u093E\u0932\u093F\u0924 \u092E\u094B\u0921 \u0907\u0902\u0938\u094D\u091F\u0949\u0932 \u0915\u093F\u092F\u093E \u0917\u092F\u093E LaTeX \u0907\u0902\u091C\u0928 \u091A\u0941\u0928\u0924\u093E \u0939\u0948\u0964 wkhtmltopdf \u092C\u093F\u0928\u093E LaTeX \u0915\u0947 \u0915\u093E\u092E \u0915\u0930\u0924\u093E \u0939\u0948, \u0932\u0947\u0915\u093F\u0928 \u0928\u093F\u0930\u094D\u092F\u093E\u0924 \u092B\u093C\u0949\u0928\u094D\u091F \u0938\u0947\u091F\u093F\u0902\u0917 \u0909\u0938 \u092A\u0930 \u0932\u093E\u0917\u0942 \u0928\u0939\u0940\u0902 \u0939\u094B\u0924\u0940\u0964",
-      pdfEngineAuto: "\u0938\u094D\u0935\u091A\u093E\u0932\u093F\u0924 (\u0905\u0928\u0941\u0936\u0902\u0938\u093F\u0924)",
-      subtreeTitleSource: "\u092B\u093C\u094B\u0932\u094D\u0921\u0930 \u0928\u093F\u0930\u094D\u092F\u093E\u0924 \u0915\u093E \u0936\u0940\u0930\u094D\u0937\u0915",
-      subtreeTitleSourceDesc: "\u092B\u093C\u094B\u0932\u094D\u0921\u0930 \u0928\u093F\u0930\u094D\u092F\u093E\u0924 \u0915\u093E \u0936\u0940\u0930\u094D\u0937\u0915 \u092A\u0943\u0937\u094D\u0920 \u0914\u0930 \u092E\u0947\u091F\u093E\u0921\u0947\u091F\u093E \u0915\u093F\u0938\u0947 \u0926\u0930\u094D\u0936\u093E\u090F\u0901: \u0928\u093F\u0930\u094D\u092F\u093E\u0924 \u0915\u093F\u092F\u093E \u0917\u092F\u093E \u092B\u093C\u094B\u0932\u094D\u0921\u0930 \u092F\u093E \u092A\u0942\u0930\u093E \u092A\u094D\u0930\u094B\u091C\u0947\u0915\u094D\u091F\u0964",
-      subtreeTitleFolder: "\u092B\u093C\u094B\u0932\u094D\u0921\u0930 \u0915\u093E \u0928\u093E\u092E",
-      subtreeTitleProject: "\u092A\u094D\u0930\u094B\u091C\u0947\u0915\u094D\u091F \u0915\u093E \u0936\u0940\u0930\u094D\u0937\u0915"
+      pdfEngineAuto: "\u0938\u094D\u0935\u091A\u093E\u0932\u093F\u0924 (\u0905\u0928\u0941\u0936\u0902\u0938\u093F\u0924)"
     },
     log: {
       heading: "\u0926\u0948\u0928\u093F\u0915 \u0932\u0947\u0916\u0928 \u0932\u0949\u0917",
@@ -4437,7 +4439,14 @@ var hi_default = {
     exportFailed: "\u0928\u093F\u0930\u094D\u092F\u093E\u0924 \u0935\u093F\u092B\u0932: {{error}}",
     cancel: "\u0930\u0926\u094D\u0926 \u0915\u0930\u0947\u0902",
     pandocWarning: 'Pandoc \u0928\u0939\u0940\u0902 \u092E\u093F\u0932\u093E\u0964 \u0928\u093F\u0930\u094D\u092F\u093E\u0924 \u0938\u0947\u091F\u093F\u0902\u0917\u094D\u0938 \u092E\u0947\u0902 "Pandoc \u092A\u0925" \u092B\u093C\u0940\u0932\u094D\u0921 \u091C\u093E\u0901\u091A\u0947\u0902 \u2014 \u092F\u0939 \u0928\u093F\u0930\u094D\u092F\u093E\u0924 \u0938\u0902\u092D\u0935\u0924\u0903 \u0935\u093F\u092B\u0932 \u0939\u094B\u0917\u093E\u0964',
-    includeFolderHeadings: "\u092B\u093C\u094B\u0932\u094D\u0921\u0930 \u0928\u093E\u092E\u094B\u0902 \u0915\u094B \u0936\u0940\u0930\u094D\u0937\u0915 \u0915\u0947 \u0930\u0942\u092A \u092E\u0947\u0902 \u0936\u093E\u092E\u093F\u0932 \u0915\u0930\u0947\u0902"
+    includeFolderHeadings: "\u092B\u093C\u094B\u0932\u094D\u0921\u0930 \u0928\u093E\u092E\u094B\u0902 \u0915\u094B \u0936\u0940\u0930\u094D\u0937\u0915 \u0915\u0947 \u0930\u0942\u092A \u092E\u0947\u0902 \u0936\u093E\u092E\u093F\u0932 \u0915\u0930\u0947\u0902",
+    titleName: "\u0936\u0940\u0930\u094D\u0937\u0915",
+    titleFolder: "\u092B\u093C\u094B\u0932\u094D\u0921\u0930 \u0928\u093E\u092E",
+    titleProjectFolder: "\u092A\u094D\u0930\u094B\u091C\u0947\u0915\u094D\u091F \u2014 \u092B\u093C\u094B\u0932\u094D\u0921\u0930",
+    titleProject: "\u092A\u094D\u0930\u094B\u091C\u0947\u0915\u094D\u091F \u0928\u093E\u092E",
+    titleCustom: "\u0905\u092A\u0928\u093E \u0936\u0940\u0930\u094D\u0937\u0915 \u0932\u093F\u0916\u0947\u0902",
+    customTitleName: "\u0915\u0938\u094D\u091F\u092E \u0936\u0940\u0930\u094D\u0937\u0915",
+    customTitlePlaceholder: "\u0936\u0940\u0930\u094D\u0937\u0915 \u0926\u0930\u094D\u091C \u0915\u0930\u0947\u0902"
   },
   publishModal: {
     title: "WordPress \u092A\u0930 \u092A\u094D\u0930\u0915\u093E\u0936\u093F\u0924 \u0915\u0930\u0947\u0902",
@@ -4764,11 +4773,7 @@ var es_default = {
       includeCoverDesc: "Generar una portada de texto cuando no se proporciona imagen de portada.",
       pdfEngine: "Motor de PDF",
       pdfEngineDesc: "Motor usado para exportar a PDF. Auto elige un motor LaTeX instalado. wkhtmltopdf funciona sin LaTeX, pero la fuente de exportaci\xF3n no se aplica con \xE9l.",
-      pdfEngineAuto: "Auto (recomendado)",
-      subtreeTitleSource: "T\xEDtulo al exportar carpeta",
-      subtreeTitleSourceDesc: "Qu\xE9 nombran la portada y los metadatos al exportar una carpeta: la carpeta exportada o el proyecto completo.",
-      subtreeTitleFolder: "Nombre de la carpeta",
-      subtreeTitleProject: "T\xEDtulo del proyecto"
+      pdfEngineAuto: "Auto (recomendado)"
     },
     log: {
       heading: "Registro diario de escritura",
@@ -5190,7 +5195,14 @@ var es_default = {
     exportFailed: "Error de exportaci\xF3n: {{error}}",
     cancel: "Cancelar",
     pandocWarning: 'No se encontr\xF3 Pandoc. Revisa el campo "Ruta de Pandoc" en los ajustes de exportaci\xF3n: esta exportaci\xF3n probablemente fallar\xE1.',
-    includeFolderHeadings: "Incluir nombres de carpetas como encabezados"
+    includeFolderHeadings: "Incluir nombres de carpetas como encabezados",
+    titleName: "T\xEDtulo",
+    titleFolder: "Nombre de la carpeta",
+    titleProjectFolder: "Proyecto \u2014 carpeta",
+    titleProject: "Nombre del proyecto",
+    titleCustom: "Escribe tu propio t\xEDtulo",
+    customTitleName: "T\xEDtulo personalizado",
+    customTitlePlaceholder: "Introduce un t\xEDtulo"
   },
   publishModal: {
     title: "Publicar en WordPress",
@@ -5517,11 +5529,7 @@ var ar_default = {
       includeCoverDesc: "\u0625\u0646\u0634\u0627\u0621 \u0635\u0641\u062D\u0629 \u063A\u0644\u0627\u0641 \u0646\u0635\u064A\u0629 \u0639\u0646\u062F \u0639\u062F\u0645 \u062A\u0648\u0641\u0631 \u0635\u0648\u0631\u0629 \u063A\u0644\u0627\u0641.",
       pdfEngine: "\u0645\u062D\u0631\u0643 PDF",
       pdfEngineDesc: "\u0627\u0644\u0645\u062D\u0631\u0643 \u0627\u0644\u0645\u0633\u062A\u062E\u062F\u0645 \u0644\u062A\u0635\u062F\u064A\u0631 PDF. \u064A\u062E\u062A\u0627\u0631 \u0627\u0644\u0648\u0636\u0639 \u0627\u0644\u062A\u0644\u0642\u0627\u0626\u064A \u0645\u062D\u0631\u0643 LaTeX \u0645\u062B\u0628\u062A\u064B\u0627. \u064A\u0639\u0645\u0644 wkhtmltopdf \u062F\u0648\u0646 LaTeX\u060C \u0644\u0643\u0646 \u0625\u0639\u062F\u0627\u062F \u062E\u0637 \u0627\u0644\u062A\u0635\u062F\u064A\u0631 \u0644\u0627 \u064A\u0646\u0637\u0628\u0642 \u0639\u0644\u064A\u0647.",
-      pdfEngineAuto: "\u062A\u0644\u0642\u0627\u0626\u064A (\u0645\u0648\u0635\u0649 \u0628\u0647)",
-      subtreeTitleSource: "\u0639\u0646\u0648\u0627\u0646 \u062A\u0635\u062F\u064A\u0631 \u0627\u0644\u0645\u062C\u0644\u062F",
-      subtreeTitleSourceDesc: "\u0645\u0627 \u062A\u0634\u064A\u0631 \u0625\u0644\u064A\u0647 \u0635\u0641\u062D\u0629 \u0627\u0644\u0639\u0646\u0648\u0627\u0646 \u0648\u0627\u0644\u0628\u064A\u0627\u0646\u0627\u062A \u0627\u0644\u0648\u0635\u0641\u064A\u0629 \u0639\u0646\u062F \u062A\u0635\u062F\u064A\u0631 \u0645\u062C\u0644\u062F: \u0627\u0644\u0645\u062C\u0644\u062F \u0627\u0644\u0645\u064F\u0635\u062F\u064E\u0651\u0631 \u0623\u0648 \u0627\u0644\u0645\u0634\u0631\u0648\u0639 \u0628\u0623\u0643\u0645\u0644\u0647.",
-      subtreeTitleFolder: "\u0627\u0633\u0645 \u0627\u0644\u0645\u062C\u0644\u062F",
-      subtreeTitleProject: "\u0639\u0646\u0648\u0627\u0646 \u0627\u0644\u0645\u0634\u0631\u0648\u0639"
+      pdfEngineAuto: "\u062A\u0644\u0642\u0627\u0626\u064A (\u0645\u0648\u0635\u0649 \u0628\u0647)"
     },
     log: {
       heading: "\u0633\u062C\u0644 \u0627\u0644\u0643\u062A\u0627\u0628\u0629 \u0627\u0644\u064A\u0648\u0645\u064A",
@@ -5959,7 +5967,14 @@ var ar_default = {
     exportFailed: "\u0641\u0634\u0644 \u0627\u0644\u062A\u0635\u062F\u064A\u0631: {{error}}",
     cancel: "\u0625\u0644\u063A\u0627\u0621",
     pandocWarning: '\u0644\u0645 \u064A\u062A\u0645 \u0627\u0644\u0639\u062B\u0648\u0631 \u0639\u0644\u0649 Pandoc. \u062A\u062D\u0642\u0642 \u0645\u0646 \u062D\u0642\u0644 "\u0645\u0633\u0627\u0631 Pandoc" \u0641\u064A \u0625\u0639\u062F\u0627\u062F\u0627\u062A \u0627\u0644\u062A\u0635\u062F\u064A\u0631 \u2014 \u0645\u0646 \u0627\u0644\u0645\u0631\u062C\u062D \u0623\u0646 \u064A\u0641\u0634\u0644 \u0647\u0630\u0627 \u0627\u0644\u062A\u0635\u062F\u064A\u0631.',
-    includeFolderHeadings: "\u062A\u0636\u0645\u064A\u0646 \u0623\u0633\u0645\u0627\u0621 \u0627\u0644\u0645\u062C\u0644\u062F\u0627\u062A \u0643\u0639\u0646\u0627\u0648\u064A\u0646"
+    includeFolderHeadings: "\u062A\u0636\u0645\u064A\u0646 \u0623\u0633\u0645\u0627\u0621 \u0627\u0644\u0645\u062C\u0644\u062F\u0627\u062A \u0643\u0639\u0646\u0627\u0648\u064A\u0646",
+    titleName: "\u0627\u0644\u0639\u0646\u0648\u0627\u0646",
+    titleFolder: "\u0627\u0633\u0645 \u0627\u0644\u0645\u062C\u0644\u062F",
+    titleProjectFolder: "\u0627\u0644\u0645\u0634\u0631\u0648\u0639 \u2014 \u0627\u0644\u0645\u062C\u0644\u062F",
+    titleProject: "\u0627\u0633\u0645 \u0627\u0644\u0645\u0634\u0631\u0648\u0639",
+    titleCustom: "\u0627\u0643\u062A\u0628 \u0639\u0646\u0648\u0627\u0646\u0643 \u0627\u0644\u062E\u0627\u0635",
+    customTitleName: "\u0639\u0646\u0648\u0627\u0646 \u0645\u062E\u0635\u0635",
+    customTitlePlaceholder: "\u0623\u062F\u062E\u0644 \u0639\u0646\u0648\u0627\u0646\u064B\u0627"
   },
   publishModal: {
     title: "\u0646\u0634\u0631 \u0625\u0644\u0649 WordPress",
@@ -6290,11 +6305,7 @@ var fr_default = {
       includeCoverDesc: "G\xE9n\xE9rer une page de couverture texte si aucune image de couverture n\u2019est fournie.",
       pdfEngine: "Moteur PDF",
       pdfEngineDesc: "Moteur utilis\xE9 pour l'export PDF. Auto choisit un moteur LaTeX install\xE9. wkhtmltopdf fonctionne sans LaTeX, mais la police d'export ne s'y applique pas.",
-      pdfEngineAuto: "Auto (recommand\xE9)",
-      subtreeTitleSource: "Titre de l\u2019export de dossier",
-      subtreeTitleSourceDesc: "Ce que la page de titre et les m\xE9tadonn\xE9es d\u2019un export de dossier d\xE9signent : le dossier export\xE9 ou le projet entier.",
-      subtreeTitleFolder: "Nom du dossier",
-      subtreeTitleProject: "Titre du projet"
+      pdfEngineAuto: "Auto (recommand\xE9)"
     },
     log: {
       heading: "Journal quotidien d\u2019\xE9criture",
@@ -6716,7 +6727,14 @@ var fr_default = {
     exportFailed: "\xC9chec de l'export : {{error}}",
     cancel: "Annuler",
     pandocWarning: "Pandoc est introuvable. V\xE9rifiez le champ \xAB Chemin de Pandoc \xBB dans les r\xE9glages d'export \u2014 cet export \xE9chouera probablement.",
-    includeFolderHeadings: "Inclure les noms de dossiers comme titres"
+    includeFolderHeadings: "Inclure les noms de dossiers comme titres",
+    titleName: "Titre",
+    titleFolder: "Nom du dossier",
+    titleProjectFolder: "Projet \u2014 dossier",
+    titleProject: "Nom du projet",
+    titleCustom: "Saisissez votre propre titre",
+    customTitleName: "Titre personnalis\xE9",
+    customTitlePlaceholder: "Saisissez un titre"
   },
   publishModal: {
     title: "Publier sur WordPress",
@@ -7043,11 +7061,7 @@ var bn_default = {
       includeCoverDesc: "\u0995\u09AD\u09BE\u09B0 \u099B\u09AC\u09BF \u09A8\u09BE \u09A5\u09BE\u0995\u09B2\u09C7 \u099F\u09C7\u0995\u09CD\u09B8\u099F \u0995\u09AD\u09BE\u09B0 \u09AA\u09C7\u099C \u09A4\u09C8\u09B0\u09BF \u0995\u09B0\u09C1\u09A8\u0964",
       pdfEngine: "PDF \u0987\u099E\u09CD\u099C\u09BF\u09A8",
       pdfEngineDesc: "PDF \u098F\u0995\u09CD\u09B8\u09AA\u09CB\u09B0\u09CD\u099F\u09C7 \u09AC\u09CD\u09AF\u09AC\u09B9\u09C3\u09A4 \u0987\u099E\u09CD\u099C\u09BF\u09A8\u0964 \u09B8\u09CD\u09AC\u09AF\u09BC\u0982\u0995\u09CD\u09B0\u09BF\u09AF\u09BC \u09AE\u09CB\u09A1 \u0987\u09A8\u09B8\u09CD\u099F\u09B2 \u0995\u09B0\u09BE LaTeX \u0987\u099E\u09CD\u099C\u09BF\u09A8 \u09AC\u09C7\u099B\u09C7 \u09A8\u09C7\u09AF\u09BC\u0964 wkhtmltopdf LaTeX \u099B\u09BE\u09A1\u09BC\u09BE\u0987 \u0995\u09BE\u099C \u0995\u09B0\u09C7, \u09A4\u09AC\u09C7 \u098F\u0995\u09CD\u09B8\u09AA\u09CB\u09B0\u09CD\u099F \u09AB\u09A8\u09CD\u099F \u09B8\u09C7\u099F\u09BF\u0982 \u098F\u09A4\u09C7 \u09AA\u09CD\u09B0\u09AF\u09CB\u099C\u09CD\u09AF \u09A8\u09AF\u09BC\u0964",
-      pdfEngineAuto: "\u09B8\u09CD\u09AC\u09AF\u09BC\u0982\u0995\u09CD\u09B0\u09BF\u09AF\u09BC (\u09AA\u09CD\u09B0\u09B8\u09CD\u09A4\u09BE\u09AC\u09BF\u09A4)",
-      subtreeTitleSource: "\u09AB\u09CB\u09B2\u09CD\u09A1\u09BE\u09B0 \u09B0\u09AA\u09CD\u09A4\u09BE\u09A8\u09BF\u09B0 \u09B6\u09BF\u09B0\u09CB\u09A8\u09BE\u09AE",
-      subtreeTitleSourceDesc: "\u09AB\u09CB\u09B2\u09CD\u09A1\u09BE\u09B0 \u09B0\u09AA\u09CD\u09A4\u09BE\u09A8\u09BF\u09B0 \u09B6\u09BF\u09B0\u09CB\u09A8\u09BE\u09AE \u09AA\u09BE\u09A4\u09BE \u0993 \u09AE\u09C7\u099F\u09BE\u09A1\u09C7\u099F\u09BE \u0995\u09C0 \u09A8\u09BF\u09B0\u09CD\u09A6\u09C7\u09B6 \u0995\u09B0\u09AC\u09C7: \u09B0\u09AA\u09CD\u09A4\u09BE\u09A8\u09BF \u0995\u09B0\u09BE \u09AB\u09CB\u09B2\u09CD\u09A1\u09BE\u09B0 \u09A8\u09BE\u0995\u09BF \u09AA\u09C1\u09B0\u09CB \u09AA\u09CD\u09B0\u0995\u09B2\u09CD\u09AA\u0964",
-      subtreeTitleFolder: "\u09AB\u09CB\u09B2\u09CD\u09A1\u09BE\u09B0\u09C7\u09B0 \u09A8\u09BE\u09AE",
-      subtreeTitleProject: "\u09AA\u09CD\u09B0\u0995\u09B2\u09CD\u09AA\u09C7\u09B0 \u09B6\u09BF\u09B0\u09CB\u09A8\u09BE\u09AE"
+      pdfEngineAuto: "\u09B8\u09CD\u09AC\u09AF\u09BC\u0982\u0995\u09CD\u09B0\u09BF\u09AF\u09BC (\u09AA\u09CD\u09B0\u09B8\u09CD\u09A4\u09BE\u09AC\u09BF\u09A4)"
     },
     log: {
       heading: "\u09A6\u09C8\u09A8\u09BF\u0995 \u09B2\u09C7\u0996\u09BE\u09B0 \u09B2\u0997",
@@ -7469,7 +7483,14 @@ var bn_default = {
     exportFailed: "\u09B0\u09AA\u09CD\u09A4\u09BE\u09A8\u09BF \u09AC\u09CD\u09AF\u09B0\u09CD\u09A5: {{error}}",
     cancel: "\u09AC\u09BE\u09A4\u09BF\u09B2",
     pandocWarning: 'Pandoc \u09AA\u09BE\u0993\u09AF\u09BC\u09BE \u09AF\u09BE\u09AF\u09BC\u09A8\u09BF\u0964 \u09B0\u09AA\u09CD\u09A4\u09BE\u09A8\u09BF \u09B8\u09C7\u099F\u09BF\u0982\u09B8\u09C7 "Pandoc \u09AA\u09BE\u09A5" \u09AB\u09BF\u09B2\u09CD\u09A1\u099F\u09BF \u09A6\u09C7\u0996\u09C1\u09A8 \u2014 \u098F\u0987 \u09B0\u09AA\u09CD\u09A4\u09BE\u09A8\u09BF \u09B8\u09AE\u09CD\u09AD\u09AC\u09A4 \u09AC\u09CD\u09AF\u09B0\u09CD\u09A5 \u09B9\u09AC\u09C7\u0964',
-    includeFolderHeadings: "\u09AB\u09CB\u09B2\u09CD\u09A1\u09BE\u09B0\u09C7\u09B0 \u09A8\u09BE\u09AE\u0997\u09C1\u09B2\u09BF \u09B6\u09BF\u09B0\u09CB\u09A8\u09BE\u09AE \u09B9\u09BF\u09B8\u09C7\u09AC\u09C7 \u0985\u09A8\u09CD\u09A4\u09B0\u09CD\u09AD\u09C1\u0995\u09CD\u09A4 \u0995\u09B0\u09C1\u09A8"
+    includeFolderHeadings: "\u09AB\u09CB\u09B2\u09CD\u09A1\u09BE\u09B0\u09C7\u09B0 \u09A8\u09BE\u09AE\u0997\u09C1\u09B2\u09BF \u09B6\u09BF\u09B0\u09CB\u09A8\u09BE\u09AE \u09B9\u09BF\u09B8\u09C7\u09AC\u09C7 \u0985\u09A8\u09CD\u09A4\u09B0\u09CD\u09AD\u09C1\u0995\u09CD\u09A4 \u0995\u09B0\u09C1\u09A8",
+    titleName: "\u09B6\u09BF\u09B0\u09CB\u09A8\u09BE\u09AE",
+    titleFolder: "\u09AB\u09CB\u09B2\u09CD\u09A1\u09BE\u09B0\u09C7\u09B0 \u09A8\u09BE\u09AE",
+    titleProjectFolder: "\u09AA\u09CD\u09B0\u099C\u09C7\u0995\u09CD\u099F \u2014 \u09AB\u09CB\u09B2\u09CD\u09A1\u09BE\u09B0",
+    titleProject: "\u09AA\u09CD\u09B0\u099C\u09C7\u0995\u09CD\u099F\u09C7\u09B0 \u09A8\u09BE\u09AE",
+    titleCustom: "\u09A8\u09BF\u099C\u09C7\u09B0 \u09B6\u09BF\u09B0\u09CB\u09A8\u09BE\u09AE \u09B2\u09BF\u0996\u09C1\u09A8",
+    customTitleName: "\u0995\u09BE\u09B8\u09CD\u099F\u09AE \u09B6\u09BF\u09B0\u09CB\u09A8\u09BE\u09AE",
+    customTitlePlaceholder: "\u098F\u0995\u099F\u09BF \u09B6\u09BF\u09B0\u09CB\u09A8\u09BE\u09AE \u09B2\u09BF\u0996\u09C1\u09A8"
   },
   publishModal: {
     title: "WordPress-\u098F \u09AA\u09CD\u09B0\u0995\u09BE\u09B6 \u0995\u09B0\u09C1\u09A8",
@@ -7796,11 +7817,7 @@ var pt_BR_default = {
       includeCoverDesc: "Gerar uma capa de texto quando nenhuma imagem de capa for fornecida.",
       pdfEngine: "Motor de PDF",
       pdfEngineDesc: "Motor usado na exporta\xE7\xE3o de PDF. Auto escolhe um motor LaTeX instalado. O wkhtmltopdf funciona sem LaTeX, mas a fonte de exporta\xE7\xE3o n\xE3o se aplica a ele.",
-      pdfEngineAuto: "Auto (recomendado)",
-      subtreeTitleSource: "T\xEDtulo ao exportar pasta",
-      subtreeTitleSourceDesc: "O que a p\xE1gina de t\xEDtulo e os metadados de uma exporta\xE7\xE3o de pasta nomeiam: a pasta exportada ou o projeto inteiro.",
-      subtreeTitleFolder: "Nome da pasta",
-      subtreeTitleProject: "T\xEDtulo do projeto"
+      pdfEngineAuto: "Auto (recomendado)"
     },
     log: {
       heading: "Log di\xE1rio de escrita",
@@ -8222,7 +8239,14 @@ var pt_BR_default = {
     exportFailed: "Falha na exporta\xE7\xE3o: {{error}}",
     cancel: "Cancelar",
     pandocWarning: 'O Pandoc n\xE3o foi encontrado. Verifique o campo "Caminho do Pandoc" nas configura\xE7\xF5es de exporta\xE7\xE3o \u2014 esta exporta\xE7\xE3o provavelmente falhar\xE1.',
-    includeFolderHeadings: "Incluir nomes de pastas como t\xEDtulos"
+    includeFolderHeadings: "Incluir nomes de pastas como t\xEDtulos",
+    titleName: "T\xEDtulo",
+    titleFolder: "Nome da pasta",
+    titleProjectFolder: "Projeto \u2014 pasta",
+    titleProject: "Nome do projeto",
+    titleCustom: "Digite seu pr\xF3prio t\xEDtulo",
+    customTitleName: "T\xEDtulo personalizado",
+    customTitlePlaceholder: "Digite um t\xEDtulo"
   },
   publishModal: {
     title: "Publicar no WordPress",
@@ -8549,11 +8573,7 @@ var ru_default = {
       includeCoverDesc: "\u0421\u043E\u0437\u0434\u0430\u0442\u044C \u0442\u0435\u043A\u0441\u0442\u043E\u0432\u0443\u044E \u043E\u0431\u043B\u043E\u0436\u043A\u0443, \u0435\u0441\u043B\u0438 \u0438\u0437\u043E\u0431\u0440\u0430\u0436\u0435\u043D\u0438\u0435 \u043E\u0431\u043B\u043E\u0436\u043A\u0438 \u043D\u0435 \u043F\u0440\u0435\u0434\u043E\u0441\u0442\u0430\u0432\u043B\u0435\u043D\u043E.",
       pdfEngine: "\u0414\u0432\u0438\u0436\u043E\u043A PDF",
       pdfEngineDesc: "\u0414\u0432\u0438\u0436\u043E\u043A \u0434\u043B\u044F \u044D\u043A\u0441\u043F\u043E\u0440\u0442\u0430 \u0432 PDF. \u0410\u0432\u0442\u043E \u0432\u044B\u0431\u0438\u0440\u0430\u0435\u0442 \u0443\u0441\u0442\u0430\u043D\u043E\u0432\u043B\u0435\u043D\u043D\u044B\u0439 \u0434\u0432\u0438\u0436\u043E\u043A LaTeX. wkhtmltopdf \u0440\u0430\u0431\u043E\u0442\u0430\u0435\u0442 \u0431\u0435\u0437 LaTeX, \u043D\u043E \u0448\u0440\u0438\u0444\u0442 \u044D\u043A\u0441\u043F\u043E\u0440\u0442\u0430 \u043A \u043D\u0435\u043C\u0443 \u043D\u0435 \u043F\u0440\u0438\u043C\u0435\u043D\u044F\u0435\u0442\u0441\u044F.",
-      pdfEngineAuto: "\u0410\u0432\u0442\u043E (\u0440\u0435\u043A\u043E\u043C\u0435\u043D\u0434\u0443\u0435\u0442\u0441\u044F)",
-      subtreeTitleSource: "\u0417\u0430\u0433\u043E\u043B\u043E\u0432\u043E\u043A \u043F\u0440\u0438 \u044D\u043A\u0441\u043F\u043E\u0440\u0442\u0435 \u043F\u0430\u043F\u043A\u0438",
-      subtreeTitleSourceDesc: "\u0427\u0442\u043E \u0443\u043A\u0430\u0437\u044B\u0432\u0430\u044E\u0442 \u0442\u0438\u0442\u0443\u043B\u044C\u043D\u0430\u044F \u0441\u0442\u0440\u0430\u043D\u0438\u0446\u0430 \u0438 \u043C\u0435\u0442\u0430\u0434\u0430\u043D\u043D\u044B\u0435 \u043F\u0440\u0438 \u044D\u043A\u0441\u043F\u043E\u0440\u0442\u0435 \u043F\u0430\u043F\u043A\u0438: \u044D\u043A\u0441\u043F\u043E\u0440\u0442\u0438\u0440\u0443\u0435\u043C\u0443\u044E \u043F\u0430\u043F\u043A\u0443 \u0438\u043B\u0438 \u0432\u0435\u0441\u044C \u043F\u0440\u043E\u0435\u043A\u0442.",
-      subtreeTitleFolder: "\u0418\u043C\u044F \u043F\u0430\u043F\u043A\u0438",
-      subtreeTitleProject: "\u041D\u0430\u0437\u0432\u0430\u043D\u0438\u0435 \u043F\u0440\u043E\u0435\u043A\u0442\u0430"
+      pdfEngineAuto: "\u0410\u0432\u0442\u043E (\u0440\u0435\u043A\u043E\u043C\u0435\u043D\u0434\u0443\u0435\u0442\u0441\u044F)"
     },
     log: {
       heading: "\u0415\u0436\u0435\u0434\u043D\u0435\u0432\u043D\u044B\u0439 \u0436\u0443\u0440\u043D\u0430\u043B \u043D\u0430\u043F\u0438\u0441\u0430\u043D\u0438\u044F",
@@ -8985,7 +9005,14 @@ var ru_default = {
     exportFailed: "\u041E\u0448\u0438\u0431\u043A\u0430 \u044D\u043A\u0441\u043F\u043E\u0440\u0442\u0430: {{error}}",
     cancel: "\u041E\u0442\u043C\u0435\u043D\u0430",
     pandocWarning: "Pandoc \u043D\u0435 \u043D\u0430\u0439\u0434\u0435\u043D. \u041F\u0440\u043E\u0432\u0435\u0440\u044C\u0442\u0435 \u043F\u043E\u043B\u0435 \xAB\u041F\u0443\u0442\u044C \u043A Pandoc\xBB \u0432 \u043D\u0430\u0441\u0442\u0440\u043E\u0439\u043A\u0430\u0445 \u044D\u043A\u0441\u043F\u043E\u0440\u0442\u0430 \u2014 \u044D\u043A\u0441\u043F\u043E\u0440\u0442, \u0441\u043A\u043E\u0440\u0435\u0435 \u0432\u0441\u0435\u0433\u043E, \u043D\u0435 \u0443\u0434\u0430\u0441\u0442\u0441\u044F.",
-    includeFolderHeadings: "\u0412\u043A\u043B\u044E\u0447\u0430\u0442\u044C \u0438\u043C\u0435\u043D\u0430 \u043F\u0430\u043F\u043E\u043A \u043A\u0430\u043A \u0437\u0430\u0433\u043E\u043B\u043E\u0432\u043A\u0438"
+    includeFolderHeadings: "\u0412\u043A\u043B\u044E\u0447\u0430\u0442\u044C \u0438\u043C\u0435\u043D\u0430 \u043F\u0430\u043F\u043E\u043A \u043A\u0430\u043A \u0437\u0430\u0433\u043E\u043B\u043E\u0432\u043A\u0438",
+    titleName: "\u041D\u0430\u0437\u0432\u0430\u043D\u0438\u0435",
+    titleFolder: "\u0418\u043C\u044F \u043F\u0430\u043F\u043A\u0438",
+    titleProjectFolder: "\u041F\u0440\u043E\u0435\u043A\u0442 \u2014 \u043F\u0430\u043F\u043A\u0430",
+    titleProject: "\u041D\u0430\u0437\u0432\u0430\u043D\u0438\u0435 \u043F\u0440\u043E\u0435\u043A\u0442\u0430",
+    titleCustom: "\u0412\u0432\u0435\u0434\u0438\u0442\u0435 \u0441\u043E\u0431\u0441\u0442\u0432\u0435\u043D\u043D\u043E\u0435 \u043D\u0430\u0437\u0432\u0430\u043D\u0438\u0435",
+    customTitleName: "\u0421\u043E\u0431\u0441\u0442\u0432\u0435\u043D\u043D\u043E\u0435 \u043D\u0430\u0437\u0432\u0430\u043D\u0438\u0435",
+    customTitlePlaceholder: "\u0412\u0432\u0435\u0434\u0438\u0442\u0435 \u043D\u0430\u0437\u0432\u0430\u043D\u0438\u0435"
   },
   publishModal: {
     title: "\u041E\u043F\u0443\u0431\u043B\u0438\u043A\u043E\u0432\u0430\u0442\u044C \u0432 WordPress",
@@ -9314,11 +9341,7 @@ var ja_default = {
       includeCoverDesc: "\u30AB\u30D0\u30FC\u753B\u50CF\u304C\u306A\u3044\u5834\u5408\u3001\u30C6\u30AD\u30B9\u30C8\u30AB\u30D0\u30FC\u30DA\u30FC\u30B8\u3092\u81EA\u52D5\u751F\u6210\u3057\u307E\u3059\u3002",
       pdfEngine: "PDF \u30A8\u30F3\u30B8\u30F3",
       pdfEngineDesc: "PDF \u66F8\u304D\u51FA\u3057\u306B\u4F7F\u3046\u30A8\u30F3\u30B8\u30F3\u3067\u3059\u3002\u81EA\u52D5\u3067\u306F\u30A4\u30F3\u30B9\u30C8\u30FC\u30EB\u6E08\u307F\u306E LaTeX \u30A8\u30F3\u30B8\u30F3\u3092\u9078\u3073\u307E\u3059\u3002wkhtmltopdf \u306F LaTeX \u4E0D\u8981\u3067\u3059\u304C\u3001\u66F8\u304D\u51FA\u3057\u30D5\u30A9\u30F3\u30C8\u8A2D\u5B9A\u306F\u9069\u7528\u3055\u308C\u307E\u305B\u3093\u3002",
-      pdfEngineAuto: "\u81EA\u52D5\uFF08\u63A8\u5968\uFF09",
-      subtreeTitleSource: "\u30D5\u30A9\u30EB\u30C0\u30FC\u66F8\u304D\u51FA\u3057\u6642\u306E\u30BF\u30A4\u30C8\u30EB",
-      subtreeTitleSourceDesc: "\u30D5\u30A9\u30EB\u30C0\u30FC\u66F8\u304D\u51FA\u3057\u306E\u30BF\u30A4\u30C8\u30EB\u30DA\u30FC\u30B8\u3068\u30E1\u30BF\u30C7\u30FC\u30BF\u304C\u793A\u3059\u540D\u524D\uFF1A\u66F8\u304D\u51FA\u3057\u305F\u30D5\u30A9\u30EB\u30C0\u30FC\u304B\u3001\u30D7\u30ED\u30B8\u30A7\u30AF\u30C8\u5168\u4F53\u304B\u3002",
-      subtreeTitleFolder: "\u30D5\u30A9\u30EB\u30C0\u30FC\u540D",
-      subtreeTitleProject: "\u30D7\u30ED\u30B8\u30A7\u30AF\u30C8\u306E\u30BF\u30A4\u30C8\u30EB"
+      pdfEngineAuto: "\u81EA\u52D5\uFF08\u63A8\u5968\uFF09"
     },
     log: {
       heading: "\u6BCE\u65E5\u306E\u57F7\u7B46\u30ED\u30B0",
@@ -9740,7 +9763,14 @@ var ja_default = {
     exportFailed: "\u30A8\u30AF\u30B9\u30DD\u30FC\u30C8\u306B\u5931\u6557\u3057\u307E\u3057\u305F\uFF1A{{error}}",
     cancel: "\u30AD\u30E3\u30F3\u30BB\u30EB",
     pandocWarning: "Pandoc\u304C\u898B\u3064\u304B\u308A\u307E\u305B\u3093\u3002\u30A8\u30AF\u30B9\u30DD\u30FC\u30C8\u8A2D\u5B9A\u306E\u300CPandoc\u306E\u30D1\u30B9\u300D\u3092\u78BA\u8A8D\u3057\u3066\u304F\u3060\u3055\u3044 \u2014 \u3053\u306E\u30A8\u30AF\u30B9\u30DD\u30FC\u30C8\u306F\u5931\u6557\u3059\u308B\u53EF\u80FD\u6027\u304C\u9AD8\u3044\u3067\u3059\u3002",
-    includeFolderHeadings: "\u30D5\u30A9\u30EB\u30C0\u30FC\u540D\u3092\u898B\u51FA\u3057\u3068\u3057\u3066\u542B\u3081\u308B"
+    includeFolderHeadings: "\u30D5\u30A9\u30EB\u30C0\u30FC\u540D\u3092\u898B\u51FA\u3057\u3068\u3057\u3066\u542B\u3081\u308B",
+    titleName: "\u30BF\u30A4\u30C8\u30EB",
+    titleFolder: "\u30D5\u30A9\u30EB\u30C0\u540D",
+    titleProjectFolder: "\u30D7\u30ED\u30B8\u30A7\u30AF\u30C8 \u2014 \u30D5\u30A9\u30EB\u30C0",
+    titleProject: "\u30D7\u30ED\u30B8\u30A7\u30AF\u30C8\u540D",
+    titleCustom: "\u81EA\u5206\u3067\u30BF\u30A4\u30C8\u30EB\u3092\u5165\u529B",
+    customTitleName: "\u30AB\u30B9\u30BF\u30E0\u30BF\u30A4\u30C8\u30EB",
+    customTitlePlaceholder: "\u30BF\u30A4\u30C8\u30EB\u3092\u5165\u529B"
   },
   publishModal: {
     title: "WordPress\u306B\u516C\u958B",
@@ -10067,11 +10097,7 @@ var de_default = {
       includeCoverDesc: "Eine Text-Umschlagseite generieren, wenn kein Umschlagbild vorhanden ist.",
       pdfEngine: "PDF-Engine",
       pdfEngineDesc: "Engine f\xFCr den PDF-Export. Auto w\xE4hlt eine installierte LaTeX-Engine. wkhtmltopdf funktioniert ohne LaTeX, die Exportschriftart gilt dort jedoch nicht.",
-      pdfEngineAuto: "Automatisch (empfohlen)",
-      subtreeTitleSource: "Titel beim Ordner-Export",
-      subtreeTitleSourceDesc: "Was Titelseite und Metadaten eines Ordner-Exports benennen: den exportierten Ordner oder das gesamte Projekt.",
-      subtreeTitleFolder: "Ordnername",
-      subtreeTitleProject: "Projekttitel"
+      pdfEngineAuto: "Automatisch (empfohlen)"
     },
     log: {
       heading: "T\xE4gliches Schreibprotokoll",
@@ -10493,7 +10519,14 @@ var de_default = {
     exportFailed: "Export fehlgeschlagen: {{error}}",
     cancel: "Abbrechen",
     pandocWarning: "Pandoc wurde nicht gefunden. Pr\xFCfe das Feld \u201EPandoc-Pfad\u201C in den Export-Einstellungen \u2014 dieser Export wird voraussichtlich fehlschlagen.",
-    includeFolderHeadings: "Ordnernamen als \xDCberschriften einf\xFCgen"
+    includeFolderHeadings: "Ordnernamen als \xDCberschriften einf\xFCgen",
+    titleName: "Titel",
+    titleFolder: "Ordnername",
+    titleProjectFolder: "Projekt \u2014 Ordner",
+    titleProject: "Projektname",
+    titleCustom: "Eigenen Titel eingeben",
+    customTitleName: "Eigener Titel",
+    customTitlePlaceholder: "Titel eingeben"
   },
   publishModal: {
     title: "Auf WordPress ver\xF6ffentlichen",
@@ -10820,11 +10853,7 @@ var ko_default = {
       includeCoverDesc: "\uD45C\uC9C0 \uC774\uBBF8\uC9C0\uAC00 \uC5C6\uC744 \uB54C \uD14D\uC2A4\uD2B8 \uD45C\uC9C0 \uD398\uC774\uC9C0\uB97C \uC0DD\uC131\uD569\uB2C8\uB2E4.",
       pdfEngine: "PDF \uC5D4\uC9C4",
       pdfEngineDesc: "PDF \uB0B4\uBCF4\uB0B4\uAE30\uC5D0 \uC0AC\uC6A9\uD560 \uC5D4\uC9C4\uC785\uB2C8\uB2E4. \uC790\uB3D9\uC740 \uC124\uCE58\uB41C LaTeX \uC5D4\uC9C4\uC744 \uC120\uD0DD\uD569\uB2C8\uB2E4. wkhtmltopdf\uB294 LaTeX \uC5C6\uC774 \uC791\uB3D9\uD558\uC9C0\uB9CC \uB0B4\uBCF4\uB0B4\uAE30 \uAE00\uAF34 \uC124\uC815\uC774 \uC801\uC6A9\uB418\uC9C0 \uC54A\uC2B5\uB2C8\uB2E4.",
-      pdfEngineAuto: "\uC790\uB3D9(\uAD8C\uC7A5)",
-      subtreeTitleSource: "\uD3F4\uB354 \uB0B4\uBCF4\uB0B4\uAE30 \uC81C\uBAA9",
-      subtreeTitleSourceDesc: "\uD3F4\uB354 \uB0B4\uBCF4\uB0B4\uAE30\uC758 \uC81C\uBAA9 \uD398\uC774\uC9C0\uC640 \uBA54\uD0C0\uB370\uC774\uD130\uC5D0 \uD45C\uC2DC\uD560 \uC774\uB984: \uB0B4\uBCF4\uB0B8 \uD3F4\uB354 \uB610\uB294 \uC804\uCCB4 \uD504\uB85C\uC81D\uD2B8.",
-      subtreeTitleFolder: "\uD3F4\uB354 \uC774\uB984",
-      subtreeTitleProject: "\uD504\uB85C\uC81D\uD2B8 \uC81C\uBAA9"
+      pdfEngineAuto: "\uC790\uB3D9(\uAD8C\uC7A5)"
     },
     log: {
       heading: "\uC77C\uC77C \uAE00\uC4F0\uAE30 \uB85C\uADF8",
@@ -11246,7 +11275,14 @@ var ko_default = {
     exportFailed: "\uB0B4\uBCF4\uB0B4\uAE30 \uC2E4\uD328: {{error}}",
     cancel: "\uCDE8\uC18C",
     pandocWarning: 'Pandoc\uC744 \uCC3E\uC744 \uC218 \uC5C6\uC2B5\uB2C8\uB2E4. \uB0B4\uBCF4\uB0B4\uAE30 \uC124\uC815\uC758 "Pandoc \uACBD\uB85C" \uD544\uB4DC\uB97C \uD655\uC778\uD558\uC138\uC694 \u2014 \uC774 \uB0B4\uBCF4\uB0B4\uAE30\uB294 \uC2E4\uD328\uD560 \uAC00\uB2A5\uC131\uC774 \uB192\uC2B5\uB2C8\uB2E4.',
-    includeFolderHeadings: "\uD3F4\uB354 \uC774\uB984\uC744 \uC81C\uBAA9\uC73C\uB85C \uD3EC\uD568"
+    includeFolderHeadings: "\uD3F4\uB354 \uC774\uB984\uC744 \uC81C\uBAA9\uC73C\uB85C \uD3EC\uD568",
+    titleName: "\uC81C\uBAA9",
+    titleFolder: "\uD3F4\uB354 \uC774\uB984",
+    titleProjectFolder: "\uD504\uB85C\uC81D\uD2B8 \u2014 \uD3F4\uB354",
+    titleProject: "\uD504\uB85C\uC81D\uD2B8 \uC774\uB984",
+    titleCustom: "\uC9C1\uC811 \uC81C\uBAA9 \uC785\uB825",
+    customTitleName: "\uC0AC\uC6A9\uC790 \uC9C0\uC815 \uC81C\uBAA9",
+    customTitlePlaceholder: "\uC81C\uBAA9 \uC785\uB825"
   },
   publishModal: {
     title: "WordPress\uC5D0 \uAC8C\uC2DC",
@@ -12473,8 +12509,30 @@ var import_obsidian15 = require("obsidian");
 
 // modals/ExportModal.ts
 var import_obsidian12 = require("obsidian");
+
+// src/exportTitle.ts
+function resolveExportTitle(choice, ctx) {
+  var _a2, _b2;
+  switch (choice) {
+    case "folder":
+      return (_a2 = ctx.folderName) != null ? _a2 : ctx.projectTitle;
+    case "project-folder":
+      return ctx.folderName ? `${ctx.projectTitle} \u2014 ${ctx.folderName}` : ctx.projectTitle;
+    case "project":
+      return ctx.projectTitle;
+    case "custom": {
+      const typed = ((_b2 = ctx.customTitle) != null ? _b2 : "").trim();
+      return typed.length > 0 ? typed : null;
+    }
+  }
+}
+function sanitizeTitleForFilename(title) {
+  return title.replace(/[\\/:*?"<>|]/g, "-");
+}
+
+// modals/ExportModal.ts
 var _ExportModal = class _ExportModal extends import_obsidian12.Modal {
-  constructor(app, plugin, initialScope = "current", subtreeRoot) {
+  constructor(app, plugin, initialScope = "current", subtreeRoot, initial) {
     super(app);
     this.exportScope = "current";
     this.includeFrontmatter = false;
@@ -12482,8 +12540,10 @@ var _ExportModal = class _ExportModal extends import_obsidian12.Modal {
     this.includeTitlesAsHeadings = true;
     this.includeFolderNames = false;
     this.addTitlePage = true;
+    this.customTitle = "";
     this.coverImagePath = "";
     this.authorContact = "";
+    this.exportBtn = null;
     this.pandocWarningEl = null;
     // Checked once per modal open, only when a pandoc format is selected
     this.pandocAvailable = null;
@@ -12491,6 +12551,19 @@ var _ExportModal = class _ExportModal extends import_obsidian12.Modal {
     this.format = plugin.settings.defaultExportFormat;
     this.exportScope = initialScope;
     this.subtreeRoot = subtreeRoot;
+    this.titleChoice = subtreeRoot ? "folder" : "project";
+    if (initial) {
+      this.exportScope = initial.scope;
+      this.subtreeRoot = initial.subtreeRoot;
+      this.currentFilePath = initial.currentFilePath;
+      this.includeFrontmatter = initial.includeFrontmatter;
+      this.includeResearch = initial.includeResearch;
+      this.includeTitlesAsHeadings = initial.includeTitlesAsHeadings;
+      this.includeFolderNames = initial.includeFolderNamesAsHeadings;
+      this.addTitlePage = initial.addTitlePage;
+      this.titleChoice = initial.titleChoice;
+      this.customTitle = initial.customTitle;
+    }
   }
   onOpen() {
     const { contentEl } = this;
@@ -12499,6 +12572,7 @@ var _ExportModal = class _ExportModal extends import_obsidian12.Modal {
     contentEl.createEl("h2", { text: t2("exportModal.title") });
     let coverSetting;
     let contactSetting;
+    let customTitleSetting;
     new import_obsidian12.Setting(contentEl).setName(t2("exportModal.formatName")).addDropdown((d) => d.addOption("md", t2("exportModal.format.md")).addOption("html", t2("exportModal.format.html")).addOption("manuscript", t2("exportModal.format.manuscript")).addOption("epub", t2("exportModal.format.epub")).addOption("pdf", t2("exportModal.format.pdf")).addOption("docx", t2("exportModal.format.docx")).addOption("rtf", t2("exportModal.format.rtf")).setValue(this.format).onChange((v) => {
       this.format = v;
       coverSetting.settingEl.toggleClass("ws-hidden", v !== "epub");
@@ -12520,6 +12594,25 @@ var _ExportModal = class _ExportModal extends import_obsidian12.Modal {
         this.exportScope = v;
       }));
     }
+    new import_obsidian12.Setting(contentEl).setName(t2("exportModal.titleName")).addDropdown((d) => {
+      if (this.subtreeRoot) {
+        d.addOption("folder", t2("exportModal.titleFolder"));
+        d.addOption("project-folder", t2("exportModal.titleProjectFolder"));
+      }
+      d.addOption("project", t2("exportModal.titleProject"));
+      d.addOption("custom", t2("exportModal.titleCustom"));
+      d.setValue(this.titleChoice);
+      d.onChange((v) => {
+        this.titleChoice = v;
+        customTitleSetting.settingEl.toggleClass("ws-hidden", v !== "custom");
+        this.updateExportEnabled();
+      });
+    });
+    customTitleSetting = new import_obsidian12.Setting(contentEl).setName(t2("exportModal.customTitleName")).addText((tx) => tx.setValue(this.customTitle).setPlaceholder(t2("exportModal.customTitlePlaceholder")).onChange((v) => {
+      this.customTitle = v;
+      this.updateExportEnabled();
+    }));
+    customTitleSetting.settingEl.toggleClass("ws-hidden", this.titleChoice !== "custom");
     new import_obsidian12.Setting(contentEl).setName(t2("exportModal.includeFrontmatter")).addToggle((tx) => tx.setValue(this.includeFrontmatter).onChange((v) => {
       this.includeFrontmatter = v;
     }));
@@ -12544,12 +12637,17 @@ var _ExportModal = class _ExportModal extends import_obsidian12.Modal {
       text: t2("exportModal.previewBtn")
     });
     previewBtn.onclick = async () => {
+      const state = this.uiState();
       this.close();
-      await this.plugin.openCompilePreview();
+      await this.plugin.openCompilePreview(state);
     };
     const btnRow = contentEl.createDiv("ws-modal-btn-row");
     const exportBtn = btnRow.createEl("button", { cls: "mod-cta", text: t2("exportModal.exportBtn") });
+    this.exportBtn = exportBtn;
+    this.updateExportEnabled();
     exportBtn.onclick = async () => {
+      const title = this.resolvedTitle();
+      if (title === null) return;
       exportBtn.disabled = true;
       exportBtn.textContent = t2("exportModal.exporting");
       try {
@@ -12561,6 +12659,8 @@ var _ExportModal = class _ExportModal extends import_obsidian12.Modal {
           includeTitlesAsHeadings: this.includeTitlesAsHeadings,
           includeFolderNamesAsHeadings: this.includeFolderNames,
           subtreeRoot: this.subtreeRoot,
+          exportTitle: title || void 0,
+          currentFile: this.currentFilePath,
           paperSize: this.plugin.settings.defaultPaperSize,
           font: this.plugin.settings.defaultExportFont,
           fontSize: this.plugin.settings.defaultExportFontSize,
@@ -12571,12 +12671,51 @@ var _ExportModal = class _ExportModal extends import_obsidian12.Modal {
         this.close();
       } catch (e) {
         new import_obsidian12.Notice(t2("exportModal.exportFailed", { error: e instanceof Error ? e.message : String(e) }));
-        exportBtn.disabled = false;
         exportBtn.textContent = t2("exportModal.exportBtn");
+        this.updateExportEnabled();
       }
     };
     const cancelBtn = btnRow.createEl("button", { text: t2("exportModal.cancel") });
     cancelBtn.onclick = () => this.close();
+  }
+  // The dialog's title choice resolved to the export's one title. Null while
+  // "Type your own title" is chosen with an empty field — Export stays
+  // disabled rather than inventing a fallback.
+  resolvedTitle() {
+    var _a2, _b2;
+    const project = this.plugin.projectManager.getActiveProject();
+    return resolveExportTitle(this.titleChoice, {
+      projectTitle: (_a2 = project == null ? void 0 : project.title) != null ? _a2 : "",
+      folderName: this.subtreeRoot ? parseFolderPrefix((_b2 = this.subtreeRoot.split("/").pop()) != null ? _b2 : "").displayName : void 0,
+      customTitle: this.customTitle
+    });
+  }
+  updateExportEnabled() {
+    if (this.exportBtn) {
+      this.exportBtn.disabled = this.resolvedTitle() === null;
+    }
+  }
+  // The dialog's current selections, handed to the compile preview so it
+  // renders exactly what this export would produce (#260)
+  uiState() {
+    var _a2, _b2;
+    let currentFilePath = this.currentFilePath;
+    if (this.exportScope === "current" && !currentFilePath) {
+      const view = (_a2 = this.app.workspace.getMostRecentLeaf()) == null ? void 0 : _a2.view;
+      currentFilePath = view instanceof import_obsidian12.MarkdownView ? (_b2 = view.file) == null ? void 0 : _b2.path : void 0;
+    }
+    return {
+      scope: this.exportScope,
+      subtreeRoot: this.subtreeRoot,
+      currentFilePath,
+      includeFrontmatter: this.includeFrontmatter,
+      includeResearch: this.includeResearch,
+      includeTitlesAsHeadings: this.includeTitlesAsHeadings,
+      includeFolderNamesAsHeadings: this.includeFolderNames,
+      addTitlePage: this.addTitlePage,
+      titleChoice: this.titleChoice,
+      customTitle: this.customTitle
+    };
   }
   // Warning only — the export attempt itself stays allowed
   updatePandocWarning() {
@@ -15533,1320 +15672,10 @@ var FilesystemBinderView = class extends import_obsidian18.ItemView {
 };
 
 // src/CompilePreview.ts
-var import_obsidian19 = require("obsidian");
-
-// src/sections.ts
-function splitSections(content2) {
-  const lines = content2.split("\n");
-  const sections = [];
-  let current = [];
-  let fence = null;
-  for (const line of lines) {
-    const fenceMatch = /^\s*(```|~~~)/.exec(line);
-    if (fenceMatch) {
-      if (fence === null) fence = fenceMatch[1];
-      else if (fenceMatch[1] === fence) fence = null;
-    }
-    if (fence === null && line.startsWith("# ") && current.length > 0) {
-      sections.push(current.join("\n"));
-      current = [];
-    }
-    current.push(line);
-  }
-  if (current.length > 0) sections.push(current.join("\n"));
-  return sections;
-}
-function sectionId(index) {
-  return `section-${index}`;
-}
-function buildJumpItems(sections) {
-  const items = [];
-  sections.forEach((section, index) => {
-    const h1 = /^# (.+)/.exec(section);
-    if (h1) items.push({ title: h1[1].trim(), id: sectionId(index) });
-  });
-  return items;
-}
-
-// src/CompilePreview.ts
-var COMPILE_PREVIEW_VIEW_TYPE = "writing-studio-compile-preview";
-var CompilePreviewView = class extends import_obsidian19.ItemView {
-  constructor(leaf, plugin) {
-    super(leaf);
-    this.content = "";
-    this.sections = [];
-    this.jumpItems = [];
-    // Virtual path inside the project folder so relative links and embeds in
-    // the rendered preview resolve from the project, not the vault root.
-    this.sourcePath = "";
-    this.plugin = plugin;
-  }
-  getViewType() {
-    return COMPILE_PREVIEW_VIEW_TYPE;
-  }
-  getDisplayText() {
-    return t2("compilePreview.displayText");
-  }
-  getIcon() {
-    return "layers";
-  }
-  onOpen() {
-    this.render();
-    return Promise.resolve();
-  }
-  async loadContent(opts = {}) {
-    const exportOpts = {
-      format: "md",
-      scope: "project",
-      includeFrontmatter: false,
-      includeResearch: opts.includeResearch || false,
-      includeTitlesAsHeadings: true,
-      paperSize: "letter",
-      font: "",
-      fontSize: 12,
-      addTitlePage: true
-    };
-    const project = this.plugin.projectManager.getActiveProject();
-    this.sourcePath = project ? (0, import_obsidian19.normalizePath)(`${project.folderPath}/_compile.md`) : "";
-    this.content = this.plugin.exportEngine.toMarkdown(await this.plugin.exportEngine.compileContent(exportOpts));
-    this.sections = splitSections(this.content);
-    this.jumpItems = buildJumpItems(this.sections);
-    this.render();
-  }
-  render() {
-    const container = this.containerEl.children[1];
-    container.empty();
-    container.addClass("ws-compile-preview-container");
-    const toolbar = container.createDiv("ws-compile-toolbar");
-    const jumpSel = toolbar.createEl("select", { cls: "ws-compile-jump" });
-    const defaultOpt = jumpSel.createEl("option", { text: t2("compilePreview.jumpToSection") });
-    defaultOpt.value = "";
-    for (const item of this.jumpItems) {
-      const opt = jumpSel.createEl("option", { text: item.title });
-      opt.value = item.id;
-    }
-    jumpSel.onchange = () => {
-      const id = jumpSel.value;
-      if (!id) return;
-      const el = container.querySelector(`[data-section-id="${id}"]`);
-      if (el) el.scrollIntoView({ behavior: "smooth" });
-    };
-    const exportBtn = toolbar.createEl("button", {
-      cls: "ws-compile-export-btn mod-cta",
-      text: t2("compilePreview.proceedToExport")
-    });
-    exportBtn.onclick = () => {
-      new ExportModal(this.app, this.plugin, "project").open();
-    };
-    const closeBtn = toolbar.createEl("button", {
-      cls: "ws-compile-close-btn",
-      text: t2("compilePreview.closePreview")
-    });
-    closeBtn.onclick = () => {
-      this.leaf.detach();
-    };
-    const contentDiv = container.createDiv("ws-compile-content markdown-reading-view");
-    if (!this.content) {
-      contentDiv.createEl("p", {
-        text: t2("compilePreview.noContent"),
-        cls: "ws-empty-state"
-      });
-      const loadBtn = contentDiv.createEl("button", {
-        cls: "ws-compile-load-btn mod-cta",
-        text: t2("compilePreview.loadCompilation")
-      });
-      loadBtn.onclick = safeHandler(async () => {
-        if (!this.plugin.projectManager.getActiveProject()) {
-          new import_obsidian19.Notice(t2("binder.selectProjectFirst"));
-          return;
-        }
-        await this.loadContent();
-      });
-      return;
-    }
-    this.sections.forEach((section, index) => {
-      const sectionDiv = contentDiv.createDiv("ws-compile-section");
-      if (section.startsWith("# ")) {
-        sectionDiv.setAttribute("data-section-id", sectionId(index));
-      }
-      void import_obsidian19.MarkdownRenderer.render(this.app, section, sectionDiv, this.sourcePath, this);
-    });
-  }
-  async onClose() {
-  }
-};
-
-// src/LauncherView.ts
 var import_obsidian20 = require("obsidian");
-var LAUNCHER_VIEW_TYPE = "writing-studio-launcher";
-var LauncherView = class extends import_obsidian20.ItemView {
-  constructor(leaf, plugin) {
-    super(leaf);
-    this.refreshTimer = null;
-    this.todayVals = [];
-    this.renderedSprintActive = false;
-    this.plugin = plugin;
-  }
-  getViewType() {
-    return LAUNCHER_VIEW_TYPE;
-  }
-  getDisplayText() {
-    return t2("launcher.displayText");
-  }
-  getIcon() {
-    return "feather";
-  }
-  async onOpen() {
-    this.plugin.activateStudio();
-    this.registerEvent(this.plugin.projectManager.onActiveProjectChanged(() => {
-      void this.refresh();
-    }));
-    this.registerEvent(this.plugin.projectManager.onProjectsChanged(() => {
-      void this.refresh();
-    }));
-    this.registerEvent(this.plugin.studioEvents.onModeChanged(() => {
-      void this.refresh();
-    }));
-    this.registerEvent(this.plugin.studioEvents.onFocusChanged(() => {
-      void this.refresh();
-    }));
-    this.registerEvent(this.plugin.studioEvents.onTypographyChanged(() => {
-      void this.refresh();
-    }));
-    this.registerEvent(this.plugin.studioEvents.onSprintChanged(() => {
-      void this.refresh();
-    }));
-    await this.render();
-    this.refreshTimer = window.setInterval(() => {
-      void this.tickRefresh();
-    }, 1e4);
-  }
-  async tickRefresh() {
-    const sprintActive = this.plugin.sprintTimer.isActive();
-    if (sprintActive !== this.renderedSprintActive) {
-      await this.render();
-      return;
-    }
-    await this.patchTodayCard();
-  }
-  async patchTodayCard() {
-    if (this.todayVals.length < 4) return;
-    const vals = this.todayVals;
-    const stats = this.plugin.statsTracker.getSessionStats();
-    const streak = await this.plugin.statsTracker.getStreak();
-    if (vals !== this.todayVals) return;
-    vals[0].textContent = stats.wordsWritten.toLocaleString();
-    vals[1].textContent = String(stats.sprintsCompleted);
-    vals[2].textContent = String(stats.totalMinutes);
-    vals[3].textContent = t2("launcher.stat.streakDays", { streak });
-  }
-  onClose() {
-    if (this.refreshTimer !== null) {
-      window.clearInterval(this.refreshTimer);
-      this.refreshTimer = null;
-    }
-    return Promise.resolve();
-  }
-  async refresh() {
-    await this.render();
-  }
-  async render() {
-    const root = this.containerEl.children[1];
-    root.empty();
-    this.todayVals = [];
-    this.renderedSprintActive = this.plugin.sprintTimer.isActive();
-    root.addClass("ws-launcher");
-    this.renderHeader(root);
-    await this.renderProjectCard(root);
-    this.renderModeSelector(root);
-    this.renderFocusToggles(root);
-    this.renderQuickActions(root);
-    this.renderSprintCard(root);
-    await this.renderTodayCard(root);
-  }
-  // ── Header ──────────────────────────────────────────────────────
-  renderHeader(root) {
-    const header = root.createDiv("ws-launcher-header");
-    header.createSpan({ text: t2("launcher.title"), cls: "ws-launcher-title" });
-    const settingsBtn = header.createEl("button", { cls: "ws-launcher-icon-btn", title: t2("launcher.settings") });
-    (0, import_obsidian20.setIcon)(settingsBtn, "settings");
-    settingsBtn.onclick = () => {
-      var _a2, _b2;
-      (_a2 = this.app.setting) == null ? void 0 : _a2.open();
-      (_b2 = this.app.setting) == null ? void 0 : _b2.openTabById("writing-studio");
-    };
-  }
-  // ── Project Card ─────────────────────────────────────────────────
-  async renderProjectCard(root) {
-    var _a2;
-    const project = this.plugin.projectManager.getActiveProject();
-    const card = root.createDiv("ws-launcher-card");
-    const cardHeader = card.createDiv("ws-launcher-card-header");
-    cardHeader.createSpan({ text: t2("launcher.project"), cls: "ws-launcher-card-label" });
-    if (this.plugin.projectManager.getProjects().length > 0) {
-      const newProjectBtn = cardHeader.createEl("button", { cls: "ws-launcher-text-btn", text: t2("launcher.newProject") });
-      newProjectBtn.onclick = () => {
-        new ProjectModal(this.app, this.plugin).open();
-      };
-    }
-    if (project) {
-      const editBtn = cardHeader.createEl("button", { cls: "ws-launcher-icon-btn", title: t2("projectModal.editTitle") });
-      (0, import_obsidian20.setIcon)(editBtn, "pencil");
-      editBtn.onclick = () => {
-        new ProjectModal(this.app, this.plugin, void 0, project).open();
-      };
-      const deleteBtn = cardHeader.createEl("button", { cls: "ws-launcher-icon-btn", title: t2("projectModal.deleteTitle") });
-      (0, import_obsidian20.setIcon)(deleteBtn, "trash");
-      deleteBtn.onclick = () => {
-        confirmDeleteProject(this.app, this.plugin, project);
-      };
-    }
-    if (!project) {
-      const projects2 = this.plugin.projectManager.getProjects();
-      if (projects2.length === 0) {
-        const intro = card.createDiv("ws-launcher-first-run");
-        intro.createDiv({ text: t2("launcher.firstRun.intro"), cls: "ws-launcher-first-run-text" });
-        intro.createDiv({ text: t2("launcher.firstRun.hint"), cls: "ws-launcher-first-run-text" });
-        const cta = card.createEl("button", { cls: "ws-launcher-action-btn mod-cta", text: t2("launcher.firstRun.cta") });
-        cta.onclick = () => {
-          new ProjectModal(this.app, this.plugin).open();
-        };
-        return;
-      }
-      const emptyRow = card.createDiv("ws-launcher-empty");
-      emptyRow.textContent = t2("launcher.noProjectSelected");
-      if (projects2.length > 0) {
-        const sel = card.createEl("select", { cls: "ws-launcher-project-sel" });
-        sel.createEl("option", { text: t2("launcher.chooseProject"), value: "" });
-        for (const p of projects2) {
-          sel.createEl("option", { text: p.title, value: p.id });
-        }
-        sel.onchange = async () => {
-          if (sel.value) {
-            await this.plugin.projectManager.setActiveProject(sel.value);
-            await this.refresh();
-          }
-        };
-      }
-      return;
-    }
-    const nameRow = card.createDiv("ws-launcher-project-name-row");
-    nameRow.createEl("strong", { text: project.title, cls: "ws-launcher-project-name" });
-    const projects = this.plugin.projectManager.getProjects();
-    if (projects.length > 1) {
-      const switchBtn = nameRow.createEl("button", { cls: "ws-launcher-icon-btn" });
-      (0, import_obsidian20.setIcon)(switchBtn, "chevrons-up-down");
-      (0, import_obsidian20.setTooltip)(switchBtn, t2("launcher.switchProject"));
-      switchBtn.onclick = (e) => {
-        const menu = new import_obsidian20.Menu();
-        for (const p of projects) {
-          menu.addItem((i2) => {
-            i2.setTitle(p.title).setChecked(p.id === project.id).onClick(async () => {
-              await this.plugin.projectManager.setActiveProject(p.id);
-            });
-          });
-        }
-        menu.showAtMouseEvent(e);
-      };
-    }
-    try {
-      const totalWords = await this.plugin.statsTracker.getTotalWordCount();
-      const goal = ((_a2 = project.goals) == null ? void 0 : _a2.totalWordCount) || 0;
-      const wcRow = card.createDiv("ws-launcher-wc-row");
-      wcRow.createSpan({ text: t2("launcher.wordCount", { n: totalWords.toLocaleString() }), cls: "ws-launcher-wc-num" });
-      if (goal > 0) {
-        const pct = Math.min(100, Math.round(totalWords / goal * 100));
-        wcRow.createSpan({ text: t2("launcher.wordGoal", { n: goal.toLocaleString() }), cls: "ws-launcher-wc-goal" });
-        const barWrap = card.createDiv("ws-progress-wrap ws-launcher-progress");
-        const bar = barWrap.createDiv("ws-progress-bar");
-        bar.setCssProps({ "--ws-bar-width": `${pct}%` });
-        card.createSpan({ text: t2("launcher.pctComplete", { pct }), cls: "ws-launcher-pct" });
-      } else {
-        wcRow.createSpan({ text: this.plugin.statsTracker.calculateReadingTime(totalWords), cls: "ws-launcher-wc-goal" });
-      }
-    } catch (e) {
-      console.error("[Writing Studio] project card stats", e);
-    }
-    const binderBtn = card.createEl("button", { cls: "ws-launcher-action-btn", text: t2("launcher.openBinder") });
-    binderBtn.onclick = () => {
-      void this.plugin.openBinder();
-    };
-  }
-  // ── Writing Mode Selector ────────────────────────────────────────
-  renderModeSelector(root) {
-    const card = root.createDiv("ws-launcher-card");
-    card.createDiv({ text: t2("launcher.writingMode"), cls: "ws-launcher-card-label" });
-    const modes = [
-      { id: "draft", label: t2("launcher.mode.draft"), icon: "pencil", desc: t2("launcher.mode.draftDesc") },
-      { id: "edit", label: t2("launcher.mode.edit"), icon: "edit-3", desc: t2("launcher.mode.editDesc") },
-      { id: "review", label: t2("launcher.mode.review"), icon: "eye", desc: t2("launcher.mode.reviewDesc") }
-    ];
-    const btnRow = card.createDiv("ws-launcher-mode-btns");
-    const current = this.plugin.writingModes.getCurrentMode();
-    for (const mode of modes) {
-      const btn = btnRow.createEl("button", {
-        cls: `ws-launcher-mode-btn ${current === mode.id ? "is-active" : ""}`,
-        title: mode.desc
-      });
-      (0, import_obsidian20.setIcon)(btn.createSpan("ws-mode-icon"), mode.icon);
-      btn.createSpan({ text: mode.label, cls: "ws-mode-label" });
-      btn.onclick = () => {
-        void this.plugin.writingModes.switchMode(current === mode.id ? "none" : mode.id);
-      };
-    }
-    if (current !== "none") {
-      const clearBtn = card.createEl("button", { cls: "ws-launcher-text-btn ws-launcher-clear-mode", text: t2("launcher.mode.clearMode") });
-      clearBtn.onclick = () => {
-        void this.plugin.writingModes.switchMode("none");
-      };
-    }
-  }
-  // ── Focus & Typography Toggles ───────────────────────────────────
-  renderFocusToggles(root) {
-    const card = root.createDiv("ws-launcher-card");
-    card.createDiv({ text: t2("launcher.focusTypography"), cls: "ws-launcher-card-label" });
-    const toggles = [
-      {
-        label: t2("launcher.focusMode"),
-        isOn: () => this.plugin.focusMode.isActive(),
-        toggle: () => {
-          this.plugin.focusMode.toggle();
-        }
-      },
-      {
-        label: t2("launcher.typographyMode"),
-        isOn: () => this.plugin.typographyMode.isActive(),
-        toggle: () => {
-          void this.plugin.typographyMode.toggle();
-        }
-      }
-    ];
-    for (const tog of toggles) {
-      const row = card.createDiv("ws-launcher-toggle-row");
-      row.createSpan({ text: tog.label, cls: "ws-launcher-toggle-label" });
-      const toggle = row.createEl("button", {
-        cls: `ws-launcher-toggle ${tog.isOn() ? "is-on" : "is-off"}`,
-        text: tog.isOn() ? t2("launcher.on") : t2("launcher.off")
-      });
-      toggle.onclick = () => tog.toggle();
-    }
-  }
-  // ── Quick Actions ────────────────────────────────────────────────
-  renderQuickActions(root) {
-    const card = root.createDiv("ws-launcher-card");
-    card.createDiv({ text: t2("launcher.quickActions"), cls: "ws-launcher-card-label" });
-    const actions = [
-      {
-        icon: "target",
-        label: t2("launcher.action.targetsDashboard"),
-        action: () => {
-          new TargetsDashboardModal(this.app, this.plugin).open();
-        }
-      },
-      {
-        icon: "bar-chart-2",
-        label: t2("launcher.action.writingDashboard"),
-        action: () => {
-          new WritingDashboardModal(this.app, this.plugin).open();
-        }
-      },
-      {
-        icon: "layers",
-        label: t2("launcher.action.previewManuscript"),
-        action: () => {
-          void this.plugin.openCompilePreview();
-        }
-      },
-      {
-        icon: "download",
-        label: t2("launcher.action.export"),
-        action: () => {
-          new ExportModal(this.app, this.plugin, "project").open();
-        }
-      },
-      {
-        icon: "calendar-days",
-        label: t2("launcher.action.writingLog"),
-        action: () => {
-          void this.plugin.openWritingLog();
-        }
-      },
-      {
-        icon: "globe",
-        label: t2("launcher.action.publishToWordPress"),
-        action: () => {
-          this.plugin.publishCurrentFile();
-        }
-      }
-    ];
-    const grid = card.createDiv("ws-launcher-actions-grid");
-    for (const a of actions) {
-      const btn = grid.createEl("button", { cls: "ws-launcher-action-grid-btn", title: a.label });
-      const iconEl = btn.createDiv("ws-launcher-grid-icon");
-      (0, import_obsidian20.setIcon)(iconEl, a.icon);
-      btn.createDiv({ text: a.label, cls: "ws-launcher-grid-label" });
-      btn.onclick = a.action;
-    }
-  }
-  // ── Sprint Card ──────────────────────────────────────────────────
-  renderSprintCard(root) {
-    const card = root.createDiv("ws-launcher-card");
-    card.createDiv({ text: t2("launcher.sprintTimer"), cls: "ws-launcher-card-label" });
-    if (this.plugin.sprintTimer.isActive()) {
-      card.createDiv({ text: t2("launcher.sprintInProgress"), cls: "ws-launcher-sprint-status" });
-      return;
-    }
-    const startBtn = card.createEl("button", { cls: "ws-launcher-action-btn mod-cta", text: t2("launcher.startSprint") });
-    startBtn.onclick = () => {
-      new SprintModal(this.app, this.plugin).open();
-    };
-    const presets = card.createDiv("ws-launcher-sprint-presets");
-    presets.createSpan({ text: t2("launcher.quickStart"), cls: "ws-launcher-preset-label" });
-    for (const mins of [10, 15, 25]) {
-      const btn = presets.createEl("button", { cls: "ws-launcher-preset-btn", text: `${mins}m` });
-      btn.onclick = () => {
-        this.plugin.sprintTimer.setup(mins);
-      };
-    }
-  }
-  // ── Today Card ───────────────────────────────────────────────────
-  async renderTodayCard(root) {
-    const card = root.createDiv("ws-launcher-card");
-    card.createDiv({ text: t2("launcher.today"), cls: "ws-launcher-card-label" });
-    const stats = this.plugin.statsTracker.getSessionStats();
-    const streak = await this.plugin.statsTracker.getStreak();
-    const sessionWords = this.plugin.statsTracker.getTotalSessionWords();
-    const grid = card.createDiv("ws-launcher-today-grid");
-    const items = [
-      [t2("launcher.stat.words"), stats.wordsWritten.toLocaleString()],
-      [t2("launcher.stat.sprints"), String(stats.sprintsCompleted)],
-      [t2("launcher.stat.minutes"), String(stats.totalMinutes)],
-      [t2("launcher.stat.streak"), t2("launcher.stat.streakDays", { streak })]
-    ];
-    for (const [label, value] of items) {
-      const stat = grid.createDiv("ws-launcher-today-stat");
-      this.todayVals.push(stat.createDiv({ text: value, cls: "ws-launcher-today-val" }));
-      stat.createDiv({ text: label, cls: "ws-launcher-today-label" });
-    }
-    if (sessionWords > 0) {
-      card.createDiv({
-        text: t2("launcher.sessionWordsTyped", { n: sessionWords.toLocaleString() }),
-        cls: "ws-launcher-session-words"
-      });
-    }
-    const goal = this.plugin.settings.defaultDailyWordGoal;
-    if (goal > 0) {
-      const pct = Math.min(100, Math.round(stats.wordsWritten / goal * 100));
-      const barWrap = card.createDiv("ws-progress-wrap ws-launcher-progress");
-      const bar = barWrap.createDiv("ws-progress-bar");
-      bar.setCssProps({ "--ws-bar-width": `${pct}%` });
-      card.createSpan({
-        text: t2("launcher.dailyGoal", { written: stats.wordsWritten, goal }),
-        cls: "ws-launcher-pct"
-      });
-    }
-  }
-};
-
-// src/FocusMode.ts
-var import_obsidian21 = require("obsidian");
-var import_view = require("@codemirror/view");
-var import_state = require("@codemirror/state");
-var FOCUS_CLASS = "writing-studio-focus-mode";
-var FOCUS_FONT_CLASS = "ws-focus-fontsize";
-var FOCUS_PARA_CLASS = "cm-ws-focus-para";
-var FocusMode = class {
-  constructor(plugin) {
-    this.active = false;
-    this.toolbar = null;
-    this.savedLeafStates = /* @__PURE__ */ new Map();
-    this.editorExtension = [];
-    this.plugin = plugin;
-    this.app = plugin.app;
-    this.editorExtension = this.buildExtension();
-  }
-  isActive() {
-    return this.active;
-  }
-  toggle() {
-    if (this.active) {
-      this.disable();
-    } else {
-      this.enable();
-    }
-  }
-  enable() {
-    this.active = true;
-    activeDocument.body.classList.add(FOCUS_CLASS);
-    this.applyDimOpacity();
-    this.applyFontSize();
-    if (this.plugin.settings.focusAutoHideSidebars) {
-      this.hideSidebars();
-    }
-    this.showToolbar();
-    this.plugin.studioEvents.announceFocusChanged(true);
-  }
-  disable() {
-    this.active = false;
-    activeDocument.body.classList.remove(FOCUS_CLASS);
-    this.applyFontSize();
-    if (this.plugin.settings.focusAutoHideSidebars) {
-      this.restoreSidebars();
-    }
-    this.hideToolbar();
-    this.plugin.studioEvents.announceFocusChanged(false);
-  }
-  // Applies the focus font size override while focus mode is active.
-  // 0 means no override: the class is absent and the theme default applies.
-  applyFontSize() {
-    const size = this.plugin.settings.focusFontSize || 0;
-    if (this.active && size > 0) {
-      activeDocument.documentElement.setCssProps({ "--ws-focus-font-size": `${size}px` });
-      activeDocument.body.classList.add(FOCUS_FONT_CLASS);
-    } else {
-      activeDocument.body.classList.remove(FOCUS_FONT_CLASS);
-    }
-  }
-  applyDimOpacity() {
-    const opacity = (this.plugin.settings.dimOpacity || 20) / 100;
-    activeDocument.documentElement.setCssProps({ "--ws-focus-dim-opacity": String(opacity) });
-  }
-  hideSidebars() {
-    const left = this.app.workspace.leftSplit;
-    const right = this.app.workspace.rightSplit;
-    if (left && !left.collapsed) {
-      this.savedLeafStates.set("left", true);
-      left.collapse();
-    }
-    if (right && !right.collapsed) {
-      this.savedLeafStates.set("right", true);
-      right.collapse();
-    }
-  }
-  restoreSidebars() {
-    const left = this.app.workspace.leftSplit;
-    const right = this.app.workspace.rightSplit;
-    if (left && this.savedLeafStates.get("left")) {
-      left.expand();
-    }
-    if (right && this.savedLeafStates.get("right")) {
-      right.expand();
-    }
-    this.savedLeafStates.clear();
-  }
-  showToolbar() {
-    this.hideToolbar();
-    const toolbar = createDiv({ cls: "ws-focus-toolbar" });
-    toolbar.createSpan({ cls: "ws-focus-wordcount", text: t2("focusToolbar.wordCount", { count: 0 }) });
-    toolbar.createSpan({ cls: "ws-focus-sprint-time ws-hidden" });
-    const exitBtn = toolbar.createEl("button", { cls: "ws-focus-exit", title: t2("focusToolbar.exitTitle"), text: t2("focusToolbar.exitBtn") });
-    exitBtn.onclick = () => this.disable();
-    activeDocument.body.appendChild(toolbar);
-    this.toolbar = toolbar;
-    this.updateToolbarWordCount();
-  }
-  hideToolbar() {
-    if (this.toolbar) {
-      this.toolbar.remove();
-      this.toolbar = null;
-    }
-  }
-  updateToolbarWordCount(count) {
-    if (!this.toolbar) return;
-    const el = this.toolbar.querySelector(".ws-focus-wordcount");
-    if (el) {
-      const n = count != null ? count : this.getCurrentWordCount();
-      el.textContent = t2("focusToolbar.wordCount", { count: n });
-    }
-  }
-  updateToolbarSprintTime(timeStr) {
-    if (!this.toolbar) return;
-    const el = this.toolbar.querySelector(".ws-focus-sprint-time");
-    if (el) {
-      el.toggleClass("ws-hidden", !timeStr);
-      if (timeStr) el.textContent = timeStr;
-    }
-  }
-  getCurrentWordCount() {
-    var _a2;
-    const leaf = this.app.workspace.getMostRecentLeaf();
-    if (!leaf) return 0;
-    const view = leaf.view;
-    if (view instanceof import_obsidian21.MarkdownView) {
-      const content2 = ((_a2 = view.editor) == null ? void 0 : _a2.getValue()) || "";
-      return this.plugin.fmManager.countWords(content2);
-    }
-    return 0;
-  }
-  getEditorExtension() {
-    return this.editorExtension;
-  }
-  buildExtension() {
-    const plugin = this.plugin;
-    const focusParaDecoration = import_view.Decoration.line({ class: FOCUS_PARA_CLASS });
-    const focusPlugin = import_view.ViewPlugin.fromClass(
-      class {
-        constructor(view) {
-          this.decorations = this.buildDecorations(view);
-        }
-        update(update) {
-          if (update.docChanged || update.selectionSet) {
-            this.decorations = this.buildDecorations(update.view);
-          }
-          if (plugin.focusMode.isActive() && plugin.settings.typewriterScroll && update.selectionSet) {
-            plugin.focusMode.scrollToCursor(update.view);
-          }
-        }
-        buildDecorations(view) {
-          const builder = new import_state.RangeSetBuilder();
-          const state = view.state;
-          const sel = state.selection.main;
-          const doc = state.doc;
-          const cursorLine = doc.lineAt(sel.head);
-          const isParaMode = plugin.settings.focusUnit !== "sentence";
-          if (isParaMode) {
-            let start2 = cursorLine.number;
-            let end = cursorLine.number;
-            while (start2 > 1) {
-              const prev = doc.line(start2 - 1);
-              if (prev.text.trim() === "") break;
-              start2--;
-            }
-            while (end < doc.lines) {
-              const next = doc.line(end + 1);
-              if (next.text.trim() === "") break;
-              end++;
-            }
-            for (let i2 = start2; i2 <= end; i2++) {
-              const line = doc.line(i2);
-              builder.add(line.from, line.from, focusParaDecoration);
-            }
-          } else {
-            builder.add(cursorLine.from, cursorLine.from, focusParaDecoration);
-          }
-          return builder.finish();
-        }
-      },
-      { decorations: (v) => v.decorations }
-    );
-    return [focusPlugin];
-  }
-  scrollToCursor(view) {
-    const { head } = view.state.selection.main;
-    window.requestAnimationFrame(() => {
-      const coords = view.coordsAtPos(head);
-      if (!coords) return;
-      const scrollEl = view.scrollDOM;
-      const viewMid = scrollEl.clientHeight / 2;
-      const lineTop = coords.top - scrollEl.getBoundingClientRect().top + scrollEl.scrollTop;
-      scrollEl.scrollTo({ top: lineTop - viewMid, behavior: "auto" });
-    });
-  }
-  destroy() {
-    this.disable();
-  }
-};
-
-// src/TypographyMode.ts
-var FONT_STACKS = {
-  mono: '"iA Writer Mono", "Roboto Mono", "Courier New", monospace',
-  serif: '"iA Writer Duo Serif", Georgia, Palatino, serif',
-  sans: '"iA Writer Quattro", system-ui, -apple-system, sans-serif',
-  "cormorant-garamond": '"Cormorant Garamond", Georgia, "Times New Roman", serif',
-  "crimson-text": '"Crimson Text", Georgia, "Times New Roman", serif',
-  "eb-garamond": '"EB Garamond", Georgia, "Times New Roman", serif',
-  "libre-baskerville": '"Libre Baskerville", Georgia, "Times New Roman", serif',
-  "libre-caslon-text": '"Libre Caslon Text", Georgia, "Times New Roman", serif',
-  "literata": '"Literata", Georgia, "Times New Roman", serif',
-  "lora": '"Lora", Georgia, "Times New Roman", serif',
-  "inter": '"Inter", system-ui, -apple-system, sans-serif',
-  "lato": '"Lato", system-ui, -apple-system, sans-serif',
-  "source-sans-3": '"Source Sans 3", system-ui, -apple-system, sans-serif'
-};
-var TypographyMode = class {
-  constructor(plugin) {
-    this.active = false;
-    this.plugin = plugin;
-  }
-  // Session continuity: called when Writing Studio launches (not at plugin
-  // load — with the startup toggle off, Obsidian must open without any
-  // typography styling applied).
-  restorePersisted() {
-    if (this.plugin.settings.typographyModeActive && this.plugin.settings.persistTypography && !this.active) {
-      void this.enable();
-    }
-  }
-  isActive() {
-    return this.active;
-  }
-  async toggle() {
-    if (this.active) {
-      await this.disable();
-    } else {
-      await this.enable();
-    }
-  }
-  async enable() {
-    this.active = true;
-    this.applyCustomProperties();
-    activeDocument.body.classList.add("writing-studio-typography");
-    this.plugin.studioEvents.announceTypographyChanged(true);
-    if (this.plugin.settings.persistTypography) {
-      this.plugin.settings.typographyModeActive = true;
-      await this.plugin.saveSettings();
-    }
-  }
-  async disable() {
-    this.active = false;
-    this.removeCustomProperties();
-    activeDocument.body.classList.remove("writing-studio-typography");
-    this.plugin.studioEvents.announceTypographyChanged(false);
-    if (this.plugin.settings.persistTypography) {
-      this.plugin.settings.typographyModeActive = false;
-      await this.plugin.saveSettings();
-    }
-  }
-  applyCustomProperties() {
-    const settings = this.plugin.settings;
-    const safeCustom = settings.customFontName.replace(/["'\\;{}():]/g, "").trim();
-    const fontStack = settings.typographyFont === "custom" ? safeCustom ? `"${safeCustom}", system-ui, sans-serif` : "system-ui, sans-serif" : FONT_STACKS[settings.typographyFont] || FONT_STACKS.mono;
-    const maxChars = settings.maxLineLength || 65;
-    const fontSize = settings.typographyFontSize || 18;
-    const lineHeight = settings.lineHeight || 1.7;
-    const letterSpacing = settings.letterSpacing || "normal";
-    const halfWidthCh = `${maxChars / 2}ch`;
-    activeDocument.documentElement.setCssProps({
-      "--ws-typo-font": fontStack,
-      "--ws-typo-size": `${fontSize}px`,
-      "--ws-typo-lh": String(lineHeight),
-      "--ws-typo-ls": letterSpacing,
-      "--ws-typo-pad-left": `max(1.5rem, calc(50% - ${halfWidthCh}))`,
-      "--ws-typo-pad-right": `max(1.5rem, calc(50% - ${halfWidthCh}))`,
-      "--ws-typo-max-width": `${maxChars}ch`
-    });
-  }
-  removeCustomProperties() {
-    const root = activeDocument.documentElement;
-    root.style.removeProperty("--ws-typo-font");
-    root.style.removeProperty("--ws-typo-size");
-    root.style.removeProperty("--ws-typo-lh");
-    root.style.removeProperty("--ws-typo-ls");
-    root.style.removeProperty("--ws-typo-pad-left");
-    root.style.removeProperty("--ws-typo-pad-right");
-    root.style.removeProperty("--ws-typo-max-width");
-  }
-  refreshStyles() {
-    if (this.active) {
-      this.applyCustomProperties();
-    }
-  }
-  destroy() {
-    this.active = false;
-    this.removeCustomProperties();
-    activeDocument.body.classList.remove("writing-studio-typography");
-  }
-};
-
-// src/WritingModes.ts
-var import_obsidian22 = require("obsidian");
-
-// models/WritingMode.ts
-var WRITING_MODE_CONFIGS = {
-  draft: {
-    focusMode: true,
-    typographyMode: true,
-    binderOpen: false,
-    sidebarsVisible: false,
-    forceReadingView: false
-  },
-  edit: {
-    focusMode: false,
-    typographyMode: false,
-    binderOpen: true,
-    sidebarsVisible: true,
-    forceReadingView: false
-  },
-  review: {
-    focusMode: false,
-    typographyMode: false,
-    binderOpen: false,
-    sidebarsVisible: false,
-    forceReadingView: true
-  },
-  none: {
-    focusMode: false,
-    typographyMode: false,
-    binderOpen: false,
-    sidebarsVisible: true,
-    forceReadingView: false
-  }
-};
-
-// src/WritingModes.ts
-var WritingModes = class {
-  constructor(plugin) {
-    this.currentMode = "none";
-    this.statusBarEl = null;
-    this.reviewPrior = null;
-    this.plugin = plugin;
-    this.app = plugin.app;
-  }
-  setStatusBar(el) {
-    this.statusBarEl = el;
-    this.updateStatusBar();
-  }
-  getCurrentMode() {
-    return this.currentMode;
-  }
-  async switchMode(mode, silent = false) {
-    if (this.currentMode === mode) return;
-    this.currentMode = mode;
-    this.plugin.activateStudio();
-    const config = WRITING_MODE_CONFIGS[mode];
-    if (config.focusMode && !this.plugin.focusMode.isActive()) {
-      this.plugin.focusMode.enable();
-    } else if (!config.focusMode && this.plugin.focusMode.isActive()) {
-      this.plugin.focusMode.disable();
-    }
-    if (config.typographyMode && !this.plugin.typographyMode.isActive()) {
-      await this.plugin.typographyMode.enable();
-    } else if (!config.typographyMode && this.plugin.typographyMode.isActive()) {
-      await this.plugin.typographyMode.disable();
-    }
-    if (config.binderOpen) {
-      await this.plugin.openBinder();
-    }
-    if (!config.sidebarsVisible) {
-      this.collapseSidebars();
-    } else {
-      this.expandSidebars();
-    }
-    if (config.forceReadingView) {
-      this.forceReadingView();
-    } else {
-      this.restoreEditorViewMode();
-    }
-    this.updateStatusBar();
-    this.plugin.studioEvents.announceModeChanged(mode);
-    this.plugin.settings.currentWritingMode = mode;
-    await this.plugin.saveSettings();
-    if (!silent) {
-      const modeLabel = mode === "none" ? t2("writingModes.normal") : t2(`launcher.mode.${mode}`);
-      new import_obsidian22.Notice(t2("writingModes.switchedTo", { mode: modeLabel }));
-    }
-  }
-  collapseSidebars() {
-    const left = this.app.workspace.leftSplit;
-    const right = this.app.workspace.rightSplit;
-    if (left && !left.collapsed) left.collapse();
-    if (right && !right.collapsed) right.collapse();
-  }
-  expandSidebars() {
-    const left = this.app.workspace.leftSplit;
-    const right = this.app.workspace.rightSplit;
-    if (left && left.collapsed) left.expand();
-    if (right && right.collapsed) right.expand();
-  }
-  forceReadingView() {
-    const leaf = this.app.workspace.getMostRecentLeaf();
-    if (!leaf || !(leaf.view instanceof import_obsidian22.MarkdownView)) return;
-    const mode = leaf.view.getMode();
-    if (mode !== "preview") {
-      this.reviewPrior = { leaf, mode };
-    }
-    void this.setLeafMode(leaf, "preview");
-  }
-  restoreEditorViewMode() {
-    const prior = this.reviewPrior;
-    this.reviewPrior = null;
-    if (!prior || !(prior.leaf.view instanceof import_obsidian22.MarkdownView)) return;
-    void this.setLeafMode(prior.leaf, prior.mode);
-  }
-  async setLeafMode(leaf, mode) {
-    const state = leaf.getViewState();
-    await leaf.setViewState({ ...state, state: { ...state.state, mode } });
-  }
-  updateStatusBar() {
-    if (!this.statusBarEl) return;
-    const mode = this.currentMode;
-    this.statusBarEl.empty();
-    this.statusBarEl.toggleClass("ws-status-mode-empty", mode === "none");
-    this.statusBarEl.toggleClass("ws-status-mode--active", mode !== "none");
-    if (mode === "none") return;
-    const icons = {
-      draft: "pencil",
-      edit: "edit-3",
-      review: "eye"
-    };
-    const labels = {
-      draft: t2("writingModes.statusDraft"),
-      edit: t2("writingModes.statusEdit"),
-      review: t2("writingModes.statusReview")
-    };
-    (0, import_obsidian22.setIcon)(this.statusBarEl.createSpan("ws-status-mode-icon"), icons[mode]);
-    this.statusBarEl.createSpan({ text: labels[mode] });
-  }
-  restore() {
-    const saved = this.plugin.settings.currentWritingMode;
-    if (saved && saved !== "none") {
-      void this.switchMode(saved, true);
-    }
-  }
-  destroy() {
-    if (this.currentMode === "none") return;
-    const config = WRITING_MODE_CONFIGS[this.currentMode];
-    if (!config.sidebarsVisible) {
-      this.expandSidebars();
-    }
-    this.restoreEditorViewMode();
-    this.currentMode = "none";
-  }
-};
-
-// src/SprintTimer.ts
-var import_obsidian23 = require("obsidian");
-function computeSprintWords(scope, primaryFile, baselines, currents, projectPrefix) {
-  var _a2, _b2, _c;
-  if (scope === "project") {
-    let total = 0;
-    for (const [path, current2] of currents) {
-      if (projectPrefix && !path.startsWith(projectPrefix)) continue;
-      const baseline2 = (_a2 = baselines.get(path)) != null ? _a2 : current2;
-      total += Math.max(0, current2 - baseline2);
-    }
-    return total;
-  }
-  if (!primaryFile) return 0;
-  const baseline = (_b2 = baselines.get(primaryFile)) != null ? _b2 : 0;
-  const current = (_c = currents.get(primaryFile)) != null ? _c : baseline;
-  return Math.max(0, current - baseline);
-}
-var SprintTimer = class {
-  constructor(plugin) {
-    this.state = null;
-    this.intervalId = null;
-    this.tickCount = 0;
-    this.floatingEl = null;
-    this.statusBarEl = null;
-    this.onComplete = null;
-    this.plugin = plugin;
-    this.app = plugin.app;
-  }
-  setStatusBar(el) {
-    this.statusBarEl = el;
-    el.addClass("ws-hidden");
-  }
-  setOnComplete(cb) {
-    this.onComplete = cb;
-  }
-  isActive() {
-    return this.state !== null && this.state.active;
-  }
-  // Armed but not started — the overlay is showing its ready state
-  isReady() {
-    return this.state !== null && this.state.ready;
-  }
-  getDurationMinutes() {
-    var _a2, _b2;
-    return (_b2 = (_a2 = this.state) == null ? void 0 : _a2.durationMinutes) != null ? _b2 : null;
-  }
-  // Opens overlay in paused/ready state — called by SprintModal and preset buttons.
-  // The clock does not run until the user presses Start on the overlay itself.
-  setup(durationMinutes, wordCountGoal, projectScope = "file") {
-    var _a2;
-    if (((_a2 = this.state) == null ? void 0 : _a2.active) && !this.state.ready) {
-      new import_obsidian23.Notice(t2("sprint.alreadyRunning"));
-      return;
-    }
-    this.state = {
-      active: true,
-      paused: true,
-      ready: true,
-      startTime: Date.now(),
-      pausedAt: Date.now(),
-      totalPausedMs: 0,
-      durationMinutes,
-      wordCountGoal,
-      primaryFile: null,
-      baselines: /* @__PURE__ */ new Map(),
-      currents: /* @__PURE__ */ new Map(),
-      projectScope
-    };
-    this.showFloating();
-    this.updateDisplay();
-    this.plugin.studioEvents.announceSprintChanged();
-  }
-  pause() {
-    if (!this.state || !this.state.active || this.state.paused) return;
-    this.sampleActiveFile();
-    this.state.paused = true;
-    this.state.pausedAt = Date.now();
-    this.stopInterval();
-    this.updateDisplay();
-  }
-  resume() {
-    if (!this.state || !this.state.active || !this.state.paused) return;
-    const wasReady = this.state.ready;
-    this.state.totalPausedMs += Date.now() - this.state.pausedAt;
-    this.state.paused = false;
-    this.state.ready = false;
-    if (wasReady) {
-      this.state.baselines.clear();
-      this.state.currents.clear();
-      this.sampleActiveFile();
-      this.state.primaryFile = this.getActiveFilePath();
-    }
-    this.startInterval();
-    this.updateDisplay();
-    this.plugin.studioEvents.announceSprintChanged();
-    if (wasReady) {
-      new import_obsidian23.Notice(t2("sprint.started", { minutes: this.state.durationMinutes }));
-    }
-  }
-  stop() {
-    if (!this.state) return;
-    const wasReady = this.state.ready;
-    this.stopInterval();
-    const session = wasReady ? null : this.buildSession();
-    this.state = null;
-    this.hideFloating();
-    if (this.statusBarEl) this.statusBarEl.addClass("ws-hidden");
-    this.plugin.studioEvents.announceSprintChanged();
-    if (!wasReady && session && this.onComplete) void this.onComplete(session);
-  }
-  buildSession() {
-    this.sampleActiveFile();
-    const s = this.state;
-    const wordsWritten = this.getWordsWritten();
-    const documents = this.getCountedDocuments();
-    const startWordCount = documents.reduce((sum, p) => {
-      var _a2;
-      return sum + ((_a2 = s.baselines.get(p)) != null ? _a2 : 0);
-    }, 0);
-    return {
-      id: `sprint-${Date.now()}`,
-      date: (/* @__PURE__ */ new Date()).toISOString(),
-      duration: s.durationMinutes,
-      wordsWritten,
-      startWordCount,
-      wordCountGoal: s.wordCountGoal,
-      documents,
-      completed: true
-    };
-  }
-  getWordsWritten() {
-    const s = this.state;
-    if (!s) return 0;
-    return computeSprintWords(s.projectScope, s.primaryFile, s.baselines, s.currents, this.getProjectPrefix());
-  }
-  // Files whose words count toward this sprint, given its scope
-  getCountedDocuments() {
-    const s = this.state;
-    if (!s) return [];
-    if (s.projectScope === "project") {
-      const prefix = this.getProjectPrefix();
-      return [...s.currents.keys()].filter((p) => !prefix || p.startsWith(prefix));
-    }
-    return s.primaryFile ? [s.primaryFile] : [];
-  }
-  getProjectPrefix() {
-    var _a2;
-    if (((_a2 = this.state) == null ? void 0 : _a2.projectScope) !== "project") return null;
-    const project = this.plugin.projectManager.getActiveProject();
-    return project ? (0, import_obsidian23.normalizePath)(project.folderPath) + "/" : null;
-  }
-  getElapsedMs() {
-    if (!this.state) return 0;
-    const now = this.state.paused ? this.state.pausedAt : Date.now();
-    return now - this.state.startTime - this.state.totalPausedMs;
-  }
-  getRemainingMs() {
-    if (!this.state) return 0;
-    const totalMs = this.state.durationMinutes * 60 * 1e3;
-    return Math.max(0, totalMs - this.getElapsedMs());
-  }
-  getFormattedRemaining() {
-    const ms = this.getRemainingMs();
-    const totalSec = Math.ceil(ms / 1e3);
-    const min = Math.floor(totalSec / 60);
-    const sec = totalSec % 60;
-    return `${String(min).padStart(2, "0")}:${String(sec).padStart(2, "0")}`;
-  }
-  startInterval() {
-    this.intervalId = window.setInterval(() => this.tick(), 1e3);
-  }
-  stopInterval() {
-    if (this.intervalId !== null) {
-      window.clearInterval(this.intervalId);
-      this.intervalId = null;
-    }
-  }
-  tick() {
-    if (this.getRemainingMs() <= 0) {
-      this.handleComplete();
-      return;
-    }
-    if (++this.tickCount % 5 === 0) {
-      this.sampleActiveFile();
-    }
-    this.updateDisplay();
-  }
-  handleComplete() {
-    this.stopInterval();
-    this.sampleActiveFile();
-    if (this.plugin.settings.soundNotifications) {
-      this.playBell();
-    }
-    new import_obsidian23.Notice(t2("sprint.complete"), 5e3);
-    const session = this.buildSession();
-    this.state = null;
-    this.hideFloating();
-    if (this.statusBarEl) this.statusBarEl.addClass("ws-hidden");
-    if (this.onComplete) void this.onComplete(session);
-  }
-  playBell() {
-    try {
-      const ctx = new AudioContext();
-      const osc = ctx.createOscillator();
-      const gain = ctx.createGain();
-      osc.connect(gain);
-      gain.connect(ctx.destination);
-      osc.frequency.value = 880;
-      osc.type = "sine";
-      gain.gain.setValueAtTime(0.3, ctx.currentTime);
-      gain.gain.exponentialRampToValueAtTime(1e-3, ctx.currentTime + 1.5);
-      osc.onended = () => {
-        void ctx.close();
-      };
-      osc.start(ctx.currentTime);
-      osc.stop(ctx.currentTime + 1.5);
-    } catch (e) {
-    }
-  }
-  updateDisplay() {
-    var _a2, _b2, _c, _d;
-    const time = this.getFormattedRemaining();
-    const paused = ((_a2 = this.state) == null ? void 0 : _a2.paused) && !((_b2 = this.state) == null ? void 0 : _b2.ready) ? " \u23F8" : "";
-    const label = `\u23F1 ${time}${paused}`;
-    if (this.floatingEl) {
-      const timeEl = this.floatingEl.querySelector(".ws-sprint-time");
-      if (timeEl) timeEl.textContent = time;
-      const wcEl = this.floatingEl.querySelector(".ws-sprint-wc");
-      if (wcEl) wcEl.textContent = t2("sprint.words", { n: this.getWordsWritten() });
-      const pauseBtn = this.floatingEl.querySelector(".ws-sprint-pause");
-      if (pauseBtn) {
-        if ((_c = this.state) == null ? void 0 : _c.ready) {
-          pauseBtn.textContent = "\u25B6";
-          pauseBtn.title = t2("sprint.startTitle");
-        } else if ((_d = this.state) == null ? void 0 : _d.paused) {
-          pauseBtn.textContent = "\u25B6";
-          pauseBtn.title = t2("sprint.resumeTitle");
-        } else {
-          pauseBtn.textContent = "\u23F8";
-          pauseBtn.title = t2("sprint.pauseTitle");
-        }
-      }
-    }
-    if (this.statusBarEl) {
-      this.statusBarEl.textContent = label;
-      this.statusBarEl.removeClass("ws-hidden");
-    }
-    this.plugin.focusMode.updateToolbarSprintTime(label);
-  }
-  showFloating() {
-    this.hideFloating();
-    const el = createDiv({ cls: "ws-sprint-floating" });
-    el.createDiv({ cls: "ws-sprint-header", text: t2("sprint.header") });
-    el.createDiv({ cls: "ws-sprint-time", text: "00:00" });
-    el.createDiv({ cls: "ws-sprint-wc", text: t2("sprint.words", { n: 0 }) });
-    const controls = el.createDiv({ cls: "ws-sprint-controls" });
-    const pauseBtn = controls.createEl("button", {
-      cls: "ws-sprint-pause",
-      title: t2("sprint.startTitle"),
-      text: "\u25B6"
-    });
-    const stopBtn = controls.createEl("button", {
-      cls: "ws-sprint-stop",
-      title: t2("sprint.stopTitle"),
-      text: "\u25A0"
-    });
-    pauseBtn.onclick = () => {
-      var _a2;
-      if ((_a2 = this.state) == null ? void 0 : _a2.paused) this.resume();
-      else this.pause();
-    };
-    stopBtn.onclick = () => this.stop();
-    activeDocument.body.appendChild(el);
-    this.floatingEl = el;
-    this.makeDraggable(el);
-  }
-  makeDraggable(el) {
-    const header = el.querySelector(".ws-sprint-header");
-    if (!header) return;
-    header.addClass("ws-draggable");
-    let startX = 0, startY = 0, startLeft = 0, startTop = 0;
-    const onMove = (e) => {
-      const dx = e.clientX - startX;
-      const dy = e.clientY - startY;
-      const left = Math.max(0, Math.min(activeWindow.innerWidth - el.offsetWidth, startLeft + dx));
-      const top = Math.max(0, Math.min(activeWindow.innerHeight - el.offsetHeight, startTop + dy));
-      el.addClass("ws-sprint-floating--dragged");
-      el.setCssProps({ "--ws-float-x": `${left}px`, "--ws-float-y": `${top}px` });
-    };
-    const onUp = () => {
-      activeDocument.removeEventListener("mousemove", onMove);
-      activeDocument.removeEventListener("mouseup", onUp);
-      header.removeClass("ws-dragging");
-    };
-    header.addEventListener("mousedown", (e) => {
-      const rect = el.getBoundingClientRect();
-      startX = e.clientX;
-      startY = e.clientY;
-      startLeft = rect.left;
-      startTop = rect.top;
-      header.addClass("ws-dragging");
-      activeDocument.addEventListener("mousemove", onMove);
-      activeDocument.addEventListener("mouseup", onUp);
-      e.preventDefault();
-    });
-  }
-  hideFloating() {
-    if (this.floatingEl) {
-      this.floatingEl.remove();
-      this.floatingEl = null;
-    }
-  }
-  // Record the active file's current word count, setting its baseline the
-  // first time it is seen during this sprint
-  sampleActiveFile() {
-    var _a2;
-    const s = this.state;
-    if (!s) return;
-    const leaf = this.app.workspace.getMostRecentLeaf();
-    if (!leaf) return;
-    const view = leaf.view;
-    if (!(view instanceof import_obsidian23.MarkdownView) || !view.file) return;
-    const path = view.file.path;
-    const count = this.plugin.fmManager.countWords(((_a2 = view.editor) == null ? void 0 : _a2.getValue()) || "");
-    if (!s.baselines.has(path)) {
-      s.baselines.set(path, count);
-    }
-    s.currents.set(path, count);
-  }
-  getActiveFilePath() {
-    var _a2, _b2;
-    const leaf = this.app.workspace.getMostRecentLeaf();
-    const view = leaf == null ? void 0 : leaf.view;
-    return view instanceof import_obsidian23.MarkdownView ? (_b2 = (_a2 = view.file) == null ? void 0 : _a2.path) != null ? _b2 : null : null;
-  }
-  destroy() {
-    this.stopInterval();
-    this.hideFloating();
-  }
-};
 
 // src/ExportEngine.ts
-var import_obsidian24 = require("obsidian");
+var import_obsidian19 = require("obsidian");
 var import_child_process = require("child_process");
 var import_util = require("util");
 
@@ -18133,6 +16962,19 @@ ${body.map((r) => `<tr>${r.map((c) => cell(c, "td")).join("")}</tr>`).join("\n")
 
 // src/ExportEngine.ts
 var execFileAsync = (0, import_util.promisify)(import_child_process.execFile);
+function defaultExportUiState(subtreeRoot) {
+  return {
+    scope: "project",
+    subtreeRoot,
+    includeFrontmatter: false,
+    includeResearch: false,
+    includeTitlesAsHeadings: true,
+    includeFolderNamesAsHeadings: false,
+    addTitlePage: true,
+    titleChoice: subtreeRoot ? "folder" : "project",
+    customTitle: ""
+  };
+}
 var FONT_CAPABLE = /* @__PURE__ */ new Set(["xelatex", "lualatex"]);
 function selectPdfEngine(available, fontRequested, preferred = "auto") {
   if (preferred !== "auto") {
@@ -18252,14 +17094,11 @@ var ExportEngine = class {
     return compiled.split(SECTION_BREAK).join("\n\n---\n\n");
   }
   async export(opts) {
-    var _a2, _b2;
     const project = this.plugin.projectManager.getActiveProject();
-    const outputDir = project ? (0, import_obsidian24.normalizePath)(`${project.folderPath}/Exports`) : (0, import_obsidian24.normalizePath)("Exports");
+    const outputDir = project ? (0, import_obsidian19.normalizePath)(`${project.folderPath}/Exports`) : (0, import_obsidian19.normalizePath)("Exports");
     await this.files.ensureFolder(outputDir);
     const timestamp = (/* @__PURE__ */ new Date()).toISOString().replace(/[:.]/g, "-").slice(0, 19);
-    const projectTitle = (project == null ? void 0 : project.title.replace(/[\\/:*?"<>|]/g, "-")) || "export";
-    const subtreeName = opts.subtreeRoot ? "-" + parseFolderPrefix((_a2 = opts.subtreeRoot.split("/").pop()) != null ? _a2 : "").displayName.replace(/[\\/:*?"<>|]/g, "-") : "";
-    const baseFile = (0, import_obsidian24.normalizePath)(`${outputDir}/${projectTitle}${subtreeName}-${timestamp}`);
+    const baseFile = (0, import_obsidian19.normalizePath)(`${outputDir}/${sanitizeTitleForFilename(this.resolveTitle(opts))}-${timestamp}`);
     if (opts.format === "epub") {
       return this.exportEpub(opts, baseFile);
     }
@@ -18271,7 +17110,7 @@ var ExportEngine = class {
       case "md":
         return this.exportMarkdown(compiled, `${baseFile}.md`);
       case "html":
-        return this.exportHtml(compiled, `${baseFile}.html`, (_b2 = this.subtreeTitle(opts)) != null ? _b2 : (project == null ? void 0 : project.title) || "Document", opts);
+        return this.exportHtml(compiled, `${baseFile}.html`, this.resolveTitle(opts), opts);
       case "docx":
         return this.exportPandoc(compiled, `${baseFile}.docx`, opts);
       case "rtf":
@@ -18283,22 +17122,20 @@ var ExportEngine = class {
     }
   }
   async exportEpub(opts, baseFile) {
-    var _a2;
+    var _a2, _b2, _c;
     const project = this.plugin.projectManager.getActiveProject();
     const outputPath = `${baseFile}.epub`;
-    const title = (_a2 = this.subtreeTitle(opts)) != null ? _a2 : (project == null ? void 0 : project.title) || "Untitled";
+    const title = this.resolveTitle(opts);
     const author = (project == null ? void 0 : project.author) || this.plugin.settings.authorName || "";
     const language = this.plugin.settings.epubLanguage || "en";
     const date = localDateString();
     const chapters = [];
     if (opts.scope === "current") {
-      const leaf = this.app.workspace.getMostRecentLeaf();
-      const view = leaf == null ? void 0 : leaf.view;
-      const file = view instanceof import_obsidian24.MarkdownView ? view.file : null;
-      if (!(file instanceof import_obsidian24.TFile)) {
+      const path = (_a2 = opts.currentFile) != null ? _a2 : this.activeMarkdownPath();
+      if (!path) {
         throw new Error(t2("exportEngine.noActiveDocument"));
       }
-      let content2 = await this.files.readText(file.path);
+      let content2 = await this.files.readText(path);
       if (content2 === null) {
         throw new Error(t2("exportEngine.noActiveDocument"));
       }
@@ -18307,7 +17144,8 @@ var ExportEngine = class {
       }
       content2 = this.preprocessObsidianMarkdown(content2.trim());
       const htmlContent = this.htmlToXhtml(markdownToHtml(content2));
-      chapters.push({ id: "chapter-1", title: file.basename, htmlContent });
+      const basename = (_c = (_b2 = path.split("/").pop()) == null ? void 0 : _b2.replace(/\.md$/, "")) != null ? _c : path;
+      chapters.push({ id: "chapter-1", title: basename, htmlContent });
     } else if (opts.scope === "project" && project && this.plugin.settings.filesystemBinder) {
       let idx = 1;
       for (const item of this.manuscriptPlan(project.folderPath, opts, false)) {
@@ -18356,7 +17194,7 @@ var ExportEngine = class {
       coverImagePath: opts.coverImagePath,
       chapters
     }, outputPath);
-    new import_obsidian24.Notice(t2("exportEngine.epubExported", { path: outputPath }));
+    new import_obsidian19.Notice(t2("exportEngine.epubExported", { path: outputPath }));
     return outputPath;
   }
   preprocessObsidianMarkdown(md) {
@@ -18365,43 +17203,46 @@ var ExportEngine = class {
   htmlToXhtml(html) {
     return html.replace(/<hr>/g, "<hr/>").replace(/<br>/g, "<br/>").replace(/<img([^>]*)(?<!\/)>/g, "<img$1/>");
   }
-  // The folder display name a subtree export titles itself with, or null
-  // when the project title applies — not a subtree export, or the
-  // "Export folder title" setting says project (#244; default is folder).
-  subtreeTitle(opts) {
-    var _a2;
-    if (!opts.subtreeRoot) return null;
-    if (this.plugin.settings.subtreeExportTitleSource === "project") return null;
-    return parseFolderPrefix((_a2 = opts.subtreeRoot.split("/").pop()) != null ? _a2 : "").displayName;
+  // The export's single title authority (#260): the dialog resolves the user's
+  // dropdown choice into opts.exportTitle; filename, title page, and metadata
+  // all read this one value. Engine-level callers that pass no title get the
+  // dialog's default — folder display name for a folder export, else the
+  // project title.
+  resolveTitle(opts) {
+    var _a2, _b2, _c;
+    const explicit = (_a2 = opts.exportTitle) == null ? void 0 : _a2.trim();
+    if (explicit) return explicit;
+    if (opts.subtreeRoot) {
+      return parseFolderPrefix((_b2 = opts.subtreeRoot.split("/").pop()) != null ? _b2 : "").displayName;
+    }
+    return ((_c = this.plugin.projectManager.getActiveProject()) == null ? void 0 : _c.title) || "Untitled";
+  }
+  // Path of the most recently active markdown document, or null when none is.
+  activeMarkdownPath() {
+    const leaf = this.app.workspace.getMostRecentLeaf();
+    const view = leaf == null ? void 0 : leaf.view;
+    const file = view instanceof import_obsidian19.MarkdownView ? view.file : null;
+    return file instanceof import_obsidian19.TFile ? file.path : null;
   }
   async compileContent(opts) {
-    var _a2, _b2;
+    var _a2, _b2, _c;
     const parts = [];
     const project = this.plugin.projectManager.getActiveProject();
     if (opts.addTitlePage && project) {
       const today = (/* @__PURE__ */ new Date()).toLocaleDateString();
       const byline = t2("exportEngine.byAuthor", { author: project.author || this.plugin.settings.authorName });
-      const subtree = this.subtreeTitle(opts);
-      parts.push(subtree !== null ? `# ${subtree}
-
-${project.title}
-
-${byline}
-
-${today}` : `# ${project.title}
+      parts.push(`# ${this.resolveTitle(opts)}
 
 ${byline}
 
 ${today}`);
     }
     if (opts.scope === "current") {
-      const leaf = this.app.workspace.getMostRecentLeaf();
-      const view = leaf == null ? void 0 : leaf.view;
-      const file = view instanceof import_obsidian24.MarkdownView ? view.file : null;
-      if (!(file instanceof import_obsidian24.TFile)) {
+      const path = (_a2 = opts.currentFile) != null ? _a2 : this.activeMarkdownPath();
+      if (!path) {
         throw new Error(t2("exportEngine.noActiveDocument"));
       }
-      const content2 = await this.processPath(file.path, opts);
+      const content2 = await this.processPath(path, opts);
       if (content2 === null) {
         throw new Error(t2("exportEngine.noActiveDocument"));
       }
@@ -18446,7 +17287,7 @@ ${body}`);
         const content2 = await this.processPath(filePath, opts);
         if (content2 === null) continue;
         if (opts.includeTitlesAsHeadings) {
-          const basename = (_b2 = (_a2 = filePath.split("/").pop()) == null ? void 0 : _a2.replace(/\.md$/, "")) != null ? _b2 : filePath;
+          const basename = (_c = (_b2 = filePath.split("/").pop()) == null ? void 0 : _b2.replace(/\.md$/, "")) != null ? _c : filePath;
           const body = content2.replace(/^# [^\n]*\n+/, "").trim();
           parts.push(`# ${basename}
 
@@ -18482,10 +17323,9 @@ ${body}`);
     return content2.trim();
   }
   async exportManuscript(opts, outputPath) {
-    var _a2;
     const project = this.plugin.projectManager.getActiveProject();
     const author = (project == null ? void 0 : project.author) || this.plugin.settings.authorName || "Author";
-    const title = (_a2 = this.subtreeTitle(opts)) != null ? _a2 : (project == null ? void 0 : project.title) || "Untitled";
+    const title = this.resolveTitle(opts);
     const compiled = await this.compileContent({ ...opts, addTitlePage: false });
     const sections = compiled.split(SECTION_BREAK);
     const htmlSections = [];
@@ -18521,7 +17361,7 @@ ${body}`);
   </div>
 </div>`;
     const fullHtml = `<!DOCTYPE html>
-<html lang="${(0, import_obsidian24.getLanguage)()}">
+<html lang="${(0, import_obsidian19.getLanguage)()}">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -18536,19 +17376,19 @@ ${bodyHtml}
 </body>
 </html>`;
     await this.files.writeText(outputPath, fullHtml);
-    new import_obsidian24.Notice(t2("exportEngine.manuscriptExported", { path: outputPath }));
+    new import_obsidian19.Notice(t2("exportEngine.manuscriptExported", { path: outputPath }));
     return outputPath;
   }
   async exportMarkdown(content2, outputPath) {
     await this.files.writeText(outputPath, content2);
-    new import_obsidian24.Notice(t2("exportEngine.exportedTo", { path: outputPath }));
+    new import_obsidian19.Notice(t2("exportEngine.exportedTo", { path: outputPath }));
     return outputPath;
   }
   async exportHtml(content2, outputPath, title, opts) {
     const font = opts.font || "Georgia";
     const fontSize = opts.fontSize || 16;
     const html = `<!DOCTYPE html>
-<html lang="${(0, import_obsidian24.getLanguage)()}">
+<html lang="${(0, import_obsidian19.getLanguage)()}">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -18571,7 +17411,7 @@ ${markdownToHtml(content2)}
 </body>
 </html>`;
     await this.files.writeText(outputPath, html);
-    new import_obsidian24.Notice(t2("exportEngine.exportedHtmlTo", { path: outputPath }));
+    new import_obsidian19.Notice(t2("exportEngine.exportedHtmlTo", { path: outputPath }));
     return outputPath;
   }
   // Pre-flight for the export modal — false when the configured pandoc
@@ -18621,7 +17461,7 @@ ${markdownToHtml(content2)}
         args.push("-V", `mainfont=${safeFont}`);
       }
       await execFileAsync(pandocPath, args);
-      new import_obsidian24.Notice(t2("exportEngine.exportedTo", { path: outputPath }));
+      new import_obsidian19.Notice(t2("exportEngine.exportedTo", { path: outputPath }));
       return outputPath;
     } catch (e) {
       const raw = e instanceof Error ? e.message : String(e);
@@ -18641,11 +17481,11 @@ ${hint}`);
     const decision = selectPdfEngine(await this.detectPdfEngines(), !!opts.font, preferred);
     if (!decision.engine) {
       const msg = preferred !== "auto" ? t2("exportEngine.pdfPinnedEngineMissing", { engine: preferred }) : t2("exportEngine.pdfEngineRequired");
-      new import_obsidian24.Notice(msg);
+      new import_obsidian19.Notice(msg);
       throw new Error(msg);
     }
     if (opts.font && !decision.keepFont) {
-      new import_obsidian24.Notice(decision.engine === "wkhtmltopdf" ? t2("exportEngine.pdfFontIgnoredWkhtmltopdf") : t2("exportEngine.pdfFontNeedsXelatex"));
+      new import_obsidian19.Notice(decision.engine === "wkhtmltopdf" ? t2("exportEngine.pdfFontIgnoredWkhtmltopdf") : t2("exportEngine.pdfFontNeedsXelatex"));
     }
     try {
       return await this.exportPandoc(content2, outputPath, opts, { engine: decision.engine, keepFont: decision.keepFont });
@@ -18655,12 +17495,1345 @@ ${hint}`);
       if (classifyPandocFailure(raw) === "engine-missing") {
         msg = preferred !== "auto" ? t2("exportEngine.pdfPinnedEngineMissing", { engine: preferred }) : t2("exportEngine.pdfEngineRequired");
       }
-      new import_obsidian24.Notice(msg);
+      new import_obsidian19.Notice(msg);
       throw e;
     }
   }
   escapeHtml(str) {
     return str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+  }
+};
+
+// src/sections.ts
+function splitSections(content2) {
+  const lines = content2.split("\n");
+  const sections = [];
+  let current = [];
+  let fence = null;
+  for (const line of lines) {
+    const fenceMatch = /^\s*(```|~~~)/.exec(line);
+    if (fenceMatch) {
+      if (fence === null) fence = fenceMatch[1];
+      else if (fenceMatch[1] === fence) fence = null;
+    }
+    if (fence === null && line.startsWith("# ") && current.length > 0) {
+      sections.push(current.join("\n"));
+      current = [];
+    }
+    current.push(line);
+  }
+  if (current.length > 0) sections.push(current.join("\n"));
+  return sections;
+}
+function sectionId(index) {
+  return `section-${index}`;
+}
+function buildJumpItems(sections) {
+  const items = [];
+  sections.forEach((section, index) => {
+    const h1 = /^# (.+)/.exec(section);
+    if (h1) items.push({ title: h1[1].trim(), id: sectionId(index) });
+  });
+  return items;
+}
+
+// src/CompilePreview.ts
+var COMPILE_PREVIEW_VIEW_TYPE = "writing-studio-compile-preview";
+var CompilePreviewView = class extends import_obsidian20.ItemView {
+  constructor(leaf, plugin) {
+    super(leaf);
+    this.content = "";
+    this.sections = [];
+    this.jumpItems = [];
+    // The export dialog's selections this preview renders with — "Proceed to
+    // export" hands them back so the round trip loses nothing (#260)
+    this.state = defaultExportUiState();
+    // Virtual path inside the project folder so relative links and embeds in
+    // the rendered preview resolve from the project, not the vault root.
+    this.sourcePath = "";
+    this.plugin = plugin;
+  }
+  getViewType() {
+    return COMPILE_PREVIEW_VIEW_TYPE;
+  }
+  getDisplayText() {
+    return t2("compilePreview.displayText");
+  }
+  getIcon() {
+    return "layers";
+  }
+  onOpen() {
+    this.render();
+    return Promise.resolve();
+  }
+  // Renders the compile exactly as the export dialog's selections would
+  // produce it — same content, same title (#260). Called with no state, it
+  // uses the dialog's defaults (the standalone preview command).
+  async loadContent(state) {
+    var _a2, _b2;
+    if (state) this.state = state;
+    const s = this.state;
+    const project = this.plugin.projectManager.getActiveProject();
+    const title = resolveExportTitle(s.titleChoice, {
+      projectTitle: (_a2 = project == null ? void 0 : project.title) != null ? _a2 : "",
+      folderName: s.subtreeRoot ? parseFolderPrefix((_b2 = s.subtreeRoot.split("/").pop()) != null ? _b2 : "").displayName : void 0,
+      customTitle: s.customTitle
+    });
+    const exportOpts = {
+      format: "md",
+      scope: s.scope,
+      subtreeRoot: s.subtreeRoot,
+      currentFile: s.currentFilePath,
+      exportTitle: title || void 0,
+      includeFrontmatter: s.includeFrontmatter,
+      includeResearch: s.includeResearch,
+      includeTitlesAsHeadings: s.includeTitlesAsHeadings,
+      includeFolderNamesAsHeadings: s.includeFolderNamesAsHeadings,
+      paperSize: "letter",
+      font: "",
+      fontSize: 12,
+      addTitlePage: s.addTitlePage
+    };
+    this.sourcePath = project ? (0, import_obsidian20.normalizePath)(`${project.folderPath}/_compile.md`) : "";
+    try {
+      this.content = this.plugin.exportEngine.toMarkdown(await this.plugin.exportEngine.compileContent(exportOpts));
+    } catch (e) {
+      this.content = "";
+      new import_obsidian20.Notice(t2("exportModal.exportFailed", { error: e instanceof Error ? e.message : String(e) }));
+    }
+    this.sections = splitSections(this.content);
+    this.jumpItems = buildJumpItems(this.sections);
+    this.render();
+  }
+  render() {
+    const container = this.containerEl.children[1];
+    container.empty();
+    container.addClass("ws-compile-preview-container");
+    const toolbar = container.createDiv("ws-compile-toolbar");
+    const jumpSel = toolbar.createEl("select", { cls: "ws-compile-jump" });
+    const defaultOpt = jumpSel.createEl("option", { text: t2("compilePreview.jumpToSection") });
+    defaultOpt.value = "";
+    for (const item of this.jumpItems) {
+      const opt = jumpSel.createEl("option", { text: item.title });
+      opt.value = item.id;
+    }
+    jumpSel.onchange = () => {
+      const id = jumpSel.value;
+      if (!id) return;
+      const el = container.querySelector(`[data-section-id="${id}"]`);
+      if (el) el.scrollIntoView({ behavior: "smooth" });
+    };
+    const exportBtn = toolbar.createEl("button", {
+      cls: "ws-compile-export-btn mod-cta",
+      text: t2("compilePreview.proceedToExport")
+    });
+    exportBtn.onclick = () => {
+      new ExportModal(this.app, this.plugin, this.state.scope, this.state.subtreeRoot, this.state).open();
+    };
+    const closeBtn = toolbar.createEl("button", {
+      cls: "ws-compile-close-btn",
+      text: t2("compilePreview.closePreview")
+    });
+    closeBtn.onclick = () => {
+      this.leaf.detach();
+    };
+    const contentDiv = container.createDiv("ws-compile-content markdown-reading-view");
+    if (!this.content) {
+      contentDiv.createEl("p", {
+        text: t2("compilePreview.noContent"),
+        cls: "ws-empty-state"
+      });
+      const loadBtn = contentDiv.createEl("button", {
+        cls: "ws-compile-load-btn mod-cta",
+        text: t2("compilePreview.loadCompilation")
+      });
+      loadBtn.onclick = safeHandler(async () => {
+        if (!this.plugin.projectManager.getActiveProject()) {
+          new import_obsidian20.Notice(t2("binder.selectProjectFirst"));
+          return;
+        }
+        await this.loadContent();
+      });
+      return;
+    }
+    this.sections.forEach((section, index) => {
+      const sectionDiv = contentDiv.createDiv("ws-compile-section");
+      if (section.startsWith("# ")) {
+        sectionDiv.setAttribute("data-section-id", sectionId(index));
+      }
+      void import_obsidian20.MarkdownRenderer.render(this.app, section, sectionDiv, this.sourcePath, this);
+    });
+  }
+  async onClose() {
+  }
+};
+
+// src/LauncherView.ts
+var import_obsidian21 = require("obsidian");
+var LAUNCHER_VIEW_TYPE = "writing-studio-launcher";
+var LauncherView = class extends import_obsidian21.ItemView {
+  constructor(leaf, plugin) {
+    super(leaf);
+    this.refreshTimer = null;
+    this.todayVals = [];
+    this.renderedSprintActive = false;
+    this.plugin = plugin;
+  }
+  getViewType() {
+    return LAUNCHER_VIEW_TYPE;
+  }
+  getDisplayText() {
+    return t2("launcher.displayText");
+  }
+  getIcon() {
+    return "feather";
+  }
+  async onOpen() {
+    this.plugin.activateStudio();
+    this.registerEvent(this.plugin.projectManager.onActiveProjectChanged(() => {
+      void this.refresh();
+    }));
+    this.registerEvent(this.plugin.projectManager.onProjectsChanged(() => {
+      void this.refresh();
+    }));
+    this.registerEvent(this.plugin.studioEvents.onModeChanged(() => {
+      void this.refresh();
+    }));
+    this.registerEvent(this.plugin.studioEvents.onFocusChanged(() => {
+      void this.refresh();
+    }));
+    this.registerEvent(this.plugin.studioEvents.onTypographyChanged(() => {
+      void this.refresh();
+    }));
+    this.registerEvent(this.plugin.studioEvents.onSprintChanged(() => {
+      void this.refresh();
+    }));
+    await this.render();
+    this.refreshTimer = window.setInterval(() => {
+      void this.tickRefresh();
+    }, 1e4);
+  }
+  async tickRefresh() {
+    const sprintActive = this.plugin.sprintTimer.isActive();
+    if (sprintActive !== this.renderedSprintActive) {
+      await this.render();
+      return;
+    }
+    await this.patchTodayCard();
+  }
+  async patchTodayCard() {
+    if (this.todayVals.length < 4) return;
+    const vals = this.todayVals;
+    const stats = this.plugin.statsTracker.getSessionStats();
+    const streak = await this.plugin.statsTracker.getStreak();
+    if (vals !== this.todayVals) return;
+    vals[0].textContent = stats.wordsWritten.toLocaleString();
+    vals[1].textContent = String(stats.sprintsCompleted);
+    vals[2].textContent = String(stats.totalMinutes);
+    vals[3].textContent = t2("launcher.stat.streakDays", { streak });
+  }
+  onClose() {
+    if (this.refreshTimer !== null) {
+      window.clearInterval(this.refreshTimer);
+      this.refreshTimer = null;
+    }
+    return Promise.resolve();
+  }
+  async refresh() {
+    await this.render();
+  }
+  async render() {
+    const root = this.containerEl.children[1];
+    root.empty();
+    this.todayVals = [];
+    this.renderedSprintActive = this.plugin.sprintTimer.isActive();
+    root.addClass("ws-launcher");
+    this.renderHeader(root);
+    await this.renderProjectCard(root);
+    this.renderModeSelector(root);
+    this.renderFocusToggles(root);
+    this.renderQuickActions(root);
+    this.renderSprintCard(root);
+    await this.renderTodayCard(root);
+  }
+  // ── Header ──────────────────────────────────────────────────────
+  renderHeader(root) {
+    const header = root.createDiv("ws-launcher-header");
+    header.createSpan({ text: t2("launcher.title"), cls: "ws-launcher-title" });
+    const settingsBtn = header.createEl("button", { cls: "ws-launcher-icon-btn", title: t2("launcher.settings") });
+    (0, import_obsidian21.setIcon)(settingsBtn, "settings");
+    settingsBtn.onclick = () => {
+      var _a2, _b2;
+      (_a2 = this.app.setting) == null ? void 0 : _a2.open();
+      (_b2 = this.app.setting) == null ? void 0 : _b2.openTabById("writing-studio");
+    };
+  }
+  // ── Project Card ─────────────────────────────────────────────────
+  async renderProjectCard(root) {
+    var _a2;
+    const project = this.plugin.projectManager.getActiveProject();
+    const card = root.createDiv("ws-launcher-card");
+    const cardHeader = card.createDiv("ws-launcher-card-header");
+    cardHeader.createSpan({ text: t2("launcher.project"), cls: "ws-launcher-card-label" });
+    if (this.plugin.projectManager.getProjects().length > 0) {
+      const newProjectBtn = cardHeader.createEl("button", { cls: "ws-launcher-text-btn", text: t2("launcher.newProject") });
+      newProjectBtn.onclick = () => {
+        new ProjectModal(this.app, this.plugin).open();
+      };
+    }
+    if (project) {
+      const editBtn = cardHeader.createEl("button", { cls: "ws-launcher-icon-btn", title: t2("projectModal.editTitle") });
+      (0, import_obsidian21.setIcon)(editBtn, "pencil");
+      editBtn.onclick = () => {
+        new ProjectModal(this.app, this.plugin, void 0, project).open();
+      };
+      const deleteBtn = cardHeader.createEl("button", { cls: "ws-launcher-icon-btn", title: t2("projectModal.deleteTitle") });
+      (0, import_obsidian21.setIcon)(deleteBtn, "trash");
+      deleteBtn.onclick = () => {
+        confirmDeleteProject(this.app, this.plugin, project);
+      };
+    }
+    if (!project) {
+      const projects2 = this.plugin.projectManager.getProjects();
+      if (projects2.length === 0) {
+        const intro = card.createDiv("ws-launcher-first-run");
+        intro.createDiv({ text: t2("launcher.firstRun.intro"), cls: "ws-launcher-first-run-text" });
+        intro.createDiv({ text: t2("launcher.firstRun.hint"), cls: "ws-launcher-first-run-text" });
+        const cta = card.createEl("button", { cls: "ws-launcher-action-btn mod-cta", text: t2("launcher.firstRun.cta") });
+        cta.onclick = () => {
+          new ProjectModal(this.app, this.plugin).open();
+        };
+        return;
+      }
+      const emptyRow = card.createDiv("ws-launcher-empty");
+      emptyRow.textContent = t2("launcher.noProjectSelected");
+      if (projects2.length > 0) {
+        const sel = card.createEl("select", { cls: "ws-launcher-project-sel" });
+        sel.createEl("option", { text: t2("launcher.chooseProject"), value: "" });
+        for (const p of projects2) {
+          sel.createEl("option", { text: p.title, value: p.id });
+        }
+        sel.onchange = async () => {
+          if (sel.value) {
+            await this.plugin.projectManager.setActiveProject(sel.value);
+            await this.refresh();
+          }
+        };
+      }
+      return;
+    }
+    const nameRow = card.createDiv("ws-launcher-project-name-row");
+    nameRow.createEl("strong", { text: project.title, cls: "ws-launcher-project-name" });
+    const projects = this.plugin.projectManager.getProjects();
+    if (projects.length > 1) {
+      const switchBtn = nameRow.createEl("button", { cls: "ws-launcher-icon-btn" });
+      (0, import_obsidian21.setIcon)(switchBtn, "chevrons-up-down");
+      (0, import_obsidian21.setTooltip)(switchBtn, t2("launcher.switchProject"));
+      switchBtn.onclick = (e) => {
+        const menu = new import_obsidian21.Menu();
+        for (const p of projects) {
+          menu.addItem((i2) => {
+            i2.setTitle(p.title).setChecked(p.id === project.id).onClick(async () => {
+              await this.plugin.projectManager.setActiveProject(p.id);
+            });
+          });
+        }
+        menu.showAtMouseEvent(e);
+      };
+    }
+    try {
+      const totalWords = await this.plugin.statsTracker.getTotalWordCount();
+      const goal = ((_a2 = project.goals) == null ? void 0 : _a2.totalWordCount) || 0;
+      const wcRow = card.createDiv("ws-launcher-wc-row");
+      wcRow.createSpan({ text: t2("launcher.wordCount", { n: totalWords.toLocaleString() }), cls: "ws-launcher-wc-num" });
+      if (goal > 0) {
+        const pct = Math.min(100, Math.round(totalWords / goal * 100));
+        wcRow.createSpan({ text: t2("launcher.wordGoal", { n: goal.toLocaleString() }), cls: "ws-launcher-wc-goal" });
+        const barWrap = card.createDiv("ws-progress-wrap ws-launcher-progress");
+        const bar = barWrap.createDiv("ws-progress-bar");
+        bar.setCssProps({ "--ws-bar-width": `${pct}%` });
+        card.createSpan({ text: t2("launcher.pctComplete", { pct }), cls: "ws-launcher-pct" });
+      } else {
+        wcRow.createSpan({ text: this.plugin.statsTracker.calculateReadingTime(totalWords), cls: "ws-launcher-wc-goal" });
+      }
+    } catch (e) {
+      console.error("[Writing Studio] project card stats", e);
+    }
+    const binderBtn = card.createEl("button", { cls: "ws-launcher-action-btn", text: t2("launcher.openBinder") });
+    binderBtn.onclick = () => {
+      void this.plugin.openBinder();
+    };
+  }
+  // ── Writing Mode Selector ────────────────────────────────────────
+  renderModeSelector(root) {
+    const card = root.createDiv("ws-launcher-card");
+    card.createDiv({ text: t2("launcher.writingMode"), cls: "ws-launcher-card-label" });
+    const modes = [
+      { id: "draft", label: t2("launcher.mode.draft"), icon: "pencil", desc: t2("launcher.mode.draftDesc") },
+      { id: "edit", label: t2("launcher.mode.edit"), icon: "edit-3", desc: t2("launcher.mode.editDesc") },
+      { id: "review", label: t2("launcher.mode.review"), icon: "eye", desc: t2("launcher.mode.reviewDesc") }
+    ];
+    const btnRow = card.createDiv("ws-launcher-mode-btns");
+    const current = this.plugin.writingModes.getCurrentMode();
+    for (const mode of modes) {
+      const btn = btnRow.createEl("button", {
+        cls: `ws-launcher-mode-btn ${current === mode.id ? "is-active" : ""}`,
+        title: mode.desc
+      });
+      (0, import_obsidian21.setIcon)(btn.createSpan("ws-mode-icon"), mode.icon);
+      btn.createSpan({ text: mode.label, cls: "ws-mode-label" });
+      btn.onclick = () => {
+        void this.plugin.writingModes.switchMode(current === mode.id ? "none" : mode.id);
+      };
+    }
+    if (current !== "none") {
+      const clearBtn = card.createEl("button", { cls: "ws-launcher-text-btn ws-launcher-clear-mode", text: t2("launcher.mode.clearMode") });
+      clearBtn.onclick = () => {
+        void this.plugin.writingModes.switchMode("none");
+      };
+    }
+  }
+  // ── Focus & Typography Toggles ───────────────────────────────────
+  renderFocusToggles(root) {
+    const card = root.createDiv("ws-launcher-card");
+    card.createDiv({ text: t2("launcher.focusTypography"), cls: "ws-launcher-card-label" });
+    const toggles = [
+      {
+        label: t2("launcher.focusMode"),
+        isOn: () => this.plugin.focusMode.isActive(),
+        toggle: () => {
+          this.plugin.focusMode.toggle();
+        }
+      },
+      {
+        label: t2("launcher.typographyMode"),
+        isOn: () => this.plugin.typographyMode.isActive(),
+        toggle: () => {
+          void this.plugin.typographyMode.toggle();
+        }
+      }
+    ];
+    for (const tog of toggles) {
+      const row = card.createDiv("ws-launcher-toggle-row");
+      row.createSpan({ text: tog.label, cls: "ws-launcher-toggle-label" });
+      const toggle = row.createEl("button", {
+        cls: `ws-launcher-toggle ${tog.isOn() ? "is-on" : "is-off"}`,
+        text: tog.isOn() ? t2("launcher.on") : t2("launcher.off")
+      });
+      toggle.onclick = () => tog.toggle();
+    }
+  }
+  // ── Quick Actions ────────────────────────────────────────────────
+  renderQuickActions(root) {
+    const card = root.createDiv("ws-launcher-card");
+    card.createDiv({ text: t2("launcher.quickActions"), cls: "ws-launcher-card-label" });
+    const actions = [
+      {
+        icon: "target",
+        label: t2("launcher.action.targetsDashboard"),
+        action: () => {
+          new TargetsDashboardModal(this.app, this.plugin).open();
+        }
+      },
+      {
+        icon: "bar-chart-2",
+        label: t2("launcher.action.writingDashboard"),
+        action: () => {
+          new WritingDashboardModal(this.app, this.plugin).open();
+        }
+      },
+      {
+        icon: "layers",
+        label: t2("launcher.action.previewManuscript"),
+        action: () => {
+          void this.plugin.openCompilePreview();
+        }
+      },
+      {
+        icon: "download",
+        label: t2("launcher.action.export"),
+        action: () => {
+          new ExportModal(this.app, this.plugin, "project").open();
+        }
+      },
+      {
+        icon: "calendar-days",
+        label: t2("launcher.action.writingLog"),
+        action: () => {
+          void this.plugin.openWritingLog();
+        }
+      },
+      {
+        icon: "globe",
+        label: t2("launcher.action.publishToWordPress"),
+        action: () => {
+          this.plugin.publishCurrentFile();
+        }
+      }
+    ];
+    const grid = card.createDiv("ws-launcher-actions-grid");
+    for (const a of actions) {
+      const btn = grid.createEl("button", { cls: "ws-launcher-action-grid-btn", title: a.label });
+      const iconEl = btn.createDiv("ws-launcher-grid-icon");
+      (0, import_obsidian21.setIcon)(iconEl, a.icon);
+      btn.createDiv({ text: a.label, cls: "ws-launcher-grid-label" });
+      btn.onclick = a.action;
+    }
+  }
+  // ── Sprint Card ──────────────────────────────────────────────────
+  renderSprintCard(root) {
+    const card = root.createDiv("ws-launcher-card");
+    card.createDiv({ text: t2("launcher.sprintTimer"), cls: "ws-launcher-card-label" });
+    if (this.plugin.sprintTimer.isActive()) {
+      card.createDiv({ text: t2("launcher.sprintInProgress"), cls: "ws-launcher-sprint-status" });
+      return;
+    }
+    const startBtn = card.createEl("button", { cls: "ws-launcher-action-btn mod-cta", text: t2("launcher.startSprint") });
+    startBtn.onclick = () => {
+      new SprintModal(this.app, this.plugin).open();
+    };
+    const presets = card.createDiv("ws-launcher-sprint-presets");
+    presets.createSpan({ text: t2("launcher.quickStart"), cls: "ws-launcher-preset-label" });
+    for (const mins of [10, 15, 25]) {
+      const btn = presets.createEl("button", { cls: "ws-launcher-preset-btn", text: `${mins}m` });
+      btn.onclick = () => {
+        this.plugin.sprintTimer.setup(mins);
+      };
+    }
+  }
+  // ── Today Card ───────────────────────────────────────────────────
+  async renderTodayCard(root) {
+    const card = root.createDiv("ws-launcher-card");
+    card.createDiv({ text: t2("launcher.today"), cls: "ws-launcher-card-label" });
+    const stats = this.plugin.statsTracker.getSessionStats();
+    const streak = await this.plugin.statsTracker.getStreak();
+    const sessionWords = this.plugin.statsTracker.getTotalSessionWords();
+    const grid = card.createDiv("ws-launcher-today-grid");
+    const items = [
+      [t2("launcher.stat.words"), stats.wordsWritten.toLocaleString()],
+      [t2("launcher.stat.sprints"), String(stats.sprintsCompleted)],
+      [t2("launcher.stat.minutes"), String(stats.totalMinutes)],
+      [t2("launcher.stat.streak"), t2("launcher.stat.streakDays", { streak })]
+    ];
+    for (const [label, value] of items) {
+      const stat = grid.createDiv("ws-launcher-today-stat");
+      this.todayVals.push(stat.createDiv({ text: value, cls: "ws-launcher-today-val" }));
+      stat.createDiv({ text: label, cls: "ws-launcher-today-label" });
+    }
+    if (sessionWords > 0) {
+      card.createDiv({
+        text: t2("launcher.sessionWordsTyped", { n: sessionWords.toLocaleString() }),
+        cls: "ws-launcher-session-words"
+      });
+    }
+    const goal = this.plugin.settings.defaultDailyWordGoal;
+    if (goal > 0) {
+      const pct = Math.min(100, Math.round(stats.wordsWritten / goal * 100));
+      const barWrap = card.createDiv("ws-progress-wrap ws-launcher-progress");
+      const bar = barWrap.createDiv("ws-progress-bar");
+      bar.setCssProps({ "--ws-bar-width": `${pct}%` });
+      card.createSpan({
+        text: t2("launcher.dailyGoal", { written: stats.wordsWritten, goal }),
+        cls: "ws-launcher-pct"
+      });
+    }
+  }
+};
+
+// src/FocusMode.ts
+var import_obsidian22 = require("obsidian");
+var import_view = require("@codemirror/view");
+var import_state = require("@codemirror/state");
+var FOCUS_CLASS = "writing-studio-focus-mode";
+var FOCUS_FONT_CLASS = "ws-focus-fontsize";
+var FOCUS_PARA_CLASS = "cm-ws-focus-para";
+var FocusMode = class {
+  constructor(plugin) {
+    this.active = false;
+    this.toolbar = null;
+    this.savedLeafStates = /* @__PURE__ */ new Map();
+    this.editorExtension = [];
+    this.plugin = plugin;
+    this.app = plugin.app;
+    this.editorExtension = this.buildExtension();
+  }
+  isActive() {
+    return this.active;
+  }
+  toggle() {
+    if (this.active) {
+      this.disable();
+    } else {
+      this.enable();
+    }
+  }
+  enable() {
+    this.active = true;
+    activeDocument.body.classList.add(FOCUS_CLASS);
+    this.applyDimOpacity();
+    this.applyFontSize();
+    if (this.plugin.settings.focusAutoHideSidebars) {
+      this.hideSidebars();
+    }
+    this.showToolbar();
+    this.plugin.studioEvents.announceFocusChanged(true);
+  }
+  disable() {
+    this.active = false;
+    activeDocument.body.classList.remove(FOCUS_CLASS);
+    this.applyFontSize();
+    if (this.plugin.settings.focusAutoHideSidebars) {
+      this.restoreSidebars();
+    }
+    this.hideToolbar();
+    this.plugin.studioEvents.announceFocusChanged(false);
+  }
+  // Applies the focus font size override while focus mode is active.
+  // 0 means no override: the class is absent and the theme default applies.
+  applyFontSize() {
+    const size = this.plugin.settings.focusFontSize || 0;
+    if (this.active && size > 0) {
+      activeDocument.documentElement.setCssProps({ "--ws-focus-font-size": `${size}px` });
+      activeDocument.body.classList.add(FOCUS_FONT_CLASS);
+    } else {
+      activeDocument.body.classList.remove(FOCUS_FONT_CLASS);
+    }
+  }
+  applyDimOpacity() {
+    const opacity = (this.plugin.settings.dimOpacity || 20) / 100;
+    activeDocument.documentElement.setCssProps({ "--ws-focus-dim-opacity": String(opacity) });
+  }
+  hideSidebars() {
+    const left = this.app.workspace.leftSplit;
+    const right = this.app.workspace.rightSplit;
+    if (left && !left.collapsed) {
+      this.savedLeafStates.set("left", true);
+      left.collapse();
+    }
+    if (right && !right.collapsed) {
+      this.savedLeafStates.set("right", true);
+      right.collapse();
+    }
+  }
+  restoreSidebars() {
+    const left = this.app.workspace.leftSplit;
+    const right = this.app.workspace.rightSplit;
+    if (left && this.savedLeafStates.get("left")) {
+      left.expand();
+    }
+    if (right && this.savedLeafStates.get("right")) {
+      right.expand();
+    }
+    this.savedLeafStates.clear();
+  }
+  showToolbar() {
+    this.hideToolbar();
+    const toolbar = createDiv({ cls: "ws-focus-toolbar" });
+    toolbar.createSpan({ cls: "ws-focus-wordcount", text: t2("focusToolbar.wordCount", { count: 0 }) });
+    toolbar.createSpan({ cls: "ws-focus-sprint-time ws-hidden" });
+    const exitBtn = toolbar.createEl("button", { cls: "ws-focus-exit", title: t2("focusToolbar.exitTitle"), text: t2("focusToolbar.exitBtn") });
+    exitBtn.onclick = () => this.disable();
+    activeDocument.body.appendChild(toolbar);
+    this.toolbar = toolbar;
+    this.updateToolbarWordCount();
+  }
+  hideToolbar() {
+    if (this.toolbar) {
+      this.toolbar.remove();
+      this.toolbar = null;
+    }
+  }
+  updateToolbarWordCount(count) {
+    if (!this.toolbar) return;
+    const el = this.toolbar.querySelector(".ws-focus-wordcount");
+    if (el) {
+      const n = count != null ? count : this.getCurrentWordCount();
+      el.textContent = t2("focusToolbar.wordCount", { count: n });
+    }
+  }
+  updateToolbarSprintTime(timeStr) {
+    if (!this.toolbar) return;
+    const el = this.toolbar.querySelector(".ws-focus-sprint-time");
+    if (el) {
+      el.toggleClass("ws-hidden", !timeStr);
+      if (timeStr) el.textContent = timeStr;
+    }
+  }
+  getCurrentWordCount() {
+    var _a2;
+    const leaf = this.app.workspace.getMostRecentLeaf();
+    if (!leaf) return 0;
+    const view = leaf.view;
+    if (view instanceof import_obsidian22.MarkdownView) {
+      const content2 = ((_a2 = view.editor) == null ? void 0 : _a2.getValue()) || "";
+      return this.plugin.fmManager.countWords(content2);
+    }
+    return 0;
+  }
+  getEditorExtension() {
+    return this.editorExtension;
+  }
+  buildExtension() {
+    const plugin = this.plugin;
+    const focusParaDecoration = import_view.Decoration.line({ class: FOCUS_PARA_CLASS });
+    const focusPlugin = import_view.ViewPlugin.fromClass(
+      class {
+        constructor(view) {
+          this.decorations = this.buildDecorations(view);
+        }
+        update(update) {
+          if (update.docChanged || update.selectionSet) {
+            this.decorations = this.buildDecorations(update.view);
+          }
+          if (plugin.focusMode.isActive() && plugin.settings.typewriterScroll && update.selectionSet) {
+            plugin.focusMode.scrollToCursor(update.view);
+          }
+        }
+        buildDecorations(view) {
+          const builder = new import_state.RangeSetBuilder();
+          const state = view.state;
+          const sel = state.selection.main;
+          const doc = state.doc;
+          const cursorLine = doc.lineAt(sel.head);
+          const isParaMode = plugin.settings.focusUnit !== "sentence";
+          if (isParaMode) {
+            let start2 = cursorLine.number;
+            let end = cursorLine.number;
+            while (start2 > 1) {
+              const prev = doc.line(start2 - 1);
+              if (prev.text.trim() === "") break;
+              start2--;
+            }
+            while (end < doc.lines) {
+              const next = doc.line(end + 1);
+              if (next.text.trim() === "") break;
+              end++;
+            }
+            for (let i2 = start2; i2 <= end; i2++) {
+              const line = doc.line(i2);
+              builder.add(line.from, line.from, focusParaDecoration);
+            }
+          } else {
+            builder.add(cursorLine.from, cursorLine.from, focusParaDecoration);
+          }
+          return builder.finish();
+        }
+      },
+      { decorations: (v) => v.decorations }
+    );
+    return [focusPlugin];
+  }
+  scrollToCursor(view) {
+    const { head } = view.state.selection.main;
+    window.requestAnimationFrame(() => {
+      const coords = view.coordsAtPos(head);
+      if (!coords) return;
+      const scrollEl = view.scrollDOM;
+      const viewMid = scrollEl.clientHeight / 2;
+      const lineTop = coords.top - scrollEl.getBoundingClientRect().top + scrollEl.scrollTop;
+      scrollEl.scrollTo({ top: lineTop - viewMid, behavior: "auto" });
+    });
+  }
+  destroy() {
+    this.disable();
+  }
+};
+
+// src/TypographyMode.ts
+var FONT_STACKS = {
+  mono: '"iA Writer Mono", "Roboto Mono", "Courier New", monospace',
+  serif: '"iA Writer Duo Serif", Georgia, Palatino, serif',
+  sans: '"iA Writer Quattro", system-ui, -apple-system, sans-serif',
+  "cormorant-garamond": '"Cormorant Garamond", Georgia, "Times New Roman", serif',
+  "crimson-text": '"Crimson Text", Georgia, "Times New Roman", serif',
+  "eb-garamond": '"EB Garamond", Georgia, "Times New Roman", serif',
+  "libre-baskerville": '"Libre Baskerville", Georgia, "Times New Roman", serif',
+  "libre-caslon-text": '"Libre Caslon Text", Georgia, "Times New Roman", serif',
+  "literata": '"Literata", Georgia, "Times New Roman", serif',
+  "lora": '"Lora", Georgia, "Times New Roman", serif',
+  "inter": '"Inter", system-ui, -apple-system, sans-serif',
+  "lato": '"Lato", system-ui, -apple-system, sans-serif',
+  "source-sans-3": '"Source Sans 3", system-ui, -apple-system, sans-serif'
+};
+var TypographyMode = class {
+  constructor(plugin) {
+    this.active = false;
+    this.plugin = plugin;
+  }
+  // Session continuity: called when Writing Studio launches (not at plugin
+  // load — with the startup toggle off, Obsidian must open without any
+  // typography styling applied).
+  restorePersisted() {
+    if (this.plugin.settings.typographyModeActive && this.plugin.settings.persistTypography && !this.active) {
+      void this.enable();
+    }
+  }
+  isActive() {
+    return this.active;
+  }
+  async toggle() {
+    if (this.active) {
+      await this.disable();
+    } else {
+      await this.enable();
+    }
+  }
+  async enable() {
+    this.active = true;
+    this.applyCustomProperties();
+    activeDocument.body.classList.add("writing-studio-typography");
+    this.plugin.studioEvents.announceTypographyChanged(true);
+    if (this.plugin.settings.persistTypography) {
+      this.plugin.settings.typographyModeActive = true;
+      await this.plugin.saveSettings();
+    }
+  }
+  async disable() {
+    this.active = false;
+    this.removeCustomProperties();
+    activeDocument.body.classList.remove("writing-studio-typography");
+    this.plugin.studioEvents.announceTypographyChanged(false);
+    if (this.plugin.settings.persistTypography) {
+      this.plugin.settings.typographyModeActive = false;
+      await this.plugin.saveSettings();
+    }
+  }
+  applyCustomProperties() {
+    const settings = this.plugin.settings;
+    const safeCustom = settings.customFontName.replace(/["'\\;{}():]/g, "").trim();
+    const fontStack = settings.typographyFont === "custom" ? safeCustom ? `"${safeCustom}", system-ui, sans-serif` : "system-ui, sans-serif" : FONT_STACKS[settings.typographyFont] || FONT_STACKS.mono;
+    const maxChars = settings.maxLineLength || 65;
+    const fontSize = settings.typographyFontSize || 18;
+    const lineHeight = settings.lineHeight || 1.7;
+    const letterSpacing = settings.letterSpacing || "normal";
+    const halfWidthCh = `${maxChars / 2}ch`;
+    activeDocument.documentElement.setCssProps({
+      "--ws-typo-font": fontStack,
+      "--ws-typo-size": `${fontSize}px`,
+      "--ws-typo-lh": String(lineHeight),
+      "--ws-typo-ls": letterSpacing,
+      "--ws-typo-pad-left": `max(1.5rem, calc(50% - ${halfWidthCh}))`,
+      "--ws-typo-pad-right": `max(1.5rem, calc(50% - ${halfWidthCh}))`,
+      "--ws-typo-max-width": `${maxChars}ch`
+    });
+  }
+  removeCustomProperties() {
+    const root = activeDocument.documentElement;
+    root.style.removeProperty("--ws-typo-font");
+    root.style.removeProperty("--ws-typo-size");
+    root.style.removeProperty("--ws-typo-lh");
+    root.style.removeProperty("--ws-typo-ls");
+    root.style.removeProperty("--ws-typo-pad-left");
+    root.style.removeProperty("--ws-typo-pad-right");
+    root.style.removeProperty("--ws-typo-max-width");
+  }
+  refreshStyles() {
+    if (this.active) {
+      this.applyCustomProperties();
+    }
+  }
+  destroy() {
+    this.active = false;
+    this.removeCustomProperties();
+    activeDocument.body.classList.remove("writing-studio-typography");
+  }
+};
+
+// src/WritingModes.ts
+var import_obsidian23 = require("obsidian");
+
+// models/WritingMode.ts
+var WRITING_MODE_CONFIGS = {
+  draft: {
+    focusMode: true,
+    typographyMode: true,
+    binderOpen: false,
+    sidebarsVisible: false,
+    forceReadingView: false
+  },
+  edit: {
+    focusMode: false,
+    typographyMode: false,
+    binderOpen: true,
+    sidebarsVisible: true,
+    forceReadingView: false
+  },
+  review: {
+    focusMode: false,
+    typographyMode: false,
+    binderOpen: false,
+    sidebarsVisible: false,
+    forceReadingView: true
+  },
+  none: {
+    focusMode: false,
+    typographyMode: false,
+    binderOpen: false,
+    sidebarsVisible: true,
+    forceReadingView: false
+  }
+};
+
+// src/WritingModes.ts
+var WritingModes = class {
+  constructor(plugin) {
+    this.currentMode = "none";
+    this.statusBarEl = null;
+    this.reviewPrior = null;
+    this.plugin = plugin;
+    this.app = plugin.app;
+  }
+  setStatusBar(el) {
+    this.statusBarEl = el;
+    this.updateStatusBar();
+  }
+  getCurrentMode() {
+    return this.currentMode;
+  }
+  async switchMode(mode, silent = false) {
+    if (this.currentMode === mode) return;
+    this.currentMode = mode;
+    this.plugin.activateStudio();
+    const config = WRITING_MODE_CONFIGS[mode];
+    if (config.focusMode && !this.plugin.focusMode.isActive()) {
+      this.plugin.focusMode.enable();
+    } else if (!config.focusMode && this.plugin.focusMode.isActive()) {
+      this.plugin.focusMode.disable();
+    }
+    if (config.typographyMode && !this.plugin.typographyMode.isActive()) {
+      await this.plugin.typographyMode.enable();
+    } else if (!config.typographyMode && this.plugin.typographyMode.isActive()) {
+      await this.plugin.typographyMode.disable();
+    }
+    if (config.binderOpen) {
+      await this.plugin.openBinder();
+    }
+    if (!config.sidebarsVisible) {
+      this.collapseSidebars();
+    } else {
+      this.expandSidebars();
+    }
+    if (config.forceReadingView) {
+      this.forceReadingView();
+    } else {
+      this.restoreEditorViewMode();
+    }
+    this.updateStatusBar();
+    this.plugin.studioEvents.announceModeChanged(mode);
+    this.plugin.settings.currentWritingMode = mode;
+    await this.plugin.saveSettings();
+    if (!silent) {
+      const modeLabel = mode === "none" ? t2("writingModes.normal") : t2(`launcher.mode.${mode}`);
+      new import_obsidian23.Notice(t2("writingModes.switchedTo", { mode: modeLabel }));
+    }
+  }
+  collapseSidebars() {
+    const left = this.app.workspace.leftSplit;
+    const right = this.app.workspace.rightSplit;
+    if (left && !left.collapsed) left.collapse();
+    if (right && !right.collapsed) right.collapse();
+  }
+  expandSidebars() {
+    const left = this.app.workspace.leftSplit;
+    const right = this.app.workspace.rightSplit;
+    if (left && left.collapsed) left.expand();
+    if (right && right.collapsed) right.expand();
+  }
+  forceReadingView() {
+    const leaf = this.app.workspace.getMostRecentLeaf();
+    if (!leaf || !(leaf.view instanceof import_obsidian23.MarkdownView)) return;
+    const mode = leaf.view.getMode();
+    if (mode !== "preview") {
+      this.reviewPrior = { leaf, mode };
+    }
+    void this.setLeafMode(leaf, "preview");
+  }
+  restoreEditorViewMode() {
+    const prior = this.reviewPrior;
+    this.reviewPrior = null;
+    if (!prior || !(prior.leaf.view instanceof import_obsidian23.MarkdownView)) return;
+    void this.setLeafMode(prior.leaf, prior.mode);
+  }
+  async setLeafMode(leaf, mode) {
+    const state = leaf.getViewState();
+    await leaf.setViewState({ ...state, state: { ...state.state, mode } });
+  }
+  updateStatusBar() {
+    if (!this.statusBarEl) return;
+    const mode = this.currentMode;
+    this.statusBarEl.empty();
+    this.statusBarEl.toggleClass("ws-status-mode-empty", mode === "none");
+    this.statusBarEl.toggleClass("ws-status-mode--active", mode !== "none");
+    if (mode === "none") return;
+    const icons = {
+      draft: "pencil",
+      edit: "edit-3",
+      review: "eye"
+    };
+    const labels = {
+      draft: t2("writingModes.statusDraft"),
+      edit: t2("writingModes.statusEdit"),
+      review: t2("writingModes.statusReview")
+    };
+    (0, import_obsidian23.setIcon)(this.statusBarEl.createSpan("ws-status-mode-icon"), icons[mode]);
+    this.statusBarEl.createSpan({ text: labels[mode] });
+  }
+  restore() {
+    const saved = this.plugin.settings.currentWritingMode;
+    if (saved && saved !== "none") {
+      void this.switchMode(saved, true);
+    }
+  }
+  destroy() {
+    if (this.currentMode === "none") return;
+    const config = WRITING_MODE_CONFIGS[this.currentMode];
+    if (!config.sidebarsVisible) {
+      this.expandSidebars();
+    }
+    this.restoreEditorViewMode();
+    this.currentMode = "none";
+  }
+};
+
+// src/SprintTimer.ts
+var import_obsidian24 = require("obsidian");
+function computeSprintWords(scope, primaryFile, baselines, currents, projectPrefix) {
+  var _a2, _b2, _c;
+  if (scope === "project") {
+    let total = 0;
+    for (const [path, current2] of currents) {
+      if (projectPrefix && !path.startsWith(projectPrefix)) continue;
+      const baseline2 = (_a2 = baselines.get(path)) != null ? _a2 : current2;
+      total += Math.max(0, current2 - baseline2);
+    }
+    return total;
+  }
+  if (!primaryFile) return 0;
+  const baseline = (_b2 = baselines.get(primaryFile)) != null ? _b2 : 0;
+  const current = (_c = currents.get(primaryFile)) != null ? _c : baseline;
+  return Math.max(0, current - baseline);
+}
+var SprintTimer = class {
+  constructor(plugin) {
+    this.state = null;
+    this.intervalId = null;
+    this.tickCount = 0;
+    this.floatingEl = null;
+    this.statusBarEl = null;
+    this.onComplete = null;
+    this.plugin = plugin;
+    this.app = plugin.app;
+  }
+  setStatusBar(el) {
+    this.statusBarEl = el;
+    el.addClass("ws-hidden");
+  }
+  setOnComplete(cb) {
+    this.onComplete = cb;
+  }
+  isActive() {
+    return this.state !== null && this.state.active;
+  }
+  // Armed but not started — the overlay is showing its ready state
+  isReady() {
+    return this.state !== null && this.state.ready;
+  }
+  getDurationMinutes() {
+    var _a2, _b2;
+    return (_b2 = (_a2 = this.state) == null ? void 0 : _a2.durationMinutes) != null ? _b2 : null;
+  }
+  // Opens overlay in paused/ready state — called by SprintModal and preset buttons.
+  // The clock does not run until the user presses Start on the overlay itself.
+  setup(durationMinutes, wordCountGoal, projectScope = "file") {
+    var _a2;
+    if (((_a2 = this.state) == null ? void 0 : _a2.active) && !this.state.ready) {
+      new import_obsidian24.Notice(t2("sprint.alreadyRunning"));
+      return;
+    }
+    this.state = {
+      active: true,
+      paused: true,
+      ready: true,
+      startTime: Date.now(),
+      pausedAt: Date.now(),
+      totalPausedMs: 0,
+      durationMinutes,
+      wordCountGoal,
+      primaryFile: null,
+      baselines: /* @__PURE__ */ new Map(),
+      currents: /* @__PURE__ */ new Map(),
+      projectScope
+    };
+    this.showFloating();
+    this.updateDisplay();
+    this.plugin.studioEvents.announceSprintChanged();
+  }
+  pause() {
+    if (!this.state || !this.state.active || this.state.paused) return;
+    this.sampleActiveFile();
+    this.state.paused = true;
+    this.state.pausedAt = Date.now();
+    this.stopInterval();
+    this.updateDisplay();
+  }
+  resume() {
+    if (!this.state || !this.state.active || !this.state.paused) return;
+    const wasReady = this.state.ready;
+    this.state.totalPausedMs += Date.now() - this.state.pausedAt;
+    this.state.paused = false;
+    this.state.ready = false;
+    if (wasReady) {
+      this.state.baselines.clear();
+      this.state.currents.clear();
+      this.sampleActiveFile();
+      this.state.primaryFile = this.getActiveFilePath();
+    }
+    this.startInterval();
+    this.updateDisplay();
+    this.plugin.studioEvents.announceSprintChanged();
+    if (wasReady) {
+      new import_obsidian24.Notice(t2("sprint.started", { minutes: this.state.durationMinutes }));
+    }
+  }
+  stop() {
+    if (!this.state) return;
+    const wasReady = this.state.ready;
+    this.stopInterval();
+    const session = wasReady ? null : this.buildSession();
+    this.state = null;
+    this.hideFloating();
+    if (this.statusBarEl) this.statusBarEl.addClass("ws-hidden");
+    this.plugin.studioEvents.announceSprintChanged();
+    if (!wasReady && session && this.onComplete) void this.onComplete(session);
+  }
+  buildSession() {
+    this.sampleActiveFile();
+    const s = this.state;
+    const wordsWritten = this.getWordsWritten();
+    const documents = this.getCountedDocuments();
+    const startWordCount = documents.reduce((sum, p) => {
+      var _a2;
+      return sum + ((_a2 = s.baselines.get(p)) != null ? _a2 : 0);
+    }, 0);
+    return {
+      id: `sprint-${Date.now()}`,
+      date: (/* @__PURE__ */ new Date()).toISOString(),
+      duration: s.durationMinutes,
+      wordsWritten,
+      startWordCount,
+      wordCountGoal: s.wordCountGoal,
+      documents,
+      completed: true
+    };
+  }
+  getWordsWritten() {
+    const s = this.state;
+    if (!s) return 0;
+    return computeSprintWords(s.projectScope, s.primaryFile, s.baselines, s.currents, this.getProjectPrefix());
+  }
+  // Files whose words count toward this sprint, given its scope
+  getCountedDocuments() {
+    const s = this.state;
+    if (!s) return [];
+    if (s.projectScope === "project") {
+      const prefix = this.getProjectPrefix();
+      return [...s.currents.keys()].filter((p) => !prefix || p.startsWith(prefix));
+    }
+    return s.primaryFile ? [s.primaryFile] : [];
+  }
+  getProjectPrefix() {
+    var _a2;
+    if (((_a2 = this.state) == null ? void 0 : _a2.projectScope) !== "project") return null;
+    const project = this.plugin.projectManager.getActiveProject();
+    return project ? (0, import_obsidian24.normalizePath)(project.folderPath) + "/" : null;
+  }
+  getElapsedMs() {
+    if (!this.state) return 0;
+    const now = this.state.paused ? this.state.pausedAt : Date.now();
+    return now - this.state.startTime - this.state.totalPausedMs;
+  }
+  getRemainingMs() {
+    if (!this.state) return 0;
+    const totalMs = this.state.durationMinutes * 60 * 1e3;
+    return Math.max(0, totalMs - this.getElapsedMs());
+  }
+  getFormattedRemaining() {
+    const ms = this.getRemainingMs();
+    const totalSec = Math.ceil(ms / 1e3);
+    const min = Math.floor(totalSec / 60);
+    const sec = totalSec % 60;
+    return `${String(min).padStart(2, "0")}:${String(sec).padStart(2, "0")}`;
+  }
+  startInterval() {
+    this.intervalId = window.setInterval(() => this.tick(), 1e3);
+  }
+  stopInterval() {
+    if (this.intervalId !== null) {
+      window.clearInterval(this.intervalId);
+      this.intervalId = null;
+    }
+  }
+  tick() {
+    if (this.getRemainingMs() <= 0) {
+      this.handleComplete();
+      return;
+    }
+    if (++this.tickCount % 5 === 0) {
+      this.sampleActiveFile();
+    }
+    this.updateDisplay();
+  }
+  handleComplete() {
+    this.stopInterval();
+    this.sampleActiveFile();
+    if (this.plugin.settings.soundNotifications) {
+      this.playBell();
+    }
+    new import_obsidian24.Notice(t2("sprint.complete"), 5e3);
+    const session = this.buildSession();
+    this.state = null;
+    this.hideFloating();
+    if (this.statusBarEl) this.statusBarEl.addClass("ws-hidden");
+    if (this.onComplete) void this.onComplete(session);
+  }
+  playBell() {
+    try {
+      const ctx = new AudioContext();
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.frequency.value = 880;
+      osc.type = "sine";
+      gain.gain.setValueAtTime(0.3, ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(1e-3, ctx.currentTime + 1.5);
+      osc.onended = () => {
+        void ctx.close();
+      };
+      osc.start(ctx.currentTime);
+      osc.stop(ctx.currentTime + 1.5);
+    } catch (e) {
+    }
+  }
+  updateDisplay() {
+    var _a2, _b2, _c, _d;
+    const time = this.getFormattedRemaining();
+    const paused = ((_a2 = this.state) == null ? void 0 : _a2.paused) && !((_b2 = this.state) == null ? void 0 : _b2.ready) ? " \u23F8" : "";
+    const label = `\u23F1 ${time}${paused}`;
+    if (this.floatingEl) {
+      const timeEl = this.floatingEl.querySelector(".ws-sprint-time");
+      if (timeEl) timeEl.textContent = time;
+      const wcEl = this.floatingEl.querySelector(".ws-sprint-wc");
+      if (wcEl) wcEl.textContent = t2("sprint.words", { n: this.getWordsWritten() });
+      const pauseBtn = this.floatingEl.querySelector(".ws-sprint-pause");
+      if (pauseBtn) {
+        if ((_c = this.state) == null ? void 0 : _c.ready) {
+          pauseBtn.textContent = "\u25B6";
+          pauseBtn.title = t2("sprint.startTitle");
+        } else if ((_d = this.state) == null ? void 0 : _d.paused) {
+          pauseBtn.textContent = "\u25B6";
+          pauseBtn.title = t2("sprint.resumeTitle");
+        } else {
+          pauseBtn.textContent = "\u23F8";
+          pauseBtn.title = t2("sprint.pauseTitle");
+        }
+      }
+    }
+    if (this.statusBarEl) {
+      this.statusBarEl.textContent = label;
+      this.statusBarEl.removeClass("ws-hidden");
+    }
+    this.plugin.focusMode.updateToolbarSprintTime(label);
+  }
+  showFloating() {
+    this.hideFloating();
+    const el = createDiv({ cls: "ws-sprint-floating" });
+    el.createDiv({ cls: "ws-sprint-header", text: t2("sprint.header") });
+    el.createDiv({ cls: "ws-sprint-time", text: "00:00" });
+    el.createDiv({ cls: "ws-sprint-wc", text: t2("sprint.words", { n: 0 }) });
+    const controls = el.createDiv({ cls: "ws-sprint-controls" });
+    const pauseBtn = controls.createEl("button", {
+      cls: "ws-sprint-pause",
+      title: t2("sprint.startTitle"),
+      text: "\u25B6"
+    });
+    const stopBtn = controls.createEl("button", {
+      cls: "ws-sprint-stop",
+      title: t2("sprint.stopTitle"),
+      text: "\u25A0"
+    });
+    pauseBtn.onclick = () => {
+      var _a2;
+      if ((_a2 = this.state) == null ? void 0 : _a2.paused) this.resume();
+      else this.pause();
+    };
+    stopBtn.onclick = () => this.stop();
+    activeDocument.body.appendChild(el);
+    this.floatingEl = el;
+    this.makeDraggable(el);
+  }
+  makeDraggable(el) {
+    const header = el.querySelector(".ws-sprint-header");
+    if (!header) return;
+    header.addClass("ws-draggable");
+    let startX = 0, startY = 0, startLeft = 0, startTop = 0;
+    const onMove = (e) => {
+      const dx = e.clientX - startX;
+      const dy = e.clientY - startY;
+      const left = Math.max(0, Math.min(activeWindow.innerWidth - el.offsetWidth, startLeft + dx));
+      const top = Math.max(0, Math.min(activeWindow.innerHeight - el.offsetHeight, startTop + dy));
+      el.addClass("ws-sprint-floating--dragged");
+      el.setCssProps({ "--ws-float-x": `${left}px`, "--ws-float-y": `${top}px` });
+    };
+    const onUp = () => {
+      activeDocument.removeEventListener("mousemove", onMove);
+      activeDocument.removeEventListener("mouseup", onUp);
+      header.removeClass("ws-dragging");
+    };
+    header.addEventListener("mousedown", (e) => {
+      const rect = el.getBoundingClientRect();
+      startX = e.clientX;
+      startY = e.clientY;
+      startLeft = rect.left;
+      startTop = rect.top;
+      header.addClass("ws-dragging");
+      activeDocument.addEventListener("mousemove", onMove);
+      activeDocument.addEventListener("mouseup", onUp);
+      e.preventDefault();
+    });
+  }
+  hideFloating() {
+    if (this.floatingEl) {
+      this.floatingEl.remove();
+      this.floatingEl = null;
+    }
+  }
+  // Record the active file's current word count, setting its baseline the
+  // first time it is seen during this sprint
+  sampleActiveFile() {
+    var _a2;
+    const s = this.state;
+    if (!s) return;
+    const leaf = this.app.workspace.getMostRecentLeaf();
+    if (!leaf) return;
+    const view = leaf.view;
+    if (!(view instanceof import_obsidian24.MarkdownView) || !view.file) return;
+    const path = view.file.path;
+    const count = this.plugin.fmManager.countWords(((_a2 = view.editor) == null ? void 0 : _a2.getValue()) || "");
+    if (!s.baselines.has(path)) {
+      s.baselines.set(path, count);
+    }
+    s.currents.set(path, count);
+  }
+  getActiveFilePath() {
+    var _a2, _b2;
+    const leaf = this.app.workspace.getMostRecentLeaf();
+    const view = leaf == null ? void 0 : leaf.view;
+    return view instanceof import_obsidian24.MarkdownView ? (_b2 = (_a2 = view.file) == null ? void 0 : _a2.path) != null ? _b2 : null : null;
+  }
+  destroy() {
+    this.stopInterval();
+    this.hideFloating();
   }
 };
 
@@ -20221,12 +20394,6 @@ var WritingStudioSettingsTab = class extends import_obsidian30.PluginSettingTab 
       this.plugin.settings.defaultExportFormat = v;
       await this.plugin.saveSettings();
     }));
-    if (this.plugin.settings.filesystemBinder) {
-      new import_obsidian30.Setting(el).setName(t2("settings.export.subtreeTitleSource")).setDesc(t2("settings.export.subtreeTitleSourceDesc")).addDropdown((d) => d.addOption("folder", t2("settings.export.subtreeTitleFolder")).addOption("project", t2("settings.export.subtreeTitleProject")).setValue(this.plugin.settings.subtreeExportTitleSource).onChange(async (v) => {
-        this.plugin.settings.subtreeExportTitleSource = v;
-        await this.plugin.saveSettings();
-      }));
-    }
     new import_obsidian30.Setting(el).setName(t2("settings.export.defaultPaperSize")).addDropdown((d) => d.addOption("letter", t2("settings.export.paperSize.letter")).addOption("a4", t2("settings.export.paperSize.a4")).setValue(this.plugin.settings.defaultPaperSize).onChange(async (v) => {
       this.plugin.settings.defaultPaperSize = v;
       await this.plugin.saveSettings();
@@ -21357,7 +21524,6 @@ var DEFAULT_SETTINGS = {
   defaultExportFontSize: 12,
   pandocPath: "pandoc",
   pdfEngine: "auto",
-  subtreeExportTitleSource: "folder",
   epubLanguage: "en",
   epubIncludeCover: true,
   wordPressSites: [],
@@ -21596,7 +21762,7 @@ var WritingStudioPlugin = class extends import_obsidian37.Plugin {
       void this.app.workspace.revealLeaf(leaf);
     }
   }
-  async openCompilePreview() {
+  async openCompilePreview(state) {
     const existing = this.app.workspace.getLeavesOfType(COMPILE_PREVIEW_VIEW_TYPE);
     let leaf;
     if (existing.length > 0) {
@@ -21607,7 +21773,7 @@ var WritingStudioPlugin = class extends import_obsidian37.Plugin {
     }
     void this.app.workspace.revealLeaf(leaf);
     if (leaf.view instanceof CompilePreviewView) {
-      await leaf.view.loadContent();
+      await leaf.view.loadContent(state);
     }
   }
   async openFolder(folder) {

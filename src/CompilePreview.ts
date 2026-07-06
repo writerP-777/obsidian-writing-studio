@@ -1,6 +1,8 @@
 import { ItemView, WorkspaceLeaf, MarkdownRenderer, Notice, normalizePath } from 'obsidian';
 import type WritingStudioPlugin from '../main';
-import { ExportOptions } from './ExportEngine';
+import { ExportOptions, ExportUiState, defaultExportUiState } from './ExportEngine';
+import { resolveExportTitle } from './exportTitle';
+import { parseFolderPrefix } from './binderOrder';
 import { ExportModal } from '../modals/ExportModal';
 import { t } from './i18n';
 import { safeHandler } from './safeHandler';
@@ -13,6 +15,9 @@ export class CompilePreviewView extends ItemView {
   private content = '';
   private sections: string[] = [];
   private jumpItems: JumpItem[] = [];
+  // The export dialog's selections this preview renders with — "Proceed to
+  // export" hands them back so the round trip loses nothing (#260)
+  private state: ExportUiState = defaultExportUiState();
   // Virtual path inside the project folder so relative links and embeds in
   // the rendered preview resolve from the project, not the vault root.
   private sourcePath = '';
@@ -39,23 +44,46 @@ export class CompilePreviewView extends ItemView {
     return Promise.resolve();
   }
 
-  async loadContent(opts: Partial<ExportOptions> = {}): Promise<void> {
+  // Renders the compile exactly as the export dialog's selections would
+  // produce it — same content, same title (#260). Called with no state, it
+  // uses the dialog's defaults (the standalone preview command).
+  async loadContent(state?: ExportUiState): Promise<void> {
+    if (state) this.state = state;
+    const s = this.state;
+
+    const project = this.plugin.projectManager.getActiveProject();
+    const title = resolveExportTitle(s.titleChoice, {
+      projectTitle: project?.title ?? '',
+      folderName: s.subtreeRoot
+        ? parseFolderPrefix(s.subtreeRoot.split('/').pop() ?? '').displayName
+        : undefined,
+      customTitle: s.customTitle,
+    });
+
     const exportOpts: ExportOptions = {
       format: 'md',
-      scope: 'project',
-      includeFrontmatter: false,
-      includeResearch: opts.includeResearch || false,
-      includeTitlesAsHeadings: true,
+      scope: s.scope,
+      subtreeRoot: s.subtreeRoot,
+      currentFile: s.currentFilePath,
+      exportTitle: title || undefined,
+      includeFrontmatter: s.includeFrontmatter,
+      includeResearch: s.includeResearch,
+      includeTitlesAsHeadings: s.includeTitlesAsHeadings,
+      includeFolderNamesAsHeadings: s.includeFolderNamesAsHeadings,
       paperSize: 'letter',
       font: '',
       fontSize: 12,
-      addTitlePage: true,
+      addTitlePage: s.addTitlePage,
     };
 
-    const project = this.plugin.projectManager.getActiveProject();
     this.sourcePath = project ? normalizePath(`${project.folderPath}/_compile.md`) : '';
 
-    this.content = this.plugin.exportEngine.toMarkdown(await this.plugin.exportEngine.compileContent(exportOpts));
+    try {
+      this.content = this.plugin.exportEngine.toMarkdown(await this.plugin.exportEngine.compileContent(exportOpts));
+    } catch (e) {
+      this.content = '';
+      new Notice(t('exportModal.exportFailed', { error: e instanceof Error ? e.message : String(e) }));
+    }
     this.sections = splitSections(this.content);
     this.jumpItems = buildJumpItems(this.sections);
     this.render();
@@ -88,7 +116,7 @@ export class CompilePreviewView extends ItemView {
       text: t('compilePreview.proceedToExport'),
     });
     exportBtn.onclick = () => {
-      new ExportModal(this.app, this.plugin, 'project').open();
+      new ExportModal(this.app, this.plugin, this.state.scope, this.state.subtreeRoot, this.state).open();
     };
 
     const closeBtn = toolbar.createEl('button', {
