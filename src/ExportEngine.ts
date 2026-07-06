@@ -9,6 +9,7 @@ import { localDateString } from './dates';
 import { markdownToHtml } from './markdown';
 import { buildManuscriptTree, planCompile, CompilePlanItem } from './manuscriptTree';
 import { parseFolderPrefix } from './binderOrder';
+import { ExportTitleChoice, sanitizeTitleForFilename } from './exportTitle';
 
 const execFileAsync = promisify(execFile);
 
@@ -26,6 +27,18 @@ export interface ExportOptions {
   includeFolderNamesAsHeadings?: boolean;
   /** Manuscript-zone folder to compile instead of the whole zone (fs binder only). */
   subtreeRoot?: string;
+  /**
+   * The export's one title (#260) — filename, title page, and metadata all use
+   * this value. Absent, the default mirrors the dialog's: the folder display
+   * name for a folder export, else the project title.
+   */
+  exportTitle?: string;
+  /**
+   * Document a 'current' scope export targets. Captured by the dialog so a
+   * compile-preview leaf cannot become the "most recent leaf" and break the
+   * live lookup.
+   */
+  currentFile?: string;
   paperSize: 'letter' | 'a4';
   font: string;
   fontSize: number;
@@ -33,6 +46,38 @@ export interface ExportOptions {
   addTitlePage: boolean;
   coverImagePath?: string;
   authorContact?: string;
+}
+
+/**
+ * The export dialog's selections, carried between the dialog and the compile
+ * preview so the preview renders exactly what the export would produce (#260).
+ */
+export interface ExportUiState {
+  scope: ExportScope;
+  subtreeRoot?: string;
+  currentFilePath?: string;
+  includeFrontmatter: boolean;
+  includeResearch: boolean;
+  includeTitlesAsHeadings: boolean;
+  includeFolderNamesAsHeadings: boolean;
+  addTitlePage: boolean;
+  titleChoice: ExportTitleChoice;
+  customTitle: string;
+}
+
+// The dialog's defaults — also what the standalone preview command renders.
+export function defaultExportUiState(subtreeRoot?: string): ExportUiState {
+  return {
+    scope: 'project',
+    subtreeRoot,
+    includeFrontmatter: false,
+    includeResearch: false,
+    includeTitlesAsHeadings: true,
+    includeFolderNamesAsHeadings: false,
+    addTitlePage: true,
+    titleChoice: subtreeRoot ? 'folder' : 'project',
+    customTitle: '',
+  };
 }
 
 export type PdfEngine = 'xelatex' | 'lualatex' | 'pdflatex' | 'wkhtmltopdf';
@@ -226,14 +271,9 @@ export class ExportEngine {
     await this.files.ensureFolder(outputDir);
 
     const timestamp = new Date().toISOString().replace(/[:.]/g, '-').slice(0, 19);
-    const projectTitle = project?.title.replace(/[\\/:*?"<>|]/g, '-') || 'export';
-    // A subtree export carries the folder's display name in the filename —
-    // the rebased compile emits no heading for the folder itself (#232), so
-    // this is where its name survives.
-    const subtreeName = opts.subtreeRoot
-      ? '-' + parseFolderPrefix(opts.subtreeRoot.split('/').pop() ?? '').displayName.replace(/[\\/:*?"<>|]/g, '-')
-      : '';
-    const baseFile = normalizePath(`${outputDir}/${projectTitle}${subtreeName}-${timestamp}`);
+    // One title names the export everywhere (#260) — the filename carries it
+    // sanitized, the title page and metadata carry it verbatim.
+    const baseFile = normalizePath(`${outputDir}/${sanitizeTitleForFilename(this.resolveTitle(opts))}-${timestamp}`);
 
     if (opts.format === 'epub') {
       return this.exportEpub(opts, baseFile);
@@ -249,7 +289,7 @@ export class ExportEngine {
       case 'md':
         return this.exportMarkdown(compiled, `${baseFile}.md`);
       case 'html':
-        return this.exportHtml(compiled, `${baseFile}.html`, this.subtreeTitle(opts) ?? (project?.title || 'Document'), opts);
+        return this.exportHtml(compiled, `${baseFile}.html`, this.resolveTitle(opts), opts);
       case 'docx':
         return this.exportPandoc(compiled, `${baseFile}.docx`, opts);
       case 'rtf':
@@ -265,7 +305,7 @@ export class ExportEngine {
     const project = this.plugin.projectManager.getActiveProject();
     const outputPath = `${baseFile}.epub`;
 
-    const title = this.subtreeTitle(opts) ?? (project?.title || 'Untitled');
+    const title = this.resolveTitle(opts);
     const author = project?.author || this.plugin.settings.authorName || '';
     const language = this.plugin.settings.epubLanguage || 'en';
     const date = localDateString();
@@ -273,13 +313,11 @@ export class ExportEngine {
     const chapters: EpubChapter[] = [];
 
     if (opts.scope === 'current') {
-      const leaf = this.app.workspace.getMostRecentLeaf();
-      const view = leaf?.view;
-      const file = view instanceof MarkdownView ? view.file : null;
-      if (!(file instanceof TFile)) {
+      const path = opts.currentFile ?? this.activeMarkdownPath();
+      if (!path) {
         throw new Error(t('exportEngine.noActiveDocument'));
       }
-      let content = await this.files.readText(file.path);
+      let content = await this.files.readText(path);
       if (content === null) {
         throw new Error(t('exportEngine.noActiveDocument'));
       }
@@ -288,7 +326,8 @@ export class ExportEngine {
       }
       content = this.preprocessObsidianMarkdown(content.trim());
       const htmlContent = this.htmlToXhtml(markdownToHtml(content));
-      chapters.push({ id: 'chapter-1', title: file.basename, htmlContent });
+      const basename = path.split('/').pop()?.replace(/\.md$/, '') ?? path;
+      chapters.push({ id: 'chapter-1', title: basename, htmlContent });
     } else if (opts.scope === 'project' && project && this.plugin.settings.filesystemBinder) {
       // Folder headings have no chapter home in epub — the option is ignored
       // (ruling on #232); chapters are the zone's documents in binder order.
@@ -366,13 +405,26 @@ export class ExportEngine {
       .replace(/<img([^>]*)(?<!\/)>/g, '<img$1/>');
   }
 
-  // The folder display name a subtree export titles itself with, or null
-  // when the project title applies — not a subtree export, or the
-  // "Export folder title" setting says project (#244; default is folder).
-  private subtreeTitle(opts: ExportOptions): string | null {
-    if (!opts.subtreeRoot) return null;
-    if (this.plugin.settings.subtreeExportTitleSource === 'project') return null;
-    return parseFolderPrefix(opts.subtreeRoot.split('/').pop() ?? '').displayName;
+  // The export's single title authority (#260): the dialog resolves the user's
+  // dropdown choice into opts.exportTitle; filename, title page, and metadata
+  // all read this one value. Engine-level callers that pass no title get the
+  // dialog's default — folder display name for a folder export, else the
+  // project title.
+  private resolveTitle(opts: ExportOptions): string {
+    const explicit = opts.exportTitle?.trim();
+    if (explicit) return explicit;
+    if (opts.subtreeRoot) {
+      return parseFolderPrefix(opts.subtreeRoot.split('/').pop() ?? '').displayName;
+    }
+    return this.plugin.projectManager.getActiveProject()?.title || 'Untitled';
+  }
+
+  // Path of the most recently active markdown document, or null when none is.
+  private activeMarkdownPath(): string | null {
+    const leaf = this.app.workspace.getMostRecentLeaf();
+    const view = leaf?.view;
+    const file = view instanceof MarkdownView ? view.file : null;
+    return file instanceof TFile ? file.path : null;
   }
 
   async compileContent(opts: ExportOptions): Promise<string> {
@@ -382,22 +434,17 @@ export class ExportEngine {
     if (opts.addTitlePage && project) {
       const today = new Date().toLocaleDateString();
       const byline = t('exportEngine.byAuthor', { author: project.author || this.plugin.settings.authorName });
-      const subtree = this.subtreeTitle(opts);
-      // Subtree title pages keep the project as its own paragraph — a soft
-      // line break would be joined into the byline by pandoc (#244 mock)
-      parts.push(subtree !== null
-        ? `# ${subtree}\n\n${project.title}\n\n${byline}\n\n${today}`
-        : `# ${project.title}\n\n${byline}\n\n${today}`);
+      // The one resolved title opens the page (#260) — a "Project — folder"
+      // dropdown choice arrives here already composed.
+      parts.push(`# ${this.resolveTitle(opts)}\n\n${byline}\n\n${today}`);
     }
 
     if (opts.scope === 'current') {
-      const leaf = this.app.workspace.getMostRecentLeaf();
-      const view = leaf?.view;
-      const file = view instanceof MarkdownView ? view.file : null;
-      if (!(file instanceof TFile)) {
+      const path = opts.currentFile ?? this.activeMarkdownPath();
+      if (!path) {
         throw new Error(t('exportEngine.noActiveDocument'));
       }
-      const content = await this.processPath(file.path, opts);
+      const content = await this.processPath(path, opts);
       if (content === null) {
         throw new Error(t('exportEngine.noActiveDocument'));
       }
@@ -491,7 +538,7 @@ export class ExportEngine {
   private async exportManuscript(opts: ExportOptions, outputPath: string): Promise<string> {
     const project = this.plugin.projectManager.getActiveProject();
     const author = project?.author || this.plugin.settings.authorName || 'Author';
-    const title  = this.subtreeTitle(opts) ?? (project?.title || 'Untitled');
+    const title  = this.resolveTitle(opts);
 
     // Compile without auto title page — we build a proper manuscript title page instead
     const compiled = await this.compileContent({ ...opts, addTitlePage: false });

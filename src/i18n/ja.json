@@ -115,11 +115,7 @@
       "includeCoverDesc": "カバー画像がない場合、テキストカバーページを自動生成します。",
       "pdfEngine": "PDF エンジン",
       "pdfEngineDesc": "PDF 書き出しに使うエンジンです。自動ではインストール済みの LaTeX エンジンを選びます。wkhtmltopdf は LaTeX 不要ですが、書き出しフォント設定は適用されません。",
-      "pdfEngineAuto": "自動（推奨）",
-      "subtreeTitleSource": "フォルダー書き出し時のタイトル",
-      "subtreeTitleSourceDesc": "フォルダー書き出しのタイトルページとメタデータが示す名前：書き出したフォルダーか、プロジェクト全体か。",
-      "subtreeTitleFolder": "フォルダー名",
-      "subtreeTitleProject": "プロジェクトのタイトル"
+      "pdfEngineAuto": "自動（推奨）"
     },
     "log": {
       "heading": "毎日の執筆ログ",
@@ -541,7 +537,14 @@
     "exportFailed": "エクスポートに失敗しました：{{error}}",
     "cancel": "キャンセル",
     "pandocWarning": "Pandocが見つかりません。エクスポート設定の「Pandocのパス」を確認してください — このエクスポートは失敗する可能性が高いです。",
-    "includeFolderHeadings": "フォルダー名を見出しとして含める"
+    "includeFolderHeadings": "フォルダー名を見出しとして含める",
+    "titleName": "タイトル",
+    "titleFolder": "フォルダ名",
+    "titleProjectFolder": "プロジェクト — フォルダ",
+    "titleProject": "プロジェクト名",
+    "titleCustom": "自分でタイトルを入力",
+    "customTitleName": "カスタムタイトル",
+    "customTitlePlaceholder": "タイトルを入力"
   },
   "publishModal": {
     "title": "WordPressに公開",

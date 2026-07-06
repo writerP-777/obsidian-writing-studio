@@ -115,11 +115,7 @@
       "includeCoverDesc": "未提供封面图片时自动生成文字封面页。",
       "pdfEngine": "PDF 引擎",
       "pdfEngineDesc": "用于 PDF 导出的引擎。自动模式会选择已安装的 LaTeX 引擎。wkhtmltopdf 无需 LaTeX 即可使用，但导出字体设置对其无效。",
-      "pdfEngineAuto": "自动（推荐）",
-      "subtreeTitleSource": "导出文件夹的标题",
-      "subtreeTitleSourceDesc": "导出文件夹时标题页和元数据显示的名称：导出的文件夹或整个项目。",
-      "subtreeTitleFolder": "文件夹名称",
-      "subtreeTitleProject": "项目标题"
+      "pdfEngineAuto": "自动（推荐）"
     },
     "log": {
       "heading": "每日写作日志",
@@ -541,7 +537,14 @@
     "exportFailed": "导出失败：{{error}}",
     "cancel": "取消",
     "pandocWarning": "未找到 Pandoc。请检查导出设置中的\"Pandoc 路径\"字段——此次导出很可能失败。",
-    "includeFolderHeadings": "将文件夹名称作为标题包含"
+    "includeFolderHeadings": "将文件夹名称作为标题包含",
+    "titleName": "标题",
+    "titleFolder": "文件夹名称",
+    "titleProjectFolder": "项目 — 文件夹",
+    "titleProject": "项目名称",
+    "titleCustom": "输入自己的标题",
+    "customTitleName": "自定义标题",
+    "customTitlePlaceholder": "输入标题"
   },
   "publishModal": {
     "title": "发布到 WordPress",

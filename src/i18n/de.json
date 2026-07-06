@@ -115,11 +115,7 @@
       "includeCoverDesc": "Eine Text-Umschlagseite generieren, wenn kein Umschlagbild vorhanden ist.",
       "pdfEngine": "PDF-Engine",
       "pdfEngineDesc": "Engine für den PDF-Export. Auto wählt eine installierte LaTeX-Engine. wkhtmltopdf funktioniert ohne LaTeX, die Exportschriftart gilt dort jedoch nicht.",
-      "pdfEngineAuto": "Automatisch (empfohlen)",
-      "subtreeTitleSource": "Titel beim Ordner-Export",
-      "subtreeTitleSourceDesc": "Was Titelseite und Metadaten eines Ordner-Exports benennen: den exportierten Ordner oder das gesamte Projekt.",
-      "subtreeTitleFolder": "Ordnername",
-      "subtreeTitleProject": "Projekttitel"
+      "pdfEngineAuto": "Automatisch (empfohlen)"
     },
     "log": {
       "heading": "Tägliches Schreibprotokoll",
@@ -541,7 +537,14 @@
     "exportFailed": "Export fehlgeschlagen: {{error}}",
     "cancel": "Abbrechen",
     "pandocWarning": "Pandoc wurde nicht gefunden. Prüfe das Feld „Pandoc-Pfad“ in den Export-Einstellungen — dieser Export wird voraussichtlich fehlschlagen.",
-    "includeFolderHeadings": "Ordnernamen als Überschriften einfügen"
+    "includeFolderHeadings": "Ordnernamen als Überschriften einfügen",
+    "titleName": "Titel",
+    "titleFolder": "Ordnername",
+    "titleProjectFolder": "Projekt — Ordner",
+    "titleProject": "Projektname",
+    "titleCustom": "Eigenen Titel eingeben",
+    "customTitleName": "Eigener Titel",
+    "customTitlePlaceholder": "Titel eingeben"
   },
   "publishModal": {
     "title": "Auf WordPress veröffentlichen",

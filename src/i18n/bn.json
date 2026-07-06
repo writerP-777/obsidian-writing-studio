@@ -115,11 +115,7 @@
       "includeCoverDesc": "কভার ছবি না থাকলে টেক্সট কভার পেজ তৈরি করুন।",
       "pdfEngine": "PDF ইঞ্জিন",
       "pdfEngineDesc": "PDF এক্সপোর্টে ব্যবহৃত ইঞ্জিন। স্বয়ংক্রিয় মোড ইনস্টল করা LaTeX ইঞ্জিন বেছে নেয়। wkhtmltopdf LaTeX ছাড়াই কাজ করে, তবে এক্সপোর্ট ফন্ট সেটিং এতে প্রযোজ্য নয়।",
-      "pdfEngineAuto": "স্বয়ংক্রিয় (প্রস্তাবিত)",
-      "subtreeTitleSource": "ফোল্ডার রপ্তানির শিরোনাম",
-      "subtreeTitleSourceDesc": "ফোল্ডার রপ্তানির শিরোনাম পাতা ও মেটাডেটা কী নির্দেশ করবে: রপ্তানি করা ফোল্ডার নাকি পুরো প্রকল্প।",
-      "subtreeTitleFolder": "ফোল্ডারের নাম",
-      "subtreeTitleProject": "প্রকল্পের শিরোনাম"
+      "pdfEngineAuto": "স্বয়ংক্রিয় (প্রস্তাবিত)"
     },
     "log": {
       "heading": "দৈনিক লেখার লগ",
@@ -541,7 +537,14 @@
     "exportFailed": "রপ্তানি ব্যর্থ: {{error}}",
     "cancel": "বাতিল",
     "pandocWarning": "Pandoc পাওয়া যায়নি। রপ্তানি সেটিংসে \"Pandoc পাথ\" ফিল্ডটি দেখুন — এই রপ্তানি সম্ভবত ব্যর্থ হবে।",
-    "includeFolderHeadings": "ফোল্ডারের নামগুলি শিরোনাম হিসেবে অন্তর্ভুক্ত করুন"
+    "includeFolderHeadings": "ফোল্ডারের নামগুলি শিরোনাম হিসেবে অন্তর্ভুক্ত করুন",
+    "titleName": "শিরোনাম",
+    "titleFolder": "ফোল্ডারের নাম",
+    "titleProjectFolder": "প্রজেক্ট — ফোল্ডার",
+    "titleProject": "প্রজেক্টের নাম",
+    "titleCustom": "নিজের শিরোনাম লিখুন",
+    "customTitleName": "কাস্টম শিরোনাম",
+    "customTitlePlaceholder": "একটি শিরোনাম লিখুন"
   },
   "publishModal": {
     "title": "WordPress-এ প্রকাশ করুন",

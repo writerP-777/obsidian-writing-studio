@@ -115,11 +115,7 @@
       "includeCoverDesc": "Создать текстовую обложку, если изображение обложки не предоставлено.",
       "pdfEngine": "Движок PDF",
       "pdfEngineDesc": "Движок для экспорта в PDF. Авто выбирает установленный движок LaTeX. wkhtmltopdf работает без LaTeX, но шрифт экспорта к нему не применяется.",
-      "pdfEngineAuto": "Авто (рекомендуется)",
-      "subtreeTitleSource": "Заголовок при экспорте папки",
-      "subtreeTitleSourceDesc": "Что указывают титульная страница и метаданные при экспорте папки: экспортируемую папку или весь проект.",
-      "subtreeTitleFolder": "Имя папки",
-      "subtreeTitleProject": "Название проекта"
+      "pdfEngineAuto": "Авто (рекомендуется)"
     },
     "log": {
       "heading": "Ежедневный журнал написания",
@@ -551,7 +547,14 @@
     "exportFailed": "Ошибка экспорта: {{error}}",
     "cancel": "Отмена",
     "pandocWarning": "Pandoc не найден. Проверьте поле «Путь к Pandoc» в настройках экспорта — экспорт, скорее всего, не удастся.",
-    "includeFolderHeadings": "Включать имена папок как заголовки"
+    "includeFolderHeadings": "Включать имена папок как заголовки",
+    "titleName": "Название",
+    "titleFolder": "Имя папки",
+    "titleProjectFolder": "Проект — папка",
+    "titleProject": "Название проекта",
+    "titleCustom": "Введите собственное название",
+    "customTitleName": "Собственное название",
+    "customTitlePlaceholder": "Введите название"
   },
   "publishModal": {
     "title": "Опубликовать в WordPress",

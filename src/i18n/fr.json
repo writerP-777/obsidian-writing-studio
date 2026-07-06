@@ -115,11 +115,7 @@
       "includeCoverDesc": "Générer une page de couverture texte si aucune image de couverture n’est fournie.",
       "pdfEngine": "Moteur PDF",
       "pdfEngineDesc": "Moteur utilisé pour l'export PDF. Auto choisit un moteur LaTeX installé. wkhtmltopdf fonctionne sans LaTeX, mais la police d'export ne s'y applique pas.",
-      "pdfEngineAuto": "Auto (recommandé)",
-      "subtreeTitleSource": "Titre de l’export de dossier",
-      "subtreeTitleSourceDesc": "Ce que la page de titre et les métadonnées d’un export de dossier désignent : le dossier exporté ou le projet entier.",
-      "subtreeTitleFolder": "Nom du dossier",
-      "subtreeTitleProject": "Titre du projet"
+      "pdfEngineAuto": "Auto (recommandé)"
     },
     "log": {
       "heading": "Journal quotidien d’écriture",
@@ -541,7 +537,14 @@
     "exportFailed": "Échec de l'export : {{error}}",
     "cancel": "Annuler",
     "pandocWarning": "Pandoc est introuvable. Vérifiez le champ « Chemin de Pandoc » dans les réglages d'export — cet export échouera probablement.",
-    "includeFolderHeadings": "Inclure les noms de dossiers comme titres"
+    "includeFolderHeadings": "Inclure les noms de dossiers comme titres",
+    "titleName": "Titre",
+    "titleFolder": "Nom du dossier",
+    "titleProjectFolder": "Projet — dossier",
+    "titleProject": "Nom du projet",
+    "titleCustom": "Saisissez votre propre titre",
+    "customTitleName": "Titre personnalisé",
+    "customTitlePlaceholder": "Saisissez un titre"
   },
   "publishModal": {
     "title": "Publier sur WordPress",

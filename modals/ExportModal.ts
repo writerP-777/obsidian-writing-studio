@@ -1,6 +1,8 @@
-import { App, Modal, Setting, Notice } from 'obsidian';
+import { App, MarkdownView, Modal, Setting, Notice } from 'obsidian';
 import type WritingStudioPlugin from '../main';
-import { ExportFormat, ExportScope } from '../src/ExportEngine';
+import { ExportFormat, ExportScope, ExportUiState } from '../src/ExportEngine';
+import { ExportTitleChoice, resolveExportTitle } from '../src/exportTitle';
+import { parseFolderPrefix } from '../src/binderOrder';
 import { t } from '../src/i18n';
 
 export class ExportModal extends Modal {
@@ -15,19 +17,39 @@ export class ExportModal extends Modal {
   // A manuscript-zone folder to export instead of the whole zone (#232) —
   // set when the modal is opened from a folder's context menu
   private subtreeRoot?: string;
+  private titleChoice: ExportTitleChoice;
+  private customTitle = '';
+  // Document a 'current' scope targets when the dialog was reopened from the
+  // preview — the live "most recent leaf" lookup would find the preview leaf
+  private currentFilePath?: string;
   private coverImagePath = '';
   private authorContact = '';
+  private exportBtn: HTMLButtonElement | null = null;
   private pandocWarningEl: HTMLElement | null = null;
   // Checked once per modal open, only when a pandoc format is selected
   private pandocAvailable: boolean | null = null;
   private static readonly PANDOC_FORMATS: ReadonlySet<string> = new Set(['pdf', 'docx', 'rtf']);
 
-  constructor(app: App, plugin: WritingStudioPlugin, initialScope: ExportScope = 'current', subtreeRoot?: string) {
+  constructor(app: App, plugin: WritingStudioPlugin, initialScope: ExportScope = 'current', subtreeRoot?: string, initial?: ExportUiState) {
     super(app);
     this.plugin = plugin;
     this.format = plugin.settings.defaultExportFormat;
     this.exportScope = initialScope;
     this.subtreeRoot = subtreeRoot;
+    this.titleChoice = subtreeRoot ? 'folder' : 'project';
+    // Selections carried back from the compile preview win over the defaults
+    if (initial) {
+      this.exportScope = initial.scope;
+      this.subtreeRoot = initial.subtreeRoot;
+      this.currentFilePath = initial.currentFilePath;
+      this.includeFrontmatter = initial.includeFrontmatter;
+      this.includeResearch = initial.includeResearch;
+      this.includeTitlesAsHeadings = initial.includeTitlesAsHeadings;
+      this.includeFolderNames = initial.includeFolderNamesAsHeadings;
+      this.addTitlePage = initial.addTitlePage;
+      this.titleChoice = initial.titleChoice;
+      this.customTitle = initial.customTitle;
+    }
   }
 
   onOpen(): void {
@@ -38,6 +60,7 @@ export class ExportModal extends Modal {
 
     let coverSetting: Setting;
     let contactSetting: Setting;
+    let customTitleSetting: Setting;
 
     new Setting(contentEl)
       .setName(t('exportModal.formatName'))
@@ -89,6 +112,36 @@ export class ExportModal extends Modal {
           .onChange(v => { this.exportScope = v as ExportScope; }));
     }
 
+    // One title names the export everywhere — filename, title page, metadata
+    // (#260). The folder-based choices only exist for a folder export.
+    new Setting(contentEl)
+      .setName(t('exportModal.titleName'))
+      .addDropdown(d => {
+        if (this.subtreeRoot) {
+          d.addOption('folder', t('exportModal.titleFolder'));
+          d.addOption('project-folder', t('exportModal.titleProjectFolder'));
+        }
+        d.addOption('project', t('exportModal.titleProject'));
+        d.addOption('custom', t('exportModal.titleCustom'));
+        d.setValue(this.titleChoice);
+        d.onChange(v => {
+          this.titleChoice = v as ExportTitleChoice;
+          customTitleSetting.settingEl.toggleClass('ws-hidden', v !== 'custom');
+          this.updateExportEnabled();
+        });
+      });
+
+    customTitleSetting = new Setting(contentEl)
+      .setName(t('exportModal.customTitleName'))
+      .addText(tx => tx
+        .setValue(this.customTitle)
+        .setPlaceholder(t('exportModal.customTitlePlaceholder'))
+        .onChange(v => {
+          this.customTitle = v;
+          this.updateExportEnabled();
+        }));
+    customTitleSetting.settingEl.toggleClass('ws-hidden', this.titleChoice !== 'custom');
+
     new Setting(contentEl)
       .setName(t('exportModal.includeFrontmatter'))
       .addToggle(tx => tx.setValue(this.includeFrontmatter).onChange(v => { this.includeFrontmatter = v; }));
@@ -123,14 +176,19 @@ export class ExportModal extends Modal {
       text: t('exportModal.previewBtn'),
     });
     previewBtn.onclick = async () => {
+      const state = this.uiState();
       this.close();
-      await this.plugin.openCompilePreview();
+      await this.plugin.openCompilePreview(state);
     };
 
     const btnRow = contentEl.createDiv('ws-modal-btn-row');
 
     const exportBtn = btnRow.createEl('button', { cls: 'mod-cta', text: t('exportModal.exportBtn') });
+    this.exportBtn = exportBtn;
+    this.updateExportEnabled();
     exportBtn.onclick = async () => {
+      const title = this.resolvedTitle();
+      if (title === null) return;
       exportBtn.disabled = true;
       exportBtn.textContent = t('exportModal.exporting');
       try {
@@ -142,6 +200,8 @@ export class ExportModal extends Modal {
           includeTitlesAsHeadings: this.includeTitlesAsHeadings,
           includeFolderNamesAsHeadings: this.includeFolderNames,
           subtreeRoot: this.subtreeRoot,
+          exportTitle: title || undefined,
+          currentFile: this.currentFilePath,
           paperSize: this.plugin.settings.defaultPaperSize,
           font: this.plugin.settings.defaultExportFont,
           fontSize: this.plugin.settings.defaultExportFontSize,
@@ -152,13 +212,55 @@ export class ExportModal extends Modal {
         this.close();
       } catch (e) {
         new Notice(t('exportModal.exportFailed', { error: e instanceof Error ? e.message : String(e) }));
-        exportBtn.disabled = false;
         exportBtn.textContent = t('exportModal.exportBtn');
+        this.updateExportEnabled();
       }
     };
 
     const cancelBtn = btnRow.createEl('button', { text: t('exportModal.cancel') });
     cancelBtn.onclick = () => this.close();
+  }
+
+  // The dialog's title choice resolved to the export's one title. Null while
+  // "Type your own title" is chosen with an empty field — Export stays
+  // disabled rather than inventing a fallback.
+  private resolvedTitle(): string | null {
+    const project = this.plugin.projectManager.getActiveProject();
+    return resolveExportTitle(this.titleChoice, {
+      projectTitle: project?.title ?? '',
+      folderName: this.subtreeRoot
+        ? parseFolderPrefix(this.subtreeRoot.split('/').pop() ?? '').displayName
+        : undefined,
+      customTitle: this.customTitle,
+    });
+  }
+
+  private updateExportEnabled(): void {
+    if (this.exportBtn) {
+      this.exportBtn.disabled = this.resolvedTitle() === null;
+    }
+  }
+
+  // The dialog's current selections, handed to the compile preview so it
+  // renders exactly what this export would produce (#260)
+  private uiState(): ExportUiState {
+    let currentFilePath = this.currentFilePath;
+    if (this.exportScope === 'current' && !currentFilePath) {
+      const view = this.app.workspace.getMostRecentLeaf()?.view;
+      currentFilePath = view instanceof MarkdownView ? view.file?.path : undefined;
+    }
+    return {
+      scope: this.exportScope,
+      subtreeRoot: this.subtreeRoot,
+      currentFilePath,
+      includeFrontmatter: this.includeFrontmatter,
+      includeResearch: this.includeResearch,
+      includeTitlesAsHeadings: this.includeTitlesAsHeadings,
+      includeFolderNamesAsHeadings: this.includeFolderNames,
+      addTitlePage: this.addTitlePage,
+      titleChoice: this.titleChoice,
+      customTitle: this.customTitle,
+    };
   }
 
   // Warning only — the export attempt itself stays allowed
