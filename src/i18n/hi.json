@@ -115,7 +115,11 @@
       "includeCoverDesc": "कवर छवि न होने पर टेक्स्ट कवर पृष्ठ उत्पन्न करें।",
       "pdfEngine": "PDF इंजन",
       "pdfEngineDesc": "PDF निर्यात के लिए उपयोग होने वाला इंजन। स्वचालित मोड इंस्टॉल किया गया LaTeX इंजन चुनता है। wkhtmltopdf बिना LaTeX के काम करता है, लेकिन निर्यात फ़ॉन्ट सेटिंग उस पर लागू नहीं होती।",
-      "pdfEngineAuto": "स्वचालित (अनुशंसित)"
+      "pdfEngineAuto": "स्वचालित (अनुशंसित)",
+      "subtreeTitleSource": "फ़ोल्डर निर्यात का शीर्षक",
+      "subtreeTitleSourceDesc": "फ़ोल्डर निर्यात का शीर्षक पृष्ठ और मेटाडेटा किसे दर्शाएँ: निर्यात किया गया फ़ोल्डर या पूरा प्रोजेक्ट।",
+      "subtreeTitleFolder": "फ़ोल्डर का नाम",
+      "subtreeTitleProject": "प्रोजेक्ट का शीर्षक"
     },
     "log": {
       "heading": "दैनिक लेखन लॉग",
@@ -249,38 +253,18 @@
       "nameExists": "यहां \"{{name}}\" नाम की कोई चीज़ पहले से मौजूद है।",
       "exportFolder": "फ़ोल्डर निर्यात करें"
     },
-    "carryOver": {
-      "action": "बाइंडर स्थानांतरण का पूर्वावलोकन करें",
-      "noticeBody": "\"{{project}}\" में एक पुराना बाइंडर है जो इसकी फ़ाइलों से अलग है। देखें कि स्थानांतरण से क्या बदलेगा — आपकी स्वीकृति के बिना कुछ नहीं होगा।",
-      "noticePreview": "पूर्वावलोकन",
-      "noticeNotNow": "अभी नहीं",
-      "modalTitle": "\"{{project}}\" का स्थानांतरण — पूर्वावलोकन",
-      "dryRun": "यह एक पूर्वाभ्यास है। अभी तक कुछ नहीं बदला गया है।",
-      "countsOperations_one": "{{count}} कार्रवाई",
-      "countsOperations_other": "{{count}} कार्रवाइयाँ",
-      "countsDone": "{{count}} पूर्ण",
-      "countsPending": "{{count}} लंबित",
-      "countsAnomalies_one": "{{count}} पर ध्यान आवश्यक",
-      "countsAnomalies_other": "{{count}} पर ध्यान आवश्यक",
-      "sectionFolders": "फ़ोल्डर",
-      "sectionDocuments": "दस्तावेज़",
-      "sectionFrontmatter": "फ्रंटमैटर",
-      "keptNote": "आपकी पहले से सेट कुंजियाँ बनी रहेंगी",
-      "folderExists": "पहले से मौजूद है:",
-      "folderCreate": "इस नाम से बनेगा:",
-      "docDone": "पहले से यहाँ है:",
-      "docMove": "यहाँ जाएगा:",
-      "anomalyMissing": "न मूल स्थान पर है न नए स्थान पर — अछूता छोड़ा जाएगा",
-      "anomalyOccupied": "नया स्थान पहले से भरा है — अछूता छोड़ा जाएगा",
-      "badgeSuffixed": "नाम पहले से लिया गया — प्रत्यय जोड़ा गया",
-      "badgeReserved": "आरक्षित नाम — प्रत्यय जोड़ा गया",
-      "badgeTitleUnusable": "शीर्षक अनुपयोगी — नाम रखा गया",
-      "keptKey": "{{key}} रखा गया (पहले से सेट)",
-      "backupNote": "आपकी पुरानी बाइंडर फ़ाइल (_binder.json) बैकअप के रूप में रखी जाती है और कभी हटाई नहीं जाती। बाद में डाउनग्रेड करने पर इसे यथासंभव पहले जैसा बहाल किया जाता है।",
-      "close": "बंद करें",
-      "unavailable": "स्थानांतरण पूर्वावलोकन के लिए प्रयोगात्मक फ़ाइल-सिस्टम बाइंडर और एक सक्रिय प्रोजेक्ट आवश्यक है।",
-      "nothingToPreview": "इस प्रोजेक्ट के लिए कोई पुराना बाइंडर नहीं मिला।",
-      "readFailed": "पुरानी बाइंडर फ़ाइल पढ़ी नहीं जा सकी।"
+    "migration": {
+      "couldntMove": "Writing Studio \"{{name}}\" को स्थानांतरित नहीं कर सका: {{reason}}।",
+      "couldntRename": "Writing Studio \"{{name}}\" का नाम नहीं बदल सका: {{reason}}।",
+      "couldntUpdate": "Writing Studio \"{{name}}\" को अपडेट नहीं कर सका: {{reason}}।",
+      "reasonNameTaken": "उस नाम की फ़ाइल पहले से मौजूद है",
+      "reasonInUse": "फ़ाइल उपयोग में है",
+      "reasonPermission": "अनुमति अस्वीकार कर दी गई",
+      "restoreDone": "बाइंडर की पिछली व्यवस्था बहाल कर दी गई।",
+      "restorePartial_one": "पिछली व्यवस्था बहाल की गई। {{count}} आइटम वापस नहीं जा सका।",
+      "restorePartial_other": "पिछली व्यवस्था बहाल की गई। {{count}} आइटम वापस नहीं जा सके।",
+      "restoreNothing": "बहाल करने के लिए कुछ नहीं है।",
+      "restoreUnavailable": "व्यवस्था बहाल करने के लिए प्रयोगात्मक फ़ाइल-सिस्टम बाइंडर और एक सक्रिय प्रोजेक्ट आवश्यक है।"
     }
   },
   "launcher": {
@@ -693,7 +677,7 @@
       "openWritingLog": "राइटिंग लॉग खोलें",
       "openFolderSidebar": "साइडबार एक्सप्लोरर में फ़ोल्डर खोलें",
       "addFilesToBinder": "नई फ़ाइलों के लिए परियोजना फ़ोल्डर स्कैन करें",
-      "previewCarryOver": "बाइंडर स्थानांतरण का पूर्वावलोकन करें"
+      "restoreBinderLayout": "बाइंडर की पिछली व्यवस्था बहाल करें"
     },
     "menu": {
       "studioOptions": "राइटिंग स्टूडियो विकल्प",

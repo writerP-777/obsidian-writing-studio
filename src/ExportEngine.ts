@@ -249,7 +249,7 @@ export class ExportEngine {
       case 'md':
         return this.exportMarkdown(compiled, `${baseFile}.md`);
       case 'html':
-        return this.exportHtml(compiled, `${baseFile}.html`, project?.title || 'Document', opts);
+        return this.exportHtml(compiled, `${baseFile}.html`, this.subtreeTitle(opts) ?? (project?.title || 'Document'), opts);
       case 'docx':
         return this.exportPandoc(compiled, `${baseFile}.docx`, opts);
       case 'rtf':
@@ -265,7 +265,7 @@ export class ExportEngine {
     const project = this.plugin.projectManager.getActiveProject();
     const outputPath = `${baseFile}.epub`;
 
-    const title = project?.title || 'Untitled';
+    const title = this.subtreeTitle(opts) ?? (project?.title || 'Untitled');
     const author = project?.author || this.plugin.settings.authorName || '';
     const language = this.plugin.settings.epubLanguage || 'en';
     const date = localDateString();
@@ -366,13 +366,28 @@ export class ExportEngine {
       .replace(/<img([^>]*)(?<!\/)>/g, '<img$1/>');
   }
 
+  // The folder display name a subtree export titles itself with, or null
+  // when the project title applies — not a subtree export, or the
+  // "Export folder title" setting says project (#244; default is folder).
+  private subtreeTitle(opts: ExportOptions): string | null {
+    if (!opts.subtreeRoot) return null;
+    if (this.plugin.settings.subtreeExportTitleSource === 'project') return null;
+    return parseFolderPrefix(opts.subtreeRoot.split('/').pop() ?? '').displayName;
+  }
+
   async compileContent(opts: ExportOptions): Promise<string> {
     const parts: string[] = [];
     const project = this.plugin.projectManager.getActiveProject();
 
     if (opts.addTitlePage && project) {
       const today = new Date().toLocaleDateString();
-      parts.push(`# ${project.title}\n\n${t('exportEngine.byAuthor', { author: project.author || this.plugin.settings.authorName })}\n\n${today}`);
+      const byline = t('exportEngine.byAuthor', { author: project.author || this.plugin.settings.authorName });
+      const subtree = this.subtreeTitle(opts);
+      // Subtree title pages keep the project as its own paragraph — a soft
+      // line break would be joined into the byline by pandoc (#244 mock)
+      parts.push(subtree !== null
+        ? `# ${subtree}\n\n${project.title}\n\n${byline}\n\n${today}`
+        : `# ${project.title}\n\n${byline}\n\n${today}`);
     }
 
     if (opts.scope === 'current') {
@@ -476,7 +491,7 @@ export class ExportEngine {
   private async exportManuscript(opts: ExportOptions, outputPath: string): Promise<string> {
     const project = this.plugin.projectManager.getActiveProject();
     const author = project?.author || this.plugin.settings.authorName || 'Author';
-    const title  = project?.title || 'Untitled';
+    const title  = this.subtreeTitle(opts) ?? (project?.title || 'Untitled');
 
     // Compile without auto title page — we build a proper manuscript title page instead
     const compiled = await this.compileContent({ ...opts, addTitlePage: false });

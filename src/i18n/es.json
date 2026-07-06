@@ -115,7 +115,11 @@
       "includeCoverDesc": "Generar una portada de texto cuando no se proporciona imagen de portada.",
       "pdfEngine": "Motor de PDF",
       "pdfEngineDesc": "Motor usado para exportar a PDF. Auto elige un motor LaTeX instalado. wkhtmltopdf funciona sin LaTeX, pero la fuente de exportación no se aplica con él.",
-      "pdfEngineAuto": "Auto (recomendado)"
+      "pdfEngineAuto": "Auto (recomendado)",
+      "subtreeTitleSource": "Título al exportar carpeta",
+      "subtreeTitleSourceDesc": "Qué nombran la portada y los metadatos al exportar una carpeta: la carpeta exportada o el proyecto completo.",
+      "subtreeTitleFolder": "Nombre de la carpeta",
+      "subtreeTitleProject": "Título del proyecto"
     },
     "log": {
       "heading": "Registro diario de escritura",
@@ -249,38 +253,18 @@
       "nameExists": "Ya existe algo llamado \"{{name}}\" aquí.",
       "exportFolder": "Exportar carpeta"
     },
-    "carryOver": {
-      "action": "Previsualizar el traspaso de la carpeta de escritura",
-      "noticeBody": "«{{project}}» tiene una carpeta de escritura antigua que difiere de sus archivos. Previsualiza lo que cambiaría el traspaso — nada ocurre sin tu aprobación.",
-      "noticePreview": "Previsualizar",
-      "noticeNotNow": "Ahora no",
-      "modalTitle": "Traspasar «{{project}}» — previsualización",
-      "dryRun": "Esto es una simulación. No se ha cambiado nada.",
-      "countsOperations_one": "{{count}} operación",
-      "countsOperations_other": "{{count}} operaciones",
-      "countsDone": "{{count}} completadas",
-      "countsPending": "{{count}} pendientes",
-      "countsAnomalies_one": "{{count}} requiere atención",
-      "countsAnomalies_other": "{{count}} requieren atención",
-      "sectionFolders": "Carpetas",
-      "sectionDocuments": "Documentos",
-      "sectionFrontmatter": "Frontmatter",
-      "keptNote": "las claves que ya has definido se conservan",
-      "folderExists": "ya existe como",
-      "folderCreate": "se creará como",
-      "docDone": "ya está en",
-      "docMove": "se moverá a",
-      "anomalyMissing": "no está en su ubicación original ni en la nueva — se dejará intacto",
-      "anomalyOccupied": "su nueva ubicación ya está ocupada — se dejará intacto",
-      "badgeSuffixed": "nombre ocupado — con sufijo",
-      "badgeReserved": "nombre reservado — con sufijo",
-      "badgeTitleUnusable": "título inutilizable — se conserva el nombre",
-      "keptKey": "{{key}} conservado (ya definido)",
-      "backupNote": "Tu archivo antiguo (_binder.json) se conserva como copia de seguridad y nunca se elimina. Si más adelante vuelves a una versión anterior, se restaura tal como estaba (en la medida de lo posible).",
-      "close": "Cerrar",
-      "unavailable": "La previsualización del traspaso necesita la carpeta de escritura experimental del sistema de archivos y un proyecto activo.",
-      "nothingToPreview": "No se encontró una carpeta de escritura antigua para este proyecto.",
-      "readFailed": "No se pudo leer el archivo antiguo de la carpeta de escritura."
+    "migration": {
+      "couldntMove": "Writing Studio no pudo mover «{{name}}»: {{reason}}.",
+      "couldntRename": "Writing Studio no pudo renombrar «{{name}}»: {{reason}}.",
+      "couldntUpdate": "Writing Studio no pudo actualizar «{{name}}»: {{reason}}.",
+      "reasonNameTaken": "ya hay un archivo con ese nombre",
+      "reasonInUse": "el archivo está en uso",
+      "reasonPermission": "se denegó el permiso",
+      "restoreDone": "Disposición anterior restaurada.",
+      "restorePartial_one": "Disposición anterior restaurada. {{count}} elemento no pudo volver a su lugar.",
+      "restorePartial_other": "Disposición anterior restaurada. {{count}} elementos no pudieron volver a su lugar.",
+      "restoreNothing": "Nada que restaurar.",
+      "restoreUnavailable": "Restaurar la disposición necesita la carpeta de escritura experimental del sistema de archivos y un proyecto activo."
     }
   },
   "launcher": {
@@ -693,7 +677,7 @@
       "openWritingLog": "Abrir registro de escritura",
       "openFolderSidebar": "Abrir carpeta en el explorador lateral",
       "addFilesToBinder": "Buscar archivos nuevos en la carpeta del proyecto",
-      "previewCarryOver": "Previsualizar el traspaso de la carpeta de escritura"
+      "restoreBinderLayout": "Restaurar la disposición anterior de la carpeta de escritura"
     },
     "menu": {
       "studioOptions": "Opciones de Writing Studio",

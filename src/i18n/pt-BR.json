@@ -115,7 +115,11 @@
       "includeCoverDesc": "Gerar uma capa de texto quando nenhuma imagem de capa for fornecida.",
       "pdfEngine": "Motor de PDF",
       "pdfEngineDesc": "Motor usado na exportação de PDF. Auto escolhe um motor LaTeX instalado. O wkhtmltopdf funciona sem LaTeX, mas a fonte de exportação não se aplica a ele.",
-      "pdfEngineAuto": "Auto (recomendado)"
+      "pdfEngineAuto": "Auto (recomendado)",
+      "subtreeTitleSource": "Título ao exportar pasta",
+      "subtreeTitleSourceDesc": "O que a página de título e os metadados de uma exportação de pasta nomeiam: a pasta exportada ou o projeto inteiro.",
+      "subtreeTitleFolder": "Nome da pasta",
+      "subtreeTitleProject": "Título do projeto"
     },
     "log": {
       "heading": "Log diário de escrita",
@@ -249,38 +253,18 @@
       "nameExists": "Já existe algo chamado \"{{name}}\" aqui.",
       "exportFolder": "Exportar pasta"
     },
-    "carryOver": {
-      "action": "Pré-visualizar a transição da pasta de escrita",
-      "noticeBody": "\"{{project}}\" tem uma pasta de escrita antiga que difere dos seus arquivos. Pré-visualize o que a transição mudaria — nada acontece sem a sua aprovação.",
-      "noticePreview": "Pré-visualizar",
-      "noticeNotNow": "Agora não",
-      "modalTitle": "Transição de \"{{project}}\" — pré-visualização",
-      "dryRun": "Isto é uma simulação. Nada foi alterado.",
-      "countsOperations_one": "{{count}} operação",
-      "countsOperations_other": "{{count}} operações",
-      "countsDone": "{{count}} concluídas",
-      "countsPending": "{{count}} pendentes",
-      "countsAnomalies_one": "{{count}} precisa de atenção",
-      "countsAnomalies_other": "{{count}} precisam de atenção",
-      "sectionFolders": "Pastas",
-      "sectionDocuments": "Documentos",
-      "sectionFrontmatter": "Frontmatter",
-      "keptNote": "as chaves que você já definiu são mantidas",
-      "folderExists": "já existe como",
-      "folderCreate": "será criada como",
-      "docDone": "já está em",
-      "docMove": "será movido para",
-      "anomalyMissing": "não está no local original nem no novo — será deixado intocado",
-      "anomalyOccupied": "o novo local já está ocupado — será deixado intocado",
-      "badgeSuffixed": "nome em uso — sufixo adicionado",
-      "badgeReserved": "nome reservado — sufixo adicionado",
-      "badgeTitleUnusable": "título inutilizável — nome mantido",
-      "keptKey": "{{key}} mantido (já definido)",
-      "backupNote": "Seu arquivo antigo (_binder.json) é mantido como backup e nunca é excluído. Voltar depois a uma versão anterior o restaura como estava (na medida do possível).",
-      "close": "Fechar",
-      "unavailable": "A pré-visualização da transição precisa da pasta de escrita experimental do sistema de arquivos e de um projeto ativo.",
-      "nothingToPreview": "Nenhuma pasta de escrita antiga encontrada para este projeto.",
-      "readFailed": "Não foi possível ler o arquivo antigo da pasta de escrita."
+    "migration": {
+      "couldntMove": "O Writing Studio não conseguiu mover \"{{name}}\": {{reason}}.",
+      "couldntRename": "O Writing Studio não conseguiu renomear \"{{name}}\": {{reason}}.",
+      "couldntUpdate": "O Writing Studio não conseguiu atualizar \"{{name}}\": {{reason}}.",
+      "reasonNameTaken": "já existe um arquivo com esse nome",
+      "reasonInUse": "o arquivo está em uso",
+      "reasonPermission": "a permissão foi negada",
+      "restoreDone": "Layout anterior restaurado.",
+      "restorePartial_one": "Layout anterior restaurado. {{count}} item não pôde voltar ao lugar.",
+      "restorePartial_other": "Layout anterior restaurado. {{count}} itens não puderam voltar ao lugar.",
+      "restoreNothing": "Nada a restaurar.",
+      "restoreUnavailable": "Restaurar o layout precisa da pasta de escrita experimental do sistema de arquivos e de um projeto ativo."
     }
   },
   "launcher": {
@@ -693,7 +677,7 @@
       "openWritingLog": "Abrir registro de escrita",
       "openFolderSidebar": "Abrir pasta no explorador lateral",
       "addFilesToBinder": "Verificar novos arquivos na pasta do projeto",
-      "previewCarryOver": "Pré-visualizar a transição da pasta de escrita"
+      "restoreBinderLayout": "Restaurar o layout anterior da pasta de escrita"
     },
     "menu": {
       "studioOptions": "Opções do Writing Studio",

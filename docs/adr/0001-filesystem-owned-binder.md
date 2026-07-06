@@ -138,6 +138,31 @@ as an anomaly, never guessed. Resumability therefore needs no journal or checkpo
 rollback engine: safety = opt-in + full preview + content-preserving operation classes. No
 migration code path can alter document prose.
 
+#### Amendment — silent migration and the layout restore (2026-07-06, #231)
+
+Migration is **silent**: the notice, the preview, and the consent gate are removed (the #230
+preview shipped unreleased and was retired in the same cycle). Migration runs on project
+activation with no user action; the one-time **informational** upgrade modal (#233, shown
+after migration has already run) is the user's narrative, not a gate. Two rules tightened:
+**documents are identified by their existing filename and are never renamed to a stored
+title** — the rename-to-title step, the title sanitizer, and all document collision/reserved
+handling are removed (legacy custom titles stop being displayed; the filename is the title).
+A same-basename collision leaves the later document (legacy order) exactly where it is,
+ordered within its *actual* folder — a filename is never silently changed and no file is
+ever displaced. Reserved folder titles are legal through the marker itself (`010~ CON`
+carries no reserved stem); no visible suffix exists anywhere. Failures surface on a
+graduated, once-per-signature policy (first failure silent and logged; a persisting one
+produces a single plain-language notice).
+
+**"No rollback engine" is superseded.** That ruling rested on "safety = opt-in + full
+preview" — premises silent migration removed. Its replacement is a stateless inverse pass,
+**"Restore previous binder layout"**: computed from the same immutable `_binder.json`,
+documents return to their legacy paths (legacy parents recreated), markers come off matched
+folders, nothing is ever deleted, and anything the user moved since is skipped, never
+guessed. The restore is **layout-only** by ruling: migration's frontmatter keys persist
+(post-hoc indistinguishable from user-set values), so no copy may frame it as a full revert.
+After a restore, a plugin downgrade finds the layout the dormant `_binder.json` describes.
+
 ### UI
 
 Prototype variant C ("compact outliner", Don's selection 2026-07-03): dense single-line rows;

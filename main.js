@@ -27,7 +27,7 @@ __export(main_exports, {
   default: () => WritingStudioPlugin
 });
 module.exports = __toCommonJS(main_exports);
-var import_obsidian38 = require("obsidian");
+var import_obsidian37 = require("obsidian");
 
 // src/BinderView.ts
 var import_obsidian17 = require("obsidian");
@@ -2505,7 +2505,11 @@ var en_default = {
       includeCoverDesc: "Generate a text cover page when no cover image is provided.",
       pdfEngine: "PDF engine",
       pdfEngineDesc: "Engine used for PDF export. Auto picks an installed LaTeX engine. wkhtmltopdf works without LaTeX, but the export font setting does not apply to it.",
-      pdfEngineAuto: "Auto (recommended)"
+      pdfEngineAuto: "Auto (recommended)",
+      subtreeTitleSource: "Export folder title",
+      subtreeTitleSourceDesc: "What a folder export's title page and metadata name: the exported folder or the whole project.",
+      subtreeTitleFolder: "Folder name",
+      subtreeTitleProject: "Project title"
     },
     log: {
       heading: "Daily writing log",
@@ -2639,38 +2643,18 @@ var en_default = {
       nameExists: 'Something named "{{name}}" already exists here.',
       exportFolder: "Export folder"
     },
-    carryOver: {
-      action: "Preview binder carry-over",
-      noticeBody: '"{{project}}" has a legacy binder that differs from its files. Preview what carrying it over would change \u2014 nothing happens without your approval.',
-      noticePreview: "Preview",
-      noticeNotNow: "Not now",
-      modalTitle: 'Carry over "{{project}}" \u2014 preview',
-      dryRun: "This is a dry run. Nothing has been changed.",
-      countsOperations_one: "{{count}} operation",
-      countsOperations_other: "{{count}} operations",
-      countsDone: "{{count}} done",
-      countsPending: "{{count}} pending",
-      countsAnomalies_one: "{{count}} needs attention",
-      countsAnomalies_other: "{{count}} need attention",
-      sectionFolders: "Folders",
-      sectionDocuments: "Documents",
-      sectionFrontmatter: "Frontmatter",
-      keptNote: "keys you've already set are kept",
-      folderExists: "already exists as",
-      folderCreate: "will be created as",
-      docDone: "already at",
-      docMove: "will move to",
-      anomalyMissing: "not at its original or new location \u2014 will be left untouched",
-      anomalyOccupied: "its new location is already taken \u2014 will be left untouched",
-      badgeSuffixed: "name taken \u2014 suffixed",
-      badgeReserved: "reserved name \u2014 suffixed",
-      badgeTitleUnusable: "title unusable \u2014 name kept",
-      keptKey: "{{key}} kept (already set)",
-      backupNote: "Your old binder file (_binder.json) is kept as a backup and never deleted. Downgrading later restores it as it was (best effort).",
-      close: "Close",
-      unavailable: "Carry-over preview needs the experimental filesystem binder and an active project.",
-      nothingToPreview: "No legacy binder found for this project.",
-      readFailed: "The legacy binder file could not be read."
+    migration: {
+      couldntMove: `Writing Studio couldn't move "{{name}}": {{reason}}.`,
+      couldntRename: `Writing Studio couldn't rename "{{name}}": {{reason}}.`,
+      couldntUpdate: `Writing Studio couldn't update "{{name}}": {{reason}}.`,
+      reasonNameTaken: "a file with that name is already there",
+      reasonInUse: "the file is in use",
+      reasonPermission: "permission was denied",
+      restoreDone: "Previous binder layout restored.",
+      restorePartial_one: "Previous binder layout restored. {{count}} item could not be moved back.",
+      restorePartial_other: "Previous binder layout restored. {{count}} items could not be moved back.",
+      restoreNothing: "Nothing to restore.",
+      restoreUnavailable: "Restoring the layout needs the experimental filesystem binder and an active project."
     }
   },
   launcher: {
@@ -3083,7 +3067,7 @@ var en_default = {
       openWritingLog: "Open writing log",
       openFolderSidebar: "Open folder in sidebar explorer",
       addFilesToBinder: "Scan project folder for new files",
-      previewCarryOver: "Preview binder carry-over"
+      restoreBinderLayout: "Restore previous binder layout"
     },
     menu: {
       studioOptions: "Writing studio options",
@@ -3274,7 +3258,11 @@ var zh_default = {
       includeCoverDesc: "\u672A\u63D0\u4F9B\u5C01\u9762\u56FE\u7247\u65F6\u81EA\u52A8\u751F\u6210\u6587\u5B57\u5C01\u9762\u9875\u3002",
       pdfEngine: "PDF \u5F15\u64CE",
       pdfEngineDesc: "\u7528\u4E8E PDF \u5BFC\u51FA\u7684\u5F15\u64CE\u3002\u81EA\u52A8\u6A21\u5F0F\u4F1A\u9009\u62E9\u5DF2\u5B89\u88C5\u7684 LaTeX \u5F15\u64CE\u3002wkhtmltopdf \u65E0\u9700 LaTeX \u5373\u53EF\u4F7F\u7528\uFF0C\u4F46\u5BFC\u51FA\u5B57\u4F53\u8BBE\u7F6E\u5BF9\u5176\u65E0\u6548\u3002",
-      pdfEngineAuto: "\u81EA\u52A8\uFF08\u63A8\u8350\uFF09"
+      pdfEngineAuto: "\u81EA\u52A8\uFF08\u63A8\u8350\uFF09",
+      subtreeTitleSource: "\u5BFC\u51FA\u6587\u4EF6\u5939\u7684\u6807\u9898",
+      subtreeTitleSourceDesc: "\u5BFC\u51FA\u6587\u4EF6\u5939\u65F6\u6807\u9898\u9875\u548C\u5143\u6570\u636E\u663E\u793A\u7684\u540D\u79F0\uFF1A\u5BFC\u51FA\u7684\u6587\u4EF6\u5939\u6216\u6574\u4E2A\u9879\u76EE\u3002",
+      subtreeTitleFolder: "\u6587\u4EF6\u5939\u540D\u79F0",
+      subtreeTitleProject: "\u9879\u76EE\u6807\u9898"
     },
     log: {
       heading: "\u6BCF\u65E5\u5199\u4F5C\u65E5\u5FD7",
@@ -3408,38 +3396,18 @@ var zh_default = {
       nameExists: "\u6B64\u5904\u5DF2\u5B58\u5728\u540D\u4E3A\u201C{{name}}\u201D\u7684\u9879\u76EE\u3002",
       exportFolder: "\u5BFC\u51FA\u6587\u4EF6\u5939"
     },
-    carryOver: {
-      action: "\u9884\u89C8\u6D3B\u9875\u5939\u8FC1\u79FB",
-      noticeBody: "\u201C{{project}}\u201D\u6709\u4E00\u4E2A\u4E0E\u5176\u6587\u4EF6\u4E0D\u4E00\u81F4\u7684\u65E7\u6D3B\u9875\u5939\u3002\u53EF\u4EE5\u9884\u89C8\u8FC1\u79FB\u5C06\u5E26\u6765\u7684\u66F4\u6539\u2014\u2014\u672A\u7ECF\u60A8\u7684\u786E\u8BA4\u4E0D\u4F1A\u8FDB\u884C\u4EFB\u4F55\u64CD\u4F5C\u3002",
-      noticePreview: "\u9884\u89C8",
-      noticeNotNow: "\u6682\u4E0D",
-      modalTitle: "\u8FC1\u79FB\u201C{{project}}\u201D\u2014\u2014\u9884\u89C8",
-      dryRun: "\u8FD9\u662F\u4E00\u6B21\u6F14\u7EC3\uFF0C\u5C1A\u672A\u8FDB\u884C\u4EFB\u4F55\u66F4\u6539\u3002",
-      countsOperations_one: "{{count}} \u9879\u64CD\u4F5C",
-      countsOperations_other: "{{count}} \u9879\u64CD\u4F5C",
-      countsDone: "{{count}} \u9879\u5DF2\u5B8C\u6210",
-      countsPending: "{{count}} \u9879\u5F85\u5904\u7406",
-      countsAnomalies_one: "{{count}} \u9879\u9700\u8981\u6CE8\u610F",
-      countsAnomalies_other: "{{count}} \u9879\u9700\u8981\u6CE8\u610F",
-      sectionFolders: "\u6587\u4EF6\u5939",
-      sectionDocuments: "\u6587\u6863",
-      sectionFrontmatter: "Frontmatter",
-      keptNote: "\u5DF2\u8BBE\u7F6E\u7684\u952E\u5C06\u4FDD\u7559",
-      folderExists: "\u5DF2\u5B58\u5728\uFF0C\u540D\u4E3A",
-      folderCreate: "\u5C06\u521B\u5EFA\u4E3A",
-      docDone: "\u5DF2\u4F4D\u4E8E",
-      docMove: "\u5C06\u79FB\u52A8\u5230",
-      anomalyMissing: "\u65E2\u4E0D\u5728\u539F\u4F4D\u7F6E\u4E5F\u4E0D\u5728\u65B0\u4F4D\u7F6E\u2014\u2014\u5C06\u4FDD\u6301\u4E0D\u52A8",
-      anomalyOccupied: "\u65B0\u4F4D\u7F6E\u5DF2\u88AB\u5360\u7528\u2014\u2014\u5C06\u4FDD\u6301\u4E0D\u52A8",
-      badgeSuffixed: "\u540D\u79F0\u5DF2\u88AB\u5360\u7528\u2014\u2014\u5DF2\u52A0\u540E\u7F00",
-      badgeReserved: "\u4FDD\u7559\u540D\u79F0\u2014\u2014\u5DF2\u52A0\u540E\u7F00",
-      badgeTitleUnusable: "\u6807\u9898\u4E0D\u53EF\u7528\u2014\u2014\u4FDD\u7559\u539F\u540D\u79F0",
-      keptKey: "{{key}} \u5DF2\u4FDD\u7559\uFF08\u5DF2\u8BBE\u7F6E\uFF09",
-      backupNote: "\u65E7\u7684\u6D3B\u9875\u5939\u6587\u4EF6\uFF08_binder.json\uFF09\u5C06\u4F5C\u4E3A\u5907\u4EFD\u4FDD\u7559\uFF0C\u6C38\u8FDC\u4E0D\u4F1A\u88AB\u5220\u9664\u3002\u4EE5\u540E\u964D\u7EA7\u65F6\u4F1A\u5C3D\u91CF\u5C06\u5176\u6062\u590D\u539F\u6837\u3002",
-      close: "\u5173\u95ED",
-      unavailable: "\u8FC1\u79FB\u9884\u89C8\u9700\u8981\u542F\u7528\u5B9E\u9A8C\u6027\u6587\u4EF6\u7CFB\u7EDF\u6D3B\u9875\u5939\u5E76\u6709\u4E00\u4E2A\u6D3B\u52A8\u9879\u76EE\u3002",
-      nothingToPreview: "\u672A\u627E\u5230\u6B64\u9879\u76EE\u7684\u65E7\u6D3B\u9875\u5939\u3002",
-      readFailed: "\u65E0\u6CD5\u8BFB\u53D6\u65E7\u7684\u6D3B\u9875\u5939\u6587\u4EF6\u3002"
+    migration: {
+      couldntMove: "Writing Studio \u65E0\u6CD5\u79FB\u52A8\u201C{{name}}\u201D\uFF1A{{reason}}\u3002",
+      couldntRename: "Writing Studio \u65E0\u6CD5\u91CD\u547D\u540D\u201C{{name}}\u201D\uFF1A{{reason}}\u3002",
+      couldntUpdate: "Writing Studio \u65E0\u6CD5\u66F4\u65B0\u201C{{name}}\u201D\uFF1A{{reason}}\u3002",
+      reasonNameTaken: "\u5DF2\u5B58\u5728\u540C\u540D\u6587\u4EF6",
+      reasonInUse: "\u6587\u4EF6\u6B63\u5728\u4F7F\u7528\u4E2D",
+      reasonPermission: "\u6743\u9650\u88AB\u62D2\u7EDD",
+      restoreDone: "\u5DF2\u6062\u590D\u5148\u524D\u7684\u6D3B\u9875\u5939\u5E03\u5C40\u3002",
+      restorePartial_one: "\u5DF2\u6062\u590D\u5148\u524D\u5E03\u5C40\u3002{{count}} \u4E2A\u9879\u76EE\u65E0\u6CD5\u79FB\u56DE\u539F\u4F4D\u3002",
+      restorePartial_other: "\u5DF2\u6062\u590D\u5148\u524D\u5E03\u5C40\u3002{{count}} \u4E2A\u9879\u76EE\u65E0\u6CD5\u79FB\u56DE\u539F\u4F4D\u3002",
+      restoreNothing: "\u6CA1\u6709\u53EF\u6062\u590D\u7684\u5185\u5BB9\u3002",
+      restoreUnavailable: "\u6062\u590D\u5E03\u5C40\u9700\u8981\u542F\u7528\u5B9E\u9A8C\u6027\u6587\u4EF6\u7CFB\u7EDF\u6D3B\u9875\u5939\u5E76\u6709\u4E00\u4E2A\u6D3B\u52A8\u9879\u76EE\u3002"
     }
   },
   launcher: {
@@ -3852,7 +3820,7 @@ var zh_default = {
       openWritingLog: "\u6253\u5F00\u5199\u4F5C\u65E5\u5FD7",
       openFolderSidebar: "\u5728\u4FA7\u8FB9\u680F\u6D4F\u89C8\u5668\u4E2D\u6253\u5F00\u6587\u4EF6\u5939",
       addFilesToBinder: "\u626B\u63CF\u9879\u76EE\u6587\u4EF6\u5939\u4E2D\u7684\u65B0\u6587\u4EF6",
-      previewCarryOver: "\u9884\u89C8\u6D3B\u9875\u5939\u8FC1\u79FB"
+      restoreBinderLayout: "\u6062\u590D\u6D3B\u9875\u5939\u7684\u5148\u524D\u5E03\u5C40"
     },
     menu: {
       studioOptions: "\u5199\u4F5C\u5DE5\u4F5C\u5BA4\u9009\u9879",
@@ -4043,7 +4011,11 @@ var hi_default = {
       includeCoverDesc: "\u0915\u0935\u0930 \u091B\u0935\u093F \u0928 \u0939\u094B\u0928\u0947 \u092A\u0930 \u091F\u0947\u0915\u094D\u0938\u094D\u091F \u0915\u0935\u0930 \u092A\u0943\u0937\u094D\u0920 \u0909\u0924\u094D\u092A\u0928\u094D\u0928 \u0915\u0930\u0947\u0902\u0964",
       pdfEngine: "PDF \u0907\u0902\u091C\u0928",
       pdfEngineDesc: "PDF \u0928\u093F\u0930\u094D\u092F\u093E\u0924 \u0915\u0947 \u0932\u093F\u090F \u0909\u092A\u092F\u094B\u0917 \u0939\u094B\u0928\u0947 \u0935\u093E\u0932\u093E \u0907\u0902\u091C\u0928\u0964 \u0938\u094D\u0935\u091A\u093E\u0932\u093F\u0924 \u092E\u094B\u0921 \u0907\u0902\u0938\u094D\u091F\u0949\u0932 \u0915\u093F\u092F\u093E \u0917\u092F\u093E LaTeX \u0907\u0902\u091C\u0928 \u091A\u0941\u0928\u0924\u093E \u0939\u0948\u0964 wkhtmltopdf \u092C\u093F\u0928\u093E LaTeX \u0915\u0947 \u0915\u093E\u092E \u0915\u0930\u0924\u093E \u0939\u0948, \u0932\u0947\u0915\u093F\u0928 \u0928\u093F\u0930\u094D\u092F\u093E\u0924 \u092B\u093C\u0949\u0928\u094D\u091F \u0938\u0947\u091F\u093F\u0902\u0917 \u0909\u0938 \u092A\u0930 \u0932\u093E\u0917\u0942 \u0928\u0939\u0940\u0902 \u0939\u094B\u0924\u0940\u0964",
-      pdfEngineAuto: "\u0938\u094D\u0935\u091A\u093E\u0932\u093F\u0924 (\u0905\u0928\u0941\u0936\u0902\u0938\u093F\u0924)"
+      pdfEngineAuto: "\u0938\u094D\u0935\u091A\u093E\u0932\u093F\u0924 (\u0905\u0928\u0941\u0936\u0902\u0938\u093F\u0924)",
+      subtreeTitleSource: "\u092B\u093C\u094B\u0932\u094D\u0921\u0930 \u0928\u093F\u0930\u094D\u092F\u093E\u0924 \u0915\u093E \u0936\u0940\u0930\u094D\u0937\u0915",
+      subtreeTitleSourceDesc: "\u092B\u093C\u094B\u0932\u094D\u0921\u0930 \u0928\u093F\u0930\u094D\u092F\u093E\u0924 \u0915\u093E \u0936\u0940\u0930\u094D\u0937\u0915 \u092A\u0943\u0937\u094D\u0920 \u0914\u0930 \u092E\u0947\u091F\u093E\u0921\u0947\u091F\u093E \u0915\u093F\u0938\u0947 \u0926\u0930\u094D\u0936\u093E\u090F\u0901: \u0928\u093F\u0930\u094D\u092F\u093E\u0924 \u0915\u093F\u092F\u093E \u0917\u092F\u093E \u092B\u093C\u094B\u0932\u094D\u0921\u0930 \u092F\u093E \u092A\u0942\u0930\u093E \u092A\u094D\u0930\u094B\u091C\u0947\u0915\u094D\u091F\u0964",
+      subtreeTitleFolder: "\u092B\u093C\u094B\u0932\u094D\u0921\u0930 \u0915\u093E \u0928\u093E\u092E",
+      subtreeTitleProject: "\u092A\u094D\u0930\u094B\u091C\u0947\u0915\u094D\u091F \u0915\u093E \u0936\u0940\u0930\u094D\u0937\u0915"
     },
     log: {
       heading: "\u0926\u0948\u0928\u093F\u0915 \u0932\u0947\u0916\u0928 \u0932\u0949\u0917",
@@ -4177,38 +4149,18 @@ var hi_default = {
       nameExists: '\u092F\u0939\u093E\u0902 "{{name}}" \u0928\u093E\u092E \u0915\u0940 \u0915\u094B\u0908 \u091A\u0940\u091C\u093C \u092A\u0939\u0932\u0947 \u0938\u0947 \u092E\u094C\u091C\u0942\u0926 \u0939\u0948\u0964',
       exportFolder: "\u092B\u093C\u094B\u0932\u094D\u0921\u0930 \u0928\u093F\u0930\u094D\u092F\u093E\u0924 \u0915\u0930\u0947\u0902"
     },
-    carryOver: {
-      action: "\u092C\u093E\u0907\u0902\u0921\u0930 \u0938\u094D\u0925\u093E\u0928\u093E\u0902\u0924\u0930\u0923 \u0915\u093E \u092A\u0942\u0930\u094D\u0935\u093E\u0935\u0932\u094B\u0915\u0928 \u0915\u0930\u0947\u0902",
-      noticeBody: '"{{project}}" \u092E\u0947\u0902 \u090F\u0915 \u092A\u0941\u0930\u093E\u0928\u093E \u092C\u093E\u0907\u0902\u0921\u0930 \u0939\u0948 \u091C\u094B \u0907\u0938\u0915\u0940 \u092B\u093C\u093E\u0907\u0932\u094B\u0902 \u0938\u0947 \u0905\u0932\u0917 \u0939\u0948\u0964 \u0926\u0947\u0916\u0947\u0902 \u0915\u093F \u0938\u094D\u0925\u093E\u0928\u093E\u0902\u0924\u0930\u0923 \u0938\u0947 \u0915\u094D\u092F\u093E \u092C\u0926\u0932\u0947\u0917\u093E \u2014 \u0906\u092A\u0915\u0940 \u0938\u094D\u0935\u0940\u0915\u0943\u0924\u093F \u0915\u0947 \u092C\u093F\u0928\u093E \u0915\u0941\u091B \u0928\u0939\u0940\u0902 \u0939\u094B\u0917\u093E\u0964',
-      noticePreview: "\u092A\u0942\u0930\u094D\u0935\u093E\u0935\u0932\u094B\u0915\u0928",
-      noticeNotNow: "\u0905\u092D\u0940 \u0928\u0939\u0940\u0902",
-      modalTitle: '"{{project}}" \u0915\u093E \u0938\u094D\u0925\u093E\u0928\u093E\u0902\u0924\u0930\u0923 \u2014 \u092A\u0942\u0930\u094D\u0935\u093E\u0935\u0932\u094B\u0915\u0928',
-      dryRun: "\u092F\u0939 \u090F\u0915 \u092A\u0942\u0930\u094D\u0935\u093E\u092D\u094D\u092F\u093E\u0938 \u0939\u0948\u0964 \u0905\u092D\u0940 \u0924\u0915 \u0915\u0941\u091B \u0928\u0939\u0940\u0902 \u092C\u0926\u0932\u093E \u0917\u092F\u093E \u0939\u0948\u0964",
-      countsOperations_one: "{{count}} \u0915\u093E\u0930\u094D\u0930\u0935\u093E\u0908",
-      countsOperations_other: "{{count}} \u0915\u093E\u0930\u094D\u0930\u0935\u093E\u0907\u092F\u093E\u0901",
-      countsDone: "{{count}} \u092A\u0942\u0930\u094D\u0923",
-      countsPending: "{{count}} \u0932\u0902\u092C\u093F\u0924",
-      countsAnomalies_one: "{{count}} \u092A\u0930 \u0927\u094D\u092F\u093E\u0928 \u0906\u0935\u0936\u094D\u092F\u0915",
-      countsAnomalies_other: "{{count}} \u092A\u0930 \u0927\u094D\u092F\u093E\u0928 \u0906\u0935\u0936\u094D\u092F\u0915",
-      sectionFolders: "\u092B\u093C\u094B\u0932\u094D\u0921\u0930",
-      sectionDocuments: "\u0926\u0938\u094D\u0924\u093E\u0935\u0947\u091C\u093C",
-      sectionFrontmatter: "\u092B\u094D\u0930\u0902\u091F\u092E\u0948\u091F\u0930",
-      keptNote: "\u0906\u092A\u0915\u0940 \u092A\u0939\u0932\u0947 \u0938\u0947 \u0938\u0947\u091F \u0915\u0941\u0902\u091C\u093F\u092F\u093E\u0901 \u092C\u0928\u0940 \u0930\u0939\u0947\u0902\u0917\u0940",
-      folderExists: "\u092A\u0939\u0932\u0947 \u0938\u0947 \u092E\u094C\u091C\u0942\u0926 \u0939\u0948:",
-      folderCreate: "\u0907\u0938 \u0928\u093E\u092E \u0938\u0947 \u092C\u0928\u0947\u0917\u093E:",
-      docDone: "\u092A\u0939\u0932\u0947 \u0938\u0947 \u092F\u0939\u093E\u0901 \u0939\u0948:",
-      docMove: "\u092F\u0939\u093E\u0901 \u091C\u093E\u090F\u0917\u093E:",
-      anomalyMissing: "\u0928 \u092E\u0942\u0932 \u0938\u094D\u0925\u093E\u0928 \u092A\u0930 \u0939\u0948 \u0928 \u0928\u090F \u0938\u094D\u0925\u093E\u0928 \u092A\u0930 \u2014 \u0905\u091B\u0942\u0924\u093E \u091B\u094B\u0921\u093C\u093E \u091C\u093E\u090F\u0917\u093E",
-      anomalyOccupied: "\u0928\u092F\u093E \u0938\u094D\u0925\u093E\u0928 \u092A\u0939\u0932\u0947 \u0938\u0947 \u092D\u0930\u093E \u0939\u0948 \u2014 \u0905\u091B\u0942\u0924\u093E \u091B\u094B\u0921\u093C\u093E \u091C\u093E\u090F\u0917\u093E",
-      badgeSuffixed: "\u0928\u093E\u092E \u092A\u0939\u0932\u0947 \u0938\u0947 \u0932\u093F\u092F\u093E \u0917\u092F\u093E \u2014 \u092A\u094D\u0930\u0924\u094D\u092F\u092F \u091C\u094B\u0921\u093C\u093E \u0917\u092F\u093E",
-      badgeReserved: "\u0906\u0930\u0915\u094D\u0937\u093F\u0924 \u0928\u093E\u092E \u2014 \u092A\u094D\u0930\u0924\u094D\u092F\u092F \u091C\u094B\u0921\u093C\u093E \u0917\u092F\u093E",
-      badgeTitleUnusable: "\u0936\u0940\u0930\u094D\u0937\u0915 \u0905\u0928\u0941\u092A\u092F\u094B\u0917\u0940 \u2014 \u0928\u093E\u092E \u0930\u0916\u093E \u0917\u092F\u093E",
-      keptKey: "{{key}} \u0930\u0916\u093E \u0917\u092F\u093E (\u092A\u0939\u0932\u0947 \u0938\u0947 \u0938\u0947\u091F)",
-      backupNote: "\u0906\u092A\u0915\u0940 \u092A\u0941\u0930\u093E\u0928\u0940 \u092C\u093E\u0907\u0902\u0921\u0930 \u092B\u093C\u093E\u0907\u0932 (_binder.json) \u092C\u0948\u0915\u0905\u092A \u0915\u0947 \u0930\u0942\u092A \u092E\u0947\u0902 \u0930\u0916\u0940 \u091C\u093E\u0924\u0940 \u0939\u0948 \u0914\u0930 \u0915\u092D\u0940 \u0939\u091F\u093E\u0908 \u0928\u0939\u0940\u0902 \u091C\u093E\u0924\u0940\u0964 \u092C\u093E\u0926 \u092E\u0947\u0902 \u0921\u093E\u0909\u0928\u0917\u094D\u0930\u0947\u0921 \u0915\u0930\u0928\u0947 \u092A\u0930 \u0907\u0938\u0947 \u092F\u0925\u093E\u0938\u0902\u092D\u0935 \u092A\u0939\u0932\u0947 \u091C\u0948\u0938\u093E \u092C\u0939\u093E\u0932 \u0915\u093F\u092F\u093E \u091C\u093E\u0924\u093E \u0939\u0948\u0964",
-      close: "\u092C\u0902\u0926 \u0915\u0930\u0947\u0902",
-      unavailable: "\u0938\u094D\u0925\u093E\u0928\u093E\u0902\u0924\u0930\u0923 \u092A\u0942\u0930\u094D\u0935\u093E\u0935\u0932\u094B\u0915\u0928 \u0915\u0947 \u0932\u093F\u090F \u092A\u094D\u0930\u092F\u094B\u0917\u093E\u0924\u094D\u092E\u0915 \u092B\u093C\u093E\u0907\u0932-\u0938\u093F\u0938\u094D\u091F\u092E \u092C\u093E\u0907\u0902\u0921\u0930 \u0914\u0930 \u090F\u0915 \u0938\u0915\u094D\u0930\u093F\u092F \u092A\u094D\u0930\u094B\u091C\u0947\u0915\u094D\u091F \u0906\u0935\u0936\u094D\u092F\u0915 \u0939\u0948\u0964",
-      nothingToPreview: "\u0907\u0938 \u092A\u094D\u0930\u094B\u091C\u0947\u0915\u094D\u091F \u0915\u0947 \u0932\u093F\u090F \u0915\u094B\u0908 \u092A\u0941\u0930\u093E\u0928\u093E \u092C\u093E\u0907\u0902\u0921\u0930 \u0928\u0939\u0940\u0902 \u092E\u093F\u0932\u093E\u0964",
-      readFailed: "\u092A\u0941\u0930\u093E\u0928\u0940 \u092C\u093E\u0907\u0902\u0921\u0930 \u092B\u093C\u093E\u0907\u0932 \u092A\u0922\u093C\u0940 \u0928\u0939\u0940\u0902 \u091C\u093E \u0938\u0915\u0940\u0964"
+    migration: {
+      couldntMove: 'Writing Studio "{{name}}" \u0915\u094B \u0938\u094D\u0925\u093E\u0928\u093E\u0902\u0924\u0930\u093F\u0924 \u0928\u0939\u0940\u0902 \u0915\u0930 \u0938\u0915\u093E: {{reason}}\u0964',
+      couldntRename: 'Writing Studio "{{name}}" \u0915\u093E \u0928\u093E\u092E \u0928\u0939\u0940\u0902 \u092C\u0926\u0932 \u0938\u0915\u093E: {{reason}}\u0964',
+      couldntUpdate: 'Writing Studio "{{name}}" \u0915\u094B \u0905\u092A\u0921\u0947\u091F \u0928\u0939\u0940\u0902 \u0915\u0930 \u0938\u0915\u093E: {{reason}}\u0964',
+      reasonNameTaken: "\u0909\u0938 \u0928\u093E\u092E \u0915\u0940 \u092B\u093C\u093E\u0907\u0932 \u092A\u0939\u0932\u0947 \u0938\u0947 \u092E\u094C\u091C\u0942\u0926 \u0939\u0948",
+      reasonInUse: "\u092B\u093C\u093E\u0907\u0932 \u0909\u092A\u092F\u094B\u0917 \u092E\u0947\u0902 \u0939\u0948",
+      reasonPermission: "\u0905\u0928\u0941\u092E\u0924\u093F \u0905\u0938\u094D\u0935\u0940\u0915\u093E\u0930 \u0915\u0930 \u0926\u0940 \u0917\u0908",
+      restoreDone: "\u092C\u093E\u0907\u0902\u0921\u0930 \u0915\u0940 \u092A\u093F\u091B\u0932\u0940 \u0935\u094D\u092F\u0935\u0938\u094D\u0925\u093E \u092C\u0939\u093E\u0932 \u0915\u0930 \u0926\u0940 \u0917\u0908\u0964",
+      restorePartial_one: "\u092A\u093F\u091B\u0932\u0940 \u0935\u094D\u092F\u0935\u0938\u094D\u0925\u093E \u092C\u0939\u093E\u0932 \u0915\u0940 \u0917\u0908\u0964 {{count}} \u0906\u0907\u091F\u092E \u0935\u093E\u092A\u0938 \u0928\u0939\u0940\u0902 \u091C\u093E \u0938\u0915\u093E\u0964",
+      restorePartial_other: "\u092A\u093F\u091B\u0932\u0940 \u0935\u094D\u092F\u0935\u0938\u094D\u0925\u093E \u092C\u0939\u093E\u0932 \u0915\u0940 \u0917\u0908\u0964 {{count}} \u0906\u0907\u091F\u092E \u0935\u093E\u092A\u0938 \u0928\u0939\u0940\u0902 \u091C\u093E \u0938\u0915\u0947\u0964",
+      restoreNothing: "\u092C\u0939\u093E\u0932 \u0915\u0930\u0928\u0947 \u0915\u0947 \u0932\u093F\u090F \u0915\u0941\u091B \u0928\u0939\u0940\u0902 \u0939\u0948\u0964",
+      restoreUnavailable: "\u0935\u094D\u092F\u0935\u0938\u094D\u0925\u093E \u092C\u0939\u093E\u0932 \u0915\u0930\u0928\u0947 \u0915\u0947 \u0932\u093F\u090F \u092A\u094D\u0930\u092F\u094B\u0917\u093E\u0924\u094D\u092E\u0915 \u092B\u093C\u093E\u0907\u0932-\u0938\u093F\u0938\u094D\u091F\u092E \u092C\u093E\u0907\u0902\u0921\u0930 \u0914\u0930 \u090F\u0915 \u0938\u0915\u094D\u0930\u093F\u092F \u092A\u094D\u0930\u094B\u091C\u0947\u0915\u094D\u091F \u0906\u0935\u0936\u094D\u092F\u0915 \u0939\u0948\u0964"
     }
   },
   launcher: {
@@ -4621,7 +4573,7 @@ var hi_default = {
       openWritingLog: "\u0930\u093E\u0907\u091F\u093F\u0902\u0917 \u0932\u0949\u0917 \u0916\u094B\u0932\u0947\u0902",
       openFolderSidebar: "\u0938\u093E\u0907\u0921\u092C\u093E\u0930 \u090F\u0915\u094D\u0938\u092A\u094D\u0932\u094B\u0930\u0930 \u092E\u0947\u0902 \u092B\u093C\u094B\u0932\u094D\u0921\u0930 \u0916\u094B\u0932\u0947\u0902",
       addFilesToBinder: "\u0928\u0908 \u092B\u093C\u093E\u0907\u0932\u094B\u0902 \u0915\u0947 \u0932\u093F\u090F \u092A\u0930\u093F\u092F\u094B\u091C\u0928\u093E \u092B\u093C\u094B\u0932\u094D\u0921\u0930 \u0938\u094D\u0915\u0948\u0928 \u0915\u0930\u0947\u0902",
-      previewCarryOver: "\u092C\u093E\u0907\u0902\u0921\u0930 \u0938\u094D\u0925\u093E\u0928\u093E\u0902\u0924\u0930\u0923 \u0915\u093E \u092A\u0942\u0930\u094D\u0935\u093E\u0935\u0932\u094B\u0915\u0928 \u0915\u0930\u0947\u0902"
+      restoreBinderLayout: "\u092C\u093E\u0907\u0902\u0921\u0930 \u0915\u0940 \u092A\u093F\u091B\u0932\u0940 \u0935\u094D\u092F\u0935\u0938\u094D\u0925\u093E \u092C\u0939\u093E\u0932 \u0915\u0930\u0947\u0902"
     },
     menu: {
       studioOptions: "\u0930\u093E\u0907\u091F\u093F\u0902\u0917 \u0938\u094D\u091F\u0942\u0921\u093F\u092F\u094B \u0935\u093F\u0915\u0932\u094D\u092A",
@@ -4812,7 +4764,11 @@ var es_default = {
       includeCoverDesc: "Generar una portada de texto cuando no se proporciona imagen de portada.",
       pdfEngine: "Motor de PDF",
       pdfEngineDesc: "Motor usado para exportar a PDF. Auto elige un motor LaTeX instalado. wkhtmltopdf funciona sin LaTeX, pero la fuente de exportaci\xF3n no se aplica con \xE9l.",
-      pdfEngineAuto: "Auto (recomendado)"
+      pdfEngineAuto: "Auto (recomendado)",
+      subtreeTitleSource: "T\xEDtulo al exportar carpeta",
+      subtreeTitleSourceDesc: "Qu\xE9 nombran la portada y los metadatos al exportar una carpeta: la carpeta exportada o el proyecto completo.",
+      subtreeTitleFolder: "Nombre de la carpeta",
+      subtreeTitleProject: "T\xEDtulo del proyecto"
     },
     log: {
       heading: "Registro diario de escritura",
@@ -4946,38 +4902,18 @@ var es_default = {
       nameExists: 'Ya existe algo llamado "{{name}}" aqu\xED.',
       exportFolder: "Exportar carpeta"
     },
-    carryOver: {
-      action: "Previsualizar el traspaso de la carpeta de escritura",
-      noticeBody: "\xAB{{project}}\xBB tiene una carpeta de escritura antigua que difiere de sus archivos. Previsualiza lo que cambiar\xEDa el traspaso \u2014 nada ocurre sin tu aprobaci\xF3n.",
-      noticePreview: "Previsualizar",
-      noticeNotNow: "Ahora no",
-      modalTitle: "Traspasar \xAB{{project}}\xBB \u2014 previsualizaci\xF3n",
-      dryRun: "Esto es una simulaci\xF3n. No se ha cambiado nada.",
-      countsOperations_one: "{{count}} operaci\xF3n",
-      countsOperations_other: "{{count}} operaciones",
-      countsDone: "{{count}} completadas",
-      countsPending: "{{count}} pendientes",
-      countsAnomalies_one: "{{count}} requiere atenci\xF3n",
-      countsAnomalies_other: "{{count}} requieren atenci\xF3n",
-      sectionFolders: "Carpetas",
-      sectionDocuments: "Documentos",
-      sectionFrontmatter: "Frontmatter",
-      keptNote: "las claves que ya has definido se conservan",
-      folderExists: "ya existe como",
-      folderCreate: "se crear\xE1 como",
-      docDone: "ya est\xE1 en",
-      docMove: "se mover\xE1 a",
-      anomalyMissing: "no est\xE1 en su ubicaci\xF3n original ni en la nueva \u2014 se dejar\xE1 intacto",
-      anomalyOccupied: "su nueva ubicaci\xF3n ya est\xE1 ocupada \u2014 se dejar\xE1 intacto",
-      badgeSuffixed: "nombre ocupado \u2014 con sufijo",
-      badgeReserved: "nombre reservado \u2014 con sufijo",
-      badgeTitleUnusable: "t\xEDtulo inutilizable \u2014 se conserva el nombre",
-      keptKey: "{{key}} conservado (ya definido)",
-      backupNote: "Tu archivo antiguo (_binder.json) se conserva como copia de seguridad y nunca se elimina. Si m\xE1s adelante vuelves a una versi\xF3n anterior, se restaura tal como estaba (en la medida de lo posible).",
-      close: "Cerrar",
-      unavailable: "La previsualizaci\xF3n del traspaso necesita la carpeta de escritura experimental del sistema de archivos y un proyecto activo.",
-      nothingToPreview: "No se encontr\xF3 una carpeta de escritura antigua para este proyecto.",
-      readFailed: "No se pudo leer el archivo antiguo de la carpeta de escritura."
+    migration: {
+      couldntMove: "Writing Studio no pudo mover \xAB{{name}}\xBB: {{reason}}.",
+      couldntRename: "Writing Studio no pudo renombrar \xAB{{name}}\xBB: {{reason}}.",
+      couldntUpdate: "Writing Studio no pudo actualizar \xAB{{name}}\xBB: {{reason}}.",
+      reasonNameTaken: "ya hay un archivo con ese nombre",
+      reasonInUse: "el archivo est\xE1 en uso",
+      reasonPermission: "se deneg\xF3 el permiso",
+      restoreDone: "Disposici\xF3n anterior restaurada.",
+      restorePartial_one: "Disposici\xF3n anterior restaurada. {{count}} elemento no pudo volver a su lugar.",
+      restorePartial_other: "Disposici\xF3n anterior restaurada. {{count}} elementos no pudieron volver a su lugar.",
+      restoreNothing: "Nada que restaurar.",
+      restoreUnavailable: "Restaurar la disposici\xF3n necesita la carpeta de escritura experimental del sistema de archivos y un proyecto activo."
     }
   },
   launcher: {
@@ -5390,7 +5326,7 @@ var es_default = {
       openWritingLog: "Abrir registro de escritura",
       openFolderSidebar: "Abrir carpeta en el explorador lateral",
       addFilesToBinder: "Buscar archivos nuevos en la carpeta del proyecto",
-      previewCarryOver: "Previsualizar el traspaso de la carpeta de escritura"
+      restoreBinderLayout: "Restaurar la disposici\xF3n anterior de la carpeta de escritura"
     },
     menu: {
       studioOptions: "Opciones de Writing Studio",
@@ -5581,7 +5517,11 @@ var ar_default = {
       includeCoverDesc: "\u0625\u0646\u0634\u0627\u0621 \u0635\u0641\u062D\u0629 \u063A\u0644\u0627\u0641 \u0646\u0635\u064A\u0629 \u0639\u0646\u062F \u0639\u062F\u0645 \u062A\u0648\u0641\u0631 \u0635\u0648\u0631\u0629 \u063A\u0644\u0627\u0641.",
       pdfEngine: "\u0645\u062D\u0631\u0643 PDF",
       pdfEngineDesc: "\u0627\u0644\u0645\u062D\u0631\u0643 \u0627\u0644\u0645\u0633\u062A\u062E\u062F\u0645 \u0644\u062A\u0635\u062F\u064A\u0631 PDF. \u064A\u062E\u062A\u0627\u0631 \u0627\u0644\u0648\u0636\u0639 \u0627\u0644\u062A\u0644\u0642\u0627\u0626\u064A \u0645\u062D\u0631\u0643 LaTeX \u0645\u062B\u0628\u062A\u064B\u0627. \u064A\u0639\u0645\u0644 wkhtmltopdf \u062F\u0648\u0646 LaTeX\u060C \u0644\u0643\u0646 \u0625\u0639\u062F\u0627\u062F \u062E\u0637 \u0627\u0644\u062A\u0635\u062F\u064A\u0631 \u0644\u0627 \u064A\u0646\u0637\u0628\u0642 \u0639\u0644\u064A\u0647.",
-      pdfEngineAuto: "\u062A\u0644\u0642\u0627\u0626\u064A (\u0645\u0648\u0635\u0649 \u0628\u0647)"
+      pdfEngineAuto: "\u062A\u0644\u0642\u0627\u0626\u064A (\u0645\u0648\u0635\u0649 \u0628\u0647)",
+      subtreeTitleSource: "\u0639\u0646\u0648\u0627\u0646 \u062A\u0635\u062F\u064A\u0631 \u0627\u0644\u0645\u062C\u0644\u062F",
+      subtreeTitleSourceDesc: "\u0645\u0627 \u062A\u0634\u064A\u0631 \u0625\u0644\u064A\u0647 \u0635\u0641\u062D\u0629 \u0627\u0644\u0639\u0646\u0648\u0627\u0646 \u0648\u0627\u0644\u0628\u064A\u0627\u0646\u0627\u062A \u0627\u0644\u0648\u0635\u0641\u064A\u0629 \u0639\u0646\u062F \u062A\u0635\u062F\u064A\u0631 \u0645\u062C\u0644\u062F: \u0627\u0644\u0645\u062C\u0644\u062F \u0627\u0644\u0645\u064F\u0635\u062F\u064E\u0651\u0631 \u0623\u0648 \u0627\u0644\u0645\u0634\u0631\u0648\u0639 \u0628\u0623\u0643\u0645\u0644\u0647.",
+      subtreeTitleFolder: "\u0627\u0633\u0645 \u0627\u0644\u0645\u062C\u0644\u062F",
+      subtreeTitleProject: "\u0639\u0646\u0648\u0627\u0646 \u0627\u0644\u0645\u0634\u0631\u0648\u0639"
     },
     log: {
       heading: "\u0633\u062C\u0644 \u0627\u0644\u0643\u062A\u0627\u0628\u0629 \u0627\u0644\u064A\u0648\u0645\u064A",
@@ -5718,44 +5658,21 @@ var ar_default = {
       nameExists: '\u064A\u0648\u062C\u062F \u0628\u0627\u0644\u0641\u0639\u0644 \u0639\u0646\u0635\u0631 \u0628\u0627\u0633\u0645 "{{name}}" \u0647\u0646\u0627.',
       exportFolder: "\u062A\u0635\u062F\u064A\u0631 \u0627\u0644\u0645\u062C\u0644\u062F"
     },
-    carryOver: {
-      action: "\u0645\u0639\u0627\u064A\u0646\u0629 \u0646\u0642\u0644 \u0627\u0644\u0645\u0644\u0632\u0645\u0629",
-      noticeBody: '\u0644\u062F\u0649 "{{project}}" \u0645\u0644\u0632\u0645\u0629 \u0642\u062F\u064A\u0645\u0629 \u062A\u062E\u062A\u0644\u0641 \u0639\u0646 \u0645\u0644\u0641\u0627\u062A\u0647\u0627. \u064A\u0645\u0643\u0646\u0643 \u0645\u0639\u0627\u064A\u0646\u0629 \u0645\u0627 \u0633\u064A\u063A\u064A\u0651\u0631\u0647 \u0627\u0644\u0646\u0642\u0644 \u2014 \u0644\u0646 \u064A\u062D\u062F\u062B \u0634\u064A\u0621 \u062F\u0648\u0646 \u0645\u0648\u0627\u0641\u0642\u062A\u0643.',
-      noticePreview: "\u0645\u0639\u0627\u064A\u0646\u0629",
-      noticeNotNow: "\u0644\u064A\u0633 \u0627\u0644\u0622\u0646",
-      modalTitle: '\u0646\u0642\u0644 "{{project}}" \u2014 \u0645\u0639\u0627\u064A\u0646\u0629',
-      dryRun: "\u0647\u0630\u0647 \u062A\u062C\u0631\u0628\u0629 \u0641\u0642\u0637. \u0644\u0645 \u064A\u062A\u063A\u064A\u0651\u0631 \u0634\u064A\u0621 \u0628\u0639\u062F.",
-      countsOperations_one: "{{count}} \u0639\u0645\u0644\u064A\u0629",
-      countsOperations_two: "{{count}} \u0639\u0645\u0644\u064A\u062A\u0627\u0646",
-      countsOperations_few: "{{count}} \u0639\u0645\u0644\u064A\u0627\u062A",
-      countsOperations_many: "{{count}} \u0639\u0645\u0644\u064A\u0629",
-      countsOperations_other: "{{count}} \u0639\u0645\u0644\u064A\u0629",
-      countsDone: "{{count}} \u0645\u0646\u062C\u0632\u0629",
-      countsPending: "{{count}} \u0645\u0639\u0644\u0651\u0642\u0629",
-      countsAnomalies_one: "{{count}} \u062A\u062D\u062A\u0627\u062C \u0625\u0644\u0649 \u0627\u0646\u062A\u0628\u0627\u0647",
-      countsAnomalies_two: "{{count}} \u062A\u062D\u062A\u0627\u062C\u0627\u0646 \u0625\u0644\u0649 \u0627\u0646\u062A\u0628\u0627\u0647",
-      countsAnomalies_few: "{{count}} \u062A\u062D\u062A\u0627\u062C \u0625\u0644\u0649 \u0627\u0646\u062A\u0628\u0627\u0647",
-      countsAnomalies_many: "{{count}} \u062A\u062D\u062A\u0627\u062C \u0625\u0644\u0649 \u0627\u0646\u062A\u0628\u0627\u0647",
-      countsAnomalies_other: "{{count}} \u062A\u062D\u062A\u0627\u062C \u0625\u0644\u0649 \u0627\u0646\u062A\u0628\u0627\u0647",
-      sectionFolders: "\u0627\u0644\u0645\u062C\u0644\u062F\u0627\u062A",
-      sectionDocuments: "\u0627\u0644\u0645\u0633\u062A\u0646\u062F\u0627\u062A",
-      sectionFrontmatter: "\u0627\u0644\u0628\u064A\u0627\u0646\u0627\u062A \u0627\u0644\u062A\u0645\u0647\u064A\u062F\u064A\u0629",
-      keptNote: "\u0627\u0644\u0645\u0641\u0627\u062A\u064A\u062D \u0627\u0644\u062A\u064A \u0639\u064A\u0651\u0646\u062A\u0647\u0627 \u0645\u0633\u0628\u0642\u064B\u0627 \u062A\u0628\u0642\u0649 \u0643\u0645\u0627 \u0647\u064A",
-      folderExists: "\u0645\u0648\u062C\u0648\u062F \u0628\u0627\u0644\u0641\u0639\u0644 \u0628\u0627\u0633\u0645",
-      folderCreate: "\u0633\u064A\u064F\u0646\u0634\u0623 \u0628\u0627\u0633\u0645",
-      docDone: "\u0645\u0648\u062C\u0648\u062F \u0628\u0627\u0644\u0641\u0639\u0644 \u0641\u064A",
-      docMove: "\u0633\u064A\u064F\u0646\u0642\u0644 \u0625\u0644\u0649",
-      anomalyMissing: "\u0644\u064A\u0633 \u0641\u064A \u0645\u0648\u0642\u0639\u0647 \u0627\u0644\u0623\u0635\u0644\u064A \u0648\u0644\u0627 \u0627\u0644\u062C\u062F\u064A\u062F \u2014 \u0633\u064A\u064F\u062A\u0631\u0643 \u062F\u0648\u0646 \u062A\u063A\u064A\u064A\u0631",
-      anomalyOccupied: "\u0627\u0644\u0645\u0648\u0642\u0639 \u0627\u0644\u062C\u062F\u064A\u062F \u0645\u0634\u063A\u0648\u0644 \u0628\u0627\u0644\u0641\u0639\u0644 \u2014 \u0633\u064A\u064F\u062A\u0631\u0643 \u062F\u0648\u0646 \u062A\u063A\u064A\u064A\u0631",
-      badgeSuffixed: "\u0627\u0644\u0627\u0633\u0645 \u0645\u0633\u062A\u062E\u062F\u0645 \u2014 \u0623\u064F\u0636\u064A\u0641\u062A \u0644\u0627\u062D\u0642\u0629",
-      badgeReserved: "\u0627\u0633\u0645 \u0645\u062D\u062C\u0648\u0632 \u2014 \u0623\u064F\u0636\u064A\u0641\u062A \u0644\u0627\u062D\u0642\u0629",
-      badgeTitleUnusable: "\u0627\u0644\u0639\u0646\u0648\u0627\u0646 \u063A\u064A\u0631 \u0635\u0627\u0644\u062D \u2014 \u0627\u062D\u062A\u064F\u0641\u0638 \u0628\u0627\u0644\u0627\u0633\u0645",
-      keptKey: "{{key}} \u0645\u062D\u0641\u0648\u0638 (\u0645\u0639\u064A\u0651\u0646 \u0645\u0633\u0628\u0642\u064B\u0627)",
-      backupNote: "\u064A\u064F\u062D\u062A\u0641\u0638 \u0628\u0645\u0644\u0641 \u0627\u0644\u0645\u0644\u0632\u0645\u0629 \u0627\u0644\u0642\u062F\u064A\u0645 (_binder.json) \u0643\u0646\u0633\u062E\u0629 \u0627\u062D\u062A\u064A\u0627\u0637\u064A\u0629 \u0648\u0644\u0627 \u064A\u064F\u062D\u0630\u0641 \u0623\u0628\u062F\u064B\u0627. \u0639\u0646\u062F \u0627\u0644\u0631\u062C\u0648\u0639 \u0644\u0627\u062D\u0642\u064B\u0627 \u0625\u0644\u0649 \u0625\u0635\u062F\u0627\u0631 \u0623\u0642\u062F\u0645 \u064A\u064F\u0633\u062A\u0639\u0627\u062F \u0643\u0645\u0627 \u0643\u0627\u0646 (\u0642\u062F\u0631 \u0627\u0644\u0625\u0645\u0643\u0627\u0646).",
-      close: "\u0625\u063A\u0644\u0627\u0642",
-      unavailable: "\u062A\u062A\u0637\u0644\u0628 \u0645\u0639\u0627\u064A\u0646\u0629 \u0627\u0644\u0646\u0642\u0644 \u062A\u0641\u0639\u064A\u0644 \u0645\u0644\u0632\u0645\u0629 \u0646\u0638\u0627\u0645 \u0627\u0644\u0645\u0644\u0641\u0627\u062A \u0627\u0644\u062A\u062C\u0631\u064A\u0628\u064A\u0629 \u0648\u0648\u062C\u0648\u062F \u0645\u0634\u0631\u0648\u0639 \u0646\u0634\u0637.",
-      nothingToPreview: "\u0644\u0645 \u064A\u064F\u0639\u062B\u0631 \u0639\u0644\u0649 \u0645\u0644\u0632\u0645\u0629 \u0642\u062F\u064A\u0645\u0629 \u0644\u0647\u0630\u0627 \u0627\u0644\u0645\u0634\u0631\u0648\u0639.",
-      readFailed: "\u062A\u0639\u0630\u0651\u0631\u062A \u0642\u0631\u0627\u0621\u0629 \u0645\u0644\u0641 \u0627\u0644\u0645\u0644\u0632\u0645\u0629 \u0627\u0644\u0642\u062F\u064A\u0645."
+    migration: {
+      couldntMove: '\u062A\u0639\u0630\u0651\u0631 \u0639\u0644\u0649 Writing Studio \u0646\u0642\u0644 "{{name}}": {{reason}}.',
+      couldntRename: '\u062A\u0639\u0630\u0651\u0631 \u0639\u0644\u0649 Writing Studio \u0625\u0639\u0627\u062F\u0629 \u062A\u0633\u0645\u064A\u0629 "{{name}}": {{reason}}.',
+      couldntUpdate: '\u062A\u0639\u0630\u0651\u0631 \u0639\u0644\u0649 Writing Studio \u062A\u062D\u062F\u064A\u062B "{{name}}": {{reason}}.',
+      reasonNameTaken: "\u064A\u0648\u062C\u062F \u0645\u0644\u0641 \u0628\u0647\u0630\u0627 \u0627\u0644\u0627\u0633\u0645 \u0628\u0627\u0644\u0641\u0639\u0644",
+      reasonInUse: "\u0627\u0644\u0645\u0644\u0641 \u0642\u064A\u062F \u0627\u0644\u0627\u0633\u062A\u062E\u062F\u0627\u0645",
+      reasonPermission: "\u0631\u064F\u0641\u0636 \u0627\u0644\u0625\u0630\u0646",
+      restoreDone: "\u0627\u0633\u062A\u064F\u0639\u064A\u062F \u0627\u0644\u062A\u062E\u0637\u064A\u0637 \u0627\u0644\u0633\u0627\u0628\u0642 \u0644\u0644\u0645\u0644\u0632\u0645\u0629.",
+      restorePartial_one: "\u0627\u0633\u062A\u064F\u0639\u064A\u062F \u0627\u0644\u062A\u062E\u0637\u064A\u0637 \u0627\u0644\u0633\u0627\u0628\u0642. \u062A\u0639\u0630\u0651\u0631\u062A \u0625\u0639\u0627\u062F\u0629 \u0639\u0646\u0635\u0631 \u0648\u0627\u062D\u062F ({{count}}).",
+      restorePartial_two: "\u0627\u0633\u062A\u064F\u0639\u064A\u062F \u0627\u0644\u062A\u062E\u0637\u064A\u0637 \u0627\u0644\u0633\u0627\u0628\u0642. \u062A\u0639\u0630\u0651\u0631\u062A \u0625\u0639\u0627\u062F\u0629 \u0639\u0646\u0635\u0631\u064A\u0646 ({{count}}).",
+      restorePartial_few: "\u0627\u0633\u062A\u064F\u0639\u064A\u062F \u0627\u0644\u062A\u062E\u0637\u064A\u0637 \u0627\u0644\u0633\u0627\u0628\u0642. \u062A\u0639\u0630\u0651\u0631\u062A \u0625\u0639\u0627\u062F\u0629 {{count}} \u0639\u0646\u0627\u0635\u0631.",
+      restorePartial_many: "\u0627\u0633\u062A\u064F\u0639\u064A\u062F \u0627\u0644\u062A\u062E\u0637\u064A\u0637 \u0627\u0644\u0633\u0627\u0628\u0642. \u062A\u0639\u0630\u0651\u0631\u062A \u0625\u0639\u0627\u062F\u0629 {{count}} \u0639\u0646\u0635\u0631\u064B\u0627.",
+      restorePartial_other: "\u0627\u0633\u062A\u064F\u0639\u064A\u062F \u0627\u0644\u062A\u062E\u0637\u064A\u0637 \u0627\u0644\u0633\u0627\u0628\u0642. \u062A\u0639\u0630\u0651\u0631\u062A \u0625\u0639\u0627\u062F\u0629 {{count}} \u0639\u0646\u0635\u0631.",
+      restoreNothing: "\u0644\u0627 \u064A\u0648\u062C\u062F \u0645\u0627 \u064A\u064F\u0633\u062A\u0639\u0627\u062F.",
+      restoreUnavailable: "\u062A\u062A\u0637\u0644\u0628 \u0627\u0633\u062A\u0639\u0627\u062F\u0629 \u0627\u0644\u062A\u062E\u0637\u064A\u0637 \u062A\u0641\u0639\u064A\u0644 \u0645\u0644\u0632\u0645\u0629 \u0646\u0638\u0627\u0645 \u0627\u0644\u0645\u0644\u0641\u0627\u062A \u0627\u0644\u062A\u062C\u0631\u064A\u0628\u064A\u0629 \u0648\u0648\u062C\u0648\u062F \u0645\u0634\u0631\u0648\u0639 \u0646\u0634\u0637."
     }
   },
   launcher: {
@@ -6182,7 +6099,7 @@ var ar_default = {
       openWritingLog: "\u0641\u062A\u062D \u0633\u062C\u0644 \u0627\u0644\u0643\u062A\u0627\u0628\u0629",
       openFolderSidebar: "\u0641\u062A\u062D \u0627\u0644\u0645\u062C\u0644\u062F \u0641\u064A \u0627\u0644\u0645\u0633\u062A\u0643\u0634\u0641 \u0627\u0644\u062C\u0627\u0646\u0628\u064A",
       addFilesToBinder: "\u0641\u062D\u0635 \u0645\u062C\u0644\u062F \u0627\u0644\u0645\u0634\u0631\u0648\u0639 \u0628\u062D\u062B\u064B\u0627 \u0639\u0646 \u0645\u0644\u0641\u0627\u062A \u062C\u062F\u064A\u062F\u0629",
-      previewCarryOver: "\u0645\u0639\u0627\u064A\u0646\u0629 \u0646\u0642\u0644 \u0627\u0644\u0645\u0644\u0632\u0645\u0629"
+      restoreBinderLayout: "\u0627\u0633\u062A\u0639\u0627\u062F\u0629 \u0627\u0644\u062A\u062E\u0637\u064A\u0637 \u0627\u0644\u0633\u0627\u0628\u0642 \u0644\u0644\u0645\u0644\u0632\u0645\u0629"
     },
     menu: {
       studioOptions: "\u062E\u064A\u0627\u0631\u0627\u062A \u0627\u0633\u062A\u0648\u062F\u064A\u0648 \u0627\u0644\u0643\u062A\u0627\u0628\u0629",
@@ -6373,7 +6290,11 @@ var fr_default = {
       includeCoverDesc: "G\xE9n\xE9rer une page de couverture texte si aucune image de couverture n\u2019est fournie.",
       pdfEngine: "Moteur PDF",
       pdfEngineDesc: "Moteur utilis\xE9 pour l'export PDF. Auto choisit un moteur LaTeX install\xE9. wkhtmltopdf fonctionne sans LaTeX, mais la police d'export ne s'y applique pas.",
-      pdfEngineAuto: "Auto (recommand\xE9)"
+      pdfEngineAuto: "Auto (recommand\xE9)",
+      subtreeTitleSource: "Titre de l\u2019export de dossier",
+      subtreeTitleSourceDesc: "Ce que la page de titre et les m\xE9tadonn\xE9es d\u2019un export de dossier d\xE9signent : le dossier export\xE9 ou le projet entier.",
+      subtreeTitleFolder: "Nom du dossier",
+      subtreeTitleProject: "Titre du projet"
     },
     log: {
       heading: "Journal quotidien d\u2019\xE9criture",
@@ -6507,38 +6428,18 @@ var fr_default = {
       nameExists: "Un \xE9l\xE9ment nomm\xE9 \xAB {{name}} \xBB existe d\xE9j\xE0 ici.",
       exportFolder: "Exporter le dossier"
     },
-    carryOver: {
-      action: "Pr\xE9visualiser la reprise du classeur",
-      noticeBody: "\xAB {{project}} \xBB poss\xE8de un ancien classeur qui diff\xE8re de ses fichiers. Pr\xE9visualisez ce que la reprise changerait \u2014 rien ne se passe sans votre accord.",
-      noticePreview: "Pr\xE9visualiser",
-      noticeNotNow: "Pas maintenant",
-      modalTitle: "Reprendre \xAB {{project}} \xBB \u2014 pr\xE9visualisation",
-      dryRun: "Ceci est une simulation. Rien n'a \xE9t\xE9 modifi\xE9.",
-      countsOperations_one: "{{count}} op\xE9ration",
-      countsOperations_other: "{{count}} op\xE9rations",
-      countsDone: "{{count}} termin\xE9es",
-      countsPending: "{{count}} en attente",
-      countsAnomalies_one: "{{count}} demande votre attention",
-      countsAnomalies_other: "{{count}} demandent votre attention",
-      sectionFolders: "Dossiers",
-      sectionDocuments: "Documents",
-      sectionFrontmatter: "Frontmatter",
-      keptNote: "les cl\xE9s d\xE9j\xE0 d\xE9finies sont conserv\xE9es",
-      folderExists: "existe d\xE9j\xE0 sous le nom",
-      folderCreate: "sera cr\xE9\xE9 sous le nom",
-      docDone: "d\xE9j\xE0 \xE0",
-      docMove: "sera d\xE9plac\xE9 vers",
-      anomalyMissing: "ni \xE0 son emplacement d'origine ni au nouveau \u2014 sera laiss\xE9 intact",
-      anomalyOccupied: "son nouvel emplacement est d\xE9j\xE0 occup\xE9 \u2014 sera laiss\xE9 intact",
-      badgeSuffixed: "nom d\xE9j\xE0 pris \u2014 suffixe ajout\xE9",
-      badgeReserved: "nom r\xE9serv\xE9 \u2014 suffixe ajout\xE9",
-      badgeTitleUnusable: "titre inutilisable \u2014 nom conserv\xE9",
-      keptKey: "{{key}} conserv\xE9 (d\xE9j\xE0 d\xE9fini)",
-      backupNote: "Votre ancien fichier de classeur (_binder.json) est conserv\xE9 comme sauvegarde et jamais supprim\xE9. Revenir plus tard \xE0 une version ant\xE9rieure le restaure tel quel (dans la mesure du possible).",
-      close: "Fermer",
-      unavailable: "La pr\xE9visualisation de la reprise n\xE9cessite le classeur exp\xE9rimental bas\xE9 sur le syst\xE8me de fichiers et un projet actif.",
-      nothingToPreview: "Aucun ancien classeur trouv\xE9 pour ce projet.",
-      readFailed: "Le fichier de l'ancien classeur n'a pas pu \xEAtre lu."
+    migration: {
+      couldntMove: "Writing Studio n\u2019a pas pu d\xE9placer \xAB {{name}} \xBB : {{reason}}.",
+      couldntRename: "Writing Studio n\u2019a pas pu renommer \xAB {{name}} \xBB : {{reason}}.",
+      couldntUpdate: "Writing Studio n\u2019a pas pu mettre \xE0 jour \xAB {{name}} \xBB : {{reason}}.",
+      reasonNameTaken: "un fichier portant ce nom existe d\xE9j\xE0",
+      reasonInUse: "le fichier est en cours d\u2019utilisation",
+      reasonPermission: "l\u2019autorisation a \xE9t\xE9 refus\xE9e",
+      restoreDone: "Disposition pr\xE9c\xE9dente du classeur restaur\xE9e.",
+      restorePartial_one: "Disposition pr\xE9c\xE9dente restaur\xE9e. {{count}} \xE9l\xE9ment n\u2019a pas pu \xEAtre remis en place.",
+      restorePartial_other: "Disposition pr\xE9c\xE9dente restaur\xE9e. {{count}} \xE9l\xE9ments n\u2019ont pas pu \xEAtre remis en place.",
+      restoreNothing: "Rien \xE0 restaurer.",
+      restoreUnavailable: "La restauration de la disposition n\xE9cessite le classeur exp\xE9rimental bas\xE9 sur le syst\xE8me de fichiers et un projet actif."
     }
   },
   launcher: {
@@ -6951,7 +6852,7 @@ var fr_default = {
       openWritingLog: "Ouvrir le journal d'\xE9criture",
       openFolderSidebar: "Ouvrir le dossier dans l'explorateur lat\xE9ral",
       addFilesToBinder: "Analyser le dossier du projet pour trouver de nouveaux fichiers",
-      previewCarryOver: "Pr\xE9visualiser la reprise du classeur"
+      restoreBinderLayout: "Restaurer la disposition pr\xE9c\xE9dente du classeur"
     },
     menu: {
       studioOptions: "Options de Writing Studio",
@@ -7142,7 +7043,11 @@ var bn_default = {
       includeCoverDesc: "\u0995\u09AD\u09BE\u09B0 \u099B\u09AC\u09BF \u09A8\u09BE \u09A5\u09BE\u0995\u09B2\u09C7 \u099F\u09C7\u0995\u09CD\u09B8\u099F \u0995\u09AD\u09BE\u09B0 \u09AA\u09C7\u099C \u09A4\u09C8\u09B0\u09BF \u0995\u09B0\u09C1\u09A8\u0964",
       pdfEngine: "PDF \u0987\u099E\u09CD\u099C\u09BF\u09A8",
       pdfEngineDesc: "PDF \u098F\u0995\u09CD\u09B8\u09AA\u09CB\u09B0\u09CD\u099F\u09C7 \u09AC\u09CD\u09AF\u09AC\u09B9\u09C3\u09A4 \u0987\u099E\u09CD\u099C\u09BF\u09A8\u0964 \u09B8\u09CD\u09AC\u09AF\u09BC\u0982\u0995\u09CD\u09B0\u09BF\u09AF\u09BC \u09AE\u09CB\u09A1 \u0987\u09A8\u09B8\u09CD\u099F\u09B2 \u0995\u09B0\u09BE LaTeX \u0987\u099E\u09CD\u099C\u09BF\u09A8 \u09AC\u09C7\u099B\u09C7 \u09A8\u09C7\u09AF\u09BC\u0964 wkhtmltopdf LaTeX \u099B\u09BE\u09A1\u09BC\u09BE\u0987 \u0995\u09BE\u099C \u0995\u09B0\u09C7, \u09A4\u09AC\u09C7 \u098F\u0995\u09CD\u09B8\u09AA\u09CB\u09B0\u09CD\u099F \u09AB\u09A8\u09CD\u099F \u09B8\u09C7\u099F\u09BF\u0982 \u098F\u09A4\u09C7 \u09AA\u09CD\u09B0\u09AF\u09CB\u099C\u09CD\u09AF \u09A8\u09AF\u09BC\u0964",
-      pdfEngineAuto: "\u09B8\u09CD\u09AC\u09AF\u09BC\u0982\u0995\u09CD\u09B0\u09BF\u09AF\u09BC (\u09AA\u09CD\u09B0\u09B8\u09CD\u09A4\u09BE\u09AC\u09BF\u09A4)"
+      pdfEngineAuto: "\u09B8\u09CD\u09AC\u09AF\u09BC\u0982\u0995\u09CD\u09B0\u09BF\u09AF\u09BC (\u09AA\u09CD\u09B0\u09B8\u09CD\u09A4\u09BE\u09AC\u09BF\u09A4)",
+      subtreeTitleSource: "\u09AB\u09CB\u09B2\u09CD\u09A1\u09BE\u09B0 \u09B0\u09AA\u09CD\u09A4\u09BE\u09A8\u09BF\u09B0 \u09B6\u09BF\u09B0\u09CB\u09A8\u09BE\u09AE",
+      subtreeTitleSourceDesc: "\u09AB\u09CB\u09B2\u09CD\u09A1\u09BE\u09B0 \u09B0\u09AA\u09CD\u09A4\u09BE\u09A8\u09BF\u09B0 \u09B6\u09BF\u09B0\u09CB\u09A8\u09BE\u09AE \u09AA\u09BE\u09A4\u09BE \u0993 \u09AE\u09C7\u099F\u09BE\u09A1\u09C7\u099F\u09BE \u0995\u09C0 \u09A8\u09BF\u09B0\u09CD\u09A6\u09C7\u09B6 \u0995\u09B0\u09AC\u09C7: \u09B0\u09AA\u09CD\u09A4\u09BE\u09A8\u09BF \u0995\u09B0\u09BE \u09AB\u09CB\u09B2\u09CD\u09A1\u09BE\u09B0 \u09A8\u09BE\u0995\u09BF \u09AA\u09C1\u09B0\u09CB \u09AA\u09CD\u09B0\u0995\u09B2\u09CD\u09AA\u0964",
+      subtreeTitleFolder: "\u09AB\u09CB\u09B2\u09CD\u09A1\u09BE\u09B0\u09C7\u09B0 \u09A8\u09BE\u09AE",
+      subtreeTitleProject: "\u09AA\u09CD\u09B0\u0995\u09B2\u09CD\u09AA\u09C7\u09B0 \u09B6\u09BF\u09B0\u09CB\u09A8\u09BE\u09AE"
     },
     log: {
       heading: "\u09A6\u09C8\u09A8\u09BF\u0995 \u09B2\u09C7\u0996\u09BE\u09B0 \u09B2\u0997",
@@ -7276,38 +7181,18 @@ var bn_default = {
       nameExists: '\u098F\u0996\u09BE\u09A8\u09C7 "{{name}}" \u09A8\u09BE\u09AE\u09C7 \u0995\u09BF\u099B\u09C1 \u0987\u09A4\u09BF\u09AE\u09A7\u09CD\u09AF\u09C7 \u0986\u099B\u09C7\u0964',
       exportFolder: "\u09AB\u09CB\u09B2\u09CD\u09A1\u09BE\u09B0 \u09B0\u09AA\u09CD\u09A4\u09BE\u09A8\u09BF \u0995\u09B0\u09C1\u09A8"
     },
-    carryOver: {
-      action: "\u09AC\u09BE\u0987\u09A8\u09CD\u09A1\u09BE\u09B0 \u09B8\u09CD\u09A5\u09BE\u09A8\u09BE\u09A8\u09CD\u09A4\u09B0\u09C7\u09B0 \u09AA\u09CD\u09B0\u09BE\u0995\u09A6\u09B0\u09CD\u09B6\u09A8",
-      noticeBody: '"{{project}}"-\u098F \u098F\u0995\u099F\u09BF \u09AA\u09C1\u09B0\u09CB\u09A8\u09CB \u09AC\u09BE\u0987\u09A8\u09CD\u09A1\u09BE\u09B0 \u0986\u099B\u09C7 \u09AF\u09BE \u098F\u09B0 \u09AB\u09BE\u0987\u09B2\u0997\u09C1\u09B2\u09BF\u09B0 \u09B8\u09BE\u09A5\u09C7 \u09AE\u09C7\u09B2\u09C7 \u09A8\u09BE\u0964 \u09B8\u09CD\u09A5\u09BE\u09A8\u09BE\u09A8\u09CD\u09A4\u09B0\u09C7 \u0995\u09C0 \u09AC\u09A6\u09B2\u09BE\u09AC\u09C7 \u09A4\u09BE \u0986\u0997\u09C7 \u09A6\u09C7\u0996\u09C7 \u09A8\u09BF\u09A8 \u2014 \u0986\u09AA\u09A8\u09BE\u09B0 \u0985\u09A8\u09C1\u09AE\u09CB\u09A6\u09A8 \u099B\u09BE\u09A1\u09BC\u09BE \u0995\u09BF\u099B\u09C1\u0987 \u09B9\u09AC\u09C7 \u09A8\u09BE\u0964',
-      noticePreview: "\u09AA\u09CD\u09B0\u09BE\u0995\u09A6\u09B0\u09CD\u09B6\u09A8",
-      noticeNotNow: "\u098F\u0996\u09A8 \u09A8\u09AF\u09BC",
-      modalTitle: '"{{project}}" \u09B8\u09CD\u09A5\u09BE\u09A8\u09BE\u09A8\u09CD\u09A4\u09B0 \u2014 \u09AA\u09CD\u09B0\u09BE\u0995\u09A6\u09B0\u09CD\u09B6\u09A8',
-      dryRun: "\u098F\u099F\u09BF \u098F\u0995\u099F\u09BF \u09AE\u09B9\u09A1\u09BC\u09BE\u0964 \u098F\u0996\u09A8\u0993 \u0995\u09BF\u099B\u09C1 \u09AC\u09A6\u09B2\u09BE\u09A8\u09CB \u09B9\u09AF\u09BC\u09A8\u09BF\u0964",
-      countsOperations_one: "{{count}}\u099F\u09BF \u0995\u09BE\u099C",
-      countsOperations_other: "{{count}}\u099F\u09BF \u0995\u09BE\u099C",
-      countsDone: "{{count}}\u099F\u09BF \u09B8\u09AE\u09CD\u09AA\u09A8\u09CD\u09A8",
-      countsPending: "{{count}}\u099F\u09BF \u0985\u09AA\u09C7\u0995\u09CD\u09B7\u09AE\u09BE\u09A3",
-      countsAnomalies_one: "{{count}}\u099F\u09BF\u09B0 \u09A6\u09BF\u0995\u09C7 \u09A8\u099C\u09B0 \u09A6\u09B0\u0995\u09BE\u09B0",
-      countsAnomalies_other: "{{count}}\u099F\u09BF\u09B0 \u09A6\u09BF\u0995\u09C7 \u09A8\u099C\u09B0 \u09A6\u09B0\u0995\u09BE\u09B0",
-      sectionFolders: "\u09AB\u09CB\u09B2\u09CD\u09A1\u09BE\u09B0",
-      sectionDocuments: "\u09A8\u09A5\u09BF",
-      sectionFrontmatter: "\u09AB\u09CD\u09B0\u09A8\u09CD\u099F\u09AE\u09CD\u09AF\u09BE\u099F\u09BE\u09B0",
-      keptNote: "\u0986\u09AA\u09A8\u09BE\u09B0 \u0986\u0997\u09C7 \u09A5\u09C7\u0995\u09C7 \u09B8\u09C7\u099F \u0995\u09B0\u09BE \u0995\u09C0-\u0997\u09C1\u09B2\u09BF \u09B0\u09BE\u0996\u09BE \u09B9\u09AC\u09C7",
-      folderExists: "\u0986\u0997\u09C7 \u09A5\u09C7\u0995\u09C7\u0987 \u0986\u099B\u09C7:",
-      folderCreate: "\u098F\u0987 \u09A8\u09BE\u09AE\u09C7 \u09A4\u09C8\u09B0\u09BF \u09B9\u09AC\u09C7:",
-      docDone: "\u0986\u0997\u09C7 \u09A5\u09C7\u0995\u09C7\u0987 \u098F\u0996\u09BE\u09A8\u09C7:",
-      docMove: "\u098F\u0996\u09BE\u09A8\u09C7 \u09B8\u09B0\u09AC\u09C7:",
-      anomalyMissing: "\u09AE\u09C2\u09B2 \u09AC\u09BE \u09A8\u09A4\u09C1\u09A8 \u0995\u09CB\u09A8\u09CB \u099C\u09BE\u09AF\u09BC\u0997\u09BE\u09A4\u09C7\u0987 \u09A8\u09C7\u0987 \u2014 \u0985\u09AA\u09B0\u09BF\u09AC\u09B0\u09CD\u09A4\u09BF\u09A4 \u09A5\u09BE\u0995\u09AC\u09C7",
-      anomalyOccupied: "\u09A8\u09A4\u09C1\u09A8 \u099C\u09BE\u09AF\u09BC\u0997\u09BE\u099F\u09BF \u0986\u0997\u09C7 \u09A5\u09C7\u0995\u09C7\u0987 \u09A6\u0996\u09B2\u09C7 \u2014 \u0985\u09AA\u09B0\u09BF\u09AC\u09B0\u09CD\u09A4\u09BF\u09A4 \u09A5\u09BE\u0995\u09AC\u09C7",
-      badgeSuffixed: "\u09A8\u09BE\u09AE \u0986\u0997\u09C7 \u09A5\u09C7\u0995\u09C7 \u0986\u099B\u09C7 \u2014 \u09AA\u09CD\u09B0\u09A4\u09CD\u09AF\u09AF\u09BC \u09AF\u09CB\u0997 \u09B9\u09AF\u09BC\u09C7\u099B\u09C7",
-      badgeReserved: "\u09B8\u0982\u09B0\u0995\u09CD\u09B7\u09BF\u09A4 \u09A8\u09BE\u09AE \u2014 \u09AA\u09CD\u09B0\u09A4\u09CD\u09AF\u09AF\u09BC \u09AF\u09CB\u0997 \u09B9\u09AF\u09BC\u09C7\u099B\u09C7",
-      badgeTitleUnusable: "\u09B6\u09BF\u09B0\u09CB\u09A8\u09BE\u09AE \u09AC\u09CD\u09AF\u09AC\u09B9\u09BE\u09B0\u09AF\u09CB\u0997\u09CD\u09AF \u09A8\u09AF\u09BC \u2014 \u09A8\u09BE\u09AE \u09B0\u09BE\u0996\u09BE \u09B9\u09AF\u09BC\u09C7\u099B\u09C7",
-      keptKey: "{{key}} \u09B0\u09BE\u0996\u09BE \u09B9\u09AF\u09BC\u09C7\u099B\u09C7 (\u0986\u0997\u09C7 \u09A5\u09C7\u0995\u09C7 \u09B8\u09C7\u099F)",
-      backupNote: "\u0986\u09AA\u09A8\u09BE\u09B0 \u09AA\u09C1\u09B0\u09CB\u09A8\u09CB \u09AC\u09BE\u0987\u09A8\u09CD\u09A1\u09BE\u09B0 \u09AB\u09BE\u0987\u09B2 (_binder.json) \u09AC\u09CD\u09AF\u09BE\u0995\u0986\u09AA \u09B9\u09BF\u09B8\u09C7\u09AC\u09C7 \u09B0\u09BE\u0996\u09BE \u09B9\u09AF\u09BC \u098F\u09AC\u0982 \u0995\u0996\u09A8\u0993 \u09AE\u09C1\u099B\u09C7 \u09AB\u09C7\u09B2\u09BE \u09B9\u09AF\u09BC \u09A8\u09BE\u0964 \u09AA\u09B0\u09C7 \u09A1\u09BE\u0989\u09A8\u0997\u09CD\u09B0\u09C7\u09A1 \u0995\u09B0\u09B2\u09C7 \u09AF\u09A4\u099F\u09BE \u09B8\u09AE\u09CD\u09AD\u09AC \u0986\u0997\u09C7\u09B0 \u0985\u09AC\u09B8\u09CD\u09A5\u09BE\u09AF\u09BC \u09AB\u09BF\u09B0\u09BF\u09AF\u09BC\u09C7 \u0986\u09A8\u09BE \u09B9\u09AF\u09BC\u0964",
-      close: "\u09AC\u09A8\u09CD\u09A7 \u0995\u09B0\u09C1\u09A8",
-      unavailable: "\u09B8\u09CD\u09A5\u09BE\u09A8\u09BE\u09A8\u09CD\u09A4\u09B0\u09C7\u09B0 \u09AA\u09CD\u09B0\u09BE\u0995\u09A6\u09B0\u09CD\u09B6\u09A8\u09C7\u09B0 \u099C\u09A8\u09CD\u09AF \u09AA\u09B0\u09C0\u0995\u09CD\u09B7\u09BE\u09AE\u09C2\u09B2\u0995 \u09AB\u09BE\u0987\u09B2-\u09B8\u09BF\u09B8\u09CD\u099F\u09C7\u09AE \u09AC\u09BE\u0987\u09A8\u09CD\u09A1\u09BE\u09B0 \u098F\u09AC\u0982 \u098F\u0995\u099F\u09BF \u09B8\u0995\u09CD\u09B0\u09BF\u09AF\u09BC \u09AA\u09CD\u09B0\u0995\u09B2\u09CD\u09AA \u09A6\u09B0\u0995\u09BE\u09B0\u0964",
-      nothingToPreview: "\u098F\u0987 \u09AA\u09CD\u09B0\u0995\u09B2\u09CD\u09AA\u09C7\u09B0 \u099C\u09A8\u09CD\u09AF \u0995\u09CB\u09A8\u09CB \u09AA\u09C1\u09B0\u09CB\u09A8\u09CB \u09AC\u09BE\u0987\u09A8\u09CD\u09A1\u09BE\u09B0 \u09AA\u09BE\u0993\u09AF\u09BC\u09BE \u09AF\u09BE\u09AF\u09BC\u09A8\u09BF\u0964",
-      readFailed: "\u09AA\u09C1\u09B0\u09CB\u09A8\u09CB \u09AC\u09BE\u0987\u09A8\u09CD\u09A1\u09BE\u09B0 \u09AB\u09BE\u0987\u09B2\u099F\u09BF \u09AA\u09A1\u09BC\u09BE \u09AF\u09BE\u09AF\u09BC\u09A8\u09BF\u0964"
+    migration: {
+      couldntMove: 'Writing Studio "{{name}}" \u09B8\u09B0\u09BE\u09A4\u09C7 \u09AA\u09BE\u09B0\u09C7\u09A8\u09BF: {{reason}}\u0964',
+      couldntRename: 'Writing Studio "{{name}}"-\u098F\u09B0 \u09A8\u09BE\u09AE \u09AC\u09A6\u09B2\u09BE\u09A4\u09C7 \u09AA\u09BE\u09B0\u09C7\u09A8\u09BF: {{reason}}\u0964',
+      couldntUpdate: 'Writing Studio "{{name}}" \u09B9\u09BE\u09B2\u09A8\u09BE\u0997\u09BE\u09A6 \u0995\u09B0\u09A4\u09C7 \u09AA\u09BE\u09B0\u09C7\u09A8\u09BF: {{reason}}\u0964',
+      reasonNameTaken: "\u0993\u0987 \u09A8\u09BE\u09AE\u09C7\u09B0 \u098F\u0995\u099F\u09BF \u09AB\u09BE\u0987\u09B2 \u0986\u0997\u09C7 \u09A5\u09C7\u0995\u09C7\u0987 \u0986\u099B\u09C7",
+      reasonInUse: "\u09AB\u09BE\u0987\u09B2\u099F\u09BF \u09AC\u09CD\u09AF\u09AC\u09B9\u09BE\u09B0\u09C7 \u0986\u099B\u09C7",
+      reasonPermission: "\u0985\u09A8\u09C1\u09AE\u09A4\u09BF \u09AA\u09CD\u09B0\u09A4\u09CD\u09AF\u09BE\u0996\u09CD\u09AF\u09BE\u09A4 \u09B9\u09AF\u09BC\u09C7\u099B\u09C7",
+      restoreDone: "\u09AC\u09BE\u0987\u09A8\u09CD\u09A1\u09BE\u09B0\u09C7\u09B0 \u0986\u0997\u09C7\u09B0 \u09AC\u09BF\u09A8\u09CD\u09AF\u09BE\u09B8 \u09AB\u09BF\u09B0\u09BF\u09AF\u09BC\u09C7 \u0986\u09A8\u09BE \u09B9\u09AF\u09BC\u09C7\u099B\u09C7\u0964",
+      restorePartial_one: "\u0986\u0997\u09C7\u09B0 \u09AC\u09BF\u09A8\u09CD\u09AF\u09BE\u09B8 \u09AB\u09BF\u09B0\u09BF\u09AF\u09BC\u09C7 \u0986\u09A8\u09BE \u09B9\u09AF\u09BC\u09C7\u099B\u09C7\u0964 {{count}}\u099F\u09BF \u0986\u0987\u099F\u09C7\u09AE \u09AB\u09C7\u09B0\u09BE\u09A8\u09CB \u09AF\u09BE\u09AF\u09BC\u09A8\u09BF\u0964",
+      restorePartial_other: "\u0986\u0997\u09C7\u09B0 \u09AC\u09BF\u09A8\u09CD\u09AF\u09BE\u09B8 \u09AB\u09BF\u09B0\u09BF\u09AF\u09BC\u09C7 \u0986\u09A8\u09BE \u09B9\u09AF\u09BC\u09C7\u099B\u09C7\u0964 {{count}}\u099F\u09BF \u0986\u0987\u099F\u09C7\u09AE \u09AB\u09C7\u09B0\u09BE\u09A8\u09CB \u09AF\u09BE\u09AF\u09BC\u09A8\u09BF\u0964",
+      restoreNothing: "\u09AB\u09BF\u09B0\u09BF\u09AF\u09BC\u09C7 \u0986\u09A8\u09BE\u09B0 \u0995\u09BF\u099B\u09C1 \u09A8\u09C7\u0987\u0964",
+      restoreUnavailable: "\u09AC\u09BF\u09A8\u09CD\u09AF\u09BE\u09B8 \u09AB\u09C7\u09B0\u09BE\u09A4\u09C7 \u09AA\u09B0\u09C0\u0995\u09CD\u09B7\u09BE\u09AE\u09C2\u09B2\u0995 \u09AB\u09BE\u0987\u09B2-\u09B8\u09BF\u09B8\u09CD\u099F\u09C7\u09AE \u09AC\u09BE\u0987\u09A8\u09CD\u09A1\u09BE\u09B0 \u098F\u09AC\u0982 \u098F\u0995\u099F\u09BF \u09B8\u0995\u09CD\u09B0\u09BF\u09AF\u09BC \u09AA\u09CD\u09B0\u0995\u09B2\u09CD\u09AA \u09A6\u09B0\u0995\u09BE\u09B0\u0964"
     }
   },
   launcher: {
@@ -7720,7 +7605,7 @@ var bn_default = {
       openWritingLog: "\u09B0\u09BE\u0987\u099F\u09BF\u0982 \u09B2\u0997 \u0996\u09C1\u09B2\u09C1\u09A8",
       openFolderSidebar: "\u09B8\u09BE\u0987\u09A1\u09AC\u09BE\u09B0 \u098F\u0995\u09CD\u09B8\u09AA\u09CD\u09B2\u09CB\u09B0\u09BE\u09B0\u09C7 \u09AB\u09CB\u09B2\u09CD\u09A1\u09BE\u09B0 \u0996\u09C1\u09B2\u09C1\u09A8",
       addFilesToBinder: "\u09A8\u09A4\u09C1\u09A8 \u09AB\u09BE\u0987\u09B2\u09C7\u09B0 \u099C\u09A8\u09CD\u09AF \u09AA\u09CD\u09B0\u0995\u09B2\u09CD\u09AA \u09AB\u09CB\u09B2\u09CD\u09A1\u09BE\u09B0 \u09B8\u09CD\u0995\u09CD\u09AF\u09BE\u09A8 \u0995\u09B0\u09C1\u09A8",
-      previewCarryOver: "\u09AC\u09BE\u0987\u09A8\u09CD\u09A1\u09BE\u09B0 \u09B8\u09CD\u09A5\u09BE\u09A8\u09BE\u09A8\u09CD\u09A4\u09B0\u09C7\u09B0 \u09AA\u09CD\u09B0\u09BE\u0995\u09A6\u09B0\u09CD\u09B6\u09A8"
+      restoreBinderLayout: "\u09AC\u09BE\u0987\u09A8\u09CD\u09A1\u09BE\u09B0\u09C7\u09B0 \u0986\u0997\u09C7\u09B0 \u09AC\u09BF\u09A8\u09CD\u09AF\u09BE\u09B8 \u09AB\u09BF\u09B0\u09BF\u09AF\u09BC\u09C7 \u0986\u09A8\u09C1\u09A8"
     },
     menu: {
       studioOptions: "\u09B0\u09BE\u0987\u099F\u09BF\u0982 \u09B8\u09CD\u099F\u09C1\u09A1\u09BF\u0993 \u09AC\u09BF\u0995\u09B2\u09CD\u09AA",
@@ -7911,7 +7796,11 @@ var pt_BR_default = {
       includeCoverDesc: "Gerar uma capa de texto quando nenhuma imagem de capa for fornecida.",
       pdfEngine: "Motor de PDF",
       pdfEngineDesc: "Motor usado na exporta\xE7\xE3o de PDF. Auto escolhe um motor LaTeX instalado. O wkhtmltopdf funciona sem LaTeX, mas a fonte de exporta\xE7\xE3o n\xE3o se aplica a ele.",
-      pdfEngineAuto: "Auto (recomendado)"
+      pdfEngineAuto: "Auto (recomendado)",
+      subtreeTitleSource: "T\xEDtulo ao exportar pasta",
+      subtreeTitleSourceDesc: "O que a p\xE1gina de t\xEDtulo e os metadados de uma exporta\xE7\xE3o de pasta nomeiam: a pasta exportada ou o projeto inteiro.",
+      subtreeTitleFolder: "Nome da pasta",
+      subtreeTitleProject: "T\xEDtulo do projeto"
     },
     log: {
       heading: "Log di\xE1rio de escrita",
@@ -8045,38 +7934,18 @@ var pt_BR_default = {
       nameExists: 'J\xE1 existe algo chamado "{{name}}" aqui.',
       exportFolder: "Exportar pasta"
     },
-    carryOver: {
-      action: "Pr\xE9-visualizar a transi\xE7\xE3o da pasta de escrita",
-      noticeBody: '"{{project}}" tem uma pasta de escrita antiga que difere dos seus arquivos. Pr\xE9-visualize o que a transi\xE7\xE3o mudaria \u2014 nada acontece sem a sua aprova\xE7\xE3o.',
-      noticePreview: "Pr\xE9-visualizar",
-      noticeNotNow: "Agora n\xE3o",
-      modalTitle: 'Transi\xE7\xE3o de "{{project}}" \u2014 pr\xE9-visualiza\xE7\xE3o',
-      dryRun: "Isto \xE9 uma simula\xE7\xE3o. Nada foi alterado.",
-      countsOperations_one: "{{count}} opera\xE7\xE3o",
-      countsOperations_other: "{{count}} opera\xE7\xF5es",
-      countsDone: "{{count}} conclu\xEDdas",
-      countsPending: "{{count}} pendentes",
-      countsAnomalies_one: "{{count}} precisa de aten\xE7\xE3o",
-      countsAnomalies_other: "{{count}} precisam de aten\xE7\xE3o",
-      sectionFolders: "Pastas",
-      sectionDocuments: "Documentos",
-      sectionFrontmatter: "Frontmatter",
-      keptNote: "as chaves que voc\xEA j\xE1 definiu s\xE3o mantidas",
-      folderExists: "j\xE1 existe como",
-      folderCreate: "ser\xE1 criada como",
-      docDone: "j\xE1 est\xE1 em",
-      docMove: "ser\xE1 movido para",
-      anomalyMissing: "n\xE3o est\xE1 no local original nem no novo \u2014 ser\xE1 deixado intocado",
-      anomalyOccupied: "o novo local j\xE1 est\xE1 ocupado \u2014 ser\xE1 deixado intocado",
-      badgeSuffixed: "nome em uso \u2014 sufixo adicionado",
-      badgeReserved: "nome reservado \u2014 sufixo adicionado",
-      badgeTitleUnusable: "t\xEDtulo inutiliz\xE1vel \u2014 nome mantido",
-      keptKey: "{{key}} mantido (j\xE1 definido)",
-      backupNote: "Seu arquivo antigo (_binder.json) \xE9 mantido como backup e nunca \xE9 exclu\xEDdo. Voltar depois a uma vers\xE3o anterior o restaura como estava (na medida do poss\xEDvel).",
-      close: "Fechar",
-      unavailable: "A pr\xE9-visualiza\xE7\xE3o da transi\xE7\xE3o precisa da pasta de escrita experimental do sistema de arquivos e de um projeto ativo.",
-      nothingToPreview: "Nenhuma pasta de escrita antiga encontrada para este projeto.",
-      readFailed: "N\xE3o foi poss\xEDvel ler o arquivo antigo da pasta de escrita."
+    migration: {
+      couldntMove: 'O Writing Studio n\xE3o conseguiu mover "{{name}}": {{reason}}.',
+      couldntRename: 'O Writing Studio n\xE3o conseguiu renomear "{{name}}": {{reason}}.',
+      couldntUpdate: 'O Writing Studio n\xE3o conseguiu atualizar "{{name}}": {{reason}}.',
+      reasonNameTaken: "j\xE1 existe um arquivo com esse nome",
+      reasonInUse: "o arquivo est\xE1 em uso",
+      reasonPermission: "a permiss\xE3o foi negada",
+      restoreDone: "Layout anterior restaurado.",
+      restorePartial_one: "Layout anterior restaurado. {{count}} item n\xE3o p\xF4de voltar ao lugar.",
+      restorePartial_other: "Layout anterior restaurado. {{count}} itens n\xE3o puderam voltar ao lugar.",
+      restoreNothing: "Nada a restaurar.",
+      restoreUnavailable: "Restaurar o layout precisa da pasta de escrita experimental do sistema de arquivos e de um projeto ativo."
     }
   },
   launcher: {
@@ -8489,7 +8358,7 @@ var pt_BR_default = {
       openWritingLog: "Abrir registro de escrita",
       openFolderSidebar: "Abrir pasta no explorador lateral",
       addFilesToBinder: "Verificar novos arquivos na pasta do projeto",
-      previewCarryOver: "Pr\xE9-visualizar a transi\xE7\xE3o da pasta de escrita"
+      restoreBinderLayout: "Restaurar o layout anterior da pasta de escrita"
     },
     menu: {
       studioOptions: "Op\xE7\xF5es do Writing Studio",
@@ -8680,7 +8549,11 @@ var ru_default = {
       includeCoverDesc: "\u0421\u043E\u0437\u0434\u0430\u0442\u044C \u0442\u0435\u043A\u0441\u0442\u043E\u0432\u0443\u044E \u043E\u0431\u043B\u043E\u0436\u043A\u0443, \u0435\u0441\u043B\u0438 \u0438\u0437\u043E\u0431\u0440\u0430\u0436\u0435\u043D\u0438\u0435 \u043E\u0431\u043B\u043E\u0436\u043A\u0438 \u043D\u0435 \u043F\u0440\u0435\u0434\u043E\u0441\u0442\u0430\u0432\u043B\u0435\u043D\u043E.",
       pdfEngine: "\u0414\u0432\u0438\u0436\u043E\u043A PDF",
       pdfEngineDesc: "\u0414\u0432\u0438\u0436\u043E\u043A \u0434\u043B\u044F \u044D\u043A\u0441\u043F\u043E\u0440\u0442\u0430 \u0432 PDF. \u0410\u0432\u0442\u043E \u0432\u044B\u0431\u0438\u0440\u0430\u0435\u0442 \u0443\u0441\u0442\u0430\u043D\u043E\u0432\u043B\u0435\u043D\u043D\u044B\u0439 \u0434\u0432\u0438\u0436\u043E\u043A LaTeX. wkhtmltopdf \u0440\u0430\u0431\u043E\u0442\u0430\u0435\u0442 \u0431\u0435\u0437 LaTeX, \u043D\u043E \u0448\u0440\u0438\u0444\u0442 \u044D\u043A\u0441\u043F\u043E\u0440\u0442\u0430 \u043A \u043D\u0435\u043C\u0443 \u043D\u0435 \u043F\u0440\u0438\u043C\u0435\u043D\u044F\u0435\u0442\u0441\u044F.",
-      pdfEngineAuto: "\u0410\u0432\u0442\u043E (\u0440\u0435\u043A\u043E\u043C\u0435\u043D\u0434\u0443\u0435\u0442\u0441\u044F)"
+      pdfEngineAuto: "\u0410\u0432\u0442\u043E (\u0440\u0435\u043A\u043E\u043C\u0435\u043D\u0434\u0443\u0435\u0442\u0441\u044F)",
+      subtreeTitleSource: "\u0417\u0430\u0433\u043E\u043B\u043E\u0432\u043E\u043A \u043F\u0440\u0438 \u044D\u043A\u0441\u043F\u043E\u0440\u0442\u0435 \u043F\u0430\u043F\u043A\u0438",
+      subtreeTitleSourceDesc: "\u0427\u0442\u043E \u0443\u043A\u0430\u0437\u044B\u0432\u0430\u044E\u0442 \u0442\u0438\u0442\u0443\u043B\u044C\u043D\u0430\u044F \u0441\u0442\u0440\u0430\u043D\u0438\u0446\u0430 \u0438 \u043C\u0435\u0442\u0430\u0434\u0430\u043D\u043D\u044B\u0435 \u043F\u0440\u0438 \u044D\u043A\u0441\u043F\u043E\u0440\u0442\u0435 \u043F\u0430\u043F\u043A\u0438: \u044D\u043A\u0441\u043F\u043E\u0440\u0442\u0438\u0440\u0443\u0435\u043C\u0443\u044E \u043F\u0430\u043F\u043A\u0443 \u0438\u043B\u0438 \u0432\u0435\u0441\u044C \u043F\u0440\u043E\u0435\u043A\u0442.",
+      subtreeTitleFolder: "\u0418\u043C\u044F \u043F\u0430\u043F\u043A\u0438",
+      subtreeTitleProject: "\u041D\u0430\u0437\u0432\u0430\u043D\u0438\u0435 \u043F\u0440\u043E\u0435\u043A\u0442\u0430"
     },
     log: {
       heading: "\u0415\u0436\u0435\u0434\u043D\u0435\u0432\u043D\u044B\u0439 \u0436\u0443\u0440\u043D\u0430\u043B \u043D\u0430\u043F\u0438\u0441\u0430\u043D\u0438\u044F",
@@ -8816,42 +8689,20 @@ var ru_default = {
       nameExists: "\u0417\u0434\u0435\u0441\u044C \u0443\u0436\u0435 \u0435\u0441\u0442\u044C \u044D\u043B\u0435\u043C\u0435\u043D\u0442 \u0441 \u0438\u043C\u0435\u043D\u0435\u043C \xAB{{name}}\xBB.",
       exportFolder: "\u042D\u043A\u0441\u043F\u043E\u0440\u0442\u0438\u0440\u043E\u0432\u0430\u0442\u044C \u043F\u0430\u043F\u043A\u0443"
     },
-    carryOver: {
-      action: "\u041F\u0440\u0435\u0434\u043F\u0440\u043E\u0441\u043C\u043E\u0442\u0440 \u043F\u0435\u0440\u0435\u043D\u043E\u0441\u0430 \u043F\u0430\u043F\u043A\u0438 \u0437\u0430\u043F\u0438\u0441\u0435\u0439",
-      noticeBody: "\u0423 \xAB{{project}}\xBB \u0435\u0441\u0442\u044C \u0441\u0442\u0430\u0440\u0430\u044F \u043F\u0430\u043F\u043A\u0430 \u0437\u0430\u043F\u0438\u0441\u0435\u0439, \u043A\u043E\u0442\u043E\u0440\u0430\u044F \u043E\u0442\u043B\u0438\u0447\u0430\u0435\u0442\u0441\u044F \u043E\u0442 \u0435\u0451 \u0444\u0430\u0439\u043B\u043E\u0432. \u041F\u043E\u0441\u043C\u043E\u0442\u0440\u0438\u0442\u0435, \u0447\u0442\u043E \u0438\u0437\u043C\u0435\u043D\u0438\u0442 \u043F\u0435\u0440\u0435\u043D\u043E\u0441 \u2014 \u0431\u0435\u0437 \u0432\u0430\u0448\u0435\u0433\u043E \u0441\u043E\u0433\u043B\u0430\u0441\u0438\u044F \u043D\u0438\u0447\u0435\u0433\u043E \u043D\u0435 \u043F\u0440\u043E\u0438\u0437\u043E\u0439\u0434\u0451\u0442.",
-      noticePreview: "\u041F\u0440\u0435\u0434\u043F\u0440\u043E\u0441\u043C\u043E\u0442\u0440",
-      noticeNotNow: "\u041D\u0435 \u0441\u0435\u0439\u0447\u0430\u0441",
-      modalTitle: "\u041F\u0435\u0440\u0435\u043D\u043E\u0441 \xAB{{project}}\xBB \u2014 \u043F\u0440\u0435\u0434\u043F\u0440\u043E\u0441\u043C\u043E\u0442\u0440",
-      dryRun: "\u042D\u0442\u043E \u043F\u0440\u043E\u0431\u043D\u044B\u0439 \u0437\u0430\u043F\u0443\u0441\u043A. \u041D\u0438\u0447\u0435\u0433\u043E \u043D\u0435 \u0438\u0437\u043C\u0435\u043D\u0435\u043D\u043E.",
-      countsOperations_one: "{{count}} \u043E\u043F\u0435\u0440\u0430\u0446\u0438\u044F",
-      countsOperations_few: "{{count}} \u043E\u043F\u0435\u0440\u0430\u0446\u0438\u0438",
-      countsOperations_many: "{{count}} \u043E\u043F\u0435\u0440\u0430\u0446\u0438\u0439",
-      countsOperations_other: "{{count}} \u043E\u043F\u0435\u0440\u0430\u0446\u0438\u0439",
-      countsDone: "{{count}} \u0432\u044B\u043F\u043E\u043B\u043D\u0435\u043D\u043E",
-      countsPending: "{{count}} \u0432 \u043E\u0436\u0438\u0434\u0430\u043D\u0438\u0438",
-      countsAnomalies_one: "{{count}} \u0442\u0440\u0435\u0431\u0443\u0435\u0442 \u0432\u043D\u0438\u043C\u0430\u043D\u0438\u044F",
-      countsAnomalies_few: "{{count}} \u0442\u0440\u0435\u0431\u0443\u044E\u0442 \u0432\u043D\u0438\u043C\u0430\u043D\u0438\u044F",
-      countsAnomalies_many: "{{count}} \u0442\u0440\u0435\u0431\u0443\u044E\u0442 \u0432\u043D\u0438\u043C\u0430\u043D\u0438\u044F",
-      countsAnomalies_other: "{{count}} \u0442\u0440\u0435\u0431\u0443\u044E\u0442 \u0432\u043D\u0438\u043C\u0430\u043D\u0438\u044F",
-      sectionFolders: "\u041F\u0430\u043F\u043A\u0438",
-      sectionDocuments: "\u0414\u043E\u043A\u0443\u043C\u0435\u043D\u0442\u044B",
-      sectionFrontmatter: "Frontmatter",
-      keptNote: "\u0443\u0436\u0435 \u0437\u0430\u0434\u0430\u043D\u043D\u044B\u0435 \u043A\u043B\u044E\u0447\u0438 \u0441\u043E\u0445\u0440\u0430\u043D\u044F\u044E\u0442\u0441\u044F",
-      folderExists: "\u0443\u0436\u0435 \u0441\u0443\u0449\u0435\u0441\u0442\u0432\u0443\u0435\u0442 \u043A\u0430\u043A",
-      folderCreate: "\u0431\u0443\u0434\u0435\u0442 \u0441\u043E\u0437\u0434\u0430\u043D\u0430 \u043A\u0430\u043A",
-      docDone: "\u0443\u0436\u0435 \u043D\u0430\u0445\u043E\u0434\u0438\u0442\u0441\u044F \u0432",
-      docMove: "\u0431\u0443\u0434\u0435\u0442 \u043F\u0435\u0440\u0435\u043C\u0435\u0449\u0451\u043D \u0432",
-      anomalyMissing: "\u043D\u0435\u0442 \u043D\u0438 \u0432 \u0438\u0441\u0445\u043E\u0434\u043D\u043E\u043C, \u043D\u0438 \u0432 \u043D\u043E\u0432\u043E\u043C \u043C\u0435\u0441\u0442\u0435 \u2014 \u043E\u0441\u0442\u0430\u043D\u0435\u0442\u0441\u044F \u043D\u0435\u0442\u0440\u043E\u043D\u0443\u0442\u044B\u043C",
-      anomalyOccupied: "\u043D\u043E\u0432\u043E\u0435 \u043C\u0435\u0441\u0442\u043E \u0443\u0436\u0435 \u0437\u0430\u043D\u044F\u0442\u043E \u2014 \u043E\u0441\u0442\u0430\u043D\u0435\u0442\u0441\u044F \u043D\u0435\u0442\u0440\u043E\u043D\u0443\u0442\u044B\u043C",
-      badgeSuffixed: "\u0438\u043C\u044F \u0437\u0430\u043D\u044F\u0442\u043E \u2014 \u0434\u043E\u0431\u0430\u0432\u043B\u0435\u043D \u0441\u0443\u0444\u0444\u0438\u043A\u0441",
-      badgeReserved: "\u0437\u0430\u0440\u0435\u0437\u0435\u0440\u0432\u0438\u0440\u043E\u0432\u0430\u043D\u043D\u043E\u0435 \u0438\u043C\u044F \u2014 \u0434\u043E\u0431\u0430\u0432\u043B\u0435\u043D \u0441\u0443\u0444\u0444\u0438\u043A\u0441",
-      badgeTitleUnusable: "\u0437\u0430\u0433\u043E\u043B\u043E\u0432\u043E\u043A \u043D\u0435\u043F\u0440\u0438\u0433\u043E\u0434\u0435\u043D \u2014 \u0438\u043C\u044F \u0441\u043E\u0445\u0440\u0430\u043D\u0435\u043D\u043E",
-      keptKey: "{{key}} \u0441\u043E\u0445\u0440\u0430\u043D\u0451\u043D (\u0443\u0436\u0435 \u0437\u0430\u0434\u0430\u043D)",
-      backupNote: "\u0421\u0442\u0430\u0440\u044B\u0439 \u0444\u0430\u0439\u043B (_binder.json) \u0441\u043E\u0445\u0440\u0430\u043D\u044F\u0435\u0442\u0441\u044F \u043A\u0430\u043A \u0440\u0435\u0437\u0435\u0440\u0432\u043D\u0430\u044F \u043A\u043E\u043F\u0438\u044F \u0438 \u043D\u0438\u043A\u043E\u0433\u0434\u0430 \u043D\u0435 \u0443\u0434\u0430\u043B\u044F\u0435\u0442\u0441\u044F. \u041F\u0440\u0438 \u0432\u043E\u0437\u0432\u0440\u0430\u0442\u0435 \u043A \u043F\u0440\u0435\u0436\u043D\u0435\u0439 \u0432\u0435\u0440\u0441\u0438\u0438 \u043E\u043D \u0431\u0443\u0434\u0435\u0442 \u0432\u043E\u0441\u0441\u0442\u0430\u043D\u043E\u0432\u043B\u0435\u043D \u043A\u0430\u043A \u0431\u044B\u043B (\u043F\u043E \u0432\u043E\u0437\u043C\u043E\u0436\u043D\u043E\u0441\u0442\u0438).",
-      close: "\u0417\u0430\u043A\u0440\u044B\u0442\u044C",
-      unavailable: "\u0414\u043B\u044F \u043F\u0440\u0435\u0434\u043F\u0440\u043E\u0441\u043C\u043E\u0442\u0440\u0430 \u043F\u0435\u0440\u0435\u043D\u043E\u0441\u0430 \u043D\u0443\u0436\u043D\u044B \u044D\u043A\u0441\u043F\u0435\u0440\u0438\u043C\u0435\u043D\u0442\u0430\u043B\u044C\u043D\u0430\u044F \u0444\u0430\u0439\u043B\u043E\u0432\u0430\u044F \u043F\u0430\u043F\u043A\u0430 \u0437\u0430\u043F\u0438\u0441\u0435\u0439 \u0438 \u0430\u043A\u0442\u0438\u0432\u043D\u044B\u0439 \u043F\u0440\u043E\u0435\u043A\u0442.",
-      nothingToPreview: "\u0421\u0442\u0430\u0440\u0430\u044F \u043F\u0430\u043F\u043A\u0430 \u0437\u0430\u043F\u0438\u0441\u0435\u0439 \u0434\u043B\u044F \u044D\u0442\u043E\u0433\u043E \u043F\u0440\u043E\u0435\u043A\u0442\u0430 \u043D\u0435 \u043D\u0430\u0439\u0434\u0435\u043D\u0430.",
-      readFailed: "\u041D\u0435 \u0443\u0434\u0430\u043B\u043E\u0441\u044C \u043F\u0440\u043E\u0447\u0438\u0442\u0430\u0442\u044C \u0441\u0442\u0430\u0440\u044B\u0439 \u0444\u0430\u0439\u043B \u043F\u0430\u043F\u043A\u0438 \u0437\u0430\u043F\u0438\u0441\u0435\u0439."
+    migration: {
+      couldntMove: "Writing Studio \u043D\u0435 \u0443\u0434\u0430\u043B\u043E\u0441\u044C \u043F\u0435\u0440\u0435\u043C\u0435\u0441\u0442\u0438\u0442\u044C \xAB{{name}}\xBB: {{reason}}.",
+      couldntRename: "Writing Studio \u043D\u0435 \u0443\u0434\u0430\u043B\u043E\u0441\u044C \u043F\u0435\u0440\u0435\u0438\u043C\u0435\u043D\u043E\u0432\u0430\u0442\u044C \xAB{{name}}\xBB: {{reason}}.",
+      couldntUpdate: "Writing Studio \u043D\u0435 \u0443\u0434\u0430\u043B\u043E\u0441\u044C \u043E\u0431\u043D\u043E\u0432\u0438\u0442\u044C \xAB{{name}}\xBB: {{reason}}.",
+      reasonNameTaken: "\u0444\u0430\u0439\u043B \u0441 \u0442\u0430\u043A\u0438\u043C \u0438\u043C\u0435\u043D\u0435\u043C \u0443\u0436\u0435 \u0441\u0443\u0449\u0435\u0441\u0442\u0432\u0443\u0435\u0442",
+      reasonInUse: "\u0444\u0430\u0439\u043B \u0438\u0441\u043F\u043E\u043B\u044C\u0437\u0443\u0435\u0442\u0441\u044F",
+      reasonPermission: "\u0434\u043E\u0441\u0442\u0443\u043F \u0437\u0430\u043F\u0440\u0435\u0449\u0451\u043D",
+      restoreDone: "\u041F\u0440\u0435\u0436\u043D\u0435\u0435 \u0440\u0430\u0441\u043F\u043E\u043B\u043E\u0436\u0435\u043D\u0438\u0435 \u0432\u043E\u0441\u0441\u0442\u0430\u043D\u043E\u0432\u043B\u0435\u043D\u043E.",
+      restorePartial_one: "\u041F\u0440\u0435\u0436\u043D\u0435\u0435 \u0440\u0430\u0441\u043F\u043E\u043B\u043E\u0436\u0435\u043D\u0438\u0435 \u0432\u043E\u0441\u0441\u0442\u0430\u043D\u043E\u0432\u043B\u0435\u043D\u043E. {{count}} \u044D\u043B\u0435\u043C\u0435\u043D\u0442 \u043D\u0435 \u0443\u0434\u0430\u043B\u043E\u0441\u044C \u0432\u0435\u0440\u043D\u0443\u0442\u044C \u043D\u0430 \u043C\u0435\u0441\u0442\u043E.",
+      restorePartial_few: "\u041F\u0440\u0435\u0436\u043D\u0435\u0435 \u0440\u0430\u0441\u043F\u043E\u043B\u043E\u0436\u0435\u043D\u0438\u0435 \u0432\u043E\u0441\u0441\u0442\u0430\u043D\u043E\u0432\u043B\u0435\u043D\u043E. {{count}} \u044D\u043B\u0435\u043C\u0435\u043D\u0442\u0430 \u043D\u0435 \u0443\u0434\u0430\u043B\u043E\u0441\u044C \u0432\u0435\u0440\u043D\u0443\u0442\u044C \u043D\u0430 \u043C\u0435\u0441\u0442\u043E.",
+      restorePartial_many: "\u041F\u0440\u0435\u0436\u043D\u0435\u0435 \u0440\u0430\u0441\u043F\u043E\u043B\u043E\u0436\u0435\u043D\u0438\u0435 \u0432\u043E\u0441\u0441\u0442\u0430\u043D\u043E\u0432\u043B\u0435\u043D\u043E. {{count}} \u044D\u043B\u0435\u043C\u0435\u043D\u0442\u043E\u0432 \u043D\u0435 \u0443\u0434\u0430\u043B\u043E\u0441\u044C \u0432\u0435\u0440\u043D\u0443\u0442\u044C \u043D\u0430 \u043C\u0435\u0441\u0442\u043E.",
+      restorePartial_other: "\u041F\u0440\u0435\u0436\u043D\u0435\u0435 \u0440\u0430\u0441\u043F\u043E\u043B\u043E\u0436\u0435\u043D\u0438\u0435 \u0432\u043E\u0441\u0441\u0442\u0430\u043D\u043E\u0432\u043B\u0435\u043D\u043E. {{count}} \u044D\u043B\u0435\u043C\u0435\u043D\u0442\u043E\u0432 \u043D\u0435 \u0443\u0434\u0430\u043B\u043E\u0441\u044C \u0432\u0435\u0440\u043D\u0443\u0442\u044C \u043D\u0430 \u043C\u0435\u0441\u0442\u043E.",
+      restoreNothing: "\u0412\u043E\u0441\u0441\u0442\u0430\u043D\u0430\u0432\u043B\u0438\u0432\u0430\u0442\u044C \u043D\u0435\u0447\u0435\u0433\u043E.",
+      restoreUnavailable: "\u0414\u043B\u044F \u0432\u043E\u0441\u0441\u0442\u0430\u043D\u043E\u0432\u043B\u0435\u043D\u0438\u044F \u0440\u0430\u0441\u043F\u043E\u043B\u043E\u0436\u0435\u043D\u0438\u044F \u043D\u0443\u0436\u043D\u044B \u044D\u043A\u0441\u043F\u0435\u0440\u0438\u043C\u0435\u043D\u0442\u0430\u043B\u044C\u043D\u0430\u044F \u0444\u0430\u0439\u043B\u043E\u0432\u0430\u044F \u043F\u0430\u043F\u043A\u0430 \u0437\u0430\u043F\u0438\u0441\u0435\u0439 \u0438 \u0430\u043A\u0442\u0438\u0432\u043D\u044B\u0439 \u043F\u0440\u043E\u0435\u043A\u0442."
     }
   },
   launcher: {
@@ -9272,7 +9123,7 @@ var ru_default = {
       openWritingLog: "\u041E\u0442\u043A\u0440\u044B\u0442\u044C \u0436\u0443\u0440\u043D\u0430\u043B \u043F\u0438\u0441\u044C\u043C\u0430",
       openFolderSidebar: "\u041E\u0442\u043A\u0440\u044B\u0442\u044C \u043F\u0430\u043F\u043A\u0443 \u0432 \u0431\u043E\u043A\u043E\u0432\u043E\u043C \u043E\u0431\u043E\u0437\u0440\u0435\u0432\u0430\u0442\u0435\u043B\u0435",
       addFilesToBinder: "\u0421\u043A\u0430\u043D\u0438\u0440\u043E\u0432\u0430\u0442\u044C \u043F\u0430\u043F\u043A\u0443 \u043F\u0440\u043E\u0435\u043A\u0442\u0430 \u043D\u0430 \u043D\u043E\u0432\u044B\u0435 \u0444\u0430\u0439\u043B\u044B",
-      previewCarryOver: "\u041F\u0440\u0435\u0434\u043F\u0440\u043E\u0441\u043C\u043E\u0442\u0440 \u043F\u0435\u0440\u0435\u043D\u043E\u0441\u0430 \u043F\u0430\u043F\u043A\u0438 \u0437\u0430\u043F\u0438\u0441\u0435\u0439"
+      restoreBinderLayout: "\u0412\u043E\u0441\u0441\u0442\u0430\u043D\u043E\u0432\u0438\u0442\u044C \u043F\u0440\u0435\u0436\u043D\u0435\u0435 \u0440\u0430\u0441\u043F\u043E\u043B\u043E\u0436\u0435\u043D\u0438\u0435 \u043F\u0430\u043F\u043A\u0438 \u0437\u0430\u043F\u0438\u0441\u0435\u0439"
     },
     menu: {
       studioOptions: "\u041F\u0430\u0440\u0430\u043C\u0435\u0442\u0440\u044B Writing Studio",
@@ -9463,7 +9314,11 @@ var ja_default = {
       includeCoverDesc: "\u30AB\u30D0\u30FC\u753B\u50CF\u304C\u306A\u3044\u5834\u5408\u3001\u30C6\u30AD\u30B9\u30C8\u30AB\u30D0\u30FC\u30DA\u30FC\u30B8\u3092\u81EA\u52D5\u751F\u6210\u3057\u307E\u3059\u3002",
       pdfEngine: "PDF \u30A8\u30F3\u30B8\u30F3",
       pdfEngineDesc: "PDF \u66F8\u304D\u51FA\u3057\u306B\u4F7F\u3046\u30A8\u30F3\u30B8\u30F3\u3067\u3059\u3002\u81EA\u52D5\u3067\u306F\u30A4\u30F3\u30B9\u30C8\u30FC\u30EB\u6E08\u307F\u306E LaTeX \u30A8\u30F3\u30B8\u30F3\u3092\u9078\u3073\u307E\u3059\u3002wkhtmltopdf \u306F LaTeX \u4E0D\u8981\u3067\u3059\u304C\u3001\u66F8\u304D\u51FA\u3057\u30D5\u30A9\u30F3\u30C8\u8A2D\u5B9A\u306F\u9069\u7528\u3055\u308C\u307E\u305B\u3093\u3002",
-      pdfEngineAuto: "\u81EA\u52D5\uFF08\u63A8\u5968\uFF09"
+      pdfEngineAuto: "\u81EA\u52D5\uFF08\u63A8\u5968\uFF09",
+      subtreeTitleSource: "\u30D5\u30A9\u30EB\u30C0\u30FC\u66F8\u304D\u51FA\u3057\u6642\u306E\u30BF\u30A4\u30C8\u30EB",
+      subtreeTitleSourceDesc: "\u30D5\u30A9\u30EB\u30C0\u30FC\u66F8\u304D\u51FA\u3057\u306E\u30BF\u30A4\u30C8\u30EB\u30DA\u30FC\u30B8\u3068\u30E1\u30BF\u30C7\u30FC\u30BF\u304C\u793A\u3059\u540D\u524D\uFF1A\u66F8\u304D\u51FA\u3057\u305F\u30D5\u30A9\u30EB\u30C0\u30FC\u304B\u3001\u30D7\u30ED\u30B8\u30A7\u30AF\u30C8\u5168\u4F53\u304B\u3002",
+      subtreeTitleFolder: "\u30D5\u30A9\u30EB\u30C0\u30FC\u540D",
+      subtreeTitleProject: "\u30D7\u30ED\u30B8\u30A7\u30AF\u30C8\u306E\u30BF\u30A4\u30C8\u30EB"
     },
     log: {
       heading: "\u6BCE\u65E5\u306E\u57F7\u7B46\u30ED\u30B0",
@@ -9597,38 +9452,18 @@ var ja_default = {
       nameExists: "\u300C{{name}}\u300D\u3068\u3044\u3046\u540D\u524D\u306E\u9805\u76EE\u304C\u3059\u3067\u306B\u3053\u3053\u306B\u5B58\u5728\u3057\u307E\u3059\u3002",
       exportFolder: "\u30D5\u30A9\u30EB\u30C0\u30FC\u3092\u30A8\u30AF\u30B9\u30DD\u30FC\u30C8"
     },
-    carryOver: {
-      action: "\u30D0\u30A4\u30F3\u30C0\u30FC\u5F15\u304D\u7D99\u304E\u3092\u30D7\u30EC\u30D3\u30E5\u30FC",
-      noticeBody: "\u300C{{project}}\u300D\u306B\u306F\u3001\u30D5\u30A1\u30A4\u30EB\u3068\u4E00\u81F4\u3057\u306A\u3044\u65E7\u30D0\u30A4\u30F3\u30C0\u30FC\u304C\u3042\u308A\u307E\u3059\u3002\u5F15\u304D\u7D99\u304E\u3067\u4F55\u304C\u5909\u308F\u308B\u304B\u3092\u30D7\u30EC\u30D3\u30E5\u30FC\u3067\u304D\u307E\u3059\u3002\u627F\u8A8D\u306A\u3057\u306B\u306F\u4F55\u3082\u884C\u308F\u308C\u307E\u305B\u3093\u3002",
-      noticePreview: "\u30D7\u30EC\u30D3\u30E5\u30FC",
-      noticeNotNow: "\u4ECA\u306F\u3057\u306A\u3044",
-      modalTitle: "\u300C{{project}}\u300D\u306E\u5F15\u304D\u7D99\u304E \u2014 \u30D7\u30EC\u30D3\u30E5\u30FC",
-      dryRun: "\u3053\u308C\u306F\u30C9\u30E9\u30A4\u30E9\u30F3\u3067\u3059\u3002\u307E\u3060\u4F55\u3082\u5909\u66F4\u3055\u308C\u3066\u3044\u307E\u305B\u3093\u3002",
-      countsOperations_one: "{{count}} \u4EF6\u306E\u64CD\u4F5C",
-      countsOperations_other: "{{count}} \u4EF6\u306E\u64CD\u4F5C",
-      countsDone: "{{count}} \u4EF6\u5B8C\u4E86",
-      countsPending: "{{count}} \u4EF6\u4FDD\u7559",
-      countsAnomalies_one: "{{count}} \u4EF6\u8981\u78BA\u8A8D",
-      countsAnomalies_other: "{{count}} \u4EF6\u8981\u78BA\u8A8D",
-      sectionFolders: "\u30D5\u30A9\u30EB\u30C0\u30FC",
-      sectionDocuments: "\u30C9\u30AD\u30E5\u30E1\u30F3\u30C8",
-      sectionFrontmatter: "\u30D5\u30ED\u30F3\u30C8\u30DE\u30BF\u30FC",
-      keptNote: "\u8A2D\u5B9A\u6E08\u307F\u306E\u30AD\u30FC\u306F\u4FDD\u6301\u3055\u308C\u307E\u3059",
-      folderExists: "\u65E2\u306B\u5B58\u5728 \u2192",
-      folderCreate: "\u4F5C\u6210\u4E88\u5B9A \u2192",
-      docDone: "\u65E2\u306B\u914D\u7F6E\u6E08\u307F \u2192",
-      docMove: "\u79FB\u52D5\u5148 \u2192",
-      anomalyMissing: "\u5143\u306E\u5834\u6240\u306B\u3082\u65B0\u3057\u3044\u5834\u6240\u306B\u3082\u3042\u308A\u307E\u305B\u3093 \u2014 \u305D\u306E\u307E\u307E\u306B\u3057\u307E\u3059",
-      anomalyOccupied: "\u65B0\u3057\u3044\u5834\u6240\u306F\u65E2\u306B\u4F7F\u7528\u3055\u308C\u3066\u3044\u307E\u3059 \u2014 \u305D\u306E\u307E\u307E\u306B\u3057\u307E\u3059",
-      badgeSuffixed: "\u540D\u524D\u304C\u91CD\u8907 \u2014 \u63A5\u5C3E\u8F9E\u3092\u8FFD\u52A0",
-      badgeReserved: "\u4E88\u7D04\u3055\u308C\u305F\u540D\u524D \u2014 \u63A5\u5C3E\u8F9E\u3092\u8FFD\u52A0",
-      badgeTitleUnusable: "\u30BF\u30A4\u30C8\u30EB\u304C\u4F7F\u7528\u4E0D\u53EF \u2014 \u540D\u524D\u3092\u7DAD\u6301",
-      keptKey: "{{key}} \u306F\u4FDD\u6301\uFF08\u8A2D\u5B9A\u6E08\u307F\uFF09",
-      backupNote: "\u65E7\u30D0\u30A4\u30F3\u30C0\u30FC\u30D5\u30A1\u30A4\u30EB\uFF08_binder.json\uFF09\u306F\u30D0\u30C3\u30AF\u30A2\u30C3\u30D7\u3068\u3057\u3066\u4FDD\u6301\u3055\u308C\u3001\u524A\u9664\u3055\u308C\u308B\u3053\u3068\u306F\u3042\u308A\u307E\u305B\u3093\u3002\u5F8C\u3067\u30C0\u30A6\u30F3\u30B0\u30EC\u30FC\u30C9\u3057\u305F\u5834\u5408\u306F\u3001\u53EF\u80FD\u306A\u9650\u308A\u5143\u306E\u72B6\u614B\u306B\u5FA9\u5143\u3055\u308C\u307E\u3059\u3002",
-      close: "\u9589\u3058\u308B",
-      unavailable: "\u5F15\u304D\u7D99\u304E\u30D7\u30EC\u30D3\u30E5\u30FC\u306B\u306F\u3001\u5B9F\u9A13\u7684\u306A\u30D5\u30A1\u30A4\u30EB\u30B7\u30B9\u30C6\u30E0\u30D0\u30A4\u30F3\u30C0\u30FC\u3068\u30A2\u30AF\u30C6\u30A3\u30D6\u306A\u30D7\u30ED\u30B8\u30A7\u30AF\u30C8\u304C\u5FC5\u8981\u3067\u3059\u3002",
-      nothingToPreview: "\u3053\u306E\u30D7\u30ED\u30B8\u30A7\u30AF\u30C8\u306E\u65E7\u30D0\u30A4\u30F3\u30C0\u30FC\u304C\u898B\u3064\u304B\u308A\u307E\u305B\u3093\u3002",
-      readFailed: "\u65E7\u30D0\u30A4\u30F3\u30C0\u30FC\u30D5\u30A1\u30A4\u30EB\u3092\u8AAD\u307F\u8FBC\u3081\u307E\u305B\u3093\u3067\u3057\u305F\u3002"
+    migration: {
+      couldntMove: "Writing Studio \u306F\u300C{{name}}\u300D\u3092\u79FB\u52D5\u3067\u304D\u307E\u305B\u3093\u3067\u3057\u305F\uFF1A{{reason}}\u3002",
+      couldntRename: "Writing Studio \u306F\u300C{{name}}\u300D\u306E\u540D\u524D\u3092\u5909\u66F4\u3067\u304D\u307E\u305B\u3093\u3067\u3057\u305F\uFF1A{{reason}}\u3002",
+      couldntUpdate: "Writing Studio \u306F\u300C{{name}}\u300D\u3092\u66F4\u65B0\u3067\u304D\u307E\u305B\u3093\u3067\u3057\u305F\uFF1A{{reason}}\u3002",
+      reasonNameTaken: "\u540C\u540D\u306E\u30D5\u30A1\u30A4\u30EB\u304C\u65E2\u306B\u5B58\u5728\u3057\u307E\u3059",
+      reasonInUse: "\u30D5\u30A1\u30A4\u30EB\u304C\u4F7F\u7528\u4E2D\u3067\u3059",
+      reasonPermission: "\u30A2\u30AF\u30BB\u30B9\u304C\u62D2\u5426\u3055\u308C\u307E\u3057\u305F",
+      restoreDone: "\u4EE5\u524D\u306E\u30D0\u30A4\u30F3\u30C0\u30FC\u914D\u7F6E\u3092\u5FA9\u5143\u3057\u307E\u3057\u305F\u3002",
+      restorePartial_one: "\u4EE5\u524D\u306E\u914D\u7F6E\u3092\u5FA9\u5143\u3057\u307E\u3057\u305F\u3002{{count}} \u4EF6\u306F\u5143\u306B\u623B\u305B\u307E\u305B\u3093\u3067\u3057\u305F\u3002",
+      restorePartial_other: "\u4EE5\u524D\u306E\u914D\u7F6E\u3092\u5FA9\u5143\u3057\u307E\u3057\u305F\u3002{{count}} \u4EF6\u306F\u5143\u306B\u623B\u305B\u307E\u305B\u3093\u3067\u3057\u305F\u3002",
+      restoreNothing: "\u5FA9\u5143\u3059\u308B\u3082\u306E\u304C\u3042\u308A\u307E\u305B\u3093\u3002",
+      restoreUnavailable: "\u914D\u7F6E\u306E\u5FA9\u5143\u306B\u306F\u3001\u5B9F\u9A13\u7684\u306A\u30D5\u30A1\u30A4\u30EB\u30B7\u30B9\u30C6\u30E0\u30D0\u30A4\u30F3\u30C0\u30FC\u3068\u30A2\u30AF\u30C6\u30A3\u30D6\u306A\u30D7\u30ED\u30B8\u30A7\u30AF\u30C8\u304C\u5FC5\u8981\u3067\u3059\u3002"
     }
   },
   launcher: {
@@ -10041,7 +9876,7 @@ var ja_default = {
       openWritingLog: "\u57F7\u7B46\u30ED\u30B0\u3092\u958B\u304F",
       openFolderSidebar: "\u30B5\u30A4\u30C9\u30D0\u30FC\u30A8\u30AF\u30B9\u30D7\u30ED\u30FC\u30E9\u30FC\u3067\u30D5\u30A9\u30EB\u30C0\u3092\u958B\u304F",
       addFilesToBinder: "\u30D7\u30ED\u30B8\u30A7\u30AF\u30C8\u30D5\u30A9\u30EB\u30C0\u30FC\u306E\u65B0\u3057\u3044\u30D5\u30A1\u30A4\u30EB\u3092\u30B9\u30AD\u30E3\u30F3",
-      previewCarryOver: "\u30D0\u30A4\u30F3\u30C0\u30FC\u5F15\u304D\u7D99\u304E\u3092\u30D7\u30EC\u30D3\u30E5\u30FC"
+      restoreBinderLayout: "\u4EE5\u524D\u306E\u30D0\u30A4\u30F3\u30C0\u30FC\u914D\u7F6E\u3092\u5FA9\u5143"
     },
     menu: {
       studioOptions: "\u30E9\u30A4\u30C6\u30A3\u30F3\u30B0\u30B9\u30BF\u30B8\u30AA\u306E\u30AA\u30D7\u30B7\u30E7\u30F3",
@@ -10232,7 +10067,11 @@ var de_default = {
       includeCoverDesc: "Eine Text-Umschlagseite generieren, wenn kein Umschlagbild vorhanden ist.",
       pdfEngine: "PDF-Engine",
       pdfEngineDesc: "Engine f\xFCr den PDF-Export. Auto w\xE4hlt eine installierte LaTeX-Engine. wkhtmltopdf funktioniert ohne LaTeX, die Exportschriftart gilt dort jedoch nicht.",
-      pdfEngineAuto: "Automatisch (empfohlen)"
+      pdfEngineAuto: "Automatisch (empfohlen)",
+      subtreeTitleSource: "Titel beim Ordner-Export",
+      subtreeTitleSourceDesc: "Was Titelseite und Metadaten eines Ordner-Exports benennen: den exportierten Ordner oder das gesamte Projekt.",
+      subtreeTitleFolder: "Ordnername",
+      subtreeTitleProject: "Projekttitel"
     },
     log: {
       heading: "T\xE4gliches Schreibprotokoll",
@@ -10366,38 +10205,18 @@ var de_default = {
       nameExists: "Etwas mit dem Namen \u201E{{name}}\u201C existiert hier bereits.",
       exportFolder: "Ordner exportieren"
     },
-    carryOver: {
-      action: "Mappen-\xDCbernahme als Vorschau anzeigen",
-      noticeBody: "\u201E{{project}}\u201C hat eine alte Schreibmappe, die von ihren Dateien abweicht. Die Vorschau zeigt, was die \xDCbernahme \xE4ndern w\xFCrde \u2014 ohne Zustimmung passiert nichts.",
-      noticePreview: "Vorschau",
-      noticeNotNow: "Nicht jetzt",
-      modalTitle: "\u201E{{project}}\u201C \xFCbernehmen \u2014 Vorschau",
-      dryRun: "Dies ist ein Probelauf. Es wurde nichts ge\xE4ndert.",
-      countsOperations_one: "{{count}} Vorgang",
-      countsOperations_other: "{{count}} Vorg\xE4nge",
-      countsDone: "{{count}} erledigt",
-      countsPending: "{{count}} ausstehend",
-      countsAnomalies_one: "{{count}} braucht Aufmerksamkeit",
-      countsAnomalies_other: "{{count}} brauchen Aufmerksamkeit",
-      sectionFolders: "Ordner",
-      sectionDocuments: "Dokumente",
-      sectionFrontmatter: "Frontmatter",
-      keptNote: "bereits gesetzte Schl\xFCssel bleiben erhalten",
-      folderExists: "existiert bereits als",
-      folderCreate: "wird erstellt als",
-      docDone: "bereits unter",
-      docMove: "wird verschoben nach",
-      anomalyMissing: "weder am urspr\xFCnglichen noch am neuen Ort \u2014 bleibt unber\xFChrt",
-      anomalyOccupied: "der neue Ort ist bereits belegt \u2014 bleibt unber\xFChrt",
-      badgeSuffixed: "Name vergeben \u2014 Suffix angeh\xE4ngt",
-      badgeReserved: "reservierter Name \u2014 Suffix angeh\xE4ngt",
-      badgeTitleUnusable: "Titel unbrauchbar \u2014 Name beibehalten",
-      keptKey: "{{key}} beibehalten (bereits gesetzt)",
-      backupNote: "Die alte Mappendatei (_binder.json) bleibt als Sicherung erhalten und wird nie gel\xF6scht. Ein sp\xE4teres Downgrade stellt sie nach M\xF6glichkeit wieder her.",
-      close: "Schlie\xDFen",
-      unavailable: "Die \xDCbernahme-Vorschau ben\xF6tigt die experimentelle Dateisystem-Mappe und ein aktives Projekt.",
-      nothingToPreview: "Keine alte Schreibmappe f\xFCr dieses Projekt gefunden.",
-      readFailed: "Die alte Mappendatei konnte nicht gelesen werden."
+    migration: {
+      couldntMove: "Writing Studio konnte \u201E{{name}}\u201C nicht verschieben: {{reason}}.",
+      couldntRename: "Writing Studio konnte \u201E{{name}}\u201C nicht umbenennen: {{reason}}.",
+      couldntUpdate: "Writing Studio konnte \u201E{{name}}\u201C nicht aktualisieren: {{reason}}.",
+      reasonNameTaken: "eine Datei mit diesem Namen ist bereits vorhanden",
+      reasonInUse: "die Datei wird gerade verwendet",
+      reasonPermission: "die Berechtigung wurde verweigert",
+      restoreDone: "Vorheriges Mappen-Layout wiederhergestellt.",
+      restorePartial_one: "Vorheriges Mappen-Layout wiederhergestellt. {{count}} Element konnte nicht zur\xFCckverschoben werden.",
+      restorePartial_other: "Vorheriges Mappen-Layout wiederhergestellt. {{count}} Elemente konnten nicht zur\xFCckverschoben werden.",
+      restoreNothing: "Nichts wiederherzustellen.",
+      restoreUnavailable: "Die Wiederherstellung des Layouts ben\xF6tigt die experimentelle Dateisystem-Mappe und ein aktives Projekt."
     }
   },
   launcher: {
@@ -10810,7 +10629,7 @@ var de_default = {
       openWritingLog: "Schreibprotokoll \xF6ffnen",
       openFolderSidebar: "Ordner im Sidebar-Explorer \xF6ffnen",
       addFilesToBinder: "Projektordner nach neuen Dateien durchsuchen",
-      previewCarryOver: "Mappen-\xDCbernahme als Vorschau anzeigen"
+      restoreBinderLayout: "Vorheriges Mappen-Layout wiederherstellen"
     },
     menu: {
       studioOptions: "Schreibstudio-Optionen",
@@ -11001,7 +10820,11 @@ var ko_default = {
       includeCoverDesc: "\uD45C\uC9C0 \uC774\uBBF8\uC9C0\uAC00 \uC5C6\uC744 \uB54C \uD14D\uC2A4\uD2B8 \uD45C\uC9C0 \uD398\uC774\uC9C0\uB97C \uC0DD\uC131\uD569\uB2C8\uB2E4.",
       pdfEngine: "PDF \uC5D4\uC9C4",
       pdfEngineDesc: "PDF \uB0B4\uBCF4\uB0B4\uAE30\uC5D0 \uC0AC\uC6A9\uD560 \uC5D4\uC9C4\uC785\uB2C8\uB2E4. \uC790\uB3D9\uC740 \uC124\uCE58\uB41C LaTeX \uC5D4\uC9C4\uC744 \uC120\uD0DD\uD569\uB2C8\uB2E4. wkhtmltopdf\uB294 LaTeX \uC5C6\uC774 \uC791\uB3D9\uD558\uC9C0\uB9CC \uB0B4\uBCF4\uB0B4\uAE30 \uAE00\uAF34 \uC124\uC815\uC774 \uC801\uC6A9\uB418\uC9C0 \uC54A\uC2B5\uB2C8\uB2E4.",
-      pdfEngineAuto: "\uC790\uB3D9(\uAD8C\uC7A5)"
+      pdfEngineAuto: "\uC790\uB3D9(\uAD8C\uC7A5)",
+      subtreeTitleSource: "\uD3F4\uB354 \uB0B4\uBCF4\uB0B4\uAE30 \uC81C\uBAA9",
+      subtreeTitleSourceDesc: "\uD3F4\uB354 \uB0B4\uBCF4\uB0B4\uAE30\uC758 \uC81C\uBAA9 \uD398\uC774\uC9C0\uC640 \uBA54\uD0C0\uB370\uC774\uD130\uC5D0 \uD45C\uC2DC\uD560 \uC774\uB984: \uB0B4\uBCF4\uB0B8 \uD3F4\uB354 \uB610\uB294 \uC804\uCCB4 \uD504\uB85C\uC81D\uD2B8.",
+      subtreeTitleFolder: "\uD3F4\uB354 \uC774\uB984",
+      subtreeTitleProject: "\uD504\uB85C\uC81D\uD2B8 \uC81C\uBAA9"
     },
     log: {
       heading: "\uC77C\uC77C \uAE00\uC4F0\uAE30 \uB85C\uADF8",
@@ -11135,38 +10958,18 @@ var ko_default = {
       nameExists: '"{{name}}"(\uC774)\uB77C\uB294 \uC774\uB984\uC758 \uD56D\uBAA9\uC774 \uC774\uBBF8 \uC5EC\uAE30\uC5D0 \uC788\uC2B5\uB2C8\uB2E4.',
       exportFolder: "\uD3F4\uB354 \uB0B4\uBCF4\uB0B4\uAE30"
     },
-    carryOver: {
-      action: "\uBC14\uC778\uB354 \uC774\uAD00 \uBBF8\uB9AC\uBCF4\uAE30",
-      noticeBody: '"{{project}}"\uC5D0 \uD30C\uC77C\uACFC \uC77C\uCE58\uD558\uC9C0 \uC54A\uB294 \uC774\uC804 \uBC14\uC778\uB354\uAC00 \uC788\uC2B5\uB2C8\uB2E4. \uC774\uAD00 \uC2DC \uBB34\uC5C7\uC774 \uBC14\uB00C\uB294\uC9C0 \uBBF8\uB9AC \uBCFC \uC218 \uC788\uC2B5\uB2C8\uB2E4. \uC2B9\uC778 \uC5C6\uC774\uB294 \uC544\uBB34\uAC83\uB3C4 \uC2E4\uD589\uB418\uC9C0 \uC54A\uC2B5\uB2C8\uB2E4.',
-      noticePreview: "\uBBF8\uB9AC\uBCF4\uAE30",
-      noticeNotNow: "\uB098\uC911\uC5D0",
-      modalTitle: '"{{project}}" \uC774\uAD00 \u2014 \uBBF8\uB9AC\uBCF4\uAE30',
-      dryRun: "\uC774\uAC83\uC740 \uC608\uD589 \uC5F0\uC2B5\uC785\uB2C8\uB2E4. \uC544\uC9C1 \uC544\uBB34\uAC83\uB3C4 \uBCC0\uACBD\uB418\uC9C0 \uC54A\uC558\uC2B5\uB2C8\uB2E4.",
-      countsOperations_one: "{{count}}\uAC1C \uC791\uC5C5",
-      countsOperations_other: "{{count}}\uAC1C \uC791\uC5C5",
-      countsDone: "{{count}}\uAC1C \uC644\uB8CC",
-      countsPending: "{{count}}\uAC1C \uB300\uAE30",
-      countsAnomalies_one: "{{count}}\uAC1C \uD655\uC778 \uD544\uC694",
-      countsAnomalies_other: "{{count}}\uAC1C \uD655\uC778 \uD544\uC694",
-      sectionFolders: "\uD3F4\uB354",
-      sectionDocuments: "\uBB38\uC11C",
-      sectionFrontmatter: "\uD504\uB7F0\uD2B8\uB9E4\uD130",
-      keptNote: "\uC774\uBBF8 \uC124\uC815\uB41C \uD0A4\uB294 \uC720\uC9C0\uB429\uB2C8\uB2E4",
-      folderExists: "\uC774\uBBF8 \uC874\uC7AC \u2192",
-      folderCreate: "\uC0DD\uC131 \uC608\uC815 \u2192",
-      docDone: "\uC774\uBBF8 \uC704\uCE58 \u2192",
-      docMove: "\uC774\uB3D9 \uC608\uC815 \u2192",
-      anomalyMissing: "\uC6D0\uB798 \uC704\uCE58\uC5D0\uB3C4 \uC0C8 \uC704\uCE58\uC5D0\uB3C4 \uC5C6\uC2B5\uB2C8\uB2E4 \u2014 \uADF8\uB300\uB85C \uB461\uB2C8\uB2E4",
-      anomalyOccupied: "\uC0C8 \uC704\uCE58\uAC00 \uC774\uBBF8 \uC0AC\uC6A9 \uC911\uC785\uB2C8\uB2E4 \u2014 \uADF8\uB300\uB85C \uB461\uB2C8\uB2E4",
-      badgeSuffixed: "\uC774\uB984 \uC911\uBCF5 \u2014 \uC811\uBBF8\uC0AC \uCD94\uAC00",
-      badgeReserved: "\uC608\uC57D\uB41C \uC774\uB984 \u2014 \uC811\uBBF8\uC0AC \uCD94\uAC00",
-      badgeTitleUnusable: "\uC81C\uBAA9 \uC0AC\uC6A9 \uBD88\uAC00 \u2014 \uC774\uB984 \uC720\uC9C0",
-      keptKey: "{{key}} \uC720\uC9C0(\uC774\uBBF8 \uC124\uC815\uB428)",
-      backupNote: "\uC774\uC804 \uBC14\uC778\uB354 \uD30C\uC77C(_binder.json)\uC740 \uBC31\uC5C5\uC73C\uB85C \uC720\uC9C0\uB418\uBA70 \uC0AD\uC81C\uB418\uC9C0 \uC54A\uC2B5\uB2C8\uB2E4. \uB098\uC911\uC5D0 \uB2E4\uC6B4\uADF8\uB808\uC774\uB4DC\uD558\uBA74 \uAC00\uB2A5\uD55C \uBC94\uC704\uC5D0\uC11C \uC6D0\uB798\uB300\uB85C \uBCF5\uC6D0\uB429\uB2C8\uB2E4.",
-      close: "\uB2EB\uAE30",
-      unavailable: "\uC774\uAD00 \uBBF8\uB9AC\uBCF4\uAE30\uC5D0\uB294 \uC2E4\uD5D8\uC801 \uD30C\uC77C \uC2DC\uC2A4\uD15C \uBC14\uC778\uB354\uC640 \uD65C\uC131 \uD504\uB85C\uC81D\uD2B8\uAC00 \uD544\uC694\uD569\uB2C8\uB2E4.",
-      nothingToPreview: "\uC774 \uD504\uB85C\uC81D\uD2B8\uC758 \uC774\uC804 \uBC14\uC778\uB354\uB97C \uCC3E\uC744 \uC218 \uC5C6\uC2B5\uB2C8\uB2E4.",
-      readFailed: "\uC774\uC804 \uBC14\uC778\uB354 \uD30C\uC77C\uC744 \uC77D\uC744 \uC218 \uC5C6\uC2B5\uB2C8\uB2E4."
+    migration: {
+      couldntMove: 'Writing Studio\uAC00 "{{name}}"\uC744(\uB97C) \uC774\uB3D9\uD558\uC9C0 \uBABB\uD588\uC2B5\uB2C8\uB2E4: {{reason}}.',
+      couldntRename: 'Writing Studio\uAC00 "{{name}}"\uC758 \uC774\uB984\uC744 \uBC14\uAFB8\uC9C0 \uBABB\uD588\uC2B5\uB2C8\uB2E4: {{reason}}.',
+      couldntUpdate: 'Writing Studio\uAC00 "{{name}}"\uC744(\uB97C) \uC5C5\uB370\uC774\uD2B8\uD558\uC9C0 \uBABB\uD588\uC2B5\uB2C8\uB2E4: {{reason}}.',
+      reasonNameTaken: "\uAC19\uC740 \uC774\uB984\uC758 \uD30C\uC77C\uC774 \uC774\uBBF8 \uC788\uC2B5\uB2C8\uB2E4",
+      reasonInUse: "\uD30C\uC77C\uC774 \uC0AC\uC6A9 \uC911\uC785\uB2C8\uB2E4",
+      reasonPermission: "\uAD8C\uD55C\uC774 \uAC70\uBD80\uB418\uC5C8\uC2B5\uB2C8\uB2E4",
+      restoreDone: "\uC774\uC804 \uBC14\uC778\uB354 \uBC30\uCE58\uB97C \uBCF5\uC6D0\uD588\uC2B5\uB2C8\uB2E4.",
+      restorePartial_one: "\uC774\uC804 \uBC30\uCE58\uB97C \uBCF5\uC6D0\uD588\uC2B5\uB2C8\uB2E4. {{count}}\uAC1C \uD56D\uBAA9\uC740 \uB418\uB3CC\uB9AC\uC9C0 \uBABB\uD588\uC2B5\uB2C8\uB2E4.",
+      restorePartial_other: "\uC774\uC804 \uBC30\uCE58\uB97C \uBCF5\uC6D0\uD588\uC2B5\uB2C8\uB2E4. {{count}}\uAC1C \uD56D\uBAA9\uC740 \uB418\uB3CC\uB9AC\uC9C0 \uBABB\uD588\uC2B5\uB2C8\uB2E4.",
+      restoreNothing: "\uBCF5\uC6D0\uD560 \uD56D\uBAA9\uC774 \uC5C6\uC2B5\uB2C8\uB2E4.",
+      restoreUnavailable: "\uBC30\uCE58 \uBCF5\uC6D0\uC5D0\uB294 \uC2E4\uD5D8\uC801 \uD30C\uC77C \uC2DC\uC2A4\uD15C \uBC14\uC778\uB354\uC640 \uD65C\uC131 \uD504\uB85C\uC81D\uD2B8\uAC00 \uD544\uC694\uD569\uB2C8\uB2E4."
     }
   },
   launcher: {
@@ -11579,7 +11382,7 @@ var ko_default = {
       openWritingLog: "\uAE00\uC4F0\uAE30 \uB85C\uADF8 \uC5F4\uAE30",
       openFolderSidebar: "\uC0AC\uC774\uB4DC\uBC14 \uD0D0\uC0C9\uAE30\uC5D0\uC11C \uD3F4\uB354 \uC5F4\uAE30",
       addFilesToBinder: "\uD504\uB85C\uC81D\uD2B8 \uD3F4\uB354\uC5D0\uC11C \uC0C8 \uD30C\uC77C \uAC80\uC0C9",
-      previewCarryOver: "\uBC14\uC778\uB354 \uC774\uAD00 \uBBF8\uB9AC\uBCF4\uAE30"
+      restoreBinderLayout: "\uC774\uC804 \uBC14\uC778\uB354 \uBC30\uCE58 \uBCF5\uC6D0"
     },
     menu: {
       studioOptions: "\uAE00\uC4F0\uAE30 \uC2A4\uD29C\uB514\uC624 \uC635\uC158",
@@ -14768,7 +14571,7 @@ var BinderView = class extends import_obsidian17.ItemView {
 };
 
 // src/FilesystemBinderView.ts
-var import_obsidian20 = require("obsidian");
+var import_obsidian18 = require("obsidian");
 
 // src/binderMove.ts
 function dropRegion(targetIsFolder, offsetY, height) {
@@ -14830,352 +14633,6 @@ function planMove(source, destParentPath, destSiblings, insertAt, writeOrder) {
   return ops;
 }
 
-// src/carryOverBridge.ts
-var import_obsidian19 = require("obsidian");
-
-// src/carryOver.ts
-function parseLegacyBinder(content2) {
-  try {
-    const data = JSON.parse(content2);
-    return Array.isArray(data == null ? void 0 : data.items) ? data : null;
-  } catch (e) {
-    return null;
-  }
-}
-function sanitizeTitle(title) {
-  return title.replace(/[\\/:*?"<>|]/g, "").replace(/\s+/g, " ").trim().replace(/[. ]+$/, "");
-}
-var RESERVED_STEMS = /^(con|prn|aux|nul|com[1-9]|lpt[1-9])$/i;
-function isReservedStem(stem) {
-  return RESERVED_STEMS.test(stem);
-}
-function fmRowState(op) {
-  if (op.frontmatter.length === 0) return null;
-  return op.frontmatter.some((e) => !e.kept) ? "pending" : "done";
-}
-function planHasWork(plan) {
-  return plan.counts.pending > 0 || plan.counts.anomalies > 0;
-}
-var isStructural = (item) => item.type === "group" || item.type === "part";
-function expandSiblings(items) {
-  var _a2;
-  const out = [];
-  for (const item of items) {
-    out.push(item);
-    if (!isStructural(item) && ((_a2 = item.children) == null ? void 0 : _a2.length)) {
-      out.push(...expandSiblings(item.children));
-    }
-  }
-  return out;
-}
-function claimStem(claimed, stem, ext) {
-  const reserved = isReservedStem(stem);
-  let candidate = stem;
-  let n = 1;
-  while (isReservedStem(candidate) || claimed.has((candidate + ext).toLowerCase())) {
-    n += 1;
-    candidate = `${stem} ${n}`;
-  }
-  claimed.add((candidate + ext).toLowerCase());
-  return { stem: candidate, suffixed: candidate !== stem && !reserved, reserved };
-}
-function planCarryOver(items, projectFolderPath, disk) {
-  const folderOps = [];
-  const docOps = [];
-  walkGroup(items, projectFolderPath, disk, folderOps, docOps);
-  const counts = { total: 0, done: 0, pending: 0, anomalies: 0 };
-  for (const op of folderOps) {
-    counts.total += 1;
-    if (op.state === "done") counts.done += 1;
-    else counts.pending += 1;
-  }
-  for (const op of docOps) {
-    counts.total += 1;
-    if (op.state === "done") counts.done += 1;
-    else if (op.state === "pending") counts.pending += 1;
-    else counts.anomalies += 1;
-    const fmState = fmRowState(op);
-    if (fmState !== null) {
-      counts.total += 1;
-      if (fmState === "done") counts.done += 1;
-      else counts.pending += 1;
-    }
-  }
-  return { folderOps, docOps, counts };
-}
-function walkGroup(items, parentPath2, disk, folderOps, docOps) {
-  var _a2;
-  const expanded = expandSiblings(items);
-  const claimedFiles = /* @__PURE__ */ new Set();
-  const claimedDisplays = /* @__PURE__ */ new Set();
-  const consumedAdoptees = /* @__PURE__ */ new Set();
-  const existingFolders = disk.subfolderNames(parentPath2);
-  let position = 0;
-  for (const item of expanded) {
-    position += 10;
-    if (isStructural(item)) {
-      const op = planFolder(item, position, parentPath2, existingFolders, claimedDisplays, consumedAdoptees);
-      folderOps.push(op);
-      walkGroup((_a2 = item.children) != null ? _a2 : [], op.targetPath, disk, folderOps, docOps);
-    } else {
-      docOps.push(planDoc(item, position, parentPath2, disk, claimedFiles));
-    }
-  }
-}
-function planFolder(item, position, parentPath2, existingFolders, claimedDisplays, consumedAdoptees) {
-  const base = sanitizeTitle(item.title) || "Untitled";
-  const { stem: displayName, suffixed, reserved } = claimStem(claimedDisplays, base, "");
-  const minted = folderNameWithPrefix(displayName, position);
-  const candidates = existingFolders.filter((n) => !consumedAdoptees.has(n) && parseFolderPrefix(n).displayName.toLowerCase() === displayName.toLowerCase());
-  candidates.sort((a, b) => {
-    if (a === minted !== (b === minted)) return a === minted ? -1 : 1;
-    const aMarked = parseFolderPrefix(a).order !== null;
-    const bMarked = parseFolderPrefix(b).order !== null;
-    if (aMarked !== bMarked) return aMarked ? -1 : 1;
-    return naturalCompare(a, b);
-  });
-  const adopted = candidates.length > 0 ? candidates[0] : null;
-  if (adopted !== null) consumedAdoptees.add(adopted);
-  const targetName = adopted != null ? adopted : minted;
-  return {
-    kind: "folder",
-    legacyTitle: item.title,
-    displayName,
-    targetName,
-    targetPath: `${parentPath2}/${targetName}`,
-    state: adopted !== null ? "done" : "pending",
-    suffixed,
-    reserved
-  };
-}
-function planDoc(item, position, parentPath2, disk, claimedFiles) {
-  var _a2;
-  const originalPath = (item.filePath || "").replace(/\\/g, "/");
-  const basename = (_a2 = originalPath.split("/").pop()) != null ? _a2 : "";
-  const extIdx = basename.lastIndexOf(".");
-  const ext = extIdx > 0 ? basename.slice(extIdx) : ".md";
-  let stem = sanitizeTitle(item.title);
-  const titleUnusable = stem === "";
-  if (titleUnusable) {
-    stem = (extIdx > 0 ? basename.slice(0, extIdx) : basename) || "Untitled";
-  }
-  const { stem: resolvedStem, suffixed, reserved } = claimStem(claimedFiles, stem, ext);
-  const finalPath = `${parentPath2}/${resolvedStem}${ext}`;
-  const atOriginal = originalPath !== "" && disk.fileExists(originalPath);
-  const atFinal = disk.fileExists(finalPath);
-  let state;
-  let anomaly;
-  if (finalPath === originalPath && atFinal) {
-    state = "done";
-  } else if (atOriginal && atFinal) {
-    state = "anomaly";
-    anomaly = "target-occupied";
-  } else if (atOriginal) {
-    state = "pending";
-  } else if (atFinal) {
-    state = "done";
-  } else {
-    state = "anomaly";
-    anomaly = "missing";
-  }
-  return {
-    kind: "doc",
-    originalPath,
-    finalPath,
-    state,
-    anomaly,
-    suffixed,
-    reserved,
-    titleUnusable,
-    frontmatter: state === "anomaly" ? [] : planFrontmatter(item, position, disk, state === "pending" ? originalPath : finalPath)
-  };
-}
-function planFrontmatter(item, position, disk, currentPath) {
-  var _a2;
-  const fm = (_a2 = disk.frontmatter(currentPath)) != null ? _a2 : {};
-  const kept = (key) => fm[key] !== void 0 && fm[key] !== null;
-  const entries = [];
-  entries.push({ key: "binder-order", value: position, kept: kept("binder-order") });
-  const status = parseBinderStatus(item.status);
-  if (status !== null) {
-    entries.push({ key: "binder-status", value: status, kept: kept("binder-status") });
-  }
-  const docType = parseBinderType(item.type);
-  if (docType !== null) {
-    entries.push({ key: "binder-type", value: docType, kept: kept("binder-type") });
-  }
-  if (typeof item.wordCountGoal === "number" && Number.isFinite(item.wordCountGoal) && item.wordCountGoal > 0) {
-    entries.push({ key: "word-count-goal", value: item.wordCountGoal, kept: kept("word-count-goal") });
-  }
-  if (item.includeInExport === false) {
-    entries.push({ key: "binder-compile", value: false, kept: kept("binder-compile") });
-  }
-  return entries;
-}
-
-// modals/CarryOverPreviewModal.ts
-var import_obsidian18 = require("obsidian");
-var CarryOverPreviewModal = class extends import_obsidian18.Modal {
-  constructor(app, projectTitle, projectFolderPath, plan) {
-    super(app);
-    this.projectTitle = projectTitle;
-    this.projectFolderPath = projectFolderPath;
-    this.plan = plan;
-  }
-  onOpen() {
-    const { contentEl, plan } = this;
-    this.titleEl.setText(t2("binder.carryOver.modalTitle", { project: this.projectTitle }));
-    this.modalEl.addClass("ws-co-modal");
-    contentEl.createDiv({ cls: "ws-co-banner", text: t2("binder.carryOver.dryRun") });
-    const { total, done, pending, anomalies } = plan.counts;
-    contentEl.createDiv({
-      cls: "ws-co-counts",
-      text: [
-        t2("binder.carryOver.countsOperations", { count: total }),
-        t2("binder.carryOver.countsDone", { count: done }),
-        t2("binder.carryOver.countsPending", { count: pending }),
-        t2("binder.carryOver.countsAnomalies", { count: anomalies })
-      ].join(" \xB7 ")
-    });
-    if (plan.folderOps.length > 0) {
-      contentEl.createDiv({ cls: "ws-co-section", text: t2("binder.carryOver.sectionFolders") });
-      for (const op of plan.folderOps) this.renderFolderRow(contentEl, op);
-    }
-    if (plan.docOps.length > 0) {
-      contentEl.createDiv({ cls: "ws-co-section", text: t2("binder.carryOver.sectionDocuments") });
-      for (const op of plan.docOps) this.renderDocRow(contentEl, op);
-    }
-    const fmOps = plan.docOps.filter((op) => fmRowState(op) !== null);
-    if (fmOps.length > 0) {
-      const heading = contentEl.createDiv("ws-co-section");
-      heading.createSpan({ text: t2("binder.carryOver.sectionFrontmatter") });
-      heading.createSpan({ cls: "ws-co-section-note", text: ` (${t2("binder.carryOver.keptNote")})` });
-      for (const op of fmOps) this.renderFmRow(contentEl, op);
-    }
-    contentEl.createDiv({ cls: "ws-co-backup", text: t2("binder.carryOver.backupNote") });
-    const buttons = contentEl.createDiv({ cls: "modal-button-container" });
-    const closeBtn = buttons.createEl("button", { text: t2("binder.carryOver.close") });
-    closeBtn.onclick = () => this.close();
-  }
-  stateGlyph(row, state) {
-    const glyphs = { done: "\u2713", pending: "\u2022", anomaly: "\u26A0" };
-    row.createSpan({ cls: `ws-co-glyph ws-co-glyph-${state}`, text: glyphs[state] });
-  }
-  badge(row, op) {
-    const key = op.reserved ? "binder.carryOver.badgeReserved" : op.suffixed ? "binder.carryOver.badgeSuffixed" : op.titleUnusable ? "binder.carryOver.badgeTitleUnusable" : null;
-    if (key) row.createSpan({ cls: "ws-co-badge", text: t2(key) });
-  }
-  relative(path) {
-    const prefix = this.projectFolderPath + "/";
-    return path.startsWith(prefix) ? path.slice(prefix.length) : path;
-  }
-  renderFolderRow(container, op) {
-    const row = container.createDiv("ws-co-row");
-    this.stateGlyph(row, op.state);
-    row.createSpan({ cls: "ws-co-source", text: op.displayName });
-    row.createSpan({
-      cls: "ws-co-verb",
-      text: t2(op.state === "done" ? "binder.carryOver.folderExists" : "binder.carryOver.folderCreate")
-    });
-    row.createSpan({ cls: "ws-co-target", text: op.targetName });
-    this.badge(row, op);
-  }
-  renderDocRow(container, op) {
-    const row = container.createDiv("ws-co-row");
-    this.stateGlyph(row, op.state);
-    row.createSpan({ cls: "ws-co-source", text: this.relative(op.originalPath) });
-    if (op.state === "anomaly") {
-      row.createSpan({
-        cls: "ws-co-verb",
-        text: t2(op.anomaly === "target-occupied" ? "binder.carryOver.anomalyOccupied" : "binder.carryOver.anomalyMissing")
-      });
-      return;
-    }
-    row.createSpan({
-      cls: "ws-co-verb",
-      text: t2(op.state === "done" ? "binder.carryOver.docDone" : "binder.carryOver.docMove")
-    });
-    row.createSpan({ cls: "ws-co-target", text: this.relative(op.finalPath) });
-    this.badge(row, op);
-  }
-  renderFmRow(container, op) {
-    var _a2;
-    const row = container.createDiv("ws-co-row");
-    this.stateGlyph(row, fmRowState(op) === "done" ? "done" : "pending");
-    row.createSpan({ cls: "ws-co-source", text: (_a2 = op.finalPath.split("/").pop()) != null ? _a2 : op.finalPath });
-    const parts = op.frontmatter.map((e) => e.kept ? t2("binder.carryOver.keptKey", { key: e.key }) : `${e.key}: ${String(e.value)}`);
-    row.createSpan({ cls: "ws-co-fm", text: parts.join(" \xB7 ") });
-  }
-  onClose() {
-    this.contentEl.empty();
-  }
-};
-
-// src/carryOverBridge.ts
-function buildDiskState(app) {
-  const at = (path) => app.vault.getAbstractFileByPath((0, import_obsidian19.normalizePath)(path));
-  return {
-    fileExists: (path) => at(path) instanceof import_obsidian19.TFile,
-    folderExists: (path) => at(path) instanceof import_obsidian19.TFolder,
-    subfolderNames: (parentPath2) => {
-      const folder = at(parentPath2);
-      if (!(folder instanceof import_obsidian19.TFolder)) return [];
-      return folder.children.filter((c) => c instanceof import_obsidian19.TFolder).map((c) => c.name);
-    },
-    // The metadata cache can be cold right after vault open; a key it has
-    // not indexed yet merely previews as "will write" — execution (#231)
-    // re-checks at write time, so nothing user-set is ever overwritten.
-    frontmatter: (path) => {
-      var _a2, _b2;
-      const file = at(path);
-      if (!(file instanceof import_obsidian19.TFile)) return null;
-      return (_b2 = (_a2 = app.metadataCache.getFileCache(file)) == null ? void 0 : _a2.frontmatter) != null ? _b2 : null;
-    }
-  };
-}
-async function computeCarryOverPlan(app, project) {
-  const file = app.vault.getAbstractFileByPath((0, import_obsidian19.normalizePath)(`${project.folderPath}/_binder.json`));
-  if (!(file instanceof import_obsidian19.TFile)) return { kind: "missing" };
-  const legacy = parseLegacyBinder(await app.vault.cachedRead(file));
-  if (!legacy) return { kind: "corrupt" };
-  return { kind: "plan", plan: planCarryOver(legacy.items, project.folderPath, buildDiskState(app)) };
-}
-async function openCarryOverPreview(plugin, project) {
-  const result = await computeCarryOverPlan(plugin.app, project);
-  if (result.kind === "missing") {
-    new import_obsidian19.Notice(t2("binder.carryOver.nothingToPreview"));
-    return;
-  }
-  if (result.kind === "corrupt") {
-    new import_obsidian19.Notice(t2("binder.carryOver.readFailed"));
-    return;
-  }
-  new CarryOverPreviewModal(plugin.app, project.title, project.folderPath, result.plan).open();
-}
-async function maybeOfferCarryOver(plugin) {
-  if (!plugin.settings.filesystemBinder) return;
-  const project = plugin.projectManager.getActiveProject();
-  if (!project || plugin.settings.carryOverNoticeSeen[project.id]) return;
-  const result = await computeCarryOverPlan(plugin.app, project);
-  if (result.kind !== "plan" || !planHasWork(result.plan)) return;
-  plugin.settings.carryOverNoticeSeen[project.id] = true;
-  await plugin.saveSettings();
-  const plan = result.plan;
-  const notice = new import_obsidian19.Notice(createFragment((frag) => {
-    const box = frag.createDiv("ws-co-notice");
-    box.createDiv({ cls: "ws-co-notice-name", text: "Writing Studio" });
-    box.createDiv({ text: t2("binder.carryOver.noticeBody", { project: project.title }) });
-    const buttons = box.createDiv("ws-co-notice-buttons");
-    const previewBtn = buttons.createEl("button", { text: t2("binder.carryOver.noticePreview") });
-    previewBtn.onclick = () => {
-      notice.hide();
-      new CarryOverPreviewModal(plugin.app, project.title, project.folderPath, plan).open();
-    };
-    const notNowBtn = buttons.createEl("button", { text: t2("binder.carryOver.noticeNotNow") });
-    notNowBtn.onclick = () => notice.hide();
-  }), 0);
-}
-
 // src/FilesystemBinderView.ts
 var TOOLTIP_KEYS = ["binder-order", "binder-status", "binder-type", "binder-compile", "word-count-goal"];
 var STATUS_MENU = [
@@ -15196,7 +14653,7 @@ var toMoveEntry = (n) => ({
   binderOrder: n.binderOrder,
   path: n.file.path
 });
-var FilesystemBinderView = class extends import_obsidian20.ItemView {
+var FilesystemBinderView = class extends import_obsidian18.ItemView {
   constructor(leaf, plugin) {
     super(leaf);
     this.activeProject = null;
@@ -15294,44 +14751,34 @@ var FilesystemBinderView = class extends import_obsidian20.ItemView {
       await this.plugin.projectManager.setActiveProject(projectSel.value || null);
     };
     const newProjectBtn = projectRow.createEl("button", { cls: "ws-binder-btn", title: t2("binder.newProject") });
-    (0, import_obsidian20.setIcon)(newProjectBtn, "plus");
+    (0, import_obsidian18.setIcon)(newProjectBtn, "plus");
     newProjectBtn.onclick = () => {
       new ProjectModal(this.app, this.plugin).open();
     };
     if (this.activeProject) {
       const project = this.activeProject;
       const editProjectBtn = projectRow.createEl("button", { cls: "ws-binder-btn", title: t2("projectModal.editTitle") });
-      (0, import_obsidian20.setIcon)(editProjectBtn, "pencil");
+      (0, import_obsidian18.setIcon)(editProjectBtn, "pencil");
       editProjectBtn.onclick = () => {
         new ProjectModal(this.app, this.plugin, void 0, project).open();
       };
       const deleteProjectBtn = projectRow.createEl("button", { cls: "ws-binder-btn", title: t2("projectModal.deleteTitle") });
-      (0, import_obsidian20.setIcon)(deleteProjectBtn, "trash");
+      (0, import_obsidian18.setIcon)(deleteProjectBtn, "trash");
       deleteProjectBtn.onclick = () => {
         confirmDeleteProject(this.app, this.plugin, project);
       };
-      const legacyBinder = this.app.vault.getAbstractFileByPath(
-        (0, import_obsidian20.normalizePath)(`${project.folderPath}/_binder.json`)
-      );
-      if (legacyBinder instanceof import_obsidian20.TFile) {
-        const carryOverBtn = projectRow.createEl("button", { cls: "ws-binder-btn", title: t2("binder.carryOver.action") });
-        (0, import_obsidian20.setIcon)(carryOverBtn, "import");
-        carryOverBtn.onclick = () => {
-          void openCarryOverPreview(this.plugin, project);
-        };
-      }
     }
     const toolbar = header.createDiv("ws-binder-toolbar");
     const newDocBtn = toolbar.createEl("button", { cls: "ws-binder-btn", title: t2("binder.titlePrompt.heading") });
-    (0, import_obsidian20.setIcon)(newDocBtn, "file-plus");
+    (0, import_obsidian18.setIcon)(newDocBtn, "file-plus");
     newDocBtn.onclick = () => this.promptCreateAtRoot(false);
     const newFolderBtn = toolbar.createEl("button", { cls: "ws-binder-btn", title: t2("binder.fs.newFolder") });
-    (0, import_obsidian20.setIcon)(newFolderBtn, "folder-plus");
+    (0, import_obsidian18.setIcon)(newFolderBtn, "folder-plus");
     newFolderBtn.onclick = () => this.promptCreateAtRoot(true);
     const countsBtn = toolbar.createEl("button", { cls: "ws-binder-btn ws-fsb-counts-btn" });
     countsBtn.ariaLabel = t2("binder.toggleCounts");
-    (0, import_obsidian20.setIcon)(countsBtn, "hash");
-    (0, import_obsidian20.setTooltip)(countsBtn, t2("binder.toggleCounts"));
+    (0, import_obsidian18.setIcon)(countsBtn, "hash");
+    (0, import_obsidian18.setTooltip)(countsBtn, t2("binder.toggleCounts"));
     countsBtn.toggleClass("is-active", this.showCounts);
     countsBtn.onclick = () => {
       this.showCounts = !this.showCounts;
@@ -15339,7 +14786,7 @@ var FilesystemBinderView = class extends import_obsidian20.ItemView {
       this.renderList(this.buildModel());
     };
     const dashBtn = toolbar.createEl("button", { cls: "ws-binder-btn", title: t2("binder.targetsDashboard") });
-    (0, import_obsidian20.setIcon)(dashBtn, "target");
+    (0, import_obsidian18.setIcon)(dashBtn, "target");
     dashBtn.onclick = () => {
       new TargetsDashboardModal(this.app, this.plugin).open();
     };
@@ -15367,10 +14814,10 @@ var FilesystemBinderView = class extends import_obsidian20.ItemView {
     const project = this.activeProject;
     if (!project) return model;
     const root = this.app.vault.getAbstractFileByPath(project.folderPath);
-    if (!(root instanceof import_obsidian20.TFolder)) return model;
+    if (!(root instanceof import_obsidian18.TFolder)) return model;
     model.manuscript = this.buildChildren(root, true);
     for (const { zone, folderName } of DRAWER_ZONES) {
-      const folder = root.children.find((c) => c instanceof import_obsidian20.TFolder && c.name.toLowerCase() === folderName.toLowerCase());
+      const folder = root.children.find((c) => c instanceof import_obsidian18.TFolder && c.name.toLowerCase() === folderName.toLowerCase());
       if (!folder) continue;
       model.zones[zone] = {
         folder,
@@ -15386,7 +14833,7 @@ var FilesystemBinderView = class extends import_obsidian20.ItemView {
     let n = 0;
     for (const child of folder.children) {
       if (isHiddenName(child.name)) continue;
-      if (child instanceof import_obsidian20.TFolder) n += this.countVisibleFiles(child);
+      if (child instanceof import_obsidian18.TFolder) n += this.countVisibleFiles(child);
       else n++;
     }
     return n;
@@ -15395,7 +14842,7 @@ var FilesystemBinderView = class extends import_obsidian20.ItemView {
     const nodes = [];
     for (const child of folder.children) {
       if (isHiddenName(child.name)) continue;
-      if (isRoot && child instanceof import_obsidian20.TFolder && RESERVED_PROJECT_FOLDERS.some((r) => r.toLowerCase() === child.name.toLowerCase())) {
+      if (isRoot && child instanceof import_obsidian18.TFolder && RESERVED_PROJECT_FOLDERS.some((r) => r.toLowerCase() === child.name.toLowerCase())) {
         continue;
       }
       const node = this.buildNode(child);
@@ -15405,7 +14852,7 @@ var FilesystemBinderView = class extends import_obsidian20.ItemView {
   }
   buildNode(file) {
     var _a2;
-    if (file instanceof import_obsidian20.TFolder) {
+    if (file instanceof import_obsidian18.TFolder) {
       const children = this.buildChildren(file, false);
       const entry2 = { name: file.name, isFolder: true, binderOrder: null };
       return {
@@ -15420,7 +14867,7 @@ var FilesystemBinderView = class extends import_obsidian20.ItemView {
         mdCount: children.reduce((n, c) => n + (c.isFolder ? c.mdCount : c.extension === "md" ? 1 : 0), 0)
       };
     }
-    if (!(file instanceof import_obsidian20.TFile)) return null;
+    if (!(file instanceof import_obsidian18.TFile)) return null;
     const fm = file.extension === "md" ? (_a2 = this.app.metadataCache.getFileCache(file)) == null ? void 0 : _a2.frontmatter : void 0;
     const status = parseBinderStatus(fm == null ? void 0 : fm["binder-status"]);
     const fmLines = [];
@@ -15506,11 +14953,11 @@ var FilesystemBinderView = class extends import_obsidian20.ItemView {
       tab.toggleClass("is-active", pref.open && pref.tab === zoneDef.zone);
       tab.createSpan({ cls: "ws-fsb-drawer-tab-label", text: t2(zoneDef.labelKey) });
       tab.createSpan({ cls: "ws-fsb-count", text: String(zone.fileCount) });
-      (0, import_obsidian20.setTooltip)(tab, (_b2 = (_a2 = zone.folder) == null ? void 0 : _a2.name) != null ? _b2 : zoneDef.folderName);
+      (0, import_obsidian18.setTooltip)(tab, (_b2 = (_a2 = zone.folder) == null ? void 0 : _a2.name) != null ? _b2 : zoneDef.folderName);
       tab.onclick = () => {
         void this.selectDrawerTab(zoneDef.zone);
       };
-      const zoneFolderPath = (_d = (_c = zone.folder) == null ? void 0 : _c.path) != null ? _d : (0, import_obsidian20.normalizePath)(`${project.folderPath}/${zoneDef.folderName}`);
+      const zoneFolderPath = (_d = (_c = zone.folder) == null ? void 0 : _c.path) != null ? _d : (0, import_obsidian18.normalizePath)(`${project.folderPath}/${zoneDef.folderName}`);
       tab.addEventListener("dragover", (e) => {
         const src = this.dragSource;
         if (!src) return;
@@ -15539,7 +14986,7 @@ var FilesystemBinderView = class extends import_obsidian20.ItemView {
         tab.removeClass("ws-fsb-drop-into");
         this.cancelHoverExpand();
         if (verdict.kind === "notice") {
-          new import_obsidian20.Notice(t2(verdict.messageKey));
+          new import_obsidian18.Notice(t2(verdict.messageKey));
           return;
         }
         const group = zone.nodes.filter((n) => n.file.path !== src.path).map(toMoveEntry);
@@ -15611,14 +15058,14 @@ var FilesystemBinderView = class extends import_obsidian20.ItemView {
       if (node.isFolder && this.showCounts) {
         row.createSpan({ cls: "ws-fsb-count", text: String(node.mdCount) });
       }
-      (0, import_obsidian20.setTooltip)(row, [node.name, ...node.fmLines].join("\n"));
+      (0, import_obsidian18.setTooltip)(row, [node.name, ...node.fmLines].join("\n"));
       row.onclick = () => {
         if (nav) this.navFocusPath = node.file.path;
         if (node.isFolder) {
           this.toggleCollapse(node.file.path);
           return;
         }
-        if (node.file instanceof import_obsidian20.TFile) void this.openFile(node.file);
+        if (node.file instanceof import_obsidian18.TFile) void this.openFile(node.file);
       };
       row.oncontextmenu = (e) => {
         e.preventDefault();
@@ -15703,7 +15150,7 @@ var FilesystemBinderView = class extends import_obsidian20.ItemView {
       this.clearDropIndicator();
       this.cancelHoverExpand();
       if (verdict.kind === "notice") {
-        new import_obsidian20.Notice(t2(verdict.messageKey));
+        new import_obsidian18.Notice(t2(verdict.messageKey));
         return;
       }
       const intoFolder = region === "into" && node.isFolder;
@@ -15783,11 +15230,11 @@ var FilesystemBinderView = class extends import_obsidian20.ItemView {
   // writes, so the plan is the bare rename.
   async executeZoneDrop(src, zoneFolderPath, group) {
     try {
-      if (!(this.app.vault.getAbstractFileByPath(zoneFolderPath) instanceof import_obsidian20.TFolder)) {
+      if (!(this.app.vault.getAbstractFileByPath(zoneFolderPath) instanceof import_obsidian18.TFolder)) {
         await this.app.vault.createFolder(zoneFolderPath);
       }
     } catch (e) {
-      new import_obsidian20.Notice(t2("main.operationFailed", { error: e instanceof Error ? e.message : String(e) }));
+      new import_obsidian18.Notice(t2("main.operationFailed", { error: e instanceof Error ? e.message : String(e) }));
       return;
     }
     await this.executeMove(planMove(src, zoneFolderPath, group, "end", false));
@@ -15803,15 +15250,15 @@ var FilesystemBinderView = class extends import_obsidian20.ItemView {
         const file = this.app.vault.getAbstractFileByPath(op.path);
         if (!file) continue;
         if (op.kind === "rename") {
-          await this.app.fileManager.renameFile(file, (0, import_obsidian20.normalizePath)(op.newPath));
-        } else if (file instanceof import_obsidian20.TFile) {
+          await this.app.fileManager.renameFile(file, (0, import_obsidian18.normalizePath)(op.newPath));
+        } else if (file instanceof import_obsidian18.TFile) {
           await this.app.fileManager.processFrontMatter(file, (fm) => {
             fm["binder-order"] = op.order;
           });
         }
       }
     } catch (e) {
-      new import_obsidian20.Notice(t2("main.operationFailed", { error: e instanceof Error ? e.message : String(e) }));
+      new import_obsidian18.Notice(t2("main.operationFailed", { error: e instanceof Error ? e.message : String(e) }));
     }
   }
   toggleCollapse(path) {
@@ -15830,20 +15277,20 @@ var FilesystemBinderView = class extends import_obsidian20.ItemView {
       const leaf = this.app.workspace.getLeaf(false);
       await leaf.openFile(file);
     } catch (e) {
-      new import_obsidian20.Notice(t2("main.operationFailed", { error: e instanceof Error ? e.message : String(e) }));
+      new import_obsidian18.Notice(t2("main.operationFailed", { error: e instanceof Error ? e.message : String(e) }));
     }
   }
   // ─── Mutation surface (slice 5, #229) ──────────────────────────────────────
   // Every mutation is a filesystem or frontmatter write; the binder re-renders
   // through the vault/metadata event path, never by a manual refresh call.
   buildContextMenu(node, zone) {
-    const menu = new import_obsidian20.Menu();
+    const menu = new import_obsidian18.Menu();
     const actions = new Set(menuActionsFor(node, zone));
-    const doc = node.file instanceof import_obsidian20.TFile && node.extension === "md" ? node.file : null;
+    const doc = node.file instanceof import_obsidian18.TFile && node.extension === "md" ? node.file : null;
     if (actions.has("rename")) {
       menu.addItem((i2) => i2.setTitle(t2("binder.menu.rename")).setIcon("pencil").onClick(() => this.promptRename(node)));
     }
-    if (actions.has("export") && node.file instanceof import_obsidian20.TFolder) {
+    if (actions.has("export") && node.file instanceof import_obsidian18.TFolder) {
       const folderPath = node.file.path;
       menu.addItem((i2) => i2.setTitle(t2("binder.fs.exportFolder")).setIcon("download").onClick(() => {
         new ExportModal(this.app, this.plugin, "project", folderPath).open();
@@ -15899,7 +15346,7 @@ var FilesystemBinderView = class extends import_obsidian20.ItemView {
       }));
     }
     if (actions.has("newDoc") || actions.has("newFolder")) {
-      const parent = node.file instanceof import_obsidian20.TFolder ? node.file : node.file.parent;
+      const parent = node.file instanceof import_obsidian18.TFolder ? node.file : node.file.parent;
       if (parent) {
         menu.addSeparator();
         if (actions.has("newDoc")) {
@@ -15936,9 +15383,9 @@ var FilesystemBinderView = class extends import_obsidian20.ItemView {
         const parent = (_d = (_c = node.file.parent) == null ? void 0 : _c.path) != null ? _d : "";
         const newPath = parent === "" || parent === "/" ? target : `${parent}/${target}`;
         try {
-          await this.app.fileManager.renameFile(node.file, (0, import_obsidian20.normalizePath)(newPath));
+          await this.app.fileManager.renameFile(node.file, (0, import_obsidian18.normalizePath)(newPath));
         } catch (e) {
-          new import_obsidian20.Notice(t2("main.operationFailed", { error: e instanceof Error ? e.message : String(e) }));
+          new import_obsidian18.Notice(t2("main.operationFailed", { error: e instanceof Error ? e.message : String(e) }));
         }
       }
     ).open();
@@ -15946,8 +15393,8 @@ var FilesystemBinderView = class extends import_obsidian20.ItemView {
   promptCreateAtRoot(isFolder) {
     const project = this.activeProject;
     const root = project ? this.app.vault.getAbstractFileByPath(project.folderPath) : null;
-    if (!(root instanceof import_obsidian20.TFolder)) {
-      new import_obsidian20.Notice(t2("binder.selectProjectFirst"));
+    if (!(root instanceof import_obsidian18.TFolder)) {
+      new import_obsidian18.Notice(t2("binder.selectProjectFirst"));
       return;
     }
     this.promptCreate(root, isFolder);
@@ -15969,7 +15416,7 @@ var FilesystemBinderView = class extends import_obsidian20.ItemView {
           this.rejectName(verdict.reason, target);
           return;
         }
-        const path = (0, import_obsidian20.normalizePath)(`${parent.path}/${target}`);
+        const path = (0, import_obsidian18.normalizePath)(`${parent.path}/${target}`);
         try {
           if (isFolder) {
             await this.app.vault.createFolder(path);
@@ -15978,13 +15425,13 @@ var FilesystemBinderView = class extends import_obsidian20.ItemView {
             await this.openFile(created);
           }
         } catch (e) {
-          new import_obsidian20.Notice(t2("main.operationFailed", { error: e instanceof Error ? e.message : String(e) }));
+          new import_obsidian18.Notice(t2("main.operationFailed", { error: e instanceof Error ? e.message : String(e) }));
         }
       }
     ).open();
   }
   confirmDelete(node) {
-    const folder = node.file instanceof import_obsidian20.TFolder ? node.file : null;
+    const folder = node.file instanceof import_obsidian18.TFolder ? node.file : null;
     new ConfirmModal(
       this.app,
       folder ? t2("binder.fs.deleteFolderTitle") : t2("binder.deleteConfirm.title"),
@@ -15995,7 +15442,7 @@ var FilesystemBinderView = class extends import_obsidian20.ItemView {
         try {
           await this.app.fileManager.trashFile(node.file);
         } catch (e) {
-          new import_obsidian20.Notice(t2("main.operationFailed", { error: e instanceof Error ? e.message : String(e) }));
+          new import_obsidian18.Notice(t2("main.operationFailed", { error: e instanceof Error ? e.message : String(e) }));
         }
       }
     ).open();
@@ -16005,7 +15452,7 @@ var FilesystemBinderView = class extends import_obsidian20.ItemView {
   countAllFiles(folder) {
     let n = 0;
     for (const child of folder.children) {
-      if (child instanceof import_obsidian20.TFolder) n += this.countAllFiles(child);
+      if (child instanceof import_obsidian18.TFolder) n += this.countAllFiles(child);
       else n++;
     }
     return n;
@@ -16014,7 +15461,7 @@ var FilesystemBinderView = class extends import_obsidian20.ItemView {
     try {
       await this.app.fileManager.processFrontMatter(file, mutate);
     } catch (e) {
-      new import_obsidian20.Notice(t2("main.operationFailed", { error: e instanceof Error ? e.message : String(e) }));
+      new import_obsidian18.Notice(t2("main.operationFailed", { error: e instanceof Error ? e.message : String(e) }));
     }
   }
   rejectName(reason, target) {
@@ -16024,7 +15471,7 @@ var FilesystemBinderView = class extends import_obsidian20.ItemView {
       trailing: "binder.fs.nameTrailing",
       exists: "binder.fs.nameExists"
     };
-    new import_obsidian20.Notice(t2(keys[reason != null ? reason : "empty"], { name: target }));
+    new import_obsidian18.Notice(t2(keys[reason != null ? reason : "empty"], { name: target }));
   }
   // ─── Keyboard ──────────────────────────────────────────────────────────────
   handleTreeKey(e) {
@@ -16059,7 +15506,7 @@ var FilesystemBinderView = class extends import_obsidian20.ItemView {
         if (!row) break;
         if (row.node.isFolder) {
           if (row.hasChildren) this.toggleCollapse(row.node.file.path);
-        } else if (row.node.file instanceof import_obsidian20.TFile) {
+        } else if (row.node.file instanceof import_obsidian18.TFile) {
           void this.openFile(row.node.file);
         }
         break;
@@ -16086,7 +15533,7 @@ var FilesystemBinderView = class extends import_obsidian20.ItemView {
 };
 
 // src/CompilePreview.ts
-var import_obsidian21 = require("obsidian");
+var import_obsidian19 = require("obsidian");
 
 // src/sections.ts
 function splitSections(content2) {
@@ -16123,7 +15570,7 @@ function buildJumpItems(sections) {
 
 // src/CompilePreview.ts
 var COMPILE_PREVIEW_VIEW_TYPE = "writing-studio-compile-preview";
-var CompilePreviewView = class extends import_obsidian21.ItemView {
+var CompilePreviewView = class extends import_obsidian19.ItemView {
   constructor(leaf, plugin) {
     super(leaf);
     this.content = "";
@@ -16160,7 +15607,7 @@ var CompilePreviewView = class extends import_obsidian21.ItemView {
       addTitlePage: true
     };
     const project = this.plugin.projectManager.getActiveProject();
-    this.sourcePath = project ? (0, import_obsidian21.normalizePath)(`${project.folderPath}/_compile.md`) : "";
+    this.sourcePath = project ? (0, import_obsidian19.normalizePath)(`${project.folderPath}/_compile.md`) : "";
     this.content = this.plugin.exportEngine.toMarkdown(await this.plugin.exportEngine.compileContent(exportOpts));
     this.sections = splitSections(this.content);
     this.jumpItems = buildJumpItems(this.sections);
@@ -16210,7 +15657,7 @@ var CompilePreviewView = class extends import_obsidian21.ItemView {
       });
       loadBtn.onclick = safeHandler(async () => {
         if (!this.plugin.projectManager.getActiveProject()) {
-          new import_obsidian21.Notice(t2("binder.selectProjectFirst"));
+          new import_obsidian19.Notice(t2("binder.selectProjectFirst"));
           return;
         }
         await this.loadContent();
@@ -16222,7 +15669,7 @@ var CompilePreviewView = class extends import_obsidian21.ItemView {
       if (section.startsWith("# ")) {
         sectionDiv.setAttribute("data-section-id", sectionId(index));
       }
-      void import_obsidian21.MarkdownRenderer.render(this.app, section, sectionDiv, this.sourcePath, this);
+      void import_obsidian19.MarkdownRenderer.render(this.app, section, sectionDiv, this.sourcePath, this);
     });
   }
   async onClose() {
@@ -16230,9 +15677,9 @@ var CompilePreviewView = class extends import_obsidian21.ItemView {
 };
 
 // src/LauncherView.ts
-var import_obsidian22 = require("obsidian");
+var import_obsidian20 = require("obsidian");
 var LAUNCHER_VIEW_TYPE = "writing-studio-launcher";
-var LauncherView = class extends import_obsidian22.ItemView {
+var LauncherView = class extends import_obsidian20.ItemView {
   constructor(leaf, plugin) {
     super(leaf);
     this.refreshTimer = null;
@@ -16322,7 +15769,7 @@ var LauncherView = class extends import_obsidian22.ItemView {
     const header = root.createDiv("ws-launcher-header");
     header.createSpan({ text: t2("launcher.title"), cls: "ws-launcher-title" });
     const settingsBtn = header.createEl("button", { cls: "ws-launcher-icon-btn", title: t2("launcher.settings") });
-    (0, import_obsidian22.setIcon)(settingsBtn, "settings");
+    (0, import_obsidian20.setIcon)(settingsBtn, "settings");
     settingsBtn.onclick = () => {
       var _a2, _b2;
       (_a2 = this.app.setting) == null ? void 0 : _a2.open();
@@ -16344,12 +15791,12 @@ var LauncherView = class extends import_obsidian22.ItemView {
     }
     if (project) {
       const editBtn = cardHeader.createEl("button", { cls: "ws-launcher-icon-btn", title: t2("projectModal.editTitle") });
-      (0, import_obsidian22.setIcon)(editBtn, "pencil");
+      (0, import_obsidian20.setIcon)(editBtn, "pencil");
       editBtn.onclick = () => {
         new ProjectModal(this.app, this.plugin, void 0, project).open();
       };
       const deleteBtn = cardHeader.createEl("button", { cls: "ws-launcher-icon-btn", title: t2("projectModal.deleteTitle") });
-      (0, import_obsidian22.setIcon)(deleteBtn, "trash");
+      (0, import_obsidian20.setIcon)(deleteBtn, "trash");
       deleteBtn.onclick = () => {
         confirmDeleteProject(this.app, this.plugin, project);
       };
@@ -16388,10 +15835,10 @@ var LauncherView = class extends import_obsidian22.ItemView {
     const projects = this.plugin.projectManager.getProjects();
     if (projects.length > 1) {
       const switchBtn = nameRow.createEl("button", { cls: "ws-launcher-icon-btn" });
-      (0, import_obsidian22.setIcon)(switchBtn, "chevrons-up-down");
-      (0, import_obsidian22.setTooltip)(switchBtn, t2("launcher.switchProject"));
+      (0, import_obsidian20.setIcon)(switchBtn, "chevrons-up-down");
+      (0, import_obsidian20.setTooltip)(switchBtn, t2("launcher.switchProject"));
       switchBtn.onclick = (e) => {
-        const menu = new import_obsidian22.Menu();
+        const menu = new import_obsidian20.Menu();
         for (const p of projects) {
           menu.addItem((i2) => {
             i2.setTitle(p.title).setChecked(p.id === project.id).onClick(async () => {
@@ -16441,7 +15888,7 @@ var LauncherView = class extends import_obsidian22.ItemView {
         cls: `ws-launcher-mode-btn ${current === mode.id ? "is-active" : ""}`,
         title: mode.desc
       });
-      (0, import_obsidian22.setIcon)(btn.createSpan("ws-mode-icon"), mode.icon);
+      (0, import_obsidian20.setIcon)(btn.createSpan("ws-mode-icon"), mode.icon);
       btn.createSpan({ text: mode.label, cls: "ws-mode-label" });
       btn.onclick = () => {
         void this.plugin.writingModes.switchMode(current === mode.id ? "none" : mode.id);
@@ -16536,7 +15983,7 @@ var LauncherView = class extends import_obsidian22.ItemView {
     for (const a of actions) {
       const btn = grid.createEl("button", { cls: "ws-launcher-action-grid-btn", title: a.label });
       const iconEl = btn.createDiv("ws-launcher-grid-icon");
-      (0, import_obsidian22.setIcon)(iconEl, a.icon);
+      (0, import_obsidian20.setIcon)(iconEl, a.icon);
       btn.createDiv({ text: a.label, cls: "ws-launcher-grid-label" });
       btn.onclick = a.action;
     }
@@ -16602,7 +16049,7 @@ var LauncherView = class extends import_obsidian22.ItemView {
 };
 
 // src/FocusMode.ts
-var import_obsidian23 = require("obsidian");
+var import_obsidian21 = require("obsidian");
 var import_view = require("@codemirror/view");
 var import_state = require("@codemirror/state");
 var FOCUS_CLASS = "writing-studio-focus-mode";
@@ -16725,7 +16172,7 @@ var FocusMode = class {
     const leaf = this.app.workspace.getMostRecentLeaf();
     if (!leaf) return 0;
     const view = leaf.view;
-    if (view instanceof import_obsidian23.MarkdownView) {
+    if (view instanceof import_obsidian21.MarkdownView) {
       const content2 = ((_a2 = view.editor) == null ? void 0 : _a2.getValue()) || "";
       return this.plugin.fmManager.countWords(content2);
     }
@@ -16901,7 +16348,7 @@ var TypographyMode = class {
 };
 
 // src/WritingModes.ts
-var import_obsidian24 = require("obsidian");
+var import_obsidian22 = require("obsidian");
 
 // models/WritingMode.ts
 var WRITING_MODE_CONFIGS = {
@@ -16985,7 +16432,7 @@ var WritingModes = class {
     await this.plugin.saveSettings();
     if (!silent) {
       const modeLabel = mode === "none" ? t2("writingModes.normal") : t2(`launcher.mode.${mode}`);
-      new import_obsidian24.Notice(t2("writingModes.switchedTo", { mode: modeLabel }));
+      new import_obsidian22.Notice(t2("writingModes.switchedTo", { mode: modeLabel }));
     }
   }
   collapseSidebars() {
@@ -17002,7 +16449,7 @@ var WritingModes = class {
   }
   forceReadingView() {
     const leaf = this.app.workspace.getMostRecentLeaf();
-    if (!leaf || !(leaf.view instanceof import_obsidian24.MarkdownView)) return;
+    if (!leaf || !(leaf.view instanceof import_obsidian22.MarkdownView)) return;
     const mode = leaf.view.getMode();
     if (mode !== "preview") {
       this.reviewPrior = { leaf, mode };
@@ -17012,7 +16459,7 @@ var WritingModes = class {
   restoreEditorViewMode() {
     const prior = this.reviewPrior;
     this.reviewPrior = null;
-    if (!prior || !(prior.leaf.view instanceof import_obsidian24.MarkdownView)) return;
+    if (!prior || !(prior.leaf.view instanceof import_obsidian22.MarkdownView)) return;
     void this.setLeafMode(prior.leaf, prior.mode);
   }
   async setLeafMode(leaf, mode) {
@@ -17036,7 +16483,7 @@ var WritingModes = class {
       edit: t2("writingModes.statusEdit"),
       review: t2("writingModes.statusReview")
     };
-    (0, import_obsidian24.setIcon)(this.statusBarEl.createSpan("ws-status-mode-icon"), icons[mode]);
+    (0, import_obsidian22.setIcon)(this.statusBarEl.createSpan("ws-status-mode-icon"), icons[mode]);
     this.statusBarEl.createSpan({ text: labels[mode] });
   }
   restore() {
@@ -17057,7 +16504,7 @@ var WritingModes = class {
 };
 
 // src/SprintTimer.ts
-var import_obsidian25 = require("obsidian");
+var import_obsidian23 = require("obsidian");
 function computeSprintWords(scope, primaryFile, baselines, currents, projectPrefix) {
   var _a2, _b2, _c;
   if (scope === "project") {
@@ -17108,7 +16555,7 @@ var SprintTimer = class {
   setup(durationMinutes, wordCountGoal, projectScope = "file") {
     var _a2;
     if (((_a2 = this.state) == null ? void 0 : _a2.active) && !this.state.ready) {
-      new import_obsidian25.Notice(t2("sprint.alreadyRunning"));
+      new import_obsidian23.Notice(t2("sprint.alreadyRunning"));
       return;
     }
     this.state = {
@@ -17153,7 +16600,7 @@ var SprintTimer = class {
     this.updateDisplay();
     this.plugin.studioEvents.announceSprintChanged();
     if (wasReady) {
-      new import_obsidian25.Notice(t2("sprint.started", { minutes: this.state.durationMinutes }));
+      new import_obsidian23.Notice(t2("sprint.started", { minutes: this.state.durationMinutes }));
     }
   }
   stop() {
@@ -17206,7 +16653,7 @@ var SprintTimer = class {
     var _a2;
     if (((_a2 = this.state) == null ? void 0 : _a2.projectScope) !== "project") return null;
     const project = this.plugin.projectManager.getActiveProject();
-    return project ? (0, import_obsidian25.normalizePath)(project.folderPath) + "/" : null;
+    return project ? (0, import_obsidian23.normalizePath)(project.folderPath) + "/" : null;
   }
   getElapsedMs() {
     if (!this.state) return 0;
@@ -17250,7 +16697,7 @@ var SprintTimer = class {
     if (this.plugin.settings.soundNotifications) {
       this.playBell();
     }
-    new import_obsidian25.Notice(t2("sprint.complete"), 5e3);
+    new import_obsidian23.Notice(t2("sprint.complete"), 5e3);
     const session = this.buildSession();
     this.state = null;
     this.hideFloating();
@@ -17378,7 +16825,7 @@ var SprintTimer = class {
     const leaf = this.app.workspace.getMostRecentLeaf();
     if (!leaf) return;
     const view = leaf.view;
-    if (!(view instanceof import_obsidian25.MarkdownView) || !view.file) return;
+    if (!(view instanceof import_obsidian23.MarkdownView) || !view.file) return;
     const path = view.file.path;
     const count = this.plugin.fmManager.countWords(((_a2 = view.editor) == null ? void 0 : _a2.getValue()) || "");
     if (!s.baselines.has(path)) {
@@ -17390,7 +16837,7 @@ var SprintTimer = class {
     var _a2, _b2;
     const leaf = this.app.workspace.getMostRecentLeaf();
     const view = leaf == null ? void 0 : leaf.view;
-    return view instanceof import_obsidian25.MarkdownView ? (_b2 = (_a2 = view.file) == null ? void 0 : _a2.path) != null ? _b2 : null : null;
+    return view instanceof import_obsidian23.MarkdownView ? (_b2 = (_a2 = view.file) == null ? void 0 : _a2.path) != null ? _b2 : null : null;
   }
   destroy() {
     this.stopInterval();
@@ -17399,7 +16846,7 @@ var SprintTimer = class {
 };
 
 // src/ExportEngine.ts
-var import_obsidian26 = require("obsidian");
+var import_obsidian24 = require("obsidian");
 var import_child_process = require("child_process");
 var import_util = require("util");
 
@@ -18805,14 +18252,14 @@ var ExportEngine = class {
     return compiled.split(SECTION_BREAK).join("\n\n---\n\n");
   }
   async export(opts) {
-    var _a2;
+    var _a2, _b2;
     const project = this.plugin.projectManager.getActiveProject();
-    const outputDir = project ? (0, import_obsidian26.normalizePath)(`${project.folderPath}/Exports`) : (0, import_obsidian26.normalizePath)("Exports");
+    const outputDir = project ? (0, import_obsidian24.normalizePath)(`${project.folderPath}/Exports`) : (0, import_obsidian24.normalizePath)("Exports");
     await this.files.ensureFolder(outputDir);
     const timestamp = (/* @__PURE__ */ new Date()).toISOString().replace(/[:.]/g, "-").slice(0, 19);
     const projectTitle = (project == null ? void 0 : project.title.replace(/[\\/:*?"<>|]/g, "-")) || "export";
     const subtreeName = opts.subtreeRoot ? "-" + parseFolderPrefix((_a2 = opts.subtreeRoot.split("/").pop()) != null ? _a2 : "").displayName.replace(/[\\/:*?"<>|]/g, "-") : "";
-    const baseFile = (0, import_obsidian26.normalizePath)(`${outputDir}/${projectTitle}${subtreeName}-${timestamp}`);
+    const baseFile = (0, import_obsidian24.normalizePath)(`${outputDir}/${projectTitle}${subtreeName}-${timestamp}`);
     if (opts.format === "epub") {
       return this.exportEpub(opts, baseFile);
     }
@@ -18824,7 +18271,7 @@ var ExportEngine = class {
       case "md":
         return this.exportMarkdown(compiled, `${baseFile}.md`);
       case "html":
-        return this.exportHtml(compiled, `${baseFile}.html`, (project == null ? void 0 : project.title) || "Document", opts);
+        return this.exportHtml(compiled, `${baseFile}.html`, (_b2 = this.subtreeTitle(opts)) != null ? _b2 : (project == null ? void 0 : project.title) || "Document", opts);
       case "docx":
         return this.exportPandoc(compiled, `${baseFile}.docx`, opts);
       case "rtf":
@@ -18836,9 +18283,10 @@ var ExportEngine = class {
     }
   }
   async exportEpub(opts, baseFile) {
+    var _a2;
     const project = this.plugin.projectManager.getActiveProject();
     const outputPath = `${baseFile}.epub`;
-    const title = (project == null ? void 0 : project.title) || "Untitled";
+    const title = (_a2 = this.subtreeTitle(opts)) != null ? _a2 : (project == null ? void 0 : project.title) || "Untitled";
     const author = (project == null ? void 0 : project.author) || this.plugin.settings.authorName || "";
     const language = this.plugin.settings.epubLanguage || "en";
     const date = localDateString();
@@ -18846,8 +18294,8 @@ var ExportEngine = class {
     if (opts.scope === "current") {
       const leaf = this.app.workspace.getMostRecentLeaf();
       const view = leaf == null ? void 0 : leaf.view;
-      const file = view instanceof import_obsidian26.MarkdownView ? view.file : null;
-      if (!(file instanceof import_obsidian26.TFile)) {
+      const file = view instanceof import_obsidian24.MarkdownView ? view.file : null;
+      if (!(file instanceof import_obsidian24.TFile)) {
         throw new Error(t2("exportEngine.noActiveDocument"));
       }
       let content2 = await this.files.readText(file.path);
@@ -18908,7 +18356,7 @@ var ExportEngine = class {
       coverImagePath: opts.coverImagePath,
       chapters
     }, outputPath);
-    new import_obsidian26.Notice(t2("exportEngine.epubExported", { path: outputPath }));
+    new import_obsidian24.Notice(t2("exportEngine.epubExported", { path: outputPath }));
     return outputPath;
   }
   preprocessObsidianMarkdown(md) {
@@ -18917,23 +18365,40 @@ var ExportEngine = class {
   htmlToXhtml(html) {
     return html.replace(/<hr>/g, "<hr/>").replace(/<br>/g, "<br/>").replace(/<img([^>]*)(?<!\/)>/g, "<img$1/>");
   }
+  // The folder display name a subtree export titles itself with, or null
+  // when the project title applies — not a subtree export, or the
+  // "Export folder title" setting says project (#244; default is folder).
+  subtreeTitle(opts) {
+    var _a2;
+    if (!opts.subtreeRoot) return null;
+    if (this.plugin.settings.subtreeExportTitleSource === "project") return null;
+    return parseFolderPrefix((_a2 = opts.subtreeRoot.split("/").pop()) != null ? _a2 : "").displayName;
+  }
   async compileContent(opts) {
     var _a2, _b2;
     const parts = [];
     const project = this.plugin.projectManager.getActiveProject();
     if (opts.addTitlePage && project) {
       const today = (/* @__PURE__ */ new Date()).toLocaleDateString();
-      parts.push(`# ${project.title}
+      const byline = t2("exportEngine.byAuthor", { author: project.author || this.plugin.settings.authorName });
+      const subtree = this.subtreeTitle(opts);
+      parts.push(subtree !== null ? `# ${subtree}
 
-${t2("exportEngine.byAuthor", { author: project.author || this.plugin.settings.authorName })}
+${project.title}
+
+${byline}
+
+${today}` : `# ${project.title}
+
+${byline}
 
 ${today}`);
     }
     if (opts.scope === "current") {
       const leaf = this.app.workspace.getMostRecentLeaf();
       const view = leaf == null ? void 0 : leaf.view;
-      const file = view instanceof import_obsidian26.MarkdownView ? view.file : null;
-      if (!(file instanceof import_obsidian26.TFile)) {
+      const file = view instanceof import_obsidian24.MarkdownView ? view.file : null;
+      if (!(file instanceof import_obsidian24.TFile)) {
         throw new Error(t2("exportEngine.noActiveDocument"));
       }
       const content2 = await this.processPath(file.path, opts);
@@ -19017,9 +18482,10 @@ ${body}`);
     return content2.trim();
   }
   async exportManuscript(opts, outputPath) {
+    var _a2;
     const project = this.plugin.projectManager.getActiveProject();
     const author = (project == null ? void 0 : project.author) || this.plugin.settings.authorName || "Author";
-    const title = (project == null ? void 0 : project.title) || "Untitled";
+    const title = (_a2 = this.subtreeTitle(opts)) != null ? _a2 : (project == null ? void 0 : project.title) || "Untitled";
     const compiled = await this.compileContent({ ...opts, addTitlePage: false });
     const sections = compiled.split(SECTION_BREAK);
     const htmlSections = [];
@@ -19055,7 +18521,7 @@ ${body}`);
   </div>
 </div>`;
     const fullHtml = `<!DOCTYPE html>
-<html lang="${(0, import_obsidian26.getLanguage)()}">
+<html lang="${(0, import_obsidian24.getLanguage)()}">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -19070,19 +18536,19 @@ ${bodyHtml}
 </body>
 </html>`;
     await this.files.writeText(outputPath, fullHtml);
-    new import_obsidian26.Notice(t2("exportEngine.manuscriptExported", { path: outputPath }));
+    new import_obsidian24.Notice(t2("exportEngine.manuscriptExported", { path: outputPath }));
     return outputPath;
   }
   async exportMarkdown(content2, outputPath) {
     await this.files.writeText(outputPath, content2);
-    new import_obsidian26.Notice(t2("exportEngine.exportedTo", { path: outputPath }));
+    new import_obsidian24.Notice(t2("exportEngine.exportedTo", { path: outputPath }));
     return outputPath;
   }
   async exportHtml(content2, outputPath, title, opts) {
     const font = opts.font || "Georgia";
     const fontSize = opts.fontSize || 16;
     const html = `<!DOCTYPE html>
-<html lang="${(0, import_obsidian26.getLanguage)()}">
+<html lang="${(0, import_obsidian24.getLanguage)()}">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -19105,7 +18571,7 @@ ${markdownToHtml(content2)}
 </body>
 </html>`;
     await this.files.writeText(outputPath, html);
-    new import_obsidian26.Notice(t2("exportEngine.exportedHtmlTo", { path: outputPath }));
+    new import_obsidian24.Notice(t2("exportEngine.exportedHtmlTo", { path: outputPath }));
     return outputPath;
   }
   // Pre-flight for the export modal — false when the configured pandoc
@@ -19155,7 +18621,7 @@ ${markdownToHtml(content2)}
         args.push("-V", `mainfont=${safeFont}`);
       }
       await execFileAsync(pandocPath, args);
-      new import_obsidian26.Notice(t2("exportEngine.exportedTo", { path: outputPath }));
+      new import_obsidian24.Notice(t2("exportEngine.exportedTo", { path: outputPath }));
       return outputPath;
     } catch (e) {
       const raw = e instanceof Error ? e.message : String(e);
@@ -19175,11 +18641,11 @@ ${hint}`);
     const decision = selectPdfEngine(await this.detectPdfEngines(), !!opts.font, preferred);
     if (!decision.engine) {
       const msg = preferred !== "auto" ? t2("exportEngine.pdfPinnedEngineMissing", { engine: preferred }) : t2("exportEngine.pdfEngineRequired");
-      new import_obsidian26.Notice(msg);
+      new import_obsidian24.Notice(msg);
       throw new Error(msg);
     }
     if (opts.font && !decision.keepFont) {
-      new import_obsidian26.Notice(decision.engine === "wkhtmltopdf" ? t2("exportEngine.pdfFontIgnoredWkhtmltopdf") : t2("exportEngine.pdfFontNeedsXelatex"));
+      new import_obsidian24.Notice(decision.engine === "wkhtmltopdf" ? t2("exportEngine.pdfFontIgnoredWkhtmltopdf") : t2("exportEngine.pdfFontNeedsXelatex"));
     }
     try {
       return await this.exportPandoc(content2, outputPath, opts, { engine: decision.engine, keepFont: decision.keepFont });
@@ -19189,7 +18655,7 @@ ${hint}`);
       if (classifyPandocFailure(raw) === "engine-missing") {
         msg = preferred !== "auto" ? t2("exportEngine.pdfPinnedEngineMissing", { engine: preferred }) : t2("exportEngine.pdfEngineRequired");
       }
-      new import_obsidian26.Notice(msg);
+      new import_obsidian24.Notice(msg);
       throw e;
     }
   }
@@ -19199,7 +18665,7 @@ ${hint}`);
 };
 
 // src/WordPressClient.ts
-var import_obsidian27 = require("obsidian");
+var import_obsidian25 = require("obsidian");
 var WordPressClient = class {
   authHeaders(site) {
     const credentials = `${site.username}:${site.appPassword}`;
@@ -19216,7 +18682,7 @@ var WordPressClient = class {
   async testConnection(site) {
     var _a2;
     try {
-      const resp = await (0, import_obsidian27.requestUrl)({
+      const resp = await (0, import_obsidian25.requestUrl)({
         url: this.apiUrl(site, "users/me"),
         method: "GET",
         headers: this.authHeaders(site),
@@ -19231,7 +18697,7 @@ var WordPressClient = class {
       const data = resp.json;
       let siteName = site.url;
       try {
-        const siteResp = await (0, import_obsidian27.requestUrl)({
+        const siteResp = await (0, import_obsidian25.requestUrl)({
           url: `${site.url.replace(/\/$/, "")}/wp-json/`,
           method: "GET",
           headers: this.authHeaders(site),
@@ -19256,7 +18722,7 @@ var WordPressClient = class {
     try {
       const all = [];
       for (let page = 1; page <= 20; page++) {
-        const resp = await (0, import_obsidian27.requestUrl)({
+        const resp = await (0, import_obsidian25.requestUrl)({
           url: this.apiUrl(site, `categories?per_page=100&page=${page}`),
           method: "GET",
           headers: this.authHeaders(site),
@@ -19277,7 +18743,7 @@ var WordPressClient = class {
       }
       return all;
     } catch (e) {
-      new import_obsidian27.Notice(t2("wpClient.fetchCategoriesFailed", { error: e instanceof Error ? e.message : String(e) }));
+      new import_obsidian25.Notice(t2("wpClient.fetchCategoriesFailed", { error: e instanceof Error ? e.message : String(e) }));
       return [];
     }
   }
@@ -19297,7 +18763,7 @@ var WordPressClient = class {
     if (opts.featuredMediaId) body.featured_media = opts.featuredMediaId;
     if (opts.scheduledDate) body.date = opts.scheduledDate;
     const url = opts.existingPostId ? this.apiUrl(site, `posts/${opts.existingPostId}`) : this.apiUrl(site, "posts");
-    const resp = await (0, import_obsidian27.requestUrl)({
+    const resp = await (0, import_obsidian25.requestUrl)({
       url,
       method: opts.existingPostId ? "PUT" : "POST",
       headers: this.authHeaders(site),
@@ -19321,7 +18787,7 @@ var WordPressClient = class {
     const skipped = [];
     for (const name of tagNames) {
       try {
-        const searchResp = await (0, import_obsidian27.requestUrl)({
+        const searchResp = await (0, import_obsidian25.requestUrl)({
           url: this.apiUrl(site, `tags?search=${encodeURIComponent(name)}`),
           method: "GET",
           headers: this.authHeaders(site),
@@ -19335,7 +18801,7 @@ var WordPressClient = class {
             continue;
           }
         }
-        const createResp = await (0, import_obsidian27.requestUrl)({
+        const createResp = await (0, import_obsidian25.requestUrl)({
           url: this.apiUrl(site, "tags"),
           method: "POST",
           headers: this.authHeaders(site),
@@ -19352,7 +18818,7 @@ var WordPressClient = class {
       }
     }
     if (skipped.length > 0) {
-      new import_obsidian27.Notice(t2("wpClient.tagsSkipped", { tags: skipped.join(", ") }));
+      new import_obsidian25.Notice(t2("wpClient.tagsSkipped", { tags: skipped.join(", ") }));
     }
     return ids;
   }
@@ -19373,10 +18839,10 @@ var WordPressClient = class {
 };
 
 // src/ProjectManager.ts
-var import_obsidian29 = require("obsidian");
+var import_obsidian27 = require("obsidian");
 
 // src/scaffold.ts
-var import_obsidian28 = require("obsidian");
+var import_obsidian26 = require("obsidian");
 function templateDoc(f) {
   var _a2, _b2, _c;
   const extra = Object.entries((_a2 = f.extraFields) != null ? _a2 : {}).map(([k, v]) => `
@@ -19411,9 +18877,9 @@ var TemplateScaffolder = class {
   }
   async apply(project, manifest) {
     var _a2;
-    const container = (0, import_obsidian28.normalizePath)(`${project.folderPath}/${resolveDocumentFolder(project)}`);
+    const container = (0, import_obsidian26.normalizePath)(`${project.folderPath}/${resolveDocumentFolder(project)}`);
     for (const folder of (_a2 = manifest.folders) != null ? _a2 : []) {
-      await this.files.ensureFolder((0, import_obsidian28.normalizePath)(`${container}/${folder}`));
+      await this.files.ensureFolder((0, import_obsidian26.normalizePath)(`${container}/${folder}`));
     }
     const items = await this.buildItems(manifest.items, container);
     return { version: "2.0", projectId: project.id, items };
@@ -19425,7 +18891,7 @@ var TemplateScaffolder = class {
     for (const node of nodes) {
       let filePath = "";
       if (node.fileName) {
-        filePath = (0, import_obsidian28.normalizePath)(`${container}/${node.fileName}.md`);
+        filePath = (0, import_obsidian26.normalizePath)(`${container}/${node.fileName}.md`);
         if (!this.files.exists(filePath)) {
           await this.files.writeText(filePath, (_a2 = node.content) != null ? _a2 : "");
         }
@@ -19826,7 +19292,7 @@ var TEMPLATE_MANIFESTS = {
 };
 
 // src/ProjectManager.ts
-var ProjectManager = class extends import_obsidian29.Events {
+var ProjectManager = class extends import_obsidian27.Events {
   constructor(plugin, files) {
     super();
     this.projects = /* @__PURE__ */ new Map();
@@ -19864,11 +19330,11 @@ var ProjectManager = class extends import_obsidian29.Events {
     this.projects.clear();
     const rootFolder = this.plugin.settings.defaultProjectFolder;
     if (!rootFolder) return;
-    const subfolders = this.files.listSubfolders((0, import_obsidian29.normalizePath)(rootFolder));
+    const subfolders = this.files.listSubfolders((0, import_obsidian27.normalizePath)(rootFolder));
     await Promise.all(subfolders.map((f) => this.loadProject(f)));
   }
   async loadProject(folderPath) {
-    const content2 = await this.files.readText((0, import_obsidian29.normalizePath)(`${folderPath}/_project.json`));
+    const content2 = await this.files.readText((0, import_obsidian27.normalizePath)(`${folderPath}/_project.json`));
     if (content2 === null) return null;
     try {
       const project = JSON.parse(content2);
@@ -19876,7 +19342,7 @@ var ProjectManager = class extends import_obsidian29.Events {
       this.projects.set(project.id, project);
       return project;
     } catch (e) {
-      new import_obsidian29.Notice(t2("projectManager.corruptProject", { folder: folderPath }));
+      new import_obsidian27.Notice(t2("projectManager.corruptProject", { folder: folderPath }));
       return null;
     }
   }
@@ -19884,15 +19350,15 @@ var ProjectManager = class extends import_obsidian29.Events {
     const rootFolder = this.plugin.settings.defaultProjectFolder || "Writing Projects";
     const id = this.uniqueId("project");
     const folderName = title.replace(/[\\/:*?"<>|]/g, "-");
-    const folderPath = (0, import_obsidian29.normalizePath)(`${rootFolder}/${folderName}`);
+    const folderPath = (0, import_obsidian27.normalizePath)(`${rootFolder}/${folderName}`);
     if (this.files.exists(folderPath)) {
       throw new Error(t2("projectManager.errorFolderExists", { folder: folderName }));
     }
     const documentFolder = defaultDocumentFolder(type);
     await this.files.ensureFolder(folderPath);
-    await this.files.ensureFolder((0, import_obsidian29.normalizePath)(`${folderPath}/${documentFolder}`));
-    await this.files.ensureFolder((0, import_obsidian29.normalizePath)(`${folderPath}/Research`));
-    await this.files.ensureFolder((0, import_obsidian29.normalizePath)(`${folderPath}/Exports`));
+    await this.files.ensureFolder((0, import_obsidian27.normalizePath)(`${folderPath}/${documentFolder}`));
+    await this.files.ensureFolder((0, import_obsidian27.normalizePath)(`${folderPath}/Research`));
+    await this.files.ensureFolder((0, import_obsidian27.normalizePath)(`${folderPath}/Exports`));
     const now = localDateString();
     const project = {
       id,
@@ -19923,7 +19389,7 @@ var ProjectManager = class extends import_obsidian29.Events {
   }
   async saveProject(project) {
     project.modified = localDateString();
-    const path = (0, import_obsidian29.normalizePath)(`${project.folderPath}/_project.json`);
+    const path = (0, import_obsidian27.normalizePath)(`${project.folderPath}/_project.json`);
     await this.writeJson(path, project);
     this.projects.set(project.id, project);
     this.trigger("projects-changed");
@@ -19931,7 +19397,7 @@ var ProjectManager = class extends import_obsidian29.Events {
   async loadBinder(project) {
     const cached = this.binderCache.get(project.id);
     if (cached) return cached;
-    const path = (0, import_obsidian29.normalizePath)(`${project.folderPath}/_binder.json`);
+    const path = (0, import_obsidian27.normalizePath)(`${project.folderPath}/_binder.json`);
     let content2;
     try {
       content2 = await this.files.readText(path);
@@ -19946,8 +19412,8 @@ var ProjectManager = class extends import_obsidian29.Events {
       this.binderCache.set(project.id, data);
       return data;
     } catch (e) {
-      await this.files.writeText((0, import_obsidian29.normalizePath)(`${project.folderPath}/_binder.json.bak`), content2);
-      new import_obsidian29.Notice(t2("projectManager.corruptBinder", { project: project.title }));
+      await this.files.writeText((0, import_obsidian27.normalizePath)(`${project.folderPath}/_binder.json.bak`), content2);
+      new import_obsidian27.Notice(t2("projectManager.corruptBinder", { project: project.title }));
       return { version: "2.0", projectId: project.id, items: [] };
     }
   }
@@ -19959,7 +19425,7 @@ var ProjectManager = class extends import_obsidian29.Events {
     const project = this.projects.get(binder.projectId);
     if (!project) return;
     this.binderCache.set(binder.projectId, binder);
-    const path = (0, import_obsidian29.normalizePath)(`${project.folderPath}/_binder.json`);
+    const path = (0, import_obsidian27.normalizePath)(`${project.folderPath}/_binder.json`);
     await this.writeJson(path, binder);
     this.trigger("binder-changed", binder);
   }
@@ -19968,9 +19434,9 @@ var ProjectManager = class extends import_obsidian29.Events {
     const now = localDateString();
     const baseName2 = title.replace(/[\\/:*?"<>|]/g, "-");
     const docFolder = resolveDocumentFolder(project);
-    let filePath = (0, import_obsidian29.normalizePath)(`${project.folderPath}/${docFolder}/${baseName2}.md`);
+    let filePath = (0, import_obsidian27.normalizePath)(`${project.folderPath}/${docFolder}/${baseName2}.md`);
     for (let n = 2; this.files.exists(filePath); n++) {
-      filePath = (0, import_obsidian29.normalizePath)(`${project.folderPath}/${docFolder}/${baseName2} ${n}.md`);
+      filePath = (0, import_obsidian27.normalizePath)(`${project.folderPath}/${docFolder}/${baseName2} ${n}.md`);
     }
     const item = {
       id: this.uniqueId("item"),
@@ -20107,14 +19573,14 @@ tags: [writing-studio]
     }
   }
   async logSprintSession(project, session) {
-    const logPath = (0, import_obsidian29.normalizePath)(`${project.folderPath}/_writing-log.json`);
+    const logPath = (0, import_obsidian27.normalizePath)(`${project.folderPath}/_writing-log.json`);
     let log = [];
     const content2 = await this.files.readText(logPath);
     if (content2 !== null) {
       try {
         log = JSON.parse(content2);
       } catch (e) {
-        new import_obsidian29.Notice(t2("projectManager.corruptLog", { project: project.title }));
+        new import_obsidian27.Notice(t2("projectManager.corruptLog", { project: project.title }));
       }
     }
     log.push(session);
@@ -20125,7 +19591,7 @@ tags: [writing-studio]
     await this.writeJson(logPath, log);
   }
   async getWritingLog(project) {
-    const logPath = (0, import_obsidian29.normalizePath)(`${project.folderPath}/_writing-log.json`);
+    const logPath = (0, import_obsidian27.normalizePath)(`${project.folderPath}/_writing-log.json`);
     try {
       const content2 = await this.files.readText(logPath);
       return content2 === null ? [] : JSON.parse(content2);
@@ -20134,7 +19600,7 @@ tags: [writing-studio]
     }
   }
   async initWritingLog(project) {
-    const logPath = (0, import_obsidian29.normalizePath)(`${project.folderPath}/_writing-log.json`);
+    const logPath = (0, import_obsidian27.normalizePath)(`${project.folderPath}/_writing-log.json`);
     await this.writeJson(logPath, []);
   }
   async writeJson(path, data) {
@@ -20224,7 +19690,7 @@ tags: [writing-studio]
     const recorded = resolveDocumentFolder(project);
     if (baseName(oldPath).toLowerCase() === recorded.toLowerCase()) return true;
     const heldDocuments = binderChanged || anyBinderPathUnder(items, newPath);
-    return heldDocuments && !this.files.exists((0, import_obsidian29.normalizePath)(`${project.folderPath}/${recorded}`));
+    return heldDocuments && !this.files.exists((0, import_obsidian27.normalizePath)(`${project.folderPath}/${recorded}`));
   }
   // A single .md rename or move. Only rewrite the title when the basename
   // actually changed — a folder rename fires this once per child with the
@@ -20267,7 +19733,7 @@ tags: [writing-studio]
 };
 
 // src/StatsTracker.ts
-var import_obsidian30 = require("obsidian");
+var import_obsidian28 = require("obsidian");
 var StatsTracker = class {
   constructor(plugin) {
     this.sessionBaselines = /* @__PURE__ */ new Map();
@@ -20324,7 +19790,7 @@ ${t2("statsTracker.dailyNote.heading")}
 - ${t2("statsTracker.dailyNote.sessionTotal")} ${t2("statsTracker.dailyNote.sessionTotalValue", { duration: session.duration })}
 `;
     const dailyFile = this.app.vault.getAbstractFileByPath(dailyNotePath);
-    if (dailyFile instanceof import_obsidian30.TFile) {
+    if (dailyFile instanceof import_obsidian28.TFile) {
       await this.app.vault.append(dailyFile, "\n" + entry);
       return;
     }
@@ -20338,7 +19804,7 @@ ${t2("statsTracker.dailyNote.heading")}
     const options = (_d = (_c = (_b2 = (_a2 = this.app.internalPlugins) == null ? void 0 : _a2.plugins) == null ? void 0 : _b2["daily-notes"]) == null ? void 0 : _c.instance) == null ? void 0 : _d.options;
     const fileName = moment().format((options == null ? void 0 : options.format) || "YYYY-MM-DD");
     const folder = (options == null ? void 0 : options.folder) || "";
-    return (0, import_obsidian30.normalizePath)(folder ? `${folder}/${fileName}.md` : `${fileName}.md`);
+    return (0, import_obsidian28.normalizePath)(folder ? `${folder}/${fileName}.md` : `${fileName}.md`);
   }
   updateFileWordCount(path, wordCount) {
     if (!this.sessionBaselines.has(path)) {
@@ -20377,7 +19843,7 @@ ${t2("statsTracker.dailyNote.heading")}
     const items = this.plugin.projectManager.flattenBinder(binder.items);
     const counts = await Promise.all(items.map(async (item) => {
       const file = this.app.vault.getAbstractFileByPath(item.filePath);
-      if (!(file instanceof import_obsidian30.TFile)) return 0;
+      if (!(file instanceof import_obsidian28.TFile)) return 0;
       const content2 = await this.app.vault.cachedRead(file);
       return this.plugin.fmManager.countWords(content2);
     }));
@@ -20459,7 +19925,7 @@ ${t2("statsTracker.dailyNote.heading")}
 };
 
 // src/FrontmatterManager.ts
-var import_obsidian31 = require("obsidian");
+var import_obsidian29 = require("obsidian");
 var FrontmatterManager = class {
   constructor(plugin) {
     this.pendingUpdates = /* @__PURE__ */ new Map();
@@ -20485,7 +19951,7 @@ var FrontmatterManager = class {
     if (file.extension !== "md") return false;
     const projectFolder = this.plugin.settings.defaultProjectFolder;
     if (!projectFolder) return false;
-    return file.path.startsWith((0, import_obsidian31.normalizePath)(projectFolder) + "/");
+    return file.path.startsWith((0, import_obsidian29.normalizePath)(projectFolder) + "/");
   }
   async updateFrontmatter(file) {
     this.writingFiles.add(file.path);
@@ -20516,7 +19982,7 @@ var FrontmatterManager = class {
 };
 
 // src/SettingsTab.ts
-var import_obsidian32 = require("obsidian");
+var import_obsidian30 = require("obsidian");
 
 // README.md
 var README_default = '<p align="center">\r\n  <img src="assets/logo.png" width="120" alt="Writing Studio logo">\r\n</p>\r\n\r\n# Writing Studio\r\n\r\n**Version 2.11.0** \xB7 Desktop only\r\n\r\n![GitHub all releases](https://img.shields.io/github/downloads/writerP-777/obsidian-writing-studio/total)\r\n[![OpenSSF Best Practices](https://www.bestpractices.dev/projects/12832/badge)](https://www.bestpractices.dev/projects/12832)\r\n\r\nWriting Studio turns Obsidian into a dedicated environment for serious nonfiction work \u2014 from your first research notes to a finished, exported manuscript. It bundles a project binder, writing modes, focus and typography tools, sprint timer, progress tracking, manuscript export, and WordPress publishing into a single plugin. A built-in sidebar file explorer lets you browse, preview, and pull content from anywhere in your vault without leaving your draft.\r\n\r\n<p align="center">\r\n  <img src="assets/sidebar-explorer-screenshot.png" alt="Writing Studio with the Launcher panel open on the left, an active draft in the center, and the Folder Sidebar Explorer open to a research folder on the right" width="900">\r\n  <br>\r\n  <em>Writing Studio in use \u2014 Launcher (left), active draft with word count goal banner (center), Folder Sidebar Explorer open to a research folder (right).</em>\r\n</p>\r\n\r\n<p align="center">\r\n  <a href="https://buymeacoffee.com/writerp777">\r\n    <img src="https://img.buymeacoffee.com/button-api/?text=Buy%20me%20a%20coffee&slug=writerp777&button_colour=c9a84c&font_colour=000000&font_family=Georgia&outline_colour=000000&coffee_colour=ffffff" alt="Buy me a coffee" height="40">\r\n  </a>\r\n</p>\r\n\r\n## Contents\r\n\r\n- [Features](#features)\r\n- [Language support](#language-support)\r\n- [Writing Studio Launcher](#writing-studio-launcher)\r\n- [Folder Sidebar Explorer](#folder-sidebar-explorer)\r\n- [Your Project](#your-project)\r\n- [Your Writing Environment](#your-writing-environment)\r\n- [Tracking Your Progress](#tracking-your-progress)\r\n- [Getting Your Work Out](#getting-your-work-out)\r\n- [Supporting Tools](#supporting-tools)\r\n- [Context Menus](#context-menus)\r\n- [Commands Reference](#commands-reference)\r\n- [Settings Overview](#settings-overview)\r\n- [Ribbon Icon](#ribbon-icon)\r\n- [Installation](#installation)\r\n- [Requirements](#requirements)\r\n- [Reporting a Bug](#reporting-a-bug)\r\n- [Security](#security)\r\n\r\n---\r\n\r\n## Features\r\n\r\n**Writing Binder** \u2014 Organize your manuscript as an ordered collection of documents with per-item status, word count, and export flags. Drag chapters into order, toggle items in or out of export, and add files from anywhere in your vault.\r\n\r\n**Project Manager** \u2014 Create projects from six templates (blank, book, article series, blog collection, journal article, magazine article), set a total word count goal, and switch between projects from the Launcher.\r\n\r\n**Compile Preview** \u2014 Concatenate all binder documents in order and render them as a finished manuscript in a split pane, without exporting.\r\n\r\n**Writing Modes** \u2014 Switch between Draft (distraction-free), Edit (full tooling), and Review (read-only) modes from the status bar, command palette, context menu, or Launcher.\r\n\r\n**Focus Mode** \u2014 Dim everything except the paragraph or sentence you are writing. Configurable dim level, font size override, sidebar collapse, and typewriter scroll.\r\n\r\n**Typography Mode** \u2014 Apply a curated font, constrained line length, and controlled line height to the editor. Fourteen font options including iA Writer fonts, Google Fonts, and custom system fonts.\r\n\r\n**Sprint Timer** \u2014 Run timed writing sessions with a draggable floating overlay. Set duration, word goal, and scope (file or project). Quick-start presets (10 m, 15 m, 25 m) available from the Launcher.\r\n\r\n**Progress Tracking** \u2014 Live word counts in the status bar and Launcher, session delta tracking, per-document and per-project word count goals with inline progress banners, and a 30-day writing log with streak tracking.\r\n\r\n**Export Engine** \u2014 Export to Manuscript (HTML), PDF, Word (.docx), RTF, HTML, Markdown, and EPUB. Manuscript format produces industry-standard layout with no external tools; other formats require Pandoc.\r\n\r\n**WordPress Publishing** \u2014 Publish directly to WordPress from Obsidian. Set post title, status, categories, tags, excerpt, and scheduled date. Supports multiple sites with per-site credentials and connection testing.\r\n\r\n**Folder Sidebar Explorer** \u2014 Browse any vault folder in a sidebar panel. Search by name or file content, preview Markdown files and images inline, and insert selected text directly into the active editor.\r\n\r\n## Language support\r\n\r\nWriting Studio is available in the following languages in addition to English:\r\n\r\n- Arabic\r\n- Bengali\r\n- Brazilian Portuguese\r\n- Chinese (Simplified)\r\n- French\r\n- German\r\n- Hindi\r\n- Japanese\r\n- Korean\r\n- Russian\r\n- Spanish\r\n\r\n**To change the language:** Open **Settings \u2192 General** in Obsidian, scroll to **Language**, and select your preferred language from the list. Restart Obsidian for the change to take effect. Writing Studio will display in the selected language if it is supported.\r\n\r\n**Found a translation error or missing text?** Please open an issue on GitHub \u2014 [Submit a bug report or enhancement request](https://github.com/writerP-777/obsidian-writing-studio/issues/new) \u2014 and include the language, the location in the plugin where the text appears, and what it currently says. We will address it in the next release.\r\n\r\n### Writing Studio Launcher\r\n\r\nThe Launcher is your home base in Writing Studio \u2014 a sidebar panel that shows your active project, progress toward your goals, and one-click access to every major feature.\r\n\r\n<p align="center">\r\n  <img src="assets/launcher-project-card.png" alt="The Launcher project card showing the active project name, switcher, edit and delete controls, word count, and a progress bar toward the project goal" width="520">\r\n  <br>\r\n  <em>The Launcher project card \u2014 active project, word count, and progress toward the project goal.</em>\r\n</p>\r\n\r\nBy default Writing Studio launches automatically when Obsidian loads \u2014 the Launcher opens and your last session\'s writing mode and typography are restored. To disable this, turn off **Open on startup** in **Settings \u2192 General**: Obsidian then opens clean, with no Writing Studio status bar items or restored modes, and the studio stays dormant until you launch it yourself. Launching it manually restores your last session state the same way.\r\n\r\n**To open manually:** Click the feather ribbon icon, or assign a hotkey to **Open launcher** in Settings \u2192 Hotkeys.\r\n\r\n**First run:** In a vault with no projects yet, the Launcher shows an orientation card explaining how projects work, with a **Create your first project** button to get started.\r\n\r\n<p align="center">\r\n  <img src="assets/launcher-first-run.png" alt="The Launcher first-run orientation card with an explanation of projects and a Create your first project button" width="520">\r\n  <br>\r\n  <em>First run \u2014 the orientation card shown before any project exists.</em>\r\n</p>\r\n\r\n**The Launcher includes:**\r\n- Active project name, total word count, and progress toward your project word count goal\r\n- Writing mode selector (Draft / Edit / Review)\r\n- Focus Mode and Typography Mode toggles\r\n- Sprint timer with "Set up sprint" button and Quick Sprint Options presets (10 m, 15 m, 25 m)\r\n- Today card showing words written, sprints completed, session word count, and streak\r\n- Quick-action buttons: Targets Dashboard, Writing Dashboard, Preview manuscript, Export, Writing Log, Publish to WordPress\r\n\r\n---\r\n\r\n### Folder Sidebar Explorer\r\n\r\nThe Folder Sidebar Explorer opens any vault folder in a right-sidebar panel, letting you browse reference material, research notes, or any folder outside your active project without leaving your draft. Unlike the Binder \u2014 which is scoped to your writing project \u2014 the sidebar explorer works with any folder in your vault.\r\n\r\n<p align="center">\r\n  <img src="assets/folder-sidebar-explorer.png" alt="The Folder Sidebar Explorer panel with a Markdown file open in preview, showing the breadcrumb trail, back and root buttons, and the insert selection button" width="340">\r\n  <br>\r\n  <em>The Folder Sidebar Explorer with a research file open in preview \u2014 select text and click insert selection to pull it into your draft.</em>\r\n</p>\r\n\r\n**To open:**\r\n- Use the command **Open folder in sidebar explorer** from the command palette \u2014 a folder picker appears so you can choose which folder to explore.\r\n- Right-click any folder in the file explorer and choose **Open in sidebar explorer** under **Writing studio options**.\r\n- Right-click any folder in [Notebook Navigator](https://github.com/johansan/notebook-navigator) and choose **Open in sidebar explorer** (requires Notebook Navigator to be installed).\r\n- Assign a hotkey in Settings \u2192 Hotkeys.\r\n\r\nThe panel opens in the **right sidebar**. The folder you open becomes the **root folder** for that session \u2014 the breadcrumb trail, the \u2302 root button, and search all operate relative to it.\r\n\r\n**Browsing and navigation:**\r\n\r\n| Feature | How to use |\r\n|---------|-----------|\r\n| Browse into a subfolder | Click the folder |\r\n| Preview a Markdown file | Click the file \u2014 the folder listing is replaced by a rendered preview inside the panel |\r\n| Preview an image | Click the file \u2014 displayed inline |\r\n| Preview audio | Click the file \u2014 player appears inline |\r\n| Other file types | Click the file \u2014 an **Open in editor** button appears |\r\n| Go back | Click **\u2190 back**, or press `Backspace` when the list has keyboard focus |\r\n| Return to root folder | Click **\u2302 root** to jump back to the folder you originally opened |\r\n| Keyboard navigation | Tab to focus the list, then `\u2191` / `\u2193` to move, `Enter` to open, `Backspace` to go back |\r\n| Breadcrumb navigation | Click any segment in the breadcrumb trail to jump directly to that folder |\r\n\r\n**Search:**\r\n\r\nA search bar appears at the top of the folder list. Type your query and press **Enter** to run the search.\r\n\r\n- Searches **both folder/file names and file contents** (`.md` and `.txt` files).\r\n- Frontmatter is excluded from content search to avoid false positives from YAML fields.\r\n- Name matches show the matched term highlighted in the result title.\r\n- Content matches show a text snippet around the match with the term highlighted, plus a **CONTENT** badge to distinguish them from name matches.\r\n- Results always search from the root folder, regardless of which subfolder you are currently browsing.\r\n- Click **\xD7** to clear the search and return to the normal folder view.\r\n\r\n**Sort:**\r\n\r\nA sort dropdown sits next to the search bar. Options:\r\n\r\n| Option | Description |\r\n|--------|-------------|\r\n| Folders \u2191 A-Z | Folders first, then files, both alphabetical (default) |\r\n| Folders \u2191 Z-A | Folders first, then files, both reverse-alphabetical |\r\n| Name A-Z | All items alphabetical, folders and files mixed |\r\n| Name Z-A | All items reverse-alphabetical, mixed |\r\n| Newest first | Sort by last-modified date, newest at top |\r\n| Oldest first | Sort by last-modified date, oldest at top |\r\n\r\n**Copy content to the editor:**\r\n\r\nWhen a Markdown file is open in preview mode (after clicking it in the file list), its text is selectable. To insert a passage into the active editor:\r\n\r\n1. Click a file in the list \u2014 the panel switches to preview mode showing the rendered file.\r\n2. Select the text you want in the preview pane.\r\n3. Click the **\u21A9 insert selection** button in the nav bar.\r\n4. The selected text is inserted at the cursor position in the active editor.\r\n\r\nThe preview is read-only \u2014 you cannot edit the file from the sidebar.\r\n\r\n**Hover tooltips:**\r\n\r\nHover over any file or folder in the list to see an information card:\r\n\r\n| Item type | Information shown |\r\n|-----------|------------------|\r\n| Markdown / text file | Last modified date and time \xB7 File size \xB7 Word count (frontmatter excluded) |\r\n| Image / audio / other file | Last modified date and time \xB7 File size |\r\n| Folder | Total file count \xB7 Subfolder count |\r\n\r\nThe word count updates asynchronously from Obsidian\'s file cache and appears within a moment of hover.\r\n\r\n---\r\n\r\n### Your Project\r\n\r\n#### Project Manager\r\n\r\nProjects group a set of documents (binder items) and act as the scope for export, statistics, and the word count goal banner.\r\n\r\n**To create a project:** Use the command **Create new writing project** from the command palette, or click **+ New** in the Launcher panel.\r\n\r\n**To switch projects:** Use the Launcher panel or the project selector at the top of the Binder panel.\r\n\r\n**To edit a project:** Click the pencil icon in the Launcher project card or next to the project selector in the Binder. You can change the title, author, description, total word count goal, and the document folder \u2014 the folder inside the project that holds its documents (for example, renaming a book project\'s `Chapters/` to `Scenes/` renames the folder and moves its files with it; the binder follows automatically, as it also does when you rename the folder directly in the file explorer). The project folder itself keeps its original name \u2014 renaming the title does not move any files.\r\n\r\n**To delete a project:** Click the trash icon in the Launcher project card or next to the project selector in the Binder, then confirm. This removes the project from Writing Studio\'s list only \u2014 the project folder and all its documents stay untouched in your vault.\r\n\r\n<p align="center">\r\n  <img src="assets/edit-project-modal.png" alt="The Edit project modal with fields for project title, author name, total word count goal, and description, and a Save button" width="560">\r\n  <br>\r\n  <em>The Edit project modal \u2014 change the title, author, description, and total word count goal.</em>\r\n</p>\r\n\r\nEach project stores:\r\n- Title, type, author, and description\r\n- Ordered binder with chapters, sections, articles, and notes\r\n- Per-item word count goals, statuses, and export flags\r\n- Optional total word count goal (shown in the Launcher and status bar)\r\n\r\n**Project templates available at creation:**\r\n\r\n| Template | Structure created |\r\n|----------|------------------|\r\n| Blank | Empty \u2014 build your own structure |\r\n| Book | Front Matter, Part 1 / Chapter 1, Back Matter |\r\n| Article series | Series Overview note (with article schedule), Article 1 placeholder |\r\n| Blog collection | Date-organized folder, first post placeholder |\r\n| Journal article | Title Page, Abstract, Keywords, Introduction, Literature Review, Methodology, Findings / Analysis, Discussion, Conclusion, References, Appendices |\r\n| Magazine article | Pitch / Query Notes, Headline & Deck, Lede, Nut Graf, Body, Quotes & Sources, Kicker, Fact-Check Notes, Author Bio |\r\n\r\n---\r\n\r\n#### Writing Binder\r\n\r\nKeeping a book-length manuscript organized means knowing at a glance which chapters are drafted, which are in progress, and how each contributes to your total word count. The Binder is a sidebar panel that shows all of that for your active project.\r\n\r\nEach document shows its title, type (Chapter, Section, Article, Note), status (Draft, In Progress, Complete, Published), and live word count. Documents can be reordered by drag-and-drop and toggled in or out of export.\r\n\r\n**To open:** Use the command **Open binder** from the command palette, or assign a hotkey in Settings \u2192 Hotkeys.\r\n\r\n**Control strip:**\r\n\r\nA two-row control strip at the top of the binder keeps the high-frequency writing controls next to your documents, so the daily loop doesn\'t require switching to the launcher tab. The top row is a Draft / Edit / Review segmented control (clicking the active mode switches back to normal). The bottom row holds Focus and Typography toggles, a sprint chip (its menu offers the set-up modal and 10/15/25-minute quick starts; an armed sprint shows a ready chip with the duration), and a **...** menu with the occasional actions: export, publish, preview manuscript, targets dashboard, writing dashboard, and writing log. The launcher keeps its own copies of all controls, and every surface stays in sync no matter where a change is made.\r\n\r\n<p align="center">\r\n  <img src="assets/binder-control-strip.png" alt="The binder control strip with Draft, Edit, and Review on the top row and Focus, Typography, Sprint, and an overflow menu on the bottom row, above the document tree" width="520">\r\n  <br>\r\n  <em>The binder control strip \u2014 writing modes on top; focus, typography, sprint, and overflow controls below.</em>\r\n</p>\r\n\r\n<p align="center">\r\n  <img src="assets/binder-strip-overflow.png" alt="The binder overflow menu open, showing export, publish to WordPress, preview manuscript, targets dashboard, writing dashboard, and writing log" width="520">\r\n  <br>\r\n  <em>The overflow menu holds the less frequent actions: export, publish, preview, and the dashboards and log.</em>\r\n</p>\r\n\r\n**Keyboard navigation:**\r\n\r\nThe binder tree is fully keyboard-operable. Tab to focus the list, then:\r\n\r\n| Key | Action |\r\n|-----|--------|\r\n| `\u2191` / `\u2193` | Move through visible documents and groups |\r\n| `\u2192` | Expand a collapsed group, or step into an open one |\r\n| `\u2190` | Collapse an open group, or jump to the parent |\r\n| `Enter` | Open the document, or expand/collapse a group |\r\n| `F2` | Rename the focused item inline (Enter commits, Escape cancels) |\r\n| `Shift+F10` or menu key | Open the item\'s right-click menu |\r\n\r\n**Opening and renaming documents:**\r\n\r\nA single click on a document opens it immediately. Renaming has moved off the single click: rename an item from its right-click menu, or by pressing **F2** while it is focused (Enter commits, Escape cancels). This keeps opening a document fast while keeping rename deliberate.\r\n\r\n**Creating new documents:**\r\n\r\nWhen you create a new document, Writing Studio prompts you for a title up front rather than naming the file "Untitled." Type the title and the document is created and added to the binder in one step.\r\n\r\n**Right-click menu:**\r\n\r\nRight-click any item in the binder for its full set of actions \u2014 open, rename, create a child document, group, or part beneath it, set status, change the item\'s type, remove it from the binder without deleting the file, or delete the document and its file.\r\n\r\n<p align="center">\r\n  <img src="assets/binder-context-menu.png" alt="The binder right-click menu showing open, rename, new child document/group/part, set status options, change type options, remove from binder, and delete document and file" width="360">\r\n  <br>\r\n  <em>The binder right-click menu \u2014 full per-item actions, including change type and remove from binder.</em>\r\n</p>\r\n\r\n**Organizing with groups and parts:**\r\n\r\nGroups and parts are structural entries \u2014 they organize the binder tree but have no file behind them. The book template creates parts for you, and you can build the same structure by hand: the folder-plus button in the binder toolbar creates a group or part at the root, and an item\'s right-click menu offers **New child group** / **New child part** beneath it. Clicking a group or part expands or collapses it. A document\'s type (chapter, section, article, note) can be changed at any time from the same menu via **Change type**.\r\n\r\n**Adding a file to a project:**\r\n1. Right-click any Markdown file in the file explorer and choose **Add to writing project** under **Writing studio options**.\r\n2. A modal appears with a dropdown listing all your writing projects.\r\n3. Select the target project and click **Add to project**.\r\n\r\n**Removing a document from the binder:**\r\n\r\nTo take a document out of the binder without deleting its file, choose **Remove from binder** from the item\'s right-click menu. The document leaves the binder; the file stays in your vault.\r\n\r\n**Adding files copied directly to the project folder:**\r\n\r\nIf you copied or moved files into the project folder outside of Obsidian and they do not appear in the binder, use the **Add files copied to this folder** button in the binder toolbar (immediately to the right of the **+ document** button). The plugin scans the project folder, lists any files not yet in the binder, and lets you select which ones to add before making any changes.\r\n\r\n---\r\n\r\n#### Compile Preview\r\n\r\nThe Compile Preview opens a split pane showing all binder documents for the active project concatenated in order, rendered as a finished manuscript.\r\n\r\n**To open:** Use the command **Preview compiled manuscript** from the command palette, or click the **Preview manuscript** button in the Launcher panel.\r\n\r\n---\r\n\r\n### Your Writing Environment\r\n\r\n#### Writing Modes\r\n\r\nThree modes shape how the editor behaves. The current mode is always shown in the status bar. Click the mode pill in the status bar to switch modes.\r\n\r\n| Mode | Purpose |\r\n|------|---------|\r\n| **Draft** | Distraction-free drafting; spell-check and formatting hints suppressed |\r\n| **Edit** | Revision pass; full editor tooling active |\r\n| **Review** | Read-only style; ideal for a final proofread |\r\n| **None** | Normal Obsidian behavior |\r\n\r\n**To switch modes:**\r\n- Click the mode indicator in the status bar.\r\n- Right-click inside the editor, then choose **Switch writing mode \u2192** under **Writing studio options**.\r\n- Assign hotkeys to **Switch to draft mode / Edit mode / Review mode** in Settings \u2192 Hotkeys.\r\n- Use the Writing Studio Launcher panel.\r\n\r\nThe active mode is saved and restored the next time Writing Studio launches \u2014 automatically at startup when **Open on startup** is enabled, or when you next open the Launcher or switch a mode.\r\n\r\n---\r\n\r\n#### Focus Mode\r\n\r\nFocus Mode dims everything in the editor except the paragraph or sentence you are currently writing, reducing visual noise and keeping attention on the active thought.\r\n\r\n**To toggle:** Assign a hotkey to **Toggle focus mode** in Settings \u2192 Hotkeys, or use the toggle in the Launcher panel. Press `Escape` to exit.\r\n\r\n**Settings (Settings \u2192 Focus mode):**\r\n\r\n| Setting | Description |\r\n|---------|-------------|\r\n| Focus unit | Highlight at the **paragraph** or **sentence (line)** level |\r\n| Dim opacity | How opaque the dimmed text appears (10\u201350%) |\r\n| Font size override | Override the editor font size while focused; 0 = use theme default. Takes precedence over Typography Mode\'s font size while Focus Mode is active |\r\n| Auto-hide sidebars | Collapse left and right sidebars when Focus Mode activates |\r\n| Typewriter scroll | Keep the active line vertically centered as you type |\r\n\r\n---\r\n\r\n#### Typography Mode\r\n\r\nTypography Mode applies a consistent, reader-friendly text treatment to the editor: a curated font, constrained line length, controlled line height, and optional letter spacing.\r\n\r\n**To toggle:** Assign a hotkey to **Toggle typography mode** in Settings \u2192 Hotkeys, or use the toggle in the Launcher panel.\r\n\r\n**To change the font while Typography Mode is active:** Right-click inside the editor and choose **Typography font \u2192** under **Writing studio options**. A font picker menu appears with all available fonts; the active font is shown with a checkmark. Selecting a font applies it immediately and saves the setting.\r\n\r\n> **Note on fonts:** Typography fonts are loaded from Google Fonts and require an internet connection the first time each font is used. After the initial load they are cached and work offline.\r\n\r\n**Settings (Settings \u2192 Typography):**\r\n\r\n| Setting | Description |\r\n|---------|-------------|\r\n| Font family | Choose from the curated font list or enter a custom font name |\r\n| Custom font name | Used when **Custom font name\u2026** is selected above |\r\n| Max line length | Characters per line (55\u201380); constrains the editor column width |\r\n| Font size | Editor font size in pixels |\r\n| Line height | Multiplier; default 1.7 |\r\n| Letter spacing | CSS `letter-spacing` value (e.g. `normal`, `0.02em`) |\r\n| Persist across sessions | Restore Typography Mode when Writing Studio next launches |\r\n\r\n**Available fonts:**\r\n\r\n| Option | Font |\r\n|--------|------|\r\n| Monospaced | iA Writer Mono (falls back to Roboto Mono / Courier New) |\r\n| Serif | iA Writer Duo Serif (falls back to Georgia) |\r\n| Sans-serif | iA Writer Quattro (falls back to system sans-serif) |\r\n| Cormorant Garamond | Elegant display serif |\r\n| Crimson Text | Classic book serif |\r\n| EB Garamond | Traditional Garamond revival |\r\n| Libre Baskerville | Readable web serif |\r\n| Libre Caslon Text | Clean slab serif |\r\n| Literata | Designed for long-form reading |\r\n| Lora | Contemporary calligraphic serif |\r\n| Inter | Modern humanist sans-serif |\r\n| Lato | Friendly rounded sans-serif |\r\n| Source Sans 3 | Clean UI sans-serif |\r\n| Custom font name\u2026 | Use any font installed on your system |\r\n\r\n---\r\n\r\n### Tracking Your Progress\r\n\r\n#### Writing Sprint Timer\r\n\r\nThe Sprint Timer runs a timed writing session. When a sprint is active, a floating overlay displays the countdown and gives you full control \u2014 without requiring you to stay on the dashboard.\r\n\r\n**To set up a sprint:**\r\n\r\n- Click **Set up sprint** in the Launcher panel to open the sprint configuration modal.\r\n- Or click one of the **Quick Sprint Options** preset buttons (10 m, 15 m, 25 m) in the Launcher panel to load a duration directly.\r\n\r\nEither path opens the floating overlay in a ready state \u2014 the timer does not start until you press \u25B6 on the overlay itself. This gives you time to navigate to your draft or open the Binder before the clock begins.\r\n\r\n**Sprint configuration modal:**\r\n\r\nThe modal lets you set:\r\n\r\n- Duration (preset or custom, in minutes)\r\n- Word count goal for the session\r\n- Scope (current file or entire project)\r\n\r\nClick **Launch sprint timer** to open the overlay in ready state.\r\n\r\n**Using the floating overlay:**\r\n\r\n| Control | Action |\r\n|---------|--------|\r\n| \u25B6 | Start or resume the sprint |\r\n| \u23F8 | Pause the sprint |\r\n| \u25A0 | Stop and end the sprint |\r\n\r\nThe overlay is draggable \u2014 click and drag the header to reposition it anywhere on screen. It stays on top regardless of writing mode or Focus Mode. The current countdown is also shown in the Obsidian status bar (`\u23F1 MM:SS`) and, when Focus Mode is active, in the focus toolbar.\r\n\r\nWhen the sprint ends, a summary modal shows words written, duration, and words-per-minute. The session is logged to sprint history and optionally appended to your Daily Note.\r\n\r\n**Settings (Settings \u2192 Sprint & goals):**\r\n\r\n| Setting | Description |\r\n|---------|-------------|\r\n| Default sprint duration | Starting value in the sprint modal (minutes) |\r\n| Default daily word goal | Target used in the Writing Dashboard and Launcher |\r\n| Sound notifications | Play a tone when the sprint ends |\r\n| Sprint history retention | Days to keep sprint records before purging |\r\n| Inline goal banner | Show a progress bar below the editor toolbar when a document has a word count goal set |\r\n\r\n---\r\n\r\n#### Word Count Goal\r\n\r\nA per-document word count goal can be set and tracked inline.\r\n\r\n**To set a goal:**\r\n- Use the command **Set word count goal** from the command palette.\r\n- Right-click inside the editor and choose **Set word count goal** under **Writing studio options**.\r\n\r\nWhen a goal is set and **Inline goal banner** is enabled, a progress bar appears below the editor toolbar showing current words, goal, and percentage. It updates in real time as you type.\r\n\r\n---\r\n\r\n#### Session Word Count\r\n\r\nThe status bar shows a `(+N)` delta next to the current file\'s word count, indicating how many words you have added since opening that file this session. The Launcher\'s **Today** card also shows a cumulative session total across all files opened during the current Obsidian session. Both counts reset when Obsidian restarts.\r\n\r\n---\r\n\r\n#### Project Word Count Goal\r\n\r\nWhen an active project has a total word count goal set, a dedicated status bar item shows `{current} / {goal} project words`. This updates automatically as you write. Set a project goal in the Project modal when creating or editing a project.\r\n\r\n---\r\n\r\n#### Writing Dashboard\r\n\r\nThe Writing Dashboard shows session statistics (words written, sprints completed, time), sprint history, daily progress toward your goal, and per-project word counts with reading time.\r\n\r\n**To open:** Use the command **Open writing dashboard** from the command palette, or click the **Writing dashboard** button in the Launcher panel.\r\n\r\n---\r\n\r\n#### Targets Dashboard\r\n\r\nThe Targets Dashboard lets you assign word count goals to individual documents in the active project\'s binder and track progress across the whole project at a glance. Goals can be edited inline in the table. Rows are sortable and filterable by status.\r\n\r\n**To open:** Use the command **Open targets dashboard**, click the **Targets dashboard** button in the Launcher panel, or assign a hotkey in Settings \u2192 Hotkeys.\r\n\r\n---\r\n\r\n#### Daily Writing Log\r\n\r\nThe Writing Log is a sidebar panel that shows your writing history at a glance.\r\n\r\n**To open:** Use the command **Open writing log** from the command palette, or click the **Writing log** button in the Launcher panel.\r\n\r\n**The Writing Log shows:**\r\n- Current streak (days in a row with at least one sprint)\r\n- This session: total session words, sprint words, sprints completed, and minutes written\r\n- Recent activity: a bar chart with one row per day you wrote, each showing word count, sprints completed, and a visual bar proportional to the day\'s output. Days with no writing are collapsed rather than shown as empty rows, so the log stays focused on the days you actually worked.\r\n\r\nWhen **Append to daily note** is enabled (Settings \u2192 Writing log), a summary of each completed sprint is also appended to today\'s Daily Note.\r\n\r\n---\r\n\r\n### Getting Your Work Out\r\n\r\n#### Export Engine\r\n\r\nWhen your draft is ready, the Export Engine converts it to a finished file in your chosen format \u2014 no reformatting required.\r\n\r\n**Supported formats:** Manuscript (HTML) \xB7 PDF \xB7 Word (.docx) \xB7 RTF \xB7 HTML \xB7 Markdown \xB7 EPUB\r\n\r\n**To export:**\r\n- Right-click inside the editor and choose **Export this document** under **Writing studio options**.\r\n- Use the command **Export document** from the command palette.\r\n- Click the **Export** button in the Launcher panel.\r\n- Assign a hotkey to **Export document** in Settings \u2192 Hotkeys.\r\n\r\n**Manuscript format**\r\n\r\nThe Manuscript format produces a self-contained HTML file formatted to industry-standard manuscript conventions:\r\n- Courier New 12 pt, double-spaced, 1-inch margins\r\n- Title page with project title, author name, approximate word count, and optional contact information\r\n- Chapter headings in uppercase, page-break before each\r\n- Scene breaks rendered as `#` (the standard manuscript convention)\r\n\r\nNo external tools are required for manuscript export.\r\n\r\n**Settings (Settings \u2192 Export):**\r\n\r\n| Setting | Description |\r\n|---------|-------------|\r\n| Default export format | Pre-selected format in the export modal |\r\n| Default paper size | Letter (US) or A4 |\r\n| Export font | Font name used in PDF/DOCX output (e.g. `Georgia`) |\r\n| Export font size | Point size for PDF/DOCX output |\r\n| Pandoc path | Full path to the `pandoc` binary if it is not on your system PATH |\r\n| PDF engine | Engine Pandoc uses for PDF export. **Auto** (default) picks an installed LaTeX engine \u2014 `xelatex` or `lualatex` when a custom font is set, `pdflatex` otherwise. Pin a specific engine to always use it; if a pinned engine is not installed the export fails with a message naming it rather than silently substituting another |\r\n| EPUB language | BCP 47 language tag (e.g. `en`, `fr`, `de`) |\r\n| EPUB include cover | Generate a text cover page when no cover image is provided |\r\n\r\n> **Requirement:** Pandoc must be installed for PDF, DOCX, RTF, HTML, and EPUB export. Download from [pandoc.org](https://pandoc.org/installing.html). For PDF export, a LaTeX distribution (e.g. TeX Live or MiKTeX) is also required \u2014 unless the PDF engine setting is pinned to [wkhtmltopdf](https://wkhtmltopdf.org/), which renders PDFs without LaTeX. Manuscript (HTML) export does not require Pandoc.\r\n>\r\n> **Font note:** the export font setting applies only to the LaTeX PDF path (`xelatex`/`lualatex`; `pdflatex` cannot apply custom fonts either). The `wkhtmltopdf` path takes its typography from Pandoc\'s HTML/CSS output, so the export font setting is ignored there \u2014 the plugin tells you when a font was skipped for this reason.\r\n>\r\n> **Formatting note:** the built-in converter used for HTML, Manuscript, and EPUB output supports headings, paragraphs, lists, blockquotes, fenced code blocks, tables, images, and links. Nested lists, setext (underline-style) headings, and footnotes are not converted \u2014 use a Pandoc format (PDF, DOCX, RTF) if your manuscript depends on them.\r\n\r\n---\r\n\r\n#### WordPress Publishing\r\n\r\nPublish your finished draft directly to WordPress without leaving Obsidian. The modal lets you choose the target site, set the post title, status, categories, tags, excerpt, and an optional scheduled publication date.\r\n\r\n**To publish:**\r\n- Right-click inside the editor and choose **Publish to WordPress** under **Writing studio options**.\r\n- Use the command **Publish to WordPress** from the command palette.\r\n- Click the **Publish to WordPress** button in the Launcher panel.\r\n- Assign a hotkey to **Publish to WordPress** in Settings \u2192 Hotkeys.\r\n\r\n**Setting up a site (Settings \u2192 WordPress):**\r\n\r\n1. Click **+ add WordPress site**.\r\n2. Enter a nickname, the site URL (e.g. `https://yourblog.com`), and your WordPress username.\r\n3. Generate an application password in WordPress under **Users \u2192 Profile \u2192 Application passwords** and paste it into the **Application password** field.\r\n4. Click **Test connection** to verify.\r\n\r\n**Per-site options:**\r\n\r\n| Setting | Description |\r\n|---------|-------------|\r\n| Default post status | Draft \xB7 Pending Review \xB7 Published |\r\n| Wikilink handling | **Strip** removes `[[...]]` syntax, leaving plain text \xB7 **Convert** turns wikilinks into URLs |\r\n\r\n**Preserving your credentials across updates**\r\n\r\nWriting Studio stores your WordPress site credentials in your vault\'s `.obsidian/plugins/writing-studio/data.json` file. Obsidian\'s in-app update process does not touch this file \u2014 your credentials are preserved automatically. However, if you uninstall and reinstall the plugin manually, or if a vault sync conflict overwrites `data.json`, credentials will be lost and will need to be re-entered. To avoid this, always use Obsidian\'s built-in Update button rather than uninstalling manually.\r\n\r\n---\r\n\r\n### Supporting Tools\r\n\r\n#### Frontmatter Manager\r\n\r\nWriting Studio automatically manages YAML frontmatter in your documents when **Frontmatter auto-update** is enabled. On every save it updates:\r\n\r\n- `word-count` \u2014 current word count\r\n- `modified` \u2014 last-modified date\r\n\r\nThe `word-count-goal` frontmatter field is read by the inline goal banner and the Word Count Goal modal.\r\n\r\n---\r\n\r\n## Context Menus\r\n\r\nWriting Studio adds items to Obsidian\'s right-click context menus. All Writing Studio items are grouped together under the heading **Writing studio options** to distinguish them from other plugins and Obsidian\'s built-in options.\r\n\r\n### Right-click inside an open document (editor menu)\r\n\r\n| Option | Action |\r\n|--------|--------|\r\n| Export this document | Open the export modal for the current file |\r\n| Publish to WordPress | Open the WordPress publish modal for the current file |\r\n| Set word count goal | Set a word count target for the current document |\r\n| Switch writing mode \u2192 | Open a mode-switcher menu (Draft / Edit / Review / None) |\r\n| Typography font \u2192 | Open a font picker menu to change the typography font (visible only when Typography Mode is active) |\r\n\r\n### Right-click a Markdown file in the file explorer\r\n\r\n| Option | Action |\r\n|--------|--------|\r\n| Add to writing project | Open a project picker and add the file to the selected project |\r\n\r\n### Right-click a folder in the file explorer\r\n\r\n| Option | Action |\r\n|--------|--------|\r\n| Open in sidebar explorer | Open the folder in the Folder Sidebar Explorer panel |\r\n\r\n---\r\n\r\n## Commands Reference\r\n\r\nNo default hotkeys are assigned. All commands can be given a hotkey in **Settings \u2192 Hotkeys**.\r\n\r\n| Command | Description |\r\n|---------|-------------|\r\n| Open launcher | Open the launcher sidebar panel |\r\n| Open binder | Open the writing binder sidebar panel |\r\n| Open writing log | Open the daily writing log panel |\r\n| Toggle focus mode | Enable or disable focus mode |\r\n| Toggle typography mode | Enable or disable typography mode |\r\n| Switch to draft mode | Activate draft writing mode |\r\n| Switch to edit mode | Activate edit writing mode |\r\n| Switch to review mode | Activate review writing mode |\r\n| Start writing sprint | Open the sprint timer modal |\r\n| Export document | Export the current document |\r\n| Export project | Export the full project |\r\n| Preview compiled manuscript | Open the compile preview pane |\r\n| Publish to WordPress | Publish the current document to WordPress |\r\n| Create new writing project | Create a new writing project |\r\n| Open writing dashboard | Open the statistics dashboard |\r\n| Open targets dashboard | Open the word count targets panel |\r\n| Set word count goal | Set a per-document word count goal |\r\n| Open folder in sidebar explorer | Search and open a vault folder in the sidebar |\r\n| Scan project folder for new files | Scan the active project folder for files not in the binder and import selected files |\r\n\r\n---\r\n\r\n## Settings Overview\r\n\r\nOpen via **Settings \u2192 Writing Studio**.\r\n\r\n| Tab | What it controls |\r\n|-----|-----------------|\r\n| General | Open on startup, default project folder, author name, document type, frontmatter auto-update |\r\n| Focus mode | Focus unit, dim opacity, font override, sidebar behavior, typewriter scroll |\r\n| Typography | Font family, custom font name, line length, font size, line height, letter spacing, persistence |\r\n| Sprint & goals | Sprint duration, daily goal, sound notifications, history retention, inline banner |\r\n| Export | Format, paper size, font, font size, Pandoc path, EPUB language, EPUB cover |\r\n| Writing log | Append sprint summaries to Daily Note |\r\n| WordPress | Site credentials, default post status, wikilink handling |\r\n\r\n---\r\n\r\n## Ribbon Icon\r\n\r\nWriting Studio adds a single icon to the Obsidian ribbon.\r\n\r\n| Icon | Action |\r\n|------|--------|\r\n| Feather | Open the Writing Studio Launcher panel |\r\n\r\nAll other features are accessible from the Launcher panel, the command palette, context menus, or assigned hotkeys.\r\n\r\n---\r\n\r\n## Installation\r\n\r\n1. Download `main.js`, `manifest.json`, and `styles.css` from the latest [GitHub release](../../releases/latest).\r\n2. Create the folder `<vault>/.obsidian/plugins/writing-studio/` if it does not exist.\r\n3. Copy the three files into that folder.\r\n4. In Obsidian, go to **Settings \u2192 Community Plugins**, find **Writing Studio**, and enable it.\r\n\r\n> **Building from source:** Clone the repository, run `npm install`, then `npm run build`. Copy the three output files as above.\r\n\r\n---\r\n\r\n## Requirements\r\n\r\nMost features work out of the box. A few require additional software for specific functions, noted below.\r\n\r\n| Requirement | When needed |\r\n|-------------|-------------|\r\n| Obsidian 1.8.7 or later | Always |\r\n| Desktop (Windows, macOS, Linux) | Always \u2014 this plugin does not run on mobile |\r\n| Internet connection | First use of each Typography Mode font (cached after that) |\r\n| [Pandoc](https://pandoc.org/installing.html) | Export to PDF, DOCX, RTF, HTML, EPUB |\r\n| LaTeX (TeX Live / MiKTeX) or [wkhtmltopdf](https://wkhtmltopdf.org/) | Export to PDF only (wkhtmltopdf must be pinned in the PDF engine setting) |\r\n| WordPress 5.6+ with REST API enabled | WordPress publishing |\r\n| WordPress Application Password | WordPress publishing |\r\n\r\n---\r\n\r\n## Reporting a Bug\r\n\r\nIf something isn\'t working, please open an issue on GitHub:\r\n\r\n**[Submit a bug report](https://github.com/writerP-777/obsidian-writing-studio/issues/new)**\r\n\r\nInclude the following when you report:\r\n\r\n- Writing Studio version (visible in **Settings \u2192 Community Plugins**)\r\n- Obsidian version (visible in **Settings \u2192 About**)\r\n- Operating system (Windows / macOS / Linux) and version\r\n- What you expected to happen\r\n- What actually happened, and any steps to reproduce it\r\n\r\nFeature requests are welcome in the same place \u2014 please label them as **[Feature Request]** in the issue title.\r\n\r\n---\r\n\r\n## Security\r\n\r\n[![CodeQL](https://github.com/writerP-777/obsidian-writing-studio/actions/workflows/codeql.yml/badge.svg)](https://github.com/writerP-777/obsidian-writing-studio/actions/workflows/codeql.yml)\r\n[![OpenSSF Scorecard](https://api.securityscorecards.dev/projects/github.com/writerP-777/obsidian-writing-studio/badge)](https://securityscorecards.dev/viewer/?uri=github.com/writerP-777/obsidian-writing-studio)\r\n[![OpenSSF Baseline](https://www.bestpractices.dev/projects/12832/baseline)](https://www.bestpractices.dev/projects/12832)\r\n[![ESLint](https://github.com/writerP-777/obsidian-writing-studio/actions/workflows/eslint.yml/badge.svg)](https://github.com/writerP-777/obsidian-writing-studio/actions/workflows/eslint.yml)\r\n[![ORCID](https://img.shields.io/badge/ORCID-0009--0009--8598--2069-brightgreen?logo=orcid&logoColor=white)](https://orcid.org/0009-0009-8598-2069)\r\n\r\nEvery push and pull request is scanned automatically:\r\n\r\n| Tool | What it checks |\r\n|------|----------------|\r\n| **CodeQL** | Static analysis for security vulnerabilities (XSS, injection, unsafe patterns) in TypeScript/JavaScript source |\r\n| **OpenSSF Scorecard** | Supply-chain security posture: dependency hygiene, branch protection, signed releases, and more |\r\n| **ESLint** (`eslint-plugin-obsidianmd`) | Obsidian plugin guideline compliance \u2014 fails on any warning or error |\r\n\r\nResults are published to the **Security** tab of this repository (GitHub code scanning).\r\n\r\nFor local development, a pre-commit hook runs ESLint (blocking) and a pre-push hook runs a full CodeQL scan (blocks the push if any HIGH or CRITICAL findings are present). Install the [CodeQL CLI](https://github.com/github/codeql-cli-binaries/releases) to enable local scanning (`winget install GitHub.CodeQL` on Windows).\r\n';
@@ -20530,7 +19996,7 @@ content = content.replace(/^!\[[^\]]*\]\((?!https?:\/\/)[^)]*\)[ \t]*$/gm, "");
 var HELP_CONTENT = content;
 
 // src/SettingsTab.ts
-var WritingStudioSettingsTab = class extends import_obsidian32.PluginSettingTab {
+var WritingStudioSettingsTab = class extends import_obsidian30.PluginSettingTab {
   constructor(app, plugin) {
     super(app, plugin);
     this.activeTab = "general";
@@ -20615,63 +20081,63 @@ var WritingStudioSettingsTab = class extends import_obsidian32.PluginSettingTab 
     }
   }
   renderGeneral(el) {
-    new import_obsidian32.Setting(el).setName(t2("settings.general.openOnStartup")).setDesc(t2("settings.general.openOnStartupDesc")).addToggle((toggle) => toggle.setValue(this.plugin.settings.openOnStartup).onChange(async (v) => {
+    new import_obsidian30.Setting(el).setName(t2("settings.general.openOnStartup")).setDesc(t2("settings.general.openOnStartupDesc")).addToggle((toggle) => toggle.setValue(this.plugin.settings.openOnStartup).onChange(async (v) => {
       this.plugin.settings.openOnStartup = v;
       await this.plugin.saveSettings();
     }));
-    new import_obsidian32.Setting(el).setName(t2("settings.general.defaultProjectFolder")).setDesc(t2("settings.general.defaultProjectFolderDesc")).addText((text) => text.setPlaceholder(t2("settings.general.defaultProjectFolderPlaceholder")).setValue(this.plugin.settings.defaultProjectFolder).onChange(async (v) => {
+    new import_obsidian30.Setting(el).setName(t2("settings.general.defaultProjectFolder")).setDesc(t2("settings.general.defaultProjectFolderDesc")).addText((text) => text.setPlaceholder(t2("settings.general.defaultProjectFolderPlaceholder")).setValue(this.plugin.settings.defaultProjectFolder).onChange(async (v) => {
       this.plugin.settings.defaultProjectFolder = v;
       await this.plugin.saveSettings();
     }));
-    new import_obsidian32.Setting(el).setName(t2("settings.general.authorName")).setDesc(t2("settings.general.authorNameDesc")).addText((text) => text.setPlaceholder(t2("settings.general.authorNamePlaceholder")).setValue(this.plugin.settings.authorName).onChange(async (v) => {
+    new import_obsidian30.Setting(el).setName(t2("settings.general.authorName")).setDesc(t2("settings.general.authorNameDesc")).addText((text) => text.setPlaceholder(t2("settings.general.authorNamePlaceholder")).setValue(this.plugin.settings.authorName).onChange(async (v) => {
       this.plugin.settings.authorName = v;
       await this.plugin.saveSettings();
     }));
-    new import_obsidian32.Setting(el).setName(t2("settings.general.defaultDocumentType")).setDesc(t2("settings.general.defaultDocumentTypeDesc")).addDropdown((d) => d.addOption("chapter", t2("settings.general.docType.chapter")).addOption("section", t2("settings.general.docType.section")).addOption("article", t2("settings.general.docType.article")).addOption("note", t2("settings.general.docType.note")).setValue(this.plugin.settings.defaultDocumentType).onChange(async (v) => {
+    new import_obsidian30.Setting(el).setName(t2("settings.general.defaultDocumentType")).setDesc(t2("settings.general.defaultDocumentTypeDesc")).addDropdown((d) => d.addOption("chapter", t2("settings.general.docType.chapter")).addOption("section", t2("settings.general.docType.section")).addOption("article", t2("settings.general.docType.article")).addOption("note", t2("settings.general.docType.note")).setValue(this.plugin.settings.defaultDocumentType).onChange(async (v) => {
       this.plugin.settings.defaultDocumentType = v;
       await this.plugin.saveSettings();
     }));
-    new import_obsidian32.Setting(el).setName(t2("settings.general.frontmatterAutoUpdate")).setDesc(t2("settings.general.frontmatterAutoUpdateDesc")).addToggle((toggle) => toggle.setValue(this.plugin.settings.frontmatterAutoUpdate).onChange(async (v) => {
+    new import_obsidian30.Setting(el).setName(t2("settings.general.frontmatterAutoUpdate")).setDesc(t2("settings.general.frontmatterAutoUpdateDesc")).addToggle((toggle) => toggle.setValue(this.plugin.settings.frontmatterAutoUpdate).onChange(async (v) => {
       this.plugin.settings.frontmatterAutoUpdate = v;
       await this.plugin.saveSettings();
     }));
-    new import_obsidian32.Setting(el).setName(t2("settings.general.experimentalHeading")).setHeading();
-    new import_obsidian32.Setting(el).setName(t2("settings.general.filesystemBinder")).setDesc(t2("settings.general.filesystemBinderDesc")).addToggle((toggle) => toggle.setValue(this.plugin.settings.filesystemBinder).onChange(async (v) => {
+    new import_obsidian30.Setting(el).setName(t2("settings.general.experimentalHeading")).setHeading();
+    new import_obsidian30.Setting(el).setName(t2("settings.general.filesystemBinder")).setDesc(t2("settings.general.filesystemBinderDesc")).addToggle((toggle) => toggle.setValue(this.plugin.settings.filesystemBinder).onChange(async (v) => {
       this.plugin.settings.filesystemBinder = v;
       await this.plugin.saveSettings();
       await this.plugin.reopenBinderViews();
     }));
   }
   renderFocusMode(el) {
-    new import_obsidian32.Setting(el).setName(t2("settings.focus.heading")).setHeading();
-    new import_obsidian32.Setting(el).setName(t2("settings.focus.focusUnit")).setDesc(t2("settings.focus.focusUnitDesc")).addDropdown((d) => d.addOption("paragraph", t2("settings.focus.paragraph")).addOption("sentence", t2("settings.focus.sentence")).setValue(this.plugin.settings.focusUnit).onChange(async (v) => {
+    new import_obsidian30.Setting(el).setName(t2("settings.focus.heading")).setHeading();
+    new import_obsidian30.Setting(el).setName(t2("settings.focus.focusUnit")).setDesc(t2("settings.focus.focusUnitDesc")).addDropdown((d) => d.addOption("paragraph", t2("settings.focus.paragraph")).addOption("sentence", t2("settings.focus.sentence")).setValue(this.plugin.settings.focusUnit).onChange(async (v) => {
       this.plugin.settings.focusUnit = v;
       await this.plugin.saveSettings();
     }));
-    new import_obsidian32.Setting(el).setName(t2("settings.focus.dimOpacity")).setDesc(t2("settings.focus.dimOpacityDesc")).addSlider((s) => s.setLimits(10, 50, 5).setValue(this.plugin.settings.dimOpacity).onChange(async (v) => {
+    new import_obsidian30.Setting(el).setName(t2("settings.focus.dimOpacity")).setDesc(t2("settings.focus.dimOpacityDesc")).addSlider((s) => s.setLimits(10, 50, 5).setValue(this.plugin.settings.dimOpacity).onChange(async (v) => {
       this.plugin.settings.dimOpacity = v;
       await this.plugin.saveSettings();
       this.plugin.focusMode.applyDimOpacity();
     }));
-    new import_obsidian32.Setting(el).setName(t2("settings.focus.fontSizeOverride")).setDesc(t2("settings.focus.fontSizeOverrideDesc")).addText((text) => text.setValue(String(this.plugin.settings.focusFontSize || 0)).onChange(async (v) => {
+    new import_obsidian30.Setting(el).setName(t2("settings.focus.fontSizeOverride")).setDesc(t2("settings.focus.fontSizeOverrideDesc")).addText((text) => text.setValue(String(this.plugin.settings.focusFontSize || 0)).onChange(async (v) => {
       const n = Number(v.trim());
       if (!Number.isInteger(n) || n !== 0 && (n < 8 || n > 72)) return;
       this.plugin.settings.focusFontSize = n;
       await this.plugin.saveSettings();
       this.plugin.focusMode.applyFontSize();
     }));
-    new import_obsidian32.Setting(el).setName(t2("settings.focus.autoHideSidebars")).addToggle((toggle) => toggle.setValue(this.plugin.settings.focusAutoHideSidebars).onChange(async (v) => {
+    new import_obsidian30.Setting(el).setName(t2("settings.focus.autoHideSidebars")).addToggle((toggle) => toggle.setValue(this.plugin.settings.focusAutoHideSidebars).onChange(async (v) => {
       this.plugin.settings.focusAutoHideSidebars = v;
       await this.plugin.saveSettings();
     }));
-    new import_obsidian32.Setting(el).setName(t2("settings.focus.typewriterScroll")).setDesc(t2("settings.focus.typewriterScrollDesc")).addToggle((toggle) => toggle.setValue(this.plugin.settings.typewriterScroll).onChange(async (v) => {
+    new import_obsidian30.Setting(el).setName(t2("settings.focus.typewriterScroll")).setDesc(t2("settings.focus.typewriterScrollDesc")).addToggle((toggle) => toggle.setValue(this.plugin.settings.typewriterScroll).onChange(async (v) => {
       this.plugin.settings.typewriterScroll = v;
       await this.plugin.saveSettings();
     }));
   }
   renderTypography(el) {
-    new import_obsidian32.Setting(el).setName(t2("settings.typography.heading")).setHeading();
-    new import_obsidian32.Setting(el).setName(t2("settings.typography.fontFamily")).addDropdown((d) => {
+    new import_obsidian30.Setting(el).setName(t2("settings.typography.heading")).setHeading();
+    new import_obsidian30.Setting(el).setName(t2("settings.typography.fontFamily")).addDropdown((d) => {
       d.addOption("mono", t2("settings.typography.font.mono"));
       d.addOption("serif", t2("settings.typography.font.serif"));
       d.addOption("sans", t2("settings.typography.font.sans"));
@@ -20693,114 +20159,120 @@ var WritingStudioSettingsTab = class extends import_obsidian32.PluginSettingTab 
         if (this.plugin.typographyMode.isActive()) this.plugin.typographyMode.refreshStyles();
       });
     });
-    new import_obsidian32.Setting(el).setName(t2("settings.typography.customFontName")).setDesc(t2("settings.typography.customFontNameDesc")).addText((text) => text.setPlaceholder(t2("settings.typography.customFontNamePlaceholder")).setValue(this.plugin.settings.customFontName).onChange(async (v) => {
+    new import_obsidian30.Setting(el).setName(t2("settings.typography.customFontName")).setDesc(t2("settings.typography.customFontNameDesc")).addText((text) => text.setPlaceholder(t2("settings.typography.customFontNamePlaceholder")).setValue(this.plugin.settings.customFontName).onChange(async (v) => {
       this.plugin.settings.customFontName = v;
       await this.plugin.saveSettings();
     }));
-    new import_obsidian32.Setting(el).setName(t2("settings.typography.maxLineLength")).setDesc(t2("settings.typography.maxLineLengthDesc")).addSlider((s) => s.setLimits(55, 80, 1).setValue(this.plugin.settings.maxLineLength).onChange(async (v) => {
+    new import_obsidian30.Setting(el).setName(t2("settings.typography.maxLineLength")).setDesc(t2("settings.typography.maxLineLengthDesc")).addSlider((s) => s.setLimits(55, 80, 1).setValue(this.plugin.settings.maxLineLength).onChange(async (v) => {
       this.plugin.settings.maxLineLength = v;
       await this.plugin.saveSettings();
     }));
-    new import_obsidian32.Setting(el).setName(t2("settings.typography.fontSize")).addText((text) => text.setValue(String(this.plugin.settings.typographyFontSize)).onChange(async (v) => {
+    new import_obsidian30.Setting(el).setName(t2("settings.typography.fontSize")).addText((text) => text.setValue(String(this.plugin.settings.typographyFontSize)).onChange(async (v) => {
       const n = Number(v.trim());
       if (!Number.isInteger(n) || n < 8 || n > 72) return;
       this.plugin.settings.typographyFontSize = n;
       await this.plugin.saveSettings();
     }));
-    new import_obsidian32.Setting(el).setName(t2("settings.typography.lineHeight")).setDesc(t2("settings.typography.lineHeightDesc")).addText((text) => text.setValue(String(this.plugin.settings.lineHeight)).onChange(async (v) => {
+    new import_obsidian30.Setting(el).setName(t2("settings.typography.lineHeight")).setDesc(t2("settings.typography.lineHeightDesc")).addText((text) => text.setValue(String(this.plugin.settings.lineHeight)).onChange(async (v) => {
       this.plugin.settings.lineHeight = parseFloat(v) || 1.7;
       await this.plugin.saveSettings();
     }));
-    new import_obsidian32.Setting(el).setName(t2("settings.typography.letterSpacing")).setDesc(t2("settings.typography.letterSpacingDesc")).addText((text) => text.setValue(this.plugin.settings.letterSpacing).onChange(async (v) => {
+    new import_obsidian30.Setting(el).setName(t2("settings.typography.letterSpacing")).setDesc(t2("settings.typography.letterSpacingDesc")).addText((text) => text.setValue(this.plugin.settings.letterSpacing).onChange(async (v) => {
       this.plugin.settings.letterSpacing = v;
       await this.plugin.saveSettings();
     }));
-    new import_obsidian32.Setting(el).setName(t2("settings.typography.persistAcrossSessions")).setDesc(t2("settings.typography.persistAcrossSessionsDesc")).addToggle((toggle) => toggle.setValue(this.plugin.settings.persistTypography).onChange(async (v) => {
+    new import_obsidian30.Setting(el).setName(t2("settings.typography.persistAcrossSessions")).setDesc(t2("settings.typography.persistAcrossSessionsDesc")).addToggle((toggle) => toggle.setValue(this.plugin.settings.persistTypography).onChange(async (v) => {
       this.plugin.settings.persistTypography = v;
       await this.plugin.saveSettings();
     }));
   }
   renderSprint(el) {
-    new import_obsidian32.Setting(el).setName(t2("settings.sprint.heading")).setHeading();
-    new import_obsidian32.Setting(el).setName(t2("settings.sprint.defaultDuration")).addText((text) => text.setValue(String(this.plugin.settings.defaultSprintDuration)).onChange(async (v) => {
+    new import_obsidian30.Setting(el).setName(t2("settings.sprint.heading")).setHeading();
+    new import_obsidian30.Setting(el).setName(t2("settings.sprint.defaultDuration")).addText((text) => text.setValue(String(this.plugin.settings.defaultSprintDuration)).onChange(async (v) => {
       const n = Number(v.trim());
       if (!Number.isInteger(n) || n < 1 || n > 600) return;
       this.plugin.settings.defaultSprintDuration = n;
       await this.plugin.saveSettings();
     }));
-    new import_obsidian32.Setting(el).setName(t2("settings.sprint.defaultDailyGoal")).addText((text) => text.setValue(String(this.plugin.settings.defaultDailyWordGoal)).onChange(async (v) => {
+    new import_obsidian30.Setting(el).setName(t2("settings.sprint.defaultDailyGoal")).addText((text) => text.setValue(String(this.plugin.settings.defaultDailyWordGoal)).onChange(async (v) => {
       const n = Number(v.trim());
       if (!Number.isInteger(n) || n < 0 || n > 1e6) return;
       this.plugin.settings.defaultDailyWordGoal = n;
       await this.plugin.saveSettings();
     }));
-    new import_obsidian32.Setting(el).setName(t2("settings.sprint.soundNotifications")).setDesc(t2("settings.sprint.soundNotificationsDesc")).addToggle((toggle) => toggle.setValue(this.plugin.settings.soundNotifications).onChange(async (v) => {
+    new import_obsidian30.Setting(el).setName(t2("settings.sprint.soundNotifications")).setDesc(t2("settings.sprint.soundNotificationsDesc")).addToggle((toggle) => toggle.setValue(this.plugin.settings.soundNotifications).onChange(async (v) => {
       this.plugin.settings.soundNotifications = v;
       await this.plugin.saveSettings();
     }));
-    new import_obsidian32.Setting(el).setName(t2("settings.sprint.historyRetention")).addText((text) => text.setValue(String(this.plugin.settings.sprintHistoryRetention)).onChange(async (v) => {
+    new import_obsidian30.Setting(el).setName(t2("settings.sprint.historyRetention")).addText((text) => text.setValue(String(this.plugin.settings.sprintHistoryRetention)).onChange(async (v) => {
       const n = Number(v.trim());
       if (!Number.isInteger(n) || n < 1 || n > 3650) return;
       this.plugin.settings.sprintHistoryRetention = n;
       await this.plugin.saveSettings();
     }));
-    new import_obsidian32.Setting(el).setName(t2("settings.sprint.inlineGoalBanner")).setDesc(t2("settings.sprint.inlineGoalBannerDesc")).addToggle((toggle) => toggle.setValue(this.plugin.settings.inlineGoalBanner).onChange(async (v) => {
+    new import_obsidian30.Setting(el).setName(t2("settings.sprint.inlineGoalBanner")).setDesc(t2("settings.sprint.inlineGoalBannerDesc")).addToggle((toggle) => toggle.setValue(this.plugin.settings.inlineGoalBanner).onChange(async (v) => {
       this.plugin.settings.inlineGoalBanner = v;
       await this.plugin.saveSettings();
     }));
   }
   renderExport(el) {
-    new import_obsidian32.Setting(el).setName(t2("settings.export.heading")).setHeading();
-    new import_obsidian32.Setting(el).setName(t2("settings.export.defaultFormat")).addDropdown((d) => d.addOption("md", t2("settings.export.format.md")).addOption("html", t2("settings.export.format.html")).addOption("manuscript", t2("exportModal.format.manuscript")).addOption("epub", t2("exportModal.format.epub")).addOption("pdf", t2("settings.export.format.pdf")).addOption("docx", t2("settings.export.format.docx")).addOption("rtf", t2("settings.export.format.rtf")).setValue(this.plugin.settings.defaultExportFormat).onChange(async (v) => {
+    new import_obsidian30.Setting(el).setName(t2("settings.export.heading")).setHeading();
+    new import_obsidian30.Setting(el).setName(t2("settings.export.defaultFormat")).addDropdown((d) => d.addOption("md", t2("settings.export.format.md")).addOption("html", t2("settings.export.format.html")).addOption("manuscript", t2("exportModal.format.manuscript")).addOption("epub", t2("exportModal.format.epub")).addOption("pdf", t2("settings.export.format.pdf")).addOption("docx", t2("settings.export.format.docx")).addOption("rtf", t2("settings.export.format.rtf")).setValue(this.plugin.settings.defaultExportFormat).onChange(async (v) => {
       this.plugin.settings.defaultExportFormat = v;
       await this.plugin.saveSettings();
     }));
-    new import_obsidian32.Setting(el).setName(t2("settings.export.defaultPaperSize")).addDropdown((d) => d.addOption("letter", t2("settings.export.paperSize.letter")).addOption("a4", t2("settings.export.paperSize.a4")).setValue(this.plugin.settings.defaultPaperSize).onChange(async (v) => {
+    if (this.plugin.settings.filesystemBinder) {
+      new import_obsidian30.Setting(el).setName(t2("settings.export.subtreeTitleSource")).setDesc(t2("settings.export.subtreeTitleSourceDesc")).addDropdown((d) => d.addOption("folder", t2("settings.export.subtreeTitleFolder")).addOption("project", t2("settings.export.subtreeTitleProject")).setValue(this.plugin.settings.subtreeExportTitleSource).onChange(async (v) => {
+        this.plugin.settings.subtreeExportTitleSource = v;
+        await this.plugin.saveSettings();
+      }));
+    }
+    new import_obsidian30.Setting(el).setName(t2("settings.export.defaultPaperSize")).addDropdown((d) => d.addOption("letter", t2("settings.export.paperSize.letter")).addOption("a4", t2("settings.export.paperSize.a4")).setValue(this.plugin.settings.defaultPaperSize).onChange(async (v) => {
       this.plugin.settings.defaultPaperSize = v;
       await this.plugin.saveSettings();
     }));
-    new import_obsidian32.Setting(el).setName(t2("settings.export.exportFont")).addText((text) => text.setPlaceholder("Georgia").setValue(this.plugin.settings.defaultExportFont).onChange(async (v) => {
+    new import_obsidian30.Setting(el).setName(t2("settings.export.exportFont")).addText((text) => text.setPlaceholder("Georgia").setValue(this.plugin.settings.defaultExportFont).onChange(async (v) => {
       this.plugin.settings.defaultExportFont = v;
       await this.plugin.saveSettings();
     }));
-    new import_obsidian32.Setting(el).setName(t2("settings.export.exportFontSize")).addText((text) => text.setValue(String(this.plugin.settings.defaultExportFontSize)).onChange(async (v) => {
+    new import_obsidian30.Setting(el).setName(t2("settings.export.exportFontSize")).addText((text) => text.setValue(String(this.plugin.settings.defaultExportFontSize)).onChange(async (v) => {
       const n = Number(v.trim());
       if (!Number.isInteger(n) || n < 6 || n > 72) return;
       this.plugin.settings.defaultExportFontSize = n;
       await this.plugin.saveSettings();
     }));
-    new import_obsidian32.Setting(el).setName(t2("settings.export.pandocPath")).setDesc(t2("settings.export.pandocPathDesc")).addText((text) => text.setPlaceholder("Pandoc").setValue(this.plugin.settings.pandocPath).onChange(async (v) => {
+    new import_obsidian30.Setting(el).setName(t2("settings.export.pandocPath")).setDesc(t2("settings.export.pandocPathDesc")).addText((text) => text.setPlaceholder("Pandoc").setValue(this.plugin.settings.pandocPath).onChange(async (v) => {
       this.plugin.settings.pandocPath = v;
       await this.plugin.saveSettings();
     }));
-    new import_obsidian32.Setting(el).setName(t2("settings.export.pdfEngine")).setDesc(t2("settings.export.pdfEngineDesc")).addDropdown((d) => d.addOption("auto", t2("settings.export.pdfEngineAuto")).addOption("xelatex", "xelatex").addOption("lualatex", "lualatex").addOption("pdflatex", "pdflatex").addOption("wkhtmltopdf", "wkhtmltopdf").setValue(this.plugin.settings.pdfEngine).onChange(async (v) => {
+    new import_obsidian30.Setting(el).setName(t2("settings.export.pdfEngine")).setDesc(t2("settings.export.pdfEngineDesc")).addDropdown((d) => d.addOption("auto", t2("settings.export.pdfEngineAuto")).addOption("xelatex", "xelatex").addOption("lualatex", "lualatex").addOption("pdflatex", "pdflatex").addOption("wkhtmltopdf", "wkhtmltopdf").setValue(this.plugin.settings.pdfEngine).onChange(async (v) => {
       this.plugin.settings.pdfEngine = v;
       await this.plugin.saveSettings();
     }));
-    new import_obsidian32.Setting(el).setName(t2("settings.export.epubHeading")).setHeading();
-    new import_obsidian32.Setting(el).setName(t2("settings.export.epubLanguage")).setDesc(t2("settings.export.epubLanguageDesc")).addText((text) => text.setPlaceholder("en").setValue(this.plugin.settings.epubLanguage).onChange(async (v) => {
+    new import_obsidian30.Setting(el).setName(t2("settings.export.epubHeading")).setHeading();
+    new import_obsidian30.Setting(el).setName(t2("settings.export.epubLanguage")).setDesc(t2("settings.export.epubLanguageDesc")).addText((text) => text.setPlaceholder("en").setValue(this.plugin.settings.epubLanguage).onChange(async (v) => {
       this.plugin.settings.epubLanguage = v.trim() || "en";
       await this.plugin.saveSettings();
     }));
-    new import_obsidian32.Setting(el).setName(t2("settings.export.includeCover")).setDesc(t2("settings.export.includeCoverDesc")).addToggle((toggle) => toggle.setValue(this.plugin.settings.epubIncludeCover).onChange(async (v) => {
+    new import_obsidian30.Setting(el).setName(t2("settings.export.includeCover")).setDesc(t2("settings.export.includeCoverDesc")).addToggle((toggle) => toggle.setValue(this.plugin.settings.epubIncludeCover).onChange(async (v) => {
       this.plugin.settings.epubIncludeCover = v;
       await this.plugin.saveSettings();
     }));
   }
   renderLog(el) {
-    new import_obsidian32.Setting(el).setName(t2("settings.log.heading")).setHeading();
-    new import_obsidian32.Setting(el).setName(t2("settings.log.appendToDailyNote")).setDesc(t2("settings.log.appendToDailyNoteDesc")).addToggle((toggle) => toggle.setValue(this.plugin.settings.appendToDailyNote).onChange(async (v) => {
+    new import_obsidian30.Setting(el).setName(t2("settings.log.heading")).setHeading();
+    new import_obsidian30.Setting(el).setName(t2("settings.log.appendToDailyNote")).setDesc(t2("settings.log.appendToDailyNoteDesc")).addToggle((toggle) => toggle.setValue(this.plugin.settings.appendToDailyNote).onChange(async (v) => {
       this.plugin.settings.appendToDailyNote = v;
       await this.plugin.saveSettings();
     }));
   }
   renderWordPress(el) {
-    new import_obsidian32.Setting(el).setName(t2("settings.wordpress.sitesHeading")).setHeading();
+    new import_obsidian30.Setting(el).setName(t2("settings.wordpress.sitesHeading")).setHeading();
     const sites = this.plugin.settings.wordPressSites;
     for (let i2 = 0; i2 < sites.length; i2++) {
       this.renderSiteConfig(el, sites[i2], i2);
     }
-    new import_obsidian32.Setting(el).addButton((b) => b.setButtonText(t2("settings.wordpress.addSite")).onClick(async () => {
+    new import_obsidian30.Setting(el).addButton((b) => b.setButtonText(t2("settings.wordpress.addSite")).onClick(async () => {
       this.plugin.settings.wordPressSites.push({
         id: `site-${Date.now()}`,
         nickname: t2("settings.wordpress.newSiteName"),
@@ -20817,8 +20289,8 @@ var WritingStudioSettingsTab = class extends import_obsidian32.PluginSettingTab 
         this.renderWordPress(contentEl);
       }
     }));
-    new import_obsidian32.Setting(el).setName(t2("settings.wordpress.wikilinksHeading")).setHeading();
-    new import_obsidian32.Setting(el).setName(t2("settings.wordpress.defaultWikilinkHandling")).addDropdown((d) => d.addOption("strip", t2("settings.wordpress.wikilinkStrip")).addOption("convert", t2("settings.wordpress.wikilinkConvert")).setValue(this.plugin.settings.wikilinkHandling).onChange(async (v) => {
+    new import_obsidian30.Setting(el).setName(t2("settings.wordpress.wikilinksHeading")).setHeading();
+    new import_obsidian30.Setting(el).setName(t2("settings.wordpress.defaultWikilinkHandling")).addDropdown((d) => d.addOption("strip", t2("settings.wordpress.wikilinkStrip")).addOption("convert", t2("settings.wordpress.wikilinkConvert")).setValue(this.plugin.settings.wikilinkHandling).onChange(async (v) => {
       this.plugin.settings.wikilinkHandling = v;
       await this.plugin.saveSettings();
     }));
@@ -20826,35 +20298,35 @@ var WritingStudioSettingsTab = class extends import_obsidian32.PluginSettingTab 
   renderSiteConfig(container, site, index) {
     const siteEl = container.createDiv("ws-wp-site-config");
     const heading = t2("settings.wordpress.siteHeading", { nickname: site.nickname || t2("settings.wordpress.siteUnnamed") });
-    new import_obsidian32.Setting(siteEl).setName(heading).setHeading();
-    new import_obsidian32.Setting(siteEl).setName(t2("settings.wordpress.nickname")).addText((text) => text.setValue(site.nickname).onChange(async (v) => {
+    new import_obsidian30.Setting(siteEl).setName(heading).setHeading();
+    new import_obsidian30.Setting(siteEl).setName(t2("settings.wordpress.nickname")).addText((text) => text.setValue(site.nickname).onChange(async (v) => {
       site.nickname = v;
       await this.plugin.saveSettings();
     }));
-    new import_obsidian32.Setting(siteEl).setName(t2("settings.wordpress.siteUrl")).addText((text) => text.setPlaceholder("https://example.com").setValue(site.url).onChange(async (v) => {
+    new import_obsidian30.Setting(siteEl).setName(t2("settings.wordpress.siteUrl")).addText((text) => text.setPlaceholder("https://example.com").setValue(site.url).onChange(async (v) => {
       site.url = v;
       await this.plugin.saveSettings();
     }));
-    new import_obsidian32.Setting(siteEl).setName(t2("settings.wordpress.username")).addText((text) => text.setValue(site.username).onChange(async (v) => {
+    new import_obsidian30.Setting(siteEl).setName(t2("settings.wordpress.username")).addText((text) => text.setValue(site.username).onChange(async (v) => {
       site.username = v;
       await this.plugin.saveSettings();
     }));
-    new import_obsidian32.Setting(siteEl).setName(t2("settings.wordpress.appPassword")).setDesc(t2("settings.wordpress.appPasswordDesc")).addText((text) => {
+    new import_obsidian30.Setting(siteEl).setName(t2("settings.wordpress.appPassword")).setDesc(t2("settings.wordpress.appPasswordDesc")).addText((text) => {
       text.inputEl.type = "password";
       text.setValue(site.appPassword).onChange(async (v) => {
         site.appPassword = v;
         await this.plugin.saveSettings();
       });
     });
-    new import_obsidian32.Setting(siteEl).setName(t2("settings.wordpress.defaultPostStatus")).addDropdown((d) => d.addOption("draft", t2("settings.wordpress.postStatus.draft")).addOption("pending", t2("settings.wordpress.postStatus.pending")).addOption("publish", t2("settings.wordpress.postStatus.publish")).setValue(site.defaultStatus).onChange(async (v) => {
+    new import_obsidian30.Setting(siteEl).setName(t2("settings.wordpress.defaultPostStatus")).addDropdown((d) => d.addOption("draft", t2("settings.wordpress.postStatus.draft")).addOption("pending", t2("settings.wordpress.postStatus.pending")).addOption("publish", t2("settings.wordpress.postStatus.publish")).setValue(site.defaultStatus).onChange(async (v) => {
       site.defaultStatus = v;
       await this.plugin.saveSettings();
     }));
-    new import_obsidian32.Setting(siteEl).setName(t2("settings.wordpress.wikilinkHandling")).addDropdown((d) => d.addOption("strip", t2("settings.wordpress.wikilinkHandlingStrip")).addOption("convert", t2("settings.wordpress.wikilinkHandlingConvert")).setValue(site.wikilinkHandling).onChange(async (v) => {
+    new import_obsidian30.Setting(siteEl).setName(t2("settings.wordpress.wikilinkHandling")).addDropdown((d) => d.addOption("strip", t2("settings.wordpress.wikilinkHandlingStrip")).addOption("convert", t2("settings.wordpress.wikilinkHandlingConvert")).setValue(site.wikilinkHandling).onChange(async (v) => {
       site.wikilinkHandling = v;
       await this.plugin.saveSettings();
     }));
-    const testRow = new import_obsidian32.Setting(siteEl).setName(t2("settings.wordpress.testConnection")).setDesc(t2("settings.wordpress.testConnectionDesc"));
+    const testRow = new import_obsidian30.Setting(siteEl).setName(t2("settings.wordpress.testConnection")).setDesc(t2("settings.wordpress.testConnectionDesc"));
     const statusEl = siteEl.createDiv("ws-wp-test-status");
     testRow.addButton((b) => b.setButtonText(t2("settings.wordpress.testConnection")).onClick(async () => {
       statusEl.textContent = t2("settings.wordpress.testing");
@@ -20863,7 +20335,7 @@ var WritingStudioSettingsTab = class extends import_obsidian32.PluginSettingTab 
       statusEl.textContent = result.message;
       statusEl.className = `ws-wp-test-status ${result.success ? "ws-wp-test-ok" : "ws-wp-test-err"}`;
     }));
-    new import_obsidian32.Setting(siteEl).addButton((b) => {
+    new import_obsidian30.Setting(siteEl).addButton((b) => {
       b.setButtonText(t2("settings.wordpress.removeSite"));
       b.buttonEl.addClass("mod-warning");
       b.onClick(async () => {
@@ -20878,10 +20350,10 @@ var WritingStudioSettingsTab = class extends import_obsidian32.PluginSettingTab 
     });
   }
   async renderHelp(el) {
-    this.helpComponent = new import_obsidian32.Component();
+    this.helpComponent = new import_obsidian30.Component();
     this.helpComponent.load();
     el.addClass("ws-help-content");
-    await import_obsidian32.MarkdownRenderer.render(this.app, HELP_CONTENT, el, "", this.helpComponent);
+    await import_obsidian30.MarkdownRenderer.render(this.app, HELP_CONTENT, el, "", this.helpComponent);
     const supportDiv = el.createDiv({ cls: "ws-support-footer" });
     supportDiv.createEl("a", {
       href: "https://buymeacoffee.com/writerp777",
@@ -20897,9 +20369,9 @@ var WritingStudioSettingsTab = class extends import_obsidian32.PluginSettingTab 
 };
 
 // src/WritingLogView.ts
-var import_obsidian33 = require("obsidian");
+var import_obsidian31 = require("obsidian");
 var WRITING_LOG_VIEW_TYPE = "writing-studio-writing-log";
-var WritingLogView = class extends import_obsidian33.ItemView {
+var WritingLogView = class extends import_obsidian31.ItemView {
   constructor(leaf, plugin) {
     super(leaf);
     this.plugin = plugin;
@@ -20926,7 +20398,7 @@ var WritingLogView = class extends import_obsidian33.ItemView {
     const root = this.containerEl.children[1];
     root.empty();
     root.addClass("ws-log-root");
-    const lang = (0, import_obsidian33.getLanguage)();
+    const lang = (0, import_obsidian31.getLanguage)();
     const header = root.createDiv("ws-log-header");
     header.createDiv({ text: t2("log.title"), cls: "ws-log-title" });
     header.createDiv({
@@ -21068,7 +20540,7 @@ var COMMAND_SPECS = [
     p.openFolderPicker();
   } },
   { id: "add-files-to-binder", nameKey: "main.cmd.addFilesToBinder", run: (p) => p.addFilesToBinder() },
-  { id: "preview-carry-over", nameKey: "main.cmd.previewCarryOver", run: (p) => p.previewCarryOver() }
+  { id: "restore-binder-layout", nameKey: "main.cmd.restoreBinderLayout", run: (p) => p.restoreBinderLayout() }
 ];
 function registerCommands(plugin) {
   for (const spec of COMMAND_SPECS) {
@@ -21151,7 +20623,7 @@ var StatusBar = class {
 };
 
 // src/GoalBanner.ts
-var import_obsidian34 = require("obsidian");
+var import_obsidian32 = require("obsidian");
 var GoalBanner = class {
   constructor(plugin) {
     this.generation = 0;
@@ -21177,7 +20649,7 @@ var GoalBanner = class {
     const leaf = this.plugin.app.workspace.getMostRecentLeaf();
     if (!leaf) return;
     const view = leaf.view;
-    if (!(view instanceof import_obsidian34.MarkdownView)) return;
+    if (!(view instanceof import_obsidian32.MarkdownView)) return;
     const file = view.file;
     if (!file) return;
     const goal = await this.plugin.projectManager.getWordCountGoalForFile(file);
@@ -21206,18 +20678,18 @@ var GoalBanner = class {
 };
 
 // src/VaultFiles.ts
-var import_obsidian35 = require("obsidian");
+var import_obsidian33 = require("obsidian");
 var ObsidianVaultFiles = class {
   constructor(app) {
     this.app = app;
   }
   async readText(path) {
     const file = this.app.vault.getAbstractFileByPath(path);
-    return file instanceof import_obsidian35.TFile ? this.app.vault.read(file) : null;
+    return file instanceof import_obsidian33.TFile ? this.app.vault.read(file) : null;
   }
   async writeText(path, content2) {
     const existing = this.app.vault.getAbstractFileByPath(path);
-    if (existing instanceof import_obsidian35.TFile) {
+    if (existing instanceof import_obsidian33.TFile) {
       await this.app.vault.modify(existing, content2);
     } else {
       await this.app.vault.create(path, content2);
@@ -21225,18 +20697,18 @@ var ObsidianVaultFiles = class {
   }
   async readBinary(path) {
     const file = this.app.vault.getAbstractFileByPath(path);
-    return file instanceof import_obsidian35.TFile ? this.app.vault.readBinary(file) : null;
+    return file instanceof import_obsidian33.TFile ? this.app.vault.readBinary(file) : null;
   }
   async writeBinary(path, data) {
     const existing = this.app.vault.getAbstractFileByPath(path);
-    if (existing instanceof import_obsidian35.TFile) {
+    if (existing instanceof import_obsidian33.TFile) {
       await this.app.vault.modifyBinary(existing, data);
     } else {
       await this.app.vault.createBinary(path, data);
     }
   }
   async remove(path) {
-    if (this.app.vault.getAbstractFileByPath(path) instanceof import_obsidian35.TFile) {
+    if (this.app.vault.getAbstractFileByPath(path) instanceof import_obsidian33.TFile) {
       await this.app.vault.adapter.remove(path);
     }
   }
@@ -21250,18 +20722,18 @@ var ObsidianVaultFiles = class {
   }
   listSubfolders(path) {
     const folder = this.app.vault.getAbstractFileByPath(path);
-    if (!(folder instanceof import_obsidian35.TFolder)) return [];
-    return folder.children.filter((c) => c instanceof import_obsidian35.TFolder).map((c) => c.path);
+    if (!(folder instanceof import_obsidian33.TFolder)) return [];
+    return folder.children.filter((c) => c instanceof import_obsidian33.TFolder).map((c) => c.path);
   }
   absolutePath(path) {
     const adapter = this.app.vault.adapter;
-    return adapter instanceof import_obsidian35.FileSystemAdapter ? adapter.getFullPath(path) : path;
+    return adapter instanceof import_obsidian33.FileSystemAdapter ? adapter.getFullPath(path) : path;
   }
 };
 
 // src/StudioEvents.ts
-var import_obsidian36 = require("obsidian");
-var StudioEvents = class extends import_obsidian36.Events {
+var import_obsidian34 = require("obsidian");
+var StudioEvents = class extends import_obsidian34.Events {
   onModeChanged(cb) {
     return this.on("mode-changed", (...data) => {
       cb(data[0]);
@@ -21296,9 +20768,504 @@ var StudioEvents = class extends import_obsidian36.Events {
   }
 };
 
+// src/carryOverBridge.ts
+var import_obsidian35 = require("obsidian");
+
+// src/carryOver.ts
+function parseLegacyBinder(content2) {
+  try {
+    const data = JSON.parse(content2);
+    return Array.isArray(data == null ? void 0 : data.items) ? data : null;
+  } catch (e) {
+    return null;
+  }
+}
+function sanitizeTitle(title) {
+  return title.replace(/[\\/:*?"<>|]/g, "").replace(/\s+/g, " ").trim().replace(/[. ]+$/, "");
+}
+function docCurrentPath(op) {
+  if (op.state === "missing") return null;
+  return op.state === "done" ? op.finalPath : op.originalPath;
+}
+function planHasWork(plan) {
+  if (plan.folderOps.some((op) => op.action !== "none")) return true;
+  return plan.docOps.some((op) => {
+    if (op.state === "pending") return true;
+    if (op.state === "missing") return false;
+    return op.frontmatter.some((e) => !e.kept) || !op.orderKept;
+  });
+}
+var isStructural = (item) => item.type === "group" || item.type === "part";
+function expandSiblings(items) {
+  var _a2;
+  const out = [];
+  for (const item of items) {
+    out.push(item);
+    if (!isStructural(item) && ((_a2 = item.children) == null ? void 0 : _a2.length)) {
+      out.push(...expandSiblings(item.children));
+    }
+  }
+  return out;
+}
+function planCarryOver(items, projectFolderPath, disk) {
+  const plan = { folderOps: [], docOps: [] };
+  walkGroup(items, projectFolderPath, disk, plan);
+  assignLeftoverOrders(plan, disk);
+  return plan;
+}
+function walkGroup(items, parentPath2, disk, plan) {
+  var _a2;
+  const expanded = expandSiblings(items);
+  const claimedBasenames = /* @__PURE__ */ new Set();
+  const consumedAdoptees = /* @__PURE__ */ new Set();
+  const existingFolders = disk.subfolderNames(parentPath2);
+  let position = 0;
+  for (const item of expanded) {
+    position += 10;
+    if (isStructural(item)) {
+      const op = planFolder(item, position, parentPath2, existingFolders, consumedAdoptees);
+      plan.folderOps.push(op);
+      walkGroup((_a2 = item.children) != null ? _a2 : [], op.targetPath, disk, plan);
+    } else {
+      plan.docOps.push(planDoc(item, position, parentPath2, disk, claimedBasenames));
+    }
+  }
+}
+function planFolder(item, position, parentPath2, existingFolders, consumedAdoptees) {
+  const displayName = sanitizeTitle(item.title) || "Untitled";
+  const minted = folderNameWithPrefix(displayName, position);
+  const candidates = existingFolders.filter((n) => !consumedAdoptees.has(n) && parseFolderPrefix(n).displayName.toLowerCase() === displayName.toLowerCase());
+  candidates.sort((a, b) => {
+    if (a === minted !== (b === minted)) return a === minted ? -1 : 1;
+    const aMarked = parseFolderPrefix(a).order !== null;
+    const bMarked = parseFolderPrefix(b).order !== null;
+    if (aMarked !== bMarked) return aMarked ? -1 : 1;
+    return naturalCompare(a, b);
+  });
+  const adopted = candidates.length > 0 ? candidates[0] : null;
+  if (adopted !== null) consumedAdoptees.add(adopted);
+  if (adopted === null) {
+    return {
+      kind: "folder",
+      legacyTitle: item.title,
+      displayName,
+      currentPath: null,
+      targetName: minted,
+      targetPath: `${parentPath2}/${minted}`,
+      action: "create"
+    };
+  }
+  if (parseFolderPrefix(adopted).order !== null) {
+    return {
+      kind: "folder",
+      legacyTitle: item.title,
+      displayName,
+      currentPath: null,
+      targetName: adopted,
+      targetPath: `${parentPath2}/${adopted}`,
+      action: "none"
+    };
+  }
+  const attached = folderNameWithPrefix(adopted, position);
+  return {
+    kind: "folder",
+    legacyTitle: item.title,
+    displayName,
+    currentPath: `${parentPath2}/${adopted}`,
+    targetName: attached,
+    targetPath: `${parentPath2}/${attached}`,
+    action: "attach-marker"
+  };
+}
+function planDoc(item, position, parentPath2, disk, claimedBasenames) {
+  var _a2, _b2;
+  const originalPath = (item.filePath || "").replace(/\\/g, "/");
+  const basename = (_a2 = originalPath.split("/").pop()) != null ? _a2 : "";
+  const finalPath = `${parentPath2}/${basename}`;
+  const atOriginal = originalPath !== "" && disk.fileExists(originalPath);
+  const atFinal = basename !== "" && disk.fileExists(finalPath);
+  const key = basename.toLowerCase();
+  let state;
+  if (!atOriginal && !atFinal) {
+    state = "missing";
+  } else if (claimedBasenames.has(key)) {
+    state = "leftover";
+  } else {
+    claimedBasenames.add(key);
+    if (finalPath === originalPath) state = "done";
+    else if (atOriginal && atFinal) state = "leftover";
+    else if (atOriginal) state = "pending";
+    else state = "done";
+  }
+  const currentPath = state === "missing" ? null : state === "done" ? finalPath : originalPath;
+  const fm = currentPath !== null ? (_b2 = disk.frontmatter(currentPath)) != null ? _b2 : {} : {};
+  const kept = (k) => fm[k] !== void 0 && fm[k] !== null;
+  return {
+    kind: "doc",
+    originalPath,
+    finalPath,
+    state,
+    order: position,
+    // leftovers re-ranked in assignLeftoverOrders
+    frontmatter: state === "missing" ? [] : metadataEntries(item, kept),
+    orderKept: state === "missing" ? false : kept("binder-order")
+  };
+}
+function metadataEntries(item, kept) {
+  const entries = [];
+  const status = parseBinderStatus(item.status);
+  if (status !== null) {
+    entries.push({ key: "binder-status", value: status, kept: kept("binder-status") });
+  }
+  const docType = parseBinderType(item.type);
+  if (docType !== null) {
+    entries.push({ key: "binder-type", value: docType, kept: kept("binder-type") });
+  }
+  if (typeof item.wordCountGoal === "number" && Number.isFinite(item.wordCountGoal) && item.wordCountGoal > 0) {
+    entries.push({ key: "word-count-goal", value: item.wordCountGoal, kept: kept("word-count-goal") });
+  }
+  if (item.includeInExport === false) {
+    entries.push({ key: "binder-compile", value: false, kept: kept("binder-compile") });
+  }
+  return entries;
+}
+function assignLeftoverOrders(plan, disk) {
+  var _a2, _b2;
+  const positions = /* @__PURE__ */ new Map();
+  for (const op of plan.docOps) {
+    if (op.state !== "leftover") continue;
+    const parent = op.originalPath.split("/").slice(0, -1).join("/");
+    const next = ((_a2 = positions.get(parent)) != null ? _a2 : 0) + 10;
+    positions.set(parent, next);
+    op.order = next;
+    op.orderKept = ((_b2 = disk.frontmatter(op.originalPath)) != null ? _b2 : {})["binder-order"] != null;
+  }
+}
+function restoreHasWork(plan) {
+  return plan.docOps.some((op) => op.state === "pending") || plan.folderOps.some((op) => op.state === "pending");
+}
+function planRestore(items, projectFolderPath, disk) {
+  const forward = planCarryOver(items, projectFolderPath, disk);
+  const docOps = [];
+  for (const op of forward.docOps) {
+    if (op.originalPath === "" || op.finalPath === op.originalPath) continue;
+    const atFinal = disk.fileExists(op.finalPath);
+    const atOriginal = disk.fileExists(op.originalPath);
+    let state;
+    let skipReason;
+    if (atOriginal) {
+      state = "done";
+    } else if (atFinal) {
+      state = "pending";
+    } else {
+      state = "skipped";
+      skipReason = "not-found";
+    }
+    docOps.push({
+      kind: "restore-doc",
+      fromPath: op.finalPath,
+      toPath: op.originalPath,
+      ensureFolders: ancestorsWithin(op.originalPath, projectFolderPath),
+      state,
+      skipReason
+    });
+  }
+  const folderOps = [];
+  for (const op of forward.folderOps) {
+    if (op.action !== "none") continue;
+    const parsed = parseFolderPrefix(op.targetName);
+    if (parsed.order === null) continue;
+    const parent = op.targetPath.split("/").slice(0, -1).join("/");
+    const toPath = `${parent}/${parsed.displayName}`;
+    const occupied = disk.folderExists(toPath) || disk.fileExists(toPath);
+    folderOps.push({
+      kind: "restore-folder",
+      fromPath: op.targetPath,
+      toPath,
+      state: occupied ? "skipped" : "pending",
+      skipReason: occupied ? "target-occupied" : void 0
+    });
+  }
+  return { docOps, folderOps };
+}
+function ancestorsWithin(filePath, projectFolderPath) {
+  const out = [];
+  const parts = filePath.split("/");
+  parts.pop();
+  let path = "";
+  for (const part of parts) {
+    path = path === "" ? part : `${path}/${part}`;
+    if (path.length > projectFolderPath.length && path.startsWith(projectFolderPath + "/")) {
+      out.push(path);
+    }
+  }
+  return out;
+}
+var basenameOf = (path) => {
+  var _a2;
+  return (_a2 = path.split("/").pop()) != null ? _a2 : path;
+};
+async function runMigrationPass(compute, io) {
+  const result = { changed: 0, failures: [], leftovers: 0, missing: 0 };
+  const failedRoots = [];
+  const underFailedRoot = (path) => failedRoots.some((root) => path === root || path.startsWith(root + "/"));
+  for (const op of compute().plan.folderOps) {
+    if (op.action === "none" || underFailedRoot(op.targetPath)) continue;
+    try {
+      if (op.action === "create") await io.createFolder(op.targetPath);
+      else await io.rename(op.currentPath, op.targetPath);
+      result.changed += 1;
+    } catch (e) {
+      failedRoots.push(op.targetPath);
+      result.failures.push({
+        signature: `folder|${op.targetPath}`,
+        name: op.displayName,
+        reason: e instanceof Error ? e.message : String(e),
+        kind: "folder"
+      });
+    }
+  }
+  const afterFolders = compute();
+  for (const op of afterFolders.plan.docOps) {
+    if (op.state !== "pending") continue;
+    const targetParent = op.finalPath.split("/").slice(0, -1).join("/");
+    if (!afterFolders.disk.folderExists(targetParent)) continue;
+    try {
+      await io.rename(op.originalPath, op.finalPath);
+      result.changed += 1;
+    } catch (e) {
+      result.failures.push({
+        signature: `move|${op.originalPath}`,
+        name: basenameOf(op.originalPath),
+        reason: e instanceof Error ? e.message : String(e),
+        kind: "move"
+      });
+    }
+  }
+  const final = compute();
+  for (const op of final.plan.docOps) {
+    const path = docCurrentPath(op);
+    if (path === null) {
+      result.missing += 1;
+      continue;
+    }
+    if (op.state === "leftover") {
+      result.leftovers += 1;
+      result.failures.push({
+        signature: `leftover|${op.originalPath}`,
+        name: basenameOf(op.originalPath),
+        reason: "name-taken",
+        kind: "leftover"
+      });
+    }
+    const writes = op.frontmatter.filter((e) => !e.kept);
+    const writeOrder = !op.orderKept && op.state !== "pending";
+    if (writes.length === 0 && !writeOrder) continue;
+    try {
+      await io.writeFrontmatter(path, (fm) => {
+        for (const e of writes) {
+          if (fm[e.key] === void 0 || fm[e.key] === null) fm[e.key] = e.value;
+        }
+        if (writeOrder && (fm["binder-order"] === void 0 || fm["binder-order"] === null)) {
+          fm["binder-order"] = op.order;
+        }
+      });
+      result.changed += 1;
+    } catch (e) {
+      result.failures.push({
+        signature: `frontmatter|${path}`,
+        name: basenameOf(path),
+        reason: e instanceof Error ? e.message : String(e),
+        kind: "frontmatter"
+      });
+    }
+  }
+  return result;
+}
+async function runRestorePass(compute, io) {
+  const result = { moved: 0, skipped: 0, failures: [] };
+  const first = compute();
+  const ensured = /* @__PURE__ */ new Set();
+  for (const op of first.plan.docOps) {
+    if (op.state !== "pending") {
+      if (op.state === "skipped") result.skipped += 1;
+      continue;
+    }
+    try {
+      for (const folder of op.ensureFolders) {
+        if (ensured.has(folder) || first.disk.folderExists(folder)) continue;
+        await io.createFolder(folder);
+        ensured.add(folder);
+      }
+      await io.rename(op.fromPath, op.toPath);
+      result.moved += 1;
+    } catch (e) {
+      result.failures.push({
+        signature: `restore|${op.fromPath}`,
+        name: basenameOf(op.fromPath),
+        reason: e instanceof Error ? e.message : String(e),
+        kind: "move"
+      });
+    }
+  }
+  for (const op of compute().plan.folderOps) {
+    if (op.state !== "pending") {
+      if (op.state === "skipped") result.skipped += 1;
+      continue;
+    }
+    try {
+      await io.rename(op.fromPath, op.toPath);
+      result.moved += 1;
+    } catch (e) {
+      result.failures.push({
+        signature: `restore|${op.fromPath}`,
+        name: basenameOf(op.fromPath),
+        reason: e instanceof Error ? e.message : String(e),
+        kind: "folder"
+      });
+    }
+  }
+  return result;
+}
+
+// src/carryOverBridge.ts
+function buildDiskState(app) {
+  const at = (path) => app.vault.getAbstractFileByPath((0, import_obsidian35.normalizePath)(path));
+  return {
+    fileExists: (path) => at(path) instanceof import_obsidian35.TFile,
+    folderExists: (path) => at(path) instanceof import_obsidian35.TFolder,
+    subfolderNames: (parentPath2) => {
+      const folder = at(parentPath2);
+      if (!(folder instanceof import_obsidian35.TFolder)) return [];
+      return folder.children.filter((c) => c instanceof import_obsidian35.TFolder).map((c) => c.name);
+    },
+    // The metadata cache can be cold right after vault open; a key it has
+    // not indexed yet merely plans as "will write" — the processFrontMatter
+    // callback re-checks live, so nothing user-set is ever overwritten.
+    frontmatter: (path) => {
+      var _a2, _b2;
+      const file = at(path);
+      if (!(file instanceof import_obsidian35.TFile)) return null;
+      return (_b2 = (_a2 = app.metadataCache.getFileCache(file)) == null ? void 0 : _a2.frontmatter) != null ? _b2 : null;
+    }
+  };
+}
+function obsidianIO(app) {
+  return {
+    createFolder: async (path) => {
+      await app.vault.createFolder((0, import_obsidian35.normalizePath)(path));
+    },
+    rename: async (fromPath, toPath) => {
+      const file = app.vault.getAbstractFileByPath((0, import_obsidian35.normalizePath)(fromPath));
+      if (!file) throw new Error(`not found: ${fromPath}`);
+      await app.fileManager.renameFile(file, (0, import_obsidian35.normalizePath)(toPath));
+    },
+    writeFrontmatter: async (path, mutate) => {
+      const file = app.vault.getAbstractFileByPath((0, import_obsidian35.normalizePath)(path));
+      if (!(file instanceof import_obsidian35.TFile)) throw new Error(`not found: ${path}`);
+      await app.fileManager.processFrontMatter(file, mutate);
+    }
+  };
+}
+async function readLegacyBinder(app, project) {
+  const file = app.vault.getAbstractFileByPath((0, import_obsidian35.normalizePath)(`${project.folderPath}/_binder.json`));
+  if (!(file instanceof import_obsidian35.TFile)) return null;
+  return parseLegacyBinder(await app.vault.cachedRead(file));
+}
+function describeReason(reason) {
+  if (reason === "name-taken") return t2("binder.migration.reasonNameTaken");
+  if (/EBUSY|ETXTBSY|locked|being used|in use/i.test(reason)) return t2("binder.migration.reasonInUse");
+  if (/EACCES|EPERM|permission/i.test(reason)) return t2("binder.migration.reasonPermission");
+  return reason;
+}
+function failureNoticeKey(kind) {
+  if (kind === "folder") return "binder.migration.couldntRename";
+  if (kind === "frontmatter") return "binder.migration.couldntUpdate";
+  return "binder.migration.couldntMove";
+}
+async function updateFailureLedger(plugin, project, failures) {
+  var _a2;
+  const ledger = plugin.settings.carryOverFailures;
+  const prefix = `${project.id}|`;
+  const seen = /* @__PURE__ */ new Set();
+  let changed = false;
+  for (const f of failures) {
+    const sig = prefix + f.signature;
+    seen.add(sig);
+    const entry = (_a2 = ledger[sig]) != null ? _a2 : { count: 0, noticed: false };
+    entry.count += 1;
+    console.warn(`Writing Studio migration: ${f.kind} failed for ${f.name} \u2014 ${f.reason}`);
+    if (entry.count >= 2 && !entry.noticed) {
+      new import_obsidian35.Notice(t2(failureNoticeKey(f.kind), { name: f.name, reason: describeReason(f.reason) }));
+      entry.noticed = true;
+    }
+    ledger[sig] = entry;
+    changed = true;
+  }
+  for (const sig of Object.keys(ledger)) {
+    if (sig.startsWith(prefix) && !seen.has(sig)) {
+      delete ledger[sig];
+      changed = true;
+    }
+  }
+  if (changed) await plugin.saveSettings();
+}
+var inFlight = /* @__PURE__ */ new Set();
+async function runSilentMigration(plugin) {
+  if (!plugin.settings.filesystemBinder) return;
+  const project = plugin.projectManager.getActiveProject();
+  if (!project || inFlight.has(project.id)) return;
+  const legacy = await readLegacyBinder(plugin.app, project);
+  if (!legacy) return;
+  const compute = () => {
+    const disk = buildDiskState(plugin.app);
+    return { plan: planCarryOver(legacy.items, project.folderPath, disk), disk };
+  };
+  if (!planHasWork(compute().plan)) return;
+  inFlight.add(project.id);
+  try {
+    const result = await runMigrationPass(compute, obsidianIO(plugin.app));
+    await updateFailureLedger(plugin, project, result.failures);
+  } finally {
+    inFlight.delete(project.id);
+  }
+}
+async function runRestoreLayout(plugin) {
+  const project = plugin.projectManager.getActiveProject();
+  if (!plugin.settings.filesystemBinder || !project) {
+    new import_obsidian35.Notice(t2("binder.migration.restoreUnavailable"));
+    return;
+  }
+  if (inFlight.has(project.id)) return;
+  const legacy = await readLegacyBinder(plugin.app, project);
+  if (!legacy) {
+    new import_obsidian35.Notice(t2("binder.migration.restoreNothing"));
+    return;
+  }
+  const compute = () => {
+    const disk = buildDiskState(plugin.app);
+    return { plan: planRestore(legacy.items, project.folderPath, disk), disk };
+  };
+  if (!restoreHasWork(compute().plan)) {
+    new import_obsidian35.Notice(t2("binder.migration.restoreNothing"));
+    return;
+  }
+  inFlight.add(project.id);
+  try {
+    const result = await runRestorePass(compute, obsidianIO(plugin.app));
+    for (const f of result.failures) {
+      console.warn(`Writing Studio restore: failed for ${f.name} \u2014 ${f.reason}`);
+    }
+    const leftBehind = result.skipped + result.failures.length;
+    new import_obsidian35.Notice(leftBehind > 0 ? t2("binder.migration.restorePartial", { count: leftBehind }) : t2("binder.migration.restoreDone"));
+  } finally {
+    inFlight.delete(project.id);
+  }
+}
+
 // modals/AddToProjectModal.ts
-var import_obsidian37 = require("obsidian");
-var AddToProjectModal = class extends import_obsidian37.Modal {
+var import_obsidian36 = require("obsidian");
+var AddToProjectModal = class extends import_obsidian36.Modal {
   constructor(app, plugin, file, onConfirm) {
     super(app);
     this.selectedProjectId = "";
@@ -21320,7 +21287,7 @@ var AddToProjectModal = class extends import_obsidian37.Modal {
     }
     this.selectedProjectId = projects[0].id;
     contentEl.createEl("p", { text: t2("addToProject.file", { path: this.file.path }), cls: "ws-add-to-project-path" });
-    new import_obsidian37.Setting(contentEl).setName(t2("addToProject.projectName")).setDesc(t2("addToProject.projectDesc")).addDropdown((d) => {
+    new import_obsidian36.Setting(contentEl).setName(t2("addToProject.projectName")).setDesc(t2("addToProject.projectDesc")).addDropdown((d) => {
       projects.forEach((p) => {
         d.addOption(p.id, p.title);
       });
@@ -21390,18 +21357,19 @@ var DEFAULT_SETTINGS = {
   defaultExportFontSize: 12,
   pandocPath: "pandoc",
   pdfEngine: "auto",
+  subtreeExportTitleSource: "folder",
   epubLanguage: "en",
   epubIncludeCover: true,
   wordPressSites: [],
   wikilinkHandling: "strip",
   filesystemBinder: false,
   binderDrawer: {},
-  carryOverNoticeSeen: {},
+  carryOverFailures: {},
   activeProjectId: null,
   currentWritingMode: "none",
   removedProjectIds: []
 };
-var WritingStudioPlugin = class extends import_obsidian38.Plugin {
+var WritingStudioPlugin = class extends import_obsidian37.Plugin {
   constructor() {
     super(...arguments);
     this.wordCountUpdateTimer = null;
@@ -21425,7 +21393,7 @@ var WritingStudioPlugin = class extends import_obsidian38.Plugin {
     }));
     this.registerEvent(this.projectManager.onActiveProjectChanged(() => {
       if (this.studioActivated) void this.statusBar.updateProjectGoalBar();
-      void maybeOfferCarryOver(this);
+      void runSilentMigration(this);
     }));
     this.focusMode = new FocusMode(this);
     this.typographyMode = new TypographyMode(this);
@@ -21471,7 +21439,7 @@ var WritingStudioPlugin = class extends import_obsidian38.Plugin {
     );
     this.registerEvent(
       this.app.workspace.on("file-menu", (menu, file) => {
-        if (file instanceof import_obsidian38.TFile && file.extension === "md") {
+        if (file instanceof import_obsidian37.TFile && file.extension === "md") {
           menu.addItem((i2) => i2.setTitle(t2("main.menu.studioOptions")).setSection("writing-studio").setDisabled(true));
           menu.addItem(
             (i2) => i2.setTitle(t2("main.menu.addToProject")).setIcon("book-open").setSection("writing-studio").onClick(() => {
@@ -21479,7 +21447,7 @@ var WritingStudioPlugin = class extends import_obsidian38.Plugin {
             })
           );
         }
-        if (file instanceof import_obsidian38.TFolder) {
+        if (file instanceof import_obsidian37.TFolder) {
           menu.addItem((i2) => i2.setTitle(t2("main.menu.studioOptions")).setSection("writing-studio").setDisabled(true));
           menu.addItem(
             (i2) => i2.setTitle(t2("main.menu.openSidebar")).setIcon("folder").setSection("writing-studio").onClick(() => {
@@ -21491,7 +21459,7 @@ var WritingStudioPlugin = class extends import_obsidian38.Plugin {
     );
     this.registerEvent(
       this.app.vault.on("modify", (file) => {
-        if (file instanceof import_obsidian38.TFile) {
+        if (file instanceof import_obsidian37.TFile) {
           this.fmManager.scheduleUpdate(file);
           this.statsTracker.invalidateWordCountCache();
           if (this.studioActivated) {
@@ -21503,9 +21471,9 @@ var WritingStudioPlugin = class extends import_obsidian38.Plugin {
     );
     this.registerEvent(
       this.app.vault.on("rename", (file, oldPath) => {
-        if (file instanceof import_obsidian38.TFolder) {
+        if (file instanceof import_obsidian37.TFolder) {
           void this.projectManager.handleFolderRename(oldPath, file.path);
-        } else if (file instanceof import_obsidian38.TFile && file.extension === "md") {
+        } else if (file instanceof import_obsidian37.TFile && file.extension === "md") {
           void this.projectManager.repairBinderPaths(oldPath, file.path, file.basename);
         }
       })
@@ -21523,7 +21491,7 @@ var WritingStudioPlugin = class extends import_obsidian38.Plugin {
       var _a2, _b2;
       await this.projectManager.initialize();
       if (this.settings.openOnStartup) await this.openLauncher();
-      void maybeOfferCarryOver(this);
+      void runSilentMigration(this);
       const nn = (_a2 = this.app.plugins.plugins["notebook-navigator"]) == null ? void 0 : _a2.api;
       if ((_b2 = nn == null ? void 0 : nn.menus) == null ? void 0 : _b2.registerFolderMenu) {
         const nnMajor = parseInt(nn.getVersion().split(".")[0]);
@@ -21670,9 +21638,9 @@ var WritingStudioPlugin = class extends import_obsidian38.Plugin {
   publishCurrentFile() {
     const leaf = this.app.workspace.getMostRecentLeaf();
     const view = leaf == null ? void 0 : leaf.view;
-    const file = view instanceof import_obsidian38.MarkdownView ? view.file : null;
-    if (!(file instanceof import_obsidian38.TFile)) {
-      new import_obsidian38.Notice(t2("main.notice.noMarkdownOpen"));
+    const file = view instanceof import_obsidian37.MarkdownView ? view.file : null;
+    if (!(file instanceof import_obsidian37.TFile)) {
+      new import_obsidian37.Notice(t2("main.notice.noMarkdownOpen"));
       return;
     }
     new PublishModal(this.app, this, file.path).open();
@@ -21690,15 +21658,11 @@ var WritingStudioPlugin = class extends import_obsidian38.Plugin {
   exportProject() {
     new ExportModal(this.app, this, "project").open();
   }
-  // Re-offers the carry-over preview (#230) regardless of the one-time
-  // notice flag. The dry run is part of the experimental binder surface.
-  async previewCarryOver() {
-    const project = this.projectManager.getActiveProject();
-    if (!this.settings.filesystemBinder || !project) {
-      new import_obsidian38.Notice(t2("binder.carryOver.unavailable"));
-      return;
-    }
-    await openCarryOverPreview(this, project);
+  // The migration's road back (#231 inverse pass) — layout-only by ruling:
+  // documents return to their legacy paths, markers come off, frontmatter
+  // stays. The #233 upgrade modal will carry the visible affordance.
+  async restoreBinderLayout() {
+    await runRestoreLayout(this);
   }
   newProject() {
     new ProjectModal(this.app, this).open();
@@ -21724,7 +21688,7 @@ var WritingStudioPlugin = class extends import_obsidian38.Plugin {
     }
   }
   showModeSwitcher(e) {
-    const menu = new import_obsidian38.Menu();
+    const menu = new import_obsidian37.Menu();
     menu.addItem((i2) => i2.setTitle(t2("main.menu.draftMode")).setIcon("pencil").onClick(() => this.writingModes.switchMode("draft")));
     menu.addItem((i2) => i2.setTitle(t2("main.menu.editMode")).setIcon("edit-3").onClick(() => this.writingModes.switchMode("edit")));
     menu.addItem((i2) => i2.setTitle(t2("main.menu.reviewMode")).setIcon("eye").onClick(() => this.writingModes.switchMode("review")));
@@ -21733,7 +21697,7 @@ var WritingStudioPlugin = class extends import_obsidian38.Plugin {
     if (e instanceof MouseEvent) menu.showAtMouseEvent(e);
   }
   showFontPicker(e) {
-    const menu = new import_obsidian38.Menu();
+    const menu = new import_obsidian37.Menu();
     TYPOGRAPHY_FONT_OPTIONS.forEach(({ key }) => {
       menu.addItem((i2) => {
         i2.setTitle(t2(`settings.typography.font.${key}`)).onClick(() => {
@@ -21751,7 +21715,7 @@ var WritingStudioPlugin = class extends import_obsidian38.Plugin {
   addFileToProject(file) {
     const projects = this.projectManager.getProjects();
     if (projects.length === 0) {
-      new import_obsidian38.Notice(t2("addToProject.noProjects"));
+      new import_obsidian37.Notice(t2("addToProject.noProjects"));
       return;
     }
     new AddToProjectModal(this.app, this, file, async (projectId) => {
@@ -21769,7 +21733,7 @@ var WritingStudioPlugin = class extends import_obsidian38.Plugin {
       };
       binder.items.push(item);
       await this.projectManager.saveBinder(binder);
-      new import_obsidian38.Notice(t2("main.notice.addedToProject", { file: file.basename, project: project.title }));
+      new import_obsidian37.Notice(t2("main.notice.addedToProject", { file: file.basename, project: project.title }));
     }).open();
   }
   scheduleLauncherRefresh() {
@@ -21789,7 +21753,7 @@ var WritingStudioPlugin = class extends import_obsidian38.Plugin {
   async updateWordCount() {
     const leaf = this.app.workspace.getMostRecentLeaf();
     const view = leaf == null ? void 0 : leaf.view;
-    if (!(view instanceof import_obsidian38.MarkdownView) || !view.editor) {
+    if (!(view instanceof import_obsidian37.MarkdownView) || !view.editor) {
       this.statusBar.clearWordCount();
       return;
     }
@@ -21814,7 +21778,7 @@ var WritingStudioPlugin = class extends import_obsidian38.Plugin {
     }
   }
 };
-var SprintSummaryModal = class extends import_obsidian38.Modal {
+var SprintSummaryModal = class extends import_obsidian37.Modal {
   constructor(app, session) {
     super(app);
     this.session = session;
@@ -21845,7 +21809,7 @@ var SprintSummaryModal = class extends import_obsidian38.Modal {
     this.contentEl.empty();
   }
 };
-var WordCountGoalModal = class extends import_obsidian38.Modal {
+var WordCountGoalModal = class extends import_obsidian37.Modal {
   constructor(app, plugin, file) {
     super(app);
     this.goal = 0;
@@ -21871,7 +21835,7 @@ var WordCountGoalModal = class extends import_obsidian38.Modal {
       const cache = this.app.metadataCache.getFileCache(this.file);
       this.goal = Number((_b2 = cache == null ? void 0 : cache.frontmatter) == null ? void 0 : _b2["word-count-goal"]) || 0;
     }
-    new import_obsidian38.Setting(contentEl).setName(t2("wordCountGoal.name")).setDesc(t2("wordCountGoal.desc")).addText((tx) => tx.setValue(String(this.goal || "")).setPlaceholder(t2("wordCountGoal.placeholder")).onChange((v) => {
+    new import_obsidian37.Setting(contentEl).setName(t2("wordCountGoal.name")).setDesc(t2("wordCountGoal.desc")).addText((tx) => tx.setValue(String(this.goal || "")).setPlaceholder(t2("wordCountGoal.placeholder")).onChange((v) => {
       this.goal = parseInt(v) || 0;
     }));
     const btnRow = contentEl.createDiv("ws-modal-btn-row");
