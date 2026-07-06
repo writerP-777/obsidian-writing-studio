@@ -44,7 +44,7 @@ export class GoalBanner {
     const file = view.file;
     if (!file) return;
 
-    const goal = await this.plugin.projectManager.getWordCountGoalForFile(file);
+    const goal = this.plugin.projectManager.getWordCountGoalForFile(file);
     if (gen !== this.generation) return;
     if (!goal || goal <= 0) return;
 

@@ -1,5 +1,6 @@
 import { App, TFile, normalizePath } from 'obsidian';
 import type WritingStudioPlugin from '../main';
+import { listManuscriptDocs } from './manuscriptTree';
 import { t } from './i18n';
 import { localDateString, moment } from './dates';
 import { SprintSession } from '../models/SprintSession';
@@ -152,13 +153,10 @@ ${t('statsTracker.dailyNote.heading')}
       return this.cachedTotalWordCount;
     }
 
-    const binder = await this.plugin.projectManager.loadBinder(project);
-    const items = this.plugin.projectManager.flattenBinder(binder.items);
-
+    // The manuscript zone is the project's document set (#233).
     // cachedRead + parallel — these are display-only reads
-    const counts = await Promise.all(items.map(async (item) => {
-      const file = this.app.vault.getAbstractFileByPath(item.filePath);
-      if (!(file instanceof TFile)) return 0;
+    const docs = listManuscriptDocs(this.app, project.folderPath);
+    const counts = await Promise.all(docs.map(async (file) => {
       const content = await this.app.vault.cachedRead(file);
       return this.plugin.fmManager.countWords(content);
     }));

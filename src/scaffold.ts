@@ -1,11 +1,14 @@
 import { normalizePath } from 'obsidian';
 import type { VaultFiles } from './VaultFiles';
 import { WritingProject, resolveDocumentFolder } from '../models/Project';
-import { BinderData, BinderItem } from '../models/BinderItem';
+import { BinderItem } from '../models/BinderItem';
+import { folderNameWithPrefix } from './binderOrder';
 
-// A project template as data: the folders and documents to scaffold and the
-// binder tree they produce. Templates build one of these; TemplateScaffolder
-// is the only code that touches the vault.
+// A project template as data: the folders and documents to scaffold.
+// Templates build one of these; TemplateScaffolder is the only code that
+// touches the vault. Since the cutover (#233) the filesystem is the binder:
+// structural nodes become real folders carrying an order marker, documents
+// carry binder-* frontmatter, and no _binder.json is written.
 export interface ManifestNode {
   id: string;
   title: string;
@@ -44,19 +47,21 @@ export interface DocFields {
   body: string;
 }
 
-// The one place the template document format lives.
+// The one place the template document format lives. Frontmatter keys are the
+// binder's own (#233): binder-order/binder-status/binder-type/binder-compile,
+// with word-count-goal the sole goal authority. No title key — the filename
+// is the title.
 export function templateDoc(f: DocFields): string {
   const extra = Object.entries(f.extraFields ?? {})
     .map(([k, v]) => `\n${k}: "${v}"`)
     .join('');
   const goalLine = f.goal && f.goal > 0 ? `\nword-count-goal: ${f.goal}` : '';
-  const exportLine = f.exportExcluded ? '\ninclude-in-export: false' : '';
+  const exportLine = f.exportExcluded ? '\nbinder-compile: false' : '';
   const tags = (f.tags ?? ['writing-studio']).join(', ');
-  return `---
-title: "${f.title}"${extra}
-type: ${f.fmType}
-order: ${f.order}
-status: draft${goalLine}${exportLine}
+  return `---${extra}
+binder-type: ${f.fmType}
+binder-order: ${f.order}
+binder-status: draft${goalLine}${exportLine}
 word-count: 0
 created: ${f.date}
 modified: ${f.date}
@@ -80,40 +85,32 @@ export class TemplateScaffolder {
     this.files = files;
   }
 
-  async apply(project: WritingProject, manifest: TemplateManifest): Promise<BinderData> {
+  async apply(project: WritingProject, manifest: TemplateManifest): Promise<void> {
     const container = normalizePath(`${project.folderPath}/${resolveDocumentFolder(project)}`);
     for (const folder of manifest.folders ?? []) {
       await this.files.ensureFolder(normalizePath(`${container}/${folder}`));
     }
-    const items = await this.buildItems(manifest.items, container);
-    return { version: '2.0', projectId: project.id, items };
+    await this.buildItems(manifest.items, container);
   }
 
-  private async buildItems(nodes: ManifestNode[], container: string): Promise<BinderItem[]> {
-    const items: BinderItem[] = [];
-    let order = 1;
+  // Sibling orders are minted with gaps of 10, the same scheme reordering
+  // uses, so a scaffolded group has room for insertions before any renumber.
+  private async buildItems(nodes: ManifestNode[], container: string): Promise<void> {
+    let order = 10;
     for (const node of nodes) {
-      let filePath = '';
       if (node.fileName) {
-        filePath = normalizePath(`${container}/${node.fileName}.md`);
+        const filePath = normalizePath(`${container}/${node.fileName}.md`);
         // Never overwrite — a user file with the same name wins.
         if (!this.files.exists(filePath)) {
           await this.files.writeText(filePath, node.content ?? '');
         }
+      } else {
+        // Structural node: a real folder ordered by its name marker (#233)
+        const folderPath = normalizePath(`${container}/${folderNameWithPrefix(node.title, order)}`);
+        await this.files.ensureFolder(folderPath);
+        if (node.children) await this.buildItems(node.children, folderPath);
       }
-      const item: BinderItem = {
-        id: node.id,
-        title: node.title,
-        filePath,
-        type: node.type,
-        order: order++,
-        status: 'draft',
-        includeInExport: node.includeInExport ?? true,
-      };
-      if (node.wordCountGoal) item.wordCountGoal = node.wordCountGoal;
-      if (node.children) item.children = await this.buildItems(node.children, container);
-      items.push(item);
+      order += 10;
     }
-    return items;
   }
 }

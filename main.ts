@@ -11,8 +11,7 @@ import {
   Menu,
 } from 'obsidian';
 
-import { BinderView, BINDER_VIEW_TYPE } from './src/BinderView';
-import { FilesystemBinderView, BinderDrawerPref } from './src/FilesystemBinderView';
+import { FilesystemBinderView, BinderDrawerPref, BINDER_VIEW_TYPE } from './src/FilesystemBinderView';
 import { CompilePreviewView, COMPILE_PREVIEW_VIEW_TYPE } from './src/CompilePreview';
 import { LauncherView, LAUNCHER_VIEW_TYPE } from './src/LauncherView';
 import { FocusMode } from './src/FocusMode';
@@ -35,7 +34,6 @@ import { ObsidianVaultFiles, type VaultFiles } from './src/VaultFiles';
 import { StudioEvents } from './src/StudioEvents';
 import { runSilentMigration, runRestoreLayout, FailureLedgerEntry } from './src/carryOverBridge';
 
-import { AddToProjectModal } from './modals/AddToProjectModal';
 import { SprintModal } from './modals/SprintModal';
 import { ExportModal } from './modals/ExportModal';
 import { PublishModal } from './modals/PublishModal';
@@ -44,9 +42,7 @@ import { TargetsDashboardModal } from './modals/TargetsDashboardModal';
 import { WritingDashboardModal } from './modals/WritingDashboardModal';
 
 import { WordPressSite } from './models/WordPressSite';
-import { resolveDefaultDocumentType } from './models/Project';
 import { WritingModeType } from './models/WritingMode';
-import type { BinderData, BinderItem } from './models/BinderItem';
 
 // Minimal subset of the Notebook Navigator public API (v1.2–2.x) used by Writing Studio.
 // Full spec: https://github.com/johansan/notebook-navigator/blob/main/docs/api-reference.md
@@ -126,13 +122,12 @@ export interface WritingStudioSettings {
   // WordPress
   wordPressSites: WordPressSite[];
   wikilinkHandling: 'strip' | 'convert';
-  // Experimental
-  // ADR 0001 preview: the binder renders the project folder tree read-only
-  // instead of _binder.json. Off = the shipped binder, untouched.
-  filesystemBinder: boolean;
   // Resources-drawer open state and active tab, per project id — a view
   // preference, deliberately kept out of the vault
   binderDrawer: Record<string, BinderDrawerPref>;
+  // Whether the one-time "binder and folders now stay in sync" modal has
+  // shown (#233) — set after the first migration that performs work
+  binderUpdateNoticeSeen: boolean;
   // Graduated migration-failure ledger (#231 R2): signature → consecutive
   // fail count + whether its one notice fired; success clears the entry
   carryOverFailures: Record<string, FailureLedgerEntry>;
@@ -179,8 +174,8 @@ const DEFAULT_SETTINGS: WritingStudioSettings = {
   epubIncludeCover: true,
   wordPressSites: [],
   wikilinkHandling: 'strip',
-  filesystemBinder: false,
   binderDrawer: {},
+  binderUpdateNoticeSeen: false,
   carryOverFailures: {},
   activeProjectId: null,
   currentWritingMode: 'none',
@@ -220,9 +215,10 @@ export default class WritingStudioPlugin extends Plugin {
     this.fmManager = new FrontmatterManager(this);
     this.projectManager = new ProjectManager(this, this.vaultFiles);
     this.statsTracker = new StatsTracker(this);
-    this.registerEvent(this.projectManager.onBinderChanged(() => {
-      this.statsTracker.invalidateWordCountCache();
-    }));
+    // The project word-count total tracks the manuscript zone, so vault
+    // membership changes invalidate it (#233 — membership lives on disk now)
+    this.registerEvent(this.app.vault.on('create', () => { this.statsTracker.invalidateWordCountCache(); }));
+    this.registerEvent(this.app.vault.on('delete', () => { this.statsTracker.invalidateWordCountCache(); }));
     // Goal/title edits and project switches refresh the status bar goal bar.
     // Gated on launch — before activateStudio() the status bar stays untouched.
     this.registerEvent(this.projectManager.onProjectsChanged(() => {
@@ -245,11 +241,7 @@ export default class WritingStudioPlugin extends Plugin {
 
     // Register views
     this.registerView(LAUNCHER_VIEW_TYPE, (leaf) => new LauncherView(leaf, this));
-    // The experimental setting picks the binder implementation at leaf
-    // creation; both classes share the view type so every entry point
-    // (ribbon, commands, launcher, workspace restore) works unchanged
-    this.registerView(BINDER_VIEW_TYPE, (leaf) =>
-      this.settings.filesystemBinder ? new FilesystemBinderView(leaf, this) : new BinderView(leaf, this));
+    this.registerView(BINDER_VIEW_TYPE, (leaf) => new FilesystemBinderView(leaf, this));
     this.registerView(COMPILE_PREVIEW_VIEW_TYPE, (leaf) => new CompilePreviewView(leaf, this));
     this.registerView(FOLDER_SIDEBAR_VIEW_TYPE, (leaf) => new FolderSidebarView(leaf));
     this.registerView(WRITING_LOG_VIEW_TYPE, (leaf) => new WritingLogView(leaf, this));
@@ -298,15 +290,6 @@ export default class WritingStudioPlugin extends Plugin {
     // File-context menu (file explorer)
     this.registerEvent(
       this.app.workspace.on('file-menu', (menu, file) => {
-        if (file instanceof TFile && file.extension === 'md') {
-          menu.addItem(i => i.setTitle(t('main.menu.studioOptions')).setSection('writing-studio').setDisabled(true));
-          menu.addItem(i =>
-            i.setTitle(t('main.menu.addToProject'))
-              .setIcon('book-open')
-              .setSection('writing-studio')
-              .onClick(() => { void this.addFileToProject(file); })
-          );
-        }
         if (file instanceof TFolder) {
           menu.addItem(i => i.setTitle(t('main.menu.studioOptions')).setSection('writing-studio').setDisabled(true));
           menu.addItem(i =>
@@ -334,16 +317,15 @@ export default class WritingStudioPlugin extends Plugin {
       })
     );
 
-    // Keep project records in sync when files or folders are renamed outside
-    // the plugin. A folder rename fires one TFolder event plus one TFile
-    // event per child; both handlers are idempotent, so the outcome is the
-    // same whichever order Obsidian delivers them in.
+    // Keep project records in sync when folders are renamed outside the
+    // plugin — folderPath and documentFolder in _project.json follow the
+    // folder they name. Documents need no following since #233: the binder
+    // renders disk truth, and per-document state travels in frontmatter.
     this.registerEvent(
       this.app.vault.on('rename', (file, oldPath) => {
+        this.statsTracker.invalidateWordCountCache();
         if (file instanceof TFolder) {
           void this.projectManager.handleFolderRename(oldPath, file.path);
-        } else if (file instanceof TFile && file.extension === 'md') {
-          void this.projectManager.repairBinderPaths(oldPath, file.path, file.basename);
         }
       })
     );
@@ -473,15 +455,6 @@ export default class WritingStudioPlugin extends Plugin {
     }
   }
 
-  // Rebuilds open binder leaves so the experimental-binder toggle takes
-  // effect immediately — the view class is chosen at leaf creation
-  async reopenBinderViews(): Promise<void> {
-    const leaves = this.app.workspace.getLeavesOfType(BINDER_VIEW_TYPE);
-    if (leaves.length === 0) return;
-    for (const leaf of leaves) leaf.detach();
-    await this.openBinder();
-  }
-
   async openBinder(): Promise<void> {
     const existing = this.app.workspace.getLeavesOfType(BINDER_VIEW_TYPE);
     if (existing.length > 0) {
@@ -592,16 +565,6 @@ export default class WritingStudioPlugin extends Plugin {
     new FolderPickerModal(this.app, (folder) => { void this.openFolder(folder); }).open();
   }
 
-  async addFilesToBinder(): Promise<void> {
-    await this.openBinder();
-    for (const leaf of this.app.workspace.getLeavesOfType(BINDER_VIEW_TYPE)) {
-      if (leaf.view instanceof BinderView) {
-        await leaf.view.scanProjectFolder();
-        break;
-      }
-    }
-  }
-
   private showModeSwitcher(e: MouseEvent | KeyboardEvent): void {
     const menu = new Menu();
     menu.addItem(i => i.setTitle(t('main.menu.draftMode')).setIcon('pencil').onClick(() => this.writingModes.switchMode('draft')));
@@ -625,34 +588,6 @@ export default class WritingStudioPlugin extends Plugin {
       });
     });
     if (e instanceof MouseEvent) menu.showAtMouseEvent(e);
-  }
-
-  private addFileToProject(file: TFile): void {
-    const projects = this.projectManager.getProjects();
-    if (projects.length === 0) {
-      new Notice(t('addToProject.noProjects'));
-      return;
-    }
-
-    new AddToProjectModal(this.app, this, file, async (projectId) => {
-      const project = projects.find(p => p.id === projectId);
-      if (!project) return;
-
-      const binder = await this.projectManager.loadBinder(project);
-      const item = {
-        id: `item-${Date.now()}`,
-        title: file.basename,
-        filePath: file.path,
-        type: resolveDefaultDocumentType(project.type, this.settings.defaultDocumentType),
-        order: binder.items.length + 1,
-        status: 'draft' as const,
-        includeInExport: true,
-      };
-
-      binder.items.push(item);
-      await this.projectManager.saveBinder(binder);
-      new Notice(t('main.notice.addedToProject', { file: file.basename, project: project.title }));
-    }).open();
   }
 
   private scheduleLauncherRefresh(): void {
@@ -688,17 +623,11 @@ export default class WritingStudioPlugin extends Plugin {
       sessionDelta = this.statsTracker.getSessionDelta(file.path);
     }
 
-    const goal = file ? await this.projectManager.getWordCountGoalForFile(file) : undefined;
+    const goal = file ? this.projectManager.getWordCountGoalForFile(file) : undefined;
     this.statusBar.showWordCount(wc, goal, sessionDelta);
     this.focusMode.updateToolbarWordCount(wc);
 
-    // Push the fresh count to the binder panel (O(1) map lookup, no re-render).
     if (file) {
-      for (const bl of this.app.workspace.getLeavesOfType(BINDER_VIEW_TYPE)) {
-        if (bl.view instanceof BinderView) {
-          bl.view.updateWordCount(file.path, wc);
-        }
-      }
       this.goalBanner.patch(wc);
     }
   }
@@ -752,12 +681,6 @@ class WordCountGoalModal extends Modal {
   private plugin: WritingStudioPlugin;
   private file: TFile;
   private goal = 0;
-  // Non-null when the file is in the active project's binder — the binder
-  // item is then the authoritative goal store (CONTEXT.md invariant 1) and
-  // frontmatter is neither read nor written. With the experimental
-  // filesystem binder on, frontmatter is the sole authority instead (#229)
-  // and this stays null.
-  private binderEntry: { binder: BinderData; item: BinderItem } | null = null;
 
   constructor(app: App, plugin: WritingStudioPlugin, file: TFile) {
     super(app);
@@ -765,21 +688,15 @@ class WordCountGoalModal extends Modal {
     this.file = file;
   }
 
-  async onOpen(): Promise<void> {
+  onOpen(): void {
     const { contentEl } = this;
     contentEl.empty();
     contentEl.addClass('ws-goal-modal');
     contentEl.createEl('h2', { text: t('wordCountGoal.title') });
 
-    this.binderEntry = this.plugin.settings.filesystemBinder
-      ? null
-      : await this.plugin.projectManager.findBinderEntryForFile(this.file.path);
-    if (this.binderEntry) {
-      this.goal = this.binderEntry.item.wordCountGoal ?? 0;
-    } else {
-      const cache = this.app.metadataCache.getFileCache(this.file);
-      this.goal = Number(cache?.frontmatter?.['word-count-goal']) || 0;
-    }
+    // Frontmatter word-count-goal is the sole goal authority (#229/#233)
+    const cache = this.app.metadataCache.getFileCache(this.file);
+    this.goal = Number(cache?.frontmatter?.['word-count-goal']) || 0;
 
     new Setting(contentEl)
       .setName(t('wordCountGoal.name'))
@@ -793,15 +710,11 @@ class WordCountGoalModal extends Modal {
 
     const saveBtn = btnRow.createEl('button', { cls: 'mod-cta', text: t('wordCountGoal.save') });
     saveBtn.onclick = async () => {
-      if (this.binderEntry) {
-        this.binderEntry.item.wordCountGoal = this.goal;
-        await this.plugin.projectManager.saveBinder(this.binderEntry.binder);
-      } else {
-        await this.app.fileManager.processFrontMatter(this.file, (fm: Record<string, unknown>) => {
-          fm['word-count-goal'] = this.goal;
-        });
-      }
-      // The banner re-resolves the goal — binder rows update via binder-changed
+      await this.app.fileManager.processFrontMatter(this.file, (fm: Record<string, unknown>) => {
+        fm['word-count-goal'] = this.goal;
+      });
+      // The banner re-resolves the goal; binder rows re-render on the
+      // metadata change event
       void this.plugin.goalBanner.show();
       this.close();
     };

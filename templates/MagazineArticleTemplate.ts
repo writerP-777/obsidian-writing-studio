@@ -48,7 +48,7 @@ export function magazineArticleManifest(_project: WritingProject): TemplateManif
     wordCountGoal: s.goal,
     includeInExport: !s.exportExcluded,
     content: templateDoc({
-      title: s.title, fmType: s.fmType, order: i + 1, goal: s.goal, date,
+      title: s.title, fmType: s.fmType, order: (i + 1) * 10, goal: s.goal, date,
       exportExcluded: s.exportExcluded,
       extraFields: s.extraFields,
       body: placeholderHint(s.hint),

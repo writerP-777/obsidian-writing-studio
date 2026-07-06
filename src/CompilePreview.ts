@@ -67,7 +67,6 @@ export class CompilePreviewView extends ItemView {
       currentFile: s.currentFilePath,
       exportTitle: title || undefined,
       includeFrontmatter: s.includeFrontmatter,
-      includeResearch: s.includeResearch,
       includeTitlesAsHeadings: s.includeTitlesAsHeadings,
       includeFolderNamesAsHeadings: s.includeFolderNamesAsHeadings,
       paperSize: 'letter',

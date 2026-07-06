@@ -131,18 +131,6 @@ export class WritingStudioSettingsTab extends PluginSettingTab {
         .setValue(this.plugin.settings.frontmatterAutoUpdate)
         .onChange(async v => { this.plugin.settings.frontmatterAutoUpdate = v; await this.plugin.saveSettings(); }));
 
-    new Setting(el).setName(t('settings.general.experimentalHeading')).setHeading();
-
-    new Setting(el)
-      .setName(t('settings.general.filesystemBinder'))
-      .setDesc(t('settings.general.filesystemBinderDesc'))
-      .addToggle(toggle => toggle
-        .setValue(this.plugin.settings.filesystemBinder)
-        .onChange(async v => {
-          this.plugin.settings.filesystemBinder = v;
-          await this.plugin.saveSettings();
-          await this.plugin.reopenBinderViews();
-        }));
   }
 
   private renderFocusMode(el: HTMLElement): void {

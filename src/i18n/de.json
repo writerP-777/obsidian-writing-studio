@@ -28,10 +28,7 @@
         "note": "Notiz"
       },
       "frontmatterAutoUpdate": "Frontmatter automatisch aktualisieren",
-      "frontmatterAutoUpdateDesc": "Wortanzahl und Änderungsdatum beim Speichern automatisch aktualisieren.",
-      "experimentalHeading": "Experimentell",
-      "filesystemBinder": "Dateisystem-Mappe",
-      "filesystemBinderDesc": "Vorschau der neu gestalteten Mappe: zeigt den Projektordnerbaum direkt an, schreibgeschützt. Zum Zurückkehren zur klassischen Mappe ausschalten."
+      "frontmatterAutoUpdateDesc": "Wortanzahl und Änderungsdatum beim Speichern automatisch aktualisieren."
     },
     "focus": {
       "heading": "Fokusmodus",
@@ -157,61 +154,27 @@
     "displayText": "Schreibmappe",
     "selectProject": "— Projekt auswählen —",
     "newProject": "Neues Projekt",
-    "addDocument": "+ Dokument",
-    "addFiles": "In diesen Ordner kopierte Dateien hinzufügen",
     "targetsDashboard": "Ziel-Dashboard",
-    "searchPlaceholder": "Dokumente suchen…",
     "noProjectSelected": "Kein Projekt ausgewählt. Erstelle oder wähle ein Schreibprojekt, um loszulegen.",
-    "noDocuments": "Noch keine Dokumente. Klicke auf „+ Dokument“, um eines hinzuzufügen.",
-    "dropToRoot": "↓ Hier ablegen, um zur Wurzel zu befördern",
     "selectProjectFirst": "Bitte zuerst ein Projekt auswählen.",
-    "cannotFindFile": "Datei nicht gefunden: {{filePath}}. Versuche, das Dokument umzubenennen oder neu zu verknüpfen.",
     "untitledDocument": "Ohne Titel {{time}}",
-    "noNewFiles": "Keine neuen Dateien im Projektordner gefunden.",
-    "pctComplete": "{{pct}}% abgeschlossen",
-    "copySuffix": "(Kopie)",
     "menu": {
-      "openDocument": "Dokument öffnen",
-      "newChildDocument": "Neues untergeordnetes Dokument",
       "setStatusDraft": "Status setzen: Entwurf",
       "setStatusInProgress": "Status setzen: In Bearbeitung",
       "setStatusComplete": "Status setzen: Abgeschlossen",
       "setStatusPublished": "Status setzen: Veröffentlicht",
-      "duplicate": "Duplizieren",
-      "moveToResearch": "In Recherche verschieben",
-      "publishToWordPress": "Auf WordPress veröffentlichen",
-      "delete": "Dokument und Datei löschen",
-      "moveUp": "Nach oben verschieben",
-      "moveDown": "Nach unten verschieben",
       "rename": "Umbenennen",
-      "removeFromBinder": "Aus der Schreibmappe entfernen",
-      "newGroup": "Neue Gruppe",
-      "newPart": "Neuer Teil",
-      "newChildGroup": "Neue untergeordnete Gruppe",
-      "newChildPart": "Neuer untergeordneter Teil",
       "changeType": "Typ ändern: {{type}}"
     },
-    "wordCountSuffix": "{{count}}W",
-    "fileNotFound": "Die Datei existiert nicht mehr: {{path}}",
     "deleteConfirm": {
       "title": "Dokument löschen",
-      "message": "„{{title}}“ aus der Schreibmappe entfernen und die Datei in den Papierkorb verschieben? Der Mappeneintrag (Status, Wortziel, Position) kann nicht wiederhergestellt werden.",
       "delete": "Löschen",
       "cancel": "Abbrechen"
     },
-    "noMatches": "Keine Dokumente entsprechen „{{query}}“.",
     "titlePrompt": {
       "heading": "Neues Dokument",
       "create": "Erstellen"
     },
-    "removeConfirm": {
-      "title": "Aus der Schreibmappe entfernen",
-      "message": "„{{title}}“ aus der Schreibmappe entfernen? Die Datei bleibt im Vault, aber Status, Wortziel und Export-Einstellung des Eintrags gehen verloren. Untergeordnete Dokumente rücken an seine Stelle.",
-      "remove": "Entfernen"
-    },
-    "newGroupOrPart": "Neue Gruppe oder neuer Teil",
-    "untitledGroup": "Unbenannte Gruppe",
-    "untitledPart": "Unbenannter Teil",
     "strip": {
       "focus": "Fokus",
       "typography": "Typografie",
@@ -299,10 +262,7 @@
       "writingLog": "Schreibprotokoll",
       "publishToWordPress": "Auf WordPress veröffentlichen"
     },
-    "openDocumentFirst": "Bitte zuerst ein Dokument öffnen.",
     "sprintTimer": "Sprint-Timer",
-    "pause": "⏸ Pause",
-    "stop": "■ Stop",
     "startSprint": "⏱ Sprint einrichten",
     "quickStart": "Schnelle Sprint-Optionen",
     "today": "Heute",
@@ -435,7 +395,6 @@
   },
   "projectManager": {
     "errorFolderExists": "Ein Ordner namens \"{{folder}}\" existiert bereits in deinem Projektordner. Wähle einen anderen Titel.",
-    "corruptBinder": "Die Datei _binder.json von \"{{project}}\" konnte nicht gelesen werden. Eine Sicherung wurde als _binder.json.bak im Projektordner gespeichert.",
     "corruptProject": "Die Projektdatei in \"{{folder}}\" ist beschädigt und das Projekt konnte nicht geladen werden.",
     "corruptLog": "Schreibprotokoll für {{project}} konnte nicht gelesen werden — ein neues Protokoll wird begonnen."
   },
@@ -527,7 +486,6 @@
     "scopeCurrent": "Aktuelles Dokument",
     "scopeProject": "Gesamtes Projekt (in Mappenreihenfolge)",
     "includeFrontmatter": "Frontmatter einschließen",
-    "includeResearch": "Recherche-Notizen einschließen",
     "includeTitlesAsHeadings": "Dokumenttitel als Überschriften einschließen",
     "addTitlePage": "Titelseite hinzufügen",
     "addTitlePageDesc": "Eine Titelseite mit Projekttitel, Autor und Datum voranstellen.",
@@ -642,16 +600,6 @@
     },
     "close": "Schließen"
   },
-  "addToProject": {
-    "title": "Zum Schreibprojekt hinzufügen",
-    "noProjects": "Keine Schreibprojekte gefunden. Erstelle zuerst ein Projekt.",
-    "close": "Schließen",
-    "file": "Datei: {{path}}",
-    "projectName": "Schreibprojekt",
-    "projectDesc": "Zu welchem Schreibprojekt möchtest du diese Datei hinzufügen?",
-    "addBtn": "Zum Projekt hinzufügen",
-    "cancel": "Abbrechen"
-  },
   "scanFolder": {
     "title": "Dateien zur Mappe hinzufügen",
     "desc": "Dateien auswählen, die diesem Projekt hinzugefügt werden sollen:",
@@ -679,7 +627,6 @@
       "setWordCountGoal": "Wortziel festlegen",
       "openWritingLog": "Schreibprotokoll öffnen",
       "openFolderSidebar": "Ordner im Sidebar-Explorer öffnen",
-      "addFilesToBinder": "Projektordner nach neuen Dateien durchsuchen",
       "restoreBinderLayout": "Vorheriges Mappen-Layout wiederherstellen"
     },
     "menu": {
@@ -689,7 +636,6 @@
       "setGoal": "Wortziel festlegen",
       "switchMode": "Schreibmodus wechseln →",
       "typographyFont": "Typografieschrift →",
-      "addToProject": "Zum Schreibprojekt hinzufügen",
       "openSidebar": "Im Sidebar-Explorer öffnen",
       "draftMode": "✍ Entwurfsmodus",
       "editMode": "✎ Bearbeitungsmodus",
@@ -697,8 +643,7 @@
       "normalMode": "Normal (kein Modus)"
     },
     "notice": {
-      "noMarkdownOpen": "Keine Markdown-Datei ist aktuell geöffnet.",
-      "addedToProject": "„{{file}}“ zu {{project}} hinzugefügt"
+      "noMarkdownOpen": "Keine Markdown-Datei ist aktuell geöffnet."
     },
     "statusBar": {
       "projectWords": "{{total}} / {{goal}} Projektwörter",
@@ -750,5 +695,12 @@
   "epub": {
     "toc": "Inhaltsverzeichnis",
     "cover": "Cover"
+  },
+  "binderUpdate": {
+    "title": "Ihre Mappe und Ihre Ordner bleiben jetzt synchron",
+    "body1": "Die Mappe liest jetzt direkt Ihre Ordner, sodass beide nie auseinanderlaufen können. Sie können Ihre Arbeit hier oder im Datei-Explorer Ihres Computers organisieren — beides stimmt immer überein.",
+    "body2": "Dazu werden beim ersten Öffnen eines bestehenden Projekts Ordner angelegt und Ihre Dokumente passend zu Ihrer alten Mappe verschoben. Nichts wird gelöscht, und an Ihren Texten ändert sich nichts.",
+    "body3": "Wenn Ihnen Ihre frühere Anordnung lieber war, können Sie Ihre Ordner zurücksetzen: Öffnen Sie die Befehlspalette (Strg+P, auf dem Mac Cmd+P) und suchen Sie nach „Vorheriges Mappen-Layout wiederherstellen“. Einige vom Update angelegte leere Ordner können zurückbleiben; Sie können sie löschen.",
+    "gotIt": "Verstanden"
   }
 }

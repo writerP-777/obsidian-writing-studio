@@ -10,7 +10,6 @@ export class ExportModal extends Modal {
   private format: ExportFormat;
   private exportScope: ExportScope = 'current';
   private includeFrontmatter = false;
-  private includeResearch = false;
   private includeTitlesAsHeadings = true;
   private includeFolderNames = false;
   private addTitlePage = true;
@@ -43,7 +42,6 @@ export class ExportModal extends Modal {
       this.subtreeRoot = initial.subtreeRoot;
       this.currentFilePath = initial.currentFilePath;
       this.includeFrontmatter = initial.includeFrontmatter;
-      this.includeResearch = initial.includeResearch;
       this.includeTitlesAsHeadings = initial.includeTitlesAsHeadings;
       this.includeFolderNames = initial.includeFolderNamesAsHeadings;
       this.addTitlePage = initial.addTitlePage;
@@ -146,25 +144,13 @@ export class ExportModal extends Modal {
       .setName(t('exportModal.includeFrontmatter'))
       .addToggle(tx => tx.setValue(this.includeFrontmatter).onChange(v => { this.includeFrontmatter = v; }));
 
-    // Under the experimental binder the zone boundary is the compile boundary
-    // (ADR 0001) — Research never compiles, so the option disappears
-    if (!this.plugin.settings.filesystemBinder) {
-      new Setting(contentEl)
-        .setName(t('exportModal.includeResearch'))
-        .addToggle(tx => tx.setValue(this.includeResearch).onChange(v => { this.includeResearch = v; }));
-    }
-
     new Setting(contentEl)
       .setName(t('exportModal.includeTitlesAsHeadings'))
       .addToggle(tx => tx.setValue(this.includeTitlesAsHeadings).onChange(v => { this.includeTitlesAsHeadings = v; }));
 
-    // Folder names only exist as a compile concept in the filesystem binder;
-    // the classic compile skips structural items entirely
-    if (this.plugin.settings.filesystemBinder) {
-      new Setting(contentEl)
-        .setName(t('exportModal.includeFolderHeadings'))
-        .addToggle(tx => tx.setValue(this.includeFolderNames).onChange(v => { this.includeFolderNames = v; }));
-    }
+    new Setting(contentEl)
+      .setName(t('exportModal.includeFolderHeadings'))
+      .addToggle(tx => tx.setValue(this.includeFolderNames).onChange(v => { this.includeFolderNames = v; }));
 
     new Setting(contentEl)
       .setName(t('exportModal.addTitlePage'))
@@ -196,7 +182,6 @@ export class ExportModal extends Modal {
           format: this.format,
           scope: this.exportScope,
           includeFrontmatter: this.includeFrontmatter,
-          includeResearch: this.includeResearch,
           includeTitlesAsHeadings: this.includeTitlesAsHeadings,
           includeFolderNamesAsHeadings: this.includeFolderNames,
           subtreeRoot: this.subtreeRoot,
@@ -254,7 +239,6 @@ export class ExportModal extends Modal {
       subtreeRoot: this.subtreeRoot,
       currentFilePath,
       includeFrontmatter: this.includeFrontmatter,
-      includeResearch: this.includeResearch,
       includeTitlesAsHeadings: this.includeTitlesAsHeadings,
       includeFolderNamesAsHeadings: this.includeFolderNames,
       addTitlePage: this.addTitlePage,

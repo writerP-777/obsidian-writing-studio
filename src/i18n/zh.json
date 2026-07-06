@@ -28,10 +28,7 @@
         "note": "笔记"
       },
       "frontmatterAutoUpdate": "前置数据自动更新",
-      "frontmatterAutoUpdateDesc": "保存时自动更新字数统计和修改日期。",
-      "experimentalHeading": "实验性功能",
-      "filesystemBinder": "文件系统活页夹",
-      "filesystemBinderDesc": "重新设计的活页夹预览：直接显示项目文件夹树，只读。关闭即可恢复经典活页夹。"
+      "frontmatterAutoUpdateDesc": "保存时自动更新字数统计和修改日期。"
     },
     "focus": {
       "heading": "专注模式",
@@ -157,61 +154,27 @@
     "displayText": "写作活页夹",
     "selectProject": "— 选择项目 —",
     "newProject": "新建项目",
-    "addDocument": "+ 文档",
-    "addFiles": "添加复制到此文件夹的文件",
     "targetsDashboard": "目标仪表板",
-    "searchPlaceholder": "搜索文档…",
     "noProjectSelected": "未选择项目。请创建或选择一个写作项目以开始。",
-    "noDocuments": "暂无文档。点击“+ 文档”添加一个。",
-    "dropToRoot": "↓ 拖放到此处提升至根级",
     "selectProjectFirst": "请先选择一个项目。",
-    "cannotFindFile": "找不到文件：{{filePath}}。请尝试重命名或重新链接文档。",
     "untitledDocument": "无标题 {{time}}",
-    "noNewFiles": "在项目文件夹中未找到新文件。",
-    "pctComplete": "已完成 {{pct}}%",
-    "copySuffix": "（副本）",
     "menu": {
-      "openDocument": "打开文档",
-      "newChildDocument": "新建子文档",
       "setStatusDraft": "设置状态：草稿",
       "setStatusInProgress": "设置状态：进行中",
       "setStatusComplete": "设置状态：完成",
       "setStatusPublished": "设置状态：已发布",
-      "duplicate": "复制",
-      "moveToResearch": "移至研究",
-      "publishToWordPress": "发布到 WordPress",
-      "delete": "删除文档和文件",
-      "moveUp": "上移",
-      "moveDown": "下移",
       "rename": "重命名",
-      "removeFromBinder": "从活页夹中移除",
-      "newGroup": "新建组",
-      "newPart": "新建部",
-      "newChildGroup": "新建子组",
-      "newChildPart": "新建子部",
       "changeType": "更改类型：{{type}}"
     },
-    "wordCountSuffix": "{{count}}字",
-    "fileNotFound": "文件已不存在：{{path}}",
     "deleteConfirm": {
       "title": "删除文档",
-      "message": "要将“{{title}}”从活页夹中移除并将其文件移至回收站吗？活页夹条目（状态、字数目标、位置）无法恢复。",
       "delete": "删除",
       "cancel": "取消"
     },
-    "noMatches": "没有与“{{query}}”匹配的文档。",
     "titlePrompt": {
       "heading": "新建文档",
       "create": "创建"
     },
-    "removeConfirm": {
-      "title": "从活页夹中移除",
-      "message": "要将“{{title}}”从活页夹中移除吗？文件将保留在库中，但该条目的状态、字数目标和导出设置将丢失。嵌套文档将上移到其位置。",
-      "remove": "移除"
-    },
-    "newGroupOrPart": "新建组或部",
-    "untitledGroup": "未命名组",
-    "untitledPart": "未命名部",
     "strip": {
       "focus": "专注",
       "typography": "排版",
@@ -299,10 +262,7 @@
       "writingLog": "写作日志",
       "publishToWordPress": "发布到 WordPress"
     },
-    "openDocumentFirst": "请先打开文档。",
     "sprintTimer": "冲刺计时器",
-    "pause": "⏸ 暂停",
-    "stop": "■ 停止",
     "startSprint": "⏱ 设置冲刺",
     "quickStart": "快速冲刺选项",
     "today": "今日",
@@ -435,7 +395,6 @@
   },
   "projectManager": {
     "errorFolderExists": "项目文件夹中已存在名为“{{folder}}”的文件夹。请选择其他标题。",
-    "corruptBinder": "无法读取“{{project}}”的 _binder.json 文件。备份已保存为项目文件夹中的 _binder.json.bak。",
     "corruptProject": "“{{folder}}”中的项目文件已损坏，无法加载该项目。",
     "corruptLog": "无法读取 {{project}} 的写作日志——将开始新的日志。"
   },
@@ -527,7 +486,6 @@
     "scopeCurrent": "当前文档",
     "scopeProject": "整个项目（按活页夹顺序）",
     "includeFrontmatter": "包含前置内容",
-    "includeResearch": "包含研究笔记",
     "includeTitlesAsHeadings": "将文档标题作为标题包含",
     "addTitlePage": "添加标题页",
     "addTitlePageDesc": "在开头添加包含项目标题、作者和日期的标题页。",
@@ -642,16 +600,6 @@
     },
     "close": "关闭"
   },
-  "addToProject": {
-    "title": "添加到写作项目",
-    "noProjects": "未找到写作项目。请先创建一个项目。",
-    "close": "关闭",
-    "file": "文件：{{path}}",
-    "projectName": "写作项目",
-    "projectDesc": "您希望将此文件添加到哪个写作项目？",
-    "addBtn": "添加到项目",
-    "cancel": "取消"
-  },
   "scanFolder": {
     "title": "将文件添加到活页夹",
     "desc": "选择要添加到此项目的文件：",
@@ -679,7 +627,6 @@
       "setWordCountGoal": "设置字数目标",
       "openWritingLog": "打开写作日志",
       "openFolderSidebar": "在侧边栏浏览器中打开文件夹",
-      "addFilesToBinder": "扫描项目文件夹中的新文件",
       "restoreBinderLayout": "恢复活页夹的先前布局"
     },
     "menu": {
@@ -689,7 +636,6 @@
       "setGoal": "设置字数目标",
       "switchMode": "切换写作模式 →",
       "typographyFont": "排版字体 →",
-      "addToProject": "添加到写作项目",
       "openSidebar": "在侧边栏浏览器中打开",
       "draftMode": "✍ 草稿模式",
       "editMode": "✎ 编辑模式",
@@ -697,8 +643,7 @@
       "normalMode": "普通（无模式）"
     },
     "notice": {
-      "noMarkdownOpen": "当前没有打开的 Markdown 文件。",
-      "addedToProject": "已将「{{file}}」添加到 {{project}}"
+      "noMarkdownOpen": "当前没有打开的 Markdown 文件。"
     },
     "statusBar": {
       "projectWords": "{{total}} / {{goal}} 项目字数",
@@ -750,5 +695,12 @@
   "epub": {
     "toc": "目录",
     "cover": "封面"
+  },
+  "binderUpdate": {
+    "title": "活页夹与文件夹现在保持同步",
+    "body1": "活页夹现在直接读取你的文件夹，两者不会再不一致。你可以在这里或在电脑的文件资源管理器中整理作品，两边始终保持一致。",
+    "body2": "为此，首次打开现有项目时会创建文件夹并移动文档，使其与旧的活页夹一致。不会删除任何内容，你写的文字也不会有任何改动。",
+    "body3": "如果你更喜欢之前的排列方式，可以还原文件夹：打开命令面板（按 Ctrl+P，Mac 上按 Cmd+P），搜索“恢复活页夹的先前布局”。更新创建的少数空文件夹可能会保留，你可以删除它们。",
+    "gotIt": "知道了"
   }
 }

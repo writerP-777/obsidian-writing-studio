@@ -15,6 +15,7 @@ import {
   parseLegacyBinder, planCarryOver, planHasWork, planRestore, restoreHasWork,
   runMigrationPass, runRestorePass,
 } from './carryOver';
+import { BinderUpdateModal } from '../modals/BinderUpdateModal';
 import { t } from './i18n';
 
 export function buildDiskState(app: App): DiskState {
@@ -121,13 +122,14 @@ export async function updateFailureLedger(
 // One run at a time per project — activation and startup can overlap.
 const inFlight = new Set<string>();
 
-// Silent migration (#231): no notice, no consent, no user action. Gated on
-// the experimental toggle until the #233 cutover. Steady state is a no-op:
-// a migrated project's plan has no work and nothing is touched.
+// Silent migration (#231, ungated at #233): no notice, no consent, no user
+// action. Steady state is a no-op: a migrated project's plan has no work and
+// nothing is touched. A project whose layout the user restored is skipped
+// permanently — restore sticks (#233; the flag lives in _project.json so it
+// travels with the vault).
 export async function runSilentMigration(plugin: WritingStudioPlugin): Promise<void> {
-  if (!plugin.settings.filesystemBinder) return;
   const project = plugin.projectManager.getActiveProject();
-  if (!project || inFlight.has(project.id)) return;
+  if (!project || project.binderLayoutRestored || inFlight.has(project.id)) return;
 
   const legacy = await readLegacyBinder(plugin.app, project);
   if (!legacy) return; // absent, or corrupt (logged path is 2.x's concern)
@@ -142,6 +144,13 @@ export async function runSilentMigration(plugin: WritingStudioPlugin): Promise<v
   try {
     const result = await runMigrationPass(compute, obsidianIO(plugin.app));
     await updateFailureLedger(plugin, project, result.failures);
+    // The one-time notice fires only here — after a migration that actually
+    // performed work — so a user with nothing to migrate never sees it
+    if (!plugin.settings.binderUpdateNoticeSeen) {
+      plugin.settings.binderUpdateNoticeSeen = true;
+      await plugin.saveSettings();
+      new BinderUpdateModal(plugin.app).open();
+    }
   } finally {
     inFlight.delete(project.id);
   }
@@ -152,7 +161,7 @@ export async function runSilentMigration(plugin: WritingStudioPlugin): Promise<v
 // by ruling: frontmatter is untouched and nothing is ever deleted.
 export async function runRestoreLayout(plugin: WritingStudioPlugin): Promise<void> {
   const project = plugin.projectManager.getActiveProject();
-  if (!plugin.settings.filesystemBinder || !project) {
+  if (!project) {
     new Notice(t('binder.migration.restoreUnavailable'));
     return;
   }
@@ -175,6 +184,11 @@ export async function runRestoreLayout(plugin: WritingStudioPlugin): Promise<voi
   inFlight.add(project.id);
   try {
     const result = await runRestorePass(compute, obsidianIO(plugin.app));
+    // Restore sticks (#233): the user chose their pre-migration arrangement,
+    // so this project never migrates automatically again. Set before the
+    // notice so an immediate reload cannot re-migrate.
+    project.binderLayoutRestored = true;
+    await plugin.projectManager.saveProject(project);
     for (const f of result.failures) {
       console.warn(`Writing Studio restore: failed for ${f.name} — ${f.reason}`);
     }

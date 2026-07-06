@@ -1,7 +1,6 @@
 import { TemplateScaffolder, templateDoc, ManifestNode } from '../src/scaffold';
 import { TEMPLATE_MANIFESTS } from '../templates/manifests';
 import { WritingProject } from '../models/Project';
-import { BinderItem } from '../models/BinderItem';
 import { InMemoryVaultFiles } from './inMemoryVaultFiles';
 
 function makeProject(): WritingProject {
@@ -18,24 +17,26 @@ function makeProject(): WritingProject {
   };
 }
 
+// Since #233 the filesystem is the binder: scaffolding writes folders and
+// documents only — structural nodes become real folders with order markers,
+// documents carry binder-* frontmatter, and no _binder.json exists.
 describe('TemplateScaffolder', () => {
-  it('scaffolds the book template: files, tree shape, sibling orders', async () => {
+  it('scaffolds the book template: docs with binder-order, part as a marker folder', async () => {
     const files = new InMemoryVaultFiles();
-    const binder = await new TemplateScaffolder(files).apply(
+    await new TemplateScaffolder(files).apply(
       makeProject(), TEMPLATE_MANIFESTS.book!(makeProject()));
 
     expect(files.files.has('Projects/My Book/Chapters/Front Matter.md')).toBe(true);
-    expect(files.files.has('Projects/My Book/Chapters/Part 1 - Chapter 1.md')).toBe(true);
+    expect(files.folders).toContain('Projects/My Book/Chapters/020~ Part 1');
+    expect(files.files.has('Projects/My Book/Chapters/020~ Part 1/Chapter 1.md')).toBe(true);
     expect(files.files.has('Projects/My Book/Chapters/Back Matter.md')).toBe(true);
 
-    expect(binder.projectId).toBe('project-1');
-    expect(binder.items.map(i => i.order)).toEqual([1, 2, 3]);
-    const part = binder.items[1];
-    expect(part.type).toBe('part');
-    expect(part.filePath).toBe('');
-    expect(part.children).toHaveLength(1);
-    expect(part.children![0].wordCountGoal).toBe(3000);
-    expect(part.children![0].order).toBe(1);
+    // One number line per sibling group: Front (10) < part folder (020~) < Back (30)
+    expect(files.files.get('Projects/My Book/Chapters/Front Matter.md')).toContain('binder-order: 10');
+    expect(files.files.get('Projects/My Book/Chapters/Back Matter.md')).toContain('binder-order: 30');
+    const chapter = files.files.get('Projects/My Book/Chapters/020~ Part 1/Chapter 1.md') ?? '';
+    expect(chapter).toContain('binder-order: 10');
+    expect(chapter).toContain('word-count-goal: 3000');
   });
 
   it('never overwrites an existing file with the same name', async () => {
@@ -48,30 +49,27 @@ describe('TemplateScaffolder', () => {
     expect(files.files.get('Projects/My Book/Chapters/Front Matter.md')).toBe('user content');
   });
 
-  it('creates manifest folders before files (blog year folder)', async () => {
+  it('creates manifest folders before files (blog year folder, no structural node)', async () => {
     const files = new InMemoryVaultFiles();
     const year = new Date().getFullYear();
 
-    const binder = await new TemplateScaffolder(files).apply(
+    await new TemplateScaffolder(files).apply(
       makeProject(), TEMPLATE_MANIFESTS.blog!(makeProject()));
 
     expect(files.folders).toContain(`Projects/My Book/Chapters/${year}`);
-    const post = binder.items[0].children![0];
-    expect(post.filePath).toMatch(new RegExp(`^Projects/My Book/Chapters/${year}/.*-first-post\\.md$`));
-    expect(binder.items[0].includeInExport).toBe(false);
+    const postPath = [...files.files.keys()].find(p => p.endsWith('-first-post.md'));
+    expect(postPath).toMatch(new RegExp(`^Projects/My Book/Chapters/${year}/`));
   });
 
   it('scaffolds into the project documentFolder when set', async () => {
     const files = new InMemoryVaultFiles();
     const project: WritingProject = { ...makeProject(), type: 'series', documentFolder: 'Articles' };
 
-    const binder = await new TemplateScaffolder(files).apply(
+    await new TemplateScaffolder(files).apply(
       project, TEMPLATE_MANIFESTS.series!(project));
 
     expect(files.files.has('Projects/My Book/Articles/Series Overview.md')).toBe(true);
     expect(files.files.has('Projects/My Book/Articles/Article 1.md')).toBe(true);
-    const paths = binder.items.flatMap(i => [i, ...(i.children ?? [])]).map(i => i.filePath).filter(Boolean);
-    expect(paths.every(p => p.startsWith('Projects/My Book/Articles/'))).toBe(true);
   });
 
   it('scaffolds into Chapters when documentFolder is absent (legacy projects)', async () => {
@@ -113,36 +111,33 @@ describe('template manifests', () => {
 
   it('journal article keeps the divergent filename for Findings / Analysis', async () => {
     const files = new InMemoryVaultFiles();
-    const binder = await new TemplateScaffolder(files).apply(
+    await new TemplateScaffolder(files).apply(
       makeProject(), TEMPLATE_MANIFESTS['journal-article']!(makeProject()));
 
-    const flat: BinderItem[] = [];
-    const collect = (items: BinderItem[]) => { for (const i of items) { flat.push(i); if (i.children) collect(i.children); } };
-    collect(binder.items);
-    const findings = flat.find(i => i.id === 'ja-findings');
-    expect(findings?.title).toBe('Findings / Analysis');
-    expect(findings?.filePath).toBe('Projects/My Book/Chapters/Findings - Analysis.md');
     expect(files.files.has('Projects/My Book/Chapters/Findings - Analysis.md')).toBe(true);
   });
 
-  it('magazine article excludes notes documents from export in binder and frontmatter', async () => {
+  it('magazine article excludes notes documents from compile via frontmatter', async () => {
     const files = new InMemoryVaultFiles();
-    const binder = await new TemplateScaffolder(files).apply(
+    await new TemplateScaffolder(files).apply(
       makeProject(), TEMPLATE_MANIFESTS['magazine-article']!(makeProject()));
 
-    const pitch = binder.items.find(i => i.id === 'ma-pitch');
-    expect(pitch?.includeInExport).toBe(false);
-    expect(files.files.get('Projects/My Book/Chapters/Pitch - Query Notes.md')).toContain('include-in-export: false');
+    expect(files.files.get('Projects/My Book/Chapters/Pitch - Query Notes.md')).toContain('binder-compile: false');
   });
 });
 
 describe('templateDoc', () => {
-  it('emits goal and extra fields only when present', () => {
-    const withGoal = templateDoc({ title: 'A', fmType: 'section', order: 1, goal: 500, date: '2026-06-12', body: 'x' });
-    const without = templateDoc({ title: 'A', fmType: 'section', order: 1, date: '2026-06-12', body: 'x' });
+  it('emits goal and extra fields only when present, with binder-* keys and no title key', () => {
+    const withGoal = templateDoc({ title: 'A', fmType: 'section', order: 10, goal: 500, date: '2026-06-12', body: 'x' });
+    const without = templateDoc({ title: 'A', fmType: 'section', order: 10, date: '2026-06-12', body: 'x' });
 
     expect(withGoal).toContain('word-count-goal: 500');
     expect(without).not.toContain('word-count-goal');
     expect(without).toContain('tags: [writing-studio]');
+    expect(without).toContain('binder-order: 10');
+    expect(without).toContain('binder-status: draft');
+    expect(without).toContain('binder-type: section');
+    // The filename is the title (#233) — no frontmatter title key
+    expect(without).not.toContain('title:');
   });
 });

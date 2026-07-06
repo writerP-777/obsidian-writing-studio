@@ -21,9 +21,8 @@ export interface ExportOptions {
   scope: ExportScope;
   selectedFiles?: string[];
   includeFrontmatter: boolean;
-  includeResearch: boolean;
   includeTitlesAsHeadings: boolean;
-  /** Folder display names become headings at folder depth (fs binder only). */
+  /** Folder display names become headings at folder depth. */
   includeFolderNamesAsHeadings?: boolean;
   /** Manuscript-zone folder to compile instead of the whole zone (fs binder only). */
   subtreeRoot?: string;
@@ -57,7 +56,6 @@ export interface ExportUiState {
   subtreeRoot?: string;
   currentFilePath?: string;
   includeFrontmatter: boolean;
-  includeResearch: boolean;
   includeTitlesAsHeadings: boolean;
   includeFolderNamesAsHeadings: boolean;
   addTitlePage: boolean;
@@ -71,7 +69,6 @@ export function defaultExportUiState(subtreeRoot?: string): ExportUiState {
     scope: 'project',
     subtreeRoot,
     includeFrontmatter: false,
-    includeResearch: false,
     includeTitlesAsHeadings: true,
     includeFolderNamesAsHeadings: false,
     addTitlePage: true,
@@ -328,33 +325,13 @@ export class ExportEngine {
       const htmlContent = this.htmlToXhtml(markdownToHtml(content));
       const basename = path.split('/').pop()?.replace(/\.md$/, '') ?? path;
       chapters.push({ id: 'chapter-1', title: basename, htmlContent });
-    } else if (opts.scope === 'project' && project && this.plugin.settings.filesystemBinder) {
+    } else if (opts.scope === 'project' && project) {
       // Folder headings have no chapter home in epub — the option is ignored
       // (ruling on #232); chapters are the zone's documents in binder order.
       let idx = 1;
       for (const item of this.manuscriptPlan(project.folderPath, opts, false)) {
         if (item.kind !== 'doc') continue;
         let content = await this.files.readText(item.path);
-        if (content === null) continue;
-        if (!opts.includeFrontmatter) {
-          content = content.replace(/^---\r?\n[\s\S]*?\r?\n---\r?\n?/, '');
-        }
-        content = this.preprocessObsidianMarkdown(content.trim());
-        if (opts.includeTitlesAsHeadings) {
-          content = content.replace(/^# [^\n]*\n+/, '').trim();
-        }
-        const htmlContent = this.htmlToXhtml(markdownToHtml(content));
-        chapters.push({ id: `chapter-${idx++}`, title: item.title, htmlContent });
-      }
-    } else if (opts.scope === 'project' && project) {
-      const binder = await this.plugin.projectManager.loadBinder(project);
-      const flatItems = this.plugin.projectManager.flattenBinder(binder.items);
-      let idx = 1;
-      for (const item of flatItems) {
-        if (!item.includeInExport) continue;
-        if (!item.filePath) continue;
-        if (!opts.includeResearch && item.filePath.includes('/Research/')) continue;
-        let content = await this.files.readText(item.filePath);
         if (content === null) continue;
         if (!opts.includeFrontmatter) {
           content = content.replace(/^---\r?\n[\s\S]*?\r?\n---\r?\n?/, '');
@@ -449,7 +426,7 @@ export class ExportEngine {
         throw new Error(t('exportEngine.noActiveDocument'));
       }
       parts.push(content);
-    } else if (opts.scope === 'project' && project && this.plugin.settings.filesystemBinder) {
+    } else if (opts.scope === 'project' && project) {
       for (const item of this.manuscriptPlan(project.folderPath, opts, opts.includeFolderNamesAsHeadings === true)) {
         if (item.kind === 'heading') {
           parts.push(`${'#'.repeat(item.level)} ${item.title}`);
@@ -458,30 +435,10 @@ export class ExportEngine {
         const content = await this.processPath(item.path, opts);
         if (content === null) continue;
         if (item.headingLevel !== null) {
-          // Same canonical-heading rule as the classic branch: the title
-          // heading replaces any leading in-document h1
+          // The title heading replaces any leading in-document h1 — keeping
+          // it would print the title twice in the compiled output
           const body = content.replace(/^# [^\n]*\n+/, '').trim();
           parts.push(`${'#'.repeat(item.headingLevel)} ${item.title}\n\n${body}`);
-        } else {
-          parts.push(content);
-        }
-      }
-    } else if (opts.scope === 'project' && project) {
-      const binder = await this.plugin.projectManager.loadBinder(project);
-      const flatItems = this.plugin.projectManager.flattenBinder(binder.items);
-
-      for (const item of flatItems) {
-        if (!item.includeInExport) continue;
-        if (!item.filePath) continue; // group/part items have no file
-        if (!opts.includeResearch && item.filePath.includes('/Research/')) continue;
-        const content = await this.processPath(item.filePath, opts);
-        if (content === null) continue;
-        if (opts.includeTitlesAsHeadings) {
-          // Strip any leading h1 from the document body — the canonical heading
-          // comes from item.title, so the in-document heading must not be kept
-          // or it would appear twice in the compiled output.
-          const body = content.replace(/^# [^\n]*\n+/, '').trim();
-          parts.push(`# ${item.title}\n\n${body}`);
         } else {
           parts.push(content);
         }
@@ -507,11 +464,11 @@ export class ExportEngine {
     return parts.join(SECTION_BREAK);
   }
 
-  // The manuscript zone is the compile source under the experimental binder
-  // (#232) — the dormant _binder.json is never read. Depth is rebased to the
-  // compile root, so a subtree export is the whole-zone walk with a different
-  // root (which is also why reserved-folder filtering only applies when the
-  // root is the project folder itself).
+  // The manuscript zone is the compile source (#232/#233) — the dormant
+  // _binder.json is never read. Depth is rebased to the compile root, so a
+  // subtree export is the whole-zone walk with a different root (which is
+  // also why reserved-folder filtering only applies when the root is the
+  // project folder itself).
   private manuscriptPlan(
     projectFolderPath: string,
     opts: ExportOptions,

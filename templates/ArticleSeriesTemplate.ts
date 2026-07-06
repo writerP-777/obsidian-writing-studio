@@ -13,7 +13,7 @@ export function articleSeriesManifest(project: WritingProject): TemplateManifest
         fileName: 'Series Overview',
         includeInExport: false,
         content: templateDoc({
-          title: 'Series Overview', fmType: 'note', order: 1, date,
+          title: 'Series Overview', fmType: 'note', order: 10, date,
           tags: ['writing-studio', 'series-meta'],
           heading: `${project.title} — Series Overview`,
           body: `## Series Description
@@ -39,7 +39,7 @@ export function articleSeriesManifest(project: WritingProject): TemplateManifest
         fileName: 'Article 1',
         wordCountGoal: 1500,
         content: templateDoc({
-          title: 'Article 1', fmType: 'article', order: 1, goal: 1500, date,
+          title: 'Article 1', fmType: 'article', order: 20, goal: 1500, date,
           body: '*Write your first article here.*',
         }),
       },

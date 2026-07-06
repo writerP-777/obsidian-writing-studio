@@ -65,6 +65,11 @@ export interface WritingProject {
   // created before the field existed — resolveDocumentFolder falls back to
   // 'Chapters' for those.
   documentFolder?: string;
+  // Set by "Restore previous binder layout" (#233): the user chose their
+  // pre-migration arrangement, so silent migration skips this project
+  // permanently. Lives in _project.json deliberately — it travels with the
+  // vault and survives plugin reinstalls, unlike data.json.
+  binderLayoutRestored?: boolean;
   goals: ProjectGoals;
   wordPressSite?: string;
   wordPressCategory?: string;

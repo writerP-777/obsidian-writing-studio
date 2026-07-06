@@ -15,17 +15,25 @@ plugin instance in their constructor and access `plugin.app` and `plugin.setting
 ```
 main.ts                    ← plugin entry point; commands, ribbon, event bus, status bar
 src/
-  ProjectManager.ts        ← project CRUD, binder load/save, template scaffolding
-  BinderView.ts            ← Scrivener-style sidebar (ItemView)
+  ProjectManager.ts        ← project CRUD (_project.json), template scaffolding
+  FilesystemBinderView.ts  ← the binder: live rendering of the project folder tree (ItemView)
+  binderOrder.ts           ← pure order engine: binder-order + folder name markers, natural sort
+  binderMove.ts            ← pure drag/drop planner: regions, zone rules, atomic move plans
+  binderMenu.ts            ← pure context-menu engine: actions, rename targets, name validation
+  manuscriptTree.ts        ← manuscript-zone walker + compile planner (one tree for all surfaces)
+  carryOver.ts             ← pure migration/restore engine over the legacy _binder.json
+  carryOverBridge.ts       ← vault-facing migration/restore glue; failure ledger; update notice
+  exportTitle.ts           ← pure export-title resolution (title dropdown, #260)
+  folderRename.ts          ← path helpers + document-folder name validation
   FocusMode.ts             ← CM6 ViewPlugin; paragraph/sentence focus + typewriter scroll
   TypographyMode.ts        ← CSS-injection typography environment
   WritingModes.ts          ← preset orchestrator: draft / edit / review / none
   SprintTimer.ts           ← timed writing session engine
   StatsTracker.ts          ← per-file word counts, session deltas, sprint history
   FrontmatterManager.ts    ← debounced frontmatter auto-update (word-count, modified)
-  ExportEngine.ts          ← md / html / docx / rtf / pdf via pandoc
+  ExportEngine.ts          ← md / html / docx / rtf / pdf via pandoc; compiles the manuscript zone
   EpubEngine.ts            ← epub export
-  CompilePreview.ts        ← read-only compiled-manuscript view (split pane)
+  CompilePreview.ts        ← read-only compiled-manuscript view (split pane); renders the export dialog's selections
   LauncherView.ts          ← hub panel (left sidebar); entry point for all features
   WordPressClient.ts       ← WordPress REST API multi-site publishing
   WritingLogView.ts        ← daily writing-activity log sidebar view
@@ -39,6 +47,7 @@ models/
   SprintSession.ts         ← SprintSession (completed sprint record)
   WordPressSite.ts         ← WordPressSite (url, credentials)
 modals/
+  BinderUpdateModal.ts     ← one-time "binder and folders now stay in sync" notice (#233)
   ProjectModal.ts          ← create / edit a writing project
   SprintModal.ts           ← configure and launch a sprint
   ExportModal.ts           ← export a document or project
@@ -76,19 +85,17 @@ scaffolding: book → `chapter`, series → `article`, blog → `article`, journ
 magazine-article → `section`. The project type's declared default wins; the global
 `defaultDocumentType` setting is the fallback used only for `blank` projects (which have no template).
 
-**Binder** (`BinderData` + `BinderView`)
-The ordered, hierarchical list of documents that belong to a writing project.
-Stored as `_binder.json` in the project folder. Rendered in the left sidebar as `BinderView`.
+**Binder** (`FilesystemBinderView`)
+A live rendering of the active project's folder tree (ADR 0001, implemented at #233):
+the filesystem owns membership, hierarchy, and — via `binder-order` frontmatter and folder
+name markers — order. There is no runtime binder store; `_binder.json` files remain on disk
+untouched as the dormant carry-over/restore source. Rendered in the left sidebar.
 Prefer: *binder*. Avoid: *outline*, *table of contents*, *file list*.
-> **Redesign accepted (ADR 0001, not yet implemented):** the binder becomes a live rendering
-> of the project folder tree — `_binder.json` leaves runtime, and the vocabulary in
-> "Binder redesign terms" below applies. Until that ships, this entry describes the code.
 
-**Binder item** (`BinderItem`)
-One entry in the binder. Has a `type` (chapter, section, article, note, group, part),
-a `status`, an optional `wordCountGoal`, and optional `children[]` for nesting.
-Groups and parts are structural (no associated file); all others map to a `.md` file via `filePath`.
-Prefer: *binder item*. Avoid: *document entry*, *node*, *chapter* (except when `type === 'chapter'`).
+**Binder item** (`BinderItem`) — *legacy model*
+One entry in a legacy `_binder.json`, kept only so migration/restore can parse the file
+(types include the retired structural `group`/`part`). Nothing else reads or writes it.
+Prefer: *legacy binder item*.
 
 **Document status** (`DocumentStatus`)
 The lifecycle state of a binder item: `draft` → `in-progress` → `complete` → `published`.
@@ -103,12 +110,13 @@ Distinct from per-document word count goals, which live on individual binder ite
 The hub panel in the left sidebar. Opens on startup (configurable). Entry point for all plugin features.
 Prefer: *launcher* or *launcher panel*. Avoid: *home*, *dashboard* (reserved for modals).
 
-**Binder view** (`BinderView`, view type `writing-studio-binder`)
-The Scrivener-style left-sidebar panel showing the active project's binder tree.
+**Binder view** (`FilesystemBinderView`, view type `writing-studio-binder`)
+The Scrivener-style left-sidebar panel rendering the active project's folder tree.
 Prefer: *binder view* or just *binder*. Avoid: *sidebar*, *panel* (too generic).
 
 **Compile preview** (`CompilePreviewView`, view type `writing-studio-compile`)
-A split-pane read-only view that renders the active project's binder items concatenated in order.
+A split-pane read-only view that renders exactly what the export dialog's current
+selections would produce — same documents, headings, title page, and title (#260).
 Prefer: *compile preview*. Avoid: *preview pane*, *manuscript view*.
 
 **Writing log** (`WritingLogView`, view type `writing-studio-log`)
@@ -117,10 +125,9 @@ A left-sidebar view showing daily writing-activity records.
 **Folder sidebar** (`FolderSidebarView`, view type `writing-studio-folder-sidebar`)
 A right-sidebar view scoped to a single vault folder. Opened via file-menu or command.
 
-### Binder redesign terms (accepted — see docs/adr/0001; not yet implemented)
+### Filesystem binder terms (ADR 0001, implemented at #233)
 
-Use these exact terms in redesign issues, PRs, and code. They describe the accepted
-filesystem-owned binder, not the shipped `_binder.json` model.
+Use these exact terms in issues, PRs, and code.
 
 **Manuscript zone**
 The upper binder zone: the project folder tree minus Research and Exports. Its depth-first
@@ -156,8 +163,12 @@ its actual folder), and metadata lands write-if-absent in frontmatter. Every tar
 deterministically from the immutable legacy file; interruption recovers by re-running.
 `_binder.json` is never deleted or modified. The inverse is **Restore previous binder
 layout** — layout-only (frontmatter persists; never framed as a full revert), stateless,
-never deletes. UI copy never says *carry-over* or *migration* (the surfaces are silent;
-failure notices name files, not concepts). Avoid: *import*, *conversion*.
+never deletes, and **restore sticks** (#233): it writes `binderLayoutRestored` into
+`_project.json` (travels with the vault) and migration skips flagged projects permanently;
+no path re-applies the arrangement. A one-time notice (`BinderUpdateModal`) shows once per
+vault, immediately after the first migration that actually performs work — informational,
+never a consent gate. UI copy never says *carry-over* or *migration* (failure notices name
+files, not concepts). Avoid: *import*, *conversion*.
 
 ### Writing environment modes
 
@@ -202,10 +213,9 @@ Displayed as `(+N)` in the status bar. Resets on reload.
 ### Goals and targets
 
 **Word count goal** (per document)
-The target word count for a single binder item. Canonical source: `BinderItem.wordCountGoal`.
-Secondary source: frontmatter field `word-count-goal` (used only for files not in any binder).
-The **targets dashboard** is the UI for managing these. Never read frontmatter as authoritative
-when a binder item exists.
+The target word count for a single document. Sole source: the frontmatter field
+`word-count-goal` (#229, ungated at #233). The **targets dashboard** is the UI for
+managing these.
 Prefer: *word count goal*. Avoid: *target*, *quota*, *goal* alone (ambiguous with project goals).
 
 **Inline goal banner**
@@ -232,8 +242,9 @@ non-LaTeX path and ignores the export font (typography comes from HTML/CSS).
 Handles epub export separately from the main export engine.
 
 **Compile** / **compiled manuscript**
-The concatenation of a project's binder items in order, used for both the compile preview
-and multi-document exports. Prefer: *compile* or *compiled manuscript*. Avoid: *merge*, *join*.
+The manuscript zone depth-first in binder order — the zone boundary is the compile
+boundary — used for both the compile preview and multi-document exports.
+Prefer: *compile* or *compiled manuscript*. Avoid: *merge*, *join*.
 
 **WordPress client** (`WordPressClient`)
 REST API client for publishing the current document to one or more configured WordPress sites.
@@ -247,15 +258,19 @@ These are the frontmatter keys the plugin reads or writes:
 |---|---|---|
 | `word-count` | `FrontmatterManager` | — |
 | `modified` | `FrontmatterManager` | — |
-| `word-count-goal` | `WordCountGoalModal` | `showInlineGoalBanner` (fallback only) |
+| `word-count-goal` | goal modal, targets dashboard, migration | goal banner, status bar, targets dashboard, binder tooltip |
+| `binder-order` | binder reorder, scaffolding, migration | binder sort, compile order |
+| `binder-status` | binder context menu, scaffolding, migration | binder status stripe, targets dashboard |
+| `binder-type` | binder context menu, scaffolding, migration | binder tooltip, targets dashboard |
+| `binder-compile` | binder context menu, scaffolding, migration | compile/export exclusion, dimmed rows |
 
 ---
 
 ## Key invariants
 
-1. **`BinderItem.wordCountGoal` is the authoritative goal source.** Frontmatter
-   `word-count-goal` is only a fallback for files not tracked in any binder. Never read
-   frontmatter first when a binder item can be found.
+1. **Frontmatter `word-count-goal` is the sole goal authority.** Every surface (goal
+   modal, banner, status bar, targets dashboard) reads and writes it directly. Nothing
+   reads a goal from anywhere else.
 
 2. **All file paths go through `normalizePath()`.** No raw string concatenation for paths.
 

@@ -28,10 +28,7 @@
         "note": "ノート"
       },
       "frontmatterAutoUpdate": "フロントマター自動更新",
-      "frontmatterAutoUpdateDesc": "保存時に語数と更新日を自動的に更新します。",
-      "experimentalHeading": "実験的機能",
-      "filesystemBinder": "ファイルシステムバインダー",
-      "filesystemBinderDesc": "再設計されたバインダーのプレビュー：プロジェクトフォルダのツリーを直接、読み取り専用で表示します。オフにするとクラシックバインダーに戻ります。"
+      "frontmatterAutoUpdateDesc": "保存時に語数と更新日を自動的に更新します。"
     },
     "focus": {
       "heading": "フォーカスモード",
@@ -157,61 +154,27 @@
     "displayText": "執筆バインダー",
     "selectProject": "— プロジェクトを選択 —",
     "newProject": "新規プロジェクト",
-    "addDocument": "+ ドキュメント",
-    "addFiles": "このフォルダにコピーされたファイルを追加",
     "targetsDashboard": "ターゲットダッシュボード",
-    "searchPlaceholder": "ドキュメントを検索…",
     "noProjectSelected": "プロジェクトが選択されていません。執筆プロジェクトを作成または選択して開始してください。",
-    "noDocuments": "ドキュメントがありません。「+ ドキュメント」をクリックして追加してください。",
-    "dropToRoot": "↓ ここにドロップしてルートに昇格",
     "selectProjectFirst": "まずプロジェクトを選択してください。",
-    "cannotFindFile": "ファイルが見つかりません：{{filePath}}。ドキュメントの名前変更または再リンクをお試しください。",
     "untitledDocument": "無題 {{time}}",
-    "noNewFiles": "プロジェクトフォルダに新しいファイルが見つかりませんでした。",
-    "pctComplete": "{{pct}}% 完了",
-    "copySuffix": "（コピー）",
     "menu": {
-      "openDocument": "ドキュメントを開く",
-      "newChildDocument": "子ドキュメントを新規作成",
       "setStatusDraft": "ステータスを設定：下書き",
       "setStatusInProgress": "ステータスを設定：進行中",
       "setStatusComplete": "ステータスを設定：完了",
       "setStatusPublished": "ステータスを設定：公開済み",
-      "duplicate": "複製",
-      "moveToResearch": "リサーチに移動",
-      "publishToWordPress": "WordPressに公開",
-      "delete": "ドキュメントとファイルを削除",
-      "moveUp": "上に移動",
-      "moveDown": "下に移動",
       "rename": "名前を変更",
-      "removeFromBinder": "バインダーから外す",
-      "newGroup": "新規グループ",
-      "newPart": "新規パート",
-      "newChildGroup": "子グループを新規作成",
-      "newChildPart": "子パートを新規作成",
       "changeType": "タイプを変更：{{type}}"
     },
-    "wordCountSuffix": "{{count}}語",
-    "fileNotFound": "ファイルが存在しません：{{path}}",
     "deleteConfirm": {
       "title": "ドキュメントを削除",
-      "message": "「{{title}}」をバインダーから削除し、ファイルをゴミ箱に移動しますか？バインダー項目（ステータス、目標語数、位置）は復元できません。",
       "delete": "削除",
       "cancel": "キャンセル"
     },
-    "noMatches": "「{{query}}」に一致するドキュメントはありません。",
     "titlePrompt": {
       "heading": "新規ドキュメント",
       "create": "作成"
     },
-    "removeConfirm": {
-      "title": "バインダーから外す",
-      "message": "「{{title}}」をバインダーから外しますか？ファイルはVaultに残りますが、項目のステータス、目標語数、エクスポート設定は失われます。入れ子のドキュメントはその位置に繰り上がります。",
-      "remove": "外す"
-    },
-    "newGroupOrPart": "新規グループまたはパート",
-    "untitledGroup": "無題のグループ",
-    "untitledPart": "無題のパート",
     "strip": {
       "focus": "フォーカス",
       "typography": "タイポグラフィ",
@@ -299,10 +262,7 @@
       "writingLog": "執筆ログ",
       "publishToWordPress": "WordPressに公開"
     },
-    "openDocumentFirst": "最初にドキュメントを開いてください。",
     "sprintTimer": "スプリントタイマー",
-    "pause": "⏸ 一時停止",
-    "stop": "■ 停止",
     "startSprint": "⏱ スプリントを設定",
     "quickStart": "クイックスプリント",
     "today": "今日",
@@ -435,7 +395,6 @@
   },
   "projectManager": {
     "errorFolderExists": "プロジェクトフォルダーに「{{folder}}」という名前のフォルダーが既に存在します。別のタイトルを選んでください。",
-    "corruptBinder": "「{{project}}」の _binder.json ファイルを読み取れませんでした。バックアップを _binder.json.bak としてプロジェクトフォルダーに保存しました。",
     "corruptProject": "「{{folder}}」のプロジェクトファイルが破損しているため、プロジェクトを読み込めませんでした。",
     "corruptLog": "{{project}} の執筆ログを読み取れませんでした — 新しいログを開始します。"
   },
@@ -527,7 +486,6 @@
     "scopeCurrent": "現在のドキュメント",
     "scopeProject": "プロジェクト全体（バインダー順）",
     "includeFrontmatter": "フロントマターを含める",
-    "includeResearch": "リサーチノートを含める",
     "includeTitlesAsHeadings": "ドキュメントタイトルを見出しとして含める",
     "addTitlePage": "タイトルページを追加",
     "addTitlePageDesc": "プロジェクトタイトル、著者、日付のタイトルページを先頭に追加します。",
@@ -642,16 +600,6 @@
     },
     "close": "閉じる"
   },
-  "addToProject": {
-    "title": "執筆プロジェクトに追加",
-    "noProjects": "執筆プロジェクトが見つかりません。まずプロジェクトを作成してください。",
-    "close": "閉じる",
-    "file": "ファイル：{{path}}",
-    "projectName": "執筆プロジェクト",
-    "projectDesc": "このファイルをどの執筆プロジェクトに追加しますか？",
-    "addBtn": "プロジェクトに追加",
-    "cancel": "キャンセル"
-  },
   "scanFolder": {
     "title": "ファイルをバインダーに追加",
     "desc": "このプロジェクトに追加するファイルを選択してください：",
@@ -679,7 +627,6 @@
       "setWordCountGoal": "語数目標を設定",
       "openWritingLog": "執筆ログを開く",
       "openFolderSidebar": "サイドバーエクスプローラーでフォルダを開く",
-      "addFilesToBinder": "プロジェクトフォルダーの新しいファイルをスキャン",
       "restoreBinderLayout": "以前のバインダー配置を復元"
     },
     "menu": {
@@ -689,7 +636,6 @@
       "setGoal": "語数目標を設定",
       "switchMode": "執筆モードを切り替え →",
       "typographyFont": "タイポグラフィフォント →",
-      "addToProject": "執筆プロジェクトに追加",
       "openSidebar": "サイドバーエクスプローラーで開く",
       "draftMode": "✍ 下書きモード",
       "editMode": "✎ 編集モード",
@@ -697,8 +643,7 @@
       "normalMode": "ノーマル（モードなし）"
     },
     "notice": {
-      "noMarkdownOpen": "現在開いているMarkdownファイルがありません。",
-      "addedToProject": "「{{file}}」を {{project}} に追加しました"
+      "noMarkdownOpen": "現在開いているMarkdownファイルがありません。"
     },
     "statusBar": {
       "projectWords": "{{total}} / {{goal}} プロジェクト語数",
@@ -750,5 +695,12 @@
   "epub": {
     "toc": "目次",
     "cover": "表紙"
+  },
+  "binderUpdate": {
+    "title": "バインダーとフォルダは常に同期されるようになりました",
+    "body1": "バインダーはフォルダを直接読み取るようになったため、両者がずれることはありません。ここでも、パソコンのファイルエクスプローラーでも作業を整理でき、常に一致します。",
+    "body2": "そのため、既存のプロジェクトを最初に開いたときに、以前のバインダーに合わせてフォルダを作成し、ドキュメントを移動します。何も削除されず、あなたの文章は一切変更されません。",
+    "body3": "以前の配置に戻したい場合は、コマンドパレット（Ctrl+P、MacではCmd+P）を開いて「以前のバインダー配置を復元」を検索してください。アップデートで作成された空のフォルダがいくつか残ることがあります。削除してかまいません。",
+    "gotIt": "わかりました"
   }
 }

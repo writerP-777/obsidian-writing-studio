@@ -28,10 +28,7 @@
         "note": "Nota"
       },
       "frontmatterAutoUpdate": "Atualização automática do frontmatter",
-      "frontmatterAutoUpdateDesc": "Atualizar automaticamente a contagem de palavras e a data de modificação ao salvar.",
-      "experimentalHeading": "Experimental",
-      "filesystemBinder": "Fichário do sistema de arquivos",
-      "filesystemBinderDesc": "Prévia do fichário redesenhado: mostra a árvore de pastas do projeto diretamente, somente leitura. Desative para voltar ao fichário clássico."
+      "frontmatterAutoUpdateDesc": "Atualizar automaticamente a contagem de palavras e a data de modificação ao salvar."
     },
     "focus": {
       "heading": "Modo foco",
@@ -157,61 +154,27 @@
     "displayText": "Pasta de escrita",
     "selectProject": "— selecionar projeto —",
     "newProject": "Novo projeto",
-    "addDocument": "+ documento",
-    "addFiles": "Adicionar arquivos copiados para esta pasta",
     "targetsDashboard": "Painel de metas",
-    "searchPlaceholder": "Pesquisar documentos…",
     "noProjectSelected": "Nenhum projeto selecionado. Crie ou selecione um projeto de escrita para começar.",
-    "noDocuments": "Nenhum documento ainda. Clique em \"+ documento\" para adicionar um.",
-    "dropToRoot": "↓ soltar aqui para promover à raiz",
     "selectProjectFirst": "Selecione um projeto primeiro.",
-    "cannotFindFile": "Não é possível encontrar o arquivo: {{filePath}}. Tente renomeá-lo ou vinculá-lo novamente.",
     "untitledDocument": "Sem título {{time}}",
-    "noNewFiles": "Nenhum arquivo novo encontrado na pasta do projeto.",
-    "pctComplete": "{{pct}}% concluído",
-    "copySuffix": "(Cópia)",
     "menu": {
-      "openDocument": "Abrir documento",
-      "newChildDocument": "Novo documento filho",
       "setStatusDraft": "Definir status: rascunho",
       "setStatusInProgress": "Definir status: em andamento",
       "setStatusComplete": "Definir status: concluído",
       "setStatusPublished": "Definir status: publicado",
-      "duplicate": "Duplicar",
-      "moveToResearch": "Mover para pesquisa",
-      "publishToWordPress": "Publicar no WordPress",
-      "delete": "Excluir documento e arquivo",
-      "moveUp": "Mover para cima",
-      "moveDown": "Mover para baixo",
       "rename": "Renomear",
-      "removeFromBinder": "Remover da pasta",
-      "newGroup": "Novo grupo",
-      "newPart": "Nova parte",
-      "newChildGroup": "Novo grupo filho",
-      "newChildPart": "Nova parte filha",
       "changeType": "Alterar tipo: {{type}}"
     },
-    "wordCountSuffix": "{{count}}p",
-    "fileNotFound": "O arquivo não existe mais: {{path}}",
     "deleteConfirm": {
       "title": "Excluir documento",
-      "message": "Remover \"{{title}}\" da pasta de escrita e mover seu arquivo para a lixeira? A entrada da pasta (status, meta de palavras, posição) não pode ser restaurada.",
       "delete": "Excluir",
       "cancel": "Cancelar"
     },
-    "noMatches": "Nenhum documento corresponde a \"{{query}}\".",
     "titlePrompt": {
       "heading": "Novo documento",
       "create": "Criar"
     },
-    "removeConfirm": {
-      "title": "Remover da pasta",
-      "message": "Remover \"{{title}}\" da pasta? O arquivo permanece no seu vault, mas o status, a meta de palavras e a configuração de exportação da entrada são perdidos. Documentos aninhados sobem para o lugar dele.",
-      "remove": "Remover"
-    },
-    "newGroupOrPart": "Novo grupo ou parte",
-    "untitledGroup": "Grupo sem título",
-    "untitledPart": "Parte sem título",
     "strip": {
       "focus": "Foco",
       "typography": "Tipografia",
@@ -299,10 +262,7 @@
       "writingLog": "Diário de escrita",
       "publishToWordPress": "Publicar no WordPress"
     },
-    "openDocumentFirst": "Abra um documento primeiro.",
     "sprintTimer": "Cronômetro de sprint",
-    "pause": "⏸ Pausar",
-    "stop": "■ Parar",
     "startSprint": "⏱ Configurar sprint",
     "quickStart": "Opções rápidas de sprint",
     "today": "Hoje",
@@ -435,7 +395,6 @@
   },
   "projectManager": {
     "errorFolderExists": "Já existe uma pasta chamada \"{{folder}}\" na sua pasta de projetos. Escolha um título diferente.",
-    "corruptBinder": "Não foi possível ler o arquivo _binder.json de \"{{project}}\". Um backup foi salvo como _binder.json.bak na pasta do projeto.",
     "corruptProject": "O arquivo de projeto em \"{{folder}}\" está corrompido e o projeto não pôde ser carregado.",
     "corruptLog": "Não foi possível ler o registro de escrita de {{project}} — iniciando um novo registro."
   },
@@ -527,7 +486,6 @@
     "scopeCurrent": "Documento atual",
     "scopeProject": "Projeto inteiro (na ordem do binder)",
     "includeFrontmatter": "Incluir metadados",
-    "includeResearch": "Incluir notas de pesquisa",
     "includeTitlesAsHeadings": "Incluir títulos de documentos como títulos",
     "addTitlePage": "Adicionar página de título",
     "addTitlePageDesc": "Adiciona uma página de título com o título do projeto, autor e data.",
@@ -642,16 +600,6 @@
     },
     "close": "Fechar"
   },
-  "addToProject": {
-    "title": "Adicionar a projeto de escrita",
-    "noProjects": "Nenhum projeto de escrita encontrado. Crie um projeto primeiro.",
-    "close": "Fechar",
-    "file": "Arquivo: {{path}}",
-    "projectName": "Projeto de escrita",
-    "projectDesc": "A qual projeto de escrita você deseja adicionar este arquivo?",
-    "addBtn": "Adicionar ao projeto",
-    "cancel": "Cancelar"
-  },
   "scanFolder": {
     "title": "Adicionar arquivos ao binder",
     "desc": "Selecione os arquivos para adicionar a este projeto:",
@@ -679,7 +627,6 @@
       "setWordCountGoal": "Definir meta de contagem de palavras",
       "openWritingLog": "Abrir registro de escrita",
       "openFolderSidebar": "Abrir pasta no explorador lateral",
-      "addFilesToBinder": "Verificar novos arquivos na pasta do projeto",
       "restoreBinderLayout": "Restaurar o layout anterior da pasta de escrita"
     },
     "menu": {
@@ -689,7 +636,6 @@
       "setGoal": "Definir meta de palavras",
       "switchMode": "Mudar modo de escrita →",
       "typographyFont": "Fonte tipográfica →",
-      "addToProject": "Adicionar ao projeto de escrita",
       "openSidebar": "Abrir no explorador lateral",
       "draftMode": "✍ Modo rascunho",
       "editMode": "✎ Modo edição",
@@ -697,8 +643,7 @@
       "normalMode": "Normal (sem modo)"
     },
     "notice": {
-      "noMarkdownOpen": "Nenhum arquivo Markdown está aberto no momento.",
-      "addedToProject": "\"{{file}}\" adicionado a {{project}}"
+      "noMarkdownOpen": "Nenhum arquivo Markdown está aberto no momento."
     },
     "statusBar": {
       "projectWords": "{{total}} / {{goal}} palavras do projeto",
@@ -750,5 +695,12 @@
   "epub": {
     "toc": "Sumário",
     "cover": "Capa"
+  },
+  "binderUpdate": {
+    "title": "Sua pasta de escrita e suas pastas agora ficam sempre em sincronia",
+    "body1": "A pasta de escrita agora lê suas pastas diretamente, então as duas nunca podem ficar fora de sincronia. Você pode organizar seu trabalho aqui ou no explorador de arquivos do computador — os dois sempre vão coincidir.",
+    "body2": "Para isso, na primeira vez que você abrir um projeto existente, ele cria pastas e move seus documentos para refletir sua pasta de escrita antiga. Nada é excluído, e nada do que você escreveu é alterado.",
+    "body3": "Se você preferia sua organização anterior, pode restaurar suas pastas: abra a paleta de comandos (pressione Ctrl+P, ou Cmd+P no Mac) e procure por \"Restaurar o layout anterior da pasta de escrita\". Algumas pastas vazias criadas pela atualização podem permanecer; você pode excluí-las.",
+    "gotIt": "Entendi"
   }
 }

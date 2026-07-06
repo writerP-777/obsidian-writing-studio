@@ -1,5 +1,3 @@
-import { BinderItem } from '../models/BinderItem';
-
 // Folders every project reserves for non-document content. createProject
 // scaffolds these next to the document folder; template manifests create
 // nothing else at that level, so this list is complete.
@@ -25,30 +23,6 @@ export function rewritePathPrefix(path: string, oldPrefix: string, newPrefix: st
   if (path === oldPrefix) return newPrefix;
   if (path.startsWith(oldPrefix + '/')) return newPrefix + path.slice(oldPrefix.length);
   return path;
-}
-
-// Batch-rewrites every binder filePath under a renamed folder, in place.
-// Returns whether anything changed so the caller saves once per affected
-// binder — and not at all when a replayed event finds nothing left to do.
-export function rewriteBinderPaths(items: BinderItem[], oldPrefix: string, newPrefix: string): boolean {
-  let changed = false;
-  for (const item of items) {
-    if (item.filePath && pathAtOrUnder(item.filePath, oldPrefix)) {
-      item.filePath = rewritePathPrefix(item.filePath, oldPrefix, newPrefix);
-      changed = true;
-    }
-    if (item.children && rewriteBinderPaths(item.children, oldPrefix, newPrefix)) {
-      changed = true;
-    }
-  }
-  return changed;
-}
-
-export function anyBinderPathUnder(items: BinderItem[], prefix: string): boolean {
-  return items.some(item =>
-    (item.filePath !== '' && pathAtOrUnder(item.filePath, prefix)) ||
-    (item.children ? anyBinderPathUnder(item.children, prefix) : false)
-  );
 }
 
 export type FolderNameRejection = 'empty' | 'invalid-chars' | 'trailing' | 'reserved' | 'exists';

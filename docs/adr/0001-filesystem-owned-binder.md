@@ -1,6 +1,6 @@
 # ADR 0001 — Filesystem-owned binder
 
-- **Status:** Accepted (2026-07-03) — not yet implemented
+- **Status:** Implemented (2026-07-06, #233 cutover; slices #225-#233)
 - **Deciders:** Don Pucik, with design interviews by Claude Code and independent review by Claude Cowork
 - **Supersedes:** the `_binder.json` runtime model (in effect through 2.11.0)
 

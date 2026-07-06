@@ -1,5 +1,6 @@
-import { App, Modal, TFile } from 'obsidian';
+import { App, Modal } from 'obsidian';
 import type WritingStudioPlugin from '../main';
+import { listManuscriptDocs } from '../src/manuscriptTree';
 import { t } from '../src/i18n';
 
 export class WritingDashboardModal extends Modal {
@@ -100,8 +101,8 @@ export class WritingDashboardModal extends Modal {
       const docsSection = contentEl.createDiv('ws-dash-section');
       docsSection.createEl('h3', { text: t('writingDashboard.documentWordCounts') });
 
-      const binder = await this.plugin.projectManager.loadBinder(project);
-      const items = this.plugin.projectManager.flattenBinder(binder.items);
+      // The manuscript zone in binder order (#233) — the filename is the title
+      const docs = listManuscriptDocs(this.app, project.folderPath);
 
       const table = docsSection.createEl('table', { cls: 'ws-doc-wc-table' });
       const thead = table.createEl('thead');
@@ -113,25 +114,18 @@ export class WritingDashboardModal extends Modal {
       ].forEach(h => hr.createEl('th', { text: h }));
 
       const tbody = table.createEl('tbody');
-      for (const item of items) {
-        if (item.type === 'group' || item.type === 'part') continue;
-        const file = this.app.vault.getAbstractFileByPath(item.filePath);
-        let wc = 0;
-        if (file instanceof TFile) {
-          const content = await this.app.vault.read(file);
-          wc = this.plugin.fmManager.countWords(content);
-        }
+      for (const file of docs) {
+        const content = await this.app.vault.read(file);
+        const wc = this.plugin.fmManager.countWords(content);
         const tr = tbody.createEl('tr');
         const titleTd = tr.createEl('td');
-        const link = titleTd.createEl('a', { text: item.title });
+        const link = titleTd.createEl('a', { text: file.basename });
         link.href = '#';
         link.onclick = async (e) => {
           e.preventDefault();
-          if (file instanceof TFile) {
-            const leaf = this.app.workspace.getLeaf(false);
-            await leaf.openFile(file);
-            this.close();
-          }
+          const leaf = this.app.workspace.getLeaf(false);
+          await leaf.openFile(file);
+          this.close();
         };
         tr.createEl('td', { text: String(wc) });
         tr.createEl('td', { text: this.plugin.statsTracker.calculateReadingTime(wc) });

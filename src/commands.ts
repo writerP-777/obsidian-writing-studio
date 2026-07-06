@@ -34,7 +34,6 @@ export const COMMAND_SPECS: CommandSpec[] = [
   { id: 'set-word-count-goal', nameKey: 'main.cmd.setWordCountGoal', editorRun: (p, _editor, view) => { p.setWordCountGoal(view.file); } },
   { id: 'open-writing-log', nameKey: 'main.cmd.openWritingLog', run: p => p.openWritingLog() },
   { id: 'open-folder-sidebar', nameKey: 'main.cmd.openFolderSidebar', run: p => { p.openFolderPicker(); } },
-  { id: 'add-files-to-binder', nameKey: 'main.cmd.addFilesToBinder', run: p => p.addFilesToBinder() },
   { id: 'restore-binder-layout', nameKey: 'main.cmd.restoreBinderLayout', run: p => p.restoreBinderLayout() },
 ];
 

@@ -44,7 +44,7 @@ export function journalArticleManifest(project: WritingProject): TemplateManifes
     fileName: 'Title Page',
     wordCountGoal: 500,
     content: templateDoc({
-      title: project.title, fmType: 'section', order: 1, goal: 500, date,
+      title: project.title, fmType: 'section', order: 10, goal: 500, date,
       extraFields: {
         author: project.author,
         'institutional-affiliation': '',
@@ -63,7 +63,7 @@ export function journalArticleManifest(project: WritingProject): TemplateManifes
     fileName: s.fileName ?? s.title,
     wordCountGoal: s.goal,
     content: templateDoc({
-      title: s.title, fmType: s.fmType, order: i + 2, goal: s.goal, date,
+      title: s.title, fmType: s.fmType, order: (i + 2) * 10, goal: s.goal, date,
       body: placeholderHint(s.hint),
     }),
   }));

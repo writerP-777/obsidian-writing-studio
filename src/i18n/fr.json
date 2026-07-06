@@ -28,10 +28,7 @@
         "note": "Note"
       },
       "frontmatterAutoUpdate": "Mise à jour automatique du frontmatter",
-      "frontmatterAutoUpdateDesc": "Mettre à jour automatiquement le nombre de mots et la date de modification lors de l’enregistrement.",
-      "experimentalHeading": "Expérimental",
-      "filesystemBinder": "Classeur du système de fichiers",
-      "filesystemBinderDesc": "Aperçu du classeur repensé : affiche directement l’arborescence du dossier de projet, en lecture seule. Désactivez pour revenir au classeur classique."
+      "frontmatterAutoUpdateDesc": "Mettre à jour automatiquement le nombre de mots et la date de modification lors de l’enregistrement."
     },
     "focus": {
       "heading": "Mode concentration",
@@ -157,61 +154,27 @@
     "displayText": "Classeur d’écriture",
     "selectProject": "— sélectionner un projet —",
     "newProject": "Nouveau projet",
-    "addDocument": "+ document",
-    "addFiles": "Ajouter les fichiers copiés dans ce dossier",
     "targetsDashboard": "Tableau de bord des objectifs",
-    "searchPlaceholder": "Rechercher des documents…",
     "noProjectSelected": "Aucun projet sélectionné. Créez ou sélectionnez un projet d’écriture pour commencer.",
-    "noDocuments": "Aucun document pour l’instant. Cliquez sur « + document » pour en ajouter un.",
-    "dropToRoot": "↓ déposer ici pour promouvoir à la racine",
     "selectProjectFirst": "Veuillez d’abord sélectionner un projet.",
-    "cannotFindFile": "Impossible de trouver le fichier : {{filePath}}. Essayez de le renommer ou de le relier.",
     "untitledDocument": "Sans titre {{time}}",
-    "noNewFiles": "Aucun nouveau fichier trouvé dans le dossier du projet.",
-    "pctComplete": "{{pct}}% terminé",
-    "copySuffix": "(Copie)",
     "menu": {
-      "openDocument": "Ouvrir le document",
-      "newChildDocument": "Nouveau document enfant",
       "setStatusDraft": "Définir le statut : brouillon",
       "setStatusInProgress": "Définir le statut : en cours",
       "setStatusComplete": "Définir le statut : terminé",
       "setStatusPublished": "Définir le statut : publié",
-      "duplicate": "Dupliquer",
-      "moveToResearch": "Déplacer vers la recherche",
-      "publishToWordPress": "Publier sur WordPress",
-      "delete": "Supprimer le document et le fichier",
-      "moveUp": "Monter",
-      "moveDown": "Descendre",
       "rename": "Renommer",
-      "removeFromBinder": "Retirer du classeur",
-      "newGroup": "Nouveau groupe",
-      "newPart": "Nouvelle partie",
-      "newChildGroup": "Nouveau groupe enfant",
-      "newChildPart": "Nouvelle partie enfant",
       "changeType": "Changer le type : {{type}}"
     },
-    "wordCountSuffix": "{{count}}m",
-    "fileNotFound": "Le fichier n'existe plus : {{path}}",
     "deleteConfirm": {
       "title": "Supprimer le document",
-      "message": "Retirer « {{title}} » du classeur et déplacer son fichier vers la corbeille ? L’entrée du classeur (statut, objectif de mots, position) ne peut pas être restaurée.",
       "delete": "Supprimer",
       "cancel": "Annuler"
     },
-    "noMatches": "Aucun document ne correspond à « {{query}} ».",
     "titlePrompt": {
       "heading": "Nouveau document",
       "create": "Créer"
     },
-    "removeConfirm": {
-      "title": "Retirer du classeur",
-      "message": "Retirer « {{title}} » du classeur ? Le fichier reste dans votre coffre, mais le statut, l'objectif de mots et le réglage d'export de l'entrée sont perdus. Les documents imbriqués remontent à sa place.",
-      "remove": "Retirer"
-    },
-    "newGroupOrPart": "Nouveau groupe ou nouvelle partie",
-    "untitledGroup": "Groupe sans titre",
-    "untitledPart": "Partie sans titre",
     "strip": {
       "focus": "Concentration",
       "typography": "Typographie",
@@ -299,10 +262,7 @@
       "writingLog": "Journal d'écriture",
       "publishToWordPress": "Publier sur WordPress"
     },
-    "openDocumentFirst": "Ouvrez d'abord un document.",
     "sprintTimer": "Minuteur de sprint",
-    "pause": "⏸ Pause",
-    "stop": "■ Arrêter",
     "startSprint": "⏱ Configurer un sprint",
     "quickStart": "Options de sprint rapide",
     "today": "Aujourd'hui",
@@ -435,7 +395,6 @@
   },
   "projectManager": {
     "errorFolderExists": "Un dossier nommé \"{{folder}}\" existe déjà dans votre dossier de projets. Choisissez un autre titre.",
-    "corruptBinder": "Le fichier _binder.json de \"{{project}}\" n'a pas pu être lu. Une sauvegarde a été enregistrée sous _binder.json.bak dans le dossier du projet.",
     "corruptProject": "Le fichier de projet dans \"{{folder}}\" est corrompu et le projet n'a pas pu être chargé.",
     "corruptLog": "Impossible de lire le journal d’écriture de {{project}} — un nouveau journal va être créé."
   },
@@ -527,7 +486,6 @@
     "scopeCurrent": "Document actuel",
     "scopeProject": "Projet entier (dans l'ordre du binder)",
     "includeFrontmatter": "Inclure les métadonnées",
-    "includeResearch": "Inclure les notes de recherche",
     "includeTitlesAsHeadings": "Inclure les titres de document comme titres",
     "addTitlePage": "Ajouter une page de titre",
     "addTitlePageDesc": "Ajouter une page de titre avec le titre du projet, l'auteur et la date.",
@@ -642,16 +600,6 @@
     },
     "close": "Fermer"
   },
-  "addToProject": {
-    "title": "Ajouter à un projet d'écriture",
-    "noProjects": "Aucun projet d'écriture trouvé. Créez d'abord un projet.",
-    "close": "Fermer",
-    "file": "Fichier : {{path}}",
-    "projectName": "Projet d'écriture",
-    "projectDesc": "À quel projet d'écriture souhaitez-vous ajouter ce fichier ?",
-    "addBtn": "Ajouter au projet",
-    "cancel": "Annuler"
-  },
   "scanFolder": {
     "title": "Ajouter des fichiers au binder",
     "desc": "Sélectionnez les fichiers à ajouter à ce projet :",
@@ -679,7 +627,6 @@
       "setWordCountGoal": "Définir un objectif de nombre de mots",
       "openWritingLog": "Ouvrir le journal d'écriture",
       "openFolderSidebar": "Ouvrir le dossier dans l'explorateur latéral",
-      "addFilesToBinder": "Analyser le dossier du projet pour trouver de nouveaux fichiers",
       "restoreBinderLayout": "Restaurer la disposition précédente du classeur"
     },
     "menu": {
@@ -689,7 +636,6 @@
       "setGoal": "Définir un objectif de mots",
       "switchMode": "Changer de mode d'écriture →",
       "typographyFont": "Police typographique →",
-      "addToProject": "Ajouter au projet d'écriture",
       "openSidebar": "Ouvrir dans l'explorateur latéral",
       "draftMode": "✍ Mode brouillon",
       "editMode": "✎ Mode édition",
@@ -697,8 +643,7 @@
       "normalMode": "Normal (sans mode)"
     },
     "notice": {
-      "noMarkdownOpen": "Aucun fichier Markdown n'est actuellement ouvert.",
-      "addedToProject": "« {{file}} » ajouté à {{project}}"
+      "noMarkdownOpen": "Aucun fichier Markdown n'est actuellement ouvert."
     },
     "statusBar": {
       "projectWords": "{{total}} / {{goal}} mots du projet",
@@ -750,5 +695,12 @@
   "epub": {
     "toc": "Table des matières",
     "cover": "Couverture"
+  },
+  "binderUpdate": {
+    "title": "Votre classeur et vos dossiers restent désormais synchronisés",
+    "body1": "Le classeur lit désormais directement vos dossiers, si bien que les deux ne peuvent plus se désynchroniser. Vous pouvez organiser votre travail ici ou dans l’explorateur de fichiers de votre ordinateur : les deux resteront toujours identiques.",
+    "body2": "Pour cela, à la première ouverture d’un projet existant, des dossiers sont créés et vos documents déplacés pour correspondre à votre ancien classeur. Rien n’est supprimé et rien de ce que vous avez écrit n’est modifié.",
+    "body3": "Si vous préfériez votre organisation précédente, vous pouvez remettre vos dossiers en place : ouvrez la palette de commandes (Ctrl+P, ou Cmd+P sur Mac) et recherchez « Restaurer la disposition précédente du classeur ». Quelques dossiers vides créés par la mise à jour peuvent subsister ; vous pouvez les supprimer.",
+    "gotIt": "Compris"
   }
 }
