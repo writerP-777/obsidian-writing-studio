@@ -397,6 +397,52 @@ describe('ExportEngine.compileContent from the manuscript zone (#232)', () => {
   });
 });
 
+// #244: the "Export folder title" setting decides what a subtree export's
+// title page and metadata name — folder display name (default) or project.
+describe('subtree export title source (#244)', () => {
+  const SUBTREE = 'Projects/My Book/020~ Part One';
+
+  it('folder mode is the default: the title page opens with the folder display name', async () => {
+    const { engine } = await makeFsWorld();
+    // The fake settings carry no subtreeExportTitleSource — proving the
+    // absent/default case behaves as folder mode
+
+    const compiled = await engine.compileContent(projectOpts({
+      subtreeRoot: SUBTREE,
+      addTitlePage: true,
+    }));
+
+    const today = new Date().toLocaleDateString();
+    expect(compiled.startsWith(`# Part One\n\nMy Book\n\nBy Avery\n\n${today}`)).toBe(true);
+    expect(compiled).not.toContain('# My Book');
+  });
+
+  it('project mode reproduces the pre-#244 subtree title page byte-for-byte', async () => {
+    const { engine, plugin } = await makeFsWorld();
+    (plugin.settings as Record<string, unknown>).subtreeExportTitleSource = 'project';
+
+    const compiled = await engine.compileContent(projectOpts({
+      subtreeRoot: SUBTREE,
+      addTitlePage: true,
+    }));
+
+    const today = new Date().toLocaleDateString();
+    expect(compiled.startsWith(`# My Book\n\nBy Avery\n\n${today}`)).toBe(true);
+    expect(compiled).not.toContain('Part One\n\nMy Book');
+  });
+
+  it('an entire-project title page is identical in both modes', async () => {
+    const { engine, plugin } = await makeFsWorld();
+
+    const folderMode = await engine.compileContent(projectOpts({ addTitlePage: true }));
+    (plugin.settings as Record<string, unknown>).subtreeExportTitleSource = 'project';
+    const projectMode = await engine.compileContent(projectOpts({ addTitlePage: true }));
+
+    expect(folderMode).toBe(projectMode);
+    expect(folderMode.startsWith('# My Book\n\n')).toBe(true);
+  });
+});
+
 describe('ExportEngine.export markdown end to end', () => {
   it('writes the compiled markdown into the project Exports folder', async () => {
     const { engine, files } = await makeWorld();

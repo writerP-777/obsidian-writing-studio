@@ -115,7 +115,11 @@
       "includeCoverDesc": "Generate a text cover page when no cover image is provided.",
       "pdfEngine": "PDF engine",
       "pdfEngineDesc": "Engine used for PDF export. Auto picks an installed LaTeX engine. wkhtmltopdf works without LaTeX, but the export font setting does not apply to it.",
-      "pdfEngineAuto": "Auto (recommended)"
+      "pdfEngineAuto": "Auto (recommended)",
+      "subtreeTitleSource": "Export folder title",
+      "subtreeTitleSourceDesc": "What a folder export's title page and metadata name: the exported folder or the whole project.",
+      "subtreeTitleFolder": "Folder name",
+      "subtreeTitleProject": "Project title"
     },
     "log": {
       "heading": "Daily writing log",

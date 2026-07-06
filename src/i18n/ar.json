@@ -115,7 +115,11 @@
       "includeCoverDesc": "إنشاء صفحة غلاف نصية عند عدم توفر صورة غلاف.",
       "pdfEngine": "محرك PDF",
       "pdfEngineDesc": "المحرك المستخدم لتصدير PDF. يختار الوضع التلقائي محرك LaTeX مثبتًا. يعمل wkhtmltopdf دون LaTeX، لكن إعداد خط التصدير لا ينطبق عليه.",
-      "pdfEngineAuto": "تلقائي (موصى به)"
+      "pdfEngineAuto": "تلقائي (موصى به)",
+      "subtreeTitleSource": "عنوان تصدير المجلد",
+      "subtreeTitleSourceDesc": "ما تشير إليه صفحة العنوان والبيانات الوصفية عند تصدير مجلد: المجلد المُصدَّر أو المشروع بأكمله.",
+      "subtreeTitleFolder": "اسم المجلد",
+      "subtreeTitleProject": "عنوان المشروع"
     },
     "log": {
       "heading": "سجل الكتابة اليومي",
