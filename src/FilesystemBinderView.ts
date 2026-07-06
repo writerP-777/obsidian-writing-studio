@@ -14,6 +14,7 @@ import { ConfirmModal } from '../modals/ConfirmModal';
 import { ExportModal } from '../modals/ExportModal';
 import { confirmDeleteProject } from '../modals/confirmDeleteProject';
 import { ControlStrip } from './ControlStrip';
+import { openCarryOverPreview } from './carryOverBridge';
 import { t } from './i18n';
 import { treeNavAction, parentIndex } from './treeNav';
 import { applyFocus } from './FolderSidebarView';
@@ -221,6 +222,18 @@ export class FilesystemBinderView extends ItemView {
       deleteProjectBtn.onclick = () => {
         confirmDeleteProject(this.app, this.plugin, project);
       };
+
+      // Quiet carry-over re-offer (#230): only surfaces while a legacy
+      // _binder.json exists, independent of the one-time notice flag
+      const legacyBinder = this.app.vault.getAbstractFileByPath(
+        normalizePath(`${project.folderPath}/_binder.json`));
+      if (legacyBinder instanceof TFile) {
+        const carryOverBtn = projectRow.createEl('button', { cls: 'ws-binder-btn', title: t('binder.carryOver.action') });
+        setIcon(carryOverBtn, 'import');
+        carryOverBtn.onclick = () => {
+          void openCarryOverPreview(this.plugin, project);
+        };
+      }
     }
 
     // Toolbar — creation targets the manuscript root (#229); presentation

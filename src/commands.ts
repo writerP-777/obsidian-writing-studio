@@ -35,6 +35,7 @@ export const COMMAND_SPECS: CommandSpec[] = [
   { id: 'open-writing-log', nameKey: 'main.cmd.openWritingLog', run: p => p.openWritingLog() },
   { id: 'open-folder-sidebar', nameKey: 'main.cmd.openFolderSidebar', run: p => { p.openFolderPicker(); } },
   { id: 'add-files-to-binder', nameKey: 'main.cmd.addFilesToBinder', run: p => p.addFilesToBinder() },
+  { id: 'preview-carry-over', nameKey: 'main.cmd.previewCarryOver', run: p => p.previewCarryOver() },
 ];
 
 export function registerCommands(plugin: WritingStudioPlugin): void {

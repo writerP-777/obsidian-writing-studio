@@ -248,6 +248,39 @@
       "nameTrailing": "名称不能以空格或句点结尾。",
       "nameExists": "此处已存在名为“{{name}}”的项目。",
       "exportFolder": "导出文件夹"
+    },
+    "carryOver": {
+      "action": "预览活页夹迁移",
+      "noticeBody": "“{{project}}”有一个与其文件不一致的旧活页夹。可以预览迁移将带来的更改——未经您的确认不会进行任何操作。",
+      "noticePreview": "预览",
+      "noticeNotNow": "暂不",
+      "modalTitle": "迁移“{{project}}”——预览",
+      "dryRun": "这是一次演练，尚未进行任何更改。",
+      "countsOperations_one": "{{count}} 项操作",
+      "countsOperations_other": "{{count}} 项操作",
+      "countsDone": "{{count}} 项已完成",
+      "countsPending": "{{count}} 项待处理",
+      "countsAnomalies_one": "{{count}} 项需要注意",
+      "countsAnomalies_other": "{{count}} 项需要注意",
+      "sectionFolders": "文件夹",
+      "sectionDocuments": "文档",
+      "sectionFrontmatter": "Frontmatter",
+      "keptNote": "已设置的键将保留",
+      "folderExists": "已存在，名为",
+      "folderCreate": "将创建为",
+      "docDone": "已位于",
+      "docMove": "将移动到",
+      "anomalyMissing": "既不在原位置也不在新位置——将保持不动",
+      "anomalyOccupied": "新位置已被占用——将保持不动",
+      "badgeSuffixed": "名称已被占用——已加后缀",
+      "badgeReserved": "保留名称——已加后缀",
+      "badgeTitleUnusable": "标题不可用——保留原名称",
+      "keptKey": "{{key}} 已保留（已设置）",
+      "backupNote": "旧的活页夹文件（_binder.json）将作为备份保留，永远不会被删除。以后降级时会尽量将其恢复原样。",
+      "close": "关闭",
+      "unavailable": "迁移预览需要启用实验性文件系统活页夹并有一个活动项目。",
+      "nothingToPreview": "未找到此项目的旧活页夹。",
+      "readFailed": "无法读取旧的活页夹文件。"
     }
   },
   "launcher": {
@@ -659,7 +692,8 @@
       "setWordCountGoal": "设置字数目标",
       "openWritingLog": "打开写作日志",
       "openFolderSidebar": "在侧边栏浏览器中打开文件夹",
-      "addFilesToBinder": "扫描项目文件夹中的新文件"
+      "addFilesToBinder": "扫描项目文件夹中的新文件",
+      "previewCarryOver": "预览活页夹迁移"
     },
     "menu": {
       "studioOptions": "写作工作室选项",

@@ -248,6 +248,39 @@
       "nameTrailing": "Les noms ne peuvent pas se terminer par une espace ou un point.",
       "nameExists": "Un élément nommé « {{name}} » existe déjà ici.",
       "exportFolder": "Exporter le dossier"
+    },
+    "carryOver": {
+      "action": "Prévisualiser la reprise du classeur",
+      "noticeBody": "« {{project}} » possède un ancien classeur qui diffère de ses fichiers. Prévisualisez ce que la reprise changerait — rien ne se passe sans votre accord.",
+      "noticePreview": "Prévisualiser",
+      "noticeNotNow": "Pas maintenant",
+      "modalTitle": "Reprendre « {{project}} » — prévisualisation",
+      "dryRun": "Ceci est une simulation. Rien n'a été modifié.",
+      "countsOperations_one": "{{count}} opération",
+      "countsOperations_other": "{{count}} opérations",
+      "countsDone": "{{count}} terminées",
+      "countsPending": "{{count}} en attente",
+      "countsAnomalies_one": "{{count}} demande votre attention",
+      "countsAnomalies_other": "{{count}} demandent votre attention",
+      "sectionFolders": "Dossiers",
+      "sectionDocuments": "Documents",
+      "sectionFrontmatter": "Frontmatter",
+      "keptNote": "les clés déjà définies sont conservées",
+      "folderExists": "existe déjà sous le nom",
+      "folderCreate": "sera créé sous le nom",
+      "docDone": "déjà à",
+      "docMove": "sera déplacé vers",
+      "anomalyMissing": "ni à son emplacement d'origine ni au nouveau — sera laissé intact",
+      "anomalyOccupied": "son nouvel emplacement est déjà occupé — sera laissé intact",
+      "badgeSuffixed": "nom déjà pris — suffixe ajouté",
+      "badgeReserved": "nom réservé — suffixe ajouté",
+      "badgeTitleUnusable": "titre inutilisable — nom conservé",
+      "keptKey": "{{key}} conservé (déjà défini)",
+      "backupNote": "Votre ancien fichier de classeur (_binder.json) est conservé comme sauvegarde et jamais supprimé. Revenir plus tard à une version antérieure le restaure tel quel (dans la mesure du possible).",
+      "close": "Fermer",
+      "unavailable": "La prévisualisation de la reprise nécessite le classeur expérimental basé sur le système de fichiers et un projet actif.",
+      "nothingToPreview": "Aucun ancien classeur trouvé pour ce projet.",
+      "readFailed": "Le fichier de l'ancien classeur n'a pas pu être lu."
     }
   },
   "launcher": {
@@ -659,7 +692,8 @@
       "setWordCountGoal": "Définir un objectif de nombre de mots",
       "openWritingLog": "Ouvrir le journal d'écriture",
       "openFolderSidebar": "Ouvrir le dossier dans l'explorateur latéral",
-      "addFilesToBinder": "Analyser le dossier du projet pour trouver de nouveaux fichiers"
+      "addFilesToBinder": "Analyser le dossier du projet pour trouver de nouveaux fichiers",
+      "previewCarryOver": "Prévisualiser la reprise du classeur"
     },
     "menu": {
       "studioOptions": "Options de Writing Studio",

@@ -99,3 +99,15 @@ export class Setting {
 export class MarkdownRenderer {
   static async render(): Promise<void> {}
 }
+
+// Minimal base so modules importing modal classes load; tests never open one
+export class Modal {
+  app: unknown;
+  constructor(app: unknown) {
+    this.app = app;
+  }
+  open(): void {}
+  close(): void {}
+  onOpen(): void {}
+  onClose(): void {}
+}

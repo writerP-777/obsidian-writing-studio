@@ -127,7 +127,8 @@ operation. The pass:
 2. **One atomic `renameFile` per item, original → final** (move + rename-to-title + prefix in
    a single operation; no intermediate location exists).
 3. Idempotent frontmatter writes (`binder-order`, `binder-status`, `word-count-goal`,
-   `binder-type`).
+   `binder-type`, and `binder-compile: false` for legacy compile exclusions — amended
+   2026-07-06, #230 Q2; a key is written only when absent, so user-set values always win).
 
 The plan — including collision suffixes, resolved by legacy binder order — is a pure function
 of the immutable `_binder.json`, so every run computes identical targets. Re-run
