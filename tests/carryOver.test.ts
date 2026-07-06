@@ -590,3 +590,151 @@ describe('failure ledger (R2 — graduated, once per signature)', () => {
     expect(Notice.messages[1]).toContain('permission was denied');
   });
 });
+
+// ─── #263: content folders receive the order of their recorded documents ───
+
+describe('#263 content-folder ordering', () => {
+  // Don''s spot-check case: nine legacy documents recorded inside Chapters,
+  // physically at the project root (stale paths, the #219 class) — the docs
+  // get ordered at root while the folder had nothing, sinking it.
+  function donCase() {
+    const items = [
+      doc('Pitch', `${ROOT}/Chapters/Pitch.md`),
+      doc('Body', `${ROOT}/Chapters/Body.md`),
+    ];
+    const vault = new MemVault({
+      folders: [ROOT, `${ROOT}/Chapters`],
+      files: {
+        [`${ROOT}/Pitch.md`]: { body: 'PITCH' },
+        [`${ROOT}/Body.md`]: { body: 'BODY' },
+        [`${ROOT}/Chapters/Intro.md`]: { body: 'UNTRACKED INTRO' },
+      },
+    });
+    return { items, vault };
+  }
+
+  it('mints a marker placing the folder before its earliest recorded document', async () => {
+    const { items, vault } = donCase();
+
+    const plan = planCarryOver(items, ROOT, vault.disk());
+    const folderOp = plan.folderOps.find(op => op.action === 'attach-marker');
+    expect(folderOp?.targetName).toBe('005~ Chapters');
+
+    await migrate(vault, items);
+    expect(vault.folders.has(`${ROOT}/005~ Chapters`)).toBe(true);
+    expect(vault.folders.has(`${ROOT}/Chapters`)).toBe(false);
+    // The untracked document rides the rename untouched
+    expect(vault.files.get(`${ROOT}/005~ Chapters/Intro.md`)?.body).toBe('UNTRACKED INTRO');
+    // Ordered documents stay at root with their positions
+    expect(vault.files.get(`${ROOT}/Pitch.md`)?.fm['binder-order']).toBe(10);
+    expect(vault.files.get(`${ROOT}/Body.md`)?.fm['binder-order']).toBe(20);
+  });
+
+  it('is idempotent: the marked folder plans as none and the steady state has no work', async () => {
+    const { items, vault } = donCase();
+    await migrate(vault, items);
+
+    const plan = planCarryOver(items, ROOT, vault.disk());
+    expect(plan.folderOps.every(op => op.action === 'none')).toBe(true);
+    expect(planHasWork(plan)).toBe(false);
+  });
+
+  it('narrow trigger: a recorded folder whose documents order elsewhere gets no marker', () => {
+    // The documents target the structural part folder, not the root group —
+    // Sub is not competing with ordered siblings, so it keeps its name.
+    const items = [
+      part('Part', [doc('A', `${ROOT}/Sub/a.md`)]),
+    ];
+    const vault = new MemVault({
+      folders: [ROOT, `${ROOT}/Sub`],
+      files: { [`${ROOT}/Sub/a.md`]: {} },
+    });
+
+    const plan = planCarryOver(items, ROOT, vault.disk());
+
+    expect(plan.folderOps.filter(op => op.targetName.includes('Sub'))).toEqual([]);
+  });
+
+  it('a recorded folder missing on disk is never guessed at', () => {
+    const items = [doc('A', `${ROOT}/Gone/a.md`)];
+    const vault = new MemVault({
+      folders: [ROOT],
+      files: { [`${ROOT}/a.md`]: {} },
+    });
+
+    const plan = planCarryOver(items, ROOT, vault.disk());
+
+    expect(plan.folderOps).toEqual([]);
+  });
+
+  it('a folder already carrying a marker is untouched, and restore strips it', async () => {
+    const items = [doc('A', `${ROOT}/Chapters/a.md`)];
+    const vault = new MemVault({
+      folders: [ROOT, `${ROOT}/900~ Chapters`],
+      files: { [`${ROOT}/a.md`]: {} },
+    });
+
+    await migrate(vault, items);
+    expect(vault.folders.has(`${ROOT}/900~ Chapters`)).toBe(true); // kept as-is
+
+    await restore(vault, items);
+    expect(vault.folders.has(`${ROOT}/Chapters`)).toBe(true);
+    expect(vault.folders.has(`${ROOT}/900~ Chapters`)).toBe(false);
+  });
+
+  it('restore round-trips: documents return INTO the marked folder, which then sheds its marker', async () => {
+    const { items, vault } = donCase();
+    await migrate(vault, items);
+
+    const result = await restore(vault, items);
+
+    expect(result.failures).toEqual([]);
+    expect(vault.folders.has(`${ROOT}/Chapters`)).toBe(true);
+    expect([...vault.folders].some(f => f.includes('~'))).toBe(false);
+    expect(vault.files.get(`${ROOT}/Chapters/Pitch.md`)?.body).toBe('PITCH');
+    expect(vault.files.get(`${ROOT}/Chapters/Body.md`)?.body).toBe('BODY');
+    expect(vault.files.get(`${ROOT}/Chapters/Intro.md`)?.body).toBe('UNTRACKED INTRO');
+    // Layout-only: the frontmatter written by migration persists
+    expect(vault.files.get(`${ROOT}/Chapters/Pitch.md`)?.fm['binder-order']).toBe(10);
+  });
+
+  it('regression: a document recorded inside an adopted structural folder rides the strip home', async () => {
+    // Shipped-restore latent bug: the doc rode the attach-marker rename, and
+    // restore used to recreate a plain twin of the folder, strand the strip
+    // on EEXIST, and leave two folders behind.
+    const items = [
+      part('Part', [doc('A', `${ROOT}/Part/a.md`)]),
+    ];
+    const vault = new MemVault({
+      folders: [ROOT, `${ROOT}/Part`],
+      files: { [`${ROOT}/Part/a.md`]: { body: 'A BODY' } },
+    });
+    await migrate(vault, items);
+    expect(vault.files.has(`${ROOT}/010~ Part/a.md`)).toBe(true);
+
+    const result = await restore(vault, items);
+
+    expect(result.failures).toEqual([]);
+    expect(vault.files.get(`${ROOT}/Part/a.md`)?.body).toBe('A BODY');
+    expect([...vault.folders].filter(f => f.endsWith('Part'))).toEqual([`${ROOT}/Part`]);
+  });
+
+  it('regression: nested marker strips run deepest first', async () => {
+    const items = [
+      part('Outer', [part('Inner', [doc('A', `${ROOT}/Outer/Inner/a.md`)])]),
+    ];
+    const vault = new MemVault({
+      folders: [ROOT, `${ROOT}/Outer`, `${ROOT}/Outer/Inner`],
+      files: { [`${ROOT}/Outer/Inner/a.md`]: { body: 'A' } },
+    });
+    await migrate(vault, items);
+    expect(vault.files.has(`${ROOT}/010~ Outer/010~ Inner/a.md`)).toBe(true);
+
+    const result = await restore(vault, items);
+
+    expect(result.failures).toEqual([]);
+    expect(vault.folders.has(`${ROOT}/Outer`)).toBe(true);
+    expect(vault.folders.has(`${ROOT}/Outer/Inner`)).toBe(true);
+    expect(vault.files.get(`${ROOT}/Outer/Inner/a.md`)?.body).toBe('A');
+  });
+});

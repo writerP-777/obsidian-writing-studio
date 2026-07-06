@@ -18895,8 +18895,70 @@ function expandSiblings(items) {
 function planCarryOver(items, projectFolderPath, disk) {
   const plan = { folderOps: [], docOps: [] };
   walkGroup(items, projectFolderPath, disk, plan);
+  planContentFolders(plan, projectFolderPath, disk);
   assignLeftoverOrders(plan, disk);
   return plan;
+}
+var parentOf2 = (path) => path.split("/").slice(0, -1).join("/");
+function planContentFolders(plan, projectFolderPath, disk) {
+  const claimed = /* @__PURE__ */ new Set();
+  for (const op of plan.folderOps) {
+    claimed.add(op.targetPath);
+    if (op.currentPath !== null) claimed.add(op.currentPath);
+  }
+  const blocked = /* @__PURE__ */ new Set();
+  for (const op of plan.docOps) {
+    if ((op.state === "pending" || op.state === "leftover") && op.originalPath !== "") {
+      blocked.add(parentOf2(op.originalPath));
+    }
+  }
+  const earliest = /* @__PURE__ */ new Map();
+  for (const op of plan.docOps) {
+    if (op.state !== "done") continue;
+    if (op.originalPath === "") continue;
+    const recordedParent = parentOf2(op.originalPath);
+    if (blocked.has(recordedParent)) continue;
+    if (!(recordedParent.length > projectFolderPath.length && recordedParent.startsWith(projectFolderPath + "/"))) continue;
+    if (parentOf2(op.finalPath) !== parentOf2(recordedParent)) continue;
+    const current = earliest.get(recordedParent);
+    if (current === void 0 || op.order < current) earliest.set(recordedParent, op.order);
+  }
+  for (const [recordedParent, position] of [...earliest.entries()].sort()) {
+    const parent = parentOf2(recordedParent);
+    const plainName = recordedParent.split("/").pop();
+    const candidates = disk.subfolderNames(parent).filter((n) => !claimed.has(`${parent}/${n}`) && parseFolderPrefix(n).displayName.toLowerCase() === plainName.toLowerCase());
+    if (candidates.length === 0) continue;
+    candidates.sort((a, b) => {
+      const aMarked = parseFolderPrefix(a).order !== null;
+      const bMarked = parseFolderPrefix(b).order !== null;
+      if (aMarked !== bMarked) return aMarked ? -1 : 1;
+      return naturalCompare(a, b);
+    });
+    const name = candidates[0];
+    claimed.add(`${parent}/${name}`);
+    if (parseFolderPrefix(name).order !== null) {
+      plan.folderOps.push({
+        kind: "folder",
+        legacyTitle: plainName,
+        displayName: parseFolderPrefix(name).displayName,
+        currentPath: null,
+        targetName: name,
+        targetPath: `${parent}/${name}`,
+        action: "none"
+      });
+      continue;
+    }
+    const attached = folderNameWithPrefix(name, position - 5);
+    plan.folderOps.push({
+      kind: "folder",
+      legacyTitle: plainName,
+      displayName: name,
+      currentPath: `${parent}/${name}`,
+      targetName: attached,
+      targetPath: `${parent}/${attached}`,
+      action: "attach-marker"
+    });
+  }
 }
 function walkGroup(items, parentPath2, disk, plan) {
   var _a2;
@@ -19031,14 +19093,46 @@ function restoreHasWork(plan) {
 }
 function planRestore(items, projectFolderPath, disk) {
   const forward = planCarryOver(items, projectFolderPath, disk);
+  const folderOps = [];
+  const stripByPlain = /* @__PURE__ */ new Map();
+  for (const op of forward.folderOps) {
+    if (op.action !== "none") continue;
+    const parsed = parseFolderPrefix(op.targetName);
+    if (parsed.order === null) continue;
+    const parent = parentOf2(op.targetPath);
+    const toPath = `${parent}/${parsed.displayName}`;
+    const occupied = disk.folderExists(toPath) || disk.fileExists(toPath);
+    folderOps.push({
+      kind: "restore-folder",
+      fromPath: op.targetPath,
+      toPath,
+      state: occupied ? "skipped" : "pending",
+      skipReason: occupied ? "target-occupied" : void 0
+    });
+    if (!occupied) {
+      stripByPlain.set(`${parent}|${parsed.displayName.toLowerCase()}`, op.targetName);
+    }
+  }
+  const rewriteThroughStrips = (plainPath) => {
+    const segments = plainPath.split("/");
+    let current = "";
+    for (const segment of segments) {
+      const marked = current === "" ? void 0 : stripByPlain.get(`${current}|${segment.toLowerCase()}`);
+      const name = marked != null ? marked : segment;
+      current = current === "" ? name : `${current}/${name}`;
+    }
+    return current;
+  };
   const docOps = [];
   for (const op of forward.docOps) {
     if (op.originalPath === "" || op.finalPath === op.originalPath) continue;
+    const toPath = rewriteThroughStrips(op.originalPath);
+    if (toPath === op.finalPath) continue;
     const atFinal = disk.fileExists(op.finalPath);
-    const atOriginal = disk.fileExists(op.originalPath);
+    const atHome = disk.fileExists(toPath) || disk.fileExists(op.originalPath);
     let state;
     let skipReason;
-    if (atOriginal) {
+    if (atHome) {
       state = "done";
     } else if (atFinal) {
       state = "pending";
@@ -19049,26 +19143,10 @@ function planRestore(items, projectFolderPath, disk) {
     docOps.push({
       kind: "restore-doc",
       fromPath: op.finalPath,
-      toPath: op.originalPath,
-      ensureFolders: ancestorsWithin(op.originalPath, projectFolderPath),
+      toPath,
+      ensureFolders: ancestorsWithin(toPath, projectFolderPath),
       state,
       skipReason
-    });
-  }
-  const folderOps = [];
-  for (const op of forward.folderOps) {
-    if (op.action !== "none") continue;
-    const parsed = parseFolderPrefix(op.targetName);
-    if (parsed.order === null) continue;
-    const parent = op.targetPath.split("/").slice(0, -1).join("/");
-    const toPath = `${parent}/${parsed.displayName}`;
-    const occupied = disk.folderExists(toPath) || disk.fileExists(toPath);
-    folderOps.push({
-      kind: "restore-folder",
-      fromPath: op.targetPath,
-      toPath,
-      state: occupied ? "skipped" : "pending",
-      skipReason: occupied ? "target-occupied" : void 0
     });
   }
   return { docOps, folderOps };
@@ -19094,22 +19172,28 @@ async function runMigrationPass(compute, io) {
   const result = { changed: 0, failures: [], leftovers: 0, missing: 0 };
   const failedRoots = [];
   const underFailedRoot = (path) => failedRoots.some((root) => path === root || path.startsWith(root + "/"));
-  for (const op of compute().plan.folderOps) {
-    if (op.action === "none" || underFailedRoot(op.targetPath)) continue;
-    try {
-      if (op.action === "create") await io.createFolder(op.targetPath);
-      else await io.rename(op.currentPath, op.targetPath);
-      result.changed += 1;
-    } catch (e) {
-      failedRoots.push(op.targetPath);
-      result.failures.push({
-        signature: `folder|${op.targetPath}`,
-        name: op.displayName,
-        reason: e instanceof Error ? e.message : String(e),
-        kind: "folder"
-      });
+  const attemptedFolders = /* @__PURE__ */ new Set();
+  const runFolderOps = async () => {
+    for (; ; ) {
+      const op = compute().plan.folderOps.find((o) => o.action !== "none" && !underFailedRoot(o.targetPath) && !attemptedFolders.has(`folder|${o.targetPath}`));
+      if (!op) return;
+      attemptedFolders.add(`folder|${op.targetPath}`);
+      try {
+        if (op.action === "create") await io.createFolder(op.targetPath);
+        else await io.rename(op.currentPath, op.targetPath);
+        result.changed += 1;
+      } catch (e) {
+        failedRoots.push(op.targetPath);
+        result.failures.push({
+          signature: `folder|${op.targetPath}`,
+          name: op.displayName,
+          reason: e instanceof Error ? e.message : String(e),
+          kind: "folder"
+        });
+      }
     }
-  }
+  };
+  await runFolderOps();
   const afterFolders = compute();
   for (const op of afterFolders.plan.docOps) {
     if (op.state !== "pending") continue;
@@ -19165,6 +19249,7 @@ async function runMigrationPass(compute, io) {
       });
     }
   }
+  await runFolderOps();
   return result;
 }
 async function runRestorePass(compute, io) {
@@ -19193,7 +19278,8 @@ async function runRestorePass(compute, io) {
       });
     }
   }
-  for (const op of compute().plan.folderOps) {
+  const strips = [...first.plan.folderOps].sort((a, b) => b.fromPath.split("/").length - a.fromPath.split("/").length);
+  for (const op of strips) {
     if (op.state !== "pending") {
       if (op.state === "skipped") result.skipped += 1;
       continue;
