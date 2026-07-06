@@ -33,6 +33,7 @@ import { StatusBar } from './src/StatusBar';
 import { GoalBanner } from './src/GoalBanner';
 import { ObsidianVaultFiles, type VaultFiles } from './src/VaultFiles';
 import { StudioEvents } from './src/StudioEvents';
+import { maybeOfferCarryOver, openCarryOverPreview } from './src/carryOverBridge';
 
 import { AddToProjectModal } from './modals/AddToProjectModal';
 import { SprintModal } from './modals/SprintModal';
@@ -132,6 +133,9 @@ export interface WritingStudioSettings {
   // Resources-drawer open state and active tab, per project id — a view
   // preference, deliberately kept out of the vault
   binderDrawer: Record<string, BinderDrawerPref>;
+  // Projects whose one-time carry-over notice has been shown (#230) — the
+  // command and the binder's project-row button re-offer it any time
+  carryOverNoticeSeen: Record<string, boolean>;
   // State
   activeProjectId: string | null;
   currentWritingMode: WritingModeType;
@@ -177,6 +181,7 @@ const DEFAULT_SETTINGS: WritingStudioSettings = {
   wikilinkHandling: 'strip',
   filesystemBinder: false,
   binderDrawer: {},
+  carryOverNoticeSeen: {},
   activeProjectId: null,
   currentWritingMode: 'none',
   removedProjectIds: [],
@@ -225,6 +230,7 @@ export default class WritingStudioPlugin extends Plugin {
     }));
     this.registerEvent(this.projectManager.onActiveProjectChanged(() => {
       if (this.studioActivated) void this.statusBar.updateProjectGoalBar();
+      void maybeOfferCarryOver(this);
     }));
     this.focusMode = new FocusMode(this);
     this.typographyMode = new TypographyMode(this);
@@ -362,6 +368,10 @@ export default class WritingStudioPlugin extends Plugin {
     this.app.workspace.onLayoutReady(async () => {
       await this.projectManager.initialize();
       if (this.settings.openOnStartup) await this.openLauncher();
+
+      // Startup restores the active project without firing the change event,
+      // so the carry-over offer (#230) needs its own check here
+      void maybeOfferCarryOver(this);
 
       // Register folder context menu item in Notebook Navigator if installed.
       // Guard on major version <= 2 per NN's stability policy (breaking changes require v3+).
@@ -557,6 +567,17 @@ export default class WritingStudioPlugin extends Plugin {
 
   exportProject(): void {
     new ExportModal(this.app, this, 'project').open();
+  }
+
+  // Re-offers the carry-over preview (#230) regardless of the one-time
+  // notice flag. The dry run is part of the experimental binder surface.
+  async previewCarryOver(): Promise<void> {
+    const project = this.projectManager.getActiveProject();
+    if (!this.settings.filesystemBinder || !project) {
+      new Notice(t('binder.carryOver.unavailable'));
+      return;
+    }
+    await openCarryOverPreview(this, project);
   }
 
   newProject(): void {

@@ -248,6 +248,39 @@
       "nameTrailing": "Namen dürfen nicht mit einem Leerzeichen oder Punkt enden.",
       "nameExists": "Etwas mit dem Namen „{{name}}“ existiert hier bereits.",
       "exportFolder": "Ordner exportieren"
+    },
+    "carryOver": {
+      "action": "Mappen-Übernahme als Vorschau anzeigen",
+      "noticeBody": "„{{project}}“ hat eine alte Schreibmappe, die von ihren Dateien abweicht. Die Vorschau zeigt, was die Übernahme ändern würde — ohne Zustimmung passiert nichts.",
+      "noticePreview": "Vorschau",
+      "noticeNotNow": "Nicht jetzt",
+      "modalTitle": "„{{project}}“ übernehmen — Vorschau",
+      "dryRun": "Dies ist ein Probelauf. Es wurde nichts geändert.",
+      "countsOperations_one": "{{count}} Vorgang",
+      "countsOperations_other": "{{count}} Vorgänge",
+      "countsDone": "{{count}} erledigt",
+      "countsPending": "{{count}} ausstehend",
+      "countsAnomalies_one": "{{count}} braucht Aufmerksamkeit",
+      "countsAnomalies_other": "{{count}} brauchen Aufmerksamkeit",
+      "sectionFolders": "Ordner",
+      "sectionDocuments": "Dokumente",
+      "sectionFrontmatter": "Frontmatter",
+      "keptNote": "bereits gesetzte Schlüssel bleiben erhalten",
+      "folderExists": "existiert bereits als",
+      "folderCreate": "wird erstellt als",
+      "docDone": "bereits unter",
+      "docMove": "wird verschoben nach",
+      "anomalyMissing": "weder am ursprünglichen noch am neuen Ort — bleibt unberührt",
+      "anomalyOccupied": "der neue Ort ist bereits belegt — bleibt unberührt",
+      "badgeSuffixed": "Name vergeben — Suffix angehängt",
+      "badgeReserved": "reservierter Name — Suffix angehängt",
+      "badgeTitleUnusable": "Titel unbrauchbar — Name beibehalten",
+      "keptKey": "{{key}} beibehalten (bereits gesetzt)",
+      "backupNote": "Die alte Mappendatei (_binder.json) bleibt als Sicherung erhalten und wird nie gelöscht. Ein späteres Downgrade stellt sie nach Möglichkeit wieder her.",
+      "close": "Schließen",
+      "unavailable": "Die Übernahme-Vorschau benötigt die experimentelle Dateisystem-Mappe und ein aktives Projekt.",
+      "nothingToPreview": "Keine alte Schreibmappe für dieses Projekt gefunden.",
+      "readFailed": "Die alte Mappendatei konnte nicht gelesen werden."
     }
   },
   "launcher": {
@@ -659,7 +692,8 @@
       "setWordCountGoal": "Wortziel festlegen",
       "openWritingLog": "Schreibprotokoll öffnen",
       "openFolderSidebar": "Ordner im Sidebar-Explorer öffnen",
-      "addFilesToBinder": "Projektordner nach neuen Dateien durchsuchen"
+      "addFilesToBinder": "Projektordner nach neuen Dateien durchsuchen",
+      "previewCarryOver": "Mappen-Übernahme als Vorschau anzeigen"
     },
     "menu": {
       "studioOptions": "Schreibstudio-Optionen",

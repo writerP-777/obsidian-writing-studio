@@ -248,6 +248,39 @@
       "nameTrailing": "Names cannot end with a space or period.",
       "nameExists": "Something named \"{{name}}\" already exists here.",
       "exportFolder": "Export folder"
+    },
+    "carryOver": {
+      "action": "Preview binder carry-over",
+      "noticeBody": "\"{{project}}\" has a legacy binder that differs from its files. Preview what carrying it over would change — nothing happens without your approval.",
+      "noticePreview": "Preview",
+      "noticeNotNow": "Not now",
+      "modalTitle": "Carry over \"{{project}}\" — preview",
+      "dryRun": "This is a dry run. Nothing has been changed.",
+      "countsOperations_one": "{{count}} operation",
+      "countsOperations_other": "{{count}} operations",
+      "countsDone": "{{count}} done",
+      "countsPending": "{{count}} pending",
+      "countsAnomalies_one": "{{count}} needs attention",
+      "countsAnomalies_other": "{{count}} need attention",
+      "sectionFolders": "Folders",
+      "sectionDocuments": "Documents",
+      "sectionFrontmatter": "Frontmatter",
+      "keptNote": "keys you've already set are kept",
+      "folderExists": "already exists as",
+      "folderCreate": "will be created as",
+      "docDone": "already at",
+      "docMove": "will move to",
+      "anomalyMissing": "not at its original or new location — will be left untouched",
+      "anomalyOccupied": "its new location is already taken — will be left untouched",
+      "badgeSuffixed": "name taken — suffixed",
+      "badgeReserved": "reserved name — suffixed",
+      "badgeTitleUnusable": "title unusable — name kept",
+      "keptKey": "{{key}} kept (already set)",
+      "backupNote": "Your old binder file (_binder.json) is kept as a backup and never deleted. Downgrading later restores it as it was (best effort).",
+      "close": "Close",
+      "unavailable": "Carry-over preview needs the experimental filesystem binder and an active project.",
+      "nothingToPreview": "No legacy binder found for this project.",
+      "readFailed": "The legacy binder file could not be read."
     }
   },
   "launcher": {
@@ -659,7 +692,8 @@
       "setWordCountGoal": "Set word count goal",
       "openWritingLog": "Open writing log",
       "openFolderSidebar": "Open folder in sidebar explorer",
-      "addFilesToBinder": "Scan project folder for new files"
+      "addFilesToBinder": "Scan project folder for new files",
+      "previewCarryOver": "Preview binder carry-over"
     },
     "menu": {
       "studioOptions": "Writing studio options",
