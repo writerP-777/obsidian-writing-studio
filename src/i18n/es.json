@@ -115,7 +115,11 @@
       "includeCoverDesc": "Generar una portada de texto cuando no se proporciona imagen de portada.",
       "pdfEngine": "Motor de PDF",
       "pdfEngineDesc": "Motor usado para exportar a PDF. Auto elige un motor LaTeX instalado. wkhtmltopdf funciona sin LaTeX, pero la fuente de exportación no se aplica con él.",
-      "pdfEngineAuto": "Auto (recomendado)"
+      "pdfEngineAuto": "Auto (recomendado)",
+      "subtreeTitleSource": "Título al exportar carpeta",
+      "subtreeTitleSourceDesc": "Qué nombran la portada y los metadatos al exportar una carpeta: la carpeta exportada o el proyecto completo.",
+      "subtreeTitleFolder": "Nombre de la carpeta",
+      "subtreeTitleProject": "Título del proyecto"
     },
     "log": {
       "heading": "Registro diario de escritura",

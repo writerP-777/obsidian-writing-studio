@@ -115,7 +115,11 @@
       "includeCoverDesc": "Eine Text-Umschlagseite generieren, wenn kein Umschlagbild vorhanden ist.",
       "pdfEngine": "PDF-Engine",
       "pdfEngineDesc": "Engine für den PDF-Export. Auto wählt eine installierte LaTeX-Engine. wkhtmltopdf funktioniert ohne LaTeX, die Exportschriftart gilt dort jedoch nicht.",
-      "pdfEngineAuto": "Automatisch (empfohlen)"
+      "pdfEngineAuto": "Automatisch (empfohlen)",
+      "subtreeTitleSource": "Titel beim Ordner-Export",
+      "subtreeTitleSourceDesc": "Was Titelseite und Metadaten eines Ordner-Exports benennen: den exportierten Ordner oder das gesamte Projekt.",
+      "subtreeTitleFolder": "Ordnername",
+      "subtreeTitleProject": "Projekttitel"
     },
     "log": {
       "heading": "Tägliches Schreibprotokoll",

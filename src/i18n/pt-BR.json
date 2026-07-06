@@ -115,7 +115,11 @@
       "includeCoverDesc": "Gerar uma capa de texto quando nenhuma imagem de capa for fornecida.",
       "pdfEngine": "Motor de PDF",
       "pdfEngineDesc": "Motor usado na exportação de PDF. Auto escolhe um motor LaTeX instalado. O wkhtmltopdf funciona sem LaTeX, mas a fonte de exportação não se aplica a ele.",
-      "pdfEngineAuto": "Auto (recomendado)"
+      "pdfEngineAuto": "Auto (recomendado)",
+      "subtreeTitleSource": "Título ao exportar pasta",
+      "subtreeTitleSourceDesc": "O que a página de título e os metadados de uma exportação de pasta nomeiam: a pasta exportada ou o projeto inteiro.",
+      "subtreeTitleFolder": "Nome da pasta",
+      "subtreeTitleProject": "Título do projeto"
     },
     "log": {
       "heading": "Log diário de escrita",

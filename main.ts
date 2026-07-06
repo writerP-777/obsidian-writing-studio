@@ -121,6 +121,9 @@ export interface WritingStudioSettings {
   defaultExportFontSize: number;
   pandocPath: string;
   pdfEngine: PdfEnginePreference;
+  // What a subtree ("Export folder") export's title page and metadata name
+  // across all formats (#244) — the exported folder or the whole project
+  subtreeExportTitleSource: 'folder' | 'project';
   epubLanguage: string;
   epubIncludeCover: boolean;
   // WordPress
@@ -175,6 +178,7 @@ const DEFAULT_SETTINGS: WritingStudioSettings = {
   defaultExportFontSize: 12,
   pandocPath: 'pandoc',
   pdfEngine: 'auto',
+  subtreeExportTitleSource: 'folder',
   epubLanguage: 'en',
   epubIncludeCover: true,
   wordPressSites: [],

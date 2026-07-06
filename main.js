@@ -2505,7 +2505,11 @@ var en_default = {
       includeCoverDesc: "Generate a text cover page when no cover image is provided.",
       pdfEngine: "PDF engine",
       pdfEngineDesc: "Engine used for PDF export. Auto picks an installed LaTeX engine. wkhtmltopdf works without LaTeX, but the export font setting does not apply to it.",
-      pdfEngineAuto: "Auto (recommended)"
+      pdfEngineAuto: "Auto (recommended)",
+      subtreeTitleSource: "Export folder title",
+      subtreeTitleSourceDesc: "What a folder export's title page and metadata name: the exported folder or the whole project.",
+      subtreeTitleFolder: "Folder name",
+      subtreeTitleProject: "Project title"
     },
     log: {
       heading: "Daily writing log",
@@ -3254,7 +3258,11 @@ var zh_default = {
       includeCoverDesc: "\u672A\u63D0\u4F9B\u5C01\u9762\u56FE\u7247\u65F6\u81EA\u52A8\u751F\u6210\u6587\u5B57\u5C01\u9762\u9875\u3002",
       pdfEngine: "PDF \u5F15\u64CE",
       pdfEngineDesc: "\u7528\u4E8E PDF \u5BFC\u51FA\u7684\u5F15\u64CE\u3002\u81EA\u52A8\u6A21\u5F0F\u4F1A\u9009\u62E9\u5DF2\u5B89\u88C5\u7684 LaTeX \u5F15\u64CE\u3002wkhtmltopdf \u65E0\u9700 LaTeX \u5373\u53EF\u4F7F\u7528\uFF0C\u4F46\u5BFC\u51FA\u5B57\u4F53\u8BBE\u7F6E\u5BF9\u5176\u65E0\u6548\u3002",
-      pdfEngineAuto: "\u81EA\u52A8\uFF08\u63A8\u8350\uFF09"
+      pdfEngineAuto: "\u81EA\u52A8\uFF08\u63A8\u8350\uFF09",
+      subtreeTitleSource: "\u5BFC\u51FA\u6587\u4EF6\u5939\u7684\u6807\u9898",
+      subtreeTitleSourceDesc: "\u5BFC\u51FA\u6587\u4EF6\u5939\u65F6\u6807\u9898\u9875\u548C\u5143\u6570\u636E\u663E\u793A\u7684\u540D\u79F0\uFF1A\u5BFC\u51FA\u7684\u6587\u4EF6\u5939\u6216\u6574\u4E2A\u9879\u76EE\u3002",
+      subtreeTitleFolder: "\u6587\u4EF6\u5939\u540D\u79F0",
+      subtreeTitleProject: "\u9879\u76EE\u6807\u9898"
     },
     log: {
       heading: "\u6BCF\u65E5\u5199\u4F5C\u65E5\u5FD7",
@@ -4003,7 +4011,11 @@ var hi_default = {
       includeCoverDesc: "\u0915\u0935\u0930 \u091B\u0935\u093F \u0928 \u0939\u094B\u0928\u0947 \u092A\u0930 \u091F\u0947\u0915\u094D\u0938\u094D\u091F \u0915\u0935\u0930 \u092A\u0943\u0937\u094D\u0920 \u0909\u0924\u094D\u092A\u0928\u094D\u0928 \u0915\u0930\u0947\u0902\u0964",
       pdfEngine: "PDF \u0907\u0902\u091C\u0928",
       pdfEngineDesc: "PDF \u0928\u093F\u0930\u094D\u092F\u093E\u0924 \u0915\u0947 \u0932\u093F\u090F \u0909\u092A\u092F\u094B\u0917 \u0939\u094B\u0928\u0947 \u0935\u093E\u0932\u093E \u0907\u0902\u091C\u0928\u0964 \u0938\u094D\u0935\u091A\u093E\u0932\u093F\u0924 \u092E\u094B\u0921 \u0907\u0902\u0938\u094D\u091F\u0949\u0932 \u0915\u093F\u092F\u093E \u0917\u092F\u093E LaTeX \u0907\u0902\u091C\u0928 \u091A\u0941\u0928\u0924\u093E \u0939\u0948\u0964 wkhtmltopdf \u092C\u093F\u0928\u093E LaTeX \u0915\u0947 \u0915\u093E\u092E \u0915\u0930\u0924\u093E \u0939\u0948, \u0932\u0947\u0915\u093F\u0928 \u0928\u093F\u0930\u094D\u092F\u093E\u0924 \u092B\u093C\u0949\u0928\u094D\u091F \u0938\u0947\u091F\u093F\u0902\u0917 \u0909\u0938 \u092A\u0930 \u0932\u093E\u0917\u0942 \u0928\u0939\u0940\u0902 \u0939\u094B\u0924\u0940\u0964",
-      pdfEngineAuto: "\u0938\u094D\u0935\u091A\u093E\u0932\u093F\u0924 (\u0905\u0928\u0941\u0936\u0902\u0938\u093F\u0924)"
+      pdfEngineAuto: "\u0938\u094D\u0935\u091A\u093E\u0932\u093F\u0924 (\u0905\u0928\u0941\u0936\u0902\u0938\u093F\u0924)",
+      subtreeTitleSource: "\u092B\u093C\u094B\u0932\u094D\u0921\u0930 \u0928\u093F\u0930\u094D\u092F\u093E\u0924 \u0915\u093E \u0936\u0940\u0930\u094D\u0937\u0915",
+      subtreeTitleSourceDesc: "\u092B\u093C\u094B\u0932\u094D\u0921\u0930 \u0928\u093F\u0930\u094D\u092F\u093E\u0924 \u0915\u093E \u0936\u0940\u0930\u094D\u0937\u0915 \u092A\u0943\u0937\u094D\u0920 \u0914\u0930 \u092E\u0947\u091F\u093E\u0921\u0947\u091F\u093E \u0915\u093F\u0938\u0947 \u0926\u0930\u094D\u0936\u093E\u090F\u0901: \u0928\u093F\u0930\u094D\u092F\u093E\u0924 \u0915\u093F\u092F\u093E \u0917\u092F\u093E \u092B\u093C\u094B\u0932\u094D\u0921\u0930 \u092F\u093E \u092A\u0942\u0930\u093E \u092A\u094D\u0930\u094B\u091C\u0947\u0915\u094D\u091F\u0964",
+      subtreeTitleFolder: "\u092B\u093C\u094B\u0932\u094D\u0921\u0930 \u0915\u093E \u0928\u093E\u092E",
+      subtreeTitleProject: "\u092A\u094D\u0930\u094B\u091C\u0947\u0915\u094D\u091F \u0915\u093E \u0936\u0940\u0930\u094D\u0937\u0915"
     },
     log: {
       heading: "\u0926\u0948\u0928\u093F\u0915 \u0932\u0947\u0916\u0928 \u0932\u0949\u0917",
@@ -4752,7 +4764,11 @@ var es_default = {
       includeCoverDesc: "Generar una portada de texto cuando no se proporciona imagen de portada.",
       pdfEngine: "Motor de PDF",
       pdfEngineDesc: "Motor usado para exportar a PDF. Auto elige un motor LaTeX instalado. wkhtmltopdf funciona sin LaTeX, pero la fuente de exportaci\xF3n no se aplica con \xE9l.",
-      pdfEngineAuto: "Auto (recomendado)"
+      pdfEngineAuto: "Auto (recomendado)",
+      subtreeTitleSource: "T\xEDtulo al exportar carpeta",
+      subtreeTitleSourceDesc: "Qu\xE9 nombran la portada y los metadatos al exportar una carpeta: la carpeta exportada o el proyecto completo.",
+      subtreeTitleFolder: "Nombre de la carpeta",
+      subtreeTitleProject: "T\xEDtulo del proyecto"
     },
     log: {
       heading: "Registro diario de escritura",
@@ -5501,7 +5517,11 @@ var ar_default = {
       includeCoverDesc: "\u0625\u0646\u0634\u0627\u0621 \u0635\u0641\u062D\u0629 \u063A\u0644\u0627\u0641 \u0646\u0635\u064A\u0629 \u0639\u0646\u062F \u0639\u062F\u0645 \u062A\u0648\u0641\u0631 \u0635\u0648\u0631\u0629 \u063A\u0644\u0627\u0641.",
       pdfEngine: "\u0645\u062D\u0631\u0643 PDF",
       pdfEngineDesc: "\u0627\u0644\u0645\u062D\u0631\u0643 \u0627\u0644\u0645\u0633\u062A\u062E\u062F\u0645 \u0644\u062A\u0635\u062F\u064A\u0631 PDF. \u064A\u062E\u062A\u0627\u0631 \u0627\u0644\u0648\u0636\u0639 \u0627\u0644\u062A\u0644\u0642\u0627\u0626\u064A \u0645\u062D\u0631\u0643 LaTeX \u0645\u062B\u0628\u062A\u064B\u0627. \u064A\u0639\u0645\u0644 wkhtmltopdf \u062F\u0648\u0646 LaTeX\u060C \u0644\u0643\u0646 \u0625\u0639\u062F\u0627\u062F \u062E\u0637 \u0627\u0644\u062A\u0635\u062F\u064A\u0631 \u0644\u0627 \u064A\u0646\u0637\u0628\u0642 \u0639\u0644\u064A\u0647.",
-      pdfEngineAuto: "\u062A\u0644\u0642\u0627\u0626\u064A (\u0645\u0648\u0635\u0649 \u0628\u0647)"
+      pdfEngineAuto: "\u062A\u0644\u0642\u0627\u0626\u064A (\u0645\u0648\u0635\u0649 \u0628\u0647)",
+      subtreeTitleSource: "\u0639\u0646\u0648\u0627\u0646 \u062A\u0635\u062F\u064A\u0631 \u0627\u0644\u0645\u062C\u0644\u062F",
+      subtreeTitleSourceDesc: "\u0645\u0627 \u062A\u0634\u064A\u0631 \u0625\u0644\u064A\u0647 \u0635\u0641\u062D\u0629 \u0627\u0644\u0639\u0646\u0648\u0627\u0646 \u0648\u0627\u0644\u0628\u064A\u0627\u0646\u0627\u062A \u0627\u0644\u0648\u0635\u0641\u064A\u0629 \u0639\u0646\u062F \u062A\u0635\u062F\u064A\u0631 \u0645\u062C\u0644\u062F: \u0627\u0644\u0645\u062C\u0644\u062F \u0627\u0644\u0645\u064F\u0635\u062F\u064E\u0651\u0631 \u0623\u0648 \u0627\u0644\u0645\u0634\u0631\u0648\u0639 \u0628\u0623\u0643\u0645\u0644\u0647.",
+      subtreeTitleFolder: "\u0627\u0633\u0645 \u0627\u0644\u0645\u062C\u0644\u062F",
+      subtreeTitleProject: "\u0639\u0646\u0648\u0627\u0646 \u0627\u0644\u0645\u0634\u0631\u0648\u0639"
     },
     log: {
       heading: "\u0633\u062C\u0644 \u0627\u0644\u0643\u062A\u0627\u0628\u0629 \u0627\u0644\u064A\u0648\u0645\u064A",
@@ -6270,7 +6290,11 @@ var fr_default = {
       includeCoverDesc: "G\xE9n\xE9rer une page de couverture texte si aucune image de couverture n\u2019est fournie.",
       pdfEngine: "Moteur PDF",
       pdfEngineDesc: "Moteur utilis\xE9 pour l'export PDF. Auto choisit un moteur LaTeX install\xE9. wkhtmltopdf fonctionne sans LaTeX, mais la police d'export ne s'y applique pas.",
-      pdfEngineAuto: "Auto (recommand\xE9)"
+      pdfEngineAuto: "Auto (recommand\xE9)",
+      subtreeTitleSource: "Titre de l\u2019export de dossier",
+      subtreeTitleSourceDesc: "Ce que la page de titre et les m\xE9tadonn\xE9es d\u2019un export de dossier d\xE9signent : le dossier export\xE9 ou le projet entier.",
+      subtreeTitleFolder: "Nom du dossier",
+      subtreeTitleProject: "Titre du projet"
     },
     log: {
       heading: "Journal quotidien d\u2019\xE9criture",
@@ -7019,7 +7043,11 @@ var bn_default = {
       includeCoverDesc: "\u0995\u09AD\u09BE\u09B0 \u099B\u09AC\u09BF \u09A8\u09BE \u09A5\u09BE\u0995\u09B2\u09C7 \u099F\u09C7\u0995\u09CD\u09B8\u099F \u0995\u09AD\u09BE\u09B0 \u09AA\u09C7\u099C \u09A4\u09C8\u09B0\u09BF \u0995\u09B0\u09C1\u09A8\u0964",
       pdfEngine: "PDF \u0987\u099E\u09CD\u099C\u09BF\u09A8",
       pdfEngineDesc: "PDF \u098F\u0995\u09CD\u09B8\u09AA\u09CB\u09B0\u09CD\u099F\u09C7 \u09AC\u09CD\u09AF\u09AC\u09B9\u09C3\u09A4 \u0987\u099E\u09CD\u099C\u09BF\u09A8\u0964 \u09B8\u09CD\u09AC\u09AF\u09BC\u0982\u0995\u09CD\u09B0\u09BF\u09AF\u09BC \u09AE\u09CB\u09A1 \u0987\u09A8\u09B8\u09CD\u099F\u09B2 \u0995\u09B0\u09BE LaTeX \u0987\u099E\u09CD\u099C\u09BF\u09A8 \u09AC\u09C7\u099B\u09C7 \u09A8\u09C7\u09AF\u09BC\u0964 wkhtmltopdf LaTeX \u099B\u09BE\u09A1\u09BC\u09BE\u0987 \u0995\u09BE\u099C \u0995\u09B0\u09C7, \u09A4\u09AC\u09C7 \u098F\u0995\u09CD\u09B8\u09AA\u09CB\u09B0\u09CD\u099F \u09AB\u09A8\u09CD\u099F \u09B8\u09C7\u099F\u09BF\u0982 \u098F\u09A4\u09C7 \u09AA\u09CD\u09B0\u09AF\u09CB\u099C\u09CD\u09AF \u09A8\u09AF\u09BC\u0964",
-      pdfEngineAuto: "\u09B8\u09CD\u09AC\u09AF\u09BC\u0982\u0995\u09CD\u09B0\u09BF\u09AF\u09BC (\u09AA\u09CD\u09B0\u09B8\u09CD\u09A4\u09BE\u09AC\u09BF\u09A4)"
+      pdfEngineAuto: "\u09B8\u09CD\u09AC\u09AF\u09BC\u0982\u0995\u09CD\u09B0\u09BF\u09AF\u09BC (\u09AA\u09CD\u09B0\u09B8\u09CD\u09A4\u09BE\u09AC\u09BF\u09A4)",
+      subtreeTitleSource: "\u09AB\u09CB\u09B2\u09CD\u09A1\u09BE\u09B0 \u09B0\u09AA\u09CD\u09A4\u09BE\u09A8\u09BF\u09B0 \u09B6\u09BF\u09B0\u09CB\u09A8\u09BE\u09AE",
+      subtreeTitleSourceDesc: "\u09AB\u09CB\u09B2\u09CD\u09A1\u09BE\u09B0 \u09B0\u09AA\u09CD\u09A4\u09BE\u09A8\u09BF\u09B0 \u09B6\u09BF\u09B0\u09CB\u09A8\u09BE\u09AE \u09AA\u09BE\u09A4\u09BE \u0993 \u09AE\u09C7\u099F\u09BE\u09A1\u09C7\u099F\u09BE \u0995\u09C0 \u09A8\u09BF\u09B0\u09CD\u09A6\u09C7\u09B6 \u0995\u09B0\u09AC\u09C7: \u09B0\u09AA\u09CD\u09A4\u09BE\u09A8\u09BF \u0995\u09B0\u09BE \u09AB\u09CB\u09B2\u09CD\u09A1\u09BE\u09B0 \u09A8\u09BE\u0995\u09BF \u09AA\u09C1\u09B0\u09CB \u09AA\u09CD\u09B0\u0995\u09B2\u09CD\u09AA\u0964",
+      subtreeTitleFolder: "\u09AB\u09CB\u09B2\u09CD\u09A1\u09BE\u09B0\u09C7\u09B0 \u09A8\u09BE\u09AE",
+      subtreeTitleProject: "\u09AA\u09CD\u09B0\u0995\u09B2\u09CD\u09AA\u09C7\u09B0 \u09B6\u09BF\u09B0\u09CB\u09A8\u09BE\u09AE"
     },
     log: {
       heading: "\u09A6\u09C8\u09A8\u09BF\u0995 \u09B2\u09C7\u0996\u09BE\u09B0 \u09B2\u0997",
@@ -7768,7 +7796,11 @@ var pt_BR_default = {
       includeCoverDesc: "Gerar uma capa de texto quando nenhuma imagem de capa for fornecida.",
       pdfEngine: "Motor de PDF",
       pdfEngineDesc: "Motor usado na exporta\xE7\xE3o de PDF. Auto escolhe um motor LaTeX instalado. O wkhtmltopdf funciona sem LaTeX, mas a fonte de exporta\xE7\xE3o n\xE3o se aplica a ele.",
-      pdfEngineAuto: "Auto (recomendado)"
+      pdfEngineAuto: "Auto (recomendado)",
+      subtreeTitleSource: "T\xEDtulo ao exportar pasta",
+      subtreeTitleSourceDesc: "O que a p\xE1gina de t\xEDtulo e os metadados de uma exporta\xE7\xE3o de pasta nomeiam: a pasta exportada ou o projeto inteiro.",
+      subtreeTitleFolder: "Nome da pasta",
+      subtreeTitleProject: "T\xEDtulo do projeto"
     },
     log: {
       heading: "Log di\xE1rio de escrita",
@@ -8517,7 +8549,11 @@ var ru_default = {
       includeCoverDesc: "\u0421\u043E\u0437\u0434\u0430\u0442\u044C \u0442\u0435\u043A\u0441\u0442\u043E\u0432\u0443\u044E \u043E\u0431\u043B\u043E\u0436\u043A\u0443, \u0435\u0441\u043B\u0438 \u0438\u0437\u043E\u0431\u0440\u0430\u0436\u0435\u043D\u0438\u0435 \u043E\u0431\u043B\u043E\u0436\u043A\u0438 \u043D\u0435 \u043F\u0440\u0435\u0434\u043E\u0441\u0442\u0430\u0432\u043B\u0435\u043D\u043E.",
       pdfEngine: "\u0414\u0432\u0438\u0436\u043E\u043A PDF",
       pdfEngineDesc: "\u0414\u0432\u0438\u0436\u043E\u043A \u0434\u043B\u044F \u044D\u043A\u0441\u043F\u043E\u0440\u0442\u0430 \u0432 PDF. \u0410\u0432\u0442\u043E \u0432\u044B\u0431\u0438\u0440\u0430\u0435\u0442 \u0443\u0441\u0442\u0430\u043D\u043E\u0432\u043B\u0435\u043D\u043D\u044B\u0439 \u0434\u0432\u0438\u0436\u043E\u043A LaTeX. wkhtmltopdf \u0440\u0430\u0431\u043E\u0442\u0430\u0435\u0442 \u0431\u0435\u0437 LaTeX, \u043D\u043E \u0448\u0440\u0438\u0444\u0442 \u044D\u043A\u0441\u043F\u043E\u0440\u0442\u0430 \u043A \u043D\u0435\u043C\u0443 \u043D\u0435 \u043F\u0440\u0438\u043C\u0435\u043D\u044F\u0435\u0442\u0441\u044F.",
-      pdfEngineAuto: "\u0410\u0432\u0442\u043E (\u0440\u0435\u043A\u043E\u043C\u0435\u043D\u0434\u0443\u0435\u0442\u0441\u044F)"
+      pdfEngineAuto: "\u0410\u0432\u0442\u043E (\u0440\u0435\u043A\u043E\u043C\u0435\u043D\u0434\u0443\u0435\u0442\u0441\u044F)",
+      subtreeTitleSource: "\u0417\u0430\u0433\u043E\u043B\u043E\u0432\u043E\u043A \u043F\u0440\u0438 \u044D\u043A\u0441\u043F\u043E\u0440\u0442\u0435 \u043F\u0430\u043F\u043A\u0438",
+      subtreeTitleSourceDesc: "\u0427\u0442\u043E \u0443\u043A\u0430\u0437\u044B\u0432\u0430\u044E\u0442 \u0442\u0438\u0442\u0443\u043B\u044C\u043D\u0430\u044F \u0441\u0442\u0440\u0430\u043D\u0438\u0446\u0430 \u0438 \u043C\u0435\u0442\u0430\u0434\u0430\u043D\u043D\u044B\u0435 \u043F\u0440\u0438 \u044D\u043A\u0441\u043F\u043E\u0440\u0442\u0435 \u043F\u0430\u043F\u043A\u0438: \u044D\u043A\u0441\u043F\u043E\u0440\u0442\u0438\u0440\u0443\u0435\u043C\u0443\u044E \u043F\u0430\u043F\u043A\u0443 \u0438\u043B\u0438 \u0432\u0435\u0441\u044C \u043F\u0440\u043E\u0435\u043A\u0442.",
+      subtreeTitleFolder: "\u0418\u043C\u044F \u043F\u0430\u043F\u043A\u0438",
+      subtreeTitleProject: "\u041D\u0430\u0437\u0432\u0430\u043D\u0438\u0435 \u043F\u0440\u043E\u0435\u043A\u0442\u0430"
     },
     log: {
       heading: "\u0415\u0436\u0435\u0434\u043D\u0435\u0432\u043D\u044B\u0439 \u0436\u0443\u0440\u043D\u0430\u043B \u043D\u0430\u043F\u0438\u0441\u0430\u043D\u0438\u044F",
@@ -9278,7 +9314,11 @@ var ja_default = {
       includeCoverDesc: "\u30AB\u30D0\u30FC\u753B\u50CF\u304C\u306A\u3044\u5834\u5408\u3001\u30C6\u30AD\u30B9\u30C8\u30AB\u30D0\u30FC\u30DA\u30FC\u30B8\u3092\u81EA\u52D5\u751F\u6210\u3057\u307E\u3059\u3002",
       pdfEngine: "PDF \u30A8\u30F3\u30B8\u30F3",
       pdfEngineDesc: "PDF \u66F8\u304D\u51FA\u3057\u306B\u4F7F\u3046\u30A8\u30F3\u30B8\u30F3\u3067\u3059\u3002\u81EA\u52D5\u3067\u306F\u30A4\u30F3\u30B9\u30C8\u30FC\u30EB\u6E08\u307F\u306E LaTeX \u30A8\u30F3\u30B8\u30F3\u3092\u9078\u3073\u307E\u3059\u3002wkhtmltopdf \u306F LaTeX \u4E0D\u8981\u3067\u3059\u304C\u3001\u66F8\u304D\u51FA\u3057\u30D5\u30A9\u30F3\u30C8\u8A2D\u5B9A\u306F\u9069\u7528\u3055\u308C\u307E\u305B\u3093\u3002",
-      pdfEngineAuto: "\u81EA\u52D5\uFF08\u63A8\u5968\uFF09"
+      pdfEngineAuto: "\u81EA\u52D5\uFF08\u63A8\u5968\uFF09",
+      subtreeTitleSource: "\u30D5\u30A9\u30EB\u30C0\u30FC\u66F8\u304D\u51FA\u3057\u6642\u306E\u30BF\u30A4\u30C8\u30EB",
+      subtreeTitleSourceDesc: "\u30D5\u30A9\u30EB\u30C0\u30FC\u66F8\u304D\u51FA\u3057\u306E\u30BF\u30A4\u30C8\u30EB\u30DA\u30FC\u30B8\u3068\u30E1\u30BF\u30C7\u30FC\u30BF\u304C\u793A\u3059\u540D\u524D\uFF1A\u66F8\u304D\u51FA\u3057\u305F\u30D5\u30A9\u30EB\u30C0\u30FC\u304B\u3001\u30D7\u30ED\u30B8\u30A7\u30AF\u30C8\u5168\u4F53\u304B\u3002",
+      subtreeTitleFolder: "\u30D5\u30A9\u30EB\u30C0\u30FC\u540D",
+      subtreeTitleProject: "\u30D7\u30ED\u30B8\u30A7\u30AF\u30C8\u306E\u30BF\u30A4\u30C8\u30EB"
     },
     log: {
       heading: "\u6BCE\u65E5\u306E\u57F7\u7B46\u30ED\u30B0",
@@ -10027,7 +10067,11 @@ var de_default = {
       includeCoverDesc: "Eine Text-Umschlagseite generieren, wenn kein Umschlagbild vorhanden ist.",
       pdfEngine: "PDF-Engine",
       pdfEngineDesc: "Engine f\xFCr den PDF-Export. Auto w\xE4hlt eine installierte LaTeX-Engine. wkhtmltopdf funktioniert ohne LaTeX, die Exportschriftart gilt dort jedoch nicht.",
-      pdfEngineAuto: "Automatisch (empfohlen)"
+      pdfEngineAuto: "Automatisch (empfohlen)",
+      subtreeTitleSource: "Titel beim Ordner-Export",
+      subtreeTitleSourceDesc: "Was Titelseite und Metadaten eines Ordner-Exports benennen: den exportierten Ordner oder das gesamte Projekt.",
+      subtreeTitleFolder: "Ordnername",
+      subtreeTitleProject: "Projekttitel"
     },
     log: {
       heading: "T\xE4gliches Schreibprotokoll",
@@ -10776,7 +10820,11 @@ var ko_default = {
       includeCoverDesc: "\uD45C\uC9C0 \uC774\uBBF8\uC9C0\uAC00 \uC5C6\uC744 \uB54C \uD14D\uC2A4\uD2B8 \uD45C\uC9C0 \uD398\uC774\uC9C0\uB97C \uC0DD\uC131\uD569\uB2C8\uB2E4.",
       pdfEngine: "PDF \uC5D4\uC9C4",
       pdfEngineDesc: "PDF \uB0B4\uBCF4\uB0B4\uAE30\uC5D0 \uC0AC\uC6A9\uD560 \uC5D4\uC9C4\uC785\uB2C8\uB2E4. \uC790\uB3D9\uC740 \uC124\uCE58\uB41C LaTeX \uC5D4\uC9C4\uC744 \uC120\uD0DD\uD569\uB2C8\uB2E4. wkhtmltopdf\uB294 LaTeX \uC5C6\uC774 \uC791\uB3D9\uD558\uC9C0\uB9CC \uB0B4\uBCF4\uB0B4\uAE30 \uAE00\uAF34 \uC124\uC815\uC774 \uC801\uC6A9\uB418\uC9C0 \uC54A\uC2B5\uB2C8\uB2E4.",
-      pdfEngineAuto: "\uC790\uB3D9(\uAD8C\uC7A5)"
+      pdfEngineAuto: "\uC790\uB3D9(\uAD8C\uC7A5)",
+      subtreeTitleSource: "\uD3F4\uB354 \uB0B4\uBCF4\uB0B4\uAE30 \uC81C\uBAA9",
+      subtreeTitleSourceDesc: "\uD3F4\uB354 \uB0B4\uBCF4\uB0B4\uAE30\uC758 \uC81C\uBAA9 \uD398\uC774\uC9C0\uC640 \uBA54\uD0C0\uB370\uC774\uD130\uC5D0 \uD45C\uC2DC\uD560 \uC774\uB984: \uB0B4\uBCF4\uB0B8 \uD3F4\uB354 \uB610\uB294 \uC804\uCCB4 \uD504\uB85C\uC81D\uD2B8.",
+      subtreeTitleFolder: "\uD3F4\uB354 \uC774\uB984",
+      subtreeTitleProject: "\uD504\uB85C\uC81D\uD2B8 \uC81C\uBAA9"
     },
     log: {
       heading: "\uC77C\uC77C \uAE00\uC4F0\uAE30 \uB85C\uADF8",
@@ -18204,7 +18252,7 @@ var ExportEngine = class {
     return compiled.split(SECTION_BREAK).join("\n\n---\n\n");
   }
   async export(opts) {
-    var _a2;
+    var _a2, _b2;
     const project = this.plugin.projectManager.getActiveProject();
     const outputDir = project ? (0, import_obsidian24.normalizePath)(`${project.folderPath}/Exports`) : (0, import_obsidian24.normalizePath)("Exports");
     await this.files.ensureFolder(outputDir);
@@ -18223,7 +18271,7 @@ var ExportEngine = class {
       case "md":
         return this.exportMarkdown(compiled, `${baseFile}.md`);
       case "html":
-        return this.exportHtml(compiled, `${baseFile}.html`, (project == null ? void 0 : project.title) || "Document", opts);
+        return this.exportHtml(compiled, `${baseFile}.html`, (_b2 = this.subtreeTitle(opts)) != null ? _b2 : (project == null ? void 0 : project.title) || "Document", opts);
       case "docx":
         return this.exportPandoc(compiled, `${baseFile}.docx`, opts);
       case "rtf":
@@ -18235,9 +18283,10 @@ var ExportEngine = class {
     }
   }
   async exportEpub(opts, baseFile) {
+    var _a2;
     const project = this.plugin.projectManager.getActiveProject();
     const outputPath = `${baseFile}.epub`;
-    const title = (project == null ? void 0 : project.title) || "Untitled";
+    const title = (_a2 = this.subtreeTitle(opts)) != null ? _a2 : (project == null ? void 0 : project.title) || "Untitled";
     const author = (project == null ? void 0 : project.author) || this.plugin.settings.authorName || "";
     const language = this.plugin.settings.epubLanguage || "en";
     const date = localDateString();
@@ -18316,15 +18365,32 @@ var ExportEngine = class {
   htmlToXhtml(html) {
     return html.replace(/<hr>/g, "<hr/>").replace(/<br>/g, "<br/>").replace(/<img([^>]*)(?<!\/)>/g, "<img$1/>");
   }
+  // The folder display name a subtree export titles itself with, or null
+  // when the project title applies — not a subtree export, or the
+  // "Export folder title" setting says project (#244; default is folder).
+  subtreeTitle(opts) {
+    var _a2;
+    if (!opts.subtreeRoot) return null;
+    if (this.plugin.settings.subtreeExportTitleSource === "project") return null;
+    return parseFolderPrefix((_a2 = opts.subtreeRoot.split("/").pop()) != null ? _a2 : "").displayName;
+  }
   async compileContent(opts) {
     var _a2, _b2;
     const parts = [];
     const project = this.plugin.projectManager.getActiveProject();
     if (opts.addTitlePage && project) {
       const today = (/* @__PURE__ */ new Date()).toLocaleDateString();
-      parts.push(`# ${project.title}
+      const byline = t2("exportEngine.byAuthor", { author: project.author || this.plugin.settings.authorName });
+      const subtree = this.subtreeTitle(opts);
+      parts.push(subtree !== null ? `# ${subtree}
 
-${t2("exportEngine.byAuthor", { author: project.author || this.plugin.settings.authorName })}
+${project.title}
+
+${byline}
+
+${today}` : `# ${project.title}
+
+${byline}
 
 ${today}`);
     }
@@ -18416,9 +18482,10 @@ ${body}`);
     return content2.trim();
   }
   async exportManuscript(opts, outputPath) {
+    var _a2;
     const project = this.plugin.projectManager.getActiveProject();
     const author = (project == null ? void 0 : project.author) || this.plugin.settings.authorName || "Author";
-    const title = (project == null ? void 0 : project.title) || "Untitled";
+    const title = (_a2 = this.subtreeTitle(opts)) != null ? _a2 : (project == null ? void 0 : project.title) || "Untitled";
     const compiled = await this.compileContent({ ...opts, addTitlePage: false });
     const sections = compiled.split(SECTION_BREAK);
     const htmlSections = [];
@@ -20154,6 +20221,12 @@ var WritingStudioSettingsTab = class extends import_obsidian30.PluginSettingTab 
       this.plugin.settings.defaultExportFormat = v;
       await this.plugin.saveSettings();
     }));
+    if (this.plugin.settings.filesystemBinder) {
+      new import_obsidian30.Setting(el).setName(t2("settings.export.subtreeTitleSource")).setDesc(t2("settings.export.subtreeTitleSourceDesc")).addDropdown((d) => d.addOption("folder", t2("settings.export.subtreeTitleFolder")).addOption("project", t2("settings.export.subtreeTitleProject")).setValue(this.plugin.settings.subtreeExportTitleSource).onChange(async (v) => {
+        this.plugin.settings.subtreeExportTitleSource = v;
+        await this.plugin.saveSettings();
+      }));
+    }
     new import_obsidian30.Setting(el).setName(t2("settings.export.defaultPaperSize")).addDropdown((d) => d.addOption("letter", t2("settings.export.paperSize.letter")).addOption("a4", t2("settings.export.paperSize.a4")).setValue(this.plugin.settings.defaultPaperSize).onChange(async (v) => {
       this.plugin.settings.defaultPaperSize = v;
       await this.plugin.saveSettings();
@@ -21284,6 +21357,7 @@ var DEFAULT_SETTINGS = {
   defaultExportFontSize: 12,
   pandocPath: "pandoc",
   pdfEngine: "auto",
+  subtreeExportTitleSource: "folder",
   epubLanguage: "en",
   epubIncludeCover: true,
   wordPressSites: [],
