@@ -33,7 +33,7 @@ import { StatusBar } from './src/StatusBar';
 import { GoalBanner } from './src/GoalBanner';
 import { ObsidianVaultFiles, type VaultFiles } from './src/VaultFiles';
 import { StudioEvents } from './src/StudioEvents';
-import { maybeOfferCarryOver, openCarryOverPreview } from './src/carryOverBridge';
+import { runSilentMigration, runRestoreLayout, FailureLedgerEntry } from './src/carryOverBridge';
 
 import { AddToProjectModal } from './modals/AddToProjectModal';
 import { SprintModal } from './modals/SprintModal';
@@ -121,6 +121,9 @@ export interface WritingStudioSettings {
   defaultExportFontSize: number;
   pandocPath: string;
   pdfEngine: PdfEnginePreference;
+  // What a subtree ("Export folder") export's title page and metadata name
+  // across all formats (#244) — the exported folder or the whole project
+  subtreeExportTitleSource: 'folder' | 'project';
   epubLanguage: string;
   epubIncludeCover: boolean;
   // WordPress
@@ -133,9 +136,9 @@ export interface WritingStudioSettings {
   // Resources-drawer open state and active tab, per project id — a view
   // preference, deliberately kept out of the vault
   binderDrawer: Record<string, BinderDrawerPref>;
-  // Projects whose one-time carry-over notice has been shown (#230) — the
-  // command and the binder's project-row button re-offer it any time
-  carryOverNoticeSeen: Record<string, boolean>;
+  // Graduated migration-failure ledger (#231 R2): signature → consecutive
+  // fail count + whether its one notice fired; success clears the entry
+  carryOverFailures: Record<string, FailureLedgerEntry>;
   // State
   activeProjectId: string | null;
   currentWritingMode: WritingModeType;
@@ -175,13 +178,14 @@ const DEFAULT_SETTINGS: WritingStudioSettings = {
   defaultExportFontSize: 12,
   pandocPath: 'pandoc',
   pdfEngine: 'auto',
+  subtreeExportTitleSource: 'folder',
   epubLanguage: 'en',
   epubIncludeCover: true,
   wordPressSites: [],
   wikilinkHandling: 'strip',
   filesystemBinder: false,
   binderDrawer: {},
-  carryOverNoticeSeen: {},
+  carryOverFailures: {},
   activeProjectId: null,
   currentWritingMode: 'none',
   removedProjectIds: [],
@@ -230,7 +234,7 @@ export default class WritingStudioPlugin extends Plugin {
     }));
     this.registerEvent(this.projectManager.onActiveProjectChanged(() => {
       if (this.studioActivated) void this.statusBar.updateProjectGoalBar();
-      void maybeOfferCarryOver(this);
+      void runSilentMigration(this);
     }));
     this.focusMode = new FocusMode(this);
     this.typographyMode = new TypographyMode(this);
@@ -370,8 +374,8 @@ export default class WritingStudioPlugin extends Plugin {
       if (this.settings.openOnStartup) await this.openLauncher();
 
       // Startup restores the active project without firing the change event,
-      // so the carry-over offer (#230) needs its own check here
-      void maybeOfferCarryOver(this);
+      // so silent migration (#231) needs its own check here
+      void runSilentMigration(this);
 
       // Register folder context menu item in Notebook Navigator if installed.
       // Guard on major version <= 2 per NN's stability policy (breaking changes require v3+).
@@ -569,15 +573,11 @@ export default class WritingStudioPlugin extends Plugin {
     new ExportModal(this.app, this, 'project').open();
   }
 
-  // Re-offers the carry-over preview (#230) regardless of the one-time
-  // notice flag. The dry run is part of the experimental binder surface.
-  async previewCarryOver(): Promise<void> {
-    const project = this.projectManager.getActiveProject();
-    if (!this.settings.filesystemBinder || !project) {
-      new Notice(t('binder.carryOver.unavailable'));
-      return;
-    }
-    await openCarryOverPreview(this, project);
+  // The migration's road back (#231 inverse pass) — layout-only by ruling:
+  // documents return to their legacy paths, markers come off, frontmatter
+  // stays. The #233 upgrade modal will carry the visible affordance.
+  async restoreBinderLayout(): Promise<void> {
+    await runRestoreLayout(this);
   }
 
   newProject(): void {

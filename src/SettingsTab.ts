@@ -349,6 +349,22 @@ export class WritingStudioSettingsTab extends PluginSettingTab {
         .setValue(this.plugin.settings.defaultExportFormat)
         .onChange(async v => { this.plugin.settings.defaultExportFormat = v as ExportFormat; await this.plugin.saveSettings(); }));
 
+    // Subtree exports exist only in the experimental filesystem binder, so
+    // the title-source choice (#244) hides with it
+    if (this.plugin.settings.filesystemBinder) {
+      new Setting(el)
+        .setName(t('settings.export.subtreeTitleSource'))
+        .setDesc(t('settings.export.subtreeTitleSourceDesc'))
+        .addDropdown(d => d
+          .addOption('folder', t('settings.export.subtreeTitleFolder'))
+          .addOption('project', t('settings.export.subtreeTitleProject'))
+          .setValue(this.plugin.settings.subtreeExportTitleSource)
+          .onChange(async v => {
+            this.plugin.settings.subtreeExportTitleSource = v as 'folder' | 'project';
+            await this.plugin.saveSettings();
+          }));
+    }
+
     new Setting(el)
       .setName(t('settings.export.defaultPaperSize'))
       .addDropdown(d => d

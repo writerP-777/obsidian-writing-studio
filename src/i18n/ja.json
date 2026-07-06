@@ -115,7 +115,11 @@
       "includeCoverDesc": "カバー画像がない場合、テキストカバーページを自動生成します。",
       "pdfEngine": "PDF エンジン",
       "pdfEngineDesc": "PDF 書き出しに使うエンジンです。自動ではインストール済みの LaTeX エンジンを選びます。wkhtmltopdf は LaTeX 不要ですが、書き出しフォント設定は適用されません。",
-      "pdfEngineAuto": "自動（推奨）"
+      "pdfEngineAuto": "自動（推奨）",
+      "subtreeTitleSource": "フォルダー書き出し時のタイトル",
+      "subtreeTitleSourceDesc": "フォルダー書き出しのタイトルページとメタデータが示す名前：書き出したフォルダーか、プロジェクト全体か。",
+      "subtreeTitleFolder": "フォルダー名",
+      "subtreeTitleProject": "プロジェクトのタイトル"
     },
     "log": {
       "heading": "毎日の執筆ログ",
@@ -249,38 +253,18 @@
       "nameExists": "「{{name}}」という名前の項目がすでにここに存在します。",
       "exportFolder": "フォルダーをエクスポート"
     },
-    "carryOver": {
-      "action": "バインダー引き継ぎをプレビュー",
-      "noticeBody": "「{{project}}」には、ファイルと一致しない旧バインダーがあります。引き継ぎで何が変わるかをプレビューできます。承認なしには何も行われません。",
-      "noticePreview": "プレビュー",
-      "noticeNotNow": "今はしない",
-      "modalTitle": "「{{project}}」の引き継ぎ — プレビュー",
-      "dryRun": "これはドライランです。まだ何も変更されていません。",
-      "countsOperations_one": "{{count}} 件の操作",
-      "countsOperations_other": "{{count}} 件の操作",
-      "countsDone": "{{count}} 件完了",
-      "countsPending": "{{count}} 件保留",
-      "countsAnomalies_one": "{{count}} 件要確認",
-      "countsAnomalies_other": "{{count}} 件要確認",
-      "sectionFolders": "フォルダー",
-      "sectionDocuments": "ドキュメント",
-      "sectionFrontmatter": "フロントマター",
-      "keptNote": "設定済みのキーは保持されます",
-      "folderExists": "既に存在 →",
-      "folderCreate": "作成予定 →",
-      "docDone": "既に配置済み →",
-      "docMove": "移動先 →",
-      "anomalyMissing": "元の場所にも新しい場所にもありません — そのままにします",
-      "anomalyOccupied": "新しい場所は既に使用されています — そのままにします",
-      "badgeSuffixed": "名前が重複 — 接尾辞を追加",
-      "badgeReserved": "予約された名前 — 接尾辞を追加",
-      "badgeTitleUnusable": "タイトルが使用不可 — 名前を維持",
-      "keptKey": "{{key}} は保持（設定済み）",
-      "backupNote": "旧バインダーファイル（_binder.json）はバックアップとして保持され、削除されることはありません。後でダウングレードした場合は、可能な限り元の状態に復元されます。",
-      "close": "閉じる",
-      "unavailable": "引き継ぎプレビューには、実験的なファイルシステムバインダーとアクティブなプロジェクトが必要です。",
-      "nothingToPreview": "このプロジェクトの旧バインダーが見つかりません。",
-      "readFailed": "旧バインダーファイルを読み込めませんでした。"
+    "migration": {
+      "couldntMove": "Writing Studio は「{{name}}」を移動できませんでした：{{reason}}。",
+      "couldntRename": "Writing Studio は「{{name}}」の名前を変更できませんでした：{{reason}}。",
+      "couldntUpdate": "Writing Studio は「{{name}}」を更新できませんでした：{{reason}}。",
+      "reasonNameTaken": "同名のファイルが既に存在します",
+      "reasonInUse": "ファイルが使用中です",
+      "reasonPermission": "アクセスが拒否されました",
+      "restoreDone": "以前のバインダー配置を復元しました。",
+      "restorePartial_one": "以前の配置を復元しました。{{count}} 件は元に戻せませんでした。",
+      "restorePartial_other": "以前の配置を復元しました。{{count}} 件は元に戻せませんでした。",
+      "restoreNothing": "復元するものがありません。",
+      "restoreUnavailable": "配置の復元には、実験的なファイルシステムバインダーとアクティブなプロジェクトが必要です。"
     }
   },
   "launcher": {
@@ -693,7 +677,7 @@
       "openWritingLog": "執筆ログを開く",
       "openFolderSidebar": "サイドバーエクスプローラーでフォルダを開く",
       "addFilesToBinder": "プロジェクトフォルダーの新しいファイルをスキャン",
-      "previewCarryOver": "バインダー引き継ぎをプレビュー"
+      "restoreBinderLayout": "以前のバインダー配置を復元"
     },
     "menu": {
       "studioOptions": "ライティングスタジオのオプション",

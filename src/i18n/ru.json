@@ -115,7 +115,11 @@
       "includeCoverDesc": "Создать текстовую обложку, если изображение обложки не предоставлено.",
       "pdfEngine": "Движок PDF",
       "pdfEngineDesc": "Движок для экспорта в PDF. Авто выбирает установленный движок LaTeX. wkhtmltopdf работает без LaTeX, но шрифт экспорта к нему не применяется.",
-      "pdfEngineAuto": "Авто (рекомендуется)"
+      "pdfEngineAuto": "Авто (рекомендуется)",
+      "subtreeTitleSource": "Заголовок при экспорте папки",
+      "subtreeTitleSourceDesc": "Что указывают титульная страница и метаданные при экспорте папки: экспортируемую папку или весь проект.",
+      "subtreeTitleFolder": "Имя папки",
+      "subtreeTitleProject": "Название проекта"
     },
     "log": {
       "heading": "Ежедневный журнал написания",
@@ -251,42 +255,20 @@
       "nameExists": "Здесь уже есть элемент с именем «{{name}}».",
       "exportFolder": "Экспортировать папку"
     },
-    "carryOver": {
-      "action": "Предпросмотр переноса папки записей",
-      "noticeBody": "У «{{project}}» есть старая папка записей, которая отличается от её файлов. Посмотрите, что изменит перенос — без вашего согласия ничего не произойдёт.",
-      "noticePreview": "Предпросмотр",
-      "noticeNotNow": "Не сейчас",
-      "modalTitle": "Перенос «{{project}}» — предпросмотр",
-      "dryRun": "Это пробный запуск. Ничего не изменено.",
-      "countsOperations_one": "{{count}} операция",
-      "countsOperations_few": "{{count}} операции",
-      "countsOperations_many": "{{count}} операций",
-      "countsOperations_other": "{{count}} операций",
-      "countsDone": "{{count}} выполнено",
-      "countsPending": "{{count}} в ожидании",
-      "countsAnomalies_one": "{{count}} требует внимания",
-      "countsAnomalies_few": "{{count}} требуют внимания",
-      "countsAnomalies_many": "{{count}} требуют внимания",
-      "countsAnomalies_other": "{{count}} требуют внимания",
-      "sectionFolders": "Папки",
-      "sectionDocuments": "Документы",
-      "sectionFrontmatter": "Frontmatter",
-      "keptNote": "уже заданные ключи сохраняются",
-      "folderExists": "уже существует как",
-      "folderCreate": "будет создана как",
-      "docDone": "уже находится в",
-      "docMove": "будет перемещён в",
-      "anomalyMissing": "нет ни в исходном, ни в новом месте — останется нетронутым",
-      "anomalyOccupied": "новое место уже занято — останется нетронутым",
-      "badgeSuffixed": "имя занято — добавлен суффикс",
-      "badgeReserved": "зарезервированное имя — добавлен суффикс",
-      "badgeTitleUnusable": "заголовок непригоден — имя сохранено",
-      "keptKey": "{{key}} сохранён (уже задан)",
-      "backupNote": "Старый файл (_binder.json) сохраняется как резервная копия и никогда не удаляется. При возврате к прежней версии он будет восстановлен как был (по возможности).",
-      "close": "Закрыть",
-      "unavailable": "Для предпросмотра переноса нужны экспериментальная файловая папка записей и активный проект.",
-      "nothingToPreview": "Старая папка записей для этого проекта не найдена.",
-      "readFailed": "Не удалось прочитать старый файл папки записей."
+    "migration": {
+      "couldntMove": "Writing Studio не удалось переместить «{{name}}»: {{reason}}.",
+      "couldntRename": "Writing Studio не удалось переименовать «{{name}}»: {{reason}}.",
+      "couldntUpdate": "Writing Studio не удалось обновить «{{name}}»: {{reason}}.",
+      "reasonNameTaken": "файл с таким именем уже существует",
+      "reasonInUse": "файл используется",
+      "reasonPermission": "доступ запрещён",
+      "restoreDone": "Прежнее расположение восстановлено.",
+      "restorePartial_one": "Прежнее расположение восстановлено. {{count}} элемент не удалось вернуть на место.",
+      "restorePartial_few": "Прежнее расположение восстановлено. {{count}} элемента не удалось вернуть на место.",
+      "restorePartial_many": "Прежнее расположение восстановлено. {{count}} элементов не удалось вернуть на место.",
+      "restorePartial_other": "Прежнее расположение восстановлено. {{count}} элементов не удалось вернуть на место.",
+      "restoreNothing": "Восстанавливать нечего.",
+      "restoreUnavailable": "Для восстановления расположения нужны экспериментальная файловая папка записей и активный проект."
     }
   },
   "launcher": {
@@ -707,7 +689,7 @@
       "openWritingLog": "Открыть журнал письма",
       "openFolderSidebar": "Открыть папку в боковом обозревателе",
       "addFilesToBinder": "Сканировать папку проекта на новые файлы",
-      "previewCarryOver": "Предпросмотр переноса папки записей"
+      "restoreBinderLayout": "Восстановить прежнее расположение папки записей"
     },
     "menu": {
       "studioOptions": "Параметры Writing Studio",

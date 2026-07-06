@@ -115,7 +115,11 @@
       "includeCoverDesc": "إنشاء صفحة غلاف نصية عند عدم توفر صورة غلاف.",
       "pdfEngine": "محرك PDF",
       "pdfEngineDesc": "المحرك المستخدم لتصدير PDF. يختار الوضع التلقائي محرك LaTeX مثبتًا. يعمل wkhtmltopdf دون LaTeX، لكن إعداد خط التصدير لا ينطبق عليه.",
-      "pdfEngineAuto": "تلقائي (موصى به)"
+      "pdfEngineAuto": "تلقائي (موصى به)",
+      "subtreeTitleSource": "عنوان تصدير المجلد",
+      "subtreeTitleSourceDesc": "ما تشير إليه صفحة العنوان والبيانات الوصفية عند تصدير مجلد: المجلد المُصدَّر أو المشروع بأكمله.",
+      "subtreeTitleFolder": "اسم المجلد",
+      "subtreeTitleProject": "عنوان المشروع"
     },
     "log": {
       "heading": "سجل الكتابة اليومي",
@@ -252,44 +256,21 @@
       "nameExists": "يوجد بالفعل عنصر باسم \"{{name}}\" هنا.",
       "exportFolder": "تصدير المجلد"
     },
-    "carryOver": {
-      "action": "معاينة نقل الملزمة",
-      "noticeBody": "لدى \"{{project}}\" ملزمة قديمة تختلف عن ملفاتها. يمكنك معاينة ما سيغيّره النقل — لن يحدث شيء دون موافقتك.",
-      "noticePreview": "معاينة",
-      "noticeNotNow": "ليس الآن",
-      "modalTitle": "نقل \"{{project}}\" — معاينة",
-      "dryRun": "هذه تجربة فقط. لم يتغيّر شيء بعد.",
-      "countsOperations_one": "{{count}} عملية",
-      "countsOperations_two": "{{count}} عمليتان",
-      "countsOperations_few": "{{count}} عمليات",
-      "countsOperations_many": "{{count}} عملية",
-      "countsOperations_other": "{{count}} عملية",
-      "countsDone": "{{count}} منجزة",
-      "countsPending": "{{count}} معلّقة",
-      "countsAnomalies_one": "{{count}} تحتاج إلى انتباه",
-      "countsAnomalies_two": "{{count}} تحتاجان إلى انتباه",
-      "countsAnomalies_few": "{{count}} تحتاج إلى انتباه",
-      "countsAnomalies_many": "{{count}} تحتاج إلى انتباه",
-      "countsAnomalies_other": "{{count}} تحتاج إلى انتباه",
-      "sectionFolders": "المجلدات",
-      "sectionDocuments": "المستندات",
-      "sectionFrontmatter": "البيانات التمهيدية",
-      "keptNote": "المفاتيح التي عيّنتها مسبقًا تبقى كما هي",
-      "folderExists": "موجود بالفعل باسم",
-      "folderCreate": "سيُنشأ باسم",
-      "docDone": "موجود بالفعل في",
-      "docMove": "سيُنقل إلى",
-      "anomalyMissing": "ليس في موقعه الأصلي ولا الجديد — سيُترك دون تغيير",
-      "anomalyOccupied": "الموقع الجديد مشغول بالفعل — سيُترك دون تغيير",
-      "badgeSuffixed": "الاسم مستخدم — أُضيفت لاحقة",
-      "badgeReserved": "اسم محجوز — أُضيفت لاحقة",
-      "badgeTitleUnusable": "العنوان غير صالح — احتُفظ بالاسم",
-      "keptKey": "{{key}} محفوظ (معيّن مسبقًا)",
-      "backupNote": "يُحتفظ بملف الملزمة القديم (_binder.json) كنسخة احتياطية ولا يُحذف أبدًا. عند الرجوع لاحقًا إلى إصدار أقدم يُستعاد كما كان (قدر الإمكان).",
-      "close": "إغلاق",
-      "unavailable": "تتطلب معاينة النقل تفعيل ملزمة نظام الملفات التجريبية ووجود مشروع نشط.",
-      "nothingToPreview": "لم يُعثر على ملزمة قديمة لهذا المشروع.",
-      "readFailed": "تعذّرت قراءة ملف الملزمة القديم."
+    "migration": {
+      "couldntMove": "تعذّر على Writing Studio نقل \"{{name}}\": {{reason}}.",
+      "couldntRename": "تعذّر على Writing Studio إعادة تسمية \"{{name}}\": {{reason}}.",
+      "couldntUpdate": "تعذّر على Writing Studio تحديث \"{{name}}\": {{reason}}.",
+      "reasonNameTaken": "يوجد ملف بهذا الاسم بالفعل",
+      "reasonInUse": "الملف قيد الاستخدام",
+      "reasonPermission": "رُفض الإذن",
+      "restoreDone": "استُعيد التخطيط السابق للملزمة.",
+      "restorePartial_one": "استُعيد التخطيط السابق. تعذّرت إعادة عنصر واحد ({{count}}).",
+      "restorePartial_two": "استُعيد التخطيط السابق. تعذّرت إعادة عنصرين ({{count}}).",
+      "restorePartial_few": "استُعيد التخطيط السابق. تعذّرت إعادة {{count}} عناصر.",
+      "restorePartial_many": "استُعيد التخطيط السابق. تعذّرت إعادة {{count}} عنصرًا.",
+      "restorePartial_other": "استُعيد التخطيط السابق. تعذّرت إعادة {{count}} عنصر.",
+      "restoreNothing": "لا يوجد ما يُستعاد.",
+      "restoreUnavailable": "تتطلب استعادة التخطيط تفعيل ملزمة نظام الملفات التجريبية ووجود مشروع نشط."
     }
   },
   "launcher": {
@@ -716,7 +697,7 @@
       "openWritingLog": "فتح سجل الكتابة",
       "openFolderSidebar": "فتح المجلد في المستكشف الجانبي",
       "addFilesToBinder": "فحص مجلد المشروع بحثًا عن ملفات جديدة",
-      "previewCarryOver": "معاينة نقل الملزمة"
+      "restoreBinderLayout": "استعادة التخطيط السابق للملزمة"
     },
     "menu": {
       "studioOptions": "خيارات استوديو الكتابة",
