@@ -57,7 +57,6 @@ describe('defaultExportUiState', () => {
     expect(s).toMatchObject({
       scope: 'project',
       includeFrontmatter: false,
-      includeResearch: false,
       includeTitlesAsHeadings: true,
       includeFolderNamesAsHeadings: false,
       addTitlePage: true,

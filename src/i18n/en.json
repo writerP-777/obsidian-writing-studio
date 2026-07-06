@@ -28,10 +28,7 @@
         "note": "Note"
       },
       "frontmatterAutoUpdate": "Frontmatter auto-update",
-      "frontmatterAutoUpdateDesc": "Automatically update word-count and modified date on save.",
-      "experimentalHeading": "Experimental",
-      "filesystemBinder": "Filesystem binder",
-      "filesystemBinderDesc": "Preview of the redesigned binder: shows the project folder tree directly, read-only. Turn off to return to the classic binder."
+      "frontmatterAutoUpdateDesc": "Automatically update word-count and modified date on save."
     },
     "focus": {
       "heading": "Focus mode",
@@ -157,61 +154,27 @@
     "displayText": "Writing binder",
     "selectProject": "— select project —",
     "newProject": "New project",
-    "addDocument": "+ document",
-    "addFiles": "Add files copied to this folder",
     "targetsDashboard": "Targets dashboard",
-    "searchPlaceholder": "Search documents…",
     "noProjectSelected": "No project selected. Create or select a writing project to get started.",
-    "noDocuments": "No documents yet. Click “+ document” to add one.",
-    "dropToRoot": "↓ drop here to promote to root",
     "selectProjectFirst": "Select a project first.",
-    "cannotFindFile": "Cannot find file: {{filePath}}. Try renaming or re-linking the document.",
     "untitledDocument": "Untitled {{time}}",
-    "noNewFiles": "No new files found in the project folder.",
-    "pctComplete": "{{pct}}% complete",
-    "copySuffix": "(Copy)",
     "menu": {
-      "openDocument": "Open document",
-      "newChildDocument": "New child document",
       "setStatusDraft": "Set status: draft",
       "setStatusInProgress": "Set status: in progress",
       "setStatusComplete": "Set status: complete",
       "setStatusPublished": "Set status: published",
-      "duplicate": "Duplicate",
-      "moveToResearch": "Move to research",
-      "publishToWordPress": "Publish to WordPress",
-      "delete": "Delete document and file",
-      "moveUp": "Move up",
-      "moveDown": "Move down",
       "rename": "Rename",
-      "removeFromBinder": "Remove from binder",
-      "newGroup": "New group",
-      "newPart": "New part",
-      "newChildGroup": "New child group",
-      "newChildPart": "New child part",
       "changeType": "Change type: {{type}}"
     },
-    "wordCountSuffix": "{{count}}w",
-    "fileNotFound": "File no longer exists: {{path}}",
     "deleteConfirm": {
       "title": "Delete document",
-      "message": "Remove \"{{title}}\" from the binder and move its file to the trash? The binder entry (status, word count goal, position) cannot be restored.",
       "delete": "Delete",
       "cancel": "Cancel"
     },
-    "noMatches": "No documents match \"{{query}}\".",
     "titlePrompt": {
       "heading": "New document",
       "create": "Create"
     },
-    "removeConfirm": {
-      "title": "Remove from binder",
-      "message": "Remove \"{{title}}\" from the binder? The file stays in your vault, but the entry's status, word count goal, and export setting are lost. Nested documents move up to take its place.",
-      "remove": "Remove"
-    },
-    "newGroupOrPart": "New group or part",
-    "untitledGroup": "Untitled group",
-    "untitledPart": "Untitled part",
     "strip": {
       "focus": "Focus",
       "typography": "Typography",
@@ -299,10 +262,7 @@
       "writingLog": "Writing log",
       "publishToWordPress": "Publish to WordPress"
     },
-    "openDocumentFirst": "Open a document first.",
     "sprintTimer": "Sprint timer",
-    "pause": "⏸ Pause",
-    "stop": "■ Stop",
     "startSprint": "⏱ Set up sprint",
     "quickStart": "Quick sprint options",
     "sprintInProgress": "Sprint in progress",
@@ -435,7 +395,6 @@
   },
   "projectManager": {
     "errorFolderExists": "A folder named \"{{folder}}\" already exists in your projects folder. Choose a different title.",
-    "corruptBinder": "The binder file for \"{{project}}\" could not be read. A backup was saved as _binder.json.bak in the project folder.",
     "corruptProject": "The project file in \"{{folder}}\" is corrupt and the project could not be loaded.",
     "corruptLog": "Writing log for {{project}} could not be read — starting a fresh log."
   },
@@ -527,7 +486,6 @@
     "scopeCurrent": "Current document",
     "scopeProject": "Entire project (in binder order)",
     "includeFrontmatter": "Include frontmatter",
-    "includeResearch": "Include research notes",
     "includeTitlesAsHeadings": "Include document titles as headings",
     "addTitlePage": "Add title page",
     "addTitlePageDesc": "Prepend a title page with project title, author, and date.",
@@ -642,16 +600,6 @@
     },
     "close": "Close"
   },
-  "addToProject": {
-    "title": "Add to writing project",
-    "noProjects": "No writing projects found. Create a project first.",
-    "close": "Close",
-    "file": "File: {{path}}",
-    "projectName": "Writing project",
-    "projectDesc": "What writing project do you wish to add this file to?",
-    "addBtn": "Add to project",
-    "cancel": "Cancel"
-  },
   "scanFolder": {
     "title": "Add files to binder",
     "desc": "Select the files to add to this project:",
@@ -679,7 +627,6 @@
       "setWordCountGoal": "Set word count goal",
       "openWritingLog": "Open writing log",
       "openFolderSidebar": "Open folder in sidebar explorer",
-      "addFilesToBinder": "Scan project folder for new files",
       "restoreBinderLayout": "Restore previous binder layout"
     },
     "menu": {
@@ -689,7 +636,6 @@
       "setGoal": "Set word count goal",
       "switchMode": "Switch writing mode →",
       "typographyFont": "Typography font →",
-      "addToProject": "Add to writing project",
       "openSidebar": "Open in sidebar explorer",
       "draftMode": "✍ Draft mode",
       "editMode": "✎ Edit mode",
@@ -697,8 +643,7 @@
       "normalMode": "Normal (no mode)"
     },
     "notice": {
-      "noMarkdownOpen": "No Markdown file is currently open.",
-      "addedToProject": "Added \"{{file}}\" to {{project}}"
+      "noMarkdownOpen": "No Markdown file is currently open."
     },
     "statusBar": {
       "projectWords": "{{total}} / {{goal}} project words",
@@ -750,5 +695,12 @@
   "epub": {
     "toc": "Table of contents",
     "cover": "Cover"
+  },
+  "binderUpdate": {
+    "title": "Your binder and your folders now stay in sync",
+    "body1": "Your binder now reads your folders directly, so the two can never fall out of step. You can organize your work here or in your computer's file explorer, and both will always match.",
+    "body2": "To do this, the first time you open an existing project it creates folders and moves your documents to match your old binder. Nothing is deleted, and none of your writing is changed.",
+    "body3": "If you preferred your earlier arrangement, you can put your folders back: open the command palette (press Ctrl+P, or Cmd+P on a Mac) and search for \"Restore previous binder layout.\" A few empty folders the update created may remain; you can delete them.",
+    "gotIt": "Got it"
   }
 }

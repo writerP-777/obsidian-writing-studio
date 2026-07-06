@@ -28,10 +28,7 @@
         "note": "Nota"
       },
       "frontmatterAutoUpdate": "Actualización automática del frontmatter",
-      "frontmatterAutoUpdateDesc": "Actualizar automáticamente el recuento de palabras y la fecha de modificación al guardar.",
-      "experimentalHeading": "Experimental",
-      "filesystemBinder": "Carpeta de anillas del sistema de archivos",
-      "filesystemBinderDesc": "Vista previa de la carpeta de anillas rediseñada: muestra directamente el árbol de carpetas del proyecto, en modo de solo lectura. Desactívala para volver a la carpeta de anillas clásica."
+      "frontmatterAutoUpdateDesc": "Actualizar automáticamente el recuento de palabras y la fecha de modificación al guardar."
     },
     "focus": {
       "heading": "Modo de enfoque",
@@ -157,61 +154,27 @@
     "displayText": "Carpeta de escritura",
     "selectProject": "— seleccionar proyecto —",
     "newProject": "Nuevo proyecto",
-    "addDocument": "+ documento",
-    "addFiles": "Agregar archivos copiados a esta carpeta",
     "targetsDashboard": "Panel de objetivos",
-    "searchPlaceholder": "Buscar documentos…",
     "noProjectSelected": "No hay proyecto seleccionado. Crea o selecciona un proyecto de escritura para comenzar.",
-    "noDocuments": "Aún no hay documentos. Haz clic en “+ documento” para agregar uno.",
-    "dropToRoot": "↓ soltar aquí para promover a raíz",
     "selectProjectFirst": "Selecciona un proyecto primero.",
-    "cannotFindFile": "No se puede encontrar el archivo: {{filePath}}. Intenta renombrarlo o volver a vincularlo.",
     "untitledDocument": "Sin título {{time}}",
-    "noNewFiles": "No se encontraron nuevos archivos en la carpeta del proyecto.",
-    "pctComplete": "{{pct}}% completado",
-    "copySuffix": "(Copia)",
     "menu": {
-      "openDocument": "Abrir documento",
-      "newChildDocument": "Nuevo documento hijo",
       "setStatusDraft": "Establecer estado: borrador",
       "setStatusInProgress": "Establecer estado: en progreso",
       "setStatusComplete": "Establecer estado: completo",
       "setStatusPublished": "Establecer estado: publicado",
-      "duplicate": "Duplicar",
-      "moveToResearch": "Mover a investigación",
-      "publishToWordPress": "Publicar en WordPress",
-      "delete": "Eliminar documento y archivo",
-      "moveUp": "Mover hacia arriba",
-      "moveDown": "Mover hacia abajo",
       "rename": "Renombrar",
-      "removeFromBinder": "Quitar de la carpeta",
-      "newGroup": "Nuevo grupo",
-      "newPart": "Nueva parte",
-      "newChildGroup": "Nuevo grupo hijo",
-      "newChildPart": "Nueva parte hija",
       "changeType": "Cambiar tipo: {{type}}"
     },
-    "wordCountSuffix": "{{count}}p",
-    "fileNotFound": "El archivo ya no existe: {{path}}",
     "deleteConfirm": {
       "title": "Eliminar documento",
-      "message": "¿Quitar \"{{title}}\" de la carpeta y mover su archivo a la papelera? La entrada de la carpeta (estado, objetivo de palabras, posición) no se puede restaurar.",
       "delete": "Eliminar",
       "cancel": "Cancelar"
     },
-    "noMatches": "Ningún documento coincide con \"{{query}}\".",
     "titlePrompt": {
       "heading": "Nuevo documento",
       "create": "Crear"
     },
-    "removeConfirm": {
-      "title": "Quitar de la carpeta",
-      "message": "¿Quitar \"{{title}}\" de la carpeta? El archivo permanece en tu vault, pero se pierden el estado, el objetivo de palabras y el ajuste de exportación de la entrada. Los documentos anidados suben a ocupar su lugar.",
-      "remove": "Quitar"
-    },
-    "newGroupOrPart": "Nuevo grupo o parte",
-    "untitledGroup": "Grupo sin título",
-    "untitledPart": "Parte sin título",
     "strip": {
       "focus": "Enfoque",
       "typography": "Tipografía",
@@ -299,10 +262,7 @@
       "writingLog": "Registro de escritura",
       "publishToWordPress": "Publicar en WordPress"
     },
-    "openDocumentFirst": "Abre un documento primero.",
     "sprintTimer": "Temporizador de sprint",
-    "pause": "⏸ Pausar",
-    "stop": "■ Detener",
     "startSprint": "⏱ Configurar sprint",
     "quickStart": "Opciones de sprint rápido",
     "today": "Hoy",
@@ -435,7 +395,6 @@
   },
   "projectManager": {
     "errorFolderExists": "Ya existe una carpeta llamada \"{{folder}}\" en su carpeta de proyectos. Elija un título diferente.",
-    "corruptBinder": "No se pudo leer el archivo _binder.json de \"{{project}}\". Se guardó una copia de seguridad como _binder.json.bak en la carpeta del proyecto.",
     "corruptProject": "El archivo del proyecto en \"{{folder}}\" está dañado y no se pudo cargar el proyecto.",
     "corruptLog": "No se pudo leer el registro de escritura de {{project}}; se iniciará un registro nuevo."
   },
@@ -527,7 +486,6 @@
     "scopeCurrent": "Documento actual",
     "scopeProject": "Proyecto completo (en orden del binder)",
     "includeFrontmatter": "Incluir portada",
-    "includeResearch": "Incluir notas de investigación",
     "includeTitlesAsHeadings": "Incluir títulos de documento como encabezados",
     "addTitlePage": "Añadir portada",
     "addTitlePageDesc": "Añade una portada con el título del proyecto, autor y fecha.",
@@ -642,16 +600,6 @@
     },
     "close": "Cerrar"
   },
-  "addToProject": {
-    "title": "Añadir a proyecto de escritura",
-    "noProjects": "No se encontraron proyectos de escritura. Crea un proyecto primero.",
-    "close": "Cerrar",
-    "file": "Archivo: {{path}}",
-    "projectName": "Proyecto de escritura",
-    "projectDesc": "¿A qué proyecto de escritura deseas añadir este archivo?",
-    "addBtn": "Añadir al proyecto",
-    "cancel": "Cancelar"
-  },
   "scanFolder": {
     "title": "Añadir archivos al binder",
     "desc": "Selecciona los archivos para añadir a este proyecto:",
@@ -679,7 +627,6 @@
       "setWordCountGoal": "Establecer objetivo de recuento de palabras",
       "openWritingLog": "Abrir registro de escritura",
       "openFolderSidebar": "Abrir carpeta en el explorador lateral",
-      "addFilesToBinder": "Buscar archivos nuevos en la carpeta del proyecto",
       "restoreBinderLayout": "Restaurar la disposición anterior de la carpeta de escritura"
     },
     "menu": {
@@ -689,7 +636,6 @@
       "setGoal": "Establecer objetivo de palabras",
       "switchMode": "Cambiar modo de escritura →",
       "typographyFont": "Fuente tipográfica →",
-      "addToProject": "Agregar al proyecto de escritura",
       "openSidebar": "Abrir en el explorador lateral",
       "draftMode": "✍ Modo borrador",
       "editMode": "✎ Modo edición",
@@ -697,8 +643,7 @@
       "normalMode": "Normal (sin modo)"
     },
     "notice": {
-      "noMarkdownOpen": "No hay ningún archivo Markdown abierto actualmente.",
-      "addedToProject": "\"{{file}}\" agregado a {{project}}"
+      "noMarkdownOpen": "No hay ningún archivo Markdown abierto actualmente."
     },
     "statusBar": {
       "projectWords": "{{total}} / {{goal}} palabras del proyecto",
@@ -750,5 +695,12 @@
   "epub": {
     "toc": "Índice",
     "cover": "Portada"
+  },
+  "binderUpdate": {
+    "title": "Tu carpeta de escritura y tus carpetas ahora siempre coinciden",
+    "body1": "La carpeta de escritura ahora lee tus carpetas directamente, así que las dos nunca pueden desincronizarse. Puedes organizar tu trabajo aquí o en el explorador de archivos de tu equipo, y siempre coincidirán.",
+    "body2": "Para ello, la primera vez que abras un proyecto existente se crean carpetas y se mueven tus documentos para reflejar tu carpeta de escritura anterior. No se elimina nada y tu escritura no cambia en absoluto.",
+    "body3": "Si preferías tu disposición anterior, puedes recuperar tus carpetas: abre la paleta de comandos (pulsa Ctrl+P, o Cmd+P en Mac) y busca «Restaurar la disposición anterior de la carpeta de escritura». Pueden quedar algunas carpetas vacías creadas por la actualización; puedes eliminarlas.",
+    "gotIt": "Entendido"
   }
 }

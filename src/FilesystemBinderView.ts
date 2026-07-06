@@ -2,7 +2,6 @@ import { App, ItemView, Menu, WorkspaceLeaf, TAbstractFile, TFile, TFolder, Noti
 import type WritingStudioPlugin from '../main';
 import { WritingProject } from '../models/Project';
 import { STATUS_COLORS, DocumentStatus } from '../models/BinderItem';
-import { BINDER_VIEW_TYPE } from './BinderView';
 import { RESERVED_PROJECT_FOLDERS } from './folderRename';
 import { SiblingEntry, sortSiblings, entryDisplayName, isHiddenName, parseBinderOrder } from './binderOrder';
 import { BinderZone, DropRegion, DragSource, MoveEntry, MoveOp, dropRegion, canStartDrag, evaluateDrop, planMove } from './binderMove';
@@ -17,6 +16,8 @@ import { ControlStrip } from './ControlStrip';
 import { t } from './i18n';
 import { treeNavAction, parentIndex } from './treeNav';
 import { applyFocus } from './FolderSidebarView';
+
+export const BINDER_VIEW_TYPE = 'writing-studio-binder';
 
 // The frontmatter keys the tooltip surfaces, in display order.
 const TOOLTIP_KEYS = ['binder-order', 'binder-status', 'binder-type', 'binder-compile', 'word-count-goal'];

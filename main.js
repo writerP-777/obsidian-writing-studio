@@ -27,10 +27,10 @@ __export(main_exports, {
   default: () => WritingStudioPlugin
 });
 module.exports = __toCommonJS(main_exports);
-var import_obsidian37 = require("obsidian");
+var import_obsidian35 = require("obsidian");
 
-// src/BinderView.ts
-var import_obsidian17 = require("obsidian");
+// src/FilesystemBinderView.ts
+var import_obsidian14 = require("obsidian");
 
 // models/BinderItem.ts
 var STATUS_COLORS = {
@@ -39,37 +39,6 @@ var STATUS_COLORS = {
   complete: "#10b981",
   published: "#3b82f6"
 };
-
-// models/Project.ts
-var PROJECT_TYPE_DEFAULT_DOC_TYPE = {
-  book: "chapter",
-  series: "article",
-  blog: "article",
-  "journal-article": "section",
-  "magazine-article": "section"
-};
-function resolveDefaultDocumentType(projectType, globalDefault) {
-  var _a2;
-  return (_a2 = PROJECT_TYPE_DEFAULT_DOC_TYPE[projectType]) != null ? _a2 : globalDefault;
-}
-var PROJECT_TYPE_DOCUMENT_FOLDER = {
-  book: "Chapters",
-  series: "Articles",
-  blog: "Posts",
-  "journal-article": "Sections",
-  "magazine-article": "Sections",
-  blank: "Documents"
-};
-function defaultDocumentFolder(projectType) {
-  return PROJECT_TYPE_DOCUMENT_FOLDER[projectType];
-}
-function resolveDocumentFolder(project) {
-  var _a2;
-  return (_a2 = project.documentFolder) != null ? _a2 : "Chapters";
-}
-
-// modals/ProjectModal.ts
-var import_obsidian2 = require("obsidian");
 
 // src/folderRename.ts
 var RESERVED_PROJECT_FOLDERS = ["Research", "Exports"];
@@ -89,24 +58,6 @@ function rewritePathPrefix(path, oldPrefix, newPrefix) {
   if (path.startsWith(oldPrefix + "/")) return newPrefix + path.slice(oldPrefix.length);
   return path;
 }
-function rewriteBinderPaths(items, oldPrefix, newPrefix) {
-  let changed = false;
-  for (const item of items) {
-    if (item.filePath && pathAtOrUnder(item.filePath, oldPrefix)) {
-      item.filePath = rewritePathPrefix(item.filePath, oldPrefix, newPrefix);
-      changed = true;
-    }
-    if (item.children && rewriteBinderPaths(item.children, oldPrefix, newPrefix)) {
-      changed = true;
-    }
-  }
-  return changed;
-}
-function anyBinderPathUnder(items, prefix) {
-  return items.some(
-    (item) => item.filePath !== "" && pathAtOrUnder(item.filePath, prefix) || (item.children ? anyBinderPathUnder(item.children, prefix) : false)
-  );
-}
 function validateDocumentFolderName(name, currentName, targetExists) {
   if (name.trim() === "") return { ok: false, reason: "empty" };
   if (/[\\/:*?"<>|]/.test(name)) return { ok: false, reason: "invalid-chars" };
@@ -117,6 +68,208 @@ function validateDocumentFolderName(name, currentName, targetExists) {
   const caseOnly = name !== currentName && name.toLowerCase() === currentName.toLowerCase();
   if (targetExists && !caseOnly) return { ok: false, reason: "exists" };
   return { ok: true };
+}
+
+// src/binderOrder.ts
+function parseFolderPrefix(name) {
+  const m = /^(-?\d+)~ (\S.*)$/.exec(name);
+  if (!m) return { order: null, displayName: name };
+  return { order: parseInt(m[1], 10), displayName: m[2] };
+}
+function isHiddenName(name) {
+  return name.startsWith("_") || name.startsWith(".");
+}
+function parseBinderOrder(value) {
+  return typeof value === "number" && Number.isFinite(value) ? value : null;
+}
+function effectiveOrder(entry) {
+  return entry.isFolder ? parseFolderPrefix(entry.name).order : entry.binderOrder;
+}
+function entryDisplayName(entry) {
+  if (entry.isFolder) return parseFolderPrefix(entry.name).displayName;
+  if (entry.extension === "md") {
+    return entry.name.slice(0, entry.name.length - ".md".length);
+  }
+  return entry.name;
+}
+var collator = new Intl.Collator(void 0, { numeric: true, sensitivity: "base" });
+function naturalCompare(a, b) {
+  return collator.compare(a, b);
+}
+function compareSiblings(a, b) {
+  const ao = effectiveOrder(a);
+  const bo = effectiveOrder(b);
+  if (ao !== null && bo !== null && ao !== bo) return ao - bo;
+  if (ao !== null && bo === null) return -1;
+  if (ao === null && bo !== null) return 1;
+  const byName = naturalCompare(entryDisplayName(a), entryDisplayName(b));
+  if (byName !== 0) return byName;
+  if (a.isFolder !== b.isFolder) return a.isFolder ? 1 : -1;
+  return 0;
+}
+function sortSiblings(entries) {
+  return [...entries].sort(compareSiblings);
+}
+function canCarryOrder(entry) {
+  return entry.isFolder || entry.extension === "md";
+}
+function folderNameWithPrefix(name, order) {
+  const marker = order < 0 ? "-" + String(-order).padStart(3, "0") : String(order).padStart(3, "0");
+  return marker + "~ " + parseFolderPrefix(name).displayName;
+}
+function planReorder(sequence, movedIndex) {
+  const moved = sequence[movedIndex];
+  if (!moved || !canCarryOrder(moved)) return [];
+  const prev = movedIndex > 0 ? sequence[movedIndex - 1] : null;
+  const next = movedIndex < sequence.length - 1 ? sequence[movedIndex + 1] : null;
+  const prevOrder = prev ? effectiveOrder(prev) : null;
+  const nextOrder = next ? effectiveOrder(next) : null;
+  if (!prev && !next) {
+    return effectiveOrder(moved) === 10 ? [] : [{ index: movedIndex, order: 10 }];
+  }
+  if (!prev) {
+    const order = nextOrder !== null ? nextOrder - 10 : 10;
+    return effectiveOrder(moved) === order ? [] : [{ index: movedIndex, order }];
+  }
+  if (prevOrder !== null && (!next || nextOrder === null)) {
+    const order = prevOrder + 10;
+    return effectiveOrder(moved) === order ? [] : [{ index: movedIndex, order }];
+  }
+  if (prevOrder !== null && nextOrder !== null && nextOrder - prevOrder >= 2) {
+    const order = Math.floor((prevOrder + nextOrder) / 2);
+    return effectiveOrder(moved) === order ? [] : [{ index: movedIndex, order }];
+  }
+  const writes = [];
+  let value = 10;
+  for (let i2 = 0; i2 < sequence.length; i2++) {
+    const entry = sequence[i2];
+    if (!canCarryOrder(entry)) continue;
+    if (effectiveOrder(entry) !== value) writes.push({ index: i2, order: value });
+    value += 10;
+  }
+  return writes;
+}
+
+// src/binderMove.ts
+function dropRegion(targetIsFolder, offsetY, height) {
+  if (!targetIsFolder) return offsetY < height / 2 ? "before" : "after";
+  if (offsetY < height * 0.25) return "before";
+  if (offsetY >= height * 0.75) return "after";
+  return "into";
+}
+function canStartDrag(entry, zone) {
+  if (zone === "exports") return false;
+  if (entry.isFolder) return zone === "manuscript";
+  return entry.extension === "md";
+}
+function evaluateDrop(source, destParentPath, destZone) {
+  if (destZone === "exports") return { kind: "notice", messageKey: "binder.fs.exportsDropBlocked" };
+  if (source.isFolder && destZone !== source.zone) {
+    return { kind: "notice", messageKey: "binder.fs.folderZoneBlocked" };
+  }
+  if (source.isFolder && (destParentPath === source.path || destParentPath.startsWith(source.path + "/"))) {
+    return { kind: "refuse" };
+  }
+  return { kind: "accept" };
+}
+function parentOf(path) {
+  const i2 = path.lastIndexOf("/");
+  return i2 < 0 ? "" : path.slice(0, i2);
+}
+function joinPath(parent, name) {
+  return parent ? `${parent}/${name}` : name;
+}
+function planMove(source, destParentPath, destSiblings, insertAt, writeOrder) {
+  var _a2;
+  const index = insertAt === "end" ? destSiblings.length : insertAt;
+  const seq = [...destSiblings];
+  seq.splice(index, 0, source);
+  const writes = writeOrder ? planReorder(seq, index) : [];
+  const ops = [];
+  const sourceWrite = (_a2 = writes.find((w) => w.index === index)) != null ? _a2 : null;
+  const sourceName = source.isFolder && sourceWrite ? folderNameWithPrefix(source.name, sourceWrite.order) : source.name;
+  const sourceNewPath = joinPath(destParentPath, sourceName);
+  if (sourceNewPath !== source.path) {
+    ops.push({ kind: "rename", path: source.path, newPath: sourceNewPath });
+  }
+  if (!source.isFolder && sourceWrite) {
+    ops.push({ kind: "set-order", path: sourceNewPath, order: sourceWrite.order });
+  }
+  for (const w of writes) {
+    if (w.index === index) continue;
+    const entry = seq[w.index];
+    if (!canCarryOrder(entry)) continue;
+    if (entry.isFolder) {
+      const newName = folderNameWithPrefix(entry.name, w.order);
+      if (newName === entry.name) continue;
+      ops.push({ kind: "rename", path: entry.path, newPath: joinPath(parentOf(entry.path), newName) });
+    } else {
+      ops.push({ kind: "set-order", path: entry.path, order: w.order });
+    }
+  }
+  return ops;
+}
+
+// src/binderMenu.ts
+var BINDER_TYPES = ["chapter", "section", "article", "note"];
+function parseBinderType(value) {
+  return typeof value === "string" && BINDER_TYPES.includes(value) ? value : null;
+}
+function parseBinderStatus(value) {
+  return typeof value === "string" && value in STATUS_COLORS ? value : null;
+}
+function menuActionsFor(entry, zone) {
+  if (zone === "exports") return ["delete"];
+  if (!entry.isFolder && entry.extension !== "md") return ["rename", "delete"];
+  if (entry.isFolder && zone === "manuscript") {
+    return ["rename", "export", "newDoc", "newFolder", "delete"];
+  }
+  if (zone === "research" || entry.isFolder) {
+    return ["rename", "newDoc", "newFolder", "delete"];
+  }
+  return ["rename", "status", "goal", "type", "compile", "newDoc", "newFolder", "delete"];
+}
+function renamePrefill(entry) {
+  if (entry.isFolder || entry.extension === "md") return entryDisplayName(entry);
+  return entry.extension ? entry.name.slice(0, entry.name.length - entry.extension.length - 1) : entry.name;
+}
+function renameTargetName(entry, typed) {
+  if (entry.isFolder) {
+    if (parseFolderPrefix(typed).order !== null) return typed;
+    const order = parseFolderPrefix(entry.name).order;
+    return order !== null ? folderNameWithPrefix(typed, order) : typed;
+  }
+  if (!entry.extension) return typed;
+  const suffix = "." + entry.extension;
+  return typed.toLowerCase().endsWith(suffix.toLowerCase()) ? typed : typed + suffix;
+}
+function validateItemName(typed, targetName, siblingNames) {
+  if (typed.trim() === "") return { ok: false, reason: "empty" };
+  if (/[\\/:*?"<>|]/.test(typed)) return { ok: false, reason: "invalid-chars" };
+  if (/[. ]$/.test(typed)) return { ok: false, reason: "trailing" };
+  const lower = targetName.toLowerCase();
+  if (siblingNames.some((n) => n.toLowerCase() === lower)) return { ok: false, reason: "exists" };
+  return { ok: true };
+}
+
+// modals/ProjectModal.ts
+var import_obsidian2 = require("obsidian");
+
+// models/Project.ts
+var PROJECT_TYPE_DOCUMENT_FOLDER = {
+  book: "Chapters",
+  series: "Articles",
+  blog: "Posts",
+  "journal-article": "Sections",
+  "magazine-article": "Sections",
+  blank: "Documents"
+};
+function defaultDocumentFolder(projectType) {
+  return PROJECT_TYPE_DOCUMENT_FOLDER[projectType];
+}
+function resolveDocumentFolder(project) {
+  var _a2;
+  return (_a2 = project.documentFolder) != null ? _a2 : "Chapters";
 }
 
 // node_modules/i18next/dist/esm/i18next.js
@@ -2418,10 +2571,7 @@ var en_default = {
         note: "Note"
       },
       frontmatterAutoUpdate: "Frontmatter auto-update",
-      frontmatterAutoUpdateDesc: "Automatically update word-count and modified date on save.",
-      experimentalHeading: "Experimental",
-      filesystemBinder: "Filesystem binder",
-      filesystemBinderDesc: "Preview of the redesigned binder: shows the project folder tree directly, read-only. Turn off to return to the classic binder."
+      frontmatterAutoUpdateDesc: "Automatically update word-count and modified date on save."
     },
     focus: {
       heading: "Focus mode",
@@ -2547,61 +2697,27 @@ var en_default = {
     displayText: "Writing binder",
     selectProject: "\u2014 select project \u2014",
     newProject: "New project",
-    addDocument: "+ document",
-    addFiles: "Add files copied to this folder",
     targetsDashboard: "Targets dashboard",
-    searchPlaceholder: "Search documents\u2026",
     noProjectSelected: "No project selected. Create or select a writing project to get started.",
-    noDocuments: "No documents yet. Click \u201C+ document\u201D to add one.",
-    dropToRoot: "\u2193 drop here to promote to root",
     selectProjectFirst: "Select a project first.",
-    cannotFindFile: "Cannot find file: {{filePath}}. Try renaming or re-linking the document.",
     untitledDocument: "Untitled {{time}}",
-    noNewFiles: "No new files found in the project folder.",
-    pctComplete: "{{pct}}% complete",
-    copySuffix: "(Copy)",
     menu: {
-      openDocument: "Open document",
-      newChildDocument: "New child document",
       setStatusDraft: "Set status: draft",
       setStatusInProgress: "Set status: in progress",
       setStatusComplete: "Set status: complete",
       setStatusPublished: "Set status: published",
-      duplicate: "Duplicate",
-      moveToResearch: "Move to research",
-      publishToWordPress: "Publish to WordPress",
-      delete: "Delete document and file",
-      moveUp: "Move up",
-      moveDown: "Move down",
       rename: "Rename",
-      removeFromBinder: "Remove from binder",
-      newGroup: "New group",
-      newPart: "New part",
-      newChildGroup: "New child group",
-      newChildPart: "New child part",
       changeType: "Change type: {{type}}"
     },
-    wordCountSuffix: "{{count}}w",
-    fileNotFound: "File no longer exists: {{path}}",
     deleteConfirm: {
       title: "Delete document",
-      message: 'Remove "{{title}}" from the binder and move its file to the trash? The binder entry (status, word count goal, position) cannot be restored.',
       delete: "Delete",
       cancel: "Cancel"
     },
-    noMatches: 'No documents match "{{query}}".',
     titlePrompt: {
       heading: "New document",
       create: "Create"
     },
-    removeConfirm: {
-      title: "Remove from binder",
-      message: `Remove "{{title}}" from the binder? The file stays in your vault, but the entry's status, word count goal, and export setting are lost. Nested documents move up to take its place.`,
-      remove: "Remove"
-    },
-    newGroupOrPart: "New group or part",
-    untitledGroup: "Untitled group",
-    untitledPart: "Untitled part",
     strip: {
       focus: "Focus",
       typography: "Typography",
@@ -2689,10 +2805,7 @@ var en_default = {
       writingLog: "Writing log",
       publishToWordPress: "Publish to WordPress"
     },
-    openDocumentFirst: "Open a document first.",
     sprintTimer: "Sprint timer",
-    pause: "\u23F8 Pause",
-    stop: "\u25A0 Stop",
     startSprint: "\u23F1 Set up sprint",
     quickStart: "Quick sprint options",
     sprintInProgress: "Sprint in progress",
@@ -2825,7 +2938,6 @@ var en_default = {
   },
   projectManager: {
     errorFolderExists: 'A folder named "{{folder}}" already exists in your projects folder. Choose a different title.',
-    corruptBinder: 'The binder file for "{{project}}" could not be read. A backup was saved as _binder.json.bak in the project folder.',
     corruptProject: 'The project file in "{{folder}}" is corrupt and the project could not be loaded.',
     corruptLog: "Writing log for {{project}} could not be read \u2014 starting a fresh log."
   },
@@ -2917,7 +3029,6 @@ var en_default = {
     scopeCurrent: "Current document",
     scopeProject: "Entire project (in binder order)",
     includeFrontmatter: "Include frontmatter",
-    includeResearch: "Include research notes",
     includeTitlesAsHeadings: "Include document titles as headings",
     addTitlePage: "Add title page",
     addTitlePageDesc: "Prepend a title page with project title, author, and date.",
@@ -3032,16 +3143,6 @@ var en_default = {
     },
     close: "Close"
   },
-  addToProject: {
-    title: "Add to writing project",
-    noProjects: "No writing projects found. Create a project first.",
-    close: "Close",
-    file: "File: {{path}}",
-    projectName: "Writing project",
-    projectDesc: "What writing project do you wish to add this file to?",
-    addBtn: "Add to project",
-    cancel: "Cancel"
-  },
   scanFolder: {
     title: "Add files to binder",
     desc: "Select the files to add to this project:",
@@ -3069,7 +3170,6 @@ var en_default = {
       setWordCountGoal: "Set word count goal",
       openWritingLog: "Open writing log",
       openFolderSidebar: "Open folder in sidebar explorer",
-      addFilesToBinder: "Scan project folder for new files",
       restoreBinderLayout: "Restore previous binder layout"
     },
     menu: {
@@ -3079,7 +3179,6 @@ var en_default = {
       setGoal: "Set word count goal",
       switchMode: "Switch writing mode \u2192",
       typographyFont: "Typography font \u2192",
-      addToProject: "Add to writing project",
       openSidebar: "Open in sidebar explorer",
       draftMode: "\u270D Draft mode",
       editMode: "\u270E Edit mode",
@@ -3087,8 +3186,7 @@ var en_default = {
       normalMode: "Normal (no mode)"
     },
     notice: {
-      noMarkdownOpen: "No Markdown file is currently open.",
-      addedToProject: 'Added "{{file}}" to {{project}}'
+      noMarkdownOpen: "No Markdown file is currently open."
     },
     statusBar: {
       projectWords: "{{total}} / {{goal}} project words",
@@ -3140,6 +3238,13 @@ var en_default = {
   epub: {
     toc: "Table of contents",
     cover: "Cover"
+  },
+  binderUpdate: {
+    title: "Your binder and your folders now stay in sync",
+    body1: "Your binder now reads your folders directly, so the two can never fall out of step. You can organize your work here or in your computer's file explorer, and both will always match.",
+    body2: "To do this, the first time you open an existing project it creates folders and moves your documents to match your old binder. Nothing is deleted, and none of your writing is changed.",
+    body3: 'If you preferred your earlier arrangement, you can put your folders back: open the command palette (press Ctrl+P, or Cmd+P on a Mac) and search for "Restore previous binder layout." A few empty folders the update created may remain; you can delete them.',
+    gotIt: "Got it"
   }
 };
 
@@ -3174,10 +3279,7 @@ var zh_default = {
         note: "\u7B14\u8BB0"
       },
       frontmatterAutoUpdate: "\u524D\u7F6E\u6570\u636E\u81EA\u52A8\u66F4\u65B0",
-      frontmatterAutoUpdateDesc: "\u4FDD\u5B58\u65F6\u81EA\u52A8\u66F4\u65B0\u5B57\u6570\u7EDF\u8BA1\u548C\u4FEE\u6539\u65E5\u671F\u3002",
-      experimentalHeading: "\u5B9E\u9A8C\u6027\u529F\u80FD",
-      filesystemBinder: "\u6587\u4EF6\u7CFB\u7EDF\u6D3B\u9875\u5939",
-      filesystemBinderDesc: "\u91CD\u65B0\u8BBE\u8BA1\u7684\u6D3B\u9875\u5939\u9884\u89C8\uFF1A\u76F4\u63A5\u663E\u793A\u9879\u76EE\u6587\u4EF6\u5939\u6811\uFF0C\u53EA\u8BFB\u3002\u5173\u95ED\u5373\u53EF\u6062\u590D\u7ECF\u5178\u6D3B\u9875\u5939\u3002"
+      frontmatterAutoUpdateDesc: "\u4FDD\u5B58\u65F6\u81EA\u52A8\u66F4\u65B0\u5B57\u6570\u7EDF\u8BA1\u548C\u4FEE\u6539\u65E5\u671F\u3002"
     },
     focus: {
       heading: "\u4E13\u6CE8\u6A21\u5F0F",
@@ -3303,61 +3405,27 @@ var zh_default = {
     displayText: "\u5199\u4F5C\u6D3B\u9875\u5939",
     selectProject: "\u2014 \u9009\u62E9\u9879\u76EE \u2014",
     newProject: "\u65B0\u5EFA\u9879\u76EE",
-    addDocument: "+ \u6587\u6863",
-    addFiles: "\u6DFB\u52A0\u590D\u5236\u5230\u6B64\u6587\u4EF6\u5939\u7684\u6587\u4EF6",
     targetsDashboard: "\u76EE\u6807\u4EEA\u8868\u677F",
-    searchPlaceholder: "\u641C\u7D22\u6587\u6863\u2026",
     noProjectSelected: "\u672A\u9009\u62E9\u9879\u76EE\u3002\u8BF7\u521B\u5EFA\u6216\u9009\u62E9\u4E00\u4E2A\u5199\u4F5C\u9879\u76EE\u4EE5\u5F00\u59CB\u3002",
-    noDocuments: "\u6682\u65E0\u6587\u6863\u3002\u70B9\u51FB\u201C+ \u6587\u6863\u201D\u6DFB\u52A0\u4E00\u4E2A\u3002",
-    dropToRoot: "\u2193 \u62D6\u653E\u5230\u6B64\u5904\u63D0\u5347\u81F3\u6839\u7EA7",
     selectProjectFirst: "\u8BF7\u5148\u9009\u62E9\u4E00\u4E2A\u9879\u76EE\u3002",
-    cannotFindFile: "\u627E\u4E0D\u5230\u6587\u4EF6\uFF1A{{filePath}}\u3002\u8BF7\u5C1D\u8BD5\u91CD\u547D\u540D\u6216\u91CD\u65B0\u94FE\u63A5\u6587\u6863\u3002",
     untitledDocument: "\u65E0\u6807\u9898 {{time}}",
-    noNewFiles: "\u5728\u9879\u76EE\u6587\u4EF6\u5939\u4E2D\u672A\u627E\u5230\u65B0\u6587\u4EF6\u3002",
-    pctComplete: "\u5DF2\u5B8C\u6210 {{pct}}%",
-    copySuffix: "\uFF08\u526F\u672C\uFF09",
     menu: {
-      openDocument: "\u6253\u5F00\u6587\u6863",
-      newChildDocument: "\u65B0\u5EFA\u5B50\u6587\u6863",
       setStatusDraft: "\u8BBE\u7F6E\u72B6\u6001\uFF1A\u8349\u7A3F",
       setStatusInProgress: "\u8BBE\u7F6E\u72B6\u6001\uFF1A\u8FDB\u884C\u4E2D",
       setStatusComplete: "\u8BBE\u7F6E\u72B6\u6001\uFF1A\u5B8C\u6210",
       setStatusPublished: "\u8BBE\u7F6E\u72B6\u6001\uFF1A\u5DF2\u53D1\u5E03",
-      duplicate: "\u590D\u5236",
-      moveToResearch: "\u79FB\u81F3\u7814\u7A76",
-      publishToWordPress: "\u53D1\u5E03\u5230 WordPress",
-      delete: "\u5220\u9664\u6587\u6863\u548C\u6587\u4EF6",
-      moveUp: "\u4E0A\u79FB",
-      moveDown: "\u4E0B\u79FB",
       rename: "\u91CD\u547D\u540D",
-      removeFromBinder: "\u4ECE\u6D3B\u9875\u5939\u4E2D\u79FB\u9664",
-      newGroup: "\u65B0\u5EFA\u7EC4",
-      newPart: "\u65B0\u5EFA\u90E8",
-      newChildGroup: "\u65B0\u5EFA\u5B50\u7EC4",
-      newChildPart: "\u65B0\u5EFA\u5B50\u90E8",
       changeType: "\u66F4\u6539\u7C7B\u578B\uFF1A{{type}}"
     },
-    wordCountSuffix: "{{count}}\u5B57",
-    fileNotFound: "\u6587\u4EF6\u5DF2\u4E0D\u5B58\u5728\uFF1A{{path}}",
     deleteConfirm: {
       title: "\u5220\u9664\u6587\u6863",
-      message: "\u8981\u5C06\u201C{{title}}\u201D\u4ECE\u6D3B\u9875\u5939\u4E2D\u79FB\u9664\u5E76\u5C06\u5176\u6587\u4EF6\u79FB\u81F3\u56DE\u6536\u7AD9\u5417\uFF1F\u6D3B\u9875\u5939\u6761\u76EE\uFF08\u72B6\u6001\u3001\u5B57\u6570\u76EE\u6807\u3001\u4F4D\u7F6E\uFF09\u65E0\u6CD5\u6062\u590D\u3002",
       delete: "\u5220\u9664",
       cancel: "\u53D6\u6D88"
     },
-    noMatches: "\u6CA1\u6709\u4E0E\u201C{{query}}\u201D\u5339\u914D\u7684\u6587\u6863\u3002",
     titlePrompt: {
       heading: "\u65B0\u5EFA\u6587\u6863",
       create: "\u521B\u5EFA"
     },
-    removeConfirm: {
-      title: "\u4ECE\u6D3B\u9875\u5939\u4E2D\u79FB\u9664",
-      message: "\u8981\u5C06\u201C{{title}}\u201D\u4ECE\u6D3B\u9875\u5939\u4E2D\u79FB\u9664\u5417\uFF1F\u6587\u4EF6\u5C06\u4FDD\u7559\u5728\u5E93\u4E2D\uFF0C\u4F46\u8BE5\u6761\u76EE\u7684\u72B6\u6001\u3001\u5B57\u6570\u76EE\u6807\u548C\u5BFC\u51FA\u8BBE\u7F6E\u5C06\u4E22\u5931\u3002\u5D4C\u5957\u6587\u6863\u5C06\u4E0A\u79FB\u5230\u5176\u4F4D\u7F6E\u3002",
-      remove: "\u79FB\u9664"
-    },
-    newGroupOrPart: "\u65B0\u5EFA\u7EC4\u6216\u90E8",
-    untitledGroup: "\u672A\u547D\u540D\u7EC4",
-    untitledPart: "\u672A\u547D\u540D\u90E8",
     strip: {
       focus: "\u4E13\u6CE8",
       typography: "\u6392\u7248",
@@ -3445,10 +3513,7 @@ var zh_default = {
       writingLog: "\u5199\u4F5C\u65E5\u5FD7",
       publishToWordPress: "\u53D1\u5E03\u5230 WordPress"
     },
-    openDocumentFirst: "\u8BF7\u5148\u6253\u5F00\u6587\u6863\u3002",
     sprintTimer: "\u51B2\u523A\u8BA1\u65F6\u5668",
-    pause: "\u23F8 \u6682\u505C",
-    stop: "\u25A0 \u505C\u6B62",
     startSprint: "\u23F1 \u8BBE\u7F6E\u51B2\u523A",
     quickStart: "\u5FEB\u901F\u51B2\u523A\u9009\u9879",
     today: "\u4ECA\u65E5",
@@ -3581,7 +3646,6 @@ var zh_default = {
   },
   projectManager: {
     errorFolderExists: "\u9879\u76EE\u6587\u4EF6\u5939\u4E2D\u5DF2\u5B58\u5728\u540D\u4E3A\u201C{{folder}}\u201D\u7684\u6587\u4EF6\u5939\u3002\u8BF7\u9009\u62E9\u5176\u4ED6\u6807\u9898\u3002",
-    corruptBinder: "\u65E0\u6CD5\u8BFB\u53D6\u201C{{project}}\u201D\u7684 _binder.json \u6587\u4EF6\u3002\u5907\u4EFD\u5DF2\u4FDD\u5B58\u4E3A\u9879\u76EE\u6587\u4EF6\u5939\u4E2D\u7684 _binder.json.bak\u3002",
     corruptProject: "\u201C{{folder}}\u201D\u4E2D\u7684\u9879\u76EE\u6587\u4EF6\u5DF2\u635F\u574F\uFF0C\u65E0\u6CD5\u52A0\u8F7D\u8BE5\u9879\u76EE\u3002",
     corruptLog: "\u65E0\u6CD5\u8BFB\u53D6 {{project}} \u7684\u5199\u4F5C\u65E5\u5FD7\u2014\u2014\u5C06\u5F00\u59CB\u65B0\u7684\u65E5\u5FD7\u3002"
   },
@@ -3673,7 +3737,6 @@ var zh_default = {
     scopeCurrent: "\u5F53\u524D\u6587\u6863",
     scopeProject: "\u6574\u4E2A\u9879\u76EE\uFF08\u6309\u6D3B\u9875\u5939\u987A\u5E8F\uFF09",
     includeFrontmatter: "\u5305\u542B\u524D\u7F6E\u5185\u5BB9",
-    includeResearch: "\u5305\u542B\u7814\u7A76\u7B14\u8BB0",
     includeTitlesAsHeadings: "\u5C06\u6587\u6863\u6807\u9898\u4F5C\u4E3A\u6807\u9898\u5305\u542B",
     addTitlePage: "\u6DFB\u52A0\u6807\u9898\u9875",
     addTitlePageDesc: "\u5728\u5F00\u5934\u6DFB\u52A0\u5305\u542B\u9879\u76EE\u6807\u9898\u3001\u4F5C\u8005\u548C\u65E5\u671F\u7684\u6807\u9898\u9875\u3002",
@@ -3788,16 +3851,6 @@ var zh_default = {
     },
     close: "\u5173\u95ED"
   },
-  addToProject: {
-    title: "\u6DFB\u52A0\u5230\u5199\u4F5C\u9879\u76EE",
-    noProjects: "\u672A\u627E\u5230\u5199\u4F5C\u9879\u76EE\u3002\u8BF7\u5148\u521B\u5EFA\u4E00\u4E2A\u9879\u76EE\u3002",
-    close: "\u5173\u95ED",
-    file: "\u6587\u4EF6\uFF1A{{path}}",
-    projectName: "\u5199\u4F5C\u9879\u76EE",
-    projectDesc: "\u60A8\u5E0C\u671B\u5C06\u6B64\u6587\u4EF6\u6DFB\u52A0\u5230\u54EA\u4E2A\u5199\u4F5C\u9879\u76EE\uFF1F",
-    addBtn: "\u6DFB\u52A0\u5230\u9879\u76EE",
-    cancel: "\u53D6\u6D88"
-  },
   scanFolder: {
     title: "\u5C06\u6587\u4EF6\u6DFB\u52A0\u5230\u6D3B\u9875\u5939",
     desc: "\u9009\u62E9\u8981\u6DFB\u52A0\u5230\u6B64\u9879\u76EE\u7684\u6587\u4EF6\uFF1A",
@@ -3825,7 +3878,6 @@ var zh_default = {
       setWordCountGoal: "\u8BBE\u7F6E\u5B57\u6570\u76EE\u6807",
       openWritingLog: "\u6253\u5F00\u5199\u4F5C\u65E5\u5FD7",
       openFolderSidebar: "\u5728\u4FA7\u8FB9\u680F\u6D4F\u89C8\u5668\u4E2D\u6253\u5F00\u6587\u4EF6\u5939",
-      addFilesToBinder: "\u626B\u63CF\u9879\u76EE\u6587\u4EF6\u5939\u4E2D\u7684\u65B0\u6587\u4EF6",
       restoreBinderLayout: "\u6062\u590D\u6D3B\u9875\u5939\u7684\u5148\u524D\u5E03\u5C40"
     },
     menu: {
@@ -3835,7 +3887,6 @@ var zh_default = {
       setGoal: "\u8BBE\u7F6E\u5B57\u6570\u76EE\u6807",
       switchMode: "\u5207\u6362\u5199\u4F5C\u6A21\u5F0F \u2192",
       typographyFont: "\u6392\u7248\u5B57\u4F53 \u2192",
-      addToProject: "\u6DFB\u52A0\u5230\u5199\u4F5C\u9879\u76EE",
       openSidebar: "\u5728\u4FA7\u8FB9\u680F\u6D4F\u89C8\u5668\u4E2D\u6253\u5F00",
       draftMode: "\u270D \u8349\u7A3F\u6A21\u5F0F",
       editMode: "\u270E \u7F16\u8F91\u6A21\u5F0F",
@@ -3843,8 +3894,7 @@ var zh_default = {
       normalMode: "\u666E\u901A\uFF08\u65E0\u6A21\u5F0F\uFF09"
     },
     notice: {
-      noMarkdownOpen: "\u5F53\u524D\u6CA1\u6709\u6253\u5F00\u7684 Markdown \u6587\u4EF6\u3002",
-      addedToProject: "\u5DF2\u5C06\u300C{{file}}\u300D\u6DFB\u52A0\u5230 {{project}}"
+      noMarkdownOpen: "\u5F53\u524D\u6CA1\u6709\u6253\u5F00\u7684 Markdown \u6587\u4EF6\u3002"
     },
     statusBar: {
       projectWords: "{{total}} / {{goal}} \u9879\u76EE\u5B57\u6570",
@@ -3896,6 +3946,13 @@ var zh_default = {
   epub: {
     toc: "\u76EE\u5F55",
     cover: "\u5C01\u9762"
+  },
+  binderUpdate: {
+    title: "\u6D3B\u9875\u5939\u4E0E\u6587\u4EF6\u5939\u73B0\u5728\u4FDD\u6301\u540C\u6B65",
+    body1: "\u6D3B\u9875\u5939\u73B0\u5728\u76F4\u63A5\u8BFB\u53D6\u4F60\u7684\u6587\u4EF6\u5939\uFF0C\u4E24\u8005\u4E0D\u4F1A\u518D\u4E0D\u4E00\u81F4\u3002\u4F60\u53EF\u4EE5\u5728\u8FD9\u91CC\u6216\u5728\u7535\u8111\u7684\u6587\u4EF6\u8D44\u6E90\u7BA1\u7406\u5668\u4E2D\u6574\u7406\u4F5C\u54C1\uFF0C\u4E24\u8FB9\u59CB\u7EC8\u4FDD\u6301\u4E00\u81F4\u3002",
+    body2: "\u4E3A\u6B64\uFF0C\u9996\u6B21\u6253\u5F00\u73B0\u6709\u9879\u76EE\u65F6\u4F1A\u521B\u5EFA\u6587\u4EF6\u5939\u5E76\u79FB\u52A8\u6587\u6863\uFF0C\u4F7F\u5176\u4E0E\u65E7\u7684\u6D3B\u9875\u5939\u4E00\u81F4\u3002\u4E0D\u4F1A\u5220\u9664\u4EFB\u4F55\u5185\u5BB9\uFF0C\u4F60\u5199\u7684\u6587\u5B57\u4E5F\u4E0D\u4F1A\u6709\u4EFB\u4F55\u6539\u52A8\u3002",
+    body3: "\u5982\u679C\u4F60\u66F4\u559C\u6B22\u4E4B\u524D\u7684\u6392\u5217\u65B9\u5F0F\uFF0C\u53EF\u4EE5\u8FD8\u539F\u6587\u4EF6\u5939\uFF1A\u6253\u5F00\u547D\u4EE4\u9762\u677F\uFF08\u6309 Ctrl+P\uFF0CMac \u4E0A\u6309 Cmd+P\uFF09\uFF0C\u641C\u7D22\u201C\u6062\u590D\u6D3B\u9875\u5939\u7684\u5148\u524D\u5E03\u5C40\u201D\u3002\u66F4\u65B0\u521B\u5EFA\u7684\u5C11\u6570\u7A7A\u6587\u4EF6\u5939\u53EF\u80FD\u4F1A\u4FDD\u7559\uFF0C\u4F60\u53EF\u4EE5\u5220\u9664\u5B83\u4EEC\u3002",
+    gotIt: "\u77E5\u9053\u4E86"
   }
 };
 
@@ -3930,10 +3987,7 @@ var hi_default = {
         note: "\u0928\u094B\u091F"
       },
       frontmatterAutoUpdate: "\u092B\u094D\u0930\u0902\u091F\u092E\u0948\u091F\u0930 \u0938\u094D\u0935\u0924: \u0905\u092A\u0921\u0947\u091F",
-      frontmatterAutoUpdateDesc: "\u0938\u0939\u0947\u091C\u0928\u0947 \u092A\u0930 \u0936\u092C\u094D\u0926 \u0917\u0923\u0928\u093E \u0914\u0930 \u0938\u0902\u0936\u094B\u0927\u093F\u0924 \u0924\u093F\u0925\u093F \u0938\u094D\u0935\u091A\u093E\u0932\u093F\u0924 \u0930\u0942\u092A \u0938\u0947 \u0905\u092A\u0921\u0947\u091F \u0915\u0930\u0947\u0902\u0964",
-      experimentalHeading: "\u092A\u094D\u0930\u093E\u092F\u094B\u0917\u093F\u0915",
-      filesystemBinder: "\u092B\u093C\u093E\u0907\u0932 \u0938\u093F\u0938\u094D\u091F\u092E \u092C\u093E\u0907\u0902\u0921\u0930",
-      filesystemBinderDesc: "\u092A\u0941\u0928\u0930\u094D\u0928\u093F\u0930\u094D\u092E\u093F\u0924 \u092C\u093E\u0907\u0902\u0921\u0930 \u0915\u093E \u092A\u0942\u0930\u094D\u0935\u093E\u0935\u0932\u094B\u0915\u0928: \u092A\u094D\u0930\u094B\u091C\u0947\u0915\u094D\u091F \u092B\u093C\u094B\u0932\u094D\u0921\u0930 \u091F\u094D\u0930\u0940 \u0915\u094B \u0938\u0940\u0927\u0947, \u0915\u0947\u0935\u0932-\u092A\u0920\u0928 \u0930\u0942\u092A \u092E\u0947\u0902 \u0926\u093F\u0916\u093E\u0924\u093E \u0939\u0948\u0964 \u0915\u094D\u0932\u093E\u0938\u093F\u0915 \u092C\u093E\u0907\u0902\u0921\u0930 \u092A\u0930 \u0932\u094C\u091F\u0928\u0947 \u0915\u0947 \u0932\u093F\u090F \u092C\u0902\u0926 \u0915\u0930\u0947\u0902\u0964"
+      frontmatterAutoUpdateDesc: "\u0938\u0939\u0947\u091C\u0928\u0947 \u092A\u0930 \u0936\u092C\u094D\u0926 \u0917\u0923\u0928\u093E \u0914\u0930 \u0938\u0902\u0936\u094B\u0927\u093F\u0924 \u0924\u093F\u0925\u093F \u0938\u094D\u0935\u091A\u093E\u0932\u093F\u0924 \u0930\u0942\u092A \u0938\u0947 \u0905\u092A\u0921\u0947\u091F \u0915\u0930\u0947\u0902\u0964"
     },
     focus: {
       heading: "\u092B\u093C\u094B\u0915\u0938 \u092E\u094B\u0921",
@@ -4059,61 +4113,27 @@ var hi_default = {
     displayText: "\u0932\u0947\u0916\u0928 \u092C\u093E\u0907\u0902\u0921\u0930",
     selectProject: "\u2014 \u092A\u094D\u0930\u094B\u091C\u0947\u0915\u094D\u091F \u091A\u0941\u0928\u0947\u0902 \u2014",
     newProject: "\u0928\u092F\u093E \u092A\u094D\u0930\u094B\u091C\u0947\u0915\u094D\u091F",
-    addDocument: "+ \u0926\u0938\u094D\u0924\u093E\u0935\u0947\u091C\u093C",
-    addFiles: "\u0907\u0938 \u092B\u093C\u094B\u0932\u094D\u0921\u0930 \u092E\u0947\u0902 \u0915\u0949\u092A\u0940 \u0915\u0940 \u0917\u0908 \u092B\u093C\u093E\u0907\u0932\u0947\u0902 \u091C\u094B\u0921\u093C\u0947\u0902",
     targetsDashboard: "\u0932\u0915\u094D\u0937\u094D\u092F \u0921\u0948\u0936\u092C\u094B\u0930\u094D\u0921",
-    searchPlaceholder: "\u0926\u0938\u094D\u0924\u093E\u0935\u0947\u091C\u093C \u0916\u094B\u091C\u0947\u0902\u2026",
     noProjectSelected: "\u0915\u094B\u0908 \u092A\u094D\u0930\u094B\u091C\u0947\u0915\u094D\u091F \u0928\u0939\u0940\u0902 \u091A\u0941\u0928\u093E\u0964 \u0936\u0941\u0930\u0942 \u0915\u0930\u0928\u0947 \u0915\u0947 \u0932\u093F\u090F \u090F\u0915 \u0932\u0947\u0916\u0928 \u092A\u094D\u0930\u094B\u091C\u0947\u0915\u094D\u091F \u092C\u0928\u093E\u090F\u0902 \u092F\u093E \u091A\u0941\u0928\u0947\u0902\u0964",
-    noDocuments: '\u0905\u092D\u0940 \u0924\u0915 \u0915\u094B\u0908 \u0926\u0938\u094D\u0924\u093E\u0935\u0947\u091C\u093C \u0928\u0939\u0940\u0902\u0964 \u090F\u0915 \u091C\u094B\u0921\u093C\u0928\u0947 \u0915\u0947 \u0932\u093F\u090F "+ \u0926\u0938\u094D\u0924\u093E\u0935\u0947\u091C\u093C" \u092A\u0930 \u0915\u094D\u0932\u093F\u0915 \u0915\u0930\u0947\u0902\u0964',
-    dropToRoot: "\u2193 \u0930\u0942\u091F \u092E\u0947\u0902 \u092A\u094D\u0930\u092E\u094B\u091F \u0915\u0930\u0928\u0947 \u0915\u0947 \u0932\u093F\u090F \u092F\u0939\u093E\u0901 \u091B\u094B\u0921\u093C\u0947\u0902",
     selectProjectFirst: "\u092A\u0939\u0932\u0947 \u090F\u0915 \u092A\u094D\u0930\u094B\u091C\u0947\u0915\u094D\u091F \u091A\u0941\u0928\u0947\u0902\u0964",
-    cannotFindFile: "\u092B\u093C\u093E\u0907\u0932 \u0928\u0939\u0940\u0902 \u092E\u093F\u0932\u0940: {{filePath}}\u0964 \u0928\u093E\u092E \u092C\u0926\u0932\u0928\u0947 \u092F\u093E \u092A\u0941\u0928\u0903 \u0932\u093F\u0902\u0915 \u0915\u0930\u0928\u0947 \u0915\u093E \u092A\u094D\u0930\u092F\u093E\u0938 \u0915\u0930\u0947\u0902\u0964",
     untitledDocument: "\u0936\u0940\u0930\u094D\u0937\u0915\u0939\u0940\u0928 {{time}}",
-    noNewFiles: "\u092A\u094D\u0930\u094B\u091C\u0947\u0915\u094D\u091F \u092B\u093C\u094B\u0932\u094D\u0921\u0930 \u092E\u0947\u0902 \u0915\u094B\u0908 \u0928\u0908 \u092B\u093C\u093E\u0907\u0932 \u0928\u0939\u0940\u0902 \u092E\u093F\u0932\u0940\u0964",
-    pctComplete: "{{pct}}% \u092A\u0942\u0930\u094D\u0923",
-    copySuffix: "(\u092A\u094D\u0930\u0924\u093F\u0932\u093F\u092A\u093F)",
     menu: {
-      openDocument: "\u0926\u0938\u094D\u0924\u093E\u0935\u0947\u091C\u093C \u0916\u094B\u0932\u0947\u0902",
-      newChildDocument: "\u0928\u092F\u093E \u091A\u093E\u0907\u0932\u094D\u0921 \u0926\u0938\u094D\u0924\u093E\u0935\u0947\u091C\u093C",
       setStatusDraft: "\u0938\u094D\u0925\u093F\u0924\u093F \u0938\u0947\u091F \u0915\u0930\u0947\u0902: \u0921\u094D\u0930\u093E\u092B\u094D\u091F",
       setStatusInProgress: "\u0938\u094D\u0925\u093F\u0924\u093F \u0938\u0947\u091F \u0915\u0930\u0947\u0902: \u092A\u094D\u0930\u0917\u0924\u093F \u092E\u0947\u0902",
       setStatusComplete: "\u0938\u094D\u0925\u093F\u0924\u093F \u0938\u0947\u091F \u0915\u0930\u0947\u0902: \u092A\u0942\u0930\u094D\u0923",
       setStatusPublished: "\u0938\u094D\u0925\u093F\u0924\u093F \u0938\u0947\u091F \u0915\u0930\u0947\u0902: \u092A\u094D\u0930\u0915\u093E\u0936\u093F\u0924",
-      duplicate: "\u0921\u0941\u092A\u094D\u0932\u093F\u0915\u0947\u091F",
-      moveToResearch: "\u0936\u094B\u0927 \u092E\u0947\u0902 \u0932\u0947 \u091C\u093E\u090F\u0902",
-      publishToWordPress: "WordPress \u092A\u0930 \u092A\u094D\u0930\u0915\u093E\u0936\u093F\u0924 \u0915\u0930\u0947\u0902",
-      delete: "\u0926\u0938\u094D\u0924\u093E\u0935\u0947\u091C\u093C \u0914\u0930 \u092B\u093C\u093E\u0907\u0932 \u0939\u091F\u093E\u090F\u0901",
-      moveUp: "\u090A\u092A\u0930 \u0932\u0947 \u091C\u093E\u090F\u0902",
-      moveDown: "\u0928\u0940\u091A\u0947 \u0932\u0947 \u091C\u093E\u090F\u0902",
       rename: "\u0928\u093E\u092E \u092C\u0926\u0932\u0947\u0902",
-      removeFromBinder: "\u092C\u093E\u0907\u0902\u0921\u0930 \u0938\u0947 \u0939\u091F\u093E\u090F\u0901",
-      newGroup: "\u0928\u092F\u093E \u0938\u092E\u0942\u0939",
-      newPart: "\u0928\u092F\u093E \u092D\u093E\u0917",
-      newChildGroup: "\u0928\u092F\u093E \u091A\u093E\u0907\u0932\u094D\u0921 \u0938\u092E\u0942\u0939",
-      newChildPart: "\u0928\u092F\u093E \u091A\u093E\u0907\u0932\u094D\u0921 \u092D\u093E\u0917",
       changeType: "\u092A\u094D\u0930\u0915\u093E\u0930 \u092C\u0926\u0932\u0947\u0902: {{type}}"
     },
-    wordCountSuffix: "{{count}}\u0936",
-    fileNotFound: "\u092B\u093C\u093E\u0907\u0932 \u0905\u092C \u092E\u094C\u091C\u0942\u0926 \u0928\u0939\u0940\u0902 \u0939\u0948: {{path}}",
     deleteConfirm: {
       title: "\u0926\u0938\u094D\u0924\u093E\u0935\u0947\u091C\u093C \u0939\u091F\u093E\u090F\u0902",
-      message: '"{{title}}" \u0915\u094B \u092C\u093E\u0907\u0902\u0921\u0930 \u0938\u0947 \u0939\u091F\u093E\u0915\u0930 \u0907\u0938\u0915\u0940 \u092B\u093C\u093E\u0907\u0932 \u091F\u094D\u0930\u0948\u0936 \u092E\u0947\u0902 \u0932\u0947 \u091C\u093E\u090F\u0902? \u092C\u093E\u0907\u0902\u0921\u0930 \u092A\u094D\u0930\u0935\u093F\u0937\u094D\u091F\u093F (\u0938\u094D\u0925\u093F\u0924\u093F, \u0936\u092C\u094D\u0926 \u0938\u0902\u0916\u094D\u092F\u093E \u0932\u0915\u094D\u0937\u094D\u092F, \u0938\u094D\u0925\u093E\u0928) \u092A\u0941\u0928\u0930\u094D\u0938\u094D\u0925\u093E\u092A\u093F\u0924 \u0928\u0939\u0940\u0902 \u0915\u0940 \u091C\u093E \u0938\u0915\u0924\u0940\u0964',
       delete: "\u0939\u091F\u093E\u090F\u0902",
       cancel: "\u0930\u0926\u094D\u0926 \u0915\u0930\u0947\u0902"
     },
-    noMatches: '"{{query}}" \u0938\u0947 \u092E\u0947\u0932 \u0916\u093E\u0924\u093E \u0915\u094B\u0908 \u0926\u0938\u094D\u0924\u093E\u0935\u0947\u091C\u093C \u0928\u0939\u0940\u0902\u0964',
     titlePrompt: {
       heading: "\u0928\u092F\u093E \u0926\u0938\u094D\u0924\u093E\u0935\u0947\u091C\u093C",
       create: "\u092C\u0928\u093E\u090F\u0902"
     },
-    removeConfirm: {
-      title: "\u092C\u093E\u0907\u0902\u0921\u0930 \u0938\u0947 \u0939\u091F\u093E\u090F\u0901",
-      message: '"{{title}}" \u0915\u094B \u092C\u093E\u0907\u0902\u0921\u0930 \u0938\u0947 \u0939\u091F\u093E\u090F\u0901? \u092B\u093C\u093E\u0907\u0932 \u0935\u0949\u0932\u094D\u091F \u092E\u0947\u0902 \u092C\u0928\u0940 \u0930\u0939\u0947\u0917\u0940, \u0932\u0947\u0915\u093F\u0928 \u092A\u094D\u0930\u0935\u093F\u0937\u094D\u091F\u093F \u0915\u0940 \u0938\u094D\u0925\u093F\u0924\u093F, \u0936\u092C\u094D\u0926 \u0938\u0902\u0916\u094D\u092F\u093E \u0932\u0915\u094D\u0937\u094D\u092F \u0914\u0930 \u0928\u093F\u0930\u094D\u092F\u093E\u0924 \u0938\u0947\u091F\u093F\u0902\u0917 \u0916\u094B \u091C\u093E\u090F\u0901\u0917\u0940\u0964 \u092D\u0940\u0924\u0930 \u0915\u0947 \u0926\u0938\u094D\u0924\u093E\u0935\u0947\u091C\u093C \u0907\u0938\u0915\u0940 \u091C\u0917\u0939 \u090A\u092A\u0930 \u0906 \u091C\u093E\u090F\u0901\u0917\u0947\u0964',
-      remove: "\u0939\u091F\u093E\u090F\u0901"
-    },
-    newGroupOrPart: "\u0928\u092F\u093E \u0938\u092E\u0942\u0939 \u092F\u093E \u092D\u093E\u0917",
-    untitledGroup: "\u092C\u093F\u0928\u093E \u0936\u0940\u0930\u094D\u0937\u0915 \u0938\u092E\u0942\u0939",
-    untitledPart: "\u092C\u093F\u0928\u093E \u0936\u0940\u0930\u094D\u0937\u0915 \u092D\u093E\u0917",
     strip: {
       focus: "\u092B\u093C\u094B\u0915\u0938",
       typography: "\u091F\u093E\u0907\u092A\u094B\u0917\u094D\u0930\u093E\u092B\u093C\u0940",
@@ -4201,10 +4221,7 @@ var hi_default = {
       writingLog: "\u0932\u0947\u0916\u0928 \u0932\u0949\u0917",
       publishToWordPress: "WordPress \u092A\u0930 \u092A\u094D\u0930\u0915\u093E\u0936\u093F\u0924 \u0915\u0930\u0947\u0902"
     },
-    openDocumentFirst: "\u092A\u0939\u0932\u0947 \u090F\u0915 \u0926\u0938\u094D\u0924\u093E\u0935\u0947\u091C\u093C \u0916\u094B\u0932\u0947\u0902\u0964",
     sprintTimer: "\u0938\u094D\u092A\u094D\u0930\u093F\u0902\u091F \u091F\u093E\u0907\u092E\u0930",
-    pause: "\u23F8 \u0930\u094B\u0915\u0947\u0902",
-    stop: "\u25A0 \u092C\u0902\u0926 \u0915\u0930\u0947\u0902",
     startSprint: "\u23F1 \u0938\u094D\u092A\u094D\u0930\u093F\u0902\u091F \u0938\u0947\u091F \u0905\u092A \u0915\u0930\u0947\u0902",
     quickStart: "\u0924\u094D\u0935\u0930\u093F\u0924 \u0938\u094D\u092A\u094D\u0930\u093F\u0902\u091F \u0935\u093F\u0915\u0932\u094D\u092A",
     today: "\u0906\u091C",
@@ -4337,7 +4354,6 @@ var hi_default = {
   },
   projectManager: {
     errorFolderExists: '\u0906\u092A\u0915\u0947 \u092A\u094D\u0930\u094B\u091C\u0947\u0915\u094D\u091F \u092B\u093C\u094B\u0932\u094D\u0921\u0930 \u092E\u0947\u0902 "{{folder}}" \u0928\u093E\u092E \u0915\u093E \u092B\u093C\u094B\u0932\u094D\u0921\u0930 \u092A\u0939\u0932\u0947 \u0938\u0947 \u092E\u094C\u091C\u0942\u0926 \u0939\u0948\u0964 \u0915\u094B\u0908 \u0926\u0942\u0938\u0930\u093E \u0936\u0940\u0930\u094D\u0937\u0915 \u091A\u0941\u0928\u0947\u0902\u0964',
-    corruptBinder: '"{{project}}" \u0915\u0940 _binder.json \u092B\u093C\u093E\u0907\u0932 \u092A\u0922\u093C\u0940 \u0928\u0939\u0940\u0902 \u091C\u093E \u0938\u0915\u0940\u0964 \u092C\u0948\u0915\u0905\u092A \u092A\u094D\u0930\u094B\u091C\u0947\u0915\u094D\u091F \u092B\u093C\u094B\u0932\u094D\u0921\u0930 \u092E\u0947\u0902 _binder.json.bak \u0915\u0947 \u0930\u0942\u092A \u092E\u0947\u0902 \u0938\u0939\u0947\u091C\u093E \u0917\u092F\u093E\u0964',
     corruptProject: '"{{folder}}" \u0915\u0940 \u092A\u094D\u0930\u094B\u091C\u0947\u0915\u094D\u091F \u092B\u093C\u093E\u0907\u0932 \u0926\u0942\u0937\u093F\u0924 \u0939\u0948 \u0914\u0930 \u092A\u094D\u0930\u094B\u091C\u0947\u0915\u094D\u091F \u0932\u094B\u0921 \u0928\u0939\u0940\u0902 \u0939\u094B \u0938\u0915\u093E\u0964',
     corruptLog: "{{project}} \u0915\u093E \u0932\u0947\u0916\u0928 \u0932\u0949\u0917 \u092A\u0922\u093C\u093E \u0928\u0939\u0940\u0902 \u091C\u093E \u0938\u0915\u093E \u2014 \u0928\u092F\u093E \u0932\u0949\u0917 \u0936\u0941\u0930\u0942 \u0915\u093F\u092F\u093E \u091C\u093E \u0930\u0939\u093E \u0939\u0948\u0964"
   },
@@ -4429,7 +4445,6 @@ var hi_default = {
     scopeCurrent: "\u0935\u0930\u094D\u0924\u092E\u093E\u0928 \u0926\u0938\u094D\u0924\u093E\u0935\u0947\u091C\u093C",
     scopeProject: "\u092A\u0942\u0930\u0940 \u092A\u0930\u093F\u092F\u094B\u091C\u0928\u093E (\u092C\u093E\u0907\u0902\u0921\u0930 \u0915\u094D\u0930\u092E \u092E\u0947\u0902)",
     includeFrontmatter: "\u092B\u094D\u0930\u0902\u091F\u092E\u0948\u091F\u0930 \u0936\u093E\u092E\u093F\u0932 \u0915\u0930\u0947\u0902",
-    includeResearch: "\u0936\u094B\u0927 \u0928\u094B\u091F\u094D\u0938 \u0936\u093E\u092E\u093F\u0932 \u0915\u0930\u0947\u0902",
     includeTitlesAsHeadings: "\u0936\u0940\u0930\u094D\u0937\u0915 \u0915\u0947 \u0930\u0942\u092A \u092E\u0947\u0902 \u0926\u0938\u094D\u0924\u093E\u0935\u0947\u091C\u093C \u0936\u0940\u0930\u094D\u0937\u0915 \u0936\u093E\u092E\u093F\u0932 \u0915\u0930\u0947\u0902",
     addTitlePage: "\u0936\u0940\u0930\u094D\u0937\u0915 \u092A\u0943\u0937\u094D\u0920 \u091C\u094B\u0921\u093C\u0947\u0902",
     addTitlePageDesc: "\u092A\u0930\u093F\u092F\u094B\u091C\u0928\u093E \u0936\u0940\u0930\u094D\u0937\u0915, \u0932\u0947\u0916\u0915 \u0914\u0930 \u0926\u093F\u0928\u093E\u0902\u0915 \u0915\u0947 \u0938\u093E\u0925 \u0936\u0940\u0930\u094D\u0937\u0915 \u092A\u0943\u0937\u094D\u0920 \u091C\u094B\u0921\u093C\u0947\u0902\u0964",
@@ -4544,16 +4559,6 @@ var hi_default = {
     },
     close: "\u092C\u0902\u0926 \u0915\u0930\u0947\u0902"
   },
-  addToProject: {
-    title: "\u0932\u0947\u0916\u0928 \u092A\u0930\u093F\u092F\u094B\u091C\u0928\u093E \u092E\u0947\u0902 \u091C\u094B\u0921\u093C\u0947\u0902",
-    noProjects: "\u0915\u094B\u0908 \u0932\u0947\u0916\u0928 \u092A\u0930\u093F\u092F\u094B\u091C\u0928\u093E \u0928\u0939\u0940\u0902 \u092E\u093F\u0932\u0940\u0964 \u092A\u0939\u0932\u0947 \u092A\u0930\u093F\u092F\u094B\u091C\u0928\u093E \u092C\u0928\u093E\u090F\u0902\u0964",
-    close: "\u092C\u0902\u0926 \u0915\u0930\u0947\u0902",
-    file: "\u092B\u093C\u093E\u0907\u0932: {{path}}",
-    projectName: "\u0932\u0947\u0916\u0928 \u092A\u0930\u093F\u092F\u094B\u091C\u0928\u093E",
-    projectDesc: "\u0906\u092A \u0907\u0938 \u092B\u093C\u093E\u0907\u0932 \u0915\u094B \u0915\u093F\u0938 \u0932\u0947\u0916\u0928 \u092A\u0930\u093F\u092F\u094B\u091C\u0928\u093E \u092E\u0947\u0902 \u091C\u094B\u0921\u093C\u0928\u093E \u091A\u093E\u0939\u0924\u0947 \u0939\u0948\u0902?",
-    addBtn: "\u092A\u0930\u093F\u092F\u094B\u091C\u0928\u093E \u092E\u0947\u0902 \u091C\u094B\u0921\u093C\u0947\u0902",
-    cancel: "\u0930\u0926\u094D\u0926 \u0915\u0930\u0947\u0902"
-  },
   scanFolder: {
     title: "\u092C\u093E\u0907\u0902\u0921\u0930 \u092E\u0947\u0902 \u092B\u093C\u093E\u0907\u0932\u0947\u0902 \u091C\u094B\u0921\u093C\u0947\u0902",
     desc: "\u0907\u0938 \u092A\u0930\u093F\u092F\u094B\u091C\u0928\u093E \u092E\u0947\u0902 \u091C\u094B\u0921\u093C\u0928\u0947 \u0915\u0947 \u0932\u093F\u090F \u092B\u093C\u093E\u0907\u0932\u0947\u0902 \u091A\u0941\u0928\u0947\u0902:",
@@ -4581,7 +4586,6 @@ var hi_default = {
       setWordCountGoal: "\u0936\u092C\u094D\u0926 \u0938\u0902\u0916\u094D\u092F\u093E \u0932\u0915\u094D\u0937\u094D\u092F \u0938\u0947\u091F \u0915\u0930\u0947\u0902",
       openWritingLog: "\u0930\u093E\u0907\u091F\u093F\u0902\u0917 \u0932\u0949\u0917 \u0916\u094B\u0932\u0947\u0902",
       openFolderSidebar: "\u0938\u093E\u0907\u0921\u092C\u093E\u0930 \u090F\u0915\u094D\u0938\u092A\u094D\u0932\u094B\u0930\u0930 \u092E\u0947\u0902 \u092B\u093C\u094B\u0932\u094D\u0921\u0930 \u0916\u094B\u0932\u0947\u0902",
-      addFilesToBinder: "\u0928\u0908 \u092B\u093C\u093E\u0907\u0932\u094B\u0902 \u0915\u0947 \u0932\u093F\u090F \u092A\u0930\u093F\u092F\u094B\u091C\u0928\u093E \u092B\u093C\u094B\u0932\u094D\u0921\u0930 \u0938\u094D\u0915\u0948\u0928 \u0915\u0930\u0947\u0902",
       restoreBinderLayout: "\u092C\u093E\u0907\u0902\u0921\u0930 \u0915\u0940 \u092A\u093F\u091B\u0932\u0940 \u0935\u094D\u092F\u0935\u0938\u094D\u0925\u093E \u092C\u0939\u093E\u0932 \u0915\u0930\u0947\u0902"
     },
     menu: {
@@ -4591,7 +4595,6 @@ var hi_default = {
       setGoal: "\u0936\u092C\u094D\u0926 \u0938\u0902\u0916\u094D\u092F\u093E \u0932\u0915\u094D\u0937\u094D\u092F \u0938\u0947\u091F \u0915\u0930\u0947\u0902",
       switchMode: "\u0930\u093E\u0907\u091F\u093F\u0902\u0917 \u092E\u094B\u0921 \u092C\u0926\u0932\u0947\u0902 \u2192",
       typographyFont: "\u091F\u093E\u0907\u092A\u094B\u0917\u094D\u0930\u093E\u092B\u0940 \u092B\u093C\u0949\u0928\u094D\u091F \u2192",
-      addToProject: "\u0930\u093E\u0907\u091F\u093F\u0902\u0917 \u092A\u094D\u0930\u094B\u091C\u0947\u0915\u094D\u091F \u092E\u0947\u0902 \u091C\u094B\u0921\u093C\u0947\u0902",
       openSidebar: "\u0938\u093E\u0907\u0921\u092C\u093E\u0930 \u090F\u0915\u094D\u0938\u092A\u094D\u0932\u094B\u0930\u0930 \u092E\u0947\u0902 \u0916\u094B\u0932\u0947\u0902",
       draftMode: "\u270D \u0921\u094D\u0930\u093E\u092B\u093C\u094D\u091F \u092E\u094B\u0921",
       editMode: "\u270E \u090F\u0921\u093F\u091F \u092E\u094B\u0921",
@@ -4599,8 +4602,7 @@ var hi_default = {
       normalMode: "\u0938\u093E\u092E\u093E\u0928\u094D\u092F (\u0915\u094B\u0908 \u092E\u094B\u0921 \u0928\u0939\u0940\u0902)"
     },
     notice: {
-      noMarkdownOpen: "\u0935\u0930\u094D\u0924\u092E\u093E\u0928 \u092E\u0947\u0902 \u0915\u094B\u0908 Markdown \u092B\u093C\u093E\u0907\u0932 \u0928\u0939\u0940\u0902 \u0916\u0941\u0932\u0940 \u0939\u0948\u0964",
-      addedToProject: '"{{file}}" \u0915\u094B {{project}} \u092E\u0947\u0902 \u091C\u094B\u0921\u093C\u093E \u0917\u092F\u093E'
+      noMarkdownOpen: "\u0935\u0930\u094D\u0924\u092E\u093E\u0928 \u092E\u0947\u0902 \u0915\u094B\u0908 Markdown \u092B\u093C\u093E\u0907\u0932 \u0928\u0939\u0940\u0902 \u0916\u0941\u0932\u0940 \u0939\u0948\u0964"
     },
     statusBar: {
       projectWords: "{{total}} / {{goal}} \u092A\u094D\u0930\u094B\u091C\u0947\u0915\u094D\u091F \u0936\u092C\u094D\u0926",
@@ -4652,6 +4654,13 @@ var hi_default = {
   epub: {
     toc: "\u0935\u093F\u0937\u092F-\u0938\u0942\u091A\u0940",
     cover: "\u0906\u0935\u0930\u0923"
+  },
+  binderUpdate: {
+    title: "\u092C\u093E\u0907\u0902\u0921\u0930 \u0914\u0930 \u092B\u093C\u094B\u0932\u094D\u0921\u0930 \u0905\u092C \u0939\u092E\u0947\u0936\u093E \u092E\u0947\u0932 \u092E\u0947\u0902 \u0930\u0939\u0924\u0947 \u0939\u0948\u0902",
+    body1: "\u092C\u093E\u0907\u0902\u0921\u0930 \u0905\u092C \u0938\u0940\u0927\u0947 \u0906\u092A\u0915\u0947 \u092B\u093C\u094B\u0932\u094D\u0921\u0930 \u092A\u0922\u093C\u0924\u093E \u0939\u0948, \u0907\u0938\u0932\u093F\u090F \u0926\u094B\u0928\u094B\u0902 \u0915\u092D\u0940 \u092C\u0947\u092E\u0947\u0932 \u0928\u0939\u0940\u0902 \u0939\u094B \u0938\u0915\u0924\u0947\u0964 \u0906\u092A \u0905\u092A\u0928\u093E \u0915\u093E\u092E \u092F\u0939\u093E\u0901 \u092F\u093E \u0905\u092A\u0928\u0947 \u0915\u0902\u092A\u094D\u092F\u0942\u091F\u0930 \u0915\u0947 \u092B\u093C\u093E\u0907\u0932 \u090F\u0915\u094D\u0938\u092A\u094D\u0932\u094B\u0930\u0930 \u092E\u0947\u0902 \u0935\u094D\u092F\u0935\u0938\u094D\u0925\u093F\u0924 \u0915\u0930 \u0938\u0915\u0924\u0947 \u0939\u0948\u0902 \u2014 \u0926\u094B\u0928\u094B\u0902 \u0939\u092E\u0947\u0936\u093E \u092E\u0947\u0932 \u0916\u093E\u090F\u0901\u0917\u0947\u0964",
+    body2: "\u0907\u0938\u0915\u0947 \u0932\u093F\u090F, \u0915\u093F\u0938\u0940 \u092E\u094C\u091C\u0942\u0926\u093E \u092A\u094D\u0930\u094B\u091C\u0947\u0915\u094D\u091F \u0915\u094B \u092A\u0939\u0932\u0940 \u092C\u093E\u0930 \u0916\u094B\u0932\u0928\u0947 \u092A\u0930 \u092B\u093C\u094B\u0932\u094D\u0921\u0930 \u092C\u0928\u093E\u090F \u091C\u093E\u0924\u0947 \u0939\u0948\u0902 \u0914\u0930 \u0906\u092A\u0915\u0947 \u0926\u0938\u094D\u0924\u093E\u0935\u0947\u091C\u093C \u092A\u0941\u0930\u093E\u0928\u0947 \u092C\u093E\u0907\u0902\u0921\u0930 \u0938\u0947 \u092E\u093F\u0932\u093E\u0928\u0947 \u0915\u0947 \u0932\u093F\u090F \u0938\u094D\u0925\u093E\u0928\u093E\u0902\u0924\u0930\u093F\u0924 \u0915\u093F\u090F \u091C\u093E\u0924\u0947 \u0939\u0948\u0902\u0964 \u0915\u0941\u091B \u092D\u0940 \u0939\u091F\u093E\u092F\u093E \u0928\u0939\u0940\u0902 \u091C\u093E\u0924\u093E, \u0914\u0930 \u0906\u092A\u0915\u0947 \u0932\u0947\u0916\u0928 \u092E\u0947\u0902 \u0915\u094B\u0908 \u092C\u0926\u0932\u093E\u0935 \u0928\u0939\u0940\u0902 \u0939\u094B\u0924\u093E\u0964",
+    body3: '\u0905\u0917\u0930 \u0906\u092A\u0915\u094B \u092A\u0939\u0932\u0947 \u0915\u0940 \u0935\u094D\u092F\u0935\u0938\u094D\u0925\u093E \u092A\u0938\u0902\u0926 \u0925\u0940, \u0924\u094B \u092B\u093C\u094B\u0932\u094D\u0921\u0930 \u0935\u093E\u092A\u0938 \u0932\u093E \u0938\u0915\u0924\u0947 \u0939\u0948\u0902: \u0915\u092E\u093E\u0902\u0921 \u092A\u0948\u0932\u0947\u091F \u0916\u094B\u0932\u0947\u0902 (Ctrl+P \u0926\u092C\u093E\u090F\u0901, Mac \u092A\u0930 Cmd+P) \u0914\u0930 "\u092C\u093E\u0907\u0902\u0921\u0930 \u0915\u0940 \u092A\u093F\u091B\u0932\u0940 \u0935\u094D\u092F\u0935\u0938\u094D\u0925\u093E \u092C\u0939\u093E\u0932 \u0915\u0930\u0947\u0902" \u0916\u094B\u091C\u0947\u0902\u0964 \u0905\u092A\u0921\u0947\u091F \u0926\u094D\u0935\u093E\u0930\u093E \u092C\u0928\u093E\u090F \u0917\u090F \u0915\u0941\u091B \u0916\u093E\u0932\u0940 \u092B\u093C\u094B\u0932\u094D\u0921\u0930 \u0930\u0939 \u0938\u0915\u0924\u0947 \u0939\u0948\u0902; \u0909\u0928\u094D\u0939\u0947\u0902 \u0939\u091F\u093E \u0938\u0915\u0924\u0947 \u0939\u0948\u0902\u0964',
+    gotIt: "\u0938\u092E\u091D \u0917\u092F\u093E"
   }
 };
 
@@ -4686,10 +4695,7 @@ var es_default = {
         note: "Nota"
       },
       frontmatterAutoUpdate: "Actualizaci\xF3n autom\xE1tica del frontmatter",
-      frontmatterAutoUpdateDesc: "Actualizar autom\xE1ticamente el recuento de palabras y la fecha de modificaci\xF3n al guardar.",
-      experimentalHeading: "Experimental",
-      filesystemBinder: "Carpeta de anillas del sistema de archivos",
-      filesystemBinderDesc: "Vista previa de la carpeta de anillas redise\xF1ada: muestra directamente el \xE1rbol de carpetas del proyecto, en modo de solo lectura. Desact\xEDvala para volver a la carpeta de anillas cl\xE1sica."
+      frontmatterAutoUpdateDesc: "Actualizar autom\xE1ticamente el recuento de palabras y la fecha de modificaci\xF3n al guardar."
     },
     focus: {
       heading: "Modo de enfoque",
@@ -4815,61 +4821,27 @@ var es_default = {
     displayText: "Carpeta de escritura",
     selectProject: "\u2014 seleccionar proyecto \u2014",
     newProject: "Nuevo proyecto",
-    addDocument: "+ documento",
-    addFiles: "Agregar archivos copiados a esta carpeta",
     targetsDashboard: "Panel de objetivos",
-    searchPlaceholder: "Buscar documentos\u2026",
     noProjectSelected: "No hay proyecto seleccionado. Crea o selecciona un proyecto de escritura para comenzar.",
-    noDocuments: "A\xFAn no hay documentos. Haz clic en \u201C+ documento\u201D para agregar uno.",
-    dropToRoot: "\u2193 soltar aqu\xED para promover a ra\xEDz",
     selectProjectFirst: "Selecciona un proyecto primero.",
-    cannotFindFile: "No se puede encontrar el archivo: {{filePath}}. Intenta renombrarlo o volver a vincularlo.",
     untitledDocument: "Sin t\xEDtulo {{time}}",
-    noNewFiles: "No se encontraron nuevos archivos en la carpeta del proyecto.",
-    pctComplete: "{{pct}}% completado",
-    copySuffix: "(Copia)",
     menu: {
-      openDocument: "Abrir documento",
-      newChildDocument: "Nuevo documento hijo",
       setStatusDraft: "Establecer estado: borrador",
       setStatusInProgress: "Establecer estado: en progreso",
       setStatusComplete: "Establecer estado: completo",
       setStatusPublished: "Establecer estado: publicado",
-      duplicate: "Duplicar",
-      moveToResearch: "Mover a investigaci\xF3n",
-      publishToWordPress: "Publicar en WordPress",
-      delete: "Eliminar documento y archivo",
-      moveUp: "Mover hacia arriba",
-      moveDown: "Mover hacia abajo",
       rename: "Renombrar",
-      removeFromBinder: "Quitar de la carpeta",
-      newGroup: "Nuevo grupo",
-      newPart: "Nueva parte",
-      newChildGroup: "Nuevo grupo hijo",
-      newChildPart: "Nueva parte hija",
       changeType: "Cambiar tipo: {{type}}"
     },
-    wordCountSuffix: "{{count}}p",
-    fileNotFound: "El archivo ya no existe: {{path}}",
     deleteConfirm: {
       title: "Eliminar documento",
-      message: '\xBFQuitar "{{title}}" de la carpeta y mover su archivo a la papelera? La entrada de la carpeta (estado, objetivo de palabras, posici\xF3n) no se puede restaurar.',
       delete: "Eliminar",
       cancel: "Cancelar"
     },
-    noMatches: 'Ning\xFAn documento coincide con "{{query}}".',
     titlePrompt: {
       heading: "Nuevo documento",
       create: "Crear"
     },
-    removeConfirm: {
-      title: "Quitar de la carpeta",
-      message: '\xBFQuitar "{{title}}" de la carpeta? El archivo permanece en tu vault, pero se pierden el estado, el objetivo de palabras y el ajuste de exportaci\xF3n de la entrada. Los documentos anidados suben a ocupar su lugar.',
-      remove: "Quitar"
-    },
-    newGroupOrPart: "Nuevo grupo o parte",
-    untitledGroup: "Grupo sin t\xEDtulo",
-    untitledPart: "Parte sin t\xEDtulo",
     strip: {
       focus: "Enfoque",
       typography: "Tipograf\xEDa",
@@ -4957,10 +4929,7 @@ var es_default = {
       writingLog: "Registro de escritura",
       publishToWordPress: "Publicar en WordPress"
     },
-    openDocumentFirst: "Abre un documento primero.",
     sprintTimer: "Temporizador de sprint",
-    pause: "\u23F8 Pausar",
-    stop: "\u25A0 Detener",
     startSprint: "\u23F1 Configurar sprint",
     quickStart: "Opciones de sprint r\xE1pido",
     today: "Hoy",
@@ -5093,7 +5062,6 @@ var es_default = {
   },
   projectManager: {
     errorFolderExists: 'Ya existe una carpeta llamada "{{folder}}" en su carpeta de proyectos. Elija un t\xEDtulo diferente.',
-    corruptBinder: 'No se pudo leer el archivo _binder.json de "{{project}}". Se guard\xF3 una copia de seguridad como _binder.json.bak en la carpeta del proyecto.',
     corruptProject: 'El archivo del proyecto en "{{folder}}" est\xE1 da\xF1ado y no se pudo cargar el proyecto.',
     corruptLog: "No se pudo leer el registro de escritura de {{project}}; se iniciar\xE1 un registro nuevo."
   },
@@ -5185,7 +5153,6 @@ var es_default = {
     scopeCurrent: "Documento actual",
     scopeProject: "Proyecto completo (en orden del binder)",
     includeFrontmatter: "Incluir portada",
-    includeResearch: "Incluir notas de investigaci\xF3n",
     includeTitlesAsHeadings: "Incluir t\xEDtulos de documento como encabezados",
     addTitlePage: "A\xF1adir portada",
     addTitlePageDesc: "A\xF1ade una portada con el t\xEDtulo del proyecto, autor y fecha.",
@@ -5300,16 +5267,6 @@ var es_default = {
     },
     close: "Cerrar"
   },
-  addToProject: {
-    title: "A\xF1adir a proyecto de escritura",
-    noProjects: "No se encontraron proyectos de escritura. Crea un proyecto primero.",
-    close: "Cerrar",
-    file: "Archivo: {{path}}",
-    projectName: "Proyecto de escritura",
-    projectDesc: "\xBFA qu\xE9 proyecto de escritura deseas a\xF1adir este archivo?",
-    addBtn: "A\xF1adir al proyecto",
-    cancel: "Cancelar"
-  },
   scanFolder: {
     title: "A\xF1adir archivos al binder",
     desc: "Selecciona los archivos para a\xF1adir a este proyecto:",
@@ -5337,7 +5294,6 @@ var es_default = {
       setWordCountGoal: "Establecer objetivo de recuento de palabras",
       openWritingLog: "Abrir registro de escritura",
       openFolderSidebar: "Abrir carpeta en el explorador lateral",
-      addFilesToBinder: "Buscar archivos nuevos en la carpeta del proyecto",
       restoreBinderLayout: "Restaurar la disposici\xF3n anterior de la carpeta de escritura"
     },
     menu: {
@@ -5347,7 +5303,6 @@ var es_default = {
       setGoal: "Establecer objetivo de palabras",
       switchMode: "Cambiar modo de escritura \u2192",
       typographyFont: "Fuente tipogr\xE1fica \u2192",
-      addToProject: "Agregar al proyecto de escritura",
       openSidebar: "Abrir en el explorador lateral",
       draftMode: "\u270D Modo borrador",
       editMode: "\u270E Modo edici\xF3n",
@@ -5355,8 +5310,7 @@ var es_default = {
       normalMode: "Normal (sin modo)"
     },
     notice: {
-      noMarkdownOpen: "No hay ning\xFAn archivo Markdown abierto actualmente.",
-      addedToProject: '"{{file}}" agregado a {{project}}'
+      noMarkdownOpen: "No hay ning\xFAn archivo Markdown abierto actualmente."
     },
     statusBar: {
       projectWords: "{{total}} / {{goal}} palabras del proyecto",
@@ -5408,6 +5362,13 @@ var es_default = {
   epub: {
     toc: "\xCDndice",
     cover: "Portada"
+  },
+  binderUpdate: {
+    title: "Tu carpeta de escritura y tus carpetas ahora siempre coinciden",
+    body1: "La carpeta de escritura ahora lee tus carpetas directamente, as\xED que las dos nunca pueden desincronizarse. Puedes organizar tu trabajo aqu\xED o en el explorador de archivos de tu equipo, y siempre coincidir\xE1n.",
+    body2: "Para ello, la primera vez que abras un proyecto existente se crean carpetas y se mueven tus documentos para reflejar tu carpeta de escritura anterior. No se elimina nada y tu escritura no cambia en absoluto.",
+    body3: "Si prefer\xEDas tu disposici\xF3n anterior, puedes recuperar tus carpetas: abre la paleta de comandos (pulsa Ctrl+P, o Cmd+P en Mac) y busca \xABRestaurar la disposici\xF3n anterior de la carpeta de escritura\xBB. Pueden quedar algunas carpetas vac\xEDas creadas por la actualizaci\xF3n; puedes eliminarlas.",
+    gotIt: "Entendido"
   }
 };
 
@@ -5442,10 +5403,7 @@ var ar_default = {
         note: "\u0645\u0644\u0627\u062D\u0638\u0629"
       },
       frontmatterAutoUpdate: "\u0627\u0644\u062A\u062D\u062F\u064A\u062B \u0627\u0644\u062A\u0644\u0642\u0627\u0626\u064A \u0644\u0644\u0628\u064A\u0627\u0646\u0627\u062A \u0627\u0644\u0623\u0645\u0627\u0645\u064A\u0629",
-      frontmatterAutoUpdateDesc: "\u062A\u062D\u062F\u064A\u062B \u0639\u062F\u062F \u0627\u0644\u0643\u0644\u0645\u0627\u062A \u0648\u062A\u0627\u0631\u064A\u062E \u0627\u0644\u062A\u0639\u062F\u064A\u0644 \u062A\u0644\u0642\u0627\u0626\u064A\u064B\u0627 \u0639\u0646\u062F \u0627\u0644\u062D\u0641\u0638.",
-      experimentalHeading: "\u062A\u062C\u0631\u064A\u0628\u064A",
-      filesystemBinder: "\u0645\u0635\u0646\u0651\u0641 \u0646\u0638\u0627\u0645 \u0627\u0644\u0645\u0644\u0641\u0627\u062A",
-      filesystemBinderDesc: "\u0645\u0639\u0627\u064A\u0646\u0629 \u0644\u0644\u0645\u0635\u0646\u0651\u0641 \u0627\u0644\u0645\u0639\u0627\u062F \u062A\u0635\u0645\u064A\u0645\u0647: \u064A\u0639\u0631\u0636 \u0634\u062C\u0631\u0629 \u0645\u062C\u0644\u062F \u0627\u0644\u0645\u0634\u0631\u0648\u0639 \u0645\u0628\u0627\u0634\u0631\u0629\u060C \u0644\u0644\u0642\u0631\u0627\u0621\u0629 \u0641\u0642\u0637. \u0623\u0648\u0642\u0641\u0647 \u0644\u0644\u0639\u0648\u062F\u0629 \u0625\u0644\u0649 \u0627\u0644\u0645\u0635\u0646\u0651\u0641 \u0627\u0644\u0643\u0644\u0627\u0633\u064A\u0643\u064A."
+      frontmatterAutoUpdateDesc: "\u062A\u062D\u062F\u064A\u062B \u0639\u062F\u062F \u0627\u0644\u0643\u0644\u0645\u0627\u062A \u0648\u062A\u0627\u0631\u064A\u062E \u0627\u0644\u062A\u0639\u062F\u064A\u0644 \u062A\u0644\u0642\u0627\u0626\u064A\u064B\u0627 \u0639\u0646\u062F \u0627\u0644\u062D\u0641\u0638."
     },
     focus: {
       heading: "\u0648\u0636\u0639 \u0627\u0644\u062A\u0631\u0643\u064A\u0632",
@@ -5571,61 +5529,27 @@ var ar_default = {
     displayText: "\u0645\u0644\u0632\u0645\u0629 \u0627\u0644\u0643\u062A\u0627\u0628\u0629",
     selectProject: "\u2014 \u0627\u062E\u062A\u0631 \u0645\u0634\u0631\u0648\u0639\u064B\u0627 \u2014",
     newProject: "\u0645\u0634\u0631\u0648\u0639 \u062C\u062F\u064A\u062F",
-    addDocument: "+ \u0645\u0633\u062A\u0646\u062F",
-    addFiles: "\u0625\u0636\u0627\u0641\u0629 \u0627\u0644\u0645\u0644\u0641\u0627\u062A \u0627\u0644\u0645\u0646\u0633\u0648\u062E\u0629 \u0625\u0644\u0649 \u0647\u0630\u0627 \u0627\u0644\u0645\u062C\u0644\u062F",
     targetsDashboard: "\u0644\u0648\u062D\u0629 \u0627\u0644\u0623\u0647\u062F\u0627\u0641",
-    searchPlaceholder: "\u0628\u062D\u062B \u0641\u064A \u0627\u0644\u0645\u0633\u062A\u0646\u062F\u0627\u062A\u2026",
     noProjectSelected: "\u0644\u0645 \u064A\u062A\u0645 \u0627\u062E\u062A\u064A\u0627\u0631 \u0645\u0634\u0631\u0648\u0639. \u0623\u0646\u0634\u0626 \u0645\u0634\u0631\u0648\u0639\u064B\u0627 \u0623\u0648 \u0627\u062E\u062A\u0631 \u0645\u0634\u0631\u0648\u0639 \u0643\u062A\u0627\u0628\u0629 \u0644\u0644\u0628\u062F\u0621.",
-    noDocuments: "\u0644\u0627 \u062A\u0648\u062C\u062F \u0645\u0633\u062A\u0646\u062F\u0627\u062A \u0628\u0639\u062F. \u0627\u0646\u0642\u0631 \u0639\u0644\u0649 \u201C+ \u0645\u0633\u062A\u0646\u062F\u201D \u0644\u0625\u0636\u0627\u0641\u0629 \u0648\u0627\u062D\u062F.",
-    dropToRoot: "\u2193 \u0623\u0633\u0642\u0637 \u0647\u0646\u0627 \u0644\u0644\u062A\u0631\u0642\u064A\u0629 \u0625\u0644\u0649 \u0627\u0644\u062C\u0630\u0631",
     selectProjectFirst: "\u0627\u062E\u062A\u0631 \u0645\u0634\u0631\u0648\u0639\u064B\u0627 \u0623\u0648\u0644\u064B\u0627.",
-    cannotFindFile: "\u062A\u0639\u0630\u0651\u0631 \u0627\u0644\u0639\u062B\u0648\u0631 \u0639\u0644\u0649 \u0627\u0644\u0645\u0644\u0641: {{filePath}}. \u062D\u0627\u0648\u0644 \u0625\u0639\u0627\u062F\u0629 \u062A\u0633\u0645\u064A\u062A\u0647 \u0623\u0648 \u0631\u0628\u0637\u0647.",
     untitledDocument: "\u0628\u062F\u0648\u0646 \u0639\u0646\u0648\u0627\u0646 {{time}}",
-    noNewFiles: "\u0644\u0645 \u064A\u062A\u0645 \u0627\u0644\u0639\u062B\u0648\u0631 \u0639\u0644\u0649 \u0645\u0644\u0641\u0627\u062A \u062C\u062F\u064A\u062F\u0629 \u0641\u064A \u0645\u062C\u0644\u062F \u0627\u0644\u0645\u0634\u0631\u0648\u0639.",
-    pctComplete: "{{pct}}% \u0645\u0643\u062A\u0645\u0644",
-    copySuffix: "(\u0646\u0633\u062E\u0629)",
     menu: {
-      openDocument: "\u0641\u062A\u062D \u0627\u0644\u0645\u0633\u062A\u0646\u062F",
-      newChildDocument: "\u0645\u0633\u062A\u0646\u062F \u0641\u0631\u0639\u064A \u062C\u062F\u064A\u062F",
       setStatusDraft: "\u062A\u0639\u064A\u064A\u0646 \u0627\u0644\u062D\u0627\u0644\u0629: \u0645\u0633\u0648\u062F\u0629",
       setStatusInProgress: "\u062A\u0639\u064A\u064A\u0646 \u0627\u0644\u062D\u0627\u0644\u0629: \u0642\u064A\u062F \u0627\u0644\u062A\u0642\u062F\u0645",
       setStatusComplete: "\u062A\u0639\u064A\u064A\u0646 \u0627\u0644\u062D\u0627\u0644\u0629: \u0645\u0643\u062A\u0645\u0644",
       setStatusPublished: "\u062A\u0639\u064A\u064A\u0646 \u0627\u0644\u062D\u0627\u0644\u0629: \u0645\u0646\u0634\u0648\u0631",
-      duplicate: "\u062A\u0643\u0631\u0627\u0631",
-      moveToResearch: "\u0646\u0642\u0644 \u0625\u0644\u0649 \u0627\u0644\u0628\u062D\u062B",
-      publishToWordPress: "\u0646\u0634\u0631 \u0639\u0644\u0649 WordPress",
-      delete: "\u062D\u0630\u0641 \u0627\u0644\u0645\u0633\u062A\u0646\u062F \u0648\u0627\u0644\u0645\u0644\u0641",
-      moveUp: "\u0646\u0642\u0644 \u0644\u0623\u0639\u0644\u0649",
-      moveDown: "\u0646\u0642\u0644 \u0644\u0623\u0633\u0641\u0644",
       rename: "\u0625\u0639\u0627\u062F\u0629 \u062A\u0633\u0645\u064A\u0629",
-      removeFromBinder: "\u0625\u0632\u0627\u0644\u0629 \u0645\u0646 \u0627\u0644\u0645\u0644\u0632\u0645\u0629",
-      newGroup: "\u0645\u062C\u0645\u0648\u0639\u0629 \u062C\u062F\u064A\u062F\u0629",
-      newPart: "\u062C\u0632\u0621 \u062C\u062F\u064A\u062F",
-      newChildGroup: "\u0645\u062C\u0645\u0648\u0639\u0629 \u0641\u0631\u0639\u064A\u0629 \u062C\u062F\u064A\u062F\u0629",
-      newChildPart: "\u062C\u0632\u0621 \u0641\u0631\u0639\u064A \u062C\u062F\u064A\u062F",
       changeType: "\u062A\u063A\u064A\u064A\u0631 \u0627\u0644\u0646\u0648\u0639: {{type}}"
     },
-    wordCountSuffix: "{{count}}\u0643",
-    fileNotFound: "\u0627\u0644\u0645\u0644\u0641 \u0644\u0645 \u064A\u0639\u062F \u0645\u0648\u062C\u0648\u062F\u064B\u0627: {{path}}",
     deleteConfirm: {
       title: "\u062D\u0630\u0641 \u0627\u0644\u0645\u0633\u062A\u0646\u062F",
-      message: '\u0647\u0644 \u062A\u0631\u064A\u062F \u0625\u0632\u0627\u0644\u0629 "{{title}}" \u0645\u0646 \u0627\u0644\u0645\u0644\u0632\u0645\u0629 \u0648\u0646\u0642\u0644 \u0645\u0644\u0641\u0647 \u0625\u0644\u0649 \u0633\u0644\u0629 \u0627\u0644\u0645\u0647\u0645\u0644\u0627\u062A\u061F \u0644\u0627 \u064A\u0645\u0643\u0646 \u0627\u0633\u062A\u0639\u0627\u062F\u0629 \u0625\u062F\u062E\u0627\u0644 \u0627\u0644\u0645\u0644\u0632\u0645\u0629 (\u0627\u0644\u062D\u0627\u0644\u0629\u060C \u0647\u062F\u0641 \u0639\u062F\u062F \u0627\u0644\u0643\u0644\u0645\u0627\u062A\u060C \u0627\u0644\u0645\u0648\u0636\u0639).',
       delete: "\u062D\u0630\u0641",
       cancel: "\u0625\u0644\u063A\u0627\u0621"
     },
-    noMatches: '\u0644\u0627 \u062A\u0648\u062C\u062F \u0645\u0633\u062A\u0646\u062F\u0627\u062A \u0645\u0637\u0627\u0628\u0642\u0629 \u0644\u0640 "{{query}}".',
     titlePrompt: {
       heading: "\u0645\u0633\u062A\u0646\u062F \u062C\u062F\u064A\u062F",
       create: "\u0625\u0646\u0634\u0627\u0621"
     },
-    removeConfirm: {
-      title: "\u0625\u0632\u0627\u0644\u0629 \u0645\u0646 \u0627\u0644\u0645\u0644\u0632\u0645\u0629",
-      message: '\u0647\u0644 \u062A\u0631\u064A\u062F \u0625\u0632\u0627\u0644\u0629 "{{title}}" \u0645\u0646 \u0627\u0644\u0645\u0644\u0632\u0645\u0629\u061F \u0633\u064A\u0628\u0642\u0649 \u0627\u0644\u0645\u0644\u0641 \u0641\u064A \u0627\u0644\u062E\u0632\u0646\u0629\u060C \u0644\u0643\u0646 \u062D\u0627\u0644\u0629 \u0627\u0644\u0625\u062F\u062E\u0627\u0644 \u0648\u0647\u062F\u0641 \u0639\u062F\u062F \u0627\u0644\u0643\u0644\u0645\u0627\u062A \u0648\u0625\u0639\u062F\u0627\u062F \u0627\u0644\u062A\u0635\u062F\u064A\u0631 \u0633\u062A\u064F\u0641\u0642\u062F. \u062A\u0646\u062A\u0642\u0644 \u0627\u0644\u0645\u0633\u062A\u0646\u062F\u0627\u062A \u0627\u0644\u0645\u062A\u062F\u0627\u062E\u0644\u0629 \u0625\u0644\u0649 \u0645\u0643\u0627\u0646\u0647.',
-      remove: "\u0625\u0632\u0627\u0644\u0629"
-    },
-    newGroupOrPart: "\u0645\u062C\u0645\u0648\u0639\u0629 \u0623\u0648 \u062C\u0632\u0621 \u062C\u062F\u064A\u062F",
-    untitledGroup: "\u0645\u062C\u0645\u0648\u0639\u0629 \u0628\u062F\u0648\u0646 \u0639\u0646\u0648\u0627\u0646",
-    untitledPart: "\u062C\u0632\u0621 \u0628\u062F\u0648\u0646 \u0639\u0646\u0648\u0627\u0646",
     strip: {
       focus: "\u062A\u0631\u0643\u064A\u0632",
       typography: "\u0637\u0628\u0627\u0639\u0629",
@@ -5719,10 +5643,7 @@ var ar_default = {
       writingLog: "\u0633\u062C\u0644 \u0627\u0644\u0643\u062A\u0627\u0628\u0629",
       publishToWordPress: "\u0646\u0634\u0631 \u0639\u0644\u0649 WordPress"
     },
-    openDocumentFirst: "\u0627\u0641\u062A\u062D \u0645\u0633\u062A\u0646\u062F\u0627\u064B \u0623\u0648\u0644\u0627\u064B.",
     sprintTimer: "\u0645\u0624\u0642\u062A \u0627\u0644\u0633\u0628\u0627\u0642",
-    pause: "\u23F8 \u0625\u064A\u0642\u0627\u0641 \u0645\u0624\u0642\u062A",
-    stop: "\u25A0 \u0625\u064A\u0642\u0627\u0641",
     startSprint: "\u23F1 \u0625\u0639\u062F\u0627\u062F \u0627\u0644\u0633\u0628\u0627\u0642",
     quickStart: "\u062E\u064A\u0627\u0631\u0627\u062A \u0627\u0644\u0633\u0628\u0627\u0642 \u0627\u0644\u0633\u0631\u064A\u0639",
     today: "\u0627\u0644\u064A\u0648\u0645",
@@ -5865,7 +5786,6 @@ var ar_default = {
   },
   projectManager: {
     errorFolderExists: '\u064A\u0648\u062C\u062F \u0628\u0627\u0644\u0641\u0639\u0644 \u0645\u062C\u0644\u062F \u0628\u0627\u0633\u0645 "{{folder}}" \u0641\u064A \u0645\u062C\u0644\u062F \u0645\u0634\u0627\u0631\u064A\u0639\u0643. \u0627\u062E\u062A\u0631 \u0639\u0646\u0648\u0627\u0646\u064B\u0627 \u0645\u062E\u062A\u0644\u0641\u064B\u0627.',
-    corruptBinder: '\u062A\u0639\u0630\u0631\u062A \u0642\u0631\u0627\u0621\u0629 \u0645\u0644\u0641 _binder.json \u0627\u0644\u062E\u0627\u0635 \u0628\u0640 "{{project}}". \u062A\u0645 \u062D\u0641\u0638 \u0646\u0633\u062E\u0629 \u0627\u062D\u062A\u064A\u0627\u0637\u064A\u0629 \u0628\u0627\u0633\u0645 _binder.json.bak \u0641\u064A \u0645\u062C\u0644\u062F \u0627\u0644\u0645\u0634\u0631\u0648\u0639.',
     corruptProject: '\u0645\u0644\u0641 \u0627\u0644\u0645\u0634\u0631\u0648\u0639 \u0641\u064A "{{folder}}" \u062A\u0627\u0644\u0641 \u0648\u0644\u0645 \u064A\u062A\u0645 \u062A\u062D\u0645\u064A\u0644 \u0627\u0644\u0645\u0634\u0631\u0648\u0639.',
     corruptLog: "\u062A\u0639\u0630\u0631 \u0642\u0631\u0627\u0621\u0629 \u0633\u062C\u0644 \u0627\u0644\u0643\u062A\u0627\u0628\u0629 \u0644\u0640 {{project}} \u2014 \u0633\u064A\u062A\u0645 \u0628\u062F\u0621 \u0633\u062C\u0644 \u062C\u062F\u064A\u062F."
   },
@@ -5957,7 +5877,6 @@ var ar_default = {
     scopeCurrent: "\u0627\u0644\u0645\u0633\u062A\u0646\u062F \u0627\u0644\u062D\u0627\u0644\u064A",
     scopeProject: "\u0627\u0644\u0645\u0634\u0631\u0648\u0639 \u0628\u0627\u0644\u0643\u0627\u0645\u0644 (\u0628\u062A\u0631\u062A\u064A\u0628 \u0627\u0644\u0645\u0648\u062B\u0642)",
     includeFrontmatter: "\u062A\u0636\u0645\u064A\u0646 \u0627\u0644\u0628\u064A\u0627\u0646\u0627\u062A \u0627\u0644\u0623\u0645\u0627\u0645\u064A\u0629",
-    includeResearch: "\u062A\u0636\u0645\u064A\u0646 \u0645\u0644\u0627\u062D\u0638\u0627\u062A \u0627\u0644\u0628\u062D\u062B",
     includeTitlesAsHeadings: "\u062A\u0636\u0645\u064A\u0646 \u0639\u0646\u0627\u0648\u064A\u0646 \u0627\u0644\u0645\u0633\u062A\u0646\u062F\u0627\u062A \u0643\u0639\u0646\u0627\u0648\u064A\u0646",
     addTitlePage: "\u0625\u0636\u0627\u0641\u0629 \u0635\u0641\u062D\u0629 \u0639\u0646\u0648\u0627\u0646",
     addTitlePageDesc: "\u0625\u0636\u0627\u0641\u0629 \u0635\u0641\u062D\u0629 \u0639\u0646\u0648\u0627\u0646 \u062A\u062D\u062A\u0648\u064A \u0639\u0644\u0649 \u0639\u0646\u0648\u0627\u0646 \u0627\u0644\u0645\u0634\u0631\u0648\u0639 \u0648\u0627\u0644\u0645\u0624\u0644\u0641 \u0648\u0627\u0644\u062A\u0627\u0631\u064A\u062E.",
@@ -6076,16 +5995,6 @@ var ar_default = {
     },
     close: "\u0625\u063A\u0644\u0627\u0642"
   },
-  addToProject: {
-    title: "\u0625\u0636\u0627\u0641\u0629 \u0625\u0644\u0649 \u0645\u0634\u0631\u0648\u0639 \u0643\u062A\u0627\u0628\u0629",
-    noProjects: "\u0644\u0645 \u064A\u064F\u0639\u062B\u0631 \u0639\u0644\u0649 \u0645\u0634\u0627\u0631\u064A\u0639 \u0643\u062A\u0627\u0628\u0629. \u0623\u0646\u0634\u0626 \u0645\u0634\u0631\u0648\u0639\u064B\u0627 \u0623\u0648\u0644\u0627\u064B.",
-    close: "\u0625\u063A\u0644\u0627\u0642",
-    file: "\u0627\u0644\u0645\u0644\u0641: {{path}}",
-    projectName: "\u0645\u0634\u0631\u0648\u0639 \u0627\u0644\u0643\u062A\u0627\u0628\u0629",
-    projectDesc: "\u0625\u0644\u0649 \u0623\u064A \u0645\u0634\u0631\u0648\u0639 \u0643\u062A\u0627\u0628\u0629 \u062A\u0631\u064A\u062F \u0625\u0636\u0627\u0641\u0629 \u0647\u0630\u0627 \u0627\u0644\u0645\u0644\u0641\u061F",
-    addBtn: "\u0625\u0636\u0627\u0641\u0629 \u0625\u0644\u0649 \u0627\u0644\u0645\u0634\u0631\u0648\u0639",
-    cancel: "\u0625\u0644\u063A\u0627\u0621"
-  },
   scanFolder: {
     title: "\u0625\u0636\u0627\u0641\u0629 \u0645\u0644\u0641\u0627\u062A \u0625\u0644\u0649 \u0627\u0644\u0645\u0648\u062B\u0642",
     desc: "\u062D\u062F\u062F \u0627\u0644\u0645\u0644\u0641\u0627\u062A \u0644\u0625\u0636\u0627\u0641\u062A\u0647\u0627 \u0625\u0644\u0649 \u0647\u0630\u0627 \u0627\u0644\u0645\u0634\u0631\u0648\u0639:",
@@ -6113,7 +6022,6 @@ var ar_default = {
       setWordCountGoal: "\u062A\u0639\u064A\u064A\u0646 \u0647\u062F\u0641 \u0639\u062F\u062F \u0627\u0644\u0643\u0644\u0645\u0627\u062A",
       openWritingLog: "\u0641\u062A\u062D \u0633\u062C\u0644 \u0627\u0644\u0643\u062A\u0627\u0628\u0629",
       openFolderSidebar: "\u0641\u062A\u062D \u0627\u0644\u0645\u062C\u0644\u062F \u0641\u064A \u0627\u0644\u0645\u0633\u062A\u0643\u0634\u0641 \u0627\u0644\u062C\u0627\u0646\u0628\u064A",
-      addFilesToBinder: "\u0641\u062D\u0635 \u0645\u062C\u0644\u062F \u0627\u0644\u0645\u0634\u0631\u0648\u0639 \u0628\u062D\u062B\u064B\u0627 \u0639\u0646 \u0645\u0644\u0641\u0627\u062A \u062C\u062F\u064A\u062F\u0629",
       restoreBinderLayout: "\u0627\u0633\u062A\u0639\u0627\u062F\u0629 \u0627\u0644\u062A\u062E\u0637\u064A\u0637 \u0627\u0644\u0633\u0627\u0628\u0642 \u0644\u0644\u0645\u0644\u0632\u0645\u0629"
     },
     menu: {
@@ -6123,7 +6031,6 @@ var ar_default = {
       setGoal: "\u062A\u0639\u064A\u064A\u0646 \u0647\u062F\u0641 \u0639\u062F\u062F \u0627\u0644\u0643\u0644\u0645\u0627\u062A",
       switchMode: "\u062A\u0628\u062F\u064A\u0644 \u0648\u0636\u0639 \u0627\u0644\u0643\u062A\u0627\u0628\u0629 \u2192",
       typographyFont: "\u062E\u0637 \u0627\u0644\u0637\u0628\u0627\u0639\u0629 \u2192",
-      addToProject: "\u0625\u0636\u0627\u0641\u0629 \u0625\u0644\u0649 \u0645\u0634\u0631\u0648\u0639 \u0627\u0644\u0643\u062A\u0627\u0628\u0629",
       openSidebar: "\u0641\u062A\u062D \u0641\u064A \u0627\u0644\u0645\u0633\u062A\u0643\u0634\u0641 \u0627\u0644\u062C\u0627\u0646\u0628\u064A",
       draftMode: "\u270D \u0648\u0636\u0639 \u0627\u0644\u0645\u0633\u0648\u062F\u0629",
       editMode: "\u270E \u0648\u0636\u0639 \u0627\u0644\u062A\u062D\u0631\u064A\u0631",
@@ -6131,8 +6038,7 @@ var ar_default = {
       normalMode: "\u0639\u0627\u062F\u064A (\u0628\u0644\u0627 \u0648\u0636\u0639)"
     },
     notice: {
-      noMarkdownOpen: "\u0644\u0627 \u064A\u0648\u062C\u062F \u0645\u0644\u0641 Markdown \u0645\u0641\u062A\u0648\u062D \u062D\u0627\u0644\u064A\u0627\u064B.",
-      addedToProject: "\u062A\u0645\u062A \u0625\u0636\u0627\u0641\u0629 \xAB{{file}}\xBB \u0625\u0644\u0649 {{project}}"
+      noMarkdownOpen: "\u0644\u0627 \u064A\u0648\u062C\u062F \u0645\u0644\u0641 Markdown \u0645\u0641\u062A\u0648\u062D \u062D\u0627\u0644\u064A\u0627\u064B."
     },
     statusBar: {
       projectWords: "{{total}} / {{goal}} \u0643\u0644\u0645\u0629 \u0641\u064A \u0627\u0644\u0645\u0634\u0631\u0648\u0639",
@@ -6184,6 +6090,13 @@ var ar_default = {
   epub: {
     toc: "\u062C\u062F\u0648\u0644 \u0627\u0644\u0645\u062D\u062A\u0648\u064A\u0627\u062A",
     cover: "\u0627\u0644\u063A\u0644\u0627\u0641"
+  },
+  binderUpdate: {
+    title: "\u0627\u0644\u0645\u0644\u0632\u0645\u0629 \u0648\u0645\u062C\u0644\u062F\u0627\u062A\u0643 \u0645\u062A\u0632\u0627\u0645\u0646\u062A\u0627\u0646 \u0627\u0644\u0622\u0646 \u062F\u0627\u0626\u0645\u064B\u0627",
+    body1: "\u062A\u0642\u0631\u0623 \u0627\u0644\u0645\u0644\u0632\u0645\u0629 \u0627\u0644\u0622\u0646 \u0645\u062C\u0644\u062F\u0627\u062A\u0643 \u0645\u0628\u0627\u0634\u0631\u0629\u060C \u0641\u0644\u0627 \u064A\u0645\u0643\u0646 \u0623\u0646 \u064A\u062E\u062A\u0644\u0641 \u0627\u0644\u0627\u062B\u0646\u0627\u0646 \u0623\u0628\u062F\u064B\u0627. \u064A\u0645\u0643\u0646\u0643 \u062A\u0646\u0638\u064A\u0645 \u0639\u0645\u0644\u0643 \u0647\u0646\u0627 \u0623\u0648 \u0641\u064A \u0645\u0633\u062A\u0643\u0634\u0641 \u0627\u0644\u0645\u0644\u0641\u0627\u062A \u0639\u0644\u0649 \u062C\u0647\u0627\u0632\u0643\u060C \u0648\u0633\u064A\u062A\u0637\u0627\u0628\u0642 \u0627\u0644\u0627\u062B\u0646\u0627\u0646 \u062F\u0627\u0626\u0645\u064B\u0627.",
+    body2: "\u0644\u062A\u062D\u0642\u064A\u0642 \u0630\u0644\u0643\u060C \u0639\u0646\u062F \u0641\u062A\u062D \u0645\u0634\u0631\u0648\u0639 \u0645\u0648\u062C\u0648\u062F \u0644\u0623\u0648\u0644 \u0645\u0631\u0629 \u064A\u062A\u0645 \u0625\u0646\u0634\u0627\u0621 \u0645\u062C\u0644\u062F\u0627\u062A \u0648\u0646\u0642\u0644 \u0645\u0633\u062A\u0646\u062F\u0627\u062A\u0643 \u0644\u062A\u0637\u0627\u0628\u0642 \u0645\u0644\u0632\u0645\u062A\u0643 \u0627\u0644\u0642\u062F\u064A\u0645\u0629. \u0644\u0627 \u064A\u064F\u062D\u0630\u0641 \u0623\u064A \u0634\u064A\u0621\u060C \u0648\u0644\u0627 \u064A\u062A\u063A\u064A\u0631 \u0623\u064A \u0634\u064A\u0621 \u0645\u0645\u0627 \u0643\u062A\u0628\u062A\u0647.",
+    body3: '\u0625\u0630\u0627 \u0643\u0646\u062A \u062A\u0641\u0636\u0644 \u062A\u0631\u062A\u064A\u0628\u0643 \u0627\u0644\u0633\u0627\u0628\u0642\u060C \u064A\u0645\u0643\u0646\u0643 \u0625\u0639\u0627\u062F\u0629 \u0645\u062C\u0644\u062F\u0627\u062A\u0643: \u0627\u0641\u062A\u062D \u0644\u0648\u062D\u0629 \u0627\u0644\u0623\u0648\u0627\u0645\u0631 (\u0627\u0636\u063A\u0637 Ctrl+P\u060C \u0623\u0648 Cmd+P \u0639\u0644\u0649 \u0623\u062C\u0647\u0632\u0629 Mac) \u0648\u0627\u0628\u062D\u062B \u0639\u0646 "\u0627\u0633\u062A\u0639\u0627\u062F\u0629 \u0627\u0644\u062A\u062E\u0637\u064A\u0637 \u0627\u0644\u0633\u0627\u0628\u0642 \u0644\u0644\u0645\u0644\u0632\u0645\u0629". \u0642\u062F \u062A\u0628\u0642\u0649 \u0628\u0636\u0639\u0629 \u0645\u062C\u0644\u062F\u0627\u062A \u0641\u0627\u0631\u063A\u0629 \u0623\u0646\u0634\u0623\u0647\u0627 \u0627\u0644\u062A\u062D\u062F\u064A\u062B\u061B \u064A\u0645\u0643\u0646\u0643 \u062D\u0630\u0641\u0647\u0627.',
+    gotIt: "\u062D\u0633\u0646\u064B\u0627"
   }
 };
 
@@ -6218,10 +6131,7 @@ var fr_default = {
         note: "Note"
       },
       frontmatterAutoUpdate: "Mise \xE0 jour automatique du frontmatter",
-      frontmatterAutoUpdateDesc: "Mettre \xE0 jour automatiquement le nombre de mots et la date de modification lors de l\u2019enregistrement.",
-      experimentalHeading: "Exp\xE9rimental",
-      filesystemBinder: "Classeur du syst\xE8me de fichiers",
-      filesystemBinderDesc: "Aper\xE7u du classeur repens\xE9 : affiche directement l\u2019arborescence du dossier de projet, en lecture seule. D\xE9sactivez pour revenir au classeur classique."
+      frontmatterAutoUpdateDesc: "Mettre \xE0 jour automatiquement le nombre de mots et la date de modification lors de l\u2019enregistrement."
     },
     focus: {
       heading: "Mode concentration",
@@ -6347,61 +6257,27 @@ var fr_default = {
     displayText: "Classeur d\u2019\xE9criture",
     selectProject: "\u2014 s\xE9lectionner un projet \u2014",
     newProject: "Nouveau projet",
-    addDocument: "+ document",
-    addFiles: "Ajouter les fichiers copi\xE9s dans ce dossier",
     targetsDashboard: "Tableau de bord des objectifs",
-    searchPlaceholder: "Rechercher des documents\u2026",
     noProjectSelected: "Aucun projet s\xE9lectionn\xE9. Cr\xE9ez ou s\xE9lectionnez un projet d\u2019\xE9criture pour commencer.",
-    noDocuments: "Aucun document pour l\u2019instant. Cliquez sur \xAB\xA0+ document\xA0\xBB pour en ajouter un.",
-    dropToRoot: "\u2193 d\xE9poser ici pour promouvoir \xE0 la racine",
     selectProjectFirst: "Veuillez d\u2019abord s\xE9lectionner un projet.",
-    cannotFindFile: "Impossible de trouver le fichier\xA0: {{filePath}}. Essayez de le renommer ou de le relier.",
     untitledDocument: "Sans titre {{time}}",
-    noNewFiles: "Aucun nouveau fichier trouv\xE9 dans le dossier du projet.",
-    pctComplete: "{{pct}}% termin\xE9",
-    copySuffix: "(Copie)",
     menu: {
-      openDocument: "Ouvrir le document",
-      newChildDocument: "Nouveau document enfant",
       setStatusDraft: "D\xE9finir le statut\xA0: brouillon",
       setStatusInProgress: "D\xE9finir le statut\xA0: en cours",
       setStatusComplete: "D\xE9finir le statut\xA0: termin\xE9",
       setStatusPublished: "D\xE9finir le statut\xA0: publi\xE9",
-      duplicate: "Dupliquer",
-      moveToResearch: "D\xE9placer vers la recherche",
-      publishToWordPress: "Publier sur WordPress",
-      delete: "Supprimer le document et le fichier",
-      moveUp: "Monter",
-      moveDown: "Descendre",
       rename: "Renommer",
-      removeFromBinder: "Retirer du classeur",
-      newGroup: "Nouveau groupe",
-      newPart: "Nouvelle partie",
-      newChildGroup: "Nouveau groupe enfant",
-      newChildPart: "Nouvelle partie enfant",
       changeType: "Changer le type : {{type}}"
     },
-    wordCountSuffix: "{{count}}m",
-    fileNotFound: "Le fichier n'existe plus : {{path}}",
     deleteConfirm: {
       title: "Supprimer le document",
-      message: "Retirer \xAB {{title}} \xBB du classeur et d\xE9placer son fichier vers la corbeille ? L\u2019entr\xE9e du classeur (statut, objectif de mots, position) ne peut pas \xEAtre restaur\xE9e.",
       delete: "Supprimer",
       cancel: "Annuler"
     },
-    noMatches: "Aucun document ne correspond \xE0 \xAB {{query}} \xBB.",
     titlePrompt: {
       heading: "Nouveau document",
       create: "Cr\xE9er"
     },
-    removeConfirm: {
-      title: "Retirer du classeur",
-      message: "Retirer \xAB {{title}} \xBB du classeur ? Le fichier reste dans votre coffre, mais le statut, l'objectif de mots et le r\xE9glage d'export de l'entr\xE9e sont perdus. Les documents imbriqu\xE9s remontent \xE0 sa place.",
-      remove: "Retirer"
-    },
-    newGroupOrPart: "Nouveau groupe ou nouvelle partie",
-    untitledGroup: "Groupe sans titre",
-    untitledPart: "Partie sans titre",
     strip: {
       focus: "Concentration",
       typography: "Typographie",
@@ -6489,10 +6365,7 @@ var fr_default = {
       writingLog: "Journal d'\xE9criture",
       publishToWordPress: "Publier sur WordPress"
     },
-    openDocumentFirst: "Ouvrez d'abord un document.",
     sprintTimer: "Minuteur de sprint",
-    pause: "\u23F8 Pause",
-    stop: "\u25A0 Arr\xEAter",
     startSprint: "\u23F1 Configurer un sprint",
     quickStart: "Options de sprint rapide",
     today: "Aujourd'hui",
@@ -6625,7 +6498,6 @@ var fr_default = {
   },
   projectManager: {
     errorFolderExists: 'Un dossier nomm\xE9 "{{folder}}" existe d\xE9j\xE0 dans votre dossier de projets. Choisissez un autre titre.',
-    corruptBinder: `Le fichier _binder.json de "{{project}}" n'a pas pu \xEAtre lu. Une sauvegarde a \xE9t\xE9 enregistr\xE9e sous _binder.json.bak dans le dossier du projet.`,
     corruptProject: `Le fichier de projet dans "{{folder}}" est corrompu et le projet n'a pas pu \xEAtre charg\xE9.`,
     corruptLog: "Impossible de lire le journal d\u2019\xE9criture de {{project}} \u2014 un nouveau journal va \xEAtre cr\xE9\xE9."
   },
@@ -6717,7 +6589,6 @@ var fr_default = {
     scopeCurrent: "Document actuel",
     scopeProject: "Projet entier (dans l'ordre du binder)",
     includeFrontmatter: "Inclure les m\xE9tadonn\xE9es",
-    includeResearch: "Inclure les notes de recherche",
     includeTitlesAsHeadings: "Inclure les titres de document comme titres",
     addTitlePage: "Ajouter une page de titre",
     addTitlePageDesc: "Ajouter une page de titre avec le titre du projet, l'auteur et la date.",
@@ -6832,16 +6703,6 @@ var fr_default = {
     },
     close: "Fermer"
   },
-  addToProject: {
-    title: "Ajouter \xE0 un projet d'\xE9criture",
-    noProjects: "Aucun projet d'\xE9criture trouv\xE9. Cr\xE9ez d'abord un projet.",
-    close: "Fermer",
-    file: "Fichier : {{path}}",
-    projectName: "Projet d'\xE9criture",
-    projectDesc: "\xC0 quel projet d'\xE9criture souhaitez-vous ajouter ce fichier ?",
-    addBtn: "Ajouter au projet",
-    cancel: "Annuler"
-  },
   scanFolder: {
     title: "Ajouter des fichiers au binder",
     desc: "S\xE9lectionnez les fichiers \xE0 ajouter \xE0 ce projet :",
@@ -6869,7 +6730,6 @@ var fr_default = {
       setWordCountGoal: "D\xE9finir un objectif de nombre de mots",
       openWritingLog: "Ouvrir le journal d'\xE9criture",
       openFolderSidebar: "Ouvrir le dossier dans l'explorateur lat\xE9ral",
-      addFilesToBinder: "Analyser le dossier du projet pour trouver de nouveaux fichiers",
       restoreBinderLayout: "Restaurer la disposition pr\xE9c\xE9dente du classeur"
     },
     menu: {
@@ -6879,7 +6739,6 @@ var fr_default = {
       setGoal: "D\xE9finir un objectif de mots",
       switchMode: "Changer de mode d'\xE9criture \u2192",
       typographyFont: "Police typographique \u2192",
-      addToProject: "Ajouter au projet d'\xE9criture",
       openSidebar: "Ouvrir dans l'explorateur lat\xE9ral",
       draftMode: "\u270D Mode brouillon",
       editMode: "\u270E Mode \xE9dition",
@@ -6887,8 +6746,7 @@ var fr_default = {
       normalMode: "Normal (sans mode)"
     },
     notice: {
-      noMarkdownOpen: "Aucun fichier Markdown n'est actuellement ouvert.",
-      addedToProject: "\xAB {{file}} \xBB ajout\xE9 \xE0 {{project}}"
+      noMarkdownOpen: "Aucun fichier Markdown n'est actuellement ouvert."
     },
     statusBar: {
       projectWords: "{{total}} / {{goal}} mots du projet",
@@ -6940,6 +6798,13 @@ var fr_default = {
   epub: {
     toc: "Table des mati\xE8res",
     cover: "Couverture"
+  },
+  binderUpdate: {
+    title: "Votre classeur et vos dossiers restent d\xE9sormais synchronis\xE9s",
+    body1: "Le classeur lit d\xE9sormais directement vos dossiers, si bien que les deux ne peuvent plus se d\xE9synchroniser. Vous pouvez organiser votre travail ici ou dans l\u2019explorateur de fichiers de votre ordinateur : les deux resteront toujours identiques.",
+    body2: "Pour cela, \xE0 la premi\xE8re ouverture d\u2019un projet existant, des dossiers sont cr\xE9\xE9s et vos documents d\xE9plac\xE9s pour correspondre \xE0 votre ancien classeur. Rien n\u2019est supprim\xE9 et rien de ce que vous avez \xE9crit n\u2019est modifi\xE9.",
+    body3: "Si vous pr\xE9f\xE9riez votre organisation pr\xE9c\xE9dente, vous pouvez remettre vos dossiers en place : ouvrez la palette de commandes (Ctrl+P, ou Cmd+P sur Mac) et recherchez \xAB Restaurer la disposition pr\xE9c\xE9dente du classeur \xBB. Quelques dossiers vides cr\xE9\xE9s par la mise \xE0 jour peuvent subsister ; vous pouvez les supprimer.",
+    gotIt: "Compris"
   }
 };
 
@@ -6974,10 +6839,7 @@ var bn_default = {
         note: "\u09A8\u09CB\u099F"
       },
       frontmatterAutoUpdate: "\u09AB\u09CD\u09B0\u09A8\u09CD\u099F\u09AE\u09CD\u09AF\u09BE\u099F\u09BE\u09B0 \u09B8\u09CD\u09AC\u09AF\u09BC\u0982\u0995\u09CD\u09B0\u09BF\u09AF\u09BC \u0986\u09AA\u09A1\u09C7\u099F",
-      frontmatterAutoUpdateDesc: "\u09B8\u0982\u09B0\u0995\u09CD\u09B7\u09A3\u09C7\u09B0 \u09B8\u09AE\u09AF\u09BC \u09B6\u09AC\u09CD\u09A6 \u09B8\u0982\u0996\u09CD\u09AF\u09BE \u098F\u09AC\u0982 \u09AA\u09B0\u09BF\u09AC\u09B0\u09CD\u09A4\u09A8\u09C7\u09B0 \u09A4\u09BE\u09B0\u09BF\u0996 \u09B8\u09CD\u09AC\u09AF\u09BC\u0982\u0995\u09CD\u09B0\u09BF\u09AF\u09BC\u09AD\u09BE\u09AC\u09C7 \u0986\u09AA\u09A1\u09C7\u099F \u0995\u09B0\u09C1\u09A8\u0964",
-      experimentalHeading: "\u09AA\u09B0\u09C0\u0995\u09CD\u09B7\u09BE\u09AE\u09C2\u09B2\u0995",
-      filesystemBinder: "\u09AB\u09BE\u0987\u09B2 \u09B8\u09BF\u09B8\u09CD\u099F\u09C7\u09AE \u09AC\u09BE\u0987\u09A8\u09CD\u09A1\u09BE\u09B0",
-      filesystemBinderDesc: "\u09AA\u09C1\u09A8\u09B0\u09CD\u0997\u09A0\u09BF\u09A4 \u09AC\u09BE\u0987\u09A8\u09CD\u09A1\u09BE\u09B0\u09C7\u09B0 \u09AA\u09CD\u09B0\u09BF\u09AD\u09BF\u0989: \u09AA\u09CD\u09B0\u09CB\u099C\u09C7\u0995\u09CD\u099F \u09AB\u09CB\u09B2\u09CD\u09A1\u09BE\u09B0 \u099F\u09CD\u09B0\u09BF \u09B8\u09B0\u09BE\u09B8\u09B0\u09BF, \u09B6\u09C1\u09A7\u09C1\u09AE\u09BE\u09A4\u09CD\u09B0-\u09AA\u09BE\u09A0\u09AF\u09CB\u0997\u09CD\u09AF \u09B9\u09BF\u09B8\u09C7\u09AC\u09C7 \u09A6\u09C7\u0996\u09BE\u09AF\u09BC\u0964 \u0995\u09CD\u09B2\u09BE\u09B8\u09BF\u0995 \u09AC\u09BE\u0987\u09A8\u09CD\u09A1\u09BE\u09B0\u09C7 \u09AB\u09BF\u09B0\u09A4\u09C7 \u09AC\u09A8\u09CD\u09A7 \u0995\u09B0\u09C1\u09A8\u0964"
+      frontmatterAutoUpdateDesc: "\u09B8\u0982\u09B0\u0995\u09CD\u09B7\u09A3\u09C7\u09B0 \u09B8\u09AE\u09AF\u09BC \u09B6\u09AC\u09CD\u09A6 \u09B8\u0982\u0996\u09CD\u09AF\u09BE \u098F\u09AC\u0982 \u09AA\u09B0\u09BF\u09AC\u09B0\u09CD\u09A4\u09A8\u09C7\u09B0 \u09A4\u09BE\u09B0\u09BF\u0996 \u09B8\u09CD\u09AC\u09AF\u09BC\u0982\u0995\u09CD\u09B0\u09BF\u09AF\u09BC\u09AD\u09BE\u09AC\u09C7 \u0986\u09AA\u09A1\u09C7\u099F \u0995\u09B0\u09C1\u09A8\u0964"
     },
     focus: {
       heading: "\u09AB\u09CB\u0995\u09BE\u09B8 \u09AE\u09CB\u09A1",
@@ -7103,61 +6965,27 @@ var bn_default = {
     displayText: "\u09B2\u09C7\u0996\u09BE\u09B0 \u09AC\u09BE\u0987\u09A8\u09CD\u09A1\u09BE\u09B0",
     selectProject: "\u2014 \u09AA\u09CD\u09B0\u0995\u09B2\u09CD\u09AA \u09A8\u09BF\u09B0\u09CD\u09AC\u09BE\u099A\u09A8 \u0995\u09B0\u09C1\u09A8 \u2014",
     newProject: "\u09A8\u09A4\u09C1\u09A8 \u09AA\u09CD\u09B0\u0995\u09B2\u09CD\u09AA",
-    addDocument: "+ \u09A8\u09A5\u09BF",
-    addFiles: "\u098F\u0987 \u09AB\u09CB\u09B2\u09CD\u09A1\u09BE\u09B0\u09C7 \u0995\u09AA\u09BF \u0995\u09B0\u09BE \u09AB\u09BE\u0987\u09B2 \u09AF\u09CB\u0997 \u0995\u09B0\u09C1\u09A8",
     targetsDashboard: "\u09B2\u0995\u09CD\u09B7\u09CD\u09AF \u09A1\u09CD\u09AF\u09BE\u09B6\u09AC\u09CB\u09B0\u09CD\u09A1",
-    searchPlaceholder: "\u09A8\u09A5\u09BF \u0996\u09C1\u0981\u099C\u09C1\u09A8\u2026",
     noProjectSelected: "\u0995\u09CB\u09A8\u09CB \u09AA\u09CD\u09B0\u0995\u09B2\u09CD\u09AA \u09A8\u09BF\u09B0\u09CD\u09AC\u09BE\u099A\u09BF\u09A4 \u09A8\u09AF\u09BC\u0964 \u09B6\u09C1\u09B0\u09C1 \u0995\u09B0\u09A4\u09C7 \u098F\u0995\u099F\u09BF \u09B2\u09C7\u0996\u09BE\u09B0 \u09AA\u09CD\u09B0\u0995\u09B2\u09CD\u09AA \u09A4\u09C8\u09B0\u09BF \u09AC\u09BE \u09A8\u09BF\u09B0\u09CD\u09AC\u09BE\u099A\u09A8 \u0995\u09B0\u09C1\u09A8\u0964",
-    noDocuments: '\u098F\u0996\u09A8\u09CB \u0995\u09CB\u09A8\u09CB \u09A8\u09A5\u09BF \u09A8\u09C7\u0987\u0964 \u098F\u0995\u099F\u09BF \u09AF\u09CB\u0997 \u0995\u09B0\u09A4\u09C7 "+ \u09A8\u09A5\u09BF" \u0995\u09CD\u09B2\u09BF\u0995 \u0995\u09B0\u09C1\u09A8\u0964',
-    dropToRoot: "\u2193 \u09AE\u09C2\u09B2\u09C7 \u09AA\u09CD\u09B0\u09AE\u09CB\u099F \u0995\u09B0\u09A4\u09C7 \u098F\u0996\u09BE\u09A8\u09C7 \u09AB\u09C7\u09B2\u09C1\u09A8",
     selectProjectFirst: "\u09AA\u09CD\u09B0\u09A5\u09AE\u09C7 \u098F\u0995\u099F\u09BF \u09AA\u09CD\u09B0\u0995\u09B2\u09CD\u09AA \u09A8\u09BF\u09B0\u09CD\u09AC\u09BE\u099A\u09A8 \u0995\u09B0\u09C1\u09A8\u0964",
-    cannotFindFile: "\u09AB\u09BE\u0987\u09B2 \u09AA\u09BE\u0993\u09AF\u09BC\u09BE \u09AF\u09BE\u099A\u09CD\u099B\u09C7 \u09A8\u09BE: {{filePath}}\u0964 \u09A8\u09BE\u09AE \u09AA\u09B0\u09BF\u09AC\u09B0\u09CD\u09A4\u09A8 \u09AC\u09BE \u09AA\u09C1\u09A8\u09B0\u09BE\u09AF\u09BC \u09B2\u09BF\u0982\u0995 \u0995\u09B0\u09BE\u09B0 \u099A\u09C7\u09B7\u09CD\u099F\u09BE \u0995\u09B0\u09C1\u09A8\u0964",
     untitledDocument: "\u09B6\u09BF\u09B0\u09CB\u09A8\u09BE\u09AE\u09B9\u09C0\u09A8 {{time}}",
-    noNewFiles: "\u09AA\u09CD\u09B0\u0995\u09B2\u09CD\u09AA \u09AB\u09CB\u09B2\u09CD\u09A1\u09BE\u09B0\u09C7 \u0995\u09CB\u09A8\u09CB \u09A8\u09A4\u09C1\u09A8 \u09AB\u09BE\u0987\u09B2 \u09AA\u09BE\u0993\u09AF\u09BC\u09BE \u09AF\u09BE\u09AF\u09BC\u09A8\u09BF\u0964",
-    pctComplete: "{{pct}}% \u09B8\u09AE\u09CD\u09AA\u09A8\u09CD\u09A8",
-    copySuffix: "(\u0995\u09AA\u09BF)",
     menu: {
-      openDocument: "\u09A8\u09A5\u09BF \u0996\u09C1\u09B2\u09C1\u09A8",
-      newChildDocument: "\u09A8\u09A4\u09C1\u09A8 \u099A\u09BE\u0987\u09B2\u09CD\u09A1 \u09A8\u09A5\u09BF",
       setStatusDraft: "\u09B8\u09CD\u099F\u09CD\u09AF\u09BE\u099F\u09BE\u09B8 \u09B8\u09C7\u099F \u0995\u09B0\u09C1\u09A8: \u09A1\u09CD\u09B0\u09BE\u09AB\u099F",
       setStatusInProgress: "\u09B8\u09CD\u099F\u09CD\u09AF\u09BE\u099F\u09BE\u09B8 \u09B8\u09C7\u099F \u0995\u09B0\u09C1\u09A8: \u099A\u09B2\u09AE\u09BE\u09A8",
       setStatusComplete: "\u09B8\u09CD\u099F\u09CD\u09AF\u09BE\u099F\u09BE\u09B8 \u09B8\u09C7\u099F \u0995\u09B0\u09C1\u09A8: \u09B8\u09AE\u09CD\u09AA\u09A8\u09CD\u09A8",
       setStatusPublished: "\u09B8\u09CD\u099F\u09CD\u09AF\u09BE\u099F\u09BE\u09B8 \u09B8\u09C7\u099F \u0995\u09B0\u09C1\u09A8: \u09AA\u09CD\u09B0\u0995\u09BE\u09B6\u09BF\u09A4",
-      duplicate: "\u09A1\u09C1\u09AA\u09CD\u09B2\u09BF\u0995\u09C7\u099F",
-      moveToResearch: "\u0997\u09AC\u09C7\u09B7\u09A3\u09BE\u09AF\u09BC \u09B8\u09B0\u09BE\u09A8",
-      publishToWordPress: "WordPress-\u098F \u09AA\u09CD\u09B0\u0995\u09BE\u09B6 \u0995\u09B0\u09C1\u09A8",
-      delete: "\u09A8\u09A5\u09BF \u0993 \u09AB\u09BE\u0987\u09B2 \u09AE\u09C1\u099B\u09C1\u09A8",
-      moveUp: "\u0989\u09AA\u09B0\u09C7 \u09B8\u09B0\u09BE\u09A8",
-      moveDown: "\u09A8\u09BF\u099A\u09C7 \u09B8\u09B0\u09BE\u09A8",
       rename: "\u09A8\u09BE\u09AE \u09AA\u09B0\u09BF\u09AC\u09B0\u09CD\u09A4\u09A8 \u0995\u09B0\u09C1\u09A8",
-      removeFromBinder: "\u09AC\u09BE\u0987\u09A8\u09CD\u09A1\u09BE\u09B0 \u09A5\u09C7\u0995\u09C7 \u09B8\u09B0\u09BE\u09A8",
-      newGroup: "\u09A8\u09A4\u09C1\u09A8 \u0997\u09CD\u09B0\u09C1\u09AA",
-      newPart: "\u09A8\u09A4\u09C1\u09A8 \u09AA\u09BE\u09B0\u09CD\u099F",
-      newChildGroup: "\u09A8\u09A4\u09C1\u09A8 \u099A\u09BE\u0987\u09B2\u09CD\u09A1 \u0997\u09CD\u09B0\u09C1\u09AA",
-      newChildPart: "\u09A8\u09A4\u09C1\u09A8 \u099A\u09BE\u0987\u09B2\u09CD\u09A1 \u09AA\u09BE\u09B0\u09CD\u099F",
       changeType: "\u09A7\u09B0\u09A8 \u09AA\u09B0\u09BF\u09AC\u09B0\u09CD\u09A4\u09A8: {{type}}"
     },
-    wordCountSuffix: "{{count}}\u09B6",
-    fileNotFound: "\u09AB\u09BE\u0987\u09B2\u099F\u09BF \u0986\u09B0 \u09A8\u09C7\u0987: {{path}}",
     deleteConfirm: {
       title: "\u09A8\u09A5\u09BF \u09AE\u09C1\u099B\u09C1\u09A8",
-      message: '"{{title}}" \u0995\u09C7 \u09AC\u09BE\u0987\u09A8\u09CD\u09A1\u09BE\u09B0 \u09A5\u09C7\u0995\u09C7 \u09B8\u09B0\u09BF\u09AF\u09BC\u09C7 \u098F\u09B0 \u09AB\u09BE\u0987\u09B2 \u099F\u09CD\u09B0\u09CD\u09AF\u09BE\u09B6\u09C7 \u09AA\u09BE\u09A0\u09BE\u09AC\u09C7\u09A8? \u09AC\u09BE\u0987\u09A8\u09CD\u09A1\u09BE\u09B0 \u098F\u09A8\u09CD\u099F\u09CD\u09B0\u09BF (\u0985\u09AC\u09B8\u09CD\u09A5\u09BE, \u09B6\u09AC\u09CD\u09A6\u09B8\u0982\u0996\u09CD\u09AF\u09BE \u09B2\u0995\u09CD\u09B7\u09CD\u09AF, \u0985\u09AC\u09B8\u09CD\u09A5\u09BE\u09A8) \u09AA\u09C1\u09A8\u09B0\u09C1\u09A6\u09CD\u09A7\u09BE\u09B0 \u0995\u09B0\u09BE \u09AF\u09BE\u09AC\u09C7 \u09A8\u09BE\u0964',
       delete: "\u09AE\u09C1\u099B\u09C1\u09A8",
       cancel: "\u09AC\u09BE\u09A4\u09BF\u09B2"
     },
-    noMatches: '"{{query}}" \u098F\u09B0 \u09B8\u09BE\u09A5\u09C7 \u09AE\u09C7\u09B2\u09C7 \u098F\u09AE\u09A8 \u0995\u09CB\u09A8\u09CB \u09A8\u09A5\u09BF \u09A8\u09C7\u0987\u0964',
     titlePrompt: {
       heading: "\u09A8\u09A4\u09C1\u09A8 \u09A8\u09A5\u09BF",
       create: "\u09A4\u09C8\u09B0\u09BF \u0995\u09B0\u09C1\u09A8"
     },
-    removeConfirm: {
-      title: "\u09AC\u09BE\u0987\u09A8\u09CD\u09A1\u09BE\u09B0 \u09A5\u09C7\u0995\u09C7 \u09B8\u09B0\u09BE\u09A8",
-      message: '"{{title}}" \u0995\u09C7 \u09AC\u09BE\u0987\u09A8\u09CD\u09A1\u09BE\u09B0 \u09A5\u09C7\u0995\u09C7 \u09B8\u09B0\u09BE\u09AC\u09C7\u09A8? \u09AB\u09BE\u0987\u09B2\u099F\u09BF \u09AD\u09B2\u09CD\u099F\u09C7 \u09A5\u09C7\u0995\u09C7 \u09AF\u09BE\u09AC\u09C7, \u0995\u09BF\u09A8\u09CD\u09A4\u09C1 \u098F\u09A8\u09CD\u099F\u09CD\u09B0\u09BF\u09B0 \u0985\u09AC\u09B8\u09CD\u09A5\u09BE, \u09B6\u09AC\u09CD\u09A6\u09B8\u0982\u0996\u09CD\u09AF\u09BE \u09B2\u0995\u09CD\u09B7\u09CD\u09AF \u098F\u09AC\u0982 \u09B0\u09AA\u09CD\u09A4\u09BE\u09A8\u09BF \u09B8\u09C7\u099F\u09BF\u0982 \u09B9\u09BE\u09B0\u09BF\u09AF\u09BC\u09C7 \u09AF\u09BE\u09AC\u09C7\u0964 \u09AD\u09C7\u09A4\u09B0\u09C7\u09B0 \u09A8\u09A5\u09BF\u0997\u09C1\u09B2\u09BF \u098F\u09B0 \u099C\u09BE\u09AF\u09BC\u0997\u09BE\u09AF\u09BC \u0989\u09A0\u09C7 \u0986\u09B8\u09AC\u09C7\u0964',
-      remove: "\u09B8\u09B0\u09BE\u09A8"
-    },
-    newGroupOrPart: "\u09A8\u09A4\u09C1\u09A8 \u0997\u09CD\u09B0\u09C1\u09AA \u09AC\u09BE \u09AA\u09BE\u09B0\u09CD\u099F",
-    untitledGroup: "\u09B6\u09BF\u09B0\u09CB\u09A8\u09BE\u09AE\u09B9\u09C0\u09A8 \u0997\u09CD\u09B0\u09C1\u09AA",
-    untitledPart: "\u09B6\u09BF\u09B0\u09CB\u09A8\u09BE\u09AE\u09B9\u09C0\u09A8 \u09AA\u09BE\u09B0\u09CD\u099F",
     strip: {
       focus: "\u09AB\u09CB\u0995\u09BE\u09B8",
       typography: "\u099F\u09BE\u0987\u09AA\u09CB\u0997\u09CD\u09B0\u09BE\u09AB\u09BF",
@@ -7245,10 +7073,7 @@ var bn_default = {
       writingLog: "\u09B2\u09C7\u0996\u09BE\u09B0 \u09B2\u0997",
       publishToWordPress: "WordPress-\u098F \u09AA\u09CD\u09B0\u0995\u09BE\u09B6 \u0995\u09B0\u09C1\u09A8"
     },
-    openDocumentFirst: "\u0986\u0997\u09C7 \u098F\u0995\u099F\u09BF \u09A8\u09A5\u09BF \u0996\u09C1\u09B2\u09C1\u09A8\u0964",
     sprintTimer: "\u09B8\u09CD\u09AA\u09CD\u09B0\u09BF\u09A8\u09CD\u099F \u099F\u09BE\u0987\u09AE\u09BE\u09B0",
-    pause: "\u23F8 \u09AC\u09BF\u09B0\u09A4\u09BF",
-    stop: "\u25A0 \u09A5\u09BE\u09AE\u09BE\u09A8",
     startSprint: "\u23F1 \u09B8\u09CD\u09AA\u09CD\u09B0\u09BF\u09A8\u09CD\u099F \u09B8\u09C7\u099F \u0986\u09AA \u0995\u09B0\u09C1\u09A8",
     quickStart: "\u09A6\u09CD\u09B0\u09C1\u09A4 \u09B8\u09CD\u09AA\u09CD\u09B0\u09BF\u09A8\u09CD\u099F \u09AC\u09BF\u0995\u09B2\u09CD\u09AA",
     today: "\u0986\u099C",
@@ -7381,7 +7206,6 @@ var bn_default = {
   },
   projectManager: {
     errorFolderExists: '\u0986\u09AA\u09A8\u09BE\u09B0 \u09AA\u09CD\u09B0\u099C\u09C7\u0995\u09CD\u099F \u09AB\u09CB\u09B2\u09CD\u09A1\u09BE\u09B0\u09C7 "{{folder}}" \u09A8\u09BE\u09AE\u09C7 \u098F\u0995\u099F\u09BF \u09AB\u09CB\u09B2\u09CD\u09A1\u09BE\u09B0 \u0987\u09A4\u09BF\u09AE\u09A7\u09CD\u09AF\u09C7 \u09B0\u09AF\u09BC\u09C7\u099B\u09C7\u0964 \u0985\u09A8\u09CD\u09AF \u098F\u0995\u099F\u09BF \u09B6\u09BF\u09B0\u09CB\u09A8\u09BE\u09AE \u09AC\u09C7\u099B\u09C7 \u09A8\u09BF\u09A8\u0964',
-    corruptBinder: '"{{project}}"-\u098F\u09B0 _binder.json \u09AB\u09BE\u0987\u09B2\u099F\u09BF \u09AA\u09A1\u09BC\u09BE \u09AF\u09BE\u09AF\u09BC\u09A8\u09BF\u0964 \u09AA\u09CD\u09B0\u099C\u09C7\u0995\u09CD\u099F \u09AB\u09CB\u09B2\u09CD\u09A1\u09BE\u09B0\u09C7 _binder.json.bak \u09A8\u09BE\u09AE\u09C7 \u098F\u0995\u099F\u09BF \u09AC\u09CD\u09AF\u09BE\u0995\u0986\u09AA \u09B8\u0982\u09B0\u0995\u09CD\u09B7\u09A3 \u0995\u09B0\u09BE \u09B9\u09AF\u09BC\u09C7\u099B\u09C7\u0964',
     corruptProject: '"{{folder}}"-\u098F\u09B0 \u09AA\u09CD\u09B0\u099C\u09C7\u0995\u09CD\u099F \u09AB\u09BE\u0987\u09B2\u099F\u09BF \u0995\u09CD\u09B7\u09A4\u09BF\u0997\u09CD\u09B0\u09B8\u09CD\u09A4 \u098F\u09AC\u0982 \u09AA\u09CD\u09B0\u099C\u09C7\u0995\u09CD\u099F\u099F\u09BF \u09B2\u09CB\u09A1 \u0995\u09B0\u09BE \u09AF\u09BE\u09AF\u09BC\u09A8\u09BF\u0964',
     corruptLog: "{{project}} \u098F\u09B0 \u09B2\u09C7\u0996\u09BE\u09B0 \u09B2\u0997 \u09AA\u09A1\u09BC\u09BE \u09AF\u09BE\u09AF\u09BC\u09A8\u09BF \u2014 \u09A8\u09A4\u09C1\u09A8 \u09B2\u0997 \u09B6\u09C1\u09B0\u09C1 \u09B9\u099A\u09CD\u099B\u09C7\u0964"
   },
@@ -7473,7 +7297,6 @@ var bn_default = {
     scopeCurrent: "\u09AC\u09B0\u09CD\u09A4\u09AE\u09BE\u09A8 \u09A8\u09A5\u09BF",
     scopeProject: "\u09AA\u09C1\u09B0\u09CB \u09AA\u09CD\u09B0\u0995\u09B2\u09CD\u09AA (\u09AC\u09BE\u0987\u09A8\u09CD\u09A1\u09BE\u09B0 \u0995\u09CD\u09B0\u09AE\u09C7)",
     includeFrontmatter: "\u09AB\u09CD\u09B0\u09A8\u09CD\u099F\u09AE\u09CD\u09AF\u09BE\u099F\u09BE\u09B0 \u0985\u09A8\u09CD\u09A4\u09B0\u09CD\u09AD\u09C1\u0995\u09CD\u09A4 \u0995\u09B0\u09C1\u09A8",
-    includeResearch: "\u0997\u09AC\u09C7\u09B7\u09A3\u09BE \u09A8\u09CB\u099F \u0985\u09A8\u09CD\u09A4\u09B0\u09CD\u09AD\u09C1\u0995\u09CD\u09A4 \u0995\u09B0\u09C1\u09A8",
     includeTitlesAsHeadings: "\u09A8\u09A5\u09BF\u09B0 \u09B6\u09BF\u09B0\u09CB\u09A8\u09BE\u09AE \u09B9\u09C7\u09A1\u09BF\u0982 \u09B9\u09BF\u09B8\u09C7\u09AC\u09C7 \u0985\u09A8\u09CD\u09A4\u09B0\u09CD\u09AD\u09C1\u0995\u09CD\u09A4 \u0995\u09B0\u09C1\u09A8",
     addTitlePage: "\u09B6\u09BF\u09B0\u09CB\u09A8\u09BE\u09AE \u09AA\u09C3\u09B7\u09CD\u09A0\u09BE \u09AF\u09CB\u0997 \u0995\u09B0\u09C1\u09A8",
     addTitlePageDesc: "\u09AA\u09CD\u09B0\u0995\u09B2\u09CD\u09AA\u09C7\u09B0 \u09B6\u09BF\u09B0\u09CB\u09A8\u09BE\u09AE, \u09B2\u09C7\u0996\u0995 \u0993 \u09A4\u09BE\u09B0\u09BF\u0996 \u09B8\u09B9 \u09B6\u09BF\u09B0\u09CB\u09A8\u09BE\u09AE \u09AA\u09C3\u09B7\u09CD\u09A0\u09BE \u09AF\u09CB\u0997 \u0995\u09B0\u09C1\u09A8\u0964",
@@ -7588,16 +7411,6 @@ var bn_default = {
     },
     close: "\u09AC\u09A8\u09CD\u09A7 \u0995\u09B0\u09C1\u09A8"
   },
-  addToProject: {
-    title: "\u09B2\u09C7\u0996\u09BE\u09B0 \u09AA\u09CD\u09B0\u0995\u09B2\u09CD\u09AA\u09C7 \u09AF\u09CB\u0997 \u0995\u09B0\u09C1\u09A8",
-    noProjects: "\u0995\u09CB\u09A8\u09CB \u09B2\u09C7\u0996\u09BE\u09B0 \u09AA\u09CD\u09B0\u0995\u09B2\u09CD\u09AA \u09AA\u09BE\u0993\u09AF\u09BC\u09BE \u09AF\u09BE\u09AF\u09BC\u09A8\u09BF\u0964 \u0986\u0997\u09C7 \u098F\u0995\u099F\u09BF \u09AA\u09CD\u09B0\u0995\u09B2\u09CD\u09AA \u09A4\u09C8\u09B0\u09BF \u0995\u09B0\u09C1\u09A8\u0964",
-    close: "\u09AC\u09A8\u09CD\u09A7 \u0995\u09B0\u09C1\u09A8",
-    file: "\u09AB\u09BE\u0987\u09B2: {{path}}",
-    projectName: "\u09B2\u09C7\u0996\u09BE\u09B0 \u09AA\u09CD\u09B0\u0995\u09B2\u09CD\u09AA",
-    projectDesc: "\u0986\u09AA\u09A8\u09BF \u0995\u09CB\u09A8 \u09B2\u09C7\u0996\u09BE\u09B0 \u09AA\u09CD\u09B0\u0995\u09B2\u09CD\u09AA\u09C7 \u098F\u0987 \u09AB\u09BE\u0987\u09B2\u099F\u09BF \u09AF\u09CB\u0997 \u0995\u09B0\u09A4\u09C7 \u099A\u09BE\u09A8?",
-    addBtn: "\u09AA\u09CD\u09B0\u0995\u09B2\u09CD\u09AA\u09C7 \u09AF\u09CB\u0997 \u0995\u09B0\u09C1\u09A8",
-    cancel: "\u09AC\u09BE\u09A4\u09BF\u09B2"
-  },
   scanFolder: {
     title: "\u09AC\u09BE\u0987\u09A8\u09CD\u09A1\u09BE\u09B0\u09C7 \u09AB\u09BE\u0987\u09B2 \u09AF\u09CB\u0997 \u0995\u09B0\u09C1\u09A8",
     desc: "\u098F\u0987 \u09AA\u09CD\u09B0\u0995\u09B2\u09CD\u09AA\u09C7 \u09AF\u09CB\u0997 \u0995\u09B0\u09BE\u09B0 \u099C\u09A8\u09CD\u09AF \u09AB\u09BE\u0987\u09B2 \u09A8\u09BF\u09B0\u09CD\u09AC\u09BE\u099A\u09A8 \u0995\u09B0\u09C1\u09A8:",
@@ -7625,7 +7438,6 @@ var bn_default = {
       setWordCountGoal: "\u09B6\u09AC\u09CD\u09A6 \u09B8\u0982\u0996\u09CD\u09AF\u09BE\u09B0 \u09B2\u0995\u09CD\u09B7\u09CD\u09AF \u09A8\u09BF\u09B0\u09CD\u09A7\u09BE\u09B0\u09A3 \u0995\u09B0\u09C1\u09A8",
       openWritingLog: "\u09B0\u09BE\u0987\u099F\u09BF\u0982 \u09B2\u0997 \u0996\u09C1\u09B2\u09C1\u09A8",
       openFolderSidebar: "\u09B8\u09BE\u0987\u09A1\u09AC\u09BE\u09B0 \u098F\u0995\u09CD\u09B8\u09AA\u09CD\u09B2\u09CB\u09B0\u09BE\u09B0\u09C7 \u09AB\u09CB\u09B2\u09CD\u09A1\u09BE\u09B0 \u0996\u09C1\u09B2\u09C1\u09A8",
-      addFilesToBinder: "\u09A8\u09A4\u09C1\u09A8 \u09AB\u09BE\u0987\u09B2\u09C7\u09B0 \u099C\u09A8\u09CD\u09AF \u09AA\u09CD\u09B0\u0995\u09B2\u09CD\u09AA \u09AB\u09CB\u09B2\u09CD\u09A1\u09BE\u09B0 \u09B8\u09CD\u0995\u09CD\u09AF\u09BE\u09A8 \u0995\u09B0\u09C1\u09A8",
       restoreBinderLayout: "\u09AC\u09BE\u0987\u09A8\u09CD\u09A1\u09BE\u09B0\u09C7\u09B0 \u0986\u0997\u09C7\u09B0 \u09AC\u09BF\u09A8\u09CD\u09AF\u09BE\u09B8 \u09AB\u09BF\u09B0\u09BF\u09AF\u09BC\u09C7 \u0986\u09A8\u09C1\u09A8"
     },
     menu: {
@@ -7635,7 +7447,6 @@ var bn_default = {
       setGoal: "\u09B6\u09AC\u09CD\u09A6 \u09B8\u0982\u0996\u09CD\u09AF\u09BE\u09B0 \u09B2\u0995\u09CD\u09B7\u09CD\u09AF \u09A8\u09BF\u09B0\u09CD\u09A7\u09BE\u09B0\u09A3 \u0995\u09B0\u09C1\u09A8",
       switchMode: "\u09B0\u09BE\u0987\u099F\u09BF\u0982 \u09AE\u09CB\u09A1 \u09AA\u09B0\u09BF\u09AC\u09B0\u09CD\u09A4\u09A8 \u0995\u09B0\u09C1\u09A8 \u2192",
       typographyFont: "\u099F\u09BE\u0987\u09AA\u09CB\u0997\u09CD\u09B0\u09BE\u09AB\u09BF \u09AB\u09A8\u09CD\u099F \u2192",
-      addToProject: "\u09B0\u09BE\u0987\u099F\u09BF\u0982 \u09AA\u09CD\u09B0\u099C\u09C7\u0995\u09CD\u099F\u09C7 \u09AF\u09CB\u0997 \u0995\u09B0\u09C1\u09A8",
       openSidebar: "\u09B8\u09BE\u0987\u09A1\u09AC\u09BE\u09B0 \u098F\u0995\u09CD\u09B8\u09AA\u09CD\u09B2\u09CB\u09B0\u09BE\u09B0\u09C7 \u0996\u09C1\u09B2\u09C1\u09A8",
       draftMode: "\u270D \u09A1\u09CD\u09B0\u09BE\u09AB\u099F \u09AE\u09CB\u09A1",
       editMode: "\u270E \u098F\u09A1\u09BF\u099F \u09AE\u09CB\u09A1",
@@ -7643,8 +7454,7 @@ var bn_default = {
       normalMode: "\u09B8\u09CD\u09AC\u09BE\u09AD\u09BE\u09AC\u09BF\u0995 (\u0995\u09CB\u09A8\u09CB \u09AE\u09CB\u09A1 \u09A8\u09C7\u0987)"
     },
     notice: {
-      noMarkdownOpen: "\u09AC\u09B0\u09CD\u09A4\u09AE\u09BE\u09A8\u09C7 \u0995\u09CB\u09A8\u09CB Markdown \u09AB\u09BE\u0987\u09B2 \u0996\u09CB\u09B2\u09BE \u09A8\u09C7\u0987\u0964",
-      addedToProject: '"{{file}}" {{project}}-\u098F \u09AF\u09CB\u0997 \u0995\u09B0\u09BE \u09B9\u09AF\u09BC\u09C7\u099B\u09C7'
+      noMarkdownOpen: "\u09AC\u09B0\u09CD\u09A4\u09AE\u09BE\u09A8\u09C7 \u0995\u09CB\u09A8\u09CB Markdown \u09AB\u09BE\u0987\u09B2 \u0996\u09CB\u09B2\u09BE \u09A8\u09C7\u0987\u0964"
     },
     statusBar: {
       projectWords: "{{total}} / {{goal}} \u09AA\u09CD\u09B0\u099C\u09C7\u0995\u09CD\u099F \u09B6\u09AC\u09CD\u09A6",
@@ -7696,6 +7506,13 @@ var bn_default = {
   epub: {
     toc: "\u09B8\u09C2\u099A\u09BF\u09AA\u09A4\u09CD\u09B0",
     cover: "\u09AA\u09CD\u09B0\u099A\u09CD\u099B\u09A6"
+  },
+  binderUpdate: {
+    title: "\u09AC\u09BE\u0987\u09A8\u09CD\u09A1\u09BE\u09B0 \u0993 \u09AB\u09CB\u09B2\u09CD\u09A1\u09BE\u09B0 \u098F\u0996\u09A8 \u09B8\u09AC\u09B8\u09AE\u09AF\u09BC \u09AE\u09BF\u09B2\u09C7 \u09A5\u09BE\u0995\u09C7",
+    body1: "\u09AC\u09BE\u0987\u09A8\u09CD\u09A1\u09BE\u09B0 \u098F\u0996\u09A8 \u09B8\u09B0\u09BE\u09B8\u09B0\u09BF \u0986\u09AA\u09A8\u09BE\u09B0 \u09AB\u09CB\u09B2\u09CD\u09A1\u09BE\u09B0\u0997\u09C1\u09B2\u09BF \u09AA\u09A1\u09BC\u09C7, \u09A4\u09BE\u0987 \u09A6\u09C1\u099F\u09BF \u0995\u0996\u09A8\u0993 \u0985\u09AE\u09BF\u09B2 \u09B9\u09A4\u09C7 \u09AA\u09BE\u09B0\u09C7 \u09A8\u09BE\u0964 \u0986\u09AA\u09A8\u09BF \u098F\u0996\u09BE\u09A8\u09C7 \u09AC\u09BE \u0986\u09AA\u09A8\u09BE\u09B0 \u0995\u09AE\u09CD\u09AA\u09BF\u0989\u099F\u09BE\u09B0\u09C7\u09B0 \u09AB\u09BE\u0987\u09B2 \u098F\u0995\u09CD\u09B8\u09AA\u09CD\u09B2\u09CB\u09B0\u09BE\u09B0\u09C7 \u0995\u09BE\u099C \u09B8\u09BE\u099C\u09BE\u09A4\u09C7 \u09AA\u09BE\u09B0\u09C7\u09A8 \u2014 \u09A6\u09C1\u099F\u09BF \u09B8\u09AC\u09B8\u09AE\u09AF\u09BC \u09AE\u09BF\u09B2\u09C7 \u09A5\u09BE\u0995\u09AC\u09C7\u0964",
+    body2: "\u098F\u09B0 \u099C\u09A8\u09CD\u09AF, \u09AC\u09BF\u09A6\u09CD\u09AF\u09AE\u09BE\u09A8 \u09AA\u09CD\u09B0\u099C\u09C7\u0995\u09CD\u099F \u09AA\u09CD\u09B0\u09A5\u09AE\u09AC\u09BE\u09B0 \u0996\u09C1\u09B2\u09B2\u09C7 \u098F\u099F\u09BF \u09AB\u09CB\u09B2\u09CD\u09A1\u09BE\u09B0 \u09A4\u09C8\u09B0\u09BF \u0995\u09B0\u09C7 \u098F\u09AC\u0982 \u0986\u09AA\u09A8\u09BE\u09B0 \u09AA\u09C1\u09B0\u09BE\u09A8\u09CB \u09AC\u09BE\u0987\u09A8\u09CD\u09A1\u09BE\u09B0\u09C7\u09B0 \u09B8\u09BE\u09A5\u09C7 \u09AE\u09C7\u09B2\u09BE\u09A4\u09C7 \u09A1\u0995\u09C1\u09AE\u09C7\u09A8\u09CD\u099F\u0997\u09C1\u09B2\u09BF \u09B8\u09B0\u09BE\u09AF\u09BC\u0964 \u0995\u09BF\u099B\u09C1\u0987 \u09AE\u09C1\u099B\u09C7 \u09AB\u09C7\u09B2\u09BE \u09B9\u09AF\u09BC \u09A8\u09BE, \u098F\u09AC\u0982 \u0986\u09AA\u09A8\u09BE\u09B0 \u09B2\u09C7\u0996\u09BE\u09B0 \u0995\u09BF\u099B\u09C1\u0987 \u09AC\u09A6\u09B2\u09BE\u09AF\u09BC \u09A8\u09BE\u0964",
+    body3: '\u0986\u0997\u09C7\u09B0 \u09AC\u09BF\u09A8\u09CD\u09AF\u09BE\u09B8 \u09AA\u099B\u09A8\u09CD\u09A6 \u09B9\u09B2\u09C7 \u09AB\u09CB\u09B2\u09CD\u09A1\u09BE\u09B0\u0997\u09C1\u09B2\u09BF \u09AB\u09BF\u09B0\u09BF\u09AF\u09BC\u09C7 \u0986\u09A8\u09A4\u09C7 \u09AA\u09BE\u09B0\u09C7\u09A8: \u0995\u09AE\u09BE\u09A8\u09CD\u09A1 \u09AA\u09CD\u09AF\u09BE\u09B2\u09C7\u099F \u0996\u09C1\u09B2\u09C1\u09A8 (Ctrl+P \u099A\u09BE\u09AA\u09C1\u09A8, Mac-\u098F Cmd+P) \u098F\u09AC\u0982 "\u09AC\u09BE\u0987\u09A8\u09CD\u09A1\u09BE\u09B0\u09C7\u09B0 \u0986\u0997\u09C7\u09B0 \u09AC\u09BF\u09A8\u09CD\u09AF\u09BE\u09B8 \u09AB\u09BF\u09B0\u09BF\u09AF\u09BC\u09C7 \u0986\u09A8\u09C1\u09A8" \u0996\u09C1\u0981\u099C\u09C1\u09A8\u0964 \u0986\u09AA\u09A1\u09C7\u099F\u09C7\u09B0 \u09A4\u09C8\u09B0\u09BF \u0995\u09AF\u09BC\u09C7\u0995\u099F\u09BF \u0996\u09BE\u09B2\u09BF \u09AB\u09CB\u09B2\u09CD\u09A1\u09BE\u09B0 \u09A5\u09C7\u0995\u09C7 \u09AF\u09C7\u09A4\u09C7 \u09AA\u09BE\u09B0\u09C7; \u09B8\u09C7\u0997\u09C1\u09B2\u09BF \u09AE\u09C1\u099B\u09C7 \u09AB\u09C7\u09B2\u09A4\u09C7 \u09AA\u09BE\u09B0\u09C7\u09A8\u0964',
+    gotIt: "\u09AC\u09C1\u099D\u09C7\u099B\u09BF"
   }
 };
 
@@ -7730,10 +7547,7 @@ var pt_BR_default = {
         note: "Nota"
       },
       frontmatterAutoUpdate: "Atualiza\xE7\xE3o autom\xE1tica do frontmatter",
-      frontmatterAutoUpdateDesc: "Atualizar automaticamente a contagem de palavras e a data de modifica\xE7\xE3o ao salvar.",
-      experimentalHeading: "Experimental",
-      filesystemBinder: "Fich\xE1rio do sistema de arquivos",
-      filesystemBinderDesc: "Pr\xE9via do fich\xE1rio redesenhado: mostra a \xE1rvore de pastas do projeto diretamente, somente leitura. Desative para voltar ao fich\xE1rio cl\xE1ssico."
+      frontmatterAutoUpdateDesc: "Atualizar automaticamente a contagem de palavras e a data de modifica\xE7\xE3o ao salvar."
     },
     focus: {
       heading: "Modo foco",
@@ -7859,61 +7673,27 @@ var pt_BR_default = {
     displayText: "Pasta de escrita",
     selectProject: "\u2014 selecionar projeto \u2014",
     newProject: "Novo projeto",
-    addDocument: "+ documento",
-    addFiles: "Adicionar arquivos copiados para esta pasta",
     targetsDashboard: "Painel de metas",
-    searchPlaceholder: "Pesquisar documentos\u2026",
     noProjectSelected: "Nenhum projeto selecionado. Crie ou selecione um projeto de escrita para come\xE7ar.",
-    noDocuments: 'Nenhum documento ainda. Clique em "+ documento" para adicionar um.',
-    dropToRoot: "\u2193 soltar aqui para promover \xE0 raiz",
     selectProjectFirst: "Selecione um projeto primeiro.",
-    cannotFindFile: "N\xE3o \xE9 poss\xEDvel encontrar o arquivo: {{filePath}}. Tente renome\xE1-lo ou vincul\xE1-lo novamente.",
     untitledDocument: "Sem t\xEDtulo {{time}}",
-    noNewFiles: "Nenhum arquivo novo encontrado na pasta do projeto.",
-    pctComplete: "{{pct}}% conclu\xEDdo",
-    copySuffix: "(C\xF3pia)",
     menu: {
-      openDocument: "Abrir documento",
-      newChildDocument: "Novo documento filho",
       setStatusDraft: "Definir status: rascunho",
       setStatusInProgress: "Definir status: em andamento",
       setStatusComplete: "Definir status: conclu\xEDdo",
       setStatusPublished: "Definir status: publicado",
-      duplicate: "Duplicar",
-      moveToResearch: "Mover para pesquisa",
-      publishToWordPress: "Publicar no WordPress",
-      delete: "Excluir documento e arquivo",
-      moveUp: "Mover para cima",
-      moveDown: "Mover para baixo",
       rename: "Renomear",
-      removeFromBinder: "Remover da pasta",
-      newGroup: "Novo grupo",
-      newPart: "Nova parte",
-      newChildGroup: "Novo grupo filho",
-      newChildPart: "Nova parte filha",
       changeType: "Alterar tipo: {{type}}"
     },
-    wordCountSuffix: "{{count}}p",
-    fileNotFound: "O arquivo n\xE3o existe mais: {{path}}",
     deleteConfirm: {
       title: "Excluir documento",
-      message: 'Remover "{{title}}" da pasta de escrita e mover seu arquivo para a lixeira? A entrada da pasta (status, meta de palavras, posi\xE7\xE3o) n\xE3o pode ser restaurada.',
       delete: "Excluir",
       cancel: "Cancelar"
     },
-    noMatches: 'Nenhum documento corresponde a "{{query}}".',
     titlePrompt: {
       heading: "Novo documento",
       create: "Criar"
     },
-    removeConfirm: {
-      title: "Remover da pasta",
-      message: 'Remover "{{title}}" da pasta? O arquivo permanece no seu vault, mas o status, a meta de palavras e a configura\xE7\xE3o de exporta\xE7\xE3o da entrada s\xE3o perdidos. Documentos aninhados sobem para o lugar dele.',
-      remove: "Remover"
-    },
-    newGroupOrPart: "Novo grupo ou parte",
-    untitledGroup: "Grupo sem t\xEDtulo",
-    untitledPart: "Parte sem t\xEDtulo",
     strip: {
       focus: "Foco",
       typography: "Tipografia",
@@ -8001,10 +7781,7 @@ var pt_BR_default = {
       writingLog: "Di\xE1rio de escrita",
       publishToWordPress: "Publicar no WordPress"
     },
-    openDocumentFirst: "Abra um documento primeiro.",
     sprintTimer: "Cron\xF4metro de sprint",
-    pause: "\u23F8 Pausar",
-    stop: "\u25A0 Parar",
     startSprint: "\u23F1 Configurar sprint",
     quickStart: "Op\xE7\xF5es r\xE1pidas de sprint",
     today: "Hoje",
@@ -8137,7 +7914,6 @@ var pt_BR_default = {
   },
   projectManager: {
     errorFolderExists: 'J\xE1 existe uma pasta chamada "{{folder}}" na sua pasta de projetos. Escolha um t\xEDtulo diferente.',
-    corruptBinder: 'N\xE3o foi poss\xEDvel ler o arquivo _binder.json de "{{project}}". Um backup foi salvo como _binder.json.bak na pasta do projeto.',
     corruptProject: 'O arquivo de projeto em "{{folder}}" est\xE1 corrompido e o projeto n\xE3o p\xF4de ser carregado.',
     corruptLog: "N\xE3o foi poss\xEDvel ler o registro de escrita de {{project}} \u2014 iniciando um novo registro."
   },
@@ -8229,7 +8005,6 @@ var pt_BR_default = {
     scopeCurrent: "Documento atual",
     scopeProject: "Projeto inteiro (na ordem do binder)",
     includeFrontmatter: "Incluir metadados",
-    includeResearch: "Incluir notas de pesquisa",
     includeTitlesAsHeadings: "Incluir t\xEDtulos de documentos como t\xEDtulos",
     addTitlePage: "Adicionar p\xE1gina de t\xEDtulo",
     addTitlePageDesc: "Adiciona uma p\xE1gina de t\xEDtulo com o t\xEDtulo do projeto, autor e data.",
@@ -8344,16 +8119,6 @@ var pt_BR_default = {
     },
     close: "Fechar"
   },
-  addToProject: {
-    title: "Adicionar a projeto de escrita",
-    noProjects: "Nenhum projeto de escrita encontrado. Crie um projeto primeiro.",
-    close: "Fechar",
-    file: "Arquivo: {{path}}",
-    projectName: "Projeto de escrita",
-    projectDesc: "A qual projeto de escrita voc\xEA deseja adicionar este arquivo?",
-    addBtn: "Adicionar ao projeto",
-    cancel: "Cancelar"
-  },
   scanFolder: {
     title: "Adicionar arquivos ao binder",
     desc: "Selecione os arquivos para adicionar a este projeto:",
@@ -8381,7 +8146,6 @@ var pt_BR_default = {
       setWordCountGoal: "Definir meta de contagem de palavras",
       openWritingLog: "Abrir registro de escrita",
       openFolderSidebar: "Abrir pasta no explorador lateral",
-      addFilesToBinder: "Verificar novos arquivos na pasta do projeto",
       restoreBinderLayout: "Restaurar o layout anterior da pasta de escrita"
     },
     menu: {
@@ -8391,7 +8155,6 @@ var pt_BR_default = {
       setGoal: "Definir meta de palavras",
       switchMode: "Mudar modo de escrita \u2192",
       typographyFont: "Fonte tipogr\xE1fica \u2192",
-      addToProject: "Adicionar ao projeto de escrita",
       openSidebar: "Abrir no explorador lateral",
       draftMode: "\u270D Modo rascunho",
       editMode: "\u270E Modo edi\xE7\xE3o",
@@ -8399,8 +8162,7 @@ var pt_BR_default = {
       normalMode: "Normal (sem modo)"
     },
     notice: {
-      noMarkdownOpen: "Nenhum arquivo Markdown est\xE1 aberto no momento.",
-      addedToProject: '"{{file}}" adicionado a {{project}}'
+      noMarkdownOpen: "Nenhum arquivo Markdown est\xE1 aberto no momento."
     },
     statusBar: {
       projectWords: "{{total}} / {{goal}} palavras do projeto",
@@ -8452,6 +8214,13 @@ var pt_BR_default = {
   epub: {
     toc: "Sum\xE1rio",
     cover: "Capa"
+  },
+  binderUpdate: {
+    title: "Sua pasta de escrita e suas pastas agora ficam sempre em sincronia",
+    body1: "A pasta de escrita agora l\xEA suas pastas diretamente, ent\xE3o as duas nunca podem ficar fora de sincronia. Voc\xEA pode organizar seu trabalho aqui ou no explorador de arquivos do computador \u2014 os dois sempre v\xE3o coincidir.",
+    body2: "Para isso, na primeira vez que voc\xEA abrir um projeto existente, ele cria pastas e move seus documentos para refletir sua pasta de escrita antiga. Nada \xE9 exclu\xEDdo, e nada do que voc\xEA escreveu \xE9 alterado.",
+    body3: 'Se voc\xEA preferia sua organiza\xE7\xE3o anterior, pode restaurar suas pastas: abra a paleta de comandos (pressione Ctrl+P, ou Cmd+P no Mac) e procure por "Restaurar o layout anterior da pasta de escrita". Algumas pastas vazias criadas pela atualiza\xE7\xE3o podem permanecer; voc\xEA pode exclu\xED-las.',
+    gotIt: "Entendi"
   }
 };
 
@@ -8486,10 +8255,7 @@ var ru_default = {
         note: "\u0417\u0430\u043C\u0435\u0442\u043A\u0430"
       },
       frontmatterAutoUpdate: "\u0410\u0432\u0442\u043E\u043E\u0431\u043D\u043E\u0432\u043B\u0435\u043D\u0438\u0435 \u043C\u0435\u0442\u0430\u0434\u0430\u043D\u043D\u044B\u0445",
-      frontmatterAutoUpdateDesc: "\u0410\u0432\u0442\u043E\u043C\u0430\u0442\u0438\u0447\u0435\u0441\u043A\u0438 \u043E\u0431\u043D\u043E\u0432\u043B\u044F\u0442\u044C \u043A\u043E\u043B\u0438\u0447\u0435\u0441\u0442\u0432\u043E \u0441\u043B\u043E\u0432 \u0438 \u0434\u0430\u0442\u0443 \u0438\u0437\u043C\u0435\u043D\u0435\u043D\u0438\u044F \u043F\u0440\u0438 \u0441\u043E\u0445\u0440\u0430\u043D\u0435\u043D\u0438\u0438.",
-      experimentalHeading: "\u042D\u043A\u0441\u043F\u0435\u0440\u0438\u043C\u0435\u043D\u0442\u0430\u043B\u044C\u043D\u044B\u0435 \u0444\u0443\u043D\u043A\u0446\u0438\u0438",
-      filesystemBinder: "\u0424\u0430\u0439\u043B\u043E\u0432\u044B\u0439 \u0441\u043A\u043E\u0440\u043E\u0441\u0448\u0438\u0432\u0430\u0442\u0435\u043B\u044C",
-      filesystemBinderDesc: "\u041F\u0440\u0435\u0434\u0432\u0430\u0440\u0438\u0442\u0435\u043B\u044C\u043D\u0430\u044F \u0432\u0435\u0440\u0441\u0438\u044F \u043F\u0435\u0440\u0435\u0440\u0430\u0431\u043E\u0442\u0430\u043D\u043D\u043E\u0433\u043E \u0441\u043A\u043E\u0440\u043E\u0441\u0448\u0438\u0432\u0430\u0442\u0435\u043B\u044F: \u043F\u043E\u043A\u0430\u0437\u044B\u0432\u0430\u0435\u0442 \u0434\u0435\u0440\u0435\u0432\u043E \u043F\u0430\u043F\u043A\u0438 \u043F\u0440\u043E\u0435\u043A\u0442\u0430 \u043D\u0430\u043F\u0440\u044F\u043C\u0443\u044E, \u0442\u043E\u043B\u044C\u043A\u043E \u0434\u043B\u044F \u0447\u0442\u0435\u043D\u0438\u044F. \u041E\u0442\u043A\u043B\u044E\u0447\u0438\u0442\u0435, \u0447\u0442\u043E\u0431\u044B \u0432\u0435\u0440\u043D\u0443\u0442\u044C\u0441\u044F \u043A \u043A\u043B\u0430\u0441\u0441\u0438\u0447\u0435\u0441\u043A\u043E\u043C\u0443 \u0441\u043A\u043E\u0440\u043E\u0441\u0448\u0438\u0432\u0430\u0442\u0435\u043B\u044E."
+      frontmatterAutoUpdateDesc: "\u0410\u0432\u0442\u043E\u043C\u0430\u0442\u0438\u0447\u0435\u0441\u043A\u0438 \u043E\u0431\u043D\u043E\u0432\u043B\u044F\u0442\u044C \u043A\u043E\u043B\u0438\u0447\u0435\u0441\u0442\u0432\u043E \u0441\u043B\u043E\u0432 \u0438 \u0434\u0430\u0442\u0443 \u0438\u0437\u043C\u0435\u043D\u0435\u043D\u0438\u044F \u043F\u0440\u0438 \u0441\u043E\u0445\u0440\u0430\u043D\u0435\u043D\u0438\u0438."
     },
     focus: {
       heading: "\u0420\u0435\u0436\u0438\u043C \u0444\u043E\u043A\u0443\u0441\u0438\u0440\u043E\u0432\u043A\u0438",
@@ -8615,61 +8381,27 @@ var ru_default = {
     displayText: "\u041F\u0430\u043F\u043A\u0430 \u0434\u043B\u044F \u0437\u0430\u043F\u0438\u0441\u0435\u0439",
     selectProject: "\u2014 \u0432\u044B\u0431\u0435\u0440\u0438\u0442\u0435 \u043F\u0440\u043E\u0435\u043A\u0442 \u2014",
     newProject: "\u041D\u043E\u0432\u044B\u0439 \u043F\u0440\u043E\u0435\u043A\u0442",
-    addDocument: "+ \u0434\u043E\u043A\u0443\u043C\u0435\u043D\u0442",
-    addFiles: "\u0414\u043E\u0431\u0430\u0432\u0438\u0442\u044C \u0444\u0430\u0439\u043B\u044B, \u0441\u043A\u043E\u043F\u0438\u0440\u043E\u0432\u0430\u043D\u043D\u044B\u0435 \u0432 \u044D\u0442\u0443 \u043F\u0430\u043F\u043A\u0443",
     targetsDashboard: "\u041F\u0430\u043D\u0435\u043B\u044C \u0446\u0435\u043B\u0435\u0439",
-    searchPlaceholder: "\u041F\u043E\u0438\u0441\u043A \u0434\u043E\u043A\u0443\u043C\u0435\u043D\u0442\u043E\u0432\u2026",
     noProjectSelected: "\u041F\u0440\u043E\u0435\u043A\u0442 \u043D\u0435 \u0432\u044B\u0431\u0440\u0430\u043D. \u0421\u043E\u0437\u0434\u0430\u0439\u0442\u0435 \u0438\u043B\u0438 \u0432\u044B\u0431\u0435\u0440\u0438\u0442\u0435 \u043F\u0438\u0441\u044C\u043C\u0435\u043D\u043D\u044B\u0439 \u043F\u0440\u043E\u0435\u043A\u0442 \u0434\u043B\u044F \u043D\u0430\u0447\u0430\u043B\u0430 \u0440\u0430\u0431\u043E\u0442\u044B.",
-    noDocuments: "\u0414\u043E\u043A\u0443\u043C\u0435\u043D\u0442\u043E\u0432 \u043F\u043E\u043A\u0430 \u043D\u0435\u0442. \u041D\u0430\u0436\u043C\u0438\u0442\u0435 \xAB+ \u0434\u043E\u043A\u0443\u043C\u0435\u043D\u0442\xBB, \u0447\u0442\u043E\u0431\u044B \u0434\u043E\u0431\u0430\u0432\u0438\u0442\u044C.",
-    dropToRoot: "\u2193 \u043F\u0435\u0440\u0435\u0442\u0430\u0449\u0438\u0442\u0435 \u0441\u044E\u0434\u0430, \u0447\u0442\u043E\u0431\u044B \u043F\u0435\u0440\u0435\u043C\u0435\u0441\u0442\u0438\u0442\u044C \u0432 \u043A\u043E\u0440\u0435\u043D\u044C",
     selectProjectFirst: "\u0421\u043D\u0430\u0447\u0430\u043B\u0430 \u0432\u044B\u0431\u0435\u0440\u0438\u0442\u0435 \u043F\u0440\u043E\u0435\u043A\u0442.",
-    cannotFindFile: "\u041D\u0435 \u0443\u0434\u0430\u0451\u0442\u0441\u044F \u043D\u0430\u0439\u0442\u0438 \u0444\u0430\u0439\u043B: {{filePath}}. \u041F\u043E\u043F\u0440\u043E\u0431\u0443\u0439\u0442\u0435 \u043F\u0435\u0440\u0435\u0438\u043C\u0435\u043D\u043E\u0432\u0430\u0442\u044C \u0438\u043B\u0438 \u043F\u043E\u0432\u0442\u043E\u0440\u043D\u043E \u043F\u0440\u0438\u0432\u044F\u0437\u0430\u0442\u044C \u0434\u043E\u043A\u0443\u043C\u0435\u043D\u0442.",
     untitledDocument: "\u0411\u0435\u0437 \u043D\u0430\u0437\u0432\u0430\u043D\u0438\u044F {{time}}",
-    noNewFiles: "\u041D\u043E\u0432\u044B\u0445 \u0444\u0430\u0439\u043B\u043E\u0432 \u0432 \u043F\u0430\u043F\u043A\u0435 \u043F\u0440\u043E\u0435\u043A\u0442\u0430 \u043D\u0435 \u043D\u0430\u0439\u0434\u0435\u043D\u043E.",
-    pctComplete: "{{pct}}% \u0432\u044B\u043F\u043E\u043B\u043D\u0435\u043D\u043E",
-    copySuffix: "(\u041A\u043E\u043F\u0438\u044F)",
     menu: {
-      openDocument: "\u041E\u0442\u043A\u0440\u044B\u0442\u044C \u0434\u043E\u043A\u0443\u043C\u0435\u043D\u0442",
-      newChildDocument: "\u041D\u043E\u0432\u044B\u0439 \u0434\u043E\u0447\u0435\u0440\u043D\u0438\u0439 \u0434\u043E\u043A\u0443\u043C\u0435\u043D\u0442",
       setStatusDraft: "\u0423\u0441\u0442\u0430\u043D\u043E\u0432\u0438\u0442\u044C \u0441\u0442\u0430\u0442\u0443\u0441: \u0447\u0435\u0440\u043D\u043E\u0432\u0438\u043A",
       setStatusInProgress: "\u0423\u0441\u0442\u0430\u043D\u043E\u0432\u0438\u0442\u044C \u0441\u0442\u0430\u0442\u0443\u0441: \u0432 \u0440\u0430\u0431\u043E\u0442\u0435",
       setStatusComplete: "\u0423\u0441\u0442\u0430\u043D\u043E\u0432\u0438\u0442\u044C \u0441\u0442\u0430\u0442\u0443\u0441: \u0437\u0430\u0432\u0435\u0440\u0448\u0451\u043D",
       setStatusPublished: "\u0423\u0441\u0442\u0430\u043D\u043E\u0432\u0438\u0442\u044C \u0441\u0442\u0430\u0442\u0443\u0441: \u043E\u043F\u0443\u0431\u043B\u0438\u043A\u043E\u0432\u0430\u043D",
-      duplicate: "\u0414\u0443\u0431\u043B\u0438\u0440\u043E\u0432\u0430\u0442\u044C",
-      moveToResearch: "\u041F\u0435\u0440\u0435\u043C\u0435\u0441\u0442\u0438\u0442\u044C \u0432 \u0438\u0441\u0441\u043B\u0435\u0434\u043E\u0432\u0430\u043D\u0438\u044F",
-      publishToWordPress: "\u041E\u043F\u0443\u0431\u043B\u0438\u043A\u043E\u0432\u0430\u0442\u044C \u0432 WordPress",
-      delete: "\u0423\u0434\u0430\u043B\u0438\u0442\u044C \u0434\u043E\u043A\u0443\u043C\u0435\u043D\u0442 \u0438 \u0444\u0430\u0439\u043B",
-      moveUp: "\u041F\u0435\u0440\u0435\u043C\u0435\u0441\u0442\u0438\u0442\u044C \u0432\u0432\u0435\u0440\u0445",
-      moveDown: "\u041F\u0435\u0440\u0435\u043C\u0435\u0441\u0442\u0438\u0442\u044C \u0432\u043D\u0438\u0437",
       rename: "\u041F\u0435\u0440\u0435\u0438\u043C\u0435\u043D\u043E\u0432\u0430\u0442\u044C",
-      removeFromBinder: "\u0423\u0431\u0440\u0430\u0442\u044C \u0438\u0437 \u043F\u0430\u043F\u043A\u0438",
-      newGroup: "\u041D\u043E\u0432\u0430\u044F \u0433\u0440\u0443\u043F\u043F\u0430",
-      newPart: "\u041D\u043E\u0432\u0430\u044F \u0447\u0430\u0441\u0442\u044C",
-      newChildGroup: "\u041D\u043E\u0432\u0430\u044F \u0434\u043E\u0447\u0435\u0440\u043D\u044F\u044F \u0433\u0440\u0443\u043F\u043F\u0430",
-      newChildPart: "\u041D\u043E\u0432\u0430\u044F \u0434\u043E\u0447\u0435\u0440\u043D\u044F\u044F \u0447\u0430\u0441\u0442\u044C",
       changeType: "\u0418\u0437\u043C\u0435\u043D\u0438\u0442\u044C \u0442\u0438\u043F: {{type}}"
     },
-    wordCountSuffix: "{{count}}\u0441\u043B",
-    fileNotFound: "\u0424\u0430\u0439\u043B \u0431\u043E\u043B\u044C\u0448\u0435 \u043D\u0435 \u0441\u0443\u0449\u0435\u0441\u0442\u0432\u0443\u0435\u0442: {{path}}",
     deleteConfirm: {
       title: "\u0423\u0434\u0430\u043B\u0438\u0442\u044C \u0434\u043E\u043A\u0443\u043C\u0435\u043D\u0442",
-      message: "\u0423\u0431\u0440\u0430\u0442\u044C \xAB{{title}}\xBB \u0438\u0437 \u043F\u0430\u043F\u043A\u0438 \u0438 \u043F\u0435\u0440\u0435\u043C\u0435\u0441\u0442\u0438\u0442\u044C \u0435\u0433\u043E \u0444\u0430\u0439\u043B \u0432 \u043A\u043E\u0440\u0437\u0438\u043D\u0443? \u0417\u0430\u043F\u0438\u0441\u044C \u0432 \u043F\u0430\u043F\u043A\u0435 (\u0441\u0442\u0430\u0442\u0443\u0441, \u0446\u0435\u043B\u044C \u043F\u043E \u0441\u043B\u043E\u0432\u0430\u043C, \u043F\u043E\u0437\u0438\u0446\u0438\u044F) \u043D\u0435 \u043F\u043E\u0434\u043B\u0435\u0436\u0438\u0442 \u0432\u043E\u0441\u0441\u0442\u0430\u043D\u043E\u0432\u043B\u0435\u043D\u0438\u044E.",
       delete: "\u0423\u0434\u0430\u043B\u0438\u0442\u044C",
       cancel: "\u041E\u0442\u043C\u0435\u043D\u0430"
     },
-    noMatches: "\u041D\u0435\u0442 \u0434\u043E\u043A\u0443\u043C\u0435\u043D\u0442\u043E\u0432, \u0441\u043E\u043E\u0442\u0432\u0435\u0442\u0441\u0442\u0432\u0443\u044E\u0449\u0438\u0445 \xAB{{query}}\xBB.",
     titlePrompt: {
       heading: "\u041D\u043E\u0432\u044B\u0439 \u0434\u043E\u043A\u0443\u043C\u0435\u043D\u0442",
       create: "\u0421\u043E\u0437\u0434\u0430\u0442\u044C"
     },
-    removeConfirm: {
-      title: "\u0423\u0431\u0440\u0430\u0442\u044C \u0438\u0437 \u043F\u0430\u043F\u043A\u0438",
-      message: "\u0423\u0431\u0440\u0430\u0442\u044C \xAB{{title}}\xBB \u0438\u0437 \u043F\u0430\u043F\u043A\u0438? \u0424\u0430\u0439\u043B \u043E\u0441\u0442\u0430\u043D\u0435\u0442\u0441\u044F \u0432 \u0445\u0440\u0430\u043D\u0438\u043B\u0438\u0449\u0435, \u043D\u043E \u0441\u0442\u0430\u0442\u0443\u0441 \u0437\u0430\u043F\u0438\u0441\u0438, \u0446\u0435\u043B\u044C \u043F\u043E \u0441\u043B\u043E\u0432\u0430\u043C \u0438 \u043D\u0430\u0441\u0442\u0440\u043E\u0439\u043A\u0430 \u044D\u043A\u0441\u043F\u043E\u0440\u0442\u0430 \u0431\u0443\u0434\u0443\u0442 \u043F\u043E\u0442\u0435\u0440\u044F\u043D\u044B. \u0412\u043B\u043E\u0436\u0435\u043D\u043D\u044B\u0435 \u0434\u043E\u043A\u0443\u043C\u0435\u043D\u0442\u044B \u043F\u043E\u0434\u043D\u0438\u043C\u0443\u0442\u0441\u044F \u043D\u0430 \u0435\u0433\u043E \u043C\u0435\u0441\u0442\u043E.",
-      remove: "\u0423\u0431\u0440\u0430\u0442\u044C"
-    },
-    newGroupOrPart: "\u041D\u043E\u0432\u0430\u044F \u0433\u0440\u0443\u043F\u043F\u0430 \u0438\u043B\u0438 \u0447\u0430\u0441\u0442\u044C",
-    untitledGroup: "\u0413\u0440\u0443\u043F\u043F\u0430 \u0431\u0435\u0437 \u043D\u0430\u0437\u0432\u0430\u043D\u0438\u044F",
-    untitledPart: "\u0427\u0430\u0441\u0442\u044C \u0431\u0435\u0437 \u043D\u0430\u0437\u0432\u0430\u043D\u0438\u044F",
     strip: {
       focus: "\u0424\u043E\u043A\u0443\u0441",
       typography: "\u0422\u0438\u043F\u043E\u0433\u0440\u0430\u0444\u0438\u043A\u0430",
@@ -8761,10 +8493,7 @@ var ru_default = {
       writingLog: "\u0416\u0443\u0440\u043D\u0430\u043B \u043F\u0438\u0441\u044C\u043C\u0430",
       publishToWordPress: "\u041E\u043F\u0443\u0431\u043B\u0438\u043A\u043E\u0432\u0430\u0442\u044C \u0432 WordPress"
     },
-    openDocumentFirst: "\u0421\u043D\u0430\u0447\u0430\u043B\u0430 \u043E\u0442\u043A\u0440\u043E\u0439\u0442\u0435 \u0434\u043E\u043A\u0443\u043C\u0435\u043D\u0442.",
     sprintTimer: "\u0422\u0430\u0439\u043C\u0435\u0440 \u0441\u043F\u0440\u0438\u043D\u0442\u0430",
-    pause: "\u23F8 \u041F\u0430\u0443\u0437\u0430",
-    stop: "\u25A0 \u0421\u0442\u043E\u043F",
     startSprint: "\u23F1 \u041D\u0430\u0441\u0442\u0440\u043E\u0438\u0442\u044C \u0441\u043F\u0440\u0438\u043D\u0442",
     quickStart: "\u0411\u044B\u0441\u0442\u0440\u044B\u0435 \u0432\u0430\u0440\u0438\u0430\u043D\u0442\u044B \u0441\u043F\u0440\u0438\u043D\u0442\u0430",
     today: "\u0421\u0435\u0433\u043E\u0434\u043D\u044F",
@@ -8903,7 +8632,6 @@ var ru_default = {
   },
   projectManager: {
     errorFolderExists: '\u041F\u0430\u043F\u043A\u0430 \u0441 \u0438\u043C\u0435\u043D\u0435\u043C "{{folder}}" \u0443\u0436\u0435 \u0441\u0443\u0449\u0435\u0441\u0442\u0432\u0443\u0435\u0442 \u0432 \u043F\u0430\u043F\u043A\u0435 \u043F\u0440\u043E\u0435\u043A\u0442\u043E\u0432. \u0412\u044B\u0431\u0435\u0440\u0438\u0442\u0435 \u0434\u0440\u0443\u0433\u043E\u0435 \u043D\u0430\u0437\u0432\u0430\u043D\u0438\u0435.',
-    corruptBinder: '\u041D\u0435 \u0443\u0434\u0430\u043B\u043E\u0441\u044C \u043F\u0440\u043E\u0447\u0438\u0442\u0430\u0442\u044C \u0444\u0430\u0439\u043B _binder.json \u043F\u0440\u043E\u0435\u043A\u0442\u0430 "{{project}}". \u0420\u0435\u0437\u0435\u0440\u0432\u043D\u0430\u044F \u043A\u043E\u043F\u0438\u044F \u0441\u043E\u0445\u0440\u0430\u043D\u0435\u043D\u0430 \u043A\u0430\u043A _binder.json.bak \u0432 \u043F\u0430\u043F\u043A\u0435 \u043F\u0440\u043E\u0435\u043A\u0442\u0430.',
     corruptProject: '\u0424\u0430\u0439\u043B \u043F\u0440\u043E\u0435\u043A\u0442\u0430 \u0432 "{{folder}}" \u043F\u043E\u0432\u0440\u0435\u0436\u0434\u0451\u043D, \u0438 \u043F\u0440\u043E\u0435\u043A\u0442 \u043D\u0435 \u0443\u0434\u0430\u043B\u043E\u0441\u044C \u0437\u0430\u0433\u0440\u0443\u0437\u0438\u0442\u044C.',
     corruptLog: "\u041D\u0435 \u0443\u0434\u0430\u043B\u043E\u0441\u044C \u043F\u0440\u043E\u0447\u0438\u0442\u0430\u0442\u044C \u0436\u0443\u0440\u043D\u0430\u043B \u0437\u0430\u043F\u0438\u0441\u0438 \u0434\u043B\u044F {{project}} \u2014 \u0431\u0443\u0434\u0435\u0442 \u0441\u043E\u0437\u0434\u0430\u043D \u043D\u043E\u0432\u044B\u0439 \u0436\u0443\u0440\u043D\u0430\u043B."
   },
@@ -8995,7 +8723,6 @@ var ru_default = {
     scopeCurrent: "\u0422\u0435\u043A\u0443\u0449\u0438\u0439 \u0434\u043E\u043A\u0443\u043C\u0435\u043D\u0442",
     scopeProject: "\u0412\u0435\u0441\u044C \u043F\u0440\u043E\u0435\u043A\u0442 (\u0432 \u043F\u043E\u0440\u044F\u0434\u043A\u0435 \u0431\u0430\u043D\u0434\u0435\u0440\u0430)",
     includeFrontmatter: "\u0412\u043A\u043B\u044E\u0447\u0438\u0442\u044C \u043C\u0435\u0442\u0430\u0434\u0430\u043D\u043D\u044B\u0435",
-    includeResearch: "\u0412\u043A\u043B\u044E\u0447\u0438\u0442\u044C \u0438\u0441\u0441\u043B\u0435\u0434\u043E\u0432\u0430\u0442\u0435\u043B\u044C\u0441\u043A\u0438\u0435 \u0437\u0430\u043C\u0435\u0442\u043A\u0438",
     includeTitlesAsHeadings: "\u0412\u043A\u043B\u044E\u0447\u0438\u0442\u044C \u0437\u0430\u0433\u043E\u043B\u043E\u0432\u043A\u0438 \u0434\u043E\u043A\u0443\u043C\u0435\u043D\u0442\u043E\u0432 \u043A\u0430\u043A \u0437\u0430\u0433\u043E\u043B\u043E\u0432\u043A\u0438",
     addTitlePage: "\u0414\u043E\u0431\u0430\u0432\u0438\u0442\u044C \u0442\u0438\u0442\u0443\u043B\u044C\u043D\u0443\u044E \u0441\u0442\u0440\u0430\u043D\u0438\u0446\u0443",
     addTitlePageDesc: "\u0414\u043E\u0431\u0430\u0432\u043B\u044F\u0435\u0442 \u0442\u0438\u0442\u0443\u043B\u044C\u043D\u0443\u044E \u0441\u0442\u0440\u0430\u043D\u0438\u0446\u0443 \u0441 \u043D\u0430\u0437\u0432\u0430\u043D\u0438\u0435\u043C \u043F\u0440\u043E\u0435\u043A\u0442\u0430, \u0430\u0432\u0442\u043E\u0440\u043E\u043C \u0438 \u0434\u0430\u0442\u043E\u0439.",
@@ -9112,16 +8839,6 @@ var ru_default = {
     },
     close: "\u0417\u0430\u043A\u0440\u044B\u0442\u044C"
   },
-  addToProject: {
-    title: "\u0414\u043E\u0431\u0430\u0432\u0438\u0442\u044C \u0432 \u043F\u0438\u0441\u044C\u043C\u0435\u043D\u043D\u044B\u0439 \u043F\u0440\u043E\u0435\u043A\u0442",
-    noProjects: "\u041F\u0438\u0441\u044C\u043C\u0435\u043D\u043D\u044B\u0435 \u043F\u0440\u043E\u0435\u043A\u0442\u044B \u043D\u0435 \u043D\u0430\u0439\u0434\u0435\u043D\u044B. \u0421\u043D\u0430\u0447\u0430\u043B\u0430 \u0441\u043E\u0437\u0434\u0430\u0439\u0442\u0435 \u043F\u0440\u043E\u0435\u043A\u0442.",
-    close: "\u0417\u0430\u043A\u0440\u044B\u0442\u044C",
-    file: "\u0424\u0430\u0439\u043B: {{path}}",
-    projectName: "\u041F\u0438\u0441\u044C\u043C\u0435\u043D\u043D\u044B\u0439 \u043F\u0440\u043E\u0435\u043A\u0442",
-    projectDesc: "\u0412 \u043A\u0430\u043A\u043E\u0439 \u043F\u0438\u0441\u044C\u043C\u0435\u043D\u043D\u044B\u0439 \u043F\u0440\u043E\u0435\u043A\u0442 \u0434\u043E\u0431\u0430\u0432\u0438\u0442\u044C \u044D\u0442\u043E\u0442 \u0444\u0430\u0439\u043B?",
-    addBtn: "\u0414\u043E\u0431\u0430\u0432\u0438\u0442\u044C \u0432 \u043F\u0440\u043E\u0435\u043A\u0442",
-    cancel: "\u041E\u0442\u043C\u0435\u043D\u0430"
-  },
   scanFolder: {
     title: "\u0414\u043E\u0431\u0430\u0432\u0438\u0442\u044C \u0444\u0430\u0439\u043B\u044B \u0432 \u0431\u0430\u043D\u0434\u0435\u0440",
     desc: "\u0412\u044B\u0431\u0435\u0440\u0438\u0442\u0435 \u0444\u0430\u0439\u043B\u044B \u0434\u043B\u044F \u0434\u043E\u0431\u0430\u0432\u043B\u0435\u043D\u0438\u044F \u0432 \u044D\u0442\u043E\u0442 \u043F\u0440\u043E\u0435\u043A\u0442:",
@@ -9149,7 +8866,6 @@ var ru_default = {
       setWordCountGoal: "\u0423\u0441\u0442\u0430\u043D\u043E\u0432\u0438\u0442\u044C \u0446\u0435\u043B\u044C \u043F\u043E \u043A\u043E\u043B\u0438\u0447\u0435\u0441\u0442\u0432\u0443 \u0441\u043B\u043E\u0432",
       openWritingLog: "\u041E\u0442\u043A\u0440\u044B\u0442\u044C \u0436\u0443\u0440\u043D\u0430\u043B \u043F\u0438\u0441\u044C\u043C\u0430",
       openFolderSidebar: "\u041E\u0442\u043A\u0440\u044B\u0442\u044C \u043F\u0430\u043F\u043A\u0443 \u0432 \u0431\u043E\u043A\u043E\u0432\u043E\u043C \u043E\u0431\u043E\u0437\u0440\u0435\u0432\u0430\u0442\u0435\u043B\u0435",
-      addFilesToBinder: "\u0421\u043A\u0430\u043D\u0438\u0440\u043E\u0432\u0430\u0442\u044C \u043F\u0430\u043F\u043A\u0443 \u043F\u0440\u043E\u0435\u043A\u0442\u0430 \u043D\u0430 \u043D\u043E\u0432\u044B\u0435 \u0444\u0430\u0439\u043B\u044B",
       restoreBinderLayout: "\u0412\u043E\u0441\u0441\u0442\u0430\u043D\u043E\u0432\u0438\u0442\u044C \u043F\u0440\u0435\u0436\u043D\u0435\u0435 \u0440\u0430\u0441\u043F\u043E\u043B\u043E\u0436\u0435\u043D\u0438\u0435 \u043F\u0430\u043F\u043A\u0438 \u0437\u0430\u043F\u0438\u0441\u0435\u0439"
     },
     menu: {
@@ -9159,7 +8875,6 @@ var ru_default = {
       setGoal: "\u0423\u0441\u0442\u0430\u043D\u043E\u0432\u0438\u0442\u044C \u0446\u0435\u043B\u044C \u043F\u043E \u0441\u043B\u043E\u0432\u0430\u043C",
       switchMode: "\u041F\u0435\u0440\u0435\u043A\u043B\u044E\u0447\u0438\u0442\u044C \u0440\u0435\u0436\u0438\u043C \u043F\u0438\u0441\u044C\u043C\u0430 \u2192",
       typographyFont: "\u0428\u0440\u0438\u0444\u0442 \u0442\u0438\u043F\u043E\u0433\u0440\u0430\u0444\u0438\u043A\u0438 \u2192",
-      addToProject: "\u0414\u043E\u0431\u0430\u0432\u0438\u0442\u044C \u0432 \u043F\u0440\u043E\u0435\u043A\u0442",
       openSidebar: "\u041E\u0442\u043A\u0440\u044B\u0442\u044C \u0432 \u0431\u043E\u043A\u043E\u0432\u043E\u043C \u043E\u0431\u043E\u0437\u0440\u0435\u0432\u0430\u0442\u0435\u043B\u0435",
       draftMode: "\u270D \u0420\u0435\u0436\u0438\u043C \u0447\u0435\u0440\u043D\u043E\u0432\u0438\u043A\u0430",
       editMode: "\u270E \u0420\u0435\u0436\u0438\u043C \u0440\u0435\u0434\u0430\u043A\u0442\u0438\u0440\u043E\u0432\u0430\u043D\u0438\u044F",
@@ -9167,8 +8882,7 @@ var ru_default = {
       normalMode: "\u041E\u0431\u044B\u0447\u043D\u044B\u0439 (\u0431\u0435\u0437 \u0440\u0435\u0436\u0438\u043C\u0430)"
     },
     notice: {
-      noMarkdownOpen: "\u0412 \u0434\u0430\u043D\u043D\u044B\u0439 \u043C\u043E\u043C\u0435\u043D\u0442 \u043D\u0435 \u043E\u0442\u043A\u0440\u044B\u0442 \u043D\u0438 \u043E\u0434\u0438\u043D Markdown-\u0444\u0430\u0439\u043B.",
-      addedToProject: "\xAB{{file}}\xBB \u0434\u043E\u0431\u0430\u0432\u043B\u0435\u043D \u0432 {{project}}"
+      noMarkdownOpen: "\u0412 \u0434\u0430\u043D\u043D\u044B\u0439 \u043C\u043E\u043C\u0435\u043D\u0442 \u043D\u0435 \u043E\u0442\u043A\u0440\u044B\u0442 \u043D\u0438 \u043E\u0434\u0438\u043D Markdown-\u0444\u0430\u0439\u043B."
     },
     statusBar: {
       projectWords: "{{total}} / {{goal}} \u0441\u043B\u043E\u0432 \u0432 \u043F\u0440\u043E\u0435\u043A\u0442\u0435",
@@ -9220,6 +8934,13 @@ var ru_default = {
   epub: {
     toc: "\u041E\u0433\u043B\u0430\u0432\u043B\u0435\u043D\u0438\u0435",
     cover: "\u041E\u0431\u043B\u043E\u0436\u043A\u0430"
+  },
+  binderUpdate: {
+    title: "\u041F\u0430\u043F\u043A\u0430 \u0437\u0430\u043F\u0438\u0441\u0435\u0439 \u0438 \u0432\u0430\u0448\u0438 \u043F\u0430\u043F\u043A\u0438 \u0442\u0435\u043F\u0435\u0440\u044C \u0432\u0441\u0435\u0433\u0434\u0430 \u0441\u043E\u0433\u043B\u0430\u0441\u043E\u0432\u0430\u043D\u044B",
+    body1: "\u041F\u0430\u043F\u043A\u0430 \u0437\u0430\u043F\u0438\u0441\u0435\u0439 \u0442\u0435\u043F\u0435\u0440\u044C \u0447\u0438\u0442\u0430\u0435\u0442 \u0432\u0430\u0448\u0438 \u043F\u0430\u043F\u043A\u0438 \u043D\u0430\u043F\u0440\u044F\u043C\u0443\u044E, \u043F\u043E\u044D\u0442\u043E\u043C\u0443 \u043E\u043D\u0438 \u043D\u0438\u043A\u043E\u0433\u0434\u0430 \u043D\u0435 \u0440\u0430\u0437\u043E\u0439\u0434\u0443\u0442\u0441\u044F. \u0412\u044B \u043C\u043E\u0436\u0435\u0442\u0435 \u0443\u043F\u043E\u0440\u044F\u0434\u043E\u0447\u0438\u0432\u0430\u0442\u044C \u0440\u0430\u0431\u043E\u0442\u0443 \u0437\u0434\u0435\u0441\u044C \u0438\u043B\u0438 \u0432 \u043F\u0440\u043E\u0432\u043E\u0434\u043D\u0438\u043A\u0435 \u043A\u043E\u043C\u043F\u044C\u044E\u0442\u0435\u0440\u0430 \u2014 \u0432\u0441\u0451 \u0432\u0441\u0435\u0433\u0434\u0430 \u0431\u0443\u0434\u0435\u0442 \u0441\u043E\u0432\u043F\u0430\u0434\u0430\u0442\u044C.",
+    body2: "\u0414\u043B\u044F \u044D\u0442\u043E\u0433\u043E \u043F\u0440\u0438 \u043F\u0435\u0440\u0432\u043E\u043C \u043E\u0442\u043A\u0440\u044B\u0442\u0438\u0438 \u0441\u0443\u0449\u0435\u0441\u0442\u0432\u0443\u044E\u0449\u0435\u0433\u043E \u043F\u0440\u043E\u0435\u043A\u0442\u0430 \u0441\u043E\u0437\u0434\u0430\u044E\u0442\u0441\u044F \u043F\u0430\u043F\u043A\u0438, \u0430 \u0434\u043E\u043A\u0443\u043C\u0435\u043D\u0442\u044B \u043F\u0435\u0440\u0435\u043C\u0435\u0449\u0430\u044E\u0442\u0441\u044F \u0432 \u0441\u043E\u043E\u0442\u0432\u0435\u0442\u0441\u0442\u0432\u0438\u0438 \u0441 \u043F\u0440\u0435\u0436\u043D\u0435\u0439 \u043F\u0430\u043F\u043A\u043E\u0439 \u0437\u0430\u043F\u0438\u0441\u0435\u0439. \u041D\u0438\u0447\u0435\u0433\u043E \u043D\u0435 \u0443\u0434\u0430\u043B\u044F\u0435\u0442\u0441\u044F, \u0438 \u0432\u0430\u0448\u0438 \u0442\u0435\u043A\u0441\u0442\u044B \u043D\u0435 \u043C\u0435\u043D\u044F\u044E\u0442\u0441\u044F.",
+    body3: "\u0415\u0441\u043B\u0438 \u043F\u0440\u0435\u0436\u043D\u0435\u0435 \u0440\u0430\u0441\u043F\u043E\u043B\u043E\u0436\u0435\u043D\u0438\u0435 \u043D\u0440\u0430\u0432\u0438\u043B\u043E\u0441\u044C \u0432\u0430\u043C \u0431\u043E\u043B\u044C\u0448\u0435, \u0435\u0433\u043E \u043C\u043E\u0436\u043D\u043E \u0432\u0435\u0440\u043D\u0443\u0442\u044C: \u043E\u0442\u043A\u0440\u043E\u0439\u0442\u0435 \u043F\u0430\u043B\u0438\u0442\u0440\u0443 \u043A\u043E\u043C\u0430\u043D\u0434 (Ctrl+P, \u043D\u0430 Mac \u2014 Cmd+P) \u0438 \u043D\u0430\u0439\u0434\u0438\u0442\u0435 \xAB\u0412\u043E\u0441\u0441\u0442\u0430\u043D\u043E\u0432\u0438\u0442\u044C \u043F\u0440\u0435\u0436\u043D\u0435\u0435 \u0440\u0430\u0441\u043F\u043E\u043B\u043E\u0436\u0435\u043D\u0438\u0435 \u043F\u0430\u043F\u043A\u0438 \u0437\u0430\u043F\u0438\u0441\u0435\u0439\xBB. \u041D\u0435\u0441\u043A\u043E\u043B\u044C\u043A\u043E \u043F\u0443\u0441\u0442\u044B\u0445 \u043F\u0430\u043F\u043E\u043A, \u0441\u043E\u0437\u0434\u0430\u043D\u043D\u044B\u0445 \u043E\u0431\u043D\u043E\u0432\u043B\u0435\u043D\u0438\u0435\u043C, \u043C\u043E\u0433\u0443\u0442 \u043E\u0441\u0442\u0430\u0442\u044C\u0441\u044F \u2014 \u0438\u0445 \u043C\u043E\u0436\u043D\u043E \u0443\u0434\u0430\u043B\u0438\u0442\u044C.",
+    gotIt: "\u041F\u043E\u043D\u044F\u0442\u043D\u043E"
   }
 };
 
@@ -9254,10 +8975,7 @@ var ja_default = {
         note: "\u30CE\u30FC\u30C8"
       },
       frontmatterAutoUpdate: "\u30D5\u30ED\u30F3\u30C8\u30DE\u30BF\u30FC\u81EA\u52D5\u66F4\u65B0",
-      frontmatterAutoUpdateDesc: "\u4FDD\u5B58\u6642\u306B\u8A9E\u6570\u3068\u66F4\u65B0\u65E5\u3092\u81EA\u52D5\u7684\u306B\u66F4\u65B0\u3057\u307E\u3059\u3002",
-      experimentalHeading: "\u5B9F\u9A13\u7684\u6A5F\u80FD",
-      filesystemBinder: "\u30D5\u30A1\u30A4\u30EB\u30B7\u30B9\u30C6\u30E0\u30D0\u30A4\u30F3\u30C0\u30FC",
-      filesystemBinderDesc: "\u518D\u8A2D\u8A08\u3055\u308C\u305F\u30D0\u30A4\u30F3\u30C0\u30FC\u306E\u30D7\u30EC\u30D3\u30E5\u30FC\uFF1A\u30D7\u30ED\u30B8\u30A7\u30AF\u30C8\u30D5\u30A9\u30EB\u30C0\u306E\u30C4\u30EA\u30FC\u3092\u76F4\u63A5\u3001\u8AAD\u307F\u53D6\u308A\u5C02\u7528\u3067\u8868\u793A\u3057\u307E\u3059\u3002\u30AA\u30D5\u306B\u3059\u308B\u3068\u30AF\u30E9\u30B7\u30C3\u30AF\u30D0\u30A4\u30F3\u30C0\u30FC\u306B\u623B\u308A\u307E\u3059\u3002"
+      frontmatterAutoUpdateDesc: "\u4FDD\u5B58\u6642\u306B\u8A9E\u6570\u3068\u66F4\u65B0\u65E5\u3092\u81EA\u52D5\u7684\u306B\u66F4\u65B0\u3057\u307E\u3059\u3002"
     },
     focus: {
       heading: "\u30D5\u30A9\u30FC\u30AB\u30B9\u30E2\u30FC\u30C9",
@@ -9383,61 +9101,27 @@ var ja_default = {
     displayText: "\u57F7\u7B46\u30D0\u30A4\u30F3\u30C0\u30FC",
     selectProject: "\u2014 \u30D7\u30ED\u30B8\u30A7\u30AF\u30C8\u3092\u9078\u629E \u2014",
     newProject: "\u65B0\u898F\u30D7\u30ED\u30B8\u30A7\u30AF\u30C8",
-    addDocument: "+ \u30C9\u30AD\u30E5\u30E1\u30F3\u30C8",
-    addFiles: "\u3053\u306E\u30D5\u30A9\u30EB\u30C0\u306B\u30B3\u30D4\u30FC\u3055\u308C\u305F\u30D5\u30A1\u30A4\u30EB\u3092\u8FFD\u52A0",
     targetsDashboard: "\u30BF\u30FC\u30B2\u30C3\u30C8\u30C0\u30C3\u30B7\u30E5\u30DC\u30FC\u30C9",
-    searchPlaceholder: "\u30C9\u30AD\u30E5\u30E1\u30F3\u30C8\u3092\u691C\u7D22\u2026",
     noProjectSelected: "\u30D7\u30ED\u30B8\u30A7\u30AF\u30C8\u304C\u9078\u629E\u3055\u308C\u3066\u3044\u307E\u305B\u3093\u3002\u57F7\u7B46\u30D7\u30ED\u30B8\u30A7\u30AF\u30C8\u3092\u4F5C\u6210\u307E\u305F\u306F\u9078\u629E\u3057\u3066\u958B\u59CB\u3057\u3066\u304F\u3060\u3055\u3044\u3002",
-    noDocuments: "\u30C9\u30AD\u30E5\u30E1\u30F3\u30C8\u304C\u3042\u308A\u307E\u305B\u3093\u3002\u300C+ \u30C9\u30AD\u30E5\u30E1\u30F3\u30C8\u300D\u3092\u30AF\u30EA\u30C3\u30AF\u3057\u3066\u8FFD\u52A0\u3057\u3066\u304F\u3060\u3055\u3044\u3002",
-    dropToRoot: "\u2193 \u3053\u3053\u306B\u30C9\u30ED\u30C3\u30D7\u3057\u3066\u30EB\u30FC\u30C8\u306B\u6607\u683C",
     selectProjectFirst: "\u307E\u305A\u30D7\u30ED\u30B8\u30A7\u30AF\u30C8\u3092\u9078\u629E\u3057\u3066\u304F\u3060\u3055\u3044\u3002",
-    cannotFindFile: "\u30D5\u30A1\u30A4\u30EB\u304C\u898B\u3064\u304B\u308A\u307E\u305B\u3093\uFF1A{{filePath}}\u3002\u30C9\u30AD\u30E5\u30E1\u30F3\u30C8\u306E\u540D\u524D\u5909\u66F4\u307E\u305F\u306F\u518D\u30EA\u30F3\u30AF\u3092\u304A\u8A66\u3057\u304F\u3060\u3055\u3044\u3002",
     untitledDocument: "\u7121\u984C {{time}}",
-    noNewFiles: "\u30D7\u30ED\u30B8\u30A7\u30AF\u30C8\u30D5\u30A9\u30EB\u30C0\u306B\u65B0\u3057\u3044\u30D5\u30A1\u30A4\u30EB\u304C\u898B\u3064\u304B\u308A\u307E\u305B\u3093\u3067\u3057\u305F\u3002",
-    pctComplete: "{{pct}}% \u5B8C\u4E86",
-    copySuffix: "\uFF08\u30B3\u30D4\u30FC\uFF09",
     menu: {
-      openDocument: "\u30C9\u30AD\u30E5\u30E1\u30F3\u30C8\u3092\u958B\u304F",
-      newChildDocument: "\u5B50\u30C9\u30AD\u30E5\u30E1\u30F3\u30C8\u3092\u65B0\u898F\u4F5C\u6210",
       setStatusDraft: "\u30B9\u30C6\u30FC\u30BF\u30B9\u3092\u8A2D\u5B9A\uFF1A\u4E0B\u66F8\u304D",
       setStatusInProgress: "\u30B9\u30C6\u30FC\u30BF\u30B9\u3092\u8A2D\u5B9A\uFF1A\u9032\u884C\u4E2D",
       setStatusComplete: "\u30B9\u30C6\u30FC\u30BF\u30B9\u3092\u8A2D\u5B9A\uFF1A\u5B8C\u4E86",
       setStatusPublished: "\u30B9\u30C6\u30FC\u30BF\u30B9\u3092\u8A2D\u5B9A\uFF1A\u516C\u958B\u6E08\u307F",
-      duplicate: "\u8907\u88FD",
-      moveToResearch: "\u30EA\u30B5\u30FC\u30C1\u306B\u79FB\u52D5",
-      publishToWordPress: "WordPress\u306B\u516C\u958B",
-      delete: "\u30C9\u30AD\u30E5\u30E1\u30F3\u30C8\u3068\u30D5\u30A1\u30A4\u30EB\u3092\u524A\u9664",
-      moveUp: "\u4E0A\u306B\u79FB\u52D5",
-      moveDown: "\u4E0B\u306B\u79FB\u52D5",
       rename: "\u540D\u524D\u3092\u5909\u66F4",
-      removeFromBinder: "\u30D0\u30A4\u30F3\u30C0\u30FC\u304B\u3089\u5916\u3059",
-      newGroup: "\u65B0\u898F\u30B0\u30EB\u30FC\u30D7",
-      newPart: "\u65B0\u898F\u30D1\u30FC\u30C8",
-      newChildGroup: "\u5B50\u30B0\u30EB\u30FC\u30D7\u3092\u65B0\u898F\u4F5C\u6210",
-      newChildPart: "\u5B50\u30D1\u30FC\u30C8\u3092\u65B0\u898F\u4F5C\u6210",
       changeType: "\u30BF\u30A4\u30D7\u3092\u5909\u66F4\uFF1A{{type}}"
     },
-    wordCountSuffix: "{{count}}\u8A9E",
-    fileNotFound: "\u30D5\u30A1\u30A4\u30EB\u304C\u5B58\u5728\u3057\u307E\u305B\u3093\uFF1A{{path}}",
     deleteConfirm: {
       title: "\u30C9\u30AD\u30E5\u30E1\u30F3\u30C8\u3092\u524A\u9664",
-      message: "\u300C{{title}}\u300D\u3092\u30D0\u30A4\u30F3\u30C0\u30FC\u304B\u3089\u524A\u9664\u3057\u3001\u30D5\u30A1\u30A4\u30EB\u3092\u30B4\u30DF\u7BB1\u306B\u79FB\u52D5\u3057\u307E\u3059\u304B\uFF1F\u30D0\u30A4\u30F3\u30C0\u30FC\u9805\u76EE\uFF08\u30B9\u30C6\u30FC\u30BF\u30B9\u3001\u76EE\u6A19\u8A9E\u6570\u3001\u4F4D\u7F6E\uFF09\u306F\u5FA9\u5143\u3067\u304D\u307E\u305B\u3093\u3002",
       delete: "\u524A\u9664",
       cancel: "\u30AD\u30E3\u30F3\u30BB\u30EB"
     },
-    noMatches: "\u300C{{query}}\u300D\u306B\u4E00\u81F4\u3059\u308B\u30C9\u30AD\u30E5\u30E1\u30F3\u30C8\u306F\u3042\u308A\u307E\u305B\u3093\u3002",
     titlePrompt: {
       heading: "\u65B0\u898F\u30C9\u30AD\u30E5\u30E1\u30F3\u30C8",
       create: "\u4F5C\u6210"
     },
-    removeConfirm: {
-      title: "\u30D0\u30A4\u30F3\u30C0\u30FC\u304B\u3089\u5916\u3059",
-      message: "\u300C{{title}}\u300D\u3092\u30D0\u30A4\u30F3\u30C0\u30FC\u304B\u3089\u5916\u3057\u307E\u3059\u304B\uFF1F\u30D5\u30A1\u30A4\u30EB\u306FVault\u306B\u6B8B\u308A\u307E\u3059\u304C\u3001\u9805\u76EE\u306E\u30B9\u30C6\u30FC\u30BF\u30B9\u3001\u76EE\u6A19\u8A9E\u6570\u3001\u30A8\u30AF\u30B9\u30DD\u30FC\u30C8\u8A2D\u5B9A\u306F\u5931\u308F\u308C\u307E\u3059\u3002\u5165\u308C\u5B50\u306E\u30C9\u30AD\u30E5\u30E1\u30F3\u30C8\u306F\u305D\u306E\u4F4D\u7F6E\u306B\u7E70\u308A\u4E0A\u304C\u308A\u307E\u3059\u3002",
-      remove: "\u5916\u3059"
-    },
-    newGroupOrPart: "\u65B0\u898F\u30B0\u30EB\u30FC\u30D7\u307E\u305F\u306F\u30D1\u30FC\u30C8",
-    untitledGroup: "\u7121\u984C\u306E\u30B0\u30EB\u30FC\u30D7",
-    untitledPart: "\u7121\u984C\u306E\u30D1\u30FC\u30C8",
     strip: {
       focus: "\u30D5\u30A9\u30FC\u30AB\u30B9",
       typography: "\u30BF\u30A4\u30DD\u30B0\u30E9\u30D5\u30A3",
@@ -9525,10 +9209,7 @@ var ja_default = {
       writingLog: "\u57F7\u7B46\u30ED\u30B0",
       publishToWordPress: "WordPress\u306B\u516C\u958B"
     },
-    openDocumentFirst: "\u6700\u521D\u306B\u30C9\u30AD\u30E5\u30E1\u30F3\u30C8\u3092\u958B\u3044\u3066\u304F\u3060\u3055\u3044\u3002",
     sprintTimer: "\u30B9\u30D7\u30EA\u30F3\u30C8\u30BF\u30A4\u30DE\u30FC",
-    pause: "\u23F8 \u4E00\u6642\u505C\u6B62",
-    stop: "\u25A0 \u505C\u6B62",
     startSprint: "\u23F1 \u30B9\u30D7\u30EA\u30F3\u30C8\u3092\u8A2D\u5B9A",
     quickStart: "\u30AF\u30A4\u30C3\u30AF\u30B9\u30D7\u30EA\u30F3\u30C8",
     today: "\u4ECA\u65E5",
@@ -9661,7 +9342,6 @@ var ja_default = {
   },
   projectManager: {
     errorFolderExists: "\u30D7\u30ED\u30B8\u30A7\u30AF\u30C8\u30D5\u30A9\u30EB\u30C0\u30FC\u306B\u300C{{folder}}\u300D\u3068\u3044\u3046\u540D\u524D\u306E\u30D5\u30A9\u30EB\u30C0\u30FC\u304C\u65E2\u306B\u5B58\u5728\u3057\u307E\u3059\u3002\u5225\u306E\u30BF\u30A4\u30C8\u30EB\u3092\u9078\u3093\u3067\u304F\u3060\u3055\u3044\u3002",
-    corruptBinder: "\u300C{{project}}\u300D\u306E _binder.json \u30D5\u30A1\u30A4\u30EB\u3092\u8AAD\u307F\u53D6\u308C\u307E\u305B\u3093\u3067\u3057\u305F\u3002\u30D0\u30C3\u30AF\u30A2\u30C3\u30D7\u3092 _binder.json.bak \u3068\u3057\u3066\u30D7\u30ED\u30B8\u30A7\u30AF\u30C8\u30D5\u30A9\u30EB\u30C0\u30FC\u306B\u4FDD\u5B58\u3057\u307E\u3057\u305F\u3002",
     corruptProject: "\u300C{{folder}}\u300D\u306E\u30D7\u30ED\u30B8\u30A7\u30AF\u30C8\u30D5\u30A1\u30A4\u30EB\u304C\u7834\u640D\u3057\u3066\u3044\u308B\u305F\u3081\u3001\u30D7\u30ED\u30B8\u30A7\u30AF\u30C8\u3092\u8AAD\u307F\u8FBC\u3081\u307E\u305B\u3093\u3067\u3057\u305F\u3002",
     corruptLog: "{{project}} \u306E\u57F7\u7B46\u30ED\u30B0\u3092\u8AAD\u307F\u53D6\u308C\u307E\u305B\u3093\u3067\u3057\u305F \u2014 \u65B0\u3057\u3044\u30ED\u30B0\u3092\u958B\u59CB\u3057\u307E\u3059\u3002"
   },
@@ -9753,7 +9433,6 @@ var ja_default = {
     scopeCurrent: "\u73FE\u5728\u306E\u30C9\u30AD\u30E5\u30E1\u30F3\u30C8",
     scopeProject: "\u30D7\u30ED\u30B8\u30A7\u30AF\u30C8\u5168\u4F53\uFF08\u30D0\u30A4\u30F3\u30C0\u30FC\u9806\uFF09",
     includeFrontmatter: "\u30D5\u30ED\u30F3\u30C8\u30DE\u30BF\u30FC\u3092\u542B\u3081\u308B",
-    includeResearch: "\u30EA\u30B5\u30FC\u30C1\u30CE\u30FC\u30C8\u3092\u542B\u3081\u308B",
     includeTitlesAsHeadings: "\u30C9\u30AD\u30E5\u30E1\u30F3\u30C8\u30BF\u30A4\u30C8\u30EB\u3092\u898B\u51FA\u3057\u3068\u3057\u3066\u542B\u3081\u308B",
     addTitlePage: "\u30BF\u30A4\u30C8\u30EB\u30DA\u30FC\u30B8\u3092\u8FFD\u52A0",
     addTitlePageDesc: "\u30D7\u30ED\u30B8\u30A7\u30AF\u30C8\u30BF\u30A4\u30C8\u30EB\u3001\u8457\u8005\u3001\u65E5\u4ED8\u306E\u30BF\u30A4\u30C8\u30EB\u30DA\u30FC\u30B8\u3092\u5148\u982D\u306B\u8FFD\u52A0\u3057\u307E\u3059\u3002",
@@ -9868,16 +9547,6 @@ var ja_default = {
     },
     close: "\u9589\u3058\u308B"
   },
-  addToProject: {
-    title: "\u57F7\u7B46\u30D7\u30ED\u30B8\u30A7\u30AF\u30C8\u306B\u8FFD\u52A0",
-    noProjects: "\u57F7\u7B46\u30D7\u30ED\u30B8\u30A7\u30AF\u30C8\u304C\u898B\u3064\u304B\u308A\u307E\u305B\u3093\u3002\u307E\u305A\u30D7\u30ED\u30B8\u30A7\u30AF\u30C8\u3092\u4F5C\u6210\u3057\u3066\u304F\u3060\u3055\u3044\u3002",
-    close: "\u9589\u3058\u308B",
-    file: "\u30D5\u30A1\u30A4\u30EB\uFF1A{{path}}",
-    projectName: "\u57F7\u7B46\u30D7\u30ED\u30B8\u30A7\u30AF\u30C8",
-    projectDesc: "\u3053\u306E\u30D5\u30A1\u30A4\u30EB\u3092\u3069\u306E\u57F7\u7B46\u30D7\u30ED\u30B8\u30A7\u30AF\u30C8\u306B\u8FFD\u52A0\u3057\u307E\u3059\u304B\uFF1F",
-    addBtn: "\u30D7\u30ED\u30B8\u30A7\u30AF\u30C8\u306B\u8FFD\u52A0",
-    cancel: "\u30AD\u30E3\u30F3\u30BB\u30EB"
-  },
   scanFolder: {
     title: "\u30D5\u30A1\u30A4\u30EB\u3092\u30D0\u30A4\u30F3\u30C0\u30FC\u306B\u8FFD\u52A0",
     desc: "\u3053\u306E\u30D7\u30ED\u30B8\u30A7\u30AF\u30C8\u306B\u8FFD\u52A0\u3059\u308B\u30D5\u30A1\u30A4\u30EB\u3092\u9078\u629E\u3057\u3066\u304F\u3060\u3055\u3044\uFF1A",
@@ -9905,7 +9574,6 @@ var ja_default = {
       setWordCountGoal: "\u8A9E\u6570\u76EE\u6A19\u3092\u8A2D\u5B9A",
       openWritingLog: "\u57F7\u7B46\u30ED\u30B0\u3092\u958B\u304F",
       openFolderSidebar: "\u30B5\u30A4\u30C9\u30D0\u30FC\u30A8\u30AF\u30B9\u30D7\u30ED\u30FC\u30E9\u30FC\u3067\u30D5\u30A9\u30EB\u30C0\u3092\u958B\u304F",
-      addFilesToBinder: "\u30D7\u30ED\u30B8\u30A7\u30AF\u30C8\u30D5\u30A9\u30EB\u30C0\u30FC\u306E\u65B0\u3057\u3044\u30D5\u30A1\u30A4\u30EB\u3092\u30B9\u30AD\u30E3\u30F3",
       restoreBinderLayout: "\u4EE5\u524D\u306E\u30D0\u30A4\u30F3\u30C0\u30FC\u914D\u7F6E\u3092\u5FA9\u5143"
     },
     menu: {
@@ -9915,7 +9583,6 @@ var ja_default = {
       setGoal: "\u8A9E\u6570\u76EE\u6A19\u3092\u8A2D\u5B9A",
       switchMode: "\u57F7\u7B46\u30E2\u30FC\u30C9\u3092\u5207\u308A\u66FF\u3048 \u2192",
       typographyFont: "\u30BF\u30A4\u30DD\u30B0\u30E9\u30D5\u30A3\u30D5\u30A9\u30F3\u30C8 \u2192",
-      addToProject: "\u57F7\u7B46\u30D7\u30ED\u30B8\u30A7\u30AF\u30C8\u306B\u8FFD\u52A0",
       openSidebar: "\u30B5\u30A4\u30C9\u30D0\u30FC\u30A8\u30AF\u30B9\u30D7\u30ED\u30FC\u30E9\u30FC\u3067\u958B\u304F",
       draftMode: "\u270D \u4E0B\u66F8\u304D\u30E2\u30FC\u30C9",
       editMode: "\u270E \u7DE8\u96C6\u30E2\u30FC\u30C9",
@@ -9923,8 +9590,7 @@ var ja_default = {
       normalMode: "\u30CE\u30FC\u30DE\u30EB\uFF08\u30E2\u30FC\u30C9\u306A\u3057\uFF09"
     },
     notice: {
-      noMarkdownOpen: "\u73FE\u5728\u958B\u3044\u3066\u3044\u308BMarkdown\u30D5\u30A1\u30A4\u30EB\u304C\u3042\u308A\u307E\u305B\u3093\u3002",
-      addedToProject: "\u300C{{file}}\u300D\u3092 {{project}} \u306B\u8FFD\u52A0\u3057\u307E\u3057\u305F"
+      noMarkdownOpen: "\u73FE\u5728\u958B\u3044\u3066\u3044\u308BMarkdown\u30D5\u30A1\u30A4\u30EB\u304C\u3042\u308A\u307E\u305B\u3093\u3002"
     },
     statusBar: {
       projectWords: "{{total}} / {{goal}} \u30D7\u30ED\u30B8\u30A7\u30AF\u30C8\u8A9E\u6570",
@@ -9976,6 +9642,13 @@ var ja_default = {
   epub: {
     toc: "\u76EE\u6B21",
     cover: "\u8868\u7D19"
+  },
+  binderUpdate: {
+    title: "\u30D0\u30A4\u30F3\u30C0\u30FC\u3068\u30D5\u30A9\u30EB\u30C0\u306F\u5E38\u306B\u540C\u671F\u3055\u308C\u308B\u3088\u3046\u306B\u306A\u308A\u307E\u3057\u305F",
+    body1: "\u30D0\u30A4\u30F3\u30C0\u30FC\u306F\u30D5\u30A9\u30EB\u30C0\u3092\u76F4\u63A5\u8AAD\u307F\u53D6\u308B\u3088\u3046\u306B\u306A\u3063\u305F\u305F\u3081\u3001\u4E21\u8005\u304C\u305A\u308C\u308B\u3053\u3068\u306F\u3042\u308A\u307E\u305B\u3093\u3002\u3053\u3053\u3067\u3082\u3001\u30D1\u30BD\u30B3\u30F3\u306E\u30D5\u30A1\u30A4\u30EB\u30A8\u30AF\u30B9\u30D7\u30ED\u30FC\u30E9\u30FC\u3067\u3082\u4F5C\u696D\u3092\u6574\u7406\u3067\u304D\u3001\u5E38\u306B\u4E00\u81F4\u3057\u307E\u3059\u3002",
+    body2: "\u305D\u306E\u305F\u3081\u3001\u65E2\u5B58\u306E\u30D7\u30ED\u30B8\u30A7\u30AF\u30C8\u3092\u6700\u521D\u306B\u958B\u3044\u305F\u3068\u304D\u306B\u3001\u4EE5\u524D\u306E\u30D0\u30A4\u30F3\u30C0\u30FC\u306B\u5408\u308F\u305B\u3066\u30D5\u30A9\u30EB\u30C0\u3092\u4F5C\u6210\u3057\u3001\u30C9\u30AD\u30E5\u30E1\u30F3\u30C8\u3092\u79FB\u52D5\u3057\u307E\u3059\u3002\u4F55\u3082\u524A\u9664\u3055\u308C\u305A\u3001\u3042\u306A\u305F\u306E\u6587\u7AE0\u306F\u4E00\u5207\u5909\u66F4\u3055\u308C\u307E\u305B\u3093\u3002",
+    body3: "\u4EE5\u524D\u306E\u914D\u7F6E\u306B\u623B\u3057\u305F\u3044\u5834\u5408\u306F\u3001\u30B3\u30DE\u30F3\u30C9\u30D1\u30EC\u30C3\u30C8\uFF08Ctrl+P\u3001Mac\u3067\u306FCmd+P\uFF09\u3092\u958B\u3044\u3066\u300C\u4EE5\u524D\u306E\u30D0\u30A4\u30F3\u30C0\u30FC\u914D\u7F6E\u3092\u5FA9\u5143\u300D\u3092\u691C\u7D22\u3057\u3066\u304F\u3060\u3055\u3044\u3002\u30A2\u30C3\u30D7\u30C7\u30FC\u30C8\u3067\u4F5C\u6210\u3055\u308C\u305F\u7A7A\u306E\u30D5\u30A9\u30EB\u30C0\u304C\u3044\u304F\u3064\u304B\u6B8B\u308B\u3053\u3068\u304C\u3042\u308A\u307E\u3059\u3002\u524A\u9664\u3057\u3066\u304B\u307E\u3044\u307E\u305B\u3093\u3002",
+    gotIt: "\u308F\u304B\u308A\u307E\u3057\u305F"
   }
 };
 
@@ -10010,10 +9683,7 @@ var de_default = {
         note: "Notiz"
       },
       frontmatterAutoUpdate: "Frontmatter automatisch aktualisieren",
-      frontmatterAutoUpdateDesc: "Wortanzahl und \xC4nderungsdatum beim Speichern automatisch aktualisieren.",
-      experimentalHeading: "Experimentell",
-      filesystemBinder: "Dateisystem-Mappe",
-      filesystemBinderDesc: "Vorschau der neu gestalteten Mappe: zeigt den Projektordnerbaum direkt an, schreibgesch\xFCtzt. Zum Zur\xFCckkehren zur klassischen Mappe ausschalten."
+      frontmatterAutoUpdateDesc: "Wortanzahl und \xC4nderungsdatum beim Speichern automatisch aktualisieren."
     },
     focus: {
       heading: "Fokusmodus",
@@ -10139,61 +9809,27 @@ var de_default = {
     displayText: "Schreibmappe",
     selectProject: "\u2014 Projekt ausw\xE4hlen \u2014",
     newProject: "Neues Projekt",
-    addDocument: "+ Dokument",
-    addFiles: "In diesen Ordner kopierte Dateien hinzuf\xFCgen",
     targetsDashboard: "Ziel-Dashboard",
-    searchPlaceholder: "Dokumente suchen\u2026",
     noProjectSelected: "Kein Projekt ausgew\xE4hlt. Erstelle oder w\xE4hle ein Schreibprojekt, um loszulegen.",
-    noDocuments: "Noch keine Dokumente. Klicke auf \u201E+ Dokument\u201C, um eines hinzuzuf\xFCgen.",
-    dropToRoot: "\u2193 Hier ablegen, um zur Wurzel zu bef\xF6rdern",
     selectProjectFirst: "Bitte zuerst ein Projekt ausw\xE4hlen.",
-    cannotFindFile: "Datei nicht gefunden: {{filePath}}. Versuche, das Dokument umzubenennen oder neu zu verkn\xFCpfen.",
     untitledDocument: "Ohne Titel {{time}}",
-    noNewFiles: "Keine neuen Dateien im Projektordner gefunden.",
-    pctComplete: "{{pct}}% abgeschlossen",
-    copySuffix: "(Kopie)",
     menu: {
-      openDocument: "Dokument \xF6ffnen",
-      newChildDocument: "Neues untergeordnetes Dokument",
       setStatusDraft: "Status setzen: Entwurf",
       setStatusInProgress: "Status setzen: In Bearbeitung",
       setStatusComplete: "Status setzen: Abgeschlossen",
       setStatusPublished: "Status setzen: Ver\xF6ffentlicht",
-      duplicate: "Duplizieren",
-      moveToResearch: "In Recherche verschieben",
-      publishToWordPress: "Auf WordPress ver\xF6ffentlichen",
-      delete: "Dokument und Datei l\xF6schen",
-      moveUp: "Nach oben verschieben",
-      moveDown: "Nach unten verschieben",
       rename: "Umbenennen",
-      removeFromBinder: "Aus der Schreibmappe entfernen",
-      newGroup: "Neue Gruppe",
-      newPart: "Neuer Teil",
-      newChildGroup: "Neue untergeordnete Gruppe",
-      newChildPart: "Neuer untergeordneter Teil",
       changeType: "Typ \xE4ndern: {{type}}"
     },
-    wordCountSuffix: "{{count}}W",
-    fileNotFound: "Die Datei existiert nicht mehr: {{path}}",
     deleteConfirm: {
       title: "Dokument l\xF6schen",
-      message: "\u201E{{title}}\u201C aus der Schreibmappe entfernen und die Datei in den Papierkorb verschieben? Der Mappeneintrag (Status, Wortziel, Position) kann nicht wiederhergestellt werden.",
       delete: "L\xF6schen",
       cancel: "Abbrechen"
     },
-    noMatches: "Keine Dokumente entsprechen \u201E{{query}}\u201C.",
     titlePrompt: {
       heading: "Neues Dokument",
       create: "Erstellen"
     },
-    removeConfirm: {
-      title: "Aus der Schreibmappe entfernen",
-      message: "\u201E{{title}}\u201C aus der Schreibmappe entfernen? Die Datei bleibt im Vault, aber Status, Wortziel und Export-Einstellung des Eintrags gehen verloren. Untergeordnete Dokumente r\xFCcken an seine Stelle.",
-      remove: "Entfernen"
-    },
-    newGroupOrPart: "Neue Gruppe oder neuer Teil",
-    untitledGroup: "Unbenannte Gruppe",
-    untitledPart: "Unbenannter Teil",
     strip: {
       focus: "Fokus",
       typography: "Typografie",
@@ -10281,10 +9917,7 @@ var de_default = {
       writingLog: "Schreibprotokoll",
       publishToWordPress: "Auf WordPress ver\xF6ffentlichen"
     },
-    openDocumentFirst: "Bitte zuerst ein Dokument \xF6ffnen.",
     sprintTimer: "Sprint-Timer",
-    pause: "\u23F8 Pause",
-    stop: "\u25A0 Stop",
     startSprint: "\u23F1 Sprint einrichten",
     quickStart: "Schnelle Sprint-Optionen",
     today: "Heute",
@@ -10417,7 +10050,6 @@ var de_default = {
   },
   projectManager: {
     errorFolderExists: 'Ein Ordner namens "{{folder}}" existiert bereits in deinem Projektordner. W\xE4hle einen anderen Titel.',
-    corruptBinder: 'Die Datei _binder.json von "{{project}}" konnte nicht gelesen werden. Eine Sicherung wurde als _binder.json.bak im Projektordner gespeichert.',
     corruptProject: 'Die Projektdatei in "{{folder}}" ist besch\xE4digt und das Projekt konnte nicht geladen werden.',
     corruptLog: "Schreibprotokoll f\xFCr {{project}} konnte nicht gelesen werden \u2014 ein neues Protokoll wird begonnen."
   },
@@ -10509,7 +10141,6 @@ var de_default = {
     scopeCurrent: "Aktuelles Dokument",
     scopeProject: "Gesamtes Projekt (in Mappenreihenfolge)",
     includeFrontmatter: "Frontmatter einschlie\xDFen",
-    includeResearch: "Recherche-Notizen einschlie\xDFen",
     includeTitlesAsHeadings: "Dokumenttitel als \xDCberschriften einschlie\xDFen",
     addTitlePage: "Titelseite hinzuf\xFCgen",
     addTitlePageDesc: "Eine Titelseite mit Projekttitel, Autor und Datum voranstellen.",
@@ -10624,16 +10255,6 @@ var de_default = {
     },
     close: "Schlie\xDFen"
   },
-  addToProject: {
-    title: "Zum Schreibprojekt hinzuf\xFCgen",
-    noProjects: "Keine Schreibprojekte gefunden. Erstelle zuerst ein Projekt.",
-    close: "Schlie\xDFen",
-    file: "Datei: {{path}}",
-    projectName: "Schreibprojekt",
-    projectDesc: "Zu welchem Schreibprojekt m\xF6chtest du diese Datei hinzuf\xFCgen?",
-    addBtn: "Zum Projekt hinzuf\xFCgen",
-    cancel: "Abbrechen"
-  },
   scanFolder: {
     title: "Dateien zur Mappe hinzuf\xFCgen",
     desc: "Dateien ausw\xE4hlen, die diesem Projekt hinzugef\xFCgt werden sollen:",
@@ -10661,7 +10282,6 @@ var de_default = {
       setWordCountGoal: "Wortziel festlegen",
       openWritingLog: "Schreibprotokoll \xF6ffnen",
       openFolderSidebar: "Ordner im Sidebar-Explorer \xF6ffnen",
-      addFilesToBinder: "Projektordner nach neuen Dateien durchsuchen",
       restoreBinderLayout: "Vorheriges Mappen-Layout wiederherstellen"
     },
     menu: {
@@ -10671,7 +10291,6 @@ var de_default = {
       setGoal: "Wortziel festlegen",
       switchMode: "Schreibmodus wechseln \u2192",
       typographyFont: "Typografieschrift \u2192",
-      addToProject: "Zum Schreibprojekt hinzuf\xFCgen",
       openSidebar: "Im Sidebar-Explorer \xF6ffnen",
       draftMode: "\u270D Entwurfsmodus",
       editMode: "\u270E Bearbeitungsmodus",
@@ -10679,8 +10298,7 @@ var de_default = {
       normalMode: "Normal (kein Modus)"
     },
     notice: {
-      noMarkdownOpen: "Keine Markdown-Datei ist aktuell ge\xF6ffnet.",
-      addedToProject: "\u201E{{file}}\u201C zu {{project}} hinzugef\xFCgt"
+      noMarkdownOpen: "Keine Markdown-Datei ist aktuell ge\xF6ffnet."
     },
     statusBar: {
       projectWords: "{{total}} / {{goal}} Projektw\xF6rter",
@@ -10732,6 +10350,13 @@ var de_default = {
   epub: {
     toc: "Inhaltsverzeichnis",
     cover: "Cover"
+  },
+  binderUpdate: {
+    title: "Ihre Mappe und Ihre Ordner bleiben jetzt synchron",
+    body1: "Die Mappe liest jetzt direkt Ihre Ordner, sodass beide nie auseinanderlaufen k\xF6nnen. Sie k\xF6nnen Ihre Arbeit hier oder im Datei-Explorer Ihres Computers organisieren \u2014 beides stimmt immer \xFCberein.",
+    body2: "Dazu werden beim ersten \xD6ffnen eines bestehenden Projekts Ordner angelegt und Ihre Dokumente passend zu Ihrer alten Mappe verschoben. Nichts wird gel\xF6scht, und an Ihren Texten \xE4ndert sich nichts.",
+    body3: "Wenn Ihnen Ihre fr\xFChere Anordnung lieber war, k\xF6nnen Sie Ihre Ordner zur\xFCcksetzen: \xD6ffnen Sie die Befehlspalette (Strg+P, auf dem Mac Cmd+P) und suchen Sie nach \u201EVorheriges Mappen-Layout wiederherstellen\u201C. Einige vom Update angelegte leere Ordner k\xF6nnen zur\xFCckbleiben; Sie k\xF6nnen sie l\xF6schen.",
+    gotIt: "Verstanden"
   }
 };
 
@@ -10766,10 +10391,7 @@ var ko_default = {
         note: "\uB178\uD2B8"
       },
       frontmatterAutoUpdate: "\uD504\uB860\uD2B8\uB9E4\uD130 \uC790\uB3D9 \uC5C5\uB370\uC774\uD2B8",
-      frontmatterAutoUpdateDesc: "\uC800\uC7A5 \uC2DC \uB2E8\uC5B4 \uC218\uC640 \uC218\uC815 \uB0A0\uC9DC\uB97C \uC790\uB3D9\uC73C\uB85C \uC5C5\uB370\uC774\uD2B8\uD569\uB2C8\uB2E4.",
-      experimentalHeading: "\uC2E4\uD5D8\uC801 \uAE30\uB2A5",
-      filesystemBinder: "\uD30C\uC77C \uC2DC\uC2A4\uD15C \uBC14\uC778\uB354",
-      filesystemBinderDesc: "\uC7AC\uC124\uACC4\uB41C \uBC14\uC778\uB354 \uBBF8\uB9AC\uBCF4\uAE30: \uD504\uB85C\uC81D\uD2B8 \uD3F4\uB354 \uD2B8\uB9AC\uB97C \uC77D\uAE30 \uC804\uC6A9\uC73C\uB85C \uC9C1\uC811 \uD45C\uC2DC\uD569\uB2C8\uB2E4. \uB044\uBA74 \uAE30\uC874 \uBC14\uC778\uB354\uB85C \uB3CC\uC544\uAC11\uB2C8\uB2E4."
+      frontmatterAutoUpdateDesc: "\uC800\uC7A5 \uC2DC \uB2E8\uC5B4 \uC218\uC640 \uC218\uC815 \uB0A0\uC9DC\uB97C \uC790\uB3D9\uC73C\uB85C \uC5C5\uB370\uC774\uD2B8\uD569\uB2C8\uB2E4."
     },
     focus: {
       heading: "\uC9D1\uC911 \uBAA8\uB4DC",
@@ -10895,61 +10517,27 @@ var ko_default = {
     displayText: "\uAE00\uC4F0\uAE30 \uBC14\uC778\uB354",
     selectProject: "\u2014 \uD504\uB85C\uC81D\uD2B8 \uC120\uD0DD \u2014",
     newProject: "\uC0C8 \uD504\uB85C\uC81D\uD2B8",
-    addDocument: "+ \uBB38\uC11C",
-    addFiles: "\uC774 \uD3F4\uB354\uC5D0 \uBCF5\uC0AC\uB41C \uD30C\uC77C \uCD94\uAC00",
     targetsDashboard: "\uBAA9\uD45C \uB300\uC2DC\uBCF4\uB4DC",
-    searchPlaceholder: "\uBB38\uC11C \uAC80\uC0C9\u2026",
     noProjectSelected: "\uC120\uD0DD\uB41C \uD504\uB85C\uC81D\uD2B8\uAC00 \uC5C6\uC2B5\uB2C8\uB2E4. \uAE00\uC4F0\uAE30 \uD504\uB85C\uC81D\uD2B8\uB97C \uB9CC\uB4E4\uAC70\uB098 \uC120\uD0DD\uD558\uC5EC \uC2DC\uC791\uD558\uC138\uC694.",
-    noDocuments: '\uC544\uC9C1 \uBB38\uC11C\uAC00 \uC5C6\uC2B5\uB2C8\uB2E4. "+ \uBB38\uC11C"\uB97C \uD074\uB9AD\uD558\uC5EC \uCD94\uAC00\uD558\uC138\uC694.',
-    dropToRoot: "\u2193 \uC5EC\uAE30\uC5D0 \uB193\uC544 \uB8E8\uD2B8\uB85C \uC62C\uB9AC\uAE30",
     selectProjectFirst: "\uBA3C\uC800 \uD504\uB85C\uC81D\uD2B8\uB97C \uC120\uD0DD\uD558\uC138\uC694.",
-    cannotFindFile: "\uD30C\uC77C\uC744 \uCC3E\uC744 \uC218 \uC5C6\uC2B5\uB2C8\uB2E4: {{filePath}}. \uBB38\uC11C \uC774\uB984 \uBC14\uAFB8\uAE30 \uB610\uB294 \uB2E4\uC2DC \uC5F0\uACB0\uC744 \uC2DC\uB3C4\uD574 \uBCF4\uC138\uC694.",
     untitledDocument: "\uC81C\uBAA9 \uC5C6\uC74C {{time}}",
-    noNewFiles: "\uD504\uB85C\uC81D\uD2B8 \uD3F4\uB354\uC5D0\uC11C \uC0C8 \uD30C\uC77C\uC744 \uCC3E\uC744 \uC218 \uC5C6\uC2B5\uB2C8\uB2E4.",
-    pctComplete: "{{pct}}% \uC644\uB8CC",
-    copySuffix: "(\uBCF5\uC0AC)",
     menu: {
-      openDocument: "\uBB38\uC11C \uC5F4\uAE30",
-      newChildDocument: "\uC0C8 \uD558\uC704 \uBB38\uC11C",
       setStatusDraft: "\uC0C1\uD0DC \uC124\uC815: \uC784\uC2DC\uAE00",
       setStatusInProgress: "\uC0C1\uD0DC \uC124\uC815: \uC9C4\uD589 \uC911",
       setStatusComplete: "\uC0C1\uD0DC \uC124\uC815: \uC644\uB8CC",
       setStatusPublished: "\uC0C1\uD0DC \uC124\uC815: \uAC8C\uC2DC\uB428",
-      duplicate: "\uBCF5\uC81C",
-      moveToResearch: "\uB9AC\uC11C\uCE58\uB85C \uC774\uB3D9",
-      publishToWordPress: "WordPress\uC5D0 \uAC8C\uC2DC",
-      delete: "\uBB38\uC11C\uC640 \uD30C\uC77C \uC0AD\uC81C",
-      moveUp: "\uC704\uB85C \uC774\uB3D9",
-      moveDown: "\uC544\uB798\uB85C \uC774\uB3D9",
       rename: "\uC774\uB984 \uBC14\uAFB8\uAE30",
-      removeFromBinder: "\uBC14\uC778\uB354\uC5D0\uC11C \uC81C\uAC70",
-      newGroup: "\uC0C8 \uADF8\uB8F9",
-      newPart: "\uC0C8 \uD30C\uD2B8",
-      newChildGroup: "\uC0C8 \uD558\uC704 \uADF8\uB8F9",
-      newChildPart: "\uC0C8 \uD558\uC704 \uD30C\uD2B8",
       changeType: "\uC720\uD615 \uBCC0\uACBD: {{type}}"
     },
-    wordCountSuffix: "{{count}}\uC790",
-    fileNotFound: "\uD30C\uC77C\uC774 \uB354 \uC774\uC0C1 \uC874\uC7AC\uD558\uC9C0 \uC54A\uC2B5\uB2C8\uB2E4: {{path}}",
     deleteConfirm: {
       title: "\uBB38\uC11C \uC0AD\uC81C",
-      message: '"{{title}}"\uC744(\uB97C) \uBC14\uC778\uB354\uC5D0\uC11C \uC81C\uAC70\uD558\uACE0 \uD30C\uC77C\uC744 \uD734\uC9C0\uD1B5\uC73C\uB85C \uC774\uB3D9\uD560\uAE4C\uC694? \uBC14\uC778\uB354 \uD56D\uBAA9(\uC0C1\uD0DC, \uB2E8\uC5B4 \uC218 \uBAA9\uD45C, \uC704\uCE58)\uC740 \uBCF5\uC6D0\uD560 \uC218 \uC5C6\uC2B5\uB2C8\uB2E4.',
       delete: "\uC0AD\uC81C",
       cancel: "\uCDE8\uC18C"
     },
-    noMatches: '"{{query}}"\uC640 \uC77C\uCE58\uD558\uB294 \uBB38\uC11C\uAC00 \uC5C6\uC2B5\uB2C8\uB2E4.',
     titlePrompt: {
       heading: "\uC0C8 \uBB38\uC11C",
       create: "\uB9CC\uB4E4\uAE30"
     },
-    removeConfirm: {
-      title: "\uBC14\uC778\uB354\uC5D0\uC11C \uC81C\uAC70",
-      message: '"{{title}}"\uC744(\uB97C) \uBC14\uC778\uB354\uC5D0\uC11C \uC81C\uAC70\uD560\uAE4C\uC694? \uD30C\uC77C\uC740 \uBCFC\uD2B8\uC5D0 \uB0A8\uC9C0\uB9CC \uD56D\uBAA9\uC758 \uC0C1\uD0DC, \uB2E8\uC5B4 \uC218 \uBAA9\uD45C, \uB0B4\uBCF4\uB0B4\uAE30 \uC124\uC815\uC740 \uC0AC\uB77C\uC9D1\uB2C8\uB2E4. \uD558\uC704 \uBB38\uC11C\uB294 \uADF8 \uC790\uB9AC\uB85C \uC62C\uB77C\uC635\uB2C8\uB2E4.',
-      remove: "\uC81C\uAC70"
-    },
-    newGroupOrPart: "\uC0C8 \uADF8\uB8F9 \uB610\uB294 \uD30C\uD2B8",
-    untitledGroup: "\uC81C\uBAA9 \uC5C6\uB294 \uADF8\uB8F9",
-    untitledPart: "\uC81C\uBAA9 \uC5C6\uB294 \uD30C\uD2B8",
     strip: {
       focus: "\uC9D1\uC911",
       typography: "\uD0C0\uC774\uD3EC\uADF8\uB798\uD53C",
@@ -11037,10 +10625,7 @@ var ko_default = {
       writingLog: "\uAE00\uC4F0\uAE30 \uB85C\uADF8",
       publishToWordPress: "WordPress\uC5D0 \uAC8C\uC2DC"
     },
-    openDocumentFirst: "\uBA3C\uC800 \uBB38\uC11C\uB97C \uC5EC\uC138\uC694.",
     sprintTimer: "\uC2A4\uD504\uB9B0\uD2B8 \uD0C0\uC774\uBA38",
-    pause: "\u23F8 \uC77C\uC2DC\uC815\uC9C0",
-    stop: "\u25A0 \uC815\uC9C0",
     startSprint: "\u23F1 \uC2A4\uD504\uB9B0\uD2B8 \uC124\uC815",
     quickStart: "\uBE60\uB978 \uC2A4\uD504\uB9B0\uD2B8 \uC635\uC158",
     today: "\uC624\uB298",
@@ -11173,7 +10758,6 @@ var ko_default = {
   },
   projectManager: {
     errorFolderExists: '\uD504\uB85C\uC81D\uD2B8 \uD3F4\uB354\uC5D0 "{{folder}}"(\uC774)\uB77C\uB294 \uC774\uB984\uC758 \uD3F4\uB354\uAC00 \uC774\uBBF8 \uC788\uC2B5\uB2C8\uB2E4. \uB2E4\uB978 \uC81C\uBAA9\uC744 \uC120\uD0DD\uD558\uC138\uC694.',
-    corruptBinder: '"{{project}}"\uC758 _binder.json \uD30C\uC77C\uC744 \uC77D\uC744 \uC218 \uC5C6\uC2B5\uB2C8\uB2E4. \uBC31\uC5C5\uC774 \uD504\uB85C\uC81D\uD2B8 \uD3F4\uB354\uC5D0 _binder.json.bak(\uC73C)\uB85C \uC800\uC7A5\uB418\uC5C8\uC2B5\uB2C8\uB2E4.',
     corruptProject: '"{{folder}}"\uC758 \uD504\uB85C\uC81D\uD2B8 \uD30C\uC77C\uC774 \uC190\uC0C1\uB418\uC5B4 \uD504\uB85C\uC81D\uD2B8\uB97C \uBD88\uB7EC\uC62C \uC218 \uC5C6\uC2B5\uB2C8\uB2E4.',
     corruptLog: "{{project}}\uC758 \uAE00\uC4F0\uAE30 \uB85C\uADF8\uB97C \uC77D\uC744 \uC218 \uC5C6\uC2B5\uB2C8\uB2E4 \u2014 \uC0C8 \uB85C\uADF8\uB97C \uC2DC\uC791\uD569\uB2C8\uB2E4."
   },
@@ -11265,7 +10849,6 @@ var ko_default = {
     scopeCurrent: "\uD604\uC7AC \uBB38\uC11C",
     scopeProject: "\uC804\uCCB4 \uD504\uB85C\uC81D\uD2B8 (\uBC14\uC778\uB354 \uC21C\uC11C\uB85C)",
     includeFrontmatter: "\uD504\uB860\uD2B8\uB9E4\uD130 \uD3EC\uD568",
-    includeResearch: "\uB9AC\uC11C\uCE58 \uB178\uD2B8 \uD3EC\uD568",
     includeTitlesAsHeadings: "\uBB38\uC11C \uC81C\uBAA9\uC744 \uC81C\uBAA9\uC73C\uB85C \uD3EC\uD568",
     addTitlePage: "\uD45C\uC9C0 \uCD94\uAC00",
     addTitlePageDesc: "\uD504\uB85C\uC81D\uD2B8 \uC81C\uBAA9, \uC800\uC790 \uBC0F \uB0A0\uC9DC\uAC00 \uC788\uB294 \uD45C\uC9C0\uB97C \uC55E\uC5D0 \uCD94\uAC00\uD569\uB2C8\uB2E4.",
@@ -11380,16 +10963,6 @@ var ko_default = {
     },
     close: "\uB2EB\uAE30"
   },
-  addToProject: {
-    title: "\uAE00\uC4F0\uAE30 \uD504\uB85C\uC81D\uD2B8\uC5D0 \uCD94\uAC00",
-    noProjects: "\uAE00\uC4F0\uAE30 \uD504\uB85C\uC81D\uD2B8\uB97C \uCC3E\uC744 \uC218 \uC5C6\uC2B5\uB2C8\uB2E4. \uBA3C\uC800 \uD504\uB85C\uC81D\uD2B8\uB97C \uB9CC\uB4DC\uC138\uC694.",
-    close: "\uB2EB\uAE30",
-    file: "\uD30C\uC77C: {{path}}",
-    projectName: "\uAE00\uC4F0\uAE30 \uD504\uB85C\uC81D\uD2B8",
-    projectDesc: "\uC774 \uD30C\uC77C\uC744 \uC5B4\uB290 \uAE00\uC4F0\uAE30 \uD504\uB85C\uC81D\uD2B8\uC5D0 \uCD94\uAC00\uD558\uC2DC\uACA0\uC2B5\uB2C8\uAE4C?",
-    addBtn: "\uD504\uB85C\uC81D\uD2B8\uC5D0 \uCD94\uAC00",
-    cancel: "\uCDE8\uC18C"
-  },
   scanFolder: {
     title: "\uBC14\uC778\uB354\uC5D0 \uD30C\uC77C \uCD94\uAC00",
     desc: "\uC774 \uD504\uB85C\uC81D\uD2B8\uC5D0 \uCD94\uAC00\uD560 \uD30C\uC77C\uC744 \uC120\uD0DD\uD558\uC138\uC694:",
@@ -11417,7 +10990,6 @@ var ko_default = {
       setWordCountGoal: "\uB2E8\uC5B4 \uC218 \uBAA9\uD45C \uC124\uC815",
       openWritingLog: "\uAE00\uC4F0\uAE30 \uB85C\uADF8 \uC5F4\uAE30",
       openFolderSidebar: "\uC0AC\uC774\uB4DC\uBC14 \uD0D0\uC0C9\uAE30\uC5D0\uC11C \uD3F4\uB354 \uC5F4\uAE30",
-      addFilesToBinder: "\uD504\uB85C\uC81D\uD2B8 \uD3F4\uB354\uC5D0\uC11C \uC0C8 \uD30C\uC77C \uAC80\uC0C9",
       restoreBinderLayout: "\uC774\uC804 \uBC14\uC778\uB354 \uBC30\uCE58 \uBCF5\uC6D0"
     },
     menu: {
@@ -11427,7 +10999,6 @@ var ko_default = {
       setGoal: "\uB2E8\uC5B4 \uC218 \uBAA9\uD45C \uC124\uC815",
       switchMode: "\uAE00\uC4F0\uAE30 \uBAA8\uB4DC \uC804\uD658 \u2192",
       typographyFont: "\uD0C0\uC774\uD3EC\uADF8\uB798\uD53C \uAE00\uAF34 \u2192",
-      addToProject: "\uAE00\uC4F0\uAE30 \uD504\uB85C\uC81D\uD2B8\uC5D0 \uCD94\uAC00",
       openSidebar: "\uC0AC\uC774\uB4DC\uBC14 \uD0D0\uC0C9\uAE30\uC5D0\uC11C \uC5F4\uAE30",
       draftMode: "\u270D \uCD08\uC548 \uBAA8\uB4DC",
       editMode: "\u270E \uD3B8\uC9D1 \uBAA8\uB4DC",
@@ -11435,8 +11006,7 @@ var ko_default = {
       normalMode: "\uC77C\uBC18 (\uBAA8\uB4DC \uC5C6\uC74C)"
     },
     notice: {
-      noMarkdownOpen: "\uD604\uC7AC \uC5F4\uB824 \uC788\uB294 Markdown \uD30C\uC77C\uC774 \uC5C6\uC2B5\uB2C8\uB2E4.",
-      addedToProject: '"{{file}}"\uC744(\uB97C) {{project}}\uC5D0 \uCD94\uAC00\uD588\uC2B5\uB2C8\uB2E4'
+      noMarkdownOpen: "\uD604\uC7AC \uC5F4\uB824 \uC788\uB294 Markdown \uD30C\uC77C\uC774 \uC5C6\uC2B5\uB2C8\uB2E4."
     },
     statusBar: {
       projectWords: "{{total}} / {{goal}} \uD504\uB85C\uC81D\uD2B8 \uB2E8\uC5B4",
@@ -11488,6 +11058,13 @@ var ko_default = {
   epub: {
     toc: "\uBAA9\uCC28",
     cover: "\uD45C\uC9C0"
+  },
+  binderUpdate: {
+    title: "\uBC14\uC778\uB354\uC640 \uD3F4\uB354\uAC00 \uC774\uC81C \uD56D\uC0C1 \uC77C\uCE58\uD569\uB2C8\uB2E4",
+    body1: "\uBC14\uC778\uB354\uAC00 \uC774\uC81C \uD3F4\uB354\uB97C \uC9C1\uC811 \uC77D\uC73C\uBBC0\uB85C \uB458\uC774 \uC5B4\uAE0B\uB0A0 \uC218 \uC5C6\uC2B5\uB2C8\uB2E4. \uC5EC\uAE30\uC5D0\uC11C\uB4E0 \uCEF4\uD4E8\uD130\uC758 \uD30C\uC77C \uD0D0\uC0C9\uAE30\uC5D0\uC11C\uB4E0 \uC791\uC5C5\uC744 \uC815\uB9AC\uD560 \uC218 \uC788\uC73C\uBA70 \uD56D\uC0C1 \uC77C\uCE58\uD569\uB2C8\uB2E4.",
+    body2: "\uC774\uB97C \uC704\uD574 \uAE30\uC874 \uD504\uB85C\uC81D\uD2B8\uB97C \uCC98\uC74C \uC5F4 \uB54C \uC774\uC804 \uBC14\uC778\uB354\uC640 \uC77C\uCE58\uD558\uB3C4\uB85D \uD3F4\uB354\uB97C \uB9CC\uB4E4\uACE0 \uBB38\uC11C\uB97C \uC774\uB3D9\uD569\uB2C8\uB2E4. \uC544\uBB34\uAC83\uB3C4 \uC0AD\uC81C\uB418\uC9C0 \uC54A\uC73C\uBA70, \uC791\uC131\uD55C \uAE00\uC740 \uC804\uD600 \uBC14\uB00C\uC9C0 \uC54A\uC2B5\uB2C8\uB2E4.",
+    body3: '\uC774\uC804 \uBC30\uCE58\uAC00 \uB354 \uC88B\uC558\uB2E4\uBA74 \uD3F4\uB354\uB97C \uB418\uB3CC\uB9B4 \uC218 \uC788\uC2B5\uB2C8\uB2E4. \uBA85\uB839\uC5B4 \uD314\uB808\uD2B8\uB97C \uC5F4\uACE0(Ctrl+P, Mac\uC5D0\uC11C\uB294 Cmd+P) "\uC774\uC804 \uBC14\uC778\uB354 \uBC30\uCE58 \uBCF5\uC6D0"\uC744(\uB97C) \uAC80\uC0C9\uD558\uC138\uC694. \uC5C5\uB370\uC774\uD2B8\uAC00 \uB9CC\uB4E0 \uBE48 \uD3F4\uB354 \uBA87 \uAC1C\uAC00 \uB0A8\uC744 \uC218 \uC788\uC73C\uBA70, \uC0AD\uC81C\uD574\uB3C4 \uB429\uB2C8\uB2E4.',
+    gotIt: "\uD655\uC778\uD588\uC5B4\uC694"
   }
 };
 
@@ -11706,128 +11283,6 @@ var ProjectModal = class extends import_obsidian2.Modal {
 // modals/TargetsDashboardModal.ts
 var import_obsidian4 = require("obsidian");
 
-// src/binderOrder.ts
-function parseFolderPrefix(name) {
-  const m = /^(-?\d+)~ (\S.*)$/.exec(name);
-  if (!m) return { order: null, displayName: name };
-  return { order: parseInt(m[1], 10), displayName: m[2] };
-}
-function isHiddenName(name) {
-  return name.startsWith("_") || name.startsWith(".");
-}
-function parseBinderOrder(value) {
-  return typeof value === "number" && Number.isFinite(value) ? value : null;
-}
-function effectiveOrder(entry) {
-  return entry.isFolder ? parseFolderPrefix(entry.name).order : entry.binderOrder;
-}
-function entryDisplayName(entry) {
-  if (entry.isFolder) return parseFolderPrefix(entry.name).displayName;
-  if (entry.extension === "md") {
-    return entry.name.slice(0, entry.name.length - ".md".length);
-  }
-  return entry.name;
-}
-var collator = new Intl.Collator(void 0, { numeric: true, sensitivity: "base" });
-function naturalCompare(a, b) {
-  return collator.compare(a, b);
-}
-function compareSiblings(a, b) {
-  const ao = effectiveOrder(a);
-  const bo = effectiveOrder(b);
-  if (ao !== null && bo !== null && ao !== bo) return ao - bo;
-  if (ao !== null && bo === null) return -1;
-  if (ao === null && bo !== null) return 1;
-  const byName = naturalCompare(entryDisplayName(a), entryDisplayName(b));
-  if (byName !== 0) return byName;
-  if (a.isFolder !== b.isFolder) return a.isFolder ? 1 : -1;
-  return 0;
-}
-function sortSiblings(entries) {
-  return [...entries].sort(compareSiblings);
-}
-function canCarryOrder(entry) {
-  return entry.isFolder || entry.extension === "md";
-}
-function folderNameWithPrefix(name, order) {
-  const marker = order < 0 ? "-" + String(-order).padStart(3, "0") : String(order).padStart(3, "0");
-  return marker + "~ " + parseFolderPrefix(name).displayName;
-}
-function planReorder(sequence, movedIndex) {
-  const moved = sequence[movedIndex];
-  if (!moved || !canCarryOrder(moved)) return [];
-  const prev = movedIndex > 0 ? sequence[movedIndex - 1] : null;
-  const next = movedIndex < sequence.length - 1 ? sequence[movedIndex + 1] : null;
-  const prevOrder = prev ? effectiveOrder(prev) : null;
-  const nextOrder = next ? effectiveOrder(next) : null;
-  if (!prev && !next) {
-    return effectiveOrder(moved) === 10 ? [] : [{ index: movedIndex, order: 10 }];
-  }
-  if (!prev) {
-    const order = nextOrder !== null ? nextOrder - 10 : 10;
-    return effectiveOrder(moved) === order ? [] : [{ index: movedIndex, order }];
-  }
-  if (prevOrder !== null && (!next || nextOrder === null)) {
-    const order = prevOrder + 10;
-    return effectiveOrder(moved) === order ? [] : [{ index: movedIndex, order }];
-  }
-  if (prevOrder !== null && nextOrder !== null && nextOrder - prevOrder >= 2) {
-    const order = Math.floor((prevOrder + nextOrder) / 2);
-    return effectiveOrder(moved) === order ? [] : [{ index: movedIndex, order }];
-  }
-  const writes = [];
-  let value = 10;
-  for (let i2 = 0; i2 < sequence.length; i2++) {
-    const entry = sequence[i2];
-    if (!canCarryOrder(entry)) continue;
-    if (effectiveOrder(entry) !== value) writes.push({ index: i2, order: value });
-    value += 10;
-  }
-  return writes;
-}
-
-// src/binderMenu.ts
-var BINDER_TYPES = ["chapter", "section", "article", "note"];
-function parseBinderType(value) {
-  return typeof value === "string" && BINDER_TYPES.includes(value) ? value : null;
-}
-function parseBinderStatus(value) {
-  return typeof value === "string" && value in STATUS_COLORS ? value : null;
-}
-function menuActionsFor(entry, zone) {
-  if (zone === "exports") return ["delete"];
-  if (!entry.isFolder && entry.extension !== "md") return ["rename", "delete"];
-  if (entry.isFolder && zone === "manuscript") {
-    return ["rename", "export", "newDoc", "newFolder", "delete"];
-  }
-  if (zone === "research" || entry.isFolder) {
-    return ["rename", "newDoc", "newFolder", "delete"];
-  }
-  return ["rename", "status", "goal", "type", "compile", "newDoc", "newFolder", "delete"];
-}
-function renamePrefill(entry) {
-  if (entry.isFolder || entry.extension === "md") return entryDisplayName(entry);
-  return entry.extension ? entry.name.slice(0, entry.name.length - entry.extension.length - 1) : entry.name;
-}
-function renameTargetName(entry, typed) {
-  if (entry.isFolder) {
-    if (parseFolderPrefix(typed).order !== null) return typed;
-    const order = parseFolderPrefix(entry.name).order;
-    return order !== null ? folderNameWithPrefix(typed, order) : typed;
-  }
-  if (!entry.extension) return typed;
-  const suffix = "." + entry.extension;
-  return typed.toLowerCase().endsWith(suffix.toLowerCase()) ? typed : typed + suffix;
-}
-function validateItemName(typed, targetName, siblingNames) {
-  if (typed.trim() === "") return { ok: false, reason: "empty" };
-  if (/[\\/:*?"<>|]/.test(typed)) return { ok: false, reason: "invalid-chars" };
-  if (/[. ]$/.test(typed)) return { ok: false, reason: "trailing" };
-  const lower = targetName.toLowerCase();
-  if (siblingNames.some((n) => n.toLowerCase() === lower)) return { ok: false, reason: "exists" };
-  return { ok: true };
-}
-
 // src/manuscriptTree.ts
 var import_obsidian3 = require("obsidian");
 function buildManuscriptTree(app, rootPath, opts = {}) {
@@ -11961,39 +11416,19 @@ var TargetsDashboardModal = class extends import_obsidian4.Modal {
     var _a2;
     if (!project) return;
     this.stats = [];
-    if (this.plugin.settings.filesystemBinder) {
-      const docs = listManuscriptDocs(this.app, project.folderPath);
-      for (let i2 = 0; i2 < docs.length; i2++) {
-        const file = docs[i2];
-        const fm = (_a2 = this.app.metadataCache.getFileCache(file)) == null ? void 0 : _a2.frontmatter;
-        const rawGoal = Number(fm == null ? void 0 : fm["word-count-goal"]);
-        this.stats.push({
-          title: file.basename,
-          filePath: file.path,
-          type: parseBinderType(fm == null ? void 0 : fm["binder-type"]),
-          status: parseBinderStatus(fm == null ? void 0 : fm["binder-status"]),
-          goal: Number.isFinite(rawGoal) && rawGoal > 0 ? rawGoal : void 0,
-          order: i2,
-          binderItemId: null,
-          ...await this.countFor(file)
-        });
-      }
-      return;
-    }
-    const binder = await this.plugin.projectManager.loadBinder(project);
-    const items = this.plugin.projectManager.flattenBinder(binder.items);
-    for (const item of items) {
-      if (item.type === "group" || item.type === "part") continue;
-      const file = this.app.vault.getAbstractFileByPath(item.filePath);
+    const docs = listManuscriptDocs(this.app, project.folderPath);
+    for (let i2 = 0; i2 < docs.length; i2++) {
+      const file = docs[i2];
+      const fm = (_a2 = this.app.metadataCache.getFileCache(file)) == null ? void 0 : _a2.frontmatter;
+      const rawGoal = Number(fm == null ? void 0 : fm["word-count-goal"]);
       this.stats.push({
-        title: item.title,
-        filePath: item.filePath,
-        type: item.type,
-        status: item.status,
-        goal: item.wordCountGoal,
-        order: item.order,
-        binderItemId: item.id,
-        ...file instanceof import_obsidian4.TFile ? await this.countFor(file) : { wordCount: 0, readingTime: this.plugin.statsTracker.calculateReadingTime(0) }
+        title: file.basename,
+        filePath: file.path,
+        type: parseBinderType(fm == null ? void 0 : fm["binder-type"]),
+        status: parseBinderStatus(fm == null ? void 0 : fm["binder-status"]),
+        goal: Number.isFinite(rawGoal) && rawGoal > 0 ? rawGoal : void 0,
+        order: i2,
+        ...await this.countFor(file)
       });
     }
   }
@@ -12004,17 +11439,6 @@ var TargetsDashboardModal = class extends import_obsidian4.Modal {
   }
   async saveGoal(stat, goal) {
     stat.goal = goal;
-    if (stat.binderItemId !== null) {
-      const project = this.plugin.projectManager.getActiveProject();
-      if (!project) return;
-      const binder = await this.plugin.projectManager.loadBinder(project);
-      const found = this.plugin.projectManager.findItem(binder.items, stat.binderItemId);
-      if (found) {
-        found.wordCountGoal = goal;
-        await this.plugin.projectManager.saveBinder(binder);
-      }
-      return;
-    }
     const file = this.app.vault.getAbstractFileByPath(stat.filePath);
     if (!(file instanceof import_obsidian4.TFile)) return;
     await this.app.fileManager.processFrontMatter(file, (fm) => {
@@ -12166,301 +11590,22 @@ var TargetsDashboardModal = class extends import_obsidian4.Modal {
   }
 };
 
-// modals/PublishModal.ts
+// modals/TitlePromptModal.ts
 var import_obsidian6 = require("obsidian");
 
-// src/dates.ts
-var import_obsidian5 = require("obsidian");
-var momentUntyped = import_obsidian5.moment;
-var moment = momentUntyped;
-function localDateString(date) {
-  return moment(date).format("YYYY-MM-DD");
-}
-
-// modals/PublishModal.ts
-var PublishModal = class extends import_obsidian6.Modal {
-  constructor(app, plugin, filePath) {
-    super(app);
-    this.selectedSiteId = "";
-    this.postTitle = "";
-    this.postStatus = "draft";
-    this.selectedCategoryIds = [];
-    this.tags = [];
-    this.excerpt = "";
-    this.scheduledDate = "";
-    this.categories = [];
-    this.plugin = plugin;
-    this.filePath = filePath;
-  }
-  async onOpen() {
-    const { contentEl } = this;
-    contentEl.empty();
-    contentEl.addClass("ws-publish-modal");
-    contentEl.createEl("h2", { text: t2("publishModal.title") });
-    const sites = this.plugin.settings.wordPressSites;
-    if (sites.length === 0) {
-      contentEl.createEl("p", {
-        text: t2("publishModal.noSites"),
-        cls: "ws-empty-state"
-      });
-      contentEl.createEl("button", { text: t2("publishModal.close") }).onclick = () => this.close();
-      return;
-    }
-    this.loadExistingMeta();
-    new import_obsidian6.Setting(contentEl).setName(t2("publishModal.siteName")).addDropdown((d) => {
-      sites.forEach((s) => {
-        d.addOption(s.id, s.nickname || s.url);
-      });
-      if (this.selectedSiteId) d.setValue(this.selectedSiteId);
-      else {
-        this.selectedSiteId = sites[0].id;
-        d.setValue(this.selectedSiteId);
-      }
-      d.onChange((v) => {
-        this.selectedSiteId = v;
-        void this.loadCategories().then(() => this.render());
-      });
-    });
-    new import_obsidian6.Setting(contentEl).setName(t2("publishModal.postTitleName")).addText((tx) => tx.setValue(this.postTitle).onChange((v) => {
-      this.postTitle = v;
-    }));
-    new import_obsidian6.Setting(contentEl).setName(t2("publishModal.postStatusName")).addDropdown((d) => d.addOption("draft", t2("publishModal.postStatus.draft")).addOption("pending", t2("publishModal.postStatus.pending")).addOption("publish", t2("publishModal.postStatus.publish")).setValue(this.postStatus).onChange((v) => {
-      this.postStatus = v;
-    }));
-    const site = this.getSite();
-    if (site) {
-      this.categories = await this.plugin.wpClient.getCategories(site);
-    }
-    if (this.categories.length > 0) {
-      new import_obsidian6.Setting(contentEl).setName(t2("publishModal.categoryName"));
-      const catList = contentEl.createDiv("ws-publish-categories");
-      for (const cat of this.categories) {
-        const label = catList.createEl("label", { cls: "ws-publish-cat-label" });
-        const cb = label.createEl("input", { type: "checkbox" });
-        cb.checked = this.selectedCategoryIds.includes(cat.id);
-        cb.onchange = () => {
-          if (cb.checked) {
-            if (!this.selectedCategoryIds.includes(cat.id)) this.selectedCategoryIds.push(cat.id);
-          } else {
-            this.selectedCategoryIds = this.selectedCategoryIds.filter((id) => id !== cat.id);
-          }
-        };
-        label.createSpan({ text: ` ${cat.name} (${cat.count})` });
-      }
-    }
-    new import_obsidian6.Setting(contentEl).setName(t2("publishModal.tagsName")).setDesc(t2("publishModal.tagsDesc")).addText((tx) => tx.setValue(this.tags.join(", ")).onChange((v) => {
-      this.tags = v.split(",").map((s) => s.trim()).filter(Boolean);
-    }));
-    new import_obsidian6.Setting(contentEl).setName(t2("publishModal.excerptName")).addTextArea((tx) => tx.setValue(this.excerpt).onChange((v) => {
-      this.excerpt = v;
-    }));
-    new import_obsidian6.Setting(contentEl).setName(t2("publishModal.scheduleName")).setDesc(t2("publishModal.scheduleDesc")).addText((tx) => tx.setPlaceholder(t2("publishModal.schedulePlaceholder")).setValue(this.scheduledDate).onChange((v) => {
-      this.scheduledDate = v;
-    }));
-    if (this.existingPostId) {
-      const noticeEl = contentEl.createDiv("ws-publish-existing-notice");
-      noticeEl.createSpan({ text: t2("publishModal.existingNotice", { id: this.existingPostId }) });
-      const choiceRow = noticeEl.createDiv("ws-publish-choice");
-      const updateBtn = choiceRow.createEl("button", { text: t2("publishModal.updatePost"), cls: "mod-cta" });
-      updateBtn.onclick = () => {
-        void this.doPublish(true);
-      };
-      const newBtn = choiceRow.createEl("button", { text: t2("publishModal.newPost") });
-      newBtn.onclick = () => {
-        void this.doPublish(false);
-      };
-    }
-    const btnRow = contentEl.createDiv("ws-modal-btn-row");
-    if (!this.existingPostId) {
-      const publishBtn = btnRow.createEl("button", {
-        cls: "mod-cta",
-        text: this.scheduledDate ? t2("publishModal.schedule") : t2("publishModal.publish")
-      });
-      publishBtn.onclick = () => {
-        void this.doPublish(false);
-      };
-    }
-    const cancelBtn = btnRow.createEl("button", { text: t2("publishModal.cancel") });
-    cancelBtn.onclick = () => this.close();
-  }
-  render() {
-    void this.onOpen();
-  }
-  loadExistingMeta() {
-    var _a2;
-    const file = this.app.vault.getAbstractFileByPath(this.filePath);
-    if (!(file instanceof import_obsidian6.TFile)) return;
-    const fm = (_a2 = this.app.metadataCache.getFileCache(file)) == null ? void 0 : _a2.frontmatter;
-    if (fm) {
-      this.postTitle = fm["title"] || file.basename;
-      if (fm["wp-post-id"]) this.existingPostId = Number(fm["wp-post-id"]);
-      if (fm["wp-status"]) this.postStatus = fm["wp-status"];
-      if (fm["tags"] && Array.isArray(fm["tags"])) {
-        this.tags = fm["tags"].filter((tag) => tag !== "writing-studio");
-      }
-      if (fm["wp-site"]) {
-        const site = this.plugin.settings.wordPressSites.find((s) => s.nickname === fm["wp-site"]);
-        if (site) this.selectedSiteId = site.id;
-      }
-    }
-  }
-  async loadCategories() {
-    const site = this.getSite();
-    if (!site) return;
-    this.categories = await this.plugin.wpClient.getCategories(site);
-  }
-  getSite() {
-    return this.plugin.settings.wordPressSites.find((s) => s.id === this.selectedSiteId);
-  }
-  async doPublish(updateExisting) {
-    const site = this.getSite();
-    if (!site) {
-      new import_obsidian6.Notice(t2("publishModal.noSiteSelected"));
-      return;
-    }
-    const file = this.app.vault.getAbstractFileByPath(this.filePath);
-    if (!(file instanceof import_obsidian6.TFile)) {
-      new import_obsidian6.Notice(t2("publishModal.fileNotFound"));
-      return;
-    }
-    try {
-      const rawContent = await this.app.vault.read(file);
-      const htmlContent = this.plugin.wpClient.convertMarkdownToHtml(rawContent, site);
-      const result = await this.plugin.wpClient.publish(site, {
-        title: this.postTitle,
-        content: htmlContent,
-        status: this.postStatus,
-        categoryIds: this.selectedCategoryIds,
-        tags: this.tags,
-        excerpt: this.excerpt,
-        scheduledDate: this.scheduledDate || void 0,
-        existingPostId: updateExisting ? this.existingPostId : void 0
-      });
-      await this.app.fileManager.processFrontMatter(file, (fm) => {
-        var _a2;
-        fm["wp-site"] = site.nickname;
-        fm["wp-post-id"] = result.postId;
-        fm["wp-url"] = result.url;
-        fm["wp-status"] = result.status;
-        fm["wp-published"] = result.scheduledDate ? null : localDateString();
-        fm["wp-scheduled"] = (_a2 = result.scheduledDate) != null ? _a2 : null;
-      });
-      const action = this.scheduledDate ? t2("publishModal.scheduled") : t2("publishModal.published");
-      new import_obsidian6.Notice(t2("publishModal.actionNotice", { action, url: result.url }), 1e4);
-      this.close();
-    } catch (e) {
-      new import_obsidian6.Notice(t2("publishModal.publishFailed", { error: e instanceof Error ? e.message : String(e) }));
-    }
-  }
-  onClose() {
-    this.contentEl.empty();
-  }
-};
-
-// modals/ScanFolderModal.ts
-var import_obsidian7 = require("obsidian");
-var ScanFolderModal = class extends import_obsidian7.Modal {
-  constructor(app, files, onConfirm) {
-    super(app);
-    this.files = files;
-    this.checked = new Map(files.map((f) => [f.path, true]));
-    this.onConfirm = onConfirm;
-  }
-  onOpen() {
-    const { contentEl } = this;
-    contentEl.empty();
-    contentEl.addClass("ws-scan-folder-modal");
-    contentEl.createEl("h2", { text: t2("scanFolder.title") });
-    contentEl.createEl("p", {
-      text: t2("scanFolder.desc"),
-      cls: "ws-scan-folder-desc"
-    });
-    const listEl = contentEl.createDiv("ws-scan-folder-list");
-    for (const file of this.files) {
-      const label = listEl.createEl("label", { cls: "ws-scan-folder-row" });
-      const checkbox = label.createEl("input");
-      checkbox.type = "checkbox";
-      checkbox.checked = true;
-      checkbox.addEventListener("change", () => {
-        this.checked.set(file.path, checkbox.checked);
-      });
-      label.createSpan({ text: file.basename });
-    }
-    const btnRow = contentEl.createDiv("ws-modal-btn-row");
-    const addBtn = btnRow.createEl("button", { cls: "mod-cta", text: t2("scanFolder.addBtn") });
-    addBtn.onclick = async () => {
-      const selected = this.files.filter((f) => this.checked.get(f.path));
-      await this.onConfirm(selected);
-      this.close();
-    };
-    const cancelBtn = btnRow.createEl("button", { text: t2("scanFolder.cancel") });
-    cancelBtn.onclick = () => this.close();
-  }
-  onClose() {
-    this.contentEl.empty();
-  }
-};
-
-// modals/ConfirmModal.ts
-var import_obsidian9 = require("obsidian");
-
 // src/safeHandler.ts
-var import_obsidian8 = require("obsidian");
+var import_obsidian5 = require("obsidian");
 function safeHandler(fn) {
   return (...args) => {
     fn(...args).catch((e) => {
       console.error("[Writing Studio]", e);
-      new import_obsidian8.Notice(t2("main.operationFailed", { error: e instanceof Error ? e.message : String(e) }));
+      new import_obsidian5.Notice(t2("main.operationFailed", { error: e instanceof Error ? e.message : String(e) }));
     });
   };
 }
 
-// modals/ConfirmModal.ts
-var ConfirmModal = class extends import_obsidian9.Modal {
-  constructor(app, heading, message, ctaText, cancelText, onConfirm) {
-    super(app);
-    this.heading = heading;
-    this.message = message;
-    this.ctaText = ctaText;
-    this.cancelText = cancelText;
-    this.onConfirm = onConfirm;
-  }
-  onOpen() {
-    this.titleEl.setText(this.heading);
-    this.contentEl.createEl("p", { text: this.message });
-    const buttons = this.contentEl.createDiv({ cls: "modal-button-container" });
-    const confirmBtn = buttons.createEl("button", { cls: "mod-warning", text: this.ctaText });
-    confirmBtn.onclick = safeHandler(async () => {
-      this.close();
-      await this.onConfirm();
-    });
-    const cancelBtn = buttons.createEl("button", { text: this.cancelText });
-    cancelBtn.onclick = () => this.close();
-  }
-  onClose() {
-    this.contentEl.empty();
-  }
-};
-
-// modals/confirmDeleteProject.ts
-var import_obsidian10 = require("obsidian");
-function confirmDeleteProject(app, plugin, project) {
-  new ConfirmModal(
-    app,
-    t2("projectModal.deleteTitle"),
-    t2("projectModal.deleteMessage", { title: project.title }),
-    t2("projectModal.deleteBtn"),
-    t2("projectModal.cancel"),
-    async () => {
-      await plugin.projectManager.deleteProject(project.id);
-      new import_obsidian10.Notice(t2("projectModal.deleted", { title: project.title }));
-    }
-  ).open();
-}
-
 // modals/TitlePromptModal.ts
-var import_obsidian11 = require("obsidian");
-var TitlePromptModal = class extends import_obsidian11.Modal {
+var TitlePromptModal = class extends import_obsidian6.Modal {
   constructor(app, heading, initialValue, ctaText, cancelText, onSubmit) {
     super(app);
     this.submitted = false;
@@ -12504,11 +11649,36 @@ var TitlePromptModal = class extends import_obsidian11.Modal {
   }
 };
 
-// src/ControlStrip.ts
-var import_obsidian15 = require("obsidian");
+// modals/ConfirmModal.ts
+var import_obsidian7 = require("obsidian");
+var ConfirmModal = class extends import_obsidian7.Modal {
+  constructor(app, heading, message, ctaText, cancelText, onConfirm) {
+    super(app);
+    this.heading = heading;
+    this.message = message;
+    this.ctaText = ctaText;
+    this.cancelText = cancelText;
+    this.onConfirm = onConfirm;
+  }
+  onOpen() {
+    this.titleEl.setText(this.heading);
+    this.contentEl.createEl("p", { text: this.message });
+    const buttons = this.contentEl.createDiv({ cls: "modal-button-container" });
+    const confirmBtn = buttons.createEl("button", { cls: "mod-warning", text: this.ctaText });
+    confirmBtn.onclick = safeHandler(async () => {
+      this.close();
+      await this.onConfirm();
+    });
+    const cancelBtn = buttons.createEl("button", { text: this.cancelText });
+    cancelBtn.onclick = () => this.close();
+  }
+  onClose() {
+    this.contentEl.empty();
+  }
+};
 
 // modals/ExportModal.ts
-var import_obsidian12 = require("obsidian");
+var import_obsidian8 = require("obsidian");
 
 // src/exportTitle.ts
 function resolveExportTitle(choice, ctx) {
@@ -12531,12 +11701,11 @@ function sanitizeTitleForFilename(title) {
 }
 
 // modals/ExportModal.ts
-var _ExportModal = class _ExportModal extends import_obsidian12.Modal {
+var _ExportModal = class _ExportModal extends import_obsidian8.Modal {
   constructor(app, plugin, initialScope = "current", subtreeRoot, initial) {
     super(app);
     this.exportScope = "current";
     this.includeFrontmatter = false;
-    this.includeResearch = false;
     this.includeTitlesAsHeadings = true;
     this.includeFolderNames = false;
     this.addTitlePage = true;
@@ -12557,7 +11726,6 @@ var _ExportModal = class _ExportModal extends import_obsidian12.Modal {
       this.subtreeRoot = initial.subtreeRoot;
       this.currentFilePath = initial.currentFilePath;
       this.includeFrontmatter = initial.includeFrontmatter;
-      this.includeResearch = initial.includeResearch;
       this.includeTitlesAsHeadings = initial.includeTitlesAsHeadings;
       this.includeFolderNames = initial.includeFolderNamesAsHeadings;
       this.addTitlePage = initial.addTitlePage;
@@ -12573,7 +11741,7 @@ var _ExportModal = class _ExportModal extends import_obsidian12.Modal {
     let coverSetting;
     let contactSetting;
     let customTitleSetting;
-    new import_obsidian12.Setting(contentEl).setName(t2("exportModal.formatName")).addDropdown((d) => d.addOption("md", t2("exportModal.format.md")).addOption("html", t2("exportModal.format.html")).addOption("manuscript", t2("exportModal.format.manuscript")).addOption("epub", t2("exportModal.format.epub")).addOption("pdf", t2("exportModal.format.pdf")).addOption("docx", t2("exportModal.format.docx")).addOption("rtf", t2("exportModal.format.rtf")).setValue(this.format).onChange((v) => {
+    new import_obsidian8.Setting(contentEl).setName(t2("exportModal.formatName")).addDropdown((d) => d.addOption("md", t2("exportModal.format.md")).addOption("html", t2("exportModal.format.html")).addOption("manuscript", t2("exportModal.format.manuscript")).addOption("epub", t2("exportModal.format.epub")).addOption("pdf", t2("exportModal.format.pdf")).addOption("docx", t2("exportModal.format.docx")).addOption("rtf", t2("exportModal.format.rtf")).setValue(this.format).onChange((v) => {
       this.format = v;
       coverSetting.settingEl.toggleClass("ws-hidden", v !== "epub");
       contactSetting.settingEl.toggleClass("ws-hidden", v !== "manuscript");
@@ -12581,20 +11749,20 @@ var _ExportModal = class _ExportModal extends import_obsidian12.Modal {
     }));
     this.pandocWarningEl = contentEl.createDiv({ cls: "ws-export-pandoc-warning ws-hidden", text: t2("exportModal.pandocWarning") });
     this.updatePandocWarning();
-    coverSetting = new import_obsidian12.Setting(contentEl).setName(t2("exportModal.coverImageName")).setDesc(t2("exportModal.coverImageDesc")).addText((tx) => tx.setValue(this.coverImagePath).setPlaceholder(t2("exportModal.coverImagePlaceholder")).onChange((v) => {
+    coverSetting = new import_obsidian8.Setting(contentEl).setName(t2("exportModal.coverImageName")).setDesc(t2("exportModal.coverImageDesc")).addText((tx) => tx.setValue(this.coverImagePath).setPlaceholder(t2("exportModal.coverImagePlaceholder")).onChange((v) => {
       this.coverImagePath = v.trim();
     }));
     coverSetting.settingEl.toggleClass("ws-hidden", this.format !== "epub");
-    contactSetting = new import_obsidian12.Setting(contentEl).setName(t2("exportModal.contactInfoName")).setDesc(t2("exportModal.contactInfoDesc")).addTextArea((tx) => tx.setValue(this.authorContact).setPlaceholder(t2("exportModal.contactInfoPlaceholder")).onChange((v) => {
+    contactSetting = new import_obsidian8.Setting(contentEl).setName(t2("exportModal.contactInfoName")).setDesc(t2("exportModal.contactInfoDesc")).addTextArea((tx) => tx.setValue(this.authorContact).setPlaceholder(t2("exportModal.contactInfoPlaceholder")).onChange((v) => {
       this.authorContact = v;
     }));
     contactSetting.settingEl.toggleClass("ws-hidden", this.format !== "manuscript");
     if (!this.subtreeRoot) {
-      new import_obsidian12.Setting(contentEl).setName(t2("exportModal.scopeName")).addDropdown((d) => d.addOption("current", t2("exportModal.scopeCurrent")).addOption("project", t2("exportModal.scopeProject")).setValue(this.exportScope).onChange((v) => {
+      new import_obsidian8.Setting(contentEl).setName(t2("exportModal.scopeName")).addDropdown((d) => d.addOption("current", t2("exportModal.scopeCurrent")).addOption("project", t2("exportModal.scopeProject")).setValue(this.exportScope).onChange((v) => {
         this.exportScope = v;
       }));
     }
-    new import_obsidian12.Setting(contentEl).setName(t2("exportModal.titleName")).addDropdown((d) => {
+    new import_obsidian8.Setting(contentEl).setName(t2("exportModal.titleName")).addDropdown((d) => {
       if (this.subtreeRoot) {
         d.addOption("folder", t2("exportModal.titleFolder"));
         d.addOption("project-folder", t2("exportModal.titleProjectFolder"));
@@ -12608,28 +11776,21 @@ var _ExportModal = class _ExportModal extends import_obsidian12.Modal {
         this.updateExportEnabled();
       });
     });
-    customTitleSetting = new import_obsidian12.Setting(contentEl).setName(t2("exportModal.customTitleName")).addText((tx) => tx.setValue(this.customTitle).setPlaceholder(t2("exportModal.customTitlePlaceholder")).onChange((v) => {
+    customTitleSetting = new import_obsidian8.Setting(contentEl).setName(t2("exportModal.customTitleName")).addText((tx) => tx.setValue(this.customTitle).setPlaceholder(t2("exportModal.customTitlePlaceholder")).onChange((v) => {
       this.customTitle = v;
       this.updateExportEnabled();
     }));
     customTitleSetting.settingEl.toggleClass("ws-hidden", this.titleChoice !== "custom");
-    new import_obsidian12.Setting(contentEl).setName(t2("exportModal.includeFrontmatter")).addToggle((tx) => tx.setValue(this.includeFrontmatter).onChange((v) => {
+    new import_obsidian8.Setting(contentEl).setName(t2("exportModal.includeFrontmatter")).addToggle((tx) => tx.setValue(this.includeFrontmatter).onChange((v) => {
       this.includeFrontmatter = v;
     }));
-    if (!this.plugin.settings.filesystemBinder) {
-      new import_obsidian12.Setting(contentEl).setName(t2("exportModal.includeResearch")).addToggle((tx) => tx.setValue(this.includeResearch).onChange((v) => {
-        this.includeResearch = v;
-      }));
-    }
-    new import_obsidian12.Setting(contentEl).setName(t2("exportModal.includeTitlesAsHeadings")).addToggle((tx) => tx.setValue(this.includeTitlesAsHeadings).onChange((v) => {
+    new import_obsidian8.Setting(contentEl).setName(t2("exportModal.includeTitlesAsHeadings")).addToggle((tx) => tx.setValue(this.includeTitlesAsHeadings).onChange((v) => {
       this.includeTitlesAsHeadings = v;
     }));
-    if (this.plugin.settings.filesystemBinder) {
-      new import_obsidian12.Setting(contentEl).setName(t2("exportModal.includeFolderHeadings")).addToggle((tx) => tx.setValue(this.includeFolderNames).onChange((v) => {
-        this.includeFolderNames = v;
-      }));
-    }
-    new import_obsidian12.Setting(contentEl).setName(t2("exportModal.addTitlePage")).setDesc(t2("exportModal.addTitlePageDesc")).addToggle((tx) => tx.setValue(this.addTitlePage).onChange((v) => {
+    new import_obsidian8.Setting(contentEl).setName(t2("exportModal.includeFolderHeadings")).addToggle((tx) => tx.setValue(this.includeFolderNames).onChange((v) => {
+      this.includeFolderNames = v;
+    }));
+    new import_obsidian8.Setting(contentEl).setName(t2("exportModal.addTitlePage")).setDesc(t2("exportModal.addTitlePageDesc")).addToggle((tx) => tx.setValue(this.addTitlePage).onChange((v) => {
       this.addTitlePage = v;
     }));
     const previewBtn = contentEl.createEl("button", {
@@ -12655,7 +11816,6 @@ var _ExportModal = class _ExportModal extends import_obsidian12.Modal {
           format: this.format,
           scope: this.exportScope,
           includeFrontmatter: this.includeFrontmatter,
-          includeResearch: this.includeResearch,
           includeTitlesAsHeadings: this.includeTitlesAsHeadings,
           includeFolderNamesAsHeadings: this.includeFolderNames,
           subtreeRoot: this.subtreeRoot,
@@ -12670,7 +11830,7 @@ var _ExportModal = class _ExportModal extends import_obsidian12.Modal {
         });
         this.close();
       } catch (e) {
-        new import_obsidian12.Notice(t2("exportModal.exportFailed", { error: e instanceof Error ? e.message : String(e) }));
+        new import_obsidian8.Notice(t2("exportModal.exportFailed", { error: e instanceof Error ? e.message : String(e) }));
         exportBtn.textContent = t2("exportModal.exportBtn");
         this.updateExportEnabled();
       }
@@ -12702,14 +11862,13 @@ var _ExportModal = class _ExportModal extends import_obsidian12.Modal {
     let currentFilePath = this.currentFilePath;
     if (this.exportScope === "current" && !currentFilePath) {
       const view = (_a2 = this.app.workspace.getMostRecentLeaf()) == null ? void 0 : _a2.view;
-      currentFilePath = view instanceof import_obsidian12.MarkdownView ? (_b2 = view.file) == null ? void 0 : _b2.path : void 0;
+      currentFilePath = view instanceof import_obsidian8.MarkdownView ? (_b2 = view.file) == null ? void 0 : _b2.path : void 0;
     }
     return {
       scope: this.exportScope,
       subtreeRoot: this.subtreeRoot,
       currentFilePath,
       includeFrontmatter: this.includeFrontmatter,
-      includeResearch: this.includeResearch,
       includeTitlesAsHeadings: this.includeTitlesAsHeadings,
       includeFolderNamesAsHeadings: this.includeFolderNames,
       addTitlePage: this.addTitlePage,
@@ -12743,9 +11902,28 @@ var _ExportModal = class _ExportModal extends import_obsidian12.Modal {
 _ExportModal.PANDOC_FORMATS = /* @__PURE__ */ new Set(["pdf", "docx", "rtf"]);
 var ExportModal = _ExportModal;
 
+// modals/confirmDeleteProject.ts
+var import_obsidian9 = require("obsidian");
+function confirmDeleteProject(app, plugin, project) {
+  new ConfirmModal(
+    app,
+    t2("projectModal.deleteTitle"),
+    t2("projectModal.deleteMessage", { title: project.title }),
+    t2("projectModal.deleteBtn"),
+    t2("projectModal.cancel"),
+    async () => {
+      await plugin.projectManager.deleteProject(project.id);
+      new import_obsidian9.Notice(t2("projectModal.deleted", { title: project.title }));
+    }
+  ).open();
+}
+
+// src/ControlStrip.ts
+var import_obsidian12 = require("obsidian");
+
 // modals/SprintModal.ts
-var import_obsidian13 = require("obsidian");
-var SprintModal = class extends import_obsidian13.Modal {
+var import_obsidian10 = require("obsidian");
+var SprintModal = class extends import_obsidian10.Modal {
   constructor(app, plugin) {
     super(app);
     this.sprintScope = "file";
@@ -12762,7 +11940,7 @@ var SprintModal = class extends import_obsidian13.Modal {
     const isPreset = presets.includes(this.duration);
     let customSetting;
     let customValue = isPreset ? "" : String(this.duration);
-    new import_obsidian13.Setting(contentEl).setName(t2("sprintModal.durationName")).setDesc(t2("sprintModal.durationDesc")).addDropdown((d) => {
+    new import_obsidian10.Setting(contentEl).setName(t2("sprintModal.durationName")).setDesc(t2("sprintModal.durationDesc")).addDropdown((d) => {
       presets.forEach((m) => {
         d.addOption(String(m), `${m} min`);
       });
@@ -12774,15 +11952,15 @@ var SprintModal = class extends import_obsidian13.Modal {
         this.duration = custom ? parseInt(customValue) || 0 : parseInt(v);
       });
     });
-    customSetting = new import_obsidian13.Setting(contentEl).setName(t2("sprintModal.durationCustom")).addText((tx) => tx.setPlaceholder(t2("sprintModal.durationCustomPlaceholder")).setValue(customValue).onChange((v) => {
+    customSetting = new import_obsidian10.Setting(contentEl).setName(t2("sprintModal.durationCustom")).addText((tx) => tx.setPlaceholder(t2("sprintModal.durationCustomPlaceholder")).setValue(customValue).onChange((v) => {
       customValue = v;
       this.duration = parseInt(v) || 0;
     }));
     customSetting.settingEl.toggleClass("ws-hidden", isPreset);
-    new import_obsidian13.Setting(contentEl).setName(t2("sprintModal.wordGoalName")).setDesc(t2("sprintModal.wordGoalDesc")).addText((tx) => tx.setPlaceholder(t2("sprintModal.wordGoalPlaceholder")).setValue(this.wordGoal ? String(this.wordGoal) : "").onChange((v) => {
+    new import_obsidian10.Setting(contentEl).setName(t2("sprintModal.wordGoalName")).setDesc(t2("sprintModal.wordGoalDesc")).addText((tx) => tx.setPlaceholder(t2("sprintModal.wordGoalPlaceholder")).setValue(this.wordGoal ? String(this.wordGoal) : "").onChange((v) => {
       this.wordGoal = parseInt(v) || 0;
     }));
-    new import_obsidian13.Setting(contentEl).setName(t2("sprintModal.scopeName")).addDropdown((d) => d.addOption("file", t2("sprintModal.scopeFile")).addOption("project", t2("sprintModal.scopeProject")).setValue(this.sprintScope).onChange((v) => {
+    new import_obsidian10.Setting(contentEl).setName(t2("sprintModal.scopeName")).addDropdown((d) => d.addOption("file", t2("sprintModal.scopeFile")).addOption("project", t2("sprintModal.scopeProject")).setValue(this.sprintScope).onChange((v) => {
       this.sprintScope = v;
     }));
     const btnRow = contentEl.createDiv("ws-modal-btn-row");
@@ -12792,7 +11970,7 @@ var SprintModal = class extends import_obsidian13.Modal {
     });
     startBtn.onclick = () => {
       if (!this.duration || this.duration <= 0) {
-        new import_obsidian13.Notice(t2("sprintModal.errorDuration"));
+        new import_obsidian10.Notice(t2("sprintModal.errorDuration"));
         return;
       }
       this.plugin.sprintTimer.setup(this.duration, this.wordGoal || void 0, this.sprintScope);
@@ -12807,8 +11985,8 @@ var SprintModal = class extends import_obsidian13.Modal {
 };
 
 // modals/WritingDashboardModal.ts
-var import_obsidian14 = require("obsidian");
-var WritingDashboardModal = class extends import_obsidian14.Modal {
+var import_obsidian11 = require("obsidian");
+var WritingDashboardModal = class extends import_obsidian11.Modal {
   constructor(app, plugin) {
     super(app);
     this.plugin = plugin;
@@ -12884,8 +12062,7 @@ var WritingDashboardModal = class extends import_obsidian14.Modal {
     if (project) {
       const docsSection = contentEl.createDiv("ws-dash-section");
       docsSection.createEl("h3", { text: t2("writingDashboard.documentWordCounts") });
-      const binder = await this.plugin.projectManager.loadBinder(project);
-      const items = this.plugin.projectManager.flattenBinder(binder.items);
+      const docs = listManuscriptDocs(this.app, project.folderPath);
       const table = docsSection.createEl("table", { cls: "ws-doc-wc-table" });
       const thead = table.createEl("thead");
       const hr = thead.createEl("tr");
@@ -12895,25 +12072,18 @@ var WritingDashboardModal = class extends import_obsidian14.Modal {
         t2("writingDashboard.docTable.readingTime")
       ].forEach((h) => hr.createEl("th", { text: h }));
       const tbody = table.createEl("tbody");
-      for (const item of items) {
-        if (item.type === "group" || item.type === "part") continue;
-        const file = this.app.vault.getAbstractFileByPath(item.filePath);
-        let wc = 0;
-        if (file instanceof import_obsidian14.TFile) {
-          const content2 = await this.app.vault.read(file);
-          wc = this.plugin.fmManager.countWords(content2);
-        }
+      for (const file of docs) {
+        const content2 = await this.app.vault.read(file);
+        const wc = this.plugin.fmManager.countWords(content2);
         const tr = tbody.createEl("tr");
         const titleTd = tr.createEl("td");
-        const link = titleTd.createEl("a", { text: item.title });
+        const link = titleTd.createEl("a", { text: file.basename });
         link.href = "#";
         link.onclick = async (e) => {
           e.preventDefault();
-          if (file instanceof import_obsidian14.TFile) {
-            const leaf = this.app.workspace.getLeaf(false);
-            await leaf.openFile(file);
-            this.close();
-          }
+          const leaf = this.app.workspace.getLeaf(false);
+          await leaf.openFile(file);
+          this.close();
         };
         tr.createEl("td", { text: String(wc) });
         tr.createEl("td", { text: this.plugin.statsTracker.calculateReadingTime(wc) });
@@ -12961,8 +12131,8 @@ var ControlStrip = class {
     ];
     for (const mode of modes) {
       const btn = seg.createEl("button", { cls: "ws-strip-mode-btn" });
-      (0, import_obsidian15.setTooltip)(btn, mode.desc);
-      (0, import_obsidian15.setIcon)(btn.createSpan("ws-strip-mode-icon"), mode.icon);
+      (0, import_obsidian12.setTooltip)(btn, mode.desc);
+      (0, import_obsidian12.setIcon)(btn.createSpan("ws-strip-mode-icon"), mode.icon);
       btn.createSpan({ text: mode.label, cls: "ws-strip-mode-label" });
       btn.onclick = () => {
         const current = this.plugin.writingModes.getCurrentMode();
@@ -12974,26 +12144,26 @@ var ControlStrip = class {
   renderToggleRow(strip) {
     const row = strip.createDiv("ws-strip-row2");
     this.focusPill = row.createEl("button", { cls: "ws-strip-pill", text: t2("binder.strip.focus") });
-    (0, import_obsidian15.setTooltip)(this.focusPill, t2("launcher.focusMode"));
+    (0, import_obsidian12.setTooltip)(this.focusPill, t2("launcher.focusMode"));
     this.focusPill.onclick = () => {
       this.plugin.focusMode.toggle();
     };
     this.typographyPill = row.createEl("button", { cls: "ws-strip-pill", text: t2("binder.strip.typography") });
-    (0, import_obsidian15.setTooltip)(this.typographyPill, t2("launcher.typographyMode"));
+    (0, import_obsidian12.setTooltip)(this.typographyPill, t2("launcher.typographyMode"));
     this.typographyPill.onclick = () => {
       void this.plugin.typographyMode.toggle();
     };
     this.sprintChip = row.createEl("button", { cls: "ws-strip-chip" });
     this.sprintChip.onclick = (e) => this.showSprintMenu(e);
     const overflow = row.createEl("button", { cls: "ws-strip-overflow" });
-    (0, import_obsidian15.setIcon)(overflow, "more-horizontal");
-    (0, import_obsidian15.setTooltip)(overflow, t2("binder.strip.moreActions"));
+    (0, import_obsidian12.setIcon)(overflow, "more-horizontal");
+    (0, import_obsidian12.setTooltip)(overflow, t2("binder.strip.moreActions"));
     overflow.onclick = (e) => this.showOverflowMenu(e);
   }
   syncSprintChip() {
     const timer = this.plugin.sprintTimer;
     this.sprintChip.empty();
-    (0, import_obsidian15.setIcon)(this.sprintChip.createSpan("ws-strip-chip-icon"), "timer");
+    (0, import_obsidian12.setIcon)(this.sprintChip.createSpan("ws-strip-chip-icon"), "timer");
     let label = t2("binder.strip.sprint");
     if (timer.isActive()) {
       const minutes = timer.getDurationMinutes();
@@ -13004,7 +12174,7 @@ var ControlStrip = class {
     this.sprintChip.toggleClass("is-running", timer.isActive() && !timer.isReady());
   }
   showSprintMenu(e) {
-    const menu = new import_obsidian15.Menu();
+    const menu = new import_obsidian12.Menu();
     menu.addItem((i2) => i2.setTitle(t2("sprintModal.setupTitle")).setIcon("settings-2").onClick(() => {
       new SprintModal(this.plugin.app, this.plugin).open();
     }));
@@ -13019,7 +12189,7 @@ var ControlStrip = class {
   // The occasional actions — each opens the same surface as its launcher
   // counterpart (the labels are shared too)
   showOverflowMenu(e) {
-    const menu = new import_obsidian15.Menu();
+    const menu = new import_obsidian12.Menu();
     menu.addItem((i2) => i2.setTitle(t2("launcher.action.export")).setIcon("download").onClick(() => {
       new ExportModal(this.plugin.app, this.plugin, "project").open();
     }));
@@ -13042,39 +12212,6 @@ var ControlStrip = class {
     menu.showAtMouseEvent(e);
   }
 };
-
-// src/binderFilter.ts
-function computeBinderFilter(items, query) {
-  const q = query.toLowerCase();
-  const visible = /* @__PURE__ */ new Set();
-  const expanded = /* @__PURE__ */ new Set();
-  const markDescendants = (item) => {
-    var _a2;
-    for (const child of (_a2 = item.children) != null ? _a2 : []) {
-      visible.add(child.id);
-      markDescendants(child);
-    }
-  };
-  const walk = (item) => {
-    var _a2;
-    const selfMatch = item.title.toLowerCase().includes(q);
-    let childMatch = false;
-    for (const child of (_a2 = item.children) != null ? _a2 : []) {
-      if (walk(child)) childMatch = true;
-    }
-    if (selfMatch) {
-      visible.add(item.id);
-      markDescendants(item);
-    }
-    if (childMatch) {
-      visible.add(item.id);
-      expanded.add(item.id);
-    }
-    return selfMatch || childMatch;
-  };
-  for (const item of items) walk(item);
-  return { visible, expanded };
-}
 
 // src/treeNav.ts
 function treeNavAction(key, row) {
@@ -13109,7 +12246,7 @@ function parentIndex(rows, from) {
 }
 
 // src/FolderSidebarView.ts
-var import_obsidian16 = require("obsidian");
+var import_obsidian13 = require("obsidian");
 
 // src/words.ts
 function countWords(content2) {
@@ -13121,7 +12258,7 @@ function countWords(content2) {
 
 // src/FolderSidebarView.ts
 var FOLDER_SIDEBAR_VIEW_TYPE = "folder-sidebar-explorer-view";
-var FolderSidebarView = class extends import_obsidian16.ItemView {
+var FolderSidebarView = class extends import_obsidian13.ItemView {
   constructor(leaf) {
     super(leaf);
     this.rootFolder = null;
@@ -13171,7 +12308,7 @@ var FolderSidebarView = class extends import_obsidian16.ItemView {
     const path = state == null ? void 0 : state.rootFolderPath;
     if (typeof path === "string" && path !== ((_a2 = this.rootFolder) == null ? void 0 : _a2.path)) {
       const folder = this.app.vault.getAbstractFileByPath(path);
-      if (folder instanceof import_obsidian16.TFolder) {
+      if (folder instanceof import_obsidian13.TFolder) {
         this.setRootFolder(folder);
         return;
       }
@@ -13195,10 +12332,10 @@ var FolderSidebarView = class extends import_obsidian16.ItemView {
     const active = (_a2 = this.app.workspace.activeEditor) == null ? void 0 : _a2.editor;
     if (active) return active;
     const recent = this.app.workspace.getMostRecentLeaf(this.app.workspace.rootSplit);
-    if ((recent == null ? void 0 : recent.view) instanceof import_obsidian16.MarkdownView) return recent.view.editor;
+    if ((recent == null ? void 0 : recent.view) instanceof import_obsidian13.MarkdownView) return recent.view.editor;
     for (const leaf of this.app.workspace.getLeavesOfType("markdown")) {
       const view = leaf.view;
-      if (view instanceof import_obsidian16.MarkdownView) return view.editor;
+      if (view instanceof import_obsidian13.MarkdownView) return view.editor;
     }
     return null;
   }
@@ -13228,7 +12365,7 @@ var FolderSidebarView = class extends import_obsidian16.ItemView {
     if (this.historyStack.length === 0) return;
     const prevPath = this.historyStack.pop();
     const prev = this.app.vault.getAbstractFileByPath(prevPath);
-    if (prev instanceof import_obsidian16.TFolder) {
+    if (prev instanceof import_obsidian13.TFolder) {
       this.currentFolder = prev;
       this.searchQuery = "";
       this.searchResults = null;
@@ -13265,10 +12402,10 @@ var FolderSidebarView = class extends import_obsidian16.ItemView {
     const results = [];
     const walk = (f) => {
       for (const child of f.children) {
-        if (child instanceof import_obsidian16.TFolder) {
+        if (child instanceof import_obsidian13.TFolder) {
           results.push(child);
           walk(child);
-        } else if (child instanceof import_obsidian16.TFile) {
+        } else if (child instanceof import_obsidian13.TFile) {
           results.push(child);
         }
       }
@@ -13314,7 +12451,7 @@ var FolderSidebarView = class extends import_obsidian16.ItemView {
       }
     }
     const textFiles = allItems.filter(
-      (item) => item instanceof import_obsidian16.TFile && ["md", "txt"].includes(item.extension.toLowerCase()) && !nameMatched.has(item)
+      (item) => item instanceof import_obsidian13.TFile && ["md", "txt"].includes(item.extension.toLowerCase()) && !nameMatched.has(item)
     );
     const contentMatches = await Promise.all(textFiles.map(async (file) => {
       try {
@@ -13353,7 +12490,7 @@ var FolderSidebarView = class extends import_obsidian16.ItemView {
     this.tooltipEl = tip;
     tip.createDiv({ cls: "ws-tooltip-name", text: item.name });
     tip.createDiv({ cls: "ws-tooltip-divider" });
-    if (item instanceof import_obsidian16.TFile) {
+    if (item instanceof import_obsidian13.TFile) {
       const modDate = new Date(item.stat.mtime);
       const modStr = modDate.toLocaleDateString(void 0, {
         year: "numeric",
@@ -13383,8 +12520,8 @@ var FolderSidebarView = class extends import_obsidian16.ItemView {
       let folderCount = 0;
       const walk = (f) => {
         for (const child of f.children) {
-          if (child instanceof import_obsidian16.TFile) fileCount++;
-          else if (child instanceof import_obsidian16.TFolder) {
+          if (child instanceof import_obsidian13.TFile) fileCount++;
+          else if (child instanceof import_obsidian13.TFolder) {
             folderCount++;
             walk(child);
           }
@@ -13480,9 +12617,9 @@ var FolderSidebarView = class extends import_obsidian16.ItemView {
   // One comparator for both the folder listing and search results — the two
   // sort methods previously duplicated this switch block
   compareEntries(a, b) {
-    const aIsFolder = a instanceof import_obsidian16.TFolder;
-    const bIsFolder = b instanceof import_obsidian16.TFolder;
-    const mtime = (x2) => x2 instanceof import_obsidian16.TFile ? x2.stat.mtime : 0;
+    const aIsFolder = a instanceof import_obsidian13.TFolder;
+    const bIsFolder = b instanceof import_obsidian13.TFolder;
+    const mtime = (x2) => x2 instanceof import_obsidian13.TFile ? x2.stat.mtime : 0;
     switch (this.sortMode) {
       case "folders-az":
         if (aIsFolder !== bIsFolder) return aIsFolder ? -1 : 1;
@@ -13595,7 +12732,7 @@ var FolderSidebarView = class extends import_obsidian16.ItemView {
     const toolbar = container.createDiv({ cls: "ws-folder-toolbar" });
     const searchWrap = toolbar.createDiv({ cls: "ws-folder-search-wrap" });
     const searchIcon = searchWrap.createSpan({ cls: "ws-folder-search-icon" });
-    (0, import_obsidian16.setIcon)(searchIcon, "search");
+    (0, import_obsidian13.setIcon)(searchIcon, "search");
     const searchInput = searchWrap.createEl("input", {
       cls: "ws-folder-search-input",
       type: "text",
@@ -13656,7 +12793,7 @@ var FolderSidebarView = class extends import_obsidian16.ItemView {
     if (ext === "md") {
       try {
         const text = await this.app.vault.cachedRead(file);
-        await import_obsidian16.MarkdownRenderer.render(this.app, text, content2, file.path, this);
+        await import_obsidian13.MarkdownRenderer.render(this.app, text, content2, file.path, this);
         if (this.searchQuery) this.highlightTextInElement(content2, this.searchQuery);
       } catch (e) {
         content2.createDiv({ cls: "ws-folder-empty", text: t2("folderSidebar.previewError") });
@@ -13705,14 +12842,14 @@ var FolderSidebarView = class extends import_obsidian16.ItemView {
         itemEl.setAttribute("aria-selected", "false");
         const topRow = itemEl.createDiv({ cls: "ws-folder-item-row" });
         const iconEl = topRow.createSpan({ cls: "ws-folder-item-icon" });
-        if (item instanceof import_obsidian16.TFolder) {
-          (0, import_obsidian16.setIcon)(iconEl, "folder");
+        if (item instanceof import_obsidian13.TFolder) {
+          (0, import_obsidian13.setIcon)(iconEl, "folder");
         } else {
           const ext = item.extension.toLowerCase();
-          if (ext === "md") (0, import_obsidian16.setIcon)(iconEl, "file-text");
-          else if (["png", "jpg", "jpeg", "webp", "gif", "svg"].includes(ext)) (0, import_obsidian16.setIcon)(iconEl, "image");
-          else if (["mp3", "wav", "m4a", "ogg", "flac"].includes(ext)) (0, import_obsidian16.setIcon)(iconEl, "file-audio");
-          else (0, import_obsidian16.setIcon)(iconEl, "file");
+          if (ext === "md") (0, import_obsidian13.setIcon)(iconEl, "file-text");
+          else if (["png", "jpg", "jpeg", "webp", "gif", "svg"].includes(ext)) (0, import_obsidian13.setIcon)(iconEl, "image");
+          else if (["mp3", "wav", "m4a", "ogg", "flac"].includes(ext)) (0, import_obsidian13.setIcon)(iconEl, "file-audio");
+          else (0, import_obsidian13.setIcon)(iconEl, "file");
         }
         const isAtRoot = ((_a2 = item.parent) == null ? void 0 : _a2.path) === ((_c = (_b2 = this.rootFolder) == null ? void 0 : _b2.path) != null ? _c : current.path);
         const label = !isAtRoot && item.path.startsWith(rootPath) ? item.path.slice(rootPath.length) : item.name;
@@ -13730,8 +12867,8 @@ var FolderSidebarView = class extends import_obsidian16.ItemView {
           this.renderHighlightedText(snippetEl, snippet, lowerQuery);
         }
         itemEl.addEventListener("click", () => {
-          if (item instanceof import_obsidian16.TFolder) this.navigateTo(item);
-          else if (item instanceof import_obsidian16.TFile) this.openFile(item);
+          if (item instanceof import_obsidian13.TFolder) this.navigateTo(item);
+          else if (item instanceof import_obsidian13.TFile) this.openFile(item);
         });
         this.addTooltip(itemEl, item);
         items2.push(itemEl);
@@ -13768,7 +12905,7 @@ var FolderSidebarView = class extends import_obsidian16.ItemView {
       return;
     }
     const displayItems = current.children.filter(
-      (c) => c instanceof import_obsidian16.TFolder || c instanceof import_obsidian16.TFile
+      (c) => c instanceof import_obsidian13.TFolder || c instanceof import_obsidian13.TFile
     );
     const sorted = this.sortItems(displayItems);
     if (sorted.length === 0) {
@@ -13782,19 +12919,19 @@ var FolderSidebarView = class extends import_obsidian16.ItemView {
       item.setAttribute("role", "option");
       item.setAttribute("aria-selected", "false");
       const iconEl = item.createSpan({ cls: "ws-folder-item-icon" });
-      if (child instanceof import_obsidian16.TFolder) {
-        (0, import_obsidian16.setIcon)(iconEl, "folder");
-      } else if (child instanceof import_obsidian16.TFile) {
+      if (child instanceof import_obsidian13.TFolder) {
+        (0, import_obsidian13.setIcon)(iconEl, "folder");
+      } else if (child instanceof import_obsidian13.TFile) {
         const ext = child.extension.toLowerCase();
-        if (ext === "md") (0, import_obsidian16.setIcon)(iconEl, "file-text");
-        else if (["png", "jpg", "jpeg", "webp", "gif", "svg"].includes(ext)) (0, import_obsidian16.setIcon)(iconEl, "image");
-        else if (["mp3", "wav", "m4a", "ogg", "flac"].includes(ext)) (0, import_obsidian16.setIcon)(iconEl, "file-audio");
-        else (0, import_obsidian16.setIcon)(iconEl, "file");
+        if (ext === "md") (0, import_obsidian13.setIcon)(iconEl, "file-text");
+        else if (["png", "jpg", "jpeg", "webp", "gif", "svg"].includes(ext)) (0, import_obsidian13.setIcon)(iconEl, "image");
+        else if (["mp3", "wav", "m4a", "ogg", "flac"].includes(ext)) (0, import_obsidian13.setIcon)(iconEl, "file-audio");
+        else (0, import_obsidian13.setIcon)(iconEl, "file");
       }
       item.createSpan({ text: child.name });
       item.addEventListener("click", () => {
-        if (child instanceof import_obsidian16.TFolder) this.navigateTo(child);
-        else if (child instanceof import_obsidian16.TFile) this.openFile(child);
+        if (child instanceof import_obsidian13.TFolder) this.navigateTo(child);
+        else if (child instanceof import_obsidian13.TFile) this.openFile(child);
       });
       this.addTooltip(item, child);
       items.push(item);
@@ -13837,7 +12974,7 @@ function applyFocus(items, index) {
     if (i2 === index) item.scrollIntoView({ block: "nearest" });
   });
 }
-var FolderPickerModal = class extends import_obsidian16.FuzzySuggestModal {
+var FolderPickerModal = class extends import_obsidian13.FuzzySuggestModal {
   constructor(app, onChoose) {
     super(app);
     this.onChoose = onChoose;
@@ -13848,7 +12985,7 @@ var FolderPickerModal = class extends import_obsidian16.FuzzySuggestModal {
     const walk = (folder) => {
       folders.push(folder);
       for (const child of folder.children) {
-        if (child instanceof import_obsidian16.TFolder) walk(child);
+        if (child instanceof import_obsidian13.TFolder) walk(child);
       }
     };
     walk(this.app.vault.getRoot());
@@ -13862,917 +12999,8 @@ var FolderPickerModal = class extends import_obsidian16.FuzzySuggestModal {
   }
 };
 
-// src/BinderView.ts
-var STATUS_DOT_KEY = {
-  draft: "targetsDashboard.status.draft",
-  "in-progress": "targetsDashboard.status.inProgress",
-  complete: "targetsDashboard.status.complete",
-  published: "targetsDashboard.status.published"
-};
+// src/FilesystemBinderView.ts
 var BINDER_VIEW_TYPE = "writing-studio-binder";
-var BinderView = class extends import_obsidian17.ItemView {
-  constructor(leaf, plugin) {
-    super(leaf);
-    this.activeProject = null;
-    this.binderItems = [];
-    this.dragSource = null;
-    this.dropZone = null;
-    this.dragOverEl = null;
-    // Maps filePath → live DOM elements so word counts can be patched without
-    // re-render. One file can back several binder items, hence the array.
-    this.wcElements = /* @__PURE__ */ new Map();
-    this.searchQuery = "";
-    this.listEl = null;
-    // Non-null while a search is active — computed from the data model so
-    // matches inside collapsed groups are found and their ancestors expanded.
-    this.filterSets = null;
-    // Visible rows in visual order, rebuilt on every list render — the flat
-    // sequence keyboard navigation moves through.
-    this.navRows = [];
-    // Item id of the keyboard-focused row, so focus survives event-driven
-    // re-renders (every expand/collapse rebuilds the DOM).
-    this.navFocusItemId = null;
-    this.controlStrip = null;
-    this.plugin = plugin;
-  }
-  getViewType() {
-    return BINDER_VIEW_TYPE;
-  }
-  getDisplayText() {
-    return t2("binder.displayText");
-  }
-  getIcon() {
-    return "book-open";
-  }
-  async onOpen() {
-    this.registerEvent(this.plugin.projectManager.onActiveProjectChanged(() => {
-      void this.refresh();
-    }));
-    this.registerEvent(this.plugin.projectManager.onBinderChanged((binder) => {
-      var _a2;
-      if (binder.projectId === ((_a2 = this.activeProject) == null ? void 0 : _a2.id)) void this.refresh();
-    }));
-    this.registerEvent(this.plugin.projectManager.onProjectsChanged(() => {
-      void this.refresh();
-    }));
-    this.registerEvent(this.plugin.studioEvents.onModeChanged(() => {
-      var _a2;
-      return (_a2 = this.controlStrip) == null ? void 0 : _a2.sync();
-    }));
-    this.registerEvent(this.plugin.studioEvents.onFocusChanged(() => {
-      var _a2;
-      return (_a2 = this.controlStrip) == null ? void 0 : _a2.sync();
-    }));
-    this.registerEvent(this.plugin.studioEvents.onTypographyChanged(() => {
-      var _a2;
-      return (_a2 = this.controlStrip) == null ? void 0 : _a2.sync();
-    }));
-    this.registerEvent(this.plugin.studioEvents.onSprintChanged(() => {
-      var _a2;
-      return (_a2 = this.controlStrip) == null ? void 0 : _a2.sync();
-    }));
-    await this.refresh();
-  }
-  async refresh() {
-    this.activeProject = this.plugin.projectManager.getActiveProject();
-    if (this.activeProject) {
-      const binder = await this.plugin.projectManager.loadBinder(this.activeProject);
-      this.binderItems = binder.items;
-      await this.syncDriftedTitles();
-    } else {
-      this.binderItems = [];
-    }
-    this.render();
-  }
-  // Align binder titles with live filenames once per refresh — doing this
-  // during render() fired a concurrent saveBinder() per drifted row
-  async syncDriftedTitles() {
-    let drifted = false;
-    const walk = (items) => {
-      for (const item of items) {
-        const live = this.app.vault.getAbstractFileByPath(item.filePath);
-        if (live instanceof import_obsidian17.TFile && item.title !== live.basename) {
-          item.title = live.basename;
-          drifted = true;
-        }
-        if (item.children) walk(item.children);
-      }
-    };
-    walk(this.binderItems);
-    if (drifted) await this.saveBinder();
-  }
-  render() {
-    var _a2;
-    const container = this.containerEl.children[1];
-    container.empty();
-    this.wcElements.clear();
-    container.addClass("ws-binder-container");
-    this.controlStrip = new ControlStrip(this.plugin, container);
-    const header = container.createDiv("ws-binder-header");
-    const projectRow = header.createDiv("ws-binder-project-row");
-    const projectSel = projectRow.createEl("select", { cls: "ws-binder-project-sel" });
-    const projects = this.plugin.projectManager.getProjects();
-    const noOpt = projectSel.createEl("option", { text: t2("binder.selectProject") });
-    noOpt.value = "";
-    for (const p of projects) {
-      const opt = projectSel.createEl("option", { text: p.title });
-      opt.value = p.id;
-      if (((_a2 = this.activeProject) == null ? void 0 : _a2.id) === p.id) opt.selected = true;
-    }
-    projectSel.onchange = async () => {
-      await this.plugin.projectManager.setActiveProject(projectSel.value || null);
-    };
-    const newProjectBtn = projectRow.createEl("button", { cls: "ws-binder-btn", title: t2("binder.newProject") });
-    (0, import_obsidian17.setIcon)(newProjectBtn, "plus");
-    newProjectBtn.onclick = () => {
-      new ProjectModal(this.app, this.plugin).open();
-    };
-    if (this.activeProject) {
-      const project = this.activeProject;
-      const editProjectBtn = projectRow.createEl("button", { cls: "ws-binder-btn", title: t2("projectModal.editTitle") });
-      (0, import_obsidian17.setIcon)(editProjectBtn, "pencil");
-      editProjectBtn.onclick = () => {
-        new ProjectModal(this.app, this.plugin, void 0, project).open();
-      };
-      const deleteProjectBtn = projectRow.createEl("button", { cls: "ws-binder-btn", title: t2("projectModal.deleteTitle") });
-      (0, import_obsidian17.setIcon)(deleteProjectBtn, "trash");
-      deleteProjectBtn.onclick = () => {
-        confirmDeleteProject(this.app, this.plugin, project);
-      };
-    }
-    const toolbar = header.createDiv("ws-binder-toolbar");
-    const newDocBtn = toolbar.createEl("button", {
-      cls: "ws-binder-btn",
-      text: t2("binder.addDocument")
-    });
-    newDocBtn.onclick = () => {
-      if (!this.activeProject) {
-        new import_obsidian17.Notice(t2("binder.selectProjectFirst"));
-        return;
-      }
-      this.createNewDocument();
-    };
-    const newGroupBtn = toolbar.createEl("button", { cls: "ws-binder-btn" });
-    newGroupBtn.ariaLabel = t2("binder.newGroupOrPart");
-    (0, import_obsidian17.setIcon)(newGroupBtn, "folder-plus");
-    (0, import_obsidian17.setTooltip)(newGroupBtn, t2("binder.newGroupOrPart"));
-    newGroupBtn.onclick = (e) => {
-      if (!this.activeProject) {
-        new import_obsidian17.Notice(t2("binder.selectProjectFirst"));
-        return;
-      }
-      const menu = new import_obsidian17.Menu();
-      menu.addItem((i2) => i2.setTitle(t2("binder.menu.newGroup")).setIcon("folder").onClick(() => this.createStructuralItem("group")));
-      menu.addItem((i2) => i2.setTitle(t2("binder.menu.newPart")).setIcon("library").onClick(() => this.createStructuralItem("part")));
-      menu.showAtMouseEvent(e);
-    };
-    const scanBtn = toolbar.createEl("button", { cls: "ws-binder-btn" });
-    scanBtn.ariaLabel = t2("binder.addFiles");
-    (0, import_obsidian17.setIcon)(scanBtn, "folder-sync");
-    (0, import_obsidian17.setTooltip)(scanBtn, t2("binder.addFiles"));
-    scanBtn.onclick = async () => {
-      if (!this.activeProject) {
-        new import_obsidian17.Notice(t2("binder.selectProjectFirst"));
-        return;
-      }
-      await this.scanProjectFolder();
-    };
-    const dashBtn = toolbar.createEl("button", { cls: "ws-binder-btn", title: t2("binder.targetsDashboard") });
-    (0, import_obsidian17.setIcon)(dashBtn, "target");
-    dashBtn.onclick = () => {
-      new TargetsDashboardModal(this.app, this.plugin).open();
-    };
-    const searchInput = header.createEl("input", {
-      cls: "ws-binder-search",
-      type: "text",
-      placeholder: t2("binder.searchPlaceholder")
-    });
-    searchInput.value = this.searchQuery;
-    searchInput.oninput = () => {
-      this.searchQuery = searchInput.value;
-      this.renderList();
-    };
-    this.listEl = container.createDiv("ws-binder-list");
-    this.listEl.setAttribute("tabindex", "0");
-    this.listEl.setAttribute("role", "tree");
-    this.listEl.addEventListener("keydown", (e) => this.handleTreeKey(e));
-    this.renderList();
-  }
-  handleTreeKey(e) {
-    if (e.target instanceof HTMLElement && e.target.isContentEditable) return;
-    const index = this.navRows.findIndex((r) => r.item.id === this.navFocusItemId);
-    const row = index >= 0 ? this.navRows[index] : null;
-    const action = treeNavAction(e.key === "F10" && e.shiftKey ? "ContextMenu" : e.key, row);
-    if (!action) return;
-    e.preventDefault();
-    switch (action) {
-      case "next":
-        this.focusRow(Math.min(index + 1, this.navRows.length - 1));
-        break;
-      case "prev":
-        this.focusRow(index <= 0 ? 0 : index - 1);
-        break;
-      case "expand":
-        if (row) {
-          row.item.collapsed = false;
-          void this.saveBinder();
-        }
-        break;
-      case "collapse":
-        if (row) {
-          row.item.collapsed = true;
-          void this.saveBinder();
-        }
-        break;
-      case "to-parent":
-        this.focusRow(parentIndex(this.navRows, index));
-        break;
-      case "activate":
-        if (!row) break;
-        if (row.hasChildren) {
-          row.item.collapsed = !row.item.collapsed;
-          void this.saveBinder();
-        } else if (row.item.type !== "group" && row.item.type !== "part") {
-          void this.openDocument(row.item);
-        }
-        break;
-      case "menu":
-        if (row) {
-          const rect = row.el.getBoundingClientRect();
-          this.buildContextMenu(row.item).showAtPosition({ x: rect.left, y: rect.bottom });
-        }
-        break;
-      case "rename":
-        if (row) this.renameItem(row.item);
-        break;
-    }
-  }
-  focusRow(index) {
-    if (index < 0 || index >= this.navRows.length) return;
-    this.navFocusItemId = this.navRows[index].item.id;
-    applyFocus(this.navRows.map((r) => r.el), index);
-  }
-  renderList() {
-    const listEl = this.listEl;
-    if (!listEl) return;
-    listEl.empty();
-    this.wcElements.clear();
-    this.navRows = [];
-    if (!this.activeProject) {
-      const empty = listEl.createDiv("ws-binder-empty");
-      empty.textContent = t2("binder.noProjectSelected");
-      return;
-    }
-    if (this.binderItems.length === 0) {
-      const empty = listEl.createDiv("ws-binder-empty");
-      empty.textContent = t2("binder.noDocuments");
-      return;
-    }
-    const query = this.searchQuery.trim();
-    this.filterSets = query ? computeBinderFilter(this.binderItems, query) : null;
-    if (this.filterSets && this.filterSets.visible.size === 0) {
-      const empty = listEl.createDiv("ws-binder-empty");
-      empty.textContent = t2("binder.noMatches", { query });
-      return;
-    }
-    this.renderItems(listEl, this.binderItems, 0);
-    const focusIdx = this.navRows.findIndex((r) => r.item.id === this.navFocusItemId);
-    if (focusIdx >= 0 && activeDocument.activeElement === activeDocument.body) {
-      listEl.focus();
-      applyFocus(this.navRows.map((r) => r.el), focusIdx);
-    }
-    const rootZone = listEl.createDiv("ws-binder-root-append-zone");
-    rootZone.textContent = t2("binder.dropToRoot");
-    rootZone.ondragover = (e) => {
-      e.preventDefault();
-      rootZone.classList.add("ws-binder-root-append-active");
-    };
-    rootZone.ondragleave = (e) => {
-      if (!rootZone.contains(e.relatedTarget)) rootZone.classList.remove("ws-binder-root-append-active");
-    };
-    rootZone.ondrop = async (e) => {
-      e.preventDefault();
-      rootZone.classList.remove("ws-binder-root-append-active");
-      if (!this.dragSource) return;
-      await this.moveItemToRoot(this.dragSource);
-    };
-  }
-  renderItems(container, items, depth) {
-    var _a2, _b2, _c, _d, _e;
-    for (const item of items) {
-      const filter = this.filterSets;
-      if (filter && !filter.visible.has(item.id)) continue;
-      const isExpanded = filter ? filter.expanded.has(item.id) || !item.collapsed : !item.collapsed;
-      const row = container.createDiv({ cls: `ws-binder-item ws-binder-depth-${depth}` });
-      row.setAttribute("data-item-id", item.id);
-      row.setAttribute("draggable", "true");
-      row.setAttribute("role", "treeitem");
-      row.setAttribute("aria-level", String(depth + 1));
-      if ((_a2 = item.children) == null ? void 0 : _a2.length) row.setAttribute("aria-expanded", String(isExpanded));
-      this.navRows.push({ el: row, item, depth, hasChildren: !!((_b2 = item.children) == null ? void 0 : _b2.length), isExpanded });
-      if (depth > 0) {
-        row.setCssProps({ "--ws-binder-depth": `${depth * 16 + 8}px` });
-      }
-      if ((_c = item.children) == null ? void 0 : _c.length) {
-        const toggle = row.createSpan("ws-binder-toggle");
-        toggle.textContent = isExpanded ? "\u25BC" : "\u25B6";
-        toggle.onclick = (e) => {
-          e.stopPropagation();
-          item.collapsed = !item.collapsed;
-          void this.saveBinder();
-        };
-      } else {
-        row.createSpan("ws-binder-toggle ws-binder-toggle-leaf");
-      }
-      (0, import_obsidian17.setIcon)(row.createSpan("ws-binder-icon"), this.getTypeIcon(item.type));
-      const dot = row.createSpan("ws-binder-status-dot");
-      dot.setCssProps({ "--ws-status-color": STATUS_COLORS[item.status] });
-      dot.title = t2(STATUS_DOT_KEY[item.status]);
-      const titleEl = row.createSpan("ws-binder-title");
-      titleEl.textContent = item.title;
-      titleEl.contentEditable = "false";
-      const wcEl = row.createSpan("ws-binder-wc");
-      const wcEntries = (_d = this.wcElements.get(item.filePath)) != null ? _d : [];
-      wcEntries.push({ el: wcEl, item });
-      this.wcElements.set(item.filePath, wcEntries);
-      void this.loadWordCount(item, wcEl);
-      row.onclick = () => {
-        var _a3;
-        this.navFocusItemId = item.id;
-        if (item.type === "group" || item.type === "part") {
-          if ((_a3 = item.children) == null ? void 0 : _a3.length) {
-            item.collapsed = !item.collapsed;
-            void this.saveBinder();
-          }
-          return;
-        }
-        void this.openDocument(item);
-      };
-      row.oncontextmenu = (e) => {
-        e.preventDefault();
-        this.showContextMenu(e, item);
-      };
-      row.ondragstart = (e) => {
-        var _a3, _b3;
-        this.dragSource = item.id;
-        row.addClass("ws-binder-dragging");
-        (_a3 = this.listEl) == null ? void 0 : _a3.addClass("ws-binder-drag-active");
-        (_b3 = e.dataTransfer) == null ? void 0 : _b3.setData("text/plain", item.id);
-      };
-      row.ondragend = () => {
-        var _a3;
-        row.classList.remove("ws-binder-dragging");
-        (_a3 = this.listEl) == null ? void 0 : _a3.removeClass("ws-binder-drag-active");
-        this.dragSource = null;
-        this.dropZone = null;
-        const container2 = this.containerEl.children[1];
-        container2.querySelectorAll(".ws-binder-drop-before,.ws-binder-drop-after,.ws-binder-drop-into,.ws-binder-root-append-active").forEach((el) => el.classList.remove("ws-binder-drop-before", "ws-binder-drop-after", "ws-binder-drop-into", "ws-binder-root-append-active"));
-        this.dragOverEl = null;
-      };
-      row.ondragover = (e) => {
-        e.preventDefault();
-        if (!this.dragSource || this.dragSource === item.id) return;
-        if (this.dragOverEl && this.dragOverEl !== row) this.clearDropIndicators(this.dragOverEl);
-        this.dragOverEl = row;
-        const rect = row.getBoundingClientRect();
-        const ratio = (e.clientY - rect.top) / rect.height;
-        this.clearDropIndicators(row);
-        if (ratio < 0.3) {
-          row.classList.add("ws-binder-drop-before");
-          this.dropZone = "before";
-        } else if (ratio > 0.7) {
-          row.classList.add("ws-binder-drop-after");
-          this.dropZone = "after";
-        } else {
-          row.classList.add("ws-binder-drop-into");
-          this.dropZone = "into";
-        }
-      };
-      row.ondragleave = (e) => {
-        if (!row.contains(e.relatedTarget)) {
-          this.clearDropIndicators(row);
-          if (this.dragOverEl === row) this.dragOverEl = null;
-        }
-      };
-      row.ondrop = async (e) => {
-        e.preventDefault();
-        const zone = this.dropZone;
-        this.dropZone = null;
-        this.clearDropIndicators(row);
-        if (this.dragOverEl === row) this.dragOverEl = null;
-        if (!this.dragSource || this.dragSource === item.id) return;
-        if (zone === "before") await this.moveItemBefore(this.dragSource, item.id);
-        else if (zone === "after") await this.moveItemAfter(this.dragSource, item.id);
-        else await this.moveItemInto(this.dragSource, item.id);
-      };
-      if (((_e = item.children) == null ? void 0 : _e.length) && isExpanded) {
-        this.renderItems(container, item.children, depth + 1);
-      }
-    }
-  }
-  async loadWordCount(item, el) {
-    const file = this.app.vault.getAbstractFileByPath(item.filePath);
-    if (!(file instanceof import_obsidian17.TFile)) {
-      el.textContent = "0W";
-      return;
-    }
-    const content2 = await this.app.vault.cachedRead(file);
-    const wc = this.plugin.fmManager.countWords(content2);
-    const goal = item.wordCountGoal;
-    if (goal) {
-      const pct = Math.min(100, Math.round(wc / goal * 100));
-      el.textContent = `${wc}/${goal}`;
-      el.title = t2("binder.pctComplete", { pct });
-    } else {
-      el.textContent = t2("binder.wordCountSuffix", { count: wc });
-    }
-  }
-  // Called by the plugin's debounced word-count updater on every file change.
-  // Patches only the relevant DOM span — no binder re-render needed.
-  updateWordCount(filePath, wc) {
-    const entries = this.wcElements.get(filePath);
-    if (!entries) return;
-    for (const { el, item } of entries) {
-      const goal = item.wordCountGoal;
-      if (goal && goal > 0) {
-        const pct = Math.min(100, Math.round(wc / goal * 100));
-        el.textContent = `${wc}/${goal}`;
-        el.title = t2("binder.pctComplete", { pct });
-      } else {
-        el.textContent = t2("binder.wordCountSuffix", { count: wc });
-      }
-    }
-  }
-  // Lucide icon names — emoji clashed with the icon language everywhere else
-  getTypeIcon(type) {
-    const icons = {
-      chapter: "file-text",
-      section: "pilcrow",
-      article: "newspaper",
-      note: "sticky-note",
-      group: "folder",
-      part: "library"
-    };
-    return icons[type] || "file-text";
-  }
-  async openDocument(item) {
-    const file = this.app.vault.getAbstractFileByPath(item.filePath);
-    if (!(file instanceof import_obsidian17.TFile)) {
-      new import_obsidian17.Notice(t2("binder.cannotFindFile", { filePath: item.filePath }));
-      return;
-    }
-    const leaf = this.app.workspace.getLeaf(false);
-    await leaf.openFile(file);
-  }
-  // Entry point for the context menu and F2 — resolves the rendered title
-  // element for the item, since callers only hold the binder item
-  renameItem(item) {
-    const row = this.navRows.find((r) => r.item.id === item.id);
-    const titleEl = row == null ? void 0 : row.el.querySelector(".ws-binder-title");
-    if (titleEl) this.startRename(titleEl, item);
-  }
-  startRename(el, item) {
-    el.contentEditable = "true";
-    el.focus();
-    const range = activeDocument.createRange();
-    range.selectNodeContents(el);
-    const sel = window.getSelection();
-    sel == null ? void 0 : sel.removeAllRanges();
-    sel == null ? void 0 : sel.addRange(range);
-    const commit = async () => {
-      var _a2;
-      el.contentEditable = "false";
-      const newTitle = ((_a2 = el.textContent) == null ? void 0 : _a2.trim()) || item.title;
-      if (newTitle === item.title) return;
-      try {
-        const file = this.app.vault.getAbstractFileByPath(item.filePath);
-        if (file instanceof import_obsidian17.TFile) {
-          await this.app.fileManager.processFrontMatter(file, (fm) => {
-            fm["title"] = newTitle;
-          });
-          const parentPath2 = item.filePath.substring(0, item.filePath.lastIndexOf("/"));
-          const sanitized = newTitle.replace(/[\\/:*?"<>|]/g, "-");
-          const newPath = (0, import_obsidian17.normalizePath)(`${parentPath2}/${sanitized}.md`);
-          await this.app.fileManager.renameFile(file, newPath);
-          item.filePath = newPath;
-        }
-        item.title = newTitle;
-        await this.saveBinder();
-      } catch (e) {
-        el.textContent = item.title;
-        new import_obsidian17.Notice(t2("main.operationFailed", { error: e instanceof Error ? e.message : String(e) }));
-      }
-    };
-    el.onblur = () => {
-      void commit();
-    };
-    el.onkeydown = (e) => {
-      if (e.key === "Enter") {
-        e.preventDefault();
-        el.blur();
-      }
-      if (e.key === "Escape") {
-        el.textContent = item.title;
-        el.blur();
-      }
-    };
-  }
-  showContextMenu(e, item) {
-    this.buildContextMenu(item).showAtMouseEvent(e);
-  }
-  buildContextMenu(item) {
-    const menu = new import_obsidian17.Menu();
-    const structural = item.type === "group" || item.type === "part";
-    if (!structural) {
-      menu.addItem((i2) => i2.setTitle(t2("binder.menu.openDocument")).setIcon("file-text").onClick(safeHandler(() => this.openDocument(item))));
-    }
-    menu.addItem((i2) => i2.setTitle(t2("binder.menu.rename")).setIcon("pencil").onClick(() => this.renameItem(item)));
-    menu.addItem((i2) => i2.setTitle(t2("binder.menu.newChildDocument")).setIcon("plus").onClick(() => this.createNewDocument(item.id)));
-    menu.addItem((i2) => i2.setTitle(t2("binder.menu.newChildGroup")).setIcon("folder").onClick(() => this.createStructuralItem("group", item.id)));
-    menu.addItem((i2) => i2.setTitle(t2("binder.menu.newChildPart")).setIcon("library").onClick(() => this.createStructuralItem("part", item.id)));
-    menu.addSeparator();
-    menu.addItem((i2) => i2.setTitle(t2("binder.menu.moveUp")).setIcon("arrow-up").onClick(safeHandler(() => this.nudgeItem(item, -1))));
-    menu.addItem((i2) => i2.setTitle(t2("binder.menu.moveDown")).setIcon("arrow-down").onClick(safeHandler(() => this.nudgeItem(item, 1))));
-    menu.addSeparator();
-    menu.addItem((i2) => i2.setTitle(t2("binder.menu.setStatusDraft")).onClick(safeHandler(() => this.setItemStatus(item, "draft"))));
-    menu.addItem((i2) => i2.setTitle(t2("binder.menu.setStatusInProgress")).onClick(safeHandler(() => this.setItemStatus(item, "in-progress"))));
-    menu.addItem((i2) => i2.setTitle(t2("binder.menu.setStatusComplete")).onClick(safeHandler(() => this.setItemStatus(item, "complete"))));
-    menu.addItem((i2) => i2.setTitle(t2("binder.menu.setStatusPublished")).onClick(safeHandler(() => this.setItemStatus(item, "published"))));
-    if (!structural) {
-      menu.addSeparator();
-      for (const docType of ["chapter", "section", "article", "note"]) {
-        menu.addItem((i2) => i2.setTitle(t2("binder.menu.changeType", { type: t2(`settings.general.docType.${docType}`) })).setIcon(this.getTypeIcon(docType)).onClick(safeHandler(() => this.changeItemType(item, docType))));
-      }
-      menu.addSeparator();
-      menu.addItem((i2) => i2.setTitle(t2("binder.menu.duplicate")).setIcon("copy").onClick(safeHandler(() => this.duplicateItem(item))));
-      menu.addItem((i2) => i2.setTitle(t2("binder.menu.moveToResearch")).setIcon("folder").onClick(safeHandler(() => this.moveToResearch(item))));
-      menu.addSeparator();
-      menu.addItem((i2) => i2.setTitle(t2("binder.menu.publishToWordPress")).setIcon("globe").onClick(() => {
-        new PublishModal(this.app, this.plugin, item.filePath).open();
-      }));
-    }
-    menu.addSeparator();
-    menu.addItem((i2) => i2.setTitle(t2("binder.menu.removeFromBinder")).setIcon("list-x").onClick(() => this.removeFromBinder(item)));
-    menu.addItem((i2) => i2.setTitle(t2("binder.menu.delete")).setIcon("trash").onClick(() => this.deleteItem(item)));
-    return menu;
-  }
-  createStructuralItem(type, parentId) {
-    if (!this.activeProject) return;
-    const project = this.activeProject;
-    const heading = type === "group" ? t2("binder.menu.newGroup") : t2("binder.menu.newPart");
-    const fallback = type === "group" ? t2("binder.untitledGroup") : t2("binder.untitledPart");
-    new TitlePromptModal(
-      this.app,
-      heading,
-      fallback,
-      t2("binder.titlePrompt.create"),
-      t2("binder.deleteConfirm.cancel"),
-      async (title) => {
-        await this.plugin.projectManager.addStructuralItem(project, title, type, parentId);
-      }
-    ).open();
-  }
-  createNewDocument(parentId) {
-    if (!this.activeProject) return;
-    const project = this.activeProject;
-    const fallback = t2("binder.untitledDocument", { time: (/* @__PURE__ */ new Date()).toLocaleTimeString() });
-    new TitlePromptModal(
-      this.app,
-      t2("binder.titlePrompt.heading"),
-      fallback,
-      t2("binder.titlePrompt.create"),
-      t2("binder.deleteConfirm.cancel"),
-      async (title) => {
-        await this.plugin.projectManager.addDocumentToBinder(
-          project,
-          title,
-          resolveDefaultDocumentType(project.type, this.plugin.settings.defaultDocumentType),
-          parentId
-        );
-      }
-    ).open();
-  }
-  async setItemStatus(item, status) {
-    if (!this.activeProject) return;
-    await this.plugin.projectManager.updateItemStatus(this.activeProject, item.id, status);
-  }
-  // The type icon refreshes via the binder-changed re-render
-  async changeItemType(item, type) {
-    if (!this.activeProject) return;
-    await this.plugin.projectManager.updateItemType(this.activeProject, item.id, type);
-  }
-  async duplicateItem(item) {
-    if (!this.activeProject) return;
-    if (item.type === "group" || item.type === "part") return;
-    const newTitle = `${item.title} ${t2("binder.copySuffix")}`;
-    const srcFile = this.app.vault.getAbstractFileByPath(item.filePath);
-    const content2 = srcFile instanceof import_obsidian17.TFile ? await this.app.vault.read(srcFile) : void 0;
-    const newItem = await this.plugin.projectManager.addDocumentToBinder(
-      this.activeProject,
-      newTitle,
-      item.type,
-      void 0,
-      content2
-    );
-    newItem.status = item.status;
-    newItem.wordCountGoal = item.wordCountGoal;
-    newItem.includeInExport = item.includeInExport;
-    await this.saveBinder();
-  }
-  async moveToResearch(item) {
-    if (!this.activeProject) return;
-    const file = this.app.vault.getAbstractFileByPath(item.filePath);
-    if (!(file instanceof import_obsidian17.TFile)) {
-      new import_obsidian17.Notice(t2("binder.fileNotFound", { path: item.filePath }));
-      return;
-    }
-    const researchDir = (0, import_obsidian17.normalizePath)(`${this.activeProject.folderPath}/Research`);
-    if (!this.app.vault.getAbstractFileByPath(researchDir)) {
-      await this.app.vault.createFolder(researchDir);
-    }
-    const fileName = item.filePath.split("/").pop() || "note.md";
-    const newPath = (0, import_obsidian17.normalizePath)(`${researchDir}/${fileName}`);
-    await this.app.vault.rename(file, newPath);
-    item.filePath = newPath;
-    item.type = "note";
-    await this.saveBinder();
-  }
-  removeFromBinder(item) {
-    const project = this.activeProject;
-    if (!project) return;
-    new ConfirmModal(
-      this.app,
-      t2("binder.removeConfirm.title"),
-      t2("binder.removeConfirm.message", { title: item.title }),
-      t2("binder.removeConfirm.remove"),
-      t2("binder.deleteConfirm.cancel"),
-      async () => {
-        await this.plugin.projectManager.removeFromBinderPromoteChildren(project, item.id);
-      }
-    ).open();
-  }
-  deleteItem(item) {
-    const project = this.activeProject;
-    if (!project) return;
-    new ConfirmModal(
-      this.app,
-      t2("binder.deleteConfirm.title"),
-      t2("binder.deleteConfirm.message", { title: item.title }),
-      t2("binder.deleteConfirm.delete"),
-      t2("binder.deleteConfirm.cancel"),
-      async () => {
-        const file = this.app.vault.getAbstractFileByPath(item.filePath);
-        if (file instanceof import_obsidian17.TFile) {
-          await this.app.fileManager.trashFile(file);
-        }
-        await this.plugin.projectManager.removeItemFromBinder(project, item.id);
-      }
-    ).open();
-  }
-  clearDropIndicators(el) {
-    el.classList.remove("ws-binder-drop-before", "ws-binder-drop-after", "ws-binder-drop-into");
-  }
-  findItem(items, id) {
-    for (const item of items) {
-      if (item.id === id) return item;
-      if (item.children) {
-        const f = this.findItem(item.children, id);
-        if (f) return f;
-      }
-    }
-    return null;
-  }
-  containsItem(items, id) {
-    for (const item of items) {
-      if (item.id === id) return true;
-      if (item.children && this.containsItem(item.children, id)) return true;
-    }
-    return false;
-  }
-  removeFromTree(items, id) {
-    for (let i2 = 0; i2 < items.length; i2++) {
-      if (items[i2].id === id) return items.splice(i2, 1)[0];
-      if (items[i2].children) {
-        const f = this.removeFromTree(items[i2].children, id);
-        if (f) return f;
-      }
-    }
-    return null;
-  }
-  async moveItemBefore(sourceId, targetId) {
-    if (!this.activeProject) return;
-    const binder = await this.plugin.projectManager.loadBinder(this.activeProject);
-    const moving = this.removeFromTree(binder.items, sourceId);
-    if (!moving) return;
-    const insert = (items) => {
-      for (let i2 = 0; i2 < items.length; i2++) {
-        if (items[i2].id === targetId) {
-          items.splice(i2, 0, moving);
-          return true;
-        }
-        if (items[i2].children && insert(items[i2].children)) return true;
-      }
-      return false;
-    };
-    if (!insert(binder.items)) binder.items.unshift(moving);
-    this.reorderItems(binder.items, 1);
-    await this.plugin.projectManager.saveBinder(binder);
-  }
-  async moveItemAfter(sourceId, targetId) {
-    if (!this.activeProject) return;
-    const binder = await this.plugin.projectManager.loadBinder(this.activeProject);
-    const moving = this.removeFromTree(binder.items, sourceId);
-    if (!moving) return;
-    const insert = (items) => {
-      for (let i2 = 0; i2 < items.length; i2++) {
-        if (items[i2].id === targetId) {
-          items.splice(i2 + 1, 0, moving);
-          return true;
-        }
-        if (items[i2].children && insert(items[i2].children)) return true;
-      }
-      return false;
-    };
-    if (!insert(binder.items)) binder.items.push(moving);
-    this.reorderItems(binder.items, 1);
-    await this.plugin.projectManager.saveBinder(binder);
-  }
-  async moveItemInto(sourceId, targetId) {
-    if (!this.activeProject) return;
-    const binder = await this.plugin.projectManager.loadBinder(this.activeProject);
-    const sourceItem = this.findItem(binder.items, sourceId);
-    if (sourceItem && this.containsItem(sourceItem.children || [], targetId)) return;
-    const moving = this.removeFromTree(binder.items, sourceId);
-    if (!moving) return;
-    const addTo = (items) => {
-      for (const item of items) {
-        if (item.id === targetId) {
-          if (!item.children) item.children = [];
-          item.children.push(moving);
-          item.collapsed = false;
-          return true;
-        }
-        if (item.children && addTo(item.children)) return true;
-      }
-      return false;
-    };
-    if (!addTo(binder.items)) binder.items.push(moving);
-    this.reorderItems(binder.items, 1);
-    await this.plugin.projectManager.saveBinder(binder);
-  }
-  // Swap an item with its previous/next sibling
-  async nudgeItem(item, delta) {
-    if (!this.activeProject) return;
-    const binder = await this.plugin.projectManager.loadBinder(this.activeProject);
-    const siblings = this.findSiblings(binder.items, item.id);
-    if (!siblings) return;
-    const idx = siblings.findIndex((i2) => i2.id === item.id);
-    const target = idx + delta;
-    if (idx < 0 || target < 0 || target >= siblings.length) return;
-    [siblings[idx], siblings[target]] = [siblings[target], siblings[idx]];
-    this.reorderItems(binder.items, 1);
-    await this.plugin.projectManager.saveBinder(binder);
-  }
-  findSiblings(items, id) {
-    if (items.some((i2) => i2.id === id)) return items;
-    for (const item of items) {
-      if (item.children) {
-        const found = this.findSiblings(item.children, id);
-        if (found) return found;
-      }
-    }
-    return null;
-  }
-  async moveItemToRoot(sourceId) {
-    if (!this.activeProject) return;
-    const binder = await this.plugin.projectManager.loadBinder(this.activeProject);
-    const moving = this.removeFromTree(binder.items, sourceId);
-    if (!moving) return;
-    binder.items.push(moving);
-    this.reorderItems(binder.items, 1);
-    await this.plugin.projectManager.saveBinder(binder);
-  }
-  reorderItems(items, start2) {
-    let order = start2;
-    for (const item of items) {
-      item.order = order++;
-      if (item.children) {
-        order = this.reorderItems(item.children, 1);
-      }
-    }
-    return order;
-  }
-  async scanProjectFolder() {
-    if (!this.activeProject) {
-      new import_obsidian17.Notice(t2("binder.selectProjectFirst"));
-      return;
-    }
-    const projectFolder = (0, import_obsidian17.normalizePath)(this.activeProject.folderPath);
-    const existingPaths = new Set(
-      this.plugin.projectManager.flattenBinder(this.binderItems).map((i2) => i2.filePath)
-    );
-    const untracked = this.app.vault.getFiles().filter(
-      (f) => f.extension === "md" && f.path.startsWith(projectFolder + "/") && !f.name.startsWith("_") && !existingPaths.has(f.path)
-    );
-    if (untracked.length === 0) {
-      new import_obsidian17.Notice(t2("binder.noNewFiles"));
-      return;
-    }
-    new ScanFolderModal(this.app, untracked, async (selected) => {
-      if (selected.length === 0) return;
-      if (!this.activeProject) return;
-      const binder = await this.plugin.projectManager.loadBinder(this.activeProject);
-      const defaultType = resolveDefaultDocumentType(this.activeProject.type, this.plugin.settings.defaultDocumentType);
-      let order = binder.items.length + 1;
-      for (const file of selected) {
-        binder.items.push({
-          id: `item-${Date.now()}-${order}`,
-          title: file.basename,
-          filePath: file.path,
-          type: defaultType,
-          order: order++,
-          status: "draft",
-          includeInExport: true,
-          wordCountGoal: 0
-        });
-      }
-      await this.plugin.projectManager.saveBinder(binder);
-    }).open();
-  }
-  async saveBinder() {
-    if (!this.activeProject) return;
-    const binder = await this.plugin.projectManager.loadBinder(this.activeProject);
-    binder.items = this.binderItems;
-    await this.plugin.projectManager.saveBinder(binder);
-  }
-  async onClose() {
-  }
-};
-
-// src/FilesystemBinderView.ts
-var import_obsidian18 = require("obsidian");
-
-// src/binderMove.ts
-function dropRegion(targetIsFolder, offsetY, height) {
-  if (!targetIsFolder) return offsetY < height / 2 ? "before" : "after";
-  if (offsetY < height * 0.25) return "before";
-  if (offsetY >= height * 0.75) return "after";
-  return "into";
-}
-function canStartDrag(entry, zone) {
-  if (zone === "exports") return false;
-  if (entry.isFolder) return zone === "manuscript";
-  return entry.extension === "md";
-}
-function evaluateDrop(source, destParentPath, destZone) {
-  if (destZone === "exports") return { kind: "notice", messageKey: "binder.fs.exportsDropBlocked" };
-  if (source.isFolder && destZone !== source.zone) {
-    return { kind: "notice", messageKey: "binder.fs.folderZoneBlocked" };
-  }
-  if (source.isFolder && (destParentPath === source.path || destParentPath.startsWith(source.path + "/"))) {
-    return { kind: "refuse" };
-  }
-  return { kind: "accept" };
-}
-function parentOf(path) {
-  const i2 = path.lastIndexOf("/");
-  return i2 < 0 ? "" : path.slice(0, i2);
-}
-function joinPath(parent, name) {
-  return parent ? `${parent}/${name}` : name;
-}
-function planMove(source, destParentPath, destSiblings, insertAt, writeOrder) {
-  var _a2;
-  const index = insertAt === "end" ? destSiblings.length : insertAt;
-  const seq = [...destSiblings];
-  seq.splice(index, 0, source);
-  const writes = writeOrder ? planReorder(seq, index) : [];
-  const ops = [];
-  const sourceWrite = (_a2 = writes.find((w) => w.index === index)) != null ? _a2 : null;
-  const sourceName = source.isFolder && sourceWrite ? folderNameWithPrefix(source.name, sourceWrite.order) : source.name;
-  const sourceNewPath = joinPath(destParentPath, sourceName);
-  if (sourceNewPath !== source.path) {
-    ops.push({ kind: "rename", path: source.path, newPath: sourceNewPath });
-  }
-  if (!source.isFolder && sourceWrite) {
-    ops.push({ kind: "set-order", path: sourceNewPath, order: sourceWrite.order });
-  }
-  for (const w of writes) {
-    if (w.index === index) continue;
-    const entry = seq[w.index];
-    if (!canCarryOrder(entry)) continue;
-    if (entry.isFolder) {
-      const newName = folderNameWithPrefix(entry.name, w.order);
-      if (newName === entry.name) continue;
-      ops.push({ kind: "rename", path: entry.path, newPath: joinPath(parentOf(entry.path), newName) });
-    } else {
-      ops.push({ kind: "set-order", path: entry.path, order: w.order });
-    }
-  }
-  return ops;
-}
-
-// src/FilesystemBinderView.ts
 var TOOLTIP_KEYS = ["binder-order", "binder-status", "binder-type", "binder-compile", "word-count-goal"];
 var STATUS_MENU = [
   { value: "draft", key: "binder.menu.setStatusDraft" },
@@ -14792,7 +13020,7 @@ var toMoveEntry = (n) => ({
   binderOrder: n.binderOrder,
   path: n.file.path
 });
-var FilesystemBinderView = class extends import_obsidian18.ItemView {
+var FilesystemBinderView = class extends import_obsidian14.ItemView {
   constructor(leaf, plugin) {
     super(leaf);
     this.activeProject = null;
@@ -14890,34 +13118,34 @@ var FilesystemBinderView = class extends import_obsidian18.ItemView {
       await this.plugin.projectManager.setActiveProject(projectSel.value || null);
     };
     const newProjectBtn = projectRow.createEl("button", { cls: "ws-binder-btn", title: t2("binder.newProject") });
-    (0, import_obsidian18.setIcon)(newProjectBtn, "plus");
+    (0, import_obsidian14.setIcon)(newProjectBtn, "plus");
     newProjectBtn.onclick = () => {
       new ProjectModal(this.app, this.plugin).open();
     };
     if (this.activeProject) {
       const project = this.activeProject;
       const editProjectBtn = projectRow.createEl("button", { cls: "ws-binder-btn", title: t2("projectModal.editTitle") });
-      (0, import_obsidian18.setIcon)(editProjectBtn, "pencil");
+      (0, import_obsidian14.setIcon)(editProjectBtn, "pencil");
       editProjectBtn.onclick = () => {
         new ProjectModal(this.app, this.plugin, void 0, project).open();
       };
       const deleteProjectBtn = projectRow.createEl("button", { cls: "ws-binder-btn", title: t2("projectModal.deleteTitle") });
-      (0, import_obsidian18.setIcon)(deleteProjectBtn, "trash");
+      (0, import_obsidian14.setIcon)(deleteProjectBtn, "trash");
       deleteProjectBtn.onclick = () => {
         confirmDeleteProject(this.app, this.plugin, project);
       };
     }
     const toolbar = header.createDiv("ws-binder-toolbar");
     const newDocBtn = toolbar.createEl("button", { cls: "ws-binder-btn", title: t2("binder.titlePrompt.heading") });
-    (0, import_obsidian18.setIcon)(newDocBtn, "file-plus");
+    (0, import_obsidian14.setIcon)(newDocBtn, "file-plus");
     newDocBtn.onclick = () => this.promptCreateAtRoot(false);
     const newFolderBtn = toolbar.createEl("button", { cls: "ws-binder-btn", title: t2("binder.fs.newFolder") });
-    (0, import_obsidian18.setIcon)(newFolderBtn, "folder-plus");
+    (0, import_obsidian14.setIcon)(newFolderBtn, "folder-plus");
     newFolderBtn.onclick = () => this.promptCreateAtRoot(true);
     const countsBtn = toolbar.createEl("button", { cls: "ws-binder-btn ws-fsb-counts-btn" });
     countsBtn.ariaLabel = t2("binder.toggleCounts");
-    (0, import_obsidian18.setIcon)(countsBtn, "hash");
-    (0, import_obsidian18.setTooltip)(countsBtn, t2("binder.toggleCounts"));
+    (0, import_obsidian14.setIcon)(countsBtn, "hash");
+    (0, import_obsidian14.setTooltip)(countsBtn, t2("binder.toggleCounts"));
     countsBtn.toggleClass("is-active", this.showCounts);
     countsBtn.onclick = () => {
       this.showCounts = !this.showCounts;
@@ -14925,7 +13153,7 @@ var FilesystemBinderView = class extends import_obsidian18.ItemView {
       this.renderList(this.buildModel());
     };
     const dashBtn = toolbar.createEl("button", { cls: "ws-binder-btn", title: t2("binder.targetsDashboard") });
-    (0, import_obsidian18.setIcon)(dashBtn, "target");
+    (0, import_obsidian14.setIcon)(dashBtn, "target");
     dashBtn.onclick = () => {
       new TargetsDashboardModal(this.app, this.plugin).open();
     };
@@ -14953,10 +13181,10 @@ var FilesystemBinderView = class extends import_obsidian18.ItemView {
     const project = this.activeProject;
     if (!project) return model;
     const root = this.app.vault.getAbstractFileByPath(project.folderPath);
-    if (!(root instanceof import_obsidian18.TFolder)) return model;
+    if (!(root instanceof import_obsidian14.TFolder)) return model;
     model.manuscript = this.buildChildren(root, true);
     for (const { zone, folderName } of DRAWER_ZONES) {
-      const folder = root.children.find((c) => c instanceof import_obsidian18.TFolder && c.name.toLowerCase() === folderName.toLowerCase());
+      const folder = root.children.find((c) => c instanceof import_obsidian14.TFolder && c.name.toLowerCase() === folderName.toLowerCase());
       if (!folder) continue;
       model.zones[zone] = {
         folder,
@@ -14972,7 +13200,7 @@ var FilesystemBinderView = class extends import_obsidian18.ItemView {
     let n = 0;
     for (const child of folder.children) {
       if (isHiddenName(child.name)) continue;
-      if (child instanceof import_obsidian18.TFolder) n += this.countVisibleFiles(child);
+      if (child instanceof import_obsidian14.TFolder) n += this.countVisibleFiles(child);
       else n++;
     }
     return n;
@@ -14981,7 +13209,7 @@ var FilesystemBinderView = class extends import_obsidian18.ItemView {
     const nodes = [];
     for (const child of folder.children) {
       if (isHiddenName(child.name)) continue;
-      if (isRoot && child instanceof import_obsidian18.TFolder && RESERVED_PROJECT_FOLDERS.some((r) => r.toLowerCase() === child.name.toLowerCase())) {
+      if (isRoot && child instanceof import_obsidian14.TFolder && RESERVED_PROJECT_FOLDERS.some((r) => r.toLowerCase() === child.name.toLowerCase())) {
         continue;
       }
       const node = this.buildNode(child);
@@ -14991,7 +13219,7 @@ var FilesystemBinderView = class extends import_obsidian18.ItemView {
   }
   buildNode(file) {
     var _a2;
-    if (file instanceof import_obsidian18.TFolder) {
+    if (file instanceof import_obsidian14.TFolder) {
       const children = this.buildChildren(file, false);
       const entry2 = { name: file.name, isFolder: true, binderOrder: null };
       return {
@@ -15006,7 +13234,7 @@ var FilesystemBinderView = class extends import_obsidian18.ItemView {
         mdCount: children.reduce((n, c) => n + (c.isFolder ? c.mdCount : c.extension === "md" ? 1 : 0), 0)
       };
     }
-    if (!(file instanceof import_obsidian18.TFile)) return null;
+    if (!(file instanceof import_obsidian14.TFile)) return null;
     const fm = file.extension === "md" ? (_a2 = this.app.metadataCache.getFileCache(file)) == null ? void 0 : _a2.frontmatter : void 0;
     const status = parseBinderStatus(fm == null ? void 0 : fm["binder-status"]);
     const fmLines = [];
@@ -15092,11 +13320,11 @@ var FilesystemBinderView = class extends import_obsidian18.ItemView {
       tab.toggleClass("is-active", pref.open && pref.tab === zoneDef.zone);
       tab.createSpan({ cls: "ws-fsb-drawer-tab-label", text: t2(zoneDef.labelKey) });
       tab.createSpan({ cls: "ws-fsb-count", text: String(zone.fileCount) });
-      (0, import_obsidian18.setTooltip)(tab, (_b2 = (_a2 = zone.folder) == null ? void 0 : _a2.name) != null ? _b2 : zoneDef.folderName);
+      (0, import_obsidian14.setTooltip)(tab, (_b2 = (_a2 = zone.folder) == null ? void 0 : _a2.name) != null ? _b2 : zoneDef.folderName);
       tab.onclick = () => {
         void this.selectDrawerTab(zoneDef.zone);
       };
-      const zoneFolderPath = (_d = (_c = zone.folder) == null ? void 0 : _c.path) != null ? _d : (0, import_obsidian18.normalizePath)(`${project.folderPath}/${zoneDef.folderName}`);
+      const zoneFolderPath = (_d = (_c = zone.folder) == null ? void 0 : _c.path) != null ? _d : (0, import_obsidian14.normalizePath)(`${project.folderPath}/${zoneDef.folderName}`);
       tab.addEventListener("dragover", (e) => {
         const src = this.dragSource;
         if (!src) return;
@@ -15125,7 +13353,7 @@ var FilesystemBinderView = class extends import_obsidian18.ItemView {
         tab.removeClass("ws-fsb-drop-into");
         this.cancelHoverExpand();
         if (verdict.kind === "notice") {
-          new import_obsidian18.Notice(t2(verdict.messageKey));
+          new import_obsidian14.Notice(t2(verdict.messageKey));
           return;
         }
         const group = zone.nodes.filter((n) => n.file.path !== src.path).map(toMoveEntry);
@@ -15197,14 +13425,14 @@ var FilesystemBinderView = class extends import_obsidian18.ItemView {
       if (node.isFolder && this.showCounts) {
         row.createSpan({ cls: "ws-fsb-count", text: String(node.mdCount) });
       }
-      (0, import_obsidian18.setTooltip)(row, [node.name, ...node.fmLines].join("\n"));
+      (0, import_obsidian14.setTooltip)(row, [node.name, ...node.fmLines].join("\n"));
       row.onclick = () => {
         if (nav) this.navFocusPath = node.file.path;
         if (node.isFolder) {
           this.toggleCollapse(node.file.path);
           return;
         }
-        if (node.file instanceof import_obsidian18.TFile) void this.openFile(node.file);
+        if (node.file instanceof import_obsidian14.TFile) void this.openFile(node.file);
       };
       row.oncontextmenu = (e) => {
         e.preventDefault();
@@ -15289,7 +13517,7 @@ var FilesystemBinderView = class extends import_obsidian18.ItemView {
       this.clearDropIndicator();
       this.cancelHoverExpand();
       if (verdict.kind === "notice") {
-        new import_obsidian18.Notice(t2(verdict.messageKey));
+        new import_obsidian14.Notice(t2(verdict.messageKey));
         return;
       }
       const intoFolder = region === "into" && node.isFolder;
@@ -15369,11 +13597,11 @@ var FilesystemBinderView = class extends import_obsidian18.ItemView {
   // writes, so the plan is the bare rename.
   async executeZoneDrop(src, zoneFolderPath, group) {
     try {
-      if (!(this.app.vault.getAbstractFileByPath(zoneFolderPath) instanceof import_obsidian18.TFolder)) {
+      if (!(this.app.vault.getAbstractFileByPath(zoneFolderPath) instanceof import_obsidian14.TFolder)) {
         await this.app.vault.createFolder(zoneFolderPath);
       }
     } catch (e) {
-      new import_obsidian18.Notice(t2("main.operationFailed", { error: e instanceof Error ? e.message : String(e) }));
+      new import_obsidian14.Notice(t2("main.operationFailed", { error: e instanceof Error ? e.message : String(e) }));
       return;
     }
     await this.executeMove(planMove(src, zoneFolderPath, group, "end", false));
@@ -15389,15 +13617,15 @@ var FilesystemBinderView = class extends import_obsidian18.ItemView {
         const file = this.app.vault.getAbstractFileByPath(op.path);
         if (!file) continue;
         if (op.kind === "rename") {
-          await this.app.fileManager.renameFile(file, (0, import_obsidian18.normalizePath)(op.newPath));
-        } else if (file instanceof import_obsidian18.TFile) {
+          await this.app.fileManager.renameFile(file, (0, import_obsidian14.normalizePath)(op.newPath));
+        } else if (file instanceof import_obsidian14.TFile) {
           await this.app.fileManager.processFrontMatter(file, (fm) => {
             fm["binder-order"] = op.order;
           });
         }
       }
     } catch (e) {
-      new import_obsidian18.Notice(t2("main.operationFailed", { error: e instanceof Error ? e.message : String(e) }));
+      new import_obsidian14.Notice(t2("main.operationFailed", { error: e instanceof Error ? e.message : String(e) }));
     }
   }
   toggleCollapse(path) {
@@ -15416,20 +13644,20 @@ var FilesystemBinderView = class extends import_obsidian18.ItemView {
       const leaf = this.app.workspace.getLeaf(false);
       await leaf.openFile(file);
     } catch (e) {
-      new import_obsidian18.Notice(t2("main.operationFailed", { error: e instanceof Error ? e.message : String(e) }));
+      new import_obsidian14.Notice(t2("main.operationFailed", { error: e instanceof Error ? e.message : String(e) }));
     }
   }
   // ─── Mutation surface (slice 5, #229) ──────────────────────────────────────
   // Every mutation is a filesystem or frontmatter write; the binder re-renders
   // through the vault/metadata event path, never by a manual refresh call.
   buildContextMenu(node, zone) {
-    const menu = new import_obsidian18.Menu();
+    const menu = new import_obsidian14.Menu();
     const actions = new Set(menuActionsFor(node, zone));
-    const doc = node.file instanceof import_obsidian18.TFile && node.extension === "md" ? node.file : null;
+    const doc = node.file instanceof import_obsidian14.TFile && node.extension === "md" ? node.file : null;
     if (actions.has("rename")) {
       menu.addItem((i2) => i2.setTitle(t2("binder.menu.rename")).setIcon("pencil").onClick(() => this.promptRename(node)));
     }
-    if (actions.has("export") && node.file instanceof import_obsidian18.TFolder) {
+    if (actions.has("export") && node.file instanceof import_obsidian14.TFolder) {
       const folderPath = node.file.path;
       menu.addItem((i2) => i2.setTitle(t2("binder.fs.exportFolder")).setIcon("download").onClick(() => {
         new ExportModal(this.app, this.plugin, "project", folderPath).open();
@@ -15485,7 +13713,7 @@ var FilesystemBinderView = class extends import_obsidian18.ItemView {
       }));
     }
     if (actions.has("newDoc") || actions.has("newFolder")) {
-      const parent = node.file instanceof import_obsidian18.TFolder ? node.file : node.file.parent;
+      const parent = node.file instanceof import_obsidian14.TFolder ? node.file : node.file.parent;
       if (parent) {
         menu.addSeparator();
         if (actions.has("newDoc")) {
@@ -15522,9 +13750,9 @@ var FilesystemBinderView = class extends import_obsidian18.ItemView {
         const parent = (_d = (_c = node.file.parent) == null ? void 0 : _c.path) != null ? _d : "";
         const newPath = parent === "" || parent === "/" ? target : `${parent}/${target}`;
         try {
-          await this.app.fileManager.renameFile(node.file, (0, import_obsidian18.normalizePath)(newPath));
+          await this.app.fileManager.renameFile(node.file, (0, import_obsidian14.normalizePath)(newPath));
         } catch (e) {
-          new import_obsidian18.Notice(t2("main.operationFailed", { error: e instanceof Error ? e.message : String(e) }));
+          new import_obsidian14.Notice(t2("main.operationFailed", { error: e instanceof Error ? e.message : String(e) }));
         }
       }
     ).open();
@@ -15532,8 +13760,8 @@ var FilesystemBinderView = class extends import_obsidian18.ItemView {
   promptCreateAtRoot(isFolder) {
     const project = this.activeProject;
     const root = project ? this.app.vault.getAbstractFileByPath(project.folderPath) : null;
-    if (!(root instanceof import_obsidian18.TFolder)) {
-      new import_obsidian18.Notice(t2("binder.selectProjectFirst"));
+    if (!(root instanceof import_obsidian14.TFolder)) {
+      new import_obsidian14.Notice(t2("binder.selectProjectFirst"));
       return;
     }
     this.promptCreate(root, isFolder);
@@ -15555,7 +13783,7 @@ var FilesystemBinderView = class extends import_obsidian18.ItemView {
           this.rejectName(verdict.reason, target);
           return;
         }
-        const path = (0, import_obsidian18.normalizePath)(`${parent.path}/${target}`);
+        const path = (0, import_obsidian14.normalizePath)(`${parent.path}/${target}`);
         try {
           if (isFolder) {
             await this.app.vault.createFolder(path);
@@ -15564,13 +13792,13 @@ var FilesystemBinderView = class extends import_obsidian18.ItemView {
             await this.openFile(created);
           }
         } catch (e) {
-          new import_obsidian18.Notice(t2("main.operationFailed", { error: e instanceof Error ? e.message : String(e) }));
+          new import_obsidian14.Notice(t2("main.operationFailed", { error: e instanceof Error ? e.message : String(e) }));
         }
       }
     ).open();
   }
   confirmDelete(node) {
-    const folder = node.file instanceof import_obsidian18.TFolder ? node.file : null;
+    const folder = node.file instanceof import_obsidian14.TFolder ? node.file : null;
     new ConfirmModal(
       this.app,
       folder ? t2("binder.fs.deleteFolderTitle") : t2("binder.deleteConfirm.title"),
@@ -15581,7 +13809,7 @@ var FilesystemBinderView = class extends import_obsidian18.ItemView {
         try {
           await this.app.fileManager.trashFile(node.file);
         } catch (e) {
-          new import_obsidian18.Notice(t2("main.operationFailed", { error: e instanceof Error ? e.message : String(e) }));
+          new import_obsidian14.Notice(t2("main.operationFailed", { error: e instanceof Error ? e.message : String(e) }));
         }
       }
     ).open();
@@ -15591,7 +13819,7 @@ var FilesystemBinderView = class extends import_obsidian18.ItemView {
   countAllFiles(folder) {
     let n = 0;
     for (const child of folder.children) {
-      if (child instanceof import_obsidian18.TFolder) n += this.countAllFiles(child);
+      if (child instanceof import_obsidian14.TFolder) n += this.countAllFiles(child);
       else n++;
     }
     return n;
@@ -15600,7 +13828,7 @@ var FilesystemBinderView = class extends import_obsidian18.ItemView {
     try {
       await this.app.fileManager.processFrontMatter(file, mutate);
     } catch (e) {
-      new import_obsidian18.Notice(t2("main.operationFailed", { error: e instanceof Error ? e.message : String(e) }));
+      new import_obsidian14.Notice(t2("main.operationFailed", { error: e instanceof Error ? e.message : String(e) }));
     }
   }
   rejectName(reason, target) {
@@ -15610,7 +13838,7 @@ var FilesystemBinderView = class extends import_obsidian18.ItemView {
       trailing: "binder.fs.nameTrailing",
       exists: "binder.fs.nameExists"
     };
-    new import_obsidian18.Notice(t2(keys[reason != null ? reason : "empty"], { name: target }));
+    new import_obsidian14.Notice(t2(keys[reason != null ? reason : "empty"], { name: target }));
   }
   // ─── Keyboard ──────────────────────────────────────────────────────────────
   handleTreeKey(e) {
@@ -15645,7 +13873,7 @@ var FilesystemBinderView = class extends import_obsidian18.ItemView {
         if (!row) break;
         if (row.node.isFolder) {
           if (row.hasChildren) this.toggleCollapse(row.node.file.path);
-        } else if (row.node.file instanceof import_obsidian18.TFile) {
+        } else if (row.node.file instanceof import_obsidian14.TFile) {
           void this.openFile(row.node.file);
         }
         break;
@@ -15672,10 +13900,10 @@ var FilesystemBinderView = class extends import_obsidian18.ItemView {
 };
 
 // src/CompilePreview.ts
-var import_obsidian20 = require("obsidian");
+var import_obsidian17 = require("obsidian");
 
 // src/ExportEngine.ts
-var import_obsidian19 = require("obsidian");
+var import_obsidian16 = require("obsidian");
 var import_child_process = require("child_process");
 var import_util = require("util");
 
@@ -16815,6 +15043,14 @@ em { font-style: italic; }
   }
 };
 
+// src/dates.ts
+var import_obsidian15 = require("obsidian");
+var momentUntyped = import_obsidian15.moment;
+var moment = momentUntyped;
+function localDateString(date) {
+  return moment(date).format("YYYY-MM-DD");
+}
+
 // src/markdown.ts
 function inlineMarkdown(text) {
   return text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/!\[([^\]]*)\]\(([^)]+)\)/g, '<img src="$2" alt="$1">').replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>").replace(/\*(.+?)\*/g, "<em>$1</em>").replace(/`(.+?)`/g, "<code>$1</code>").replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2">$1</a>');
@@ -16967,7 +15203,6 @@ function defaultExportUiState(subtreeRoot) {
     scope: "project",
     subtreeRoot,
     includeFrontmatter: false,
-    includeResearch: false,
     includeTitlesAsHeadings: true,
     includeFolderNamesAsHeadings: false,
     addTitlePage: true,
@@ -17095,10 +15330,10 @@ var ExportEngine = class {
   }
   async export(opts) {
     const project = this.plugin.projectManager.getActiveProject();
-    const outputDir = project ? (0, import_obsidian19.normalizePath)(`${project.folderPath}/Exports`) : (0, import_obsidian19.normalizePath)("Exports");
+    const outputDir = project ? (0, import_obsidian16.normalizePath)(`${project.folderPath}/Exports`) : (0, import_obsidian16.normalizePath)("Exports");
     await this.files.ensureFolder(outputDir);
     const timestamp = (/* @__PURE__ */ new Date()).toISOString().replace(/[:.]/g, "-").slice(0, 19);
-    const baseFile = (0, import_obsidian19.normalizePath)(`${outputDir}/${sanitizeTitleForFilename(this.resolveTitle(opts))}-${timestamp}`);
+    const baseFile = (0, import_obsidian16.normalizePath)(`${outputDir}/${sanitizeTitleForFilename(this.resolveTitle(opts))}-${timestamp}`);
     if (opts.format === "epub") {
       return this.exportEpub(opts, baseFile);
     }
@@ -17146,31 +15381,11 @@ var ExportEngine = class {
       const htmlContent = this.htmlToXhtml(markdownToHtml(content2));
       const basename = (_c = (_b2 = path.split("/").pop()) == null ? void 0 : _b2.replace(/\.md$/, "")) != null ? _c : path;
       chapters.push({ id: "chapter-1", title: basename, htmlContent });
-    } else if (opts.scope === "project" && project && this.plugin.settings.filesystemBinder) {
+    } else if (opts.scope === "project" && project) {
       let idx = 1;
       for (const item of this.manuscriptPlan(project.folderPath, opts, false)) {
         if (item.kind !== "doc") continue;
         let content2 = await this.files.readText(item.path);
-        if (content2 === null) continue;
-        if (!opts.includeFrontmatter) {
-          content2 = content2.replace(/^---\r?\n[\s\S]*?\r?\n---\r?\n?/, "");
-        }
-        content2 = this.preprocessObsidianMarkdown(content2.trim());
-        if (opts.includeTitlesAsHeadings) {
-          content2 = content2.replace(/^# [^\n]*\n+/, "").trim();
-        }
-        const htmlContent = this.htmlToXhtml(markdownToHtml(content2));
-        chapters.push({ id: `chapter-${idx++}`, title: item.title, htmlContent });
-      }
-    } else if (opts.scope === "project" && project) {
-      const binder = await this.plugin.projectManager.loadBinder(project);
-      const flatItems = this.plugin.projectManager.flattenBinder(binder.items);
-      let idx = 1;
-      for (const item of flatItems) {
-        if (!item.includeInExport) continue;
-        if (!item.filePath) continue;
-        if (!opts.includeResearch && item.filePath.includes("/Research/")) continue;
-        let content2 = await this.files.readText(item.filePath);
         if (content2 === null) continue;
         if (!opts.includeFrontmatter) {
           content2 = content2.replace(/^---\r?\n[\s\S]*?\r?\n---\r?\n?/, "");
@@ -17194,7 +15409,7 @@ var ExportEngine = class {
       coverImagePath: opts.coverImagePath,
       chapters
     }, outputPath);
-    new import_obsidian19.Notice(t2("exportEngine.epubExported", { path: outputPath }));
+    new import_obsidian16.Notice(t2("exportEngine.epubExported", { path: outputPath }));
     return outputPath;
   }
   preprocessObsidianMarkdown(md) {
@@ -17221,8 +15436,8 @@ var ExportEngine = class {
   activeMarkdownPath() {
     const leaf = this.app.workspace.getMostRecentLeaf();
     const view = leaf == null ? void 0 : leaf.view;
-    const file = view instanceof import_obsidian19.MarkdownView ? view.file : null;
-    return file instanceof import_obsidian19.TFile ? file.path : null;
+    const file = view instanceof import_obsidian16.MarkdownView ? view.file : null;
+    return file instanceof import_obsidian16.TFile ? file.path : null;
   }
   async compileContent(opts) {
     var _a2, _b2, _c;
@@ -17247,7 +15462,7 @@ ${today}`);
         throw new Error(t2("exportEngine.noActiveDocument"));
       }
       parts.push(content2);
-    } else if (opts.scope === "project" && project && this.plugin.settings.filesystemBinder) {
+    } else if (opts.scope === "project" && project) {
       for (const item of this.manuscriptPlan(project.folderPath, opts, opts.includeFolderNamesAsHeadings === true)) {
         if (item.kind === "heading") {
           parts.push(`${"#".repeat(item.level)} ${item.title}`);
@@ -17258,24 +15473,6 @@ ${today}`);
         if (item.headingLevel !== null) {
           const body = content2.replace(/^# [^\n]*\n+/, "").trim();
           parts.push(`${"#".repeat(item.headingLevel)} ${item.title}
-
-${body}`);
-        } else {
-          parts.push(content2);
-        }
-      }
-    } else if (opts.scope === "project" && project) {
-      const binder = await this.plugin.projectManager.loadBinder(project);
-      const flatItems = this.plugin.projectManager.flattenBinder(binder.items);
-      for (const item of flatItems) {
-        if (!item.includeInExport) continue;
-        if (!item.filePath) continue;
-        if (!opts.includeResearch && item.filePath.includes("/Research/")) continue;
-        const content2 = await this.processPath(item.filePath, opts);
-        if (content2 === null) continue;
-        if (opts.includeTitlesAsHeadings) {
-          const body = content2.replace(/^# [^\n]*\n+/, "").trim();
-          parts.push(`# ${item.title}
 
 ${body}`);
         } else {
@@ -17299,11 +15496,11 @@ ${body}`);
     }
     return parts.join(SECTION_BREAK);
   }
-  // The manuscript zone is the compile source under the experimental binder
-  // (#232) — the dormant _binder.json is never read. Depth is rebased to the
-  // compile root, so a subtree export is the whole-zone walk with a different
-  // root (which is also why reserved-folder filtering only applies when the
-  // root is the project folder itself).
+  // The manuscript zone is the compile source (#232/#233) — the dormant
+  // _binder.json is never read. Depth is rebased to the compile root, so a
+  // subtree export is the whole-zone walk with a different root (which is
+  // also why reserved-folder filtering only applies when the root is the
+  // project folder itself).
   manuscriptPlan(projectFolderPath, opts, includeFolderNames) {
     var _a2;
     const root = (_a2 = opts.subtreeRoot) != null ? _a2 : projectFolderPath;
@@ -17361,7 +15558,7 @@ ${body}`);
   </div>
 </div>`;
     const fullHtml = `<!DOCTYPE html>
-<html lang="${(0, import_obsidian19.getLanguage)()}">
+<html lang="${(0, import_obsidian16.getLanguage)()}">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -17376,19 +15573,19 @@ ${bodyHtml}
 </body>
 </html>`;
     await this.files.writeText(outputPath, fullHtml);
-    new import_obsidian19.Notice(t2("exportEngine.manuscriptExported", { path: outputPath }));
+    new import_obsidian16.Notice(t2("exportEngine.manuscriptExported", { path: outputPath }));
     return outputPath;
   }
   async exportMarkdown(content2, outputPath) {
     await this.files.writeText(outputPath, content2);
-    new import_obsidian19.Notice(t2("exportEngine.exportedTo", { path: outputPath }));
+    new import_obsidian16.Notice(t2("exportEngine.exportedTo", { path: outputPath }));
     return outputPath;
   }
   async exportHtml(content2, outputPath, title, opts) {
     const font = opts.font || "Georgia";
     const fontSize = opts.fontSize || 16;
     const html = `<!DOCTYPE html>
-<html lang="${(0, import_obsidian19.getLanguage)()}">
+<html lang="${(0, import_obsidian16.getLanguage)()}">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -17411,7 +15608,7 @@ ${markdownToHtml(content2)}
 </body>
 </html>`;
     await this.files.writeText(outputPath, html);
-    new import_obsidian19.Notice(t2("exportEngine.exportedHtmlTo", { path: outputPath }));
+    new import_obsidian16.Notice(t2("exportEngine.exportedHtmlTo", { path: outputPath }));
     return outputPath;
   }
   // Pre-flight for the export modal — false when the configured pandoc
@@ -17461,7 +15658,7 @@ ${markdownToHtml(content2)}
         args.push("-V", `mainfont=${safeFont}`);
       }
       await execFileAsync(pandocPath, args);
-      new import_obsidian19.Notice(t2("exportEngine.exportedTo", { path: outputPath }));
+      new import_obsidian16.Notice(t2("exportEngine.exportedTo", { path: outputPath }));
       return outputPath;
     } catch (e) {
       const raw = e instanceof Error ? e.message : String(e);
@@ -17481,11 +15678,11 @@ ${hint}`);
     const decision = selectPdfEngine(await this.detectPdfEngines(), !!opts.font, preferred);
     if (!decision.engine) {
       const msg = preferred !== "auto" ? t2("exportEngine.pdfPinnedEngineMissing", { engine: preferred }) : t2("exportEngine.pdfEngineRequired");
-      new import_obsidian19.Notice(msg);
+      new import_obsidian16.Notice(msg);
       throw new Error(msg);
     }
     if (opts.font && !decision.keepFont) {
-      new import_obsidian19.Notice(decision.engine === "wkhtmltopdf" ? t2("exportEngine.pdfFontIgnoredWkhtmltopdf") : t2("exportEngine.pdfFontNeedsXelatex"));
+      new import_obsidian16.Notice(decision.engine === "wkhtmltopdf" ? t2("exportEngine.pdfFontIgnoredWkhtmltopdf") : t2("exportEngine.pdfFontNeedsXelatex"));
     }
     try {
       return await this.exportPandoc(content2, outputPath, opts, { engine: decision.engine, keepFont: decision.keepFont });
@@ -17495,7 +15692,7 @@ ${hint}`);
       if (classifyPandocFailure(raw) === "engine-missing") {
         msg = preferred !== "auto" ? t2("exportEngine.pdfPinnedEngineMissing", { engine: preferred }) : t2("exportEngine.pdfEngineRequired");
       }
-      new import_obsidian19.Notice(msg);
+      new import_obsidian16.Notice(msg);
       throw e;
     }
   }
@@ -17539,7 +15736,7 @@ function buildJumpItems(sections) {
 
 // src/CompilePreview.ts
 var COMPILE_PREVIEW_VIEW_TYPE = "writing-studio-compile-preview";
-var CompilePreviewView = class extends import_obsidian20.ItemView {
+var CompilePreviewView = class extends import_obsidian17.ItemView {
   constructor(leaf, plugin) {
     super(leaf);
     this.content = "";
@@ -17586,7 +15783,6 @@ var CompilePreviewView = class extends import_obsidian20.ItemView {
       currentFile: s.currentFilePath,
       exportTitle: title || void 0,
       includeFrontmatter: s.includeFrontmatter,
-      includeResearch: s.includeResearch,
       includeTitlesAsHeadings: s.includeTitlesAsHeadings,
       includeFolderNamesAsHeadings: s.includeFolderNamesAsHeadings,
       paperSize: "letter",
@@ -17594,12 +15790,12 @@ var CompilePreviewView = class extends import_obsidian20.ItemView {
       fontSize: 12,
       addTitlePage: s.addTitlePage
     };
-    this.sourcePath = project ? (0, import_obsidian20.normalizePath)(`${project.folderPath}/_compile.md`) : "";
+    this.sourcePath = project ? (0, import_obsidian17.normalizePath)(`${project.folderPath}/_compile.md`) : "";
     try {
       this.content = this.plugin.exportEngine.toMarkdown(await this.plugin.exportEngine.compileContent(exportOpts));
     } catch (e) {
       this.content = "";
-      new import_obsidian20.Notice(t2("exportModal.exportFailed", { error: e instanceof Error ? e.message : String(e) }));
+      new import_obsidian17.Notice(t2("exportModal.exportFailed", { error: e instanceof Error ? e.message : String(e) }));
     }
     this.sections = splitSections(this.content);
     this.jumpItems = buildJumpItems(this.sections);
@@ -17649,7 +15845,7 @@ var CompilePreviewView = class extends import_obsidian20.ItemView {
       });
       loadBtn.onclick = safeHandler(async () => {
         if (!this.plugin.projectManager.getActiveProject()) {
-          new import_obsidian20.Notice(t2("binder.selectProjectFirst"));
+          new import_obsidian17.Notice(t2("binder.selectProjectFirst"));
           return;
         }
         await this.loadContent();
@@ -17661,7 +15857,7 @@ var CompilePreviewView = class extends import_obsidian20.ItemView {
       if (section.startsWith("# ")) {
         sectionDiv.setAttribute("data-section-id", sectionId(index));
       }
-      void import_obsidian20.MarkdownRenderer.render(this.app, section, sectionDiv, this.sourcePath, this);
+      void import_obsidian17.MarkdownRenderer.render(this.app, section, sectionDiv, this.sourcePath, this);
     });
   }
   async onClose() {
@@ -17669,9 +15865,9 @@ var CompilePreviewView = class extends import_obsidian20.ItemView {
 };
 
 // src/LauncherView.ts
-var import_obsidian21 = require("obsidian");
+var import_obsidian18 = require("obsidian");
 var LAUNCHER_VIEW_TYPE = "writing-studio-launcher";
-var LauncherView = class extends import_obsidian21.ItemView {
+var LauncherView = class extends import_obsidian18.ItemView {
   constructor(leaf, plugin) {
     super(leaf);
     this.refreshTimer = null;
@@ -17761,7 +15957,7 @@ var LauncherView = class extends import_obsidian21.ItemView {
     const header = root.createDiv("ws-launcher-header");
     header.createSpan({ text: t2("launcher.title"), cls: "ws-launcher-title" });
     const settingsBtn = header.createEl("button", { cls: "ws-launcher-icon-btn", title: t2("launcher.settings") });
-    (0, import_obsidian21.setIcon)(settingsBtn, "settings");
+    (0, import_obsidian18.setIcon)(settingsBtn, "settings");
     settingsBtn.onclick = () => {
       var _a2, _b2;
       (_a2 = this.app.setting) == null ? void 0 : _a2.open();
@@ -17783,12 +15979,12 @@ var LauncherView = class extends import_obsidian21.ItemView {
     }
     if (project) {
       const editBtn = cardHeader.createEl("button", { cls: "ws-launcher-icon-btn", title: t2("projectModal.editTitle") });
-      (0, import_obsidian21.setIcon)(editBtn, "pencil");
+      (0, import_obsidian18.setIcon)(editBtn, "pencil");
       editBtn.onclick = () => {
         new ProjectModal(this.app, this.plugin, void 0, project).open();
       };
       const deleteBtn = cardHeader.createEl("button", { cls: "ws-launcher-icon-btn", title: t2("projectModal.deleteTitle") });
-      (0, import_obsidian21.setIcon)(deleteBtn, "trash");
+      (0, import_obsidian18.setIcon)(deleteBtn, "trash");
       deleteBtn.onclick = () => {
         confirmDeleteProject(this.app, this.plugin, project);
       };
@@ -17827,10 +16023,10 @@ var LauncherView = class extends import_obsidian21.ItemView {
     const projects = this.plugin.projectManager.getProjects();
     if (projects.length > 1) {
       const switchBtn = nameRow.createEl("button", { cls: "ws-launcher-icon-btn" });
-      (0, import_obsidian21.setIcon)(switchBtn, "chevrons-up-down");
-      (0, import_obsidian21.setTooltip)(switchBtn, t2("launcher.switchProject"));
+      (0, import_obsidian18.setIcon)(switchBtn, "chevrons-up-down");
+      (0, import_obsidian18.setTooltip)(switchBtn, t2("launcher.switchProject"));
       switchBtn.onclick = (e) => {
-        const menu = new import_obsidian21.Menu();
+        const menu = new import_obsidian18.Menu();
         for (const p of projects) {
           menu.addItem((i2) => {
             i2.setTitle(p.title).setChecked(p.id === project.id).onClick(async () => {
@@ -17880,7 +16076,7 @@ var LauncherView = class extends import_obsidian21.ItemView {
         cls: `ws-launcher-mode-btn ${current === mode.id ? "is-active" : ""}`,
         title: mode.desc
       });
-      (0, import_obsidian21.setIcon)(btn.createSpan("ws-mode-icon"), mode.icon);
+      (0, import_obsidian18.setIcon)(btn.createSpan("ws-mode-icon"), mode.icon);
       btn.createSpan({ text: mode.label, cls: "ws-mode-label" });
       btn.onclick = () => {
         void this.plugin.writingModes.switchMode(current === mode.id ? "none" : mode.id);
@@ -17975,7 +16171,7 @@ var LauncherView = class extends import_obsidian21.ItemView {
     for (const a of actions) {
       const btn = grid.createEl("button", { cls: "ws-launcher-action-grid-btn", title: a.label });
       const iconEl = btn.createDiv("ws-launcher-grid-icon");
-      (0, import_obsidian21.setIcon)(iconEl, a.icon);
+      (0, import_obsidian18.setIcon)(iconEl, a.icon);
       btn.createDiv({ text: a.label, cls: "ws-launcher-grid-label" });
       btn.onclick = a.action;
     }
@@ -18041,7 +16237,7 @@ var LauncherView = class extends import_obsidian21.ItemView {
 };
 
 // src/FocusMode.ts
-var import_obsidian22 = require("obsidian");
+var import_obsidian19 = require("obsidian");
 var import_view = require("@codemirror/view");
 var import_state = require("@codemirror/state");
 var FOCUS_CLASS = "writing-studio-focus-mode";
@@ -18164,7 +16360,7 @@ var FocusMode = class {
     const leaf = this.app.workspace.getMostRecentLeaf();
     if (!leaf) return 0;
     const view = leaf.view;
-    if (view instanceof import_obsidian22.MarkdownView) {
+    if (view instanceof import_obsidian19.MarkdownView) {
       const content2 = ((_a2 = view.editor) == null ? void 0 : _a2.getValue()) || "";
       return this.plugin.fmManager.countWords(content2);
     }
@@ -18340,7 +16536,7 @@ var TypographyMode = class {
 };
 
 // src/WritingModes.ts
-var import_obsidian23 = require("obsidian");
+var import_obsidian20 = require("obsidian");
 
 // models/WritingMode.ts
 var WRITING_MODE_CONFIGS = {
@@ -18424,7 +16620,7 @@ var WritingModes = class {
     await this.plugin.saveSettings();
     if (!silent) {
       const modeLabel = mode === "none" ? t2("writingModes.normal") : t2(`launcher.mode.${mode}`);
-      new import_obsidian23.Notice(t2("writingModes.switchedTo", { mode: modeLabel }));
+      new import_obsidian20.Notice(t2("writingModes.switchedTo", { mode: modeLabel }));
     }
   }
   collapseSidebars() {
@@ -18441,7 +16637,7 @@ var WritingModes = class {
   }
   forceReadingView() {
     const leaf = this.app.workspace.getMostRecentLeaf();
-    if (!leaf || !(leaf.view instanceof import_obsidian23.MarkdownView)) return;
+    if (!leaf || !(leaf.view instanceof import_obsidian20.MarkdownView)) return;
     const mode = leaf.view.getMode();
     if (mode !== "preview") {
       this.reviewPrior = { leaf, mode };
@@ -18451,7 +16647,7 @@ var WritingModes = class {
   restoreEditorViewMode() {
     const prior = this.reviewPrior;
     this.reviewPrior = null;
-    if (!prior || !(prior.leaf.view instanceof import_obsidian23.MarkdownView)) return;
+    if (!prior || !(prior.leaf.view instanceof import_obsidian20.MarkdownView)) return;
     void this.setLeafMode(prior.leaf, prior.mode);
   }
   async setLeafMode(leaf, mode) {
@@ -18475,7 +16671,7 @@ var WritingModes = class {
       edit: t2("writingModes.statusEdit"),
       review: t2("writingModes.statusReview")
     };
-    (0, import_obsidian23.setIcon)(this.statusBarEl.createSpan("ws-status-mode-icon"), icons[mode]);
+    (0, import_obsidian20.setIcon)(this.statusBarEl.createSpan("ws-status-mode-icon"), icons[mode]);
     this.statusBarEl.createSpan({ text: labels[mode] });
   }
   restore() {
@@ -18496,7 +16692,7 @@ var WritingModes = class {
 };
 
 // src/SprintTimer.ts
-var import_obsidian24 = require("obsidian");
+var import_obsidian21 = require("obsidian");
 function computeSprintWords(scope, primaryFile, baselines, currents, projectPrefix) {
   var _a2, _b2, _c;
   if (scope === "project") {
@@ -18547,7 +16743,7 @@ var SprintTimer = class {
   setup(durationMinutes, wordCountGoal, projectScope = "file") {
     var _a2;
     if (((_a2 = this.state) == null ? void 0 : _a2.active) && !this.state.ready) {
-      new import_obsidian24.Notice(t2("sprint.alreadyRunning"));
+      new import_obsidian21.Notice(t2("sprint.alreadyRunning"));
       return;
     }
     this.state = {
@@ -18592,7 +16788,7 @@ var SprintTimer = class {
     this.updateDisplay();
     this.plugin.studioEvents.announceSprintChanged();
     if (wasReady) {
-      new import_obsidian24.Notice(t2("sprint.started", { minutes: this.state.durationMinutes }));
+      new import_obsidian21.Notice(t2("sprint.started", { minutes: this.state.durationMinutes }));
     }
   }
   stop() {
@@ -18645,7 +16841,7 @@ var SprintTimer = class {
     var _a2;
     if (((_a2 = this.state) == null ? void 0 : _a2.projectScope) !== "project") return null;
     const project = this.plugin.projectManager.getActiveProject();
-    return project ? (0, import_obsidian24.normalizePath)(project.folderPath) + "/" : null;
+    return project ? (0, import_obsidian21.normalizePath)(project.folderPath) + "/" : null;
   }
   getElapsedMs() {
     if (!this.state) return 0;
@@ -18689,7 +16885,7 @@ var SprintTimer = class {
     if (this.plugin.settings.soundNotifications) {
       this.playBell();
     }
-    new import_obsidian24.Notice(t2("sprint.complete"), 5e3);
+    new import_obsidian21.Notice(t2("sprint.complete"), 5e3);
     const session = this.buildSession();
     this.state = null;
     this.hideFloating();
@@ -18817,7 +17013,7 @@ var SprintTimer = class {
     const leaf = this.app.workspace.getMostRecentLeaf();
     if (!leaf) return;
     const view = leaf.view;
-    if (!(view instanceof import_obsidian24.MarkdownView) || !view.file) return;
+    if (!(view instanceof import_obsidian21.MarkdownView) || !view.file) return;
     const path = view.file.path;
     const count = this.plugin.fmManager.countWords(((_a2 = view.editor) == null ? void 0 : _a2.getValue()) || "");
     if (!s.baselines.has(path)) {
@@ -18829,7 +17025,7 @@ var SprintTimer = class {
     var _a2, _b2;
     const leaf = this.app.workspace.getMostRecentLeaf();
     const view = leaf == null ? void 0 : leaf.view;
-    return view instanceof import_obsidian24.MarkdownView ? (_b2 = (_a2 = view.file) == null ? void 0 : _a2.path) != null ? _b2 : null : null;
+    return view instanceof import_obsidian21.MarkdownView ? (_b2 = (_a2 = view.file) == null ? void 0 : _a2.path) != null ? _b2 : null : null;
   }
   destroy() {
     this.stopInterval();
@@ -18838,7 +17034,7 @@ var SprintTimer = class {
 };
 
 // src/WordPressClient.ts
-var import_obsidian25 = require("obsidian");
+var import_obsidian22 = require("obsidian");
 var WordPressClient = class {
   authHeaders(site) {
     const credentials = `${site.username}:${site.appPassword}`;
@@ -18855,7 +17051,7 @@ var WordPressClient = class {
   async testConnection(site) {
     var _a2;
     try {
-      const resp = await (0, import_obsidian25.requestUrl)({
+      const resp = await (0, import_obsidian22.requestUrl)({
         url: this.apiUrl(site, "users/me"),
         method: "GET",
         headers: this.authHeaders(site),
@@ -18870,7 +17066,7 @@ var WordPressClient = class {
       const data = resp.json;
       let siteName = site.url;
       try {
-        const siteResp = await (0, import_obsidian25.requestUrl)({
+        const siteResp = await (0, import_obsidian22.requestUrl)({
           url: `${site.url.replace(/\/$/, "")}/wp-json/`,
           method: "GET",
           headers: this.authHeaders(site),
@@ -18895,7 +17091,7 @@ var WordPressClient = class {
     try {
       const all = [];
       for (let page = 1; page <= 20; page++) {
-        const resp = await (0, import_obsidian25.requestUrl)({
+        const resp = await (0, import_obsidian22.requestUrl)({
           url: this.apiUrl(site, `categories?per_page=100&page=${page}`),
           method: "GET",
           headers: this.authHeaders(site),
@@ -18916,7 +17112,7 @@ var WordPressClient = class {
       }
       return all;
     } catch (e) {
-      new import_obsidian25.Notice(t2("wpClient.fetchCategoriesFailed", { error: e instanceof Error ? e.message : String(e) }));
+      new import_obsidian22.Notice(t2("wpClient.fetchCategoriesFailed", { error: e instanceof Error ? e.message : String(e) }));
       return [];
     }
   }
@@ -18936,7 +17132,7 @@ var WordPressClient = class {
     if (opts.featuredMediaId) body.featured_media = opts.featuredMediaId;
     if (opts.scheduledDate) body.date = opts.scheduledDate;
     const url = opts.existingPostId ? this.apiUrl(site, `posts/${opts.existingPostId}`) : this.apiUrl(site, "posts");
-    const resp = await (0, import_obsidian25.requestUrl)({
+    const resp = await (0, import_obsidian22.requestUrl)({
       url,
       method: opts.existingPostId ? "PUT" : "POST",
       headers: this.authHeaders(site),
@@ -18960,7 +17156,7 @@ var WordPressClient = class {
     const skipped = [];
     for (const name of tagNames) {
       try {
-        const searchResp = await (0, import_obsidian25.requestUrl)({
+        const searchResp = await (0, import_obsidian22.requestUrl)({
           url: this.apiUrl(site, `tags?search=${encodeURIComponent(name)}`),
           method: "GET",
           headers: this.authHeaders(site),
@@ -18974,7 +17170,7 @@ var WordPressClient = class {
             continue;
           }
         }
-        const createResp = await (0, import_obsidian25.requestUrl)({
+        const createResp = await (0, import_obsidian22.requestUrl)({
           url: this.apiUrl(site, "tags"),
           method: "POST",
           headers: this.authHeaders(site),
@@ -18991,7 +17187,7 @@ var WordPressClient = class {
       }
     }
     if (skipped.length > 0) {
-      new import_obsidian25.Notice(t2("wpClient.tagsSkipped", { tags: skipped.join(", ") }));
+      new import_obsidian22.Notice(t2("wpClient.tagsSkipped", { tags: skipped.join(", ") }));
     }
     return ids;
   }
@@ -19012,23 +17208,22 @@ var WordPressClient = class {
 };
 
 // src/ProjectManager.ts
-var import_obsidian27 = require("obsidian");
+var import_obsidian24 = require("obsidian");
 
 // src/scaffold.ts
-var import_obsidian26 = require("obsidian");
+var import_obsidian23 = require("obsidian");
 function templateDoc(f) {
   var _a2, _b2, _c;
   const extra = Object.entries((_a2 = f.extraFields) != null ? _a2 : {}).map(([k, v]) => `
 ${k}: "${v}"`).join("");
   const goalLine = f.goal && f.goal > 0 ? `
 word-count-goal: ${f.goal}` : "";
-  const exportLine = f.exportExcluded ? "\ninclude-in-export: false" : "";
+  const exportLine = f.exportExcluded ? "\nbinder-compile: false" : "";
   const tags = ((_b2 = f.tags) != null ? _b2 : ["writing-studio"]).join(", ");
-  return `---
-title: "${f.title}"${extra}
-type: ${f.fmType}
-order: ${f.order}
-status: draft${goalLine}${exportLine}
+  return `---${extra}
+binder-type: ${f.fmType}
+binder-order: ${f.order}
+binder-status: draft${goalLine}${exportLine}
 word-count: 0
 created: ${f.date}
 modified: ${f.date}
@@ -19050,39 +17245,30 @@ var TemplateScaffolder = class {
   }
   async apply(project, manifest) {
     var _a2;
-    const container = (0, import_obsidian26.normalizePath)(`${project.folderPath}/${resolveDocumentFolder(project)}`);
+    const container = (0, import_obsidian23.normalizePath)(`${project.folderPath}/${resolveDocumentFolder(project)}`);
     for (const folder of (_a2 = manifest.folders) != null ? _a2 : []) {
-      await this.files.ensureFolder((0, import_obsidian26.normalizePath)(`${container}/${folder}`));
+      await this.files.ensureFolder((0, import_obsidian23.normalizePath)(`${container}/${folder}`));
     }
-    const items = await this.buildItems(manifest.items, container);
-    return { version: "2.0", projectId: project.id, items };
+    await this.buildItems(manifest.items, container);
   }
+  // Sibling orders are minted with gaps of 10, the same scheme reordering
+  // uses, so a scaffolded group has room for insertions before any renumber.
   async buildItems(nodes, container) {
-    var _a2, _b2;
-    const items = [];
-    let order = 1;
+    var _a2;
+    let order = 10;
     for (const node of nodes) {
-      let filePath = "";
       if (node.fileName) {
-        filePath = (0, import_obsidian26.normalizePath)(`${container}/${node.fileName}.md`);
+        const filePath = (0, import_obsidian23.normalizePath)(`${container}/${node.fileName}.md`);
         if (!this.files.exists(filePath)) {
           await this.files.writeText(filePath, (_a2 = node.content) != null ? _a2 : "");
         }
+      } else {
+        const folderPath = (0, import_obsidian23.normalizePath)(`${container}/${folderNameWithPrefix(node.title, order)}`);
+        await this.files.ensureFolder(folderPath);
+        if (node.children) await this.buildItems(node.children, folderPath);
       }
-      const item = {
-        id: node.id,
-        title: node.title,
-        filePath,
-        type: node.type,
-        order: order++,
-        status: "draft",
-        includeInExport: (_b2 = node.includeInExport) != null ? _b2 : true
-      };
-      if (node.wordCountGoal) item.wordCountGoal = node.wordCountGoal;
-      if (node.children) item.children = await this.buildItems(node.children, container);
-      items.push(item);
+      order += 10;
     }
-    return items;
   }
 };
 
@@ -19099,7 +17285,7 @@ function bookManifest(_project) {
         content: templateDoc({
           title: "Front Matter",
           fmType: "section",
-          order: 1,
+          order: 10,
           date,
           body: "*Title page, dedication, table of contents, and other front matter goes here.*"
         })
@@ -19113,12 +17299,14 @@ function bookManifest(_project) {
             id: "item-chapter-1",
             title: "Chapter 1",
             type: "chapter",
-            fileName: "Part 1 - Chapter 1",
+            // Physically inside the Part 1 folder since #233, so the name no
+            // longer needs to carry the part
+            fileName: "Chapter 1",
             wordCountGoal: 3e3,
             content: templateDoc({
               title: "Chapter 1",
               fmType: "chapter",
-              order: 1,
+              order: 10,
               goal: 3e3,
               date,
               body: "*Begin your story here.*"
@@ -19134,7 +17322,7 @@ function bookManifest(_project) {
         content: templateDoc({
           title: "Back Matter",
           fmType: "section",
-          order: 3,
+          order: 30,
           date,
           body: "*Acknowledgments, bibliography, author bio, and other back matter goes here.*"
         })
@@ -19157,7 +17345,7 @@ function articleSeriesManifest(project) {
         content: templateDoc({
           title: "Series Overview",
           fmType: "note",
-          order: 1,
+          order: 10,
           date,
           tags: ["writing-studio", "series-meta"],
           heading: `${project.title} \u2014 Series Overview`,
@@ -19186,7 +17374,7 @@ function articleSeriesManifest(project) {
         content: templateDoc({
           title: "Article 1",
           fmType: "article",
-          order: 1,
+          order: 20,
           goal: 1500,
           date,
           body: "*Write your first article here.*"
@@ -19204,27 +17392,19 @@ function blogCollectionManifest(_project) {
     folders: [String(year)],
     items: [
       {
-        id: `item-year-${year}`,
-        title: String(year),
-        type: "group",
-        includeInExport: false,
-        children: [
-          {
-            id: "item-first-post",
-            title: "First Post",
-            type: "article",
-            fileName: `${year}/${date}-first-post`,
-            wordCountGoal: 800,
-            content: templateDoc({
-              title: "First Post",
-              fmType: "article",
-              order: 1,
-              goal: 800,
-              date,
-              body: "*Write your first blog post here.*"
-            })
-          }
-        ]
+        id: "item-first-post",
+        title: "First Post",
+        type: "article",
+        fileName: `${year}/${date}-first-post`,
+        wordCountGoal: 800,
+        content: templateDoc({
+          title: "First Post",
+          fmType: "article",
+          order: 10,
+          goal: 800,
+          date,
+          body: "*Write your first blog post here.*"
+        })
       }
     ]
   };
@@ -19312,7 +17492,7 @@ function journalArticleManifest(project) {
     content: templateDoc({
       title: project.title,
       fmType: "section",
-      order: 1,
+      order: 10,
       goal: 500,
       date,
       extraFields: {
@@ -19336,7 +17516,7 @@ function journalArticleManifest(project) {
       content: templateDoc({
         title: s.title,
         fmType: s.fmType,
-        order: i2 + 2,
+        order: (i2 + 2) * 10,
         goal: s.goal,
         date,
         body: placeholderHint(s.hint)
@@ -19444,7 +17624,7 @@ function magazineArticleManifest(_project) {
     content: templateDoc({
       title: s.title,
       fmType: s.fmType,
-      order: i2 + 1,
+      order: (i2 + 1) * 10,
       goal: s.goal,
       date,
       exportExcluded: s.exportExcluded,
@@ -19465,12 +17645,11 @@ var TEMPLATE_MANIFESTS = {
 };
 
 // src/ProjectManager.ts
-var ProjectManager = class extends import_obsidian27.Events {
+var ProjectManager = class extends import_obsidian24.Events {
   constructor(plugin, files) {
     super();
     this.projects = /* @__PURE__ */ new Map();
     this.activeProjectId = null;
-    this.binderCache = /* @__PURE__ */ new Map();
     this.plugin = plugin;
     this.app = plugin.app;
     this.files = files;
@@ -19480,11 +17659,6 @@ var ProjectManager = class extends import_obsidian27.Events {
   // with Component.registerEvent for automatic cleanup.
   onActiveProjectChanged(cb) {
     return this.on("active-project-changed", (...data) => {
-      cb(data[0]);
-    });
-  }
-  onBinderChanged(cb) {
-    return this.on("binder-changed", (...data) => {
       cb(data[0]);
     });
   }
@@ -19503,11 +17677,11 @@ var ProjectManager = class extends import_obsidian27.Events {
     this.projects.clear();
     const rootFolder = this.plugin.settings.defaultProjectFolder;
     if (!rootFolder) return;
-    const subfolders = this.files.listSubfolders((0, import_obsidian27.normalizePath)(rootFolder));
+    const subfolders = this.files.listSubfolders((0, import_obsidian24.normalizePath)(rootFolder));
     await Promise.all(subfolders.map((f) => this.loadProject(f)));
   }
   async loadProject(folderPath) {
-    const content2 = await this.files.readText((0, import_obsidian27.normalizePath)(`${folderPath}/_project.json`));
+    const content2 = await this.files.readText((0, import_obsidian24.normalizePath)(`${folderPath}/_project.json`));
     if (content2 === null) return null;
     try {
       const project = JSON.parse(content2);
@@ -19515,7 +17689,7 @@ var ProjectManager = class extends import_obsidian27.Events {
       this.projects.set(project.id, project);
       return project;
     } catch (e) {
-      new import_obsidian27.Notice(t2("projectManager.corruptProject", { folder: folderPath }));
+      new import_obsidian24.Notice(t2("projectManager.corruptProject", { folder: folderPath }));
       return null;
     }
   }
@@ -19523,15 +17697,15 @@ var ProjectManager = class extends import_obsidian27.Events {
     const rootFolder = this.plugin.settings.defaultProjectFolder || "Writing Projects";
     const id = this.uniqueId("project");
     const folderName = title.replace(/[\\/:*?"<>|]/g, "-");
-    const folderPath = (0, import_obsidian27.normalizePath)(`${rootFolder}/${folderName}`);
+    const folderPath = (0, import_obsidian24.normalizePath)(`${rootFolder}/${folderName}`);
     if (this.files.exists(folderPath)) {
       throw new Error(t2("projectManager.errorFolderExists", { folder: folderName }));
     }
     const documentFolder = defaultDocumentFolder(type);
     await this.files.ensureFolder(folderPath);
-    await this.files.ensureFolder((0, import_obsidian27.normalizePath)(`${folderPath}/${documentFolder}`));
-    await this.files.ensureFolder((0, import_obsidian27.normalizePath)(`${folderPath}/Research`));
-    await this.files.ensureFolder((0, import_obsidian27.normalizePath)(`${folderPath}/Exports`));
+    await this.files.ensureFolder((0, import_obsidian24.normalizePath)(`${folderPath}/${documentFolder}`));
+    await this.files.ensureFolder((0, import_obsidian24.normalizePath)(`${folderPath}/Research`));
+    await this.files.ensureFolder((0, import_obsidian24.normalizePath)(`${folderPath}/Exports`));
     const now = localDateString();
     const project = {
       id,
@@ -19546,214 +17720,34 @@ var ProjectManager = class extends import_obsidian27.Events {
       goals: {}
     };
     const manifestBuilder = TEMPLATE_MANIFESTS[type];
-    const binderData = manifestBuilder ? await new TemplateScaffolder(this.files).apply(project, manifestBuilder(project)) : this.createBlankBinder(project);
+    if (manifestBuilder) {
+      await new TemplateScaffolder(this.files).apply(project, manifestBuilder(project));
+    }
     await this.saveProject(project);
-    await this.saveBinder(binderData);
     await this.initWritingLog(project);
     this.projects.set(id, project);
     return project;
   }
-  createBlankBinder(project) {
-    return {
-      version: "2.0",
-      projectId: project.id,
-      items: []
-    };
-  }
   async saveProject(project) {
     project.modified = localDateString();
-    const path = (0, import_obsidian27.normalizePath)(`${project.folderPath}/_project.json`);
+    const path = (0, import_obsidian24.normalizePath)(`${project.folderPath}/_project.json`);
     await this.writeJson(path, project);
     this.projects.set(project.id, project);
     this.trigger("projects-changed");
-  }
-  async loadBinder(project) {
-    const cached = this.binderCache.get(project.id);
-    if (cached) return cached;
-    const path = (0, import_obsidian27.normalizePath)(`${project.folderPath}/_binder.json`);
-    let content2;
-    try {
-      content2 = await this.files.readText(path);
-    } catch (e) {
-      return { version: "2.0", projectId: project.id, items: [] };
-    }
-    if (content2 === null) {
-      return { version: "2.0", projectId: project.id, items: [] };
-    }
-    try {
-      const data = JSON.parse(content2);
-      this.binderCache.set(project.id, data);
-      return data;
-    } catch (e) {
-      await this.files.writeText((0, import_obsidian27.normalizePath)(`${project.folderPath}/_binder.json.bak`), content2);
-      new import_obsidian27.Notice(t2("projectManager.corruptBinder", { project: project.title }));
-      return { version: "2.0", projectId: project.id, items: [] };
-    }
   }
   // Same-millisecond creations produced identical Date.now() IDs
   uniqueId(prefix) {
     return `${prefix}-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
   }
-  async saveBinder(binder) {
-    const project = this.projects.get(binder.projectId);
-    if (!project) return;
-    this.binderCache.set(binder.projectId, binder);
-    const path = (0, import_obsidian27.normalizePath)(`${project.folderPath}/_binder.json`);
-    await this.writeJson(path, binder);
-    this.trigger("binder-changed", binder);
-  }
-  async addDocumentToBinder(project, title, type, parentId, content2) {
-    const binder = await this.loadBinder(project);
-    const now = localDateString();
-    const baseName2 = title.replace(/[\\/:*?"<>|]/g, "-");
-    const docFolder = resolveDocumentFolder(project);
-    let filePath = (0, import_obsidian27.normalizePath)(`${project.folderPath}/${docFolder}/${baseName2}.md`);
-    for (let n = 2; this.files.exists(filePath); n++) {
-      filePath = (0, import_obsidian27.normalizePath)(`${project.folderPath}/${docFolder}/${baseName2} ${n}.md`);
-    }
-    const item = {
-      id: this.uniqueId("item"),
-      title,
-      filePath,
-      type,
-      order: this.getNextOrder(binder.items, parentId),
-      status: "draft",
-      includeInExport: true
-    };
-    const frontmatter = this.buildDocFrontmatter(title, type, item.order, now);
-    await this.files.writeText(filePath, content2 != null ? content2 : frontmatter + "\n\n");
-    this.insertIntoBinder(binder, item, parentId);
-    await this.saveBinder(binder);
-    return item;
-  }
-  // Structural items (group/part) organize the binder tree only — they have
-  // no backing file, so nothing is written to the vault
-  async addStructuralItem(project, title, type, parentId) {
-    const binder = await this.loadBinder(project);
-    const item = {
-      id: this.uniqueId("item"),
-      title,
-      filePath: "",
-      type,
-      order: this.getNextOrder(binder.items, parentId),
-      status: "draft",
-      includeInExport: true
-    };
-    this.insertIntoBinder(binder, item, parentId);
-    await this.saveBinder(binder);
-    return item;
-  }
-  // Document items only — structural items (group/part) keep their type,
-  // and document items can never become structural
-  async updateItemType(project, itemId, type) {
-    const binder = await this.loadBinder(project);
-    const item = this.findItem(binder.items, itemId);
-    if (item && item.type !== "group" && item.type !== "part" && item.type !== type) {
-      item.type = type;
-      await this.saveBinder(binder);
-    }
-  }
-  insertIntoBinder(binder, item, parentId) {
-    if (parentId) {
-      const parent = this.findItem(binder.items, parentId);
-      if (parent) {
-        parent.children = parent.children || [];
-        parent.children.push(item);
-        return;
-      }
-    }
-    binder.items.push(item);
-  }
-  buildDocFrontmatter(title, type, order, date) {
-    return `---
-title: "${title}"
-type: ${type}
-order: ${order}
-status: draft
-word-count-goal: 0
-word-count: 0
-created: ${date}
-modified: ${date}
-tags: [writing-studio]
----`;
-  }
-  // Max + 1, not length + 1 — after drag reordering, sibling counts no longer
-  // track the highest assigned order, so length-based values could collide
-  getNextOrder(items, parentId) {
-    var _a2, _b2;
-    const siblings = parentId ? (_b2 = (_a2 = this.findItem(items, parentId)) == null ? void 0 : _a2.children) != null ? _b2 : [] : items;
-    return siblings.reduce((max, i2) => Math.max(max, i2.order), 0) + 1;
-  }
-  findItem(items, id) {
-    for (const item of items) {
-      if (item.id === id) return item;
-      if (item.children) {
-        const found = this.findItem(item.children, id);
-        if (found) return found;
-      }
-    }
-    return null;
-  }
-  async removeItemFromBinder(project, itemId) {
-    const binder = await this.loadBinder(project);
-    binder.items = this.removeFromTree(binder.items, itemId);
-    await this.saveBinder(binder);
-  }
-  // The inverse of "Add to writing project" — drops the binder entry and
-  // leaves the file untouched. The removed item's children are promoted into
-  // its position so no entries are orphaned.
-  async removeFromBinderPromoteChildren(project, itemId) {
-    const binder = await this.loadBinder(project);
-    binder.items = this.promoteAndRemove(binder.items, itemId);
-    this.renumberOrders(binder.items);
-    await this.saveBinder(binder);
-  }
-  promoteAndRemove(items, id) {
-    var _a2;
-    const result = [];
-    for (const item of items) {
-      if (item.id === id) {
-        result.push(...(_a2 = item.children) != null ? _a2 : []);
-      } else {
-        result.push({
-          ...item,
-          children: item.children ? this.promoteAndRemove(item.children, id) : void 0
-        });
-      }
-    }
-    return result;
-  }
-  // Array position is the rendering order; keep the order fields in step the
-  // same way drag reordering does
-  renumberOrders(items) {
-    items.forEach((item, i2) => {
-      item.order = i2 + 1;
-      if (item.children) this.renumberOrders(item.children);
-    });
-  }
-  removeFromTree(items, id) {
-    return items.filter((item) => item.id !== id).map((item) => ({
-      ...item,
-      children: item.children ? this.removeFromTree(item.children, id) : void 0
-    }));
-  }
-  async updateItemStatus(project, itemId, status) {
-    const binder = await this.loadBinder(project);
-    const item = this.findItem(binder.items, itemId);
-    if (item) {
-      item.status = status;
-      await this.saveBinder(binder);
-    }
-  }
   async logSprintSession(project, session) {
-    const logPath = (0, import_obsidian27.normalizePath)(`${project.folderPath}/_writing-log.json`);
+    const logPath = (0, import_obsidian24.normalizePath)(`${project.folderPath}/_writing-log.json`);
     let log = [];
     const content2 = await this.files.readText(logPath);
     if (content2 !== null) {
       try {
         log = JSON.parse(content2);
       } catch (e) {
-        new import_obsidian27.Notice(t2("projectManager.corruptLog", { project: project.title }));
+        new import_obsidian24.Notice(t2("projectManager.corruptLog", { project: project.title }));
       }
     }
     log.push(session);
@@ -19764,7 +17758,7 @@ tags: [writing-studio]
     await this.writeJson(logPath, log);
   }
   async getWritingLog(project) {
-    const logPath = (0, import_obsidian27.normalizePath)(`${project.folderPath}/_writing-log.json`);
+    const logPath = (0, import_obsidian24.normalizePath)(`${project.folderPath}/_writing-log.json`);
     try {
       const content2 = await this.files.readText(logPath);
       return content2 === null ? [] : JSON.parse(content2);
@@ -19773,7 +17767,7 @@ tags: [writing-studio]
     }
   }
   async initWritingLog(project) {
-    const logPath = (0, import_obsidian27.normalizePath)(`${project.folderPath}/_writing-log.json`);
+    const logPath = (0, import_obsidian24.normalizePath)(`${project.folderPath}/_writing-log.json`);
     await this.writeJson(logPath, []);
   }
   async writeJson(path, data) {
@@ -19790,11 +17784,10 @@ tags: [writing-studio]
     return this.projects.get(this.activeProjectId) || null;
   }
   // Registry-only removal — the project folder, its documents, _project.json,
-  // and _binder.json all stay untouched in the vault
+  // and any legacy _binder.json all stay untouched in the vault
   async deleteProject(id) {
     if (!this.projects.has(id)) return;
     this.projects.delete(id);
-    this.binderCache.delete(id);
     if (!this.plugin.settings.removedProjectIds.includes(id)) {
       this.plugin.settings.removedProjectIds.push(id);
     }
@@ -19811,93 +17804,28 @@ tags: [writing-studio]
     await this.plugin.saveSettings();
     this.trigger("active-project-changed", this.getActiveProject());
   }
-  flattenBinder(items) {
-    const result = [];
-    for (const item of items) {
-      result.push(item);
-      if (item.children) {
-        result.push(...this.flattenBinder(item.children));
-      }
-    }
-    return result;
-  }
-  findBinderItemByPath(items, filePath) {
-    for (const item of items) {
-      if (item.filePath === filePath) return item;
-      if (item.children) {
-        const found = this.findBinderItemByPath(item.children, filePath);
-        if (found) return found;
-      }
-    }
-    return void 0;
-  }
   // Follows a vault folder rename. Obsidian moved the files; this updates the
-  // plugin's records to match: binder filePaths under the old prefix are
-  // batch-rewritten (one save per affected binder), folderPath is repointed
-  // for projects at or under the renamed path, and documentFolder is renamed
-  // along with the folder it names. Idempotent — a replayed event, or one
-  // arriving after the per-child TFile events already repaired the paths,
-  // finds nothing left to rewrite.
+  // plugin's records to match: folderPath is repointed for projects at or
+  // under the renamed path, and documentFolder is renamed along with the
+  // folder it names. Idempotent — a replayed event finds nothing to change.
+  // The binder needs no repair since #233 — it renders disk truth.
   async handleFolderRename(oldPath, newPath) {
     for (const project of this.getProjects()) {
-      const folderPathChanged = pathAtOrUnder(project.folderPath, oldPath);
-      if (folderPathChanged) {
+      if (pathAtOrUnder(project.folderPath, oldPath)) {
         project.folderPath = rewritePathPrefix(project.folderPath, oldPath, newPath);
         await this.saveProject(project);
       }
-      const binder = await this.loadBinder(project);
-      const binderChanged = rewriteBinderPaths(binder.items, oldPath, newPath);
-      if (binderChanged || folderPathChanged) await this.saveBinder(binder);
-      if (this.isDocumentFolderRename(project, oldPath, newPath, binder.items, binderChanged) && project.documentFolder !== baseName(newPath)) {
+      if (parentPath(oldPath) === project.folderPath && baseName(oldPath).toLowerCase() === resolveDocumentFolder(project).toLowerCase() && project.documentFolder !== baseName(newPath)) {
         project.documentFolder = baseName(newPath);
         await this.saveProject(project);
       }
     }
   }
-  // The renamed folder is a project's document folder when it is a direct
-  // child of the project folder and either carries the recorded name, or —
-  // when the recorded name is stale (renamed while the plugin was off) — it
-  // held binder documents and the recorded folder no longer exists.
-  isDocumentFolderRename(project, oldPath, newPath, items, binderChanged) {
-    if (parentPath(oldPath) !== project.folderPath) return false;
-    const recorded = resolveDocumentFolder(project);
-    if (baseName(oldPath).toLowerCase() === recorded.toLowerCase()) return true;
-    const heldDocuments = binderChanged || anyBinderPathUnder(items, newPath);
-    return heldDocuments && !this.files.exists((0, import_obsidian27.normalizePath)(`${project.folderPath}/${recorded}`));
-  }
-  // A single .md rename or move. Only rewrite the title when the basename
-  // actually changed — a folder rename fires this once per child with the
-  // basename intact, and user-set titles must survive that.
-  async repairBinderPaths(oldPath, newPath, newBasename) {
-    const oldBasename = baseName(oldPath).replace(/\.md$/, "");
-    for (const project of this.getProjects()) {
-      const binder = await this.loadBinder(project);
-      const item = this.findBinderItemByPath(binder.items, oldPath);
-      if (item) {
-        item.filePath = newPath;
-        if (oldBasename !== newBasename) item.title = newBasename;
-        await this.saveBinder(binder);
-        break;
-      }
-    }
-  }
-  // The goal modal needs the writable binder entry, not just the resolved
-  // number — null when the file is not in the active project's binder.
-  async findBinderEntryForFile(filePath) {
-    const project = this.getActiveProject();
-    if (!project) return null;
-    const binder = await this.loadBinder(project);
-    const item = this.findBinderItemByPath(binder.items, filePath);
-    return item ? { binder, item } : null;
-  }
-  async getWordCountGoalForFile(file) {
+  // Frontmatter `word-count-goal` is the sole goal authority (#229, ungated
+  // at #233). Frontmatter is user-typed — a string "500" passes the type
+  // cast and produces NaN math downstream, so validate before returning.
+  getWordCountGoalForFile(file) {
     var _a2;
-    const project = this.plugin.settings.filesystemBinder ? null : this.getActiveProject();
-    if (project) {
-      const binder = await this.loadBinder(project);
-      const item = this.findBinderItemByPath(binder.items, file.path);
-      if ((item == null ? void 0 : item.wordCountGoal) && item.wordCountGoal > 0) return item.wordCountGoal;
-    }
     const cache = this.app.metadataCache.getFileCache(file);
     const raw = (_a2 = cache == null ? void 0 : cache.frontmatter) == null ? void 0 : _a2["word-count-goal"];
     const goal = Number(raw);
@@ -19906,7 +17834,7 @@ tags: [writing-studio]
 };
 
 // src/StatsTracker.ts
-var import_obsidian28 = require("obsidian");
+var import_obsidian25 = require("obsidian");
 var StatsTracker = class {
   constructor(plugin) {
     this.sessionBaselines = /* @__PURE__ */ new Map();
@@ -19963,7 +17891,7 @@ ${t2("statsTracker.dailyNote.heading")}
 - ${t2("statsTracker.dailyNote.sessionTotal")} ${t2("statsTracker.dailyNote.sessionTotalValue", { duration: session.duration })}
 `;
     const dailyFile = this.app.vault.getAbstractFileByPath(dailyNotePath);
-    if (dailyFile instanceof import_obsidian28.TFile) {
+    if (dailyFile instanceof import_obsidian25.TFile) {
       await this.app.vault.append(dailyFile, "\n" + entry);
       return;
     }
@@ -19977,7 +17905,7 @@ ${t2("statsTracker.dailyNote.heading")}
     const options = (_d = (_c = (_b2 = (_a2 = this.app.internalPlugins) == null ? void 0 : _a2.plugins) == null ? void 0 : _b2["daily-notes"]) == null ? void 0 : _c.instance) == null ? void 0 : _d.options;
     const fileName = moment().format((options == null ? void 0 : options.format) || "YYYY-MM-DD");
     const folder = (options == null ? void 0 : options.folder) || "";
-    return (0, import_obsidian28.normalizePath)(folder ? `${folder}/${fileName}.md` : `${fileName}.md`);
+    return (0, import_obsidian25.normalizePath)(folder ? `${folder}/${fileName}.md` : `${fileName}.md`);
   }
   updateFileWordCount(path, wordCount) {
     if (!this.sessionBaselines.has(path)) {
@@ -20012,11 +17940,8 @@ ${t2("statsTracker.dailyNote.heading")}
     if (this.cachedTotalWordCount !== null && this.cachedWordCountProjectId === project.id) {
       return this.cachedTotalWordCount;
     }
-    const binder = await this.plugin.projectManager.loadBinder(project);
-    const items = this.plugin.projectManager.flattenBinder(binder.items);
-    const counts = await Promise.all(items.map(async (item) => {
-      const file = this.app.vault.getAbstractFileByPath(item.filePath);
-      if (!(file instanceof import_obsidian28.TFile)) return 0;
+    const docs = listManuscriptDocs(this.app, project.folderPath);
+    const counts = await Promise.all(docs.map(async (file) => {
       const content2 = await this.app.vault.cachedRead(file);
       return this.plugin.fmManager.countWords(content2);
     }));
@@ -20098,7 +18023,7 @@ ${t2("statsTracker.dailyNote.heading")}
 };
 
 // src/FrontmatterManager.ts
-var import_obsidian29 = require("obsidian");
+var import_obsidian26 = require("obsidian");
 var FrontmatterManager = class {
   constructor(plugin) {
     this.pendingUpdates = /* @__PURE__ */ new Map();
@@ -20124,7 +18049,7 @@ var FrontmatterManager = class {
     if (file.extension !== "md") return false;
     const projectFolder = this.plugin.settings.defaultProjectFolder;
     if (!projectFolder) return false;
-    return file.path.startsWith((0, import_obsidian29.normalizePath)(projectFolder) + "/");
+    return file.path.startsWith((0, import_obsidian26.normalizePath)(projectFolder) + "/");
   }
   async updateFrontmatter(file) {
     this.writingFiles.add(file.path);
@@ -20155,10 +18080,10 @@ var FrontmatterManager = class {
 };
 
 // src/SettingsTab.ts
-var import_obsidian30 = require("obsidian");
+var import_obsidian27 = require("obsidian");
 
 // README.md
-var README_default = '<p align="center">\r\n  <img src="assets/logo.png" width="120" alt="Writing Studio logo">\r\n</p>\r\n\r\n# Writing Studio\r\n\r\n**Version 2.11.0** \xB7 Desktop only\r\n\r\n![GitHub all releases](https://img.shields.io/github/downloads/writerP-777/obsidian-writing-studio/total)\r\n[![OpenSSF Best Practices](https://www.bestpractices.dev/projects/12832/badge)](https://www.bestpractices.dev/projects/12832)\r\n\r\nWriting Studio turns Obsidian into a dedicated environment for serious nonfiction work \u2014 from your first research notes to a finished, exported manuscript. It bundles a project binder, writing modes, focus and typography tools, sprint timer, progress tracking, manuscript export, and WordPress publishing into a single plugin. A built-in sidebar file explorer lets you browse, preview, and pull content from anywhere in your vault without leaving your draft.\r\n\r\n<p align="center">\r\n  <img src="assets/sidebar-explorer-screenshot.png" alt="Writing Studio with the Launcher panel open on the left, an active draft in the center, and the Folder Sidebar Explorer open to a research folder on the right" width="900">\r\n  <br>\r\n  <em>Writing Studio in use \u2014 Launcher (left), active draft with word count goal banner (center), Folder Sidebar Explorer open to a research folder (right).</em>\r\n</p>\r\n\r\n<p align="center">\r\n  <a href="https://buymeacoffee.com/writerp777">\r\n    <img src="https://img.buymeacoffee.com/button-api/?text=Buy%20me%20a%20coffee&slug=writerp777&button_colour=c9a84c&font_colour=000000&font_family=Georgia&outline_colour=000000&coffee_colour=ffffff" alt="Buy me a coffee" height="40">\r\n  </a>\r\n</p>\r\n\r\n## Contents\r\n\r\n- [Features](#features)\r\n- [Language support](#language-support)\r\n- [Writing Studio Launcher](#writing-studio-launcher)\r\n- [Folder Sidebar Explorer](#folder-sidebar-explorer)\r\n- [Your Project](#your-project)\r\n- [Your Writing Environment](#your-writing-environment)\r\n- [Tracking Your Progress](#tracking-your-progress)\r\n- [Getting Your Work Out](#getting-your-work-out)\r\n- [Supporting Tools](#supporting-tools)\r\n- [Context Menus](#context-menus)\r\n- [Commands Reference](#commands-reference)\r\n- [Settings Overview](#settings-overview)\r\n- [Ribbon Icon](#ribbon-icon)\r\n- [Installation](#installation)\r\n- [Requirements](#requirements)\r\n- [Reporting a Bug](#reporting-a-bug)\r\n- [Security](#security)\r\n\r\n---\r\n\r\n## Features\r\n\r\n**Writing Binder** \u2014 Organize your manuscript as an ordered collection of documents with per-item status, word count, and export flags. Drag chapters into order, toggle items in or out of export, and add files from anywhere in your vault.\r\n\r\n**Project Manager** \u2014 Create projects from six templates (blank, book, article series, blog collection, journal article, magazine article), set a total word count goal, and switch between projects from the Launcher.\r\n\r\n**Compile Preview** \u2014 Concatenate all binder documents in order and render them as a finished manuscript in a split pane, without exporting.\r\n\r\n**Writing Modes** \u2014 Switch between Draft (distraction-free), Edit (full tooling), and Review (read-only) modes from the status bar, command palette, context menu, or Launcher.\r\n\r\n**Focus Mode** \u2014 Dim everything except the paragraph or sentence you are writing. Configurable dim level, font size override, sidebar collapse, and typewriter scroll.\r\n\r\n**Typography Mode** \u2014 Apply a curated font, constrained line length, and controlled line height to the editor. Fourteen font options including iA Writer fonts, Google Fonts, and custom system fonts.\r\n\r\n**Sprint Timer** \u2014 Run timed writing sessions with a draggable floating overlay. Set duration, word goal, and scope (file or project). Quick-start presets (10 m, 15 m, 25 m) available from the Launcher.\r\n\r\n**Progress Tracking** \u2014 Live word counts in the status bar and Launcher, session delta tracking, per-document and per-project word count goals with inline progress banners, and a 30-day writing log with streak tracking.\r\n\r\n**Export Engine** \u2014 Export to Manuscript (HTML), PDF, Word (.docx), RTF, HTML, Markdown, and EPUB. Manuscript format produces industry-standard layout with no external tools; other formats require Pandoc.\r\n\r\n**WordPress Publishing** \u2014 Publish directly to WordPress from Obsidian. Set post title, status, categories, tags, excerpt, and scheduled date. Supports multiple sites with per-site credentials and connection testing.\r\n\r\n**Folder Sidebar Explorer** \u2014 Browse any vault folder in a sidebar panel. Search by name or file content, preview Markdown files and images inline, and insert selected text directly into the active editor.\r\n\r\n## Language support\r\n\r\nWriting Studio is available in the following languages in addition to English:\r\n\r\n- Arabic\r\n- Bengali\r\n- Brazilian Portuguese\r\n- Chinese (Simplified)\r\n- French\r\n- German\r\n- Hindi\r\n- Japanese\r\n- Korean\r\n- Russian\r\n- Spanish\r\n\r\n**To change the language:** Open **Settings \u2192 General** in Obsidian, scroll to **Language**, and select your preferred language from the list. Restart Obsidian for the change to take effect. Writing Studio will display in the selected language if it is supported.\r\n\r\n**Found a translation error or missing text?** Please open an issue on GitHub \u2014 [Submit a bug report or enhancement request](https://github.com/writerP-777/obsidian-writing-studio/issues/new) \u2014 and include the language, the location in the plugin where the text appears, and what it currently says. We will address it in the next release.\r\n\r\n### Writing Studio Launcher\r\n\r\nThe Launcher is your home base in Writing Studio \u2014 a sidebar panel that shows your active project, progress toward your goals, and one-click access to every major feature.\r\n\r\n<p align="center">\r\n  <img src="assets/launcher-project-card.png" alt="The Launcher project card showing the active project name, switcher, edit and delete controls, word count, and a progress bar toward the project goal" width="520">\r\n  <br>\r\n  <em>The Launcher project card \u2014 active project, word count, and progress toward the project goal.</em>\r\n</p>\r\n\r\nBy default Writing Studio launches automatically when Obsidian loads \u2014 the Launcher opens and your last session\'s writing mode and typography are restored. To disable this, turn off **Open on startup** in **Settings \u2192 General**: Obsidian then opens clean, with no Writing Studio status bar items or restored modes, and the studio stays dormant until you launch it yourself. Launching it manually restores your last session state the same way.\r\n\r\n**To open manually:** Click the feather ribbon icon, or assign a hotkey to **Open launcher** in Settings \u2192 Hotkeys.\r\n\r\n**First run:** In a vault with no projects yet, the Launcher shows an orientation card explaining how projects work, with a **Create your first project** button to get started.\r\n\r\n<p align="center">\r\n  <img src="assets/launcher-first-run.png" alt="The Launcher first-run orientation card with an explanation of projects and a Create your first project button" width="520">\r\n  <br>\r\n  <em>First run \u2014 the orientation card shown before any project exists.</em>\r\n</p>\r\n\r\n**The Launcher includes:**\r\n- Active project name, total word count, and progress toward your project word count goal\r\n- Writing mode selector (Draft / Edit / Review)\r\n- Focus Mode and Typography Mode toggles\r\n- Sprint timer with "Set up sprint" button and Quick Sprint Options presets (10 m, 15 m, 25 m)\r\n- Today card showing words written, sprints completed, session word count, and streak\r\n- Quick-action buttons: Targets Dashboard, Writing Dashboard, Preview manuscript, Export, Writing Log, Publish to WordPress\r\n\r\n---\r\n\r\n### Folder Sidebar Explorer\r\n\r\nThe Folder Sidebar Explorer opens any vault folder in a right-sidebar panel, letting you browse reference material, research notes, or any folder outside your active project without leaving your draft. Unlike the Binder \u2014 which is scoped to your writing project \u2014 the sidebar explorer works with any folder in your vault.\r\n\r\n<p align="center">\r\n  <img src="assets/folder-sidebar-explorer.png" alt="The Folder Sidebar Explorer panel with a Markdown file open in preview, showing the breadcrumb trail, back and root buttons, and the insert selection button" width="340">\r\n  <br>\r\n  <em>The Folder Sidebar Explorer with a research file open in preview \u2014 select text and click insert selection to pull it into your draft.</em>\r\n</p>\r\n\r\n**To open:**\r\n- Use the command **Open folder in sidebar explorer** from the command palette \u2014 a folder picker appears so you can choose which folder to explore.\r\n- Right-click any folder in the file explorer and choose **Open in sidebar explorer** under **Writing studio options**.\r\n- Right-click any folder in [Notebook Navigator](https://github.com/johansan/notebook-navigator) and choose **Open in sidebar explorer** (requires Notebook Navigator to be installed).\r\n- Assign a hotkey in Settings \u2192 Hotkeys.\r\n\r\nThe panel opens in the **right sidebar**. The folder you open becomes the **root folder** for that session \u2014 the breadcrumb trail, the \u2302 root button, and search all operate relative to it.\r\n\r\n**Browsing and navigation:**\r\n\r\n| Feature | How to use |\r\n|---------|-----------|\r\n| Browse into a subfolder | Click the folder |\r\n| Preview a Markdown file | Click the file \u2014 the folder listing is replaced by a rendered preview inside the panel |\r\n| Preview an image | Click the file \u2014 displayed inline |\r\n| Preview audio | Click the file \u2014 player appears inline |\r\n| Other file types | Click the file \u2014 an **Open in editor** button appears |\r\n| Go back | Click **\u2190 back**, or press `Backspace` when the list has keyboard focus |\r\n| Return to root folder | Click **\u2302 root** to jump back to the folder you originally opened |\r\n| Keyboard navigation | Tab to focus the list, then `\u2191` / `\u2193` to move, `Enter` to open, `Backspace` to go back |\r\n| Breadcrumb navigation | Click any segment in the breadcrumb trail to jump directly to that folder |\r\n\r\n**Search:**\r\n\r\nA search bar appears at the top of the folder list. Type your query and press **Enter** to run the search.\r\n\r\n- Searches **both folder/file names and file contents** (`.md` and `.txt` files).\r\n- Frontmatter is excluded from content search to avoid false positives from YAML fields.\r\n- Name matches show the matched term highlighted in the result title.\r\n- Content matches show a text snippet around the match with the term highlighted, plus a **CONTENT** badge to distinguish them from name matches.\r\n- Results always search from the root folder, regardless of which subfolder you are currently browsing.\r\n- Click **\xD7** to clear the search and return to the normal folder view.\r\n\r\n**Sort:**\r\n\r\nA sort dropdown sits next to the search bar. Options:\r\n\r\n| Option | Description |\r\n|--------|-------------|\r\n| Folders \u2191 A-Z | Folders first, then files, both alphabetical (default) |\r\n| Folders \u2191 Z-A | Folders first, then files, both reverse-alphabetical |\r\n| Name A-Z | All items alphabetical, folders and files mixed |\r\n| Name Z-A | All items reverse-alphabetical, mixed |\r\n| Newest first | Sort by last-modified date, newest at top |\r\n| Oldest first | Sort by last-modified date, oldest at top |\r\n\r\n**Copy content to the editor:**\r\n\r\nWhen a Markdown file is open in preview mode (after clicking it in the file list), its text is selectable. To insert a passage into the active editor:\r\n\r\n1. Click a file in the list \u2014 the panel switches to preview mode showing the rendered file.\r\n2. Select the text you want in the preview pane.\r\n3. Click the **\u21A9 insert selection** button in the nav bar.\r\n4. The selected text is inserted at the cursor position in the active editor.\r\n\r\nThe preview is read-only \u2014 you cannot edit the file from the sidebar.\r\n\r\n**Hover tooltips:**\r\n\r\nHover over any file or folder in the list to see an information card:\r\n\r\n| Item type | Information shown |\r\n|-----------|------------------|\r\n| Markdown / text file | Last modified date and time \xB7 File size \xB7 Word count (frontmatter excluded) |\r\n| Image / audio / other file | Last modified date and time \xB7 File size |\r\n| Folder | Total file count \xB7 Subfolder count |\r\n\r\nThe word count updates asynchronously from Obsidian\'s file cache and appears within a moment of hover.\r\n\r\n---\r\n\r\n### Your Project\r\n\r\n#### Project Manager\r\n\r\nProjects group a set of documents (binder items) and act as the scope for export, statistics, and the word count goal banner.\r\n\r\n**To create a project:** Use the command **Create new writing project** from the command palette, or click **+ New** in the Launcher panel.\r\n\r\n**To switch projects:** Use the Launcher panel or the project selector at the top of the Binder panel.\r\n\r\n**To edit a project:** Click the pencil icon in the Launcher project card or next to the project selector in the Binder. You can change the title, author, description, total word count goal, and the document folder \u2014 the folder inside the project that holds its documents (for example, renaming a book project\'s `Chapters/` to `Scenes/` renames the folder and moves its files with it; the binder follows automatically, as it also does when you rename the folder directly in the file explorer). The project folder itself keeps its original name \u2014 renaming the title does not move any files.\r\n\r\n**To delete a project:** Click the trash icon in the Launcher project card or next to the project selector in the Binder, then confirm. This removes the project from Writing Studio\'s list only \u2014 the project folder and all its documents stay untouched in your vault.\r\n\r\n<p align="center">\r\n  <img src="assets/edit-project-modal.png" alt="The Edit project modal with fields for project title, author name, total word count goal, and description, and a Save button" width="560">\r\n  <br>\r\n  <em>The Edit project modal \u2014 change the title, author, description, and total word count goal.</em>\r\n</p>\r\n\r\nEach project stores:\r\n- Title, type, author, and description\r\n- Ordered binder with chapters, sections, articles, and notes\r\n- Per-item word count goals, statuses, and export flags\r\n- Optional total word count goal (shown in the Launcher and status bar)\r\n\r\n**Project templates available at creation:**\r\n\r\n| Template | Structure created |\r\n|----------|------------------|\r\n| Blank | Empty \u2014 build your own structure |\r\n| Book | Front Matter, Part 1 / Chapter 1, Back Matter |\r\n| Article series | Series Overview note (with article schedule), Article 1 placeholder |\r\n| Blog collection | Date-organized folder, first post placeholder |\r\n| Journal article | Title Page, Abstract, Keywords, Introduction, Literature Review, Methodology, Findings / Analysis, Discussion, Conclusion, References, Appendices |\r\n| Magazine article | Pitch / Query Notes, Headline & Deck, Lede, Nut Graf, Body, Quotes & Sources, Kicker, Fact-Check Notes, Author Bio |\r\n\r\n---\r\n\r\n#### Writing Binder\r\n\r\nKeeping a book-length manuscript organized means knowing at a glance which chapters are drafted, which are in progress, and how each contributes to your total word count. The Binder is a sidebar panel that shows all of that for your active project.\r\n\r\nEach document shows its title, type (Chapter, Section, Article, Note), status (Draft, In Progress, Complete, Published), and live word count. Documents can be reordered by drag-and-drop and toggled in or out of export.\r\n\r\n**To open:** Use the command **Open binder** from the command palette, or assign a hotkey in Settings \u2192 Hotkeys.\r\n\r\n**Control strip:**\r\n\r\nA two-row control strip at the top of the binder keeps the high-frequency writing controls next to your documents, so the daily loop doesn\'t require switching to the launcher tab. The top row is a Draft / Edit / Review segmented control (clicking the active mode switches back to normal). The bottom row holds Focus and Typography toggles, a sprint chip (its menu offers the set-up modal and 10/15/25-minute quick starts; an armed sprint shows a ready chip with the duration), and a **...** menu with the occasional actions: export, publish, preview manuscript, targets dashboard, writing dashboard, and writing log. The launcher keeps its own copies of all controls, and every surface stays in sync no matter where a change is made.\r\n\r\n<p align="center">\r\n  <img src="assets/binder-control-strip.png" alt="The binder control strip with Draft, Edit, and Review on the top row and Focus, Typography, Sprint, and an overflow menu on the bottom row, above the document tree" width="520">\r\n  <br>\r\n  <em>The binder control strip \u2014 writing modes on top; focus, typography, sprint, and overflow controls below.</em>\r\n</p>\r\n\r\n<p align="center">\r\n  <img src="assets/binder-strip-overflow.png" alt="The binder overflow menu open, showing export, publish to WordPress, preview manuscript, targets dashboard, writing dashboard, and writing log" width="520">\r\n  <br>\r\n  <em>The overflow menu holds the less frequent actions: export, publish, preview, and the dashboards and log.</em>\r\n</p>\r\n\r\n**Keyboard navigation:**\r\n\r\nThe binder tree is fully keyboard-operable. Tab to focus the list, then:\r\n\r\n| Key | Action |\r\n|-----|--------|\r\n| `\u2191` / `\u2193` | Move through visible documents and groups |\r\n| `\u2192` | Expand a collapsed group, or step into an open one |\r\n| `\u2190` | Collapse an open group, or jump to the parent |\r\n| `Enter` | Open the document, or expand/collapse a group |\r\n| `F2` | Rename the focused item inline (Enter commits, Escape cancels) |\r\n| `Shift+F10` or menu key | Open the item\'s right-click menu |\r\n\r\n**Opening and renaming documents:**\r\n\r\nA single click on a document opens it immediately. Renaming has moved off the single click: rename an item from its right-click menu, or by pressing **F2** while it is focused (Enter commits, Escape cancels). This keeps opening a document fast while keeping rename deliberate.\r\n\r\n**Creating new documents:**\r\n\r\nWhen you create a new document, Writing Studio prompts you for a title up front rather than naming the file "Untitled." Type the title and the document is created and added to the binder in one step.\r\n\r\n**Right-click menu:**\r\n\r\nRight-click any item in the binder for its full set of actions \u2014 open, rename, create a child document, group, or part beneath it, set status, change the item\'s type, remove it from the binder without deleting the file, or delete the document and its file.\r\n\r\n<p align="center">\r\n  <img src="assets/binder-context-menu.png" alt="The binder right-click menu showing open, rename, new child document/group/part, set status options, change type options, remove from binder, and delete document and file" width="360">\r\n  <br>\r\n  <em>The binder right-click menu \u2014 full per-item actions, including change type and remove from binder.</em>\r\n</p>\r\n\r\n**Organizing with groups and parts:**\r\n\r\nGroups and parts are structural entries \u2014 they organize the binder tree but have no file behind them. The book template creates parts for you, and you can build the same structure by hand: the folder-plus button in the binder toolbar creates a group or part at the root, and an item\'s right-click menu offers **New child group** / **New child part** beneath it. Clicking a group or part expands or collapses it. A document\'s type (chapter, section, article, note) can be changed at any time from the same menu via **Change type**.\r\n\r\n**Adding a file to a project:**\r\n1. Right-click any Markdown file in the file explorer and choose **Add to writing project** under **Writing studio options**.\r\n2. A modal appears with a dropdown listing all your writing projects.\r\n3. Select the target project and click **Add to project**.\r\n\r\n**Removing a document from the binder:**\r\n\r\nTo take a document out of the binder without deleting its file, choose **Remove from binder** from the item\'s right-click menu. The document leaves the binder; the file stays in your vault.\r\n\r\n**Adding files copied directly to the project folder:**\r\n\r\nIf you copied or moved files into the project folder outside of Obsidian and they do not appear in the binder, use the **Add files copied to this folder** button in the binder toolbar (immediately to the right of the **+ document** button). The plugin scans the project folder, lists any files not yet in the binder, and lets you select which ones to add before making any changes.\r\n\r\n---\r\n\r\n#### Compile Preview\r\n\r\nThe Compile Preview opens a split pane showing all binder documents for the active project concatenated in order, rendered as a finished manuscript.\r\n\r\n**To open:** Use the command **Preview compiled manuscript** from the command palette, or click the **Preview manuscript** button in the Launcher panel.\r\n\r\n---\r\n\r\n### Your Writing Environment\r\n\r\n#### Writing Modes\r\n\r\nThree modes shape how the editor behaves. The current mode is always shown in the status bar. Click the mode pill in the status bar to switch modes.\r\n\r\n| Mode | Purpose |\r\n|------|---------|\r\n| **Draft** | Distraction-free drafting; spell-check and formatting hints suppressed |\r\n| **Edit** | Revision pass; full editor tooling active |\r\n| **Review** | Read-only style; ideal for a final proofread |\r\n| **None** | Normal Obsidian behavior |\r\n\r\n**To switch modes:**\r\n- Click the mode indicator in the status bar.\r\n- Right-click inside the editor, then choose **Switch writing mode \u2192** under **Writing studio options**.\r\n- Assign hotkeys to **Switch to draft mode / Edit mode / Review mode** in Settings \u2192 Hotkeys.\r\n- Use the Writing Studio Launcher panel.\r\n\r\nThe active mode is saved and restored the next time Writing Studio launches \u2014 automatically at startup when **Open on startup** is enabled, or when you next open the Launcher or switch a mode.\r\n\r\n---\r\n\r\n#### Focus Mode\r\n\r\nFocus Mode dims everything in the editor except the paragraph or sentence you are currently writing, reducing visual noise and keeping attention on the active thought.\r\n\r\n**To toggle:** Assign a hotkey to **Toggle focus mode** in Settings \u2192 Hotkeys, or use the toggle in the Launcher panel. Press `Escape` to exit.\r\n\r\n**Settings (Settings \u2192 Focus mode):**\r\n\r\n| Setting | Description |\r\n|---------|-------------|\r\n| Focus unit | Highlight at the **paragraph** or **sentence (line)** level |\r\n| Dim opacity | How opaque the dimmed text appears (10\u201350%) |\r\n| Font size override | Override the editor font size while focused; 0 = use theme default. Takes precedence over Typography Mode\'s font size while Focus Mode is active |\r\n| Auto-hide sidebars | Collapse left and right sidebars when Focus Mode activates |\r\n| Typewriter scroll | Keep the active line vertically centered as you type |\r\n\r\n---\r\n\r\n#### Typography Mode\r\n\r\nTypography Mode applies a consistent, reader-friendly text treatment to the editor: a curated font, constrained line length, controlled line height, and optional letter spacing.\r\n\r\n**To toggle:** Assign a hotkey to **Toggle typography mode** in Settings \u2192 Hotkeys, or use the toggle in the Launcher panel.\r\n\r\n**To change the font while Typography Mode is active:** Right-click inside the editor and choose **Typography font \u2192** under **Writing studio options**. A font picker menu appears with all available fonts; the active font is shown with a checkmark. Selecting a font applies it immediately and saves the setting.\r\n\r\n> **Note on fonts:** Typography fonts are loaded from Google Fonts and require an internet connection the first time each font is used. After the initial load they are cached and work offline.\r\n\r\n**Settings (Settings \u2192 Typography):**\r\n\r\n| Setting | Description |\r\n|---------|-------------|\r\n| Font family | Choose from the curated font list or enter a custom font name |\r\n| Custom font name | Used when **Custom font name\u2026** is selected above |\r\n| Max line length | Characters per line (55\u201380); constrains the editor column width |\r\n| Font size | Editor font size in pixels |\r\n| Line height | Multiplier; default 1.7 |\r\n| Letter spacing | CSS `letter-spacing` value (e.g. `normal`, `0.02em`) |\r\n| Persist across sessions | Restore Typography Mode when Writing Studio next launches |\r\n\r\n**Available fonts:**\r\n\r\n| Option | Font |\r\n|--------|------|\r\n| Monospaced | iA Writer Mono (falls back to Roboto Mono / Courier New) |\r\n| Serif | iA Writer Duo Serif (falls back to Georgia) |\r\n| Sans-serif | iA Writer Quattro (falls back to system sans-serif) |\r\n| Cormorant Garamond | Elegant display serif |\r\n| Crimson Text | Classic book serif |\r\n| EB Garamond | Traditional Garamond revival |\r\n| Libre Baskerville | Readable web serif |\r\n| Libre Caslon Text | Clean slab serif |\r\n| Literata | Designed for long-form reading |\r\n| Lora | Contemporary calligraphic serif |\r\n| Inter | Modern humanist sans-serif |\r\n| Lato | Friendly rounded sans-serif |\r\n| Source Sans 3 | Clean UI sans-serif |\r\n| Custom font name\u2026 | Use any font installed on your system |\r\n\r\n---\r\n\r\n### Tracking Your Progress\r\n\r\n#### Writing Sprint Timer\r\n\r\nThe Sprint Timer runs a timed writing session. When a sprint is active, a floating overlay displays the countdown and gives you full control \u2014 without requiring you to stay on the dashboard.\r\n\r\n**To set up a sprint:**\r\n\r\n- Click **Set up sprint** in the Launcher panel to open the sprint configuration modal.\r\n- Or click one of the **Quick Sprint Options** preset buttons (10 m, 15 m, 25 m) in the Launcher panel to load a duration directly.\r\n\r\nEither path opens the floating overlay in a ready state \u2014 the timer does not start until you press \u25B6 on the overlay itself. This gives you time to navigate to your draft or open the Binder before the clock begins.\r\n\r\n**Sprint configuration modal:**\r\n\r\nThe modal lets you set:\r\n\r\n- Duration (preset or custom, in minutes)\r\n- Word count goal for the session\r\n- Scope (current file or entire project)\r\n\r\nClick **Launch sprint timer** to open the overlay in ready state.\r\n\r\n**Using the floating overlay:**\r\n\r\n| Control | Action |\r\n|---------|--------|\r\n| \u25B6 | Start or resume the sprint |\r\n| \u23F8 | Pause the sprint |\r\n| \u25A0 | Stop and end the sprint |\r\n\r\nThe overlay is draggable \u2014 click and drag the header to reposition it anywhere on screen. It stays on top regardless of writing mode or Focus Mode. The current countdown is also shown in the Obsidian status bar (`\u23F1 MM:SS`) and, when Focus Mode is active, in the focus toolbar.\r\n\r\nWhen the sprint ends, a summary modal shows words written, duration, and words-per-minute. The session is logged to sprint history and optionally appended to your Daily Note.\r\n\r\n**Settings (Settings \u2192 Sprint & goals):**\r\n\r\n| Setting | Description |\r\n|---------|-------------|\r\n| Default sprint duration | Starting value in the sprint modal (minutes) |\r\n| Default daily word goal | Target used in the Writing Dashboard and Launcher |\r\n| Sound notifications | Play a tone when the sprint ends |\r\n| Sprint history retention | Days to keep sprint records before purging |\r\n| Inline goal banner | Show a progress bar below the editor toolbar when a document has a word count goal set |\r\n\r\n---\r\n\r\n#### Word Count Goal\r\n\r\nA per-document word count goal can be set and tracked inline.\r\n\r\n**To set a goal:**\r\n- Use the command **Set word count goal** from the command palette.\r\n- Right-click inside the editor and choose **Set word count goal** under **Writing studio options**.\r\n\r\nWhen a goal is set and **Inline goal banner** is enabled, a progress bar appears below the editor toolbar showing current words, goal, and percentage. It updates in real time as you type.\r\n\r\n---\r\n\r\n#### Session Word Count\r\n\r\nThe status bar shows a `(+N)` delta next to the current file\'s word count, indicating how many words you have added since opening that file this session. The Launcher\'s **Today** card also shows a cumulative session total across all files opened during the current Obsidian session. Both counts reset when Obsidian restarts.\r\n\r\n---\r\n\r\n#### Project Word Count Goal\r\n\r\nWhen an active project has a total word count goal set, a dedicated status bar item shows `{current} / {goal} project words`. This updates automatically as you write. Set a project goal in the Project modal when creating or editing a project.\r\n\r\n---\r\n\r\n#### Writing Dashboard\r\n\r\nThe Writing Dashboard shows session statistics (words written, sprints completed, time), sprint history, daily progress toward your goal, and per-project word counts with reading time.\r\n\r\n**To open:** Use the command **Open writing dashboard** from the command palette, or click the **Writing dashboard** button in the Launcher panel.\r\n\r\n---\r\n\r\n#### Targets Dashboard\r\n\r\nThe Targets Dashboard lets you assign word count goals to individual documents in the active project\'s binder and track progress across the whole project at a glance. Goals can be edited inline in the table. Rows are sortable and filterable by status.\r\n\r\n**To open:** Use the command **Open targets dashboard**, click the **Targets dashboard** button in the Launcher panel, or assign a hotkey in Settings \u2192 Hotkeys.\r\n\r\n---\r\n\r\n#### Daily Writing Log\r\n\r\nThe Writing Log is a sidebar panel that shows your writing history at a glance.\r\n\r\n**To open:** Use the command **Open writing log** from the command palette, or click the **Writing log** button in the Launcher panel.\r\n\r\n**The Writing Log shows:**\r\n- Current streak (days in a row with at least one sprint)\r\n- This session: total session words, sprint words, sprints completed, and minutes written\r\n- Recent activity: a bar chart with one row per day you wrote, each showing word count, sprints completed, and a visual bar proportional to the day\'s output. Days with no writing are collapsed rather than shown as empty rows, so the log stays focused on the days you actually worked.\r\n\r\nWhen **Append to daily note** is enabled (Settings \u2192 Writing log), a summary of each completed sprint is also appended to today\'s Daily Note.\r\n\r\n---\r\n\r\n### Getting Your Work Out\r\n\r\n#### Export Engine\r\n\r\nWhen your draft is ready, the Export Engine converts it to a finished file in your chosen format \u2014 no reformatting required.\r\n\r\n**Supported formats:** Manuscript (HTML) \xB7 PDF \xB7 Word (.docx) \xB7 RTF \xB7 HTML \xB7 Markdown \xB7 EPUB\r\n\r\n**To export:**\r\n- Right-click inside the editor and choose **Export this document** under **Writing studio options**.\r\n- Use the command **Export document** from the command palette.\r\n- Click the **Export** button in the Launcher panel.\r\n- Assign a hotkey to **Export document** in Settings \u2192 Hotkeys.\r\n\r\n**Manuscript format**\r\n\r\nThe Manuscript format produces a self-contained HTML file formatted to industry-standard manuscript conventions:\r\n- Courier New 12 pt, double-spaced, 1-inch margins\r\n- Title page with project title, author name, approximate word count, and optional contact information\r\n- Chapter headings in uppercase, page-break before each\r\n- Scene breaks rendered as `#` (the standard manuscript convention)\r\n\r\nNo external tools are required for manuscript export.\r\n\r\n**Settings (Settings \u2192 Export):**\r\n\r\n| Setting | Description |\r\n|---------|-------------|\r\n| Default export format | Pre-selected format in the export modal |\r\n| Default paper size | Letter (US) or A4 |\r\n| Export font | Font name used in PDF/DOCX output (e.g. `Georgia`) |\r\n| Export font size | Point size for PDF/DOCX output |\r\n| Pandoc path | Full path to the `pandoc` binary if it is not on your system PATH |\r\n| PDF engine | Engine Pandoc uses for PDF export. **Auto** (default) picks an installed LaTeX engine \u2014 `xelatex` or `lualatex` when a custom font is set, `pdflatex` otherwise. Pin a specific engine to always use it; if a pinned engine is not installed the export fails with a message naming it rather than silently substituting another |\r\n| EPUB language | BCP 47 language tag (e.g. `en`, `fr`, `de`) |\r\n| EPUB include cover | Generate a text cover page when no cover image is provided |\r\n\r\n> **Requirement:** Pandoc must be installed for PDF, DOCX, RTF, HTML, and EPUB export. Download from [pandoc.org](https://pandoc.org/installing.html). For PDF export, a LaTeX distribution (e.g. TeX Live or MiKTeX) is also required \u2014 unless the PDF engine setting is pinned to [wkhtmltopdf](https://wkhtmltopdf.org/), which renders PDFs without LaTeX. Manuscript (HTML) export does not require Pandoc.\r\n>\r\n> **Font note:** the export font setting applies only to the LaTeX PDF path (`xelatex`/`lualatex`; `pdflatex` cannot apply custom fonts either). The `wkhtmltopdf` path takes its typography from Pandoc\'s HTML/CSS output, so the export font setting is ignored there \u2014 the plugin tells you when a font was skipped for this reason.\r\n>\r\n> **Formatting note:** the built-in converter used for HTML, Manuscript, and EPUB output supports headings, paragraphs, lists, blockquotes, fenced code blocks, tables, images, and links. Nested lists, setext (underline-style) headings, and footnotes are not converted \u2014 use a Pandoc format (PDF, DOCX, RTF) if your manuscript depends on them.\r\n\r\n---\r\n\r\n#### WordPress Publishing\r\n\r\nPublish your finished draft directly to WordPress without leaving Obsidian. The modal lets you choose the target site, set the post title, status, categories, tags, excerpt, and an optional scheduled publication date.\r\n\r\n**To publish:**\r\n- Right-click inside the editor and choose **Publish to WordPress** under **Writing studio options**.\r\n- Use the command **Publish to WordPress** from the command palette.\r\n- Click the **Publish to WordPress** button in the Launcher panel.\r\n- Assign a hotkey to **Publish to WordPress** in Settings \u2192 Hotkeys.\r\n\r\n**Setting up a site (Settings \u2192 WordPress):**\r\n\r\n1. Click **+ add WordPress site**.\r\n2. Enter a nickname, the site URL (e.g. `https://yourblog.com`), and your WordPress username.\r\n3. Generate an application password in WordPress under **Users \u2192 Profile \u2192 Application passwords** and paste it into the **Application password** field.\r\n4. Click **Test connection** to verify.\r\n\r\n**Per-site options:**\r\n\r\n| Setting | Description |\r\n|---------|-------------|\r\n| Default post status | Draft \xB7 Pending Review \xB7 Published |\r\n| Wikilink handling | **Strip** removes `[[...]]` syntax, leaving plain text \xB7 **Convert** turns wikilinks into URLs |\r\n\r\n**Preserving your credentials across updates**\r\n\r\nWriting Studio stores your WordPress site credentials in your vault\'s `.obsidian/plugins/writing-studio/data.json` file. Obsidian\'s in-app update process does not touch this file \u2014 your credentials are preserved automatically. However, if you uninstall and reinstall the plugin manually, or if a vault sync conflict overwrites `data.json`, credentials will be lost and will need to be re-entered. To avoid this, always use Obsidian\'s built-in Update button rather than uninstalling manually.\r\n\r\n---\r\n\r\n### Supporting Tools\r\n\r\n#### Frontmatter Manager\r\n\r\nWriting Studio automatically manages YAML frontmatter in your documents when **Frontmatter auto-update** is enabled. On every save it updates:\r\n\r\n- `word-count` \u2014 current word count\r\n- `modified` \u2014 last-modified date\r\n\r\nThe `word-count-goal` frontmatter field is read by the inline goal banner and the Word Count Goal modal.\r\n\r\n---\r\n\r\n## Context Menus\r\n\r\nWriting Studio adds items to Obsidian\'s right-click context menus. All Writing Studio items are grouped together under the heading **Writing studio options** to distinguish them from other plugins and Obsidian\'s built-in options.\r\n\r\n### Right-click inside an open document (editor menu)\r\n\r\n| Option | Action |\r\n|--------|--------|\r\n| Export this document | Open the export modal for the current file |\r\n| Publish to WordPress | Open the WordPress publish modal for the current file |\r\n| Set word count goal | Set a word count target for the current document |\r\n| Switch writing mode \u2192 | Open a mode-switcher menu (Draft / Edit / Review / None) |\r\n| Typography font \u2192 | Open a font picker menu to change the typography font (visible only when Typography Mode is active) |\r\n\r\n### Right-click a Markdown file in the file explorer\r\n\r\n| Option | Action |\r\n|--------|--------|\r\n| Add to writing project | Open a project picker and add the file to the selected project |\r\n\r\n### Right-click a folder in the file explorer\r\n\r\n| Option | Action |\r\n|--------|--------|\r\n| Open in sidebar explorer | Open the folder in the Folder Sidebar Explorer panel |\r\n\r\n---\r\n\r\n## Commands Reference\r\n\r\nNo default hotkeys are assigned. All commands can be given a hotkey in **Settings \u2192 Hotkeys**.\r\n\r\n| Command | Description |\r\n|---------|-------------|\r\n| Open launcher | Open the launcher sidebar panel |\r\n| Open binder | Open the writing binder sidebar panel |\r\n| Open writing log | Open the daily writing log panel |\r\n| Toggle focus mode | Enable or disable focus mode |\r\n| Toggle typography mode | Enable or disable typography mode |\r\n| Switch to draft mode | Activate draft writing mode |\r\n| Switch to edit mode | Activate edit writing mode |\r\n| Switch to review mode | Activate review writing mode |\r\n| Start writing sprint | Open the sprint timer modal |\r\n| Export document | Export the current document |\r\n| Export project | Export the full project |\r\n| Preview compiled manuscript | Open the compile preview pane |\r\n| Publish to WordPress | Publish the current document to WordPress |\r\n| Create new writing project | Create a new writing project |\r\n| Open writing dashboard | Open the statistics dashboard |\r\n| Open targets dashboard | Open the word count targets panel |\r\n| Set word count goal | Set a per-document word count goal |\r\n| Open folder in sidebar explorer | Search and open a vault folder in the sidebar |\r\n| Scan project folder for new files | Scan the active project folder for files not in the binder and import selected files |\r\n\r\n---\r\n\r\n## Settings Overview\r\n\r\nOpen via **Settings \u2192 Writing Studio**.\r\n\r\n| Tab | What it controls |\r\n|-----|-----------------|\r\n| General | Open on startup, default project folder, author name, document type, frontmatter auto-update |\r\n| Focus mode | Focus unit, dim opacity, font override, sidebar behavior, typewriter scroll |\r\n| Typography | Font family, custom font name, line length, font size, line height, letter spacing, persistence |\r\n| Sprint & goals | Sprint duration, daily goal, sound notifications, history retention, inline banner |\r\n| Export | Format, paper size, font, font size, Pandoc path, EPUB language, EPUB cover |\r\n| Writing log | Append sprint summaries to Daily Note |\r\n| WordPress | Site credentials, default post status, wikilink handling |\r\n\r\n---\r\n\r\n## Ribbon Icon\r\n\r\nWriting Studio adds a single icon to the Obsidian ribbon.\r\n\r\n| Icon | Action |\r\n|------|--------|\r\n| Feather | Open the Writing Studio Launcher panel |\r\n\r\nAll other features are accessible from the Launcher panel, the command palette, context menus, or assigned hotkeys.\r\n\r\n---\r\n\r\n## Installation\r\n\r\n1. Download `main.js`, `manifest.json`, and `styles.css` from the latest [GitHub release](../../releases/latest).\r\n2. Create the folder `<vault>/.obsidian/plugins/writing-studio/` if it does not exist.\r\n3. Copy the three files into that folder.\r\n4. In Obsidian, go to **Settings \u2192 Community Plugins**, find **Writing Studio**, and enable it.\r\n\r\n> **Building from source:** Clone the repository, run `npm install`, then `npm run build`. Copy the three output files as above.\r\n\r\n---\r\n\r\n## Requirements\r\n\r\nMost features work out of the box. A few require additional software for specific functions, noted below.\r\n\r\n| Requirement | When needed |\r\n|-------------|-------------|\r\n| Obsidian 1.8.7 or later | Always |\r\n| Desktop (Windows, macOS, Linux) | Always \u2014 this plugin does not run on mobile |\r\n| Internet connection | First use of each Typography Mode font (cached after that) |\r\n| [Pandoc](https://pandoc.org/installing.html) | Export to PDF, DOCX, RTF, HTML, EPUB |\r\n| LaTeX (TeX Live / MiKTeX) or [wkhtmltopdf](https://wkhtmltopdf.org/) | Export to PDF only (wkhtmltopdf must be pinned in the PDF engine setting) |\r\n| WordPress 5.6+ with REST API enabled | WordPress publishing |\r\n| WordPress Application Password | WordPress publishing |\r\n\r\n---\r\n\r\n## Reporting a Bug\r\n\r\nIf something isn\'t working, please open an issue on GitHub:\r\n\r\n**[Submit a bug report](https://github.com/writerP-777/obsidian-writing-studio/issues/new)**\r\n\r\nInclude the following when you report:\r\n\r\n- Writing Studio version (visible in **Settings \u2192 Community Plugins**)\r\n- Obsidian version (visible in **Settings \u2192 About**)\r\n- Operating system (Windows / macOS / Linux) and version\r\n- What you expected to happen\r\n- What actually happened, and any steps to reproduce it\r\n\r\nFeature requests are welcome in the same place \u2014 please label them as **[Feature Request]** in the issue title.\r\n\r\n---\r\n\r\n## Security\r\n\r\n[![CodeQL](https://github.com/writerP-777/obsidian-writing-studio/actions/workflows/codeql.yml/badge.svg)](https://github.com/writerP-777/obsidian-writing-studio/actions/workflows/codeql.yml)\r\n[![OpenSSF Scorecard](https://api.securityscorecards.dev/projects/github.com/writerP-777/obsidian-writing-studio/badge)](https://securityscorecards.dev/viewer/?uri=github.com/writerP-777/obsidian-writing-studio)\r\n[![OpenSSF Baseline](https://www.bestpractices.dev/projects/12832/baseline)](https://www.bestpractices.dev/projects/12832)\r\n[![ESLint](https://github.com/writerP-777/obsidian-writing-studio/actions/workflows/eslint.yml/badge.svg)](https://github.com/writerP-777/obsidian-writing-studio/actions/workflows/eslint.yml)\r\n[![ORCID](https://img.shields.io/badge/ORCID-0009--0009--8598--2069-brightgreen?logo=orcid&logoColor=white)](https://orcid.org/0009-0009-8598-2069)\r\n\r\nEvery push and pull request is scanned automatically:\r\n\r\n| Tool | What it checks |\r\n|------|----------------|\r\n| **CodeQL** | Static analysis for security vulnerabilities (XSS, injection, unsafe patterns) in TypeScript/JavaScript source |\r\n| **OpenSSF Scorecard** | Supply-chain security posture: dependency hygiene, branch protection, signed releases, and more |\r\n| **ESLint** (`eslint-plugin-obsidianmd`) | Obsidian plugin guideline compliance \u2014 fails on any warning or error |\r\n\r\nResults are published to the **Security** tab of this repository (GitHub code scanning).\r\n\r\nFor local development, a pre-commit hook runs ESLint (blocking) and a pre-push hook runs a full CodeQL scan (blocks the push if any HIGH or CRITICAL findings are present). Install the [CodeQL CLI](https://github.com/github/codeql-cli-binaries/releases) to enable local scanning (`winget install GitHub.CodeQL` on Windows).\r\n';
+var README_default = '<p align="center">\r\n  <img src="assets/logo.png" width="120" alt="Writing Studio logo">\r\n</p>\r\n\r\n# Writing Studio\r\n\r\n**Version 2.11.0** \xB7 Desktop only\r\n\r\n![GitHub all releases](https://img.shields.io/github/downloads/writerP-777/obsidian-writing-studio/total)\r\n[![OpenSSF Best Practices](https://www.bestpractices.dev/projects/12832/badge)](https://www.bestpractices.dev/projects/12832)\r\n\r\nWriting Studio turns Obsidian into a dedicated environment for serious nonfiction work \u2014 from your first research notes to a finished, exported manuscript. It bundles a project binder, writing modes, focus and typography tools, sprint timer, progress tracking, manuscript export, and WordPress publishing into a single plugin. A built-in sidebar file explorer lets you browse, preview, and pull content from anywhere in your vault without leaving your draft.\r\n\r\n<p align="center">\r\n  <img src="assets/sidebar-explorer-screenshot.png" alt="Writing Studio with the Launcher panel open on the left, an active draft in the center, and the Folder Sidebar Explorer open to a research folder on the right" width="900">\r\n  <br>\r\n  <em>Writing Studio in use \u2014 Launcher (left), active draft with word count goal banner (center), Folder Sidebar Explorer open to a research folder (right).</em>\r\n</p>\r\n\r\n<p align="center">\r\n  <a href="https://buymeacoffee.com/writerp777">\r\n    <img src="https://img.buymeacoffee.com/button-api/?text=Buy%20me%20a%20coffee&slug=writerp777&button_colour=c9a84c&font_colour=000000&font_family=Georgia&outline_colour=000000&coffee_colour=ffffff" alt="Buy me a coffee" height="40">\r\n  </a>\r\n</p>\r\n\r\n## Contents\r\n\r\n- [Features](#features)\r\n- [Language support](#language-support)\r\n- [Writing Studio Launcher](#writing-studio-launcher)\r\n- [Folder Sidebar Explorer](#folder-sidebar-explorer)\r\n- [Your Project](#your-project)\r\n- [Your Writing Environment](#your-writing-environment)\r\n- [Tracking Your Progress](#tracking-your-progress)\r\n- [Getting Your Work Out](#getting-your-work-out)\r\n- [Supporting Tools](#supporting-tools)\r\n- [Context Menus](#context-menus)\r\n- [Commands Reference](#commands-reference)\r\n- [Settings Overview](#settings-overview)\r\n- [Ribbon Icon](#ribbon-icon)\r\n- [Installation](#installation)\r\n- [Requirements](#requirements)\r\n- [Reporting a Bug](#reporting-a-bug)\r\n- [Security](#security)\r\n\r\n---\r\n\r\n## Features\r\n\r\n**Writing Binder** \u2014 Organize your manuscript as an ordered collection of documents with per-item status, word count, and export flags. Drag chapters into order, toggle items in or out of export, and add files from anywhere in your vault.\r\n\r\n**Project Manager** \u2014 Create projects from six templates (blank, book, article series, blog collection, journal article, magazine article), set a total word count goal, and switch between projects from the Launcher.\r\n\r\n**Compile Preview** \u2014 Concatenate all binder documents in order and render them as a finished manuscript in a split pane, without exporting.\r\n\r\n**Writing Modes** \u2014 Switch between Draft (distraction-free), Edit (full tooling), and Review (read-only) modes from the status bar, command palette, context menu, or Launcher.\r\n\r\n**Focus Mode** \u2014 Dim everything except the paragraph or sentence you are writing. Configurable dim level, font size override, sidebar collapse, and typewriter scroll.\r\n\r\n**Typography Mode** \u2014 Apply a curated font, constrained line length, and controlled line height to the editor. Fourteen font options including iA Writer fonts, Google Fonts, and custom system fonts.\r\n\r\n**Sprint Timer** \u2014 Run timed writing sessions with a draggable floating overlay. Set duration, word goal, and scope (file or project). Quick-start presets (10 m, 15 m, 25 m) available from the Launcher.\r\n\r\n**Progress Tracking** \u2014 Live word counts in the status bar and Launcher, session delta tracking, per-document and per-project word count goals with inline progress banners, and a 30-day writing log with streak tracking.\r\n\r\n**Export Engine** \u2014 Export to Manuscript (HTML), PDF, Word (.docx), RTF, HTML, Markdown, and EPUB. Manuscript format produces industry-standard layout with no external tools; other formats require Pandoc.\r\n\r\n**WordPress Publishing** \u2014 Publish directly to WordPress from Obsidian. Set post title, status, categories, tags, excerpt, and scheduled date. Supports multiple sites with per-site credentials and connection testing.\r\n\r\n**Folder Sidebar Explorer** \u2014 Browse any vault folder in a sidebar panel. Search by name or file content, preview Markdown files and images inline, and insert selected text directly into the active editor.\r\n\r\n## Language support\r\n\r\nWriting Studio is available in the following languages in addition to English:\r\n\r\n- Arabic\r\n- Bengali\r\n- Brazilian Portuguese\r\n- Chinese (Simplified)\r\n- French\r\n- German\r\n- Hindi\r\n- Japanese\r\n- Korean\r\n- Russian\r\n- Spanish\r\n\r\n**To change the language:** Open **Settings \u2192 General** in Obsidian, scroll to **Language**, and select your preferred language from the list. Restart Obsidian for the change to take effect. Writing Studio will display in the selected language if it is supported.\r\n\r\n**Found a translation error or missing text?** Please open an issue on GitHub \u2014 [Submit a bug report or enhancement request](https://github.com/writerP-777/obsidian-writing-studio/issues/new) \u2014 and include the language, the location in the plugin where the text appears, and what it currently says. We will address it in the next release.\r\n\r\n### Writing Studio Launcher\r\n\r\nThe Launcher is your home base in Writing Studio \u2014 a sidebar panel that shows your active project, progress toward your goals, and one-click access to every major feature.\r\n\r\n<p align="center">\r\n  <img src="assets/launcher-project-card.png" alt="The Launcher project card showing the active project name, switcher, edit and delete controls, word count, and a progress bar toward the project goal" width="520">\r\n  <br>\r\n  <em>The Launcher project card \u2014 active project, word count, and progress toward the project goal.</em>\r\n</p>\r\n\r\nBy default Writing Studio launches automatically when Obsidian loads \u2014 the Launcher opens and your last session\'s writing mode and typography are restored. To disable this, turn off **Open on startup** in **Settings \u2192 General**: Obsidian then opens clean, with no Writing Studio status bar items or restored modes, and the studio stays dormant until you launch it yourself. Launching it manually restores your last session state the same way.\r\n\r\n**To open manually:** Click the feather ribbon icon, or assign a hotkey to **Open launcher** in Settings \u2192 Hotkeys.\r\n\r\n**First run:** In a vault with no projects yet, the Launcher shows an orientation card explaining how projects work, with a **Create your first project** button to get started.\r\n\r\n<p align="center">\r\n  <img src="assets/launcher-first-run.png" alt="The Launcher first-run orientation card with an explanation of projects and a Create your first project button" width="520">\r\n  <br>\r\n  <em>First run \u2014 the orientation card shown before any project exists.</em>\r\n</p>\r\n\r\n**The Launcher includes:**\r\n- Active project name, total word count, and progress toward your project word count goal\r\n- Writing mode selector (Draft / Edit / Review)\r\n- Focus Mode and Typography Mode toggles\r\n- Sprint timer with "Set up sprint" button and Quick Sprint Options presets (10 m, 15 m, 25 m)\r\n- Today card showing words written, sprints completed, session word count, and streak\r\n- Quick-action buttons: Targets Dashboard, Writing Dashboard, Preview manuscript, Export, Writing Log, Publish to WordPress\r\n\r\n---\r\n\r\n### Folder Sidebar Explorer\r\n\r\nThe Folder Sidebar Explorer opens any vault folder in a right-sidebar panel, letting you browse reference material, research notes, or any folder outside your active project without leaving your draft. Unlike the Binder \u2014 which is scoped to your writing project \u2014 the sidebar explorer works with any folder in your vault.\r\n\r\n<p align="center">\r\n  <img src="assets/folder-sidebar-explorer.png" alt="The Folder Sidebar Explorer panel with a Markdown file open in preview, showing the breadcrumb trail, back and root buttons, and the insert selection button" width="340">\r\n  <br>\r\n  <em>The Folder Sidebar Explorer with a research file open in preview \u2014 select text and click insert selection to pull it into your draft.</em>\r\n</p>\r\n\r\n**To open:**\r\n- Use the command **Open folder in sidebar explorer** from the command palette \u2014 a folder picker appears so you can choose which folder to explore.\r\n- Right-click any folder in the file explorer and choose **Open in sidebar explorer** under **Writing studio options**.\r\n- Right-click any folder in [Notebook Navigator](https://github.com/johansan/notebook-navigator) and choose **Open in sidebar explorer** (requires Notebook Navigator to be installed).\r\n- Assign a hotkey in Settings \u2192 Hotkeys.\r\n\r\nThe panel opens in the **right sidebar**. The folder you open becomes the **root folder** for that session \u2014 the breadcrumb trail, the \u2302 root button, and search all operate relative to it.\r\n\r\n**Browsing and navigation:**\r\n\r\n| Feature | How to use |\r\n|---------|-----------|\r\n| Browse into a subfolder | Click the folder |\r\n| Preview a Markdown file | Click the file \u2014 the folder listing is replaced by a rendered preview inside the panel |\r\n| Preview an image | Click the file \u2014 displayed inline |\r\n| Preview audio | Click the file \u2014 player appears inline |\r\n| Other file types | Click the file \u2014 an **Open in editor** button appears |\r\n| Go back | Click **\u2190 back**, or press `Backspace` when the list has keyboard focus |\r\n| Return to root folder | Click **\u2302 root** to jump back to the folder you originally opened |\r\n| Keyboard navigation | Tab to focus the list, then `\u2191` / `\u2193` to move, `Enter` to open, `Backspace` to go back |\r\n| Breadcrumb navigation | Click any segment in the breadcrumb trail to jump directly to that folder |\r\n\r\n**Search:**\r\n\r\nA search bar appears at the top of the folder list. Type your query and press **Enter** to run the search.\r\n\r\n- Searches **both folder/file names and file contents** (`.md` and `.txt` files).\r\n- Frontmatter is excluded from content search to avoid false positives from YAML fields.\r\n- Name matches show the matched term highlighted in the result title.\r\n- Content matches show a text snippet around the match with the term highlighted, plus a **CONTENT** badge to distinguish them from name matches.\r\n- Results always search from the root folder, regardless of which subfolder you are currently browsing.\r\n- Click **\xD7** to clear the search and return to the normal folder view.\r\n\r\n**Sort:**\r\n\r\nA sort dropdown sits next to the search bar. Options:\r\n\r\n| Option | Description |\r\n|--------|-------------|\r\n| Folders \u2191 A-Z | Folders first, then files, both alphabetical (default) |\r\n| Folders \u2191 Z-A | Folders first, then files, both reverse-alphabetical |\r\n| Name A-Z | All items alphabetical, folders and files mixed |\r\n| Name Z-A | All items reverse-alphabetical, mixed |\r\n| Newest first | Sort by last-modified date, newest at top |\r\n| Oldest first | Sort by last-modified date, oldest at top |\r\n\r\n**Copy content to the editor:**\r\n\r\nWhen a Markdown file is open in preview mode (after clicking it in the file list), its text is selectable. To insert a passage into the active editor:\r\n\r\n1. Click a file in the list \u2014 the panel switches to preview mode showing the rendered file.\r\n2. Select the text you want in the preview pane.\r\n3. Click the **\u21A9 insert selection** button in the nav bar.\r\n4. The selected text is inserted at the cursor position in the active editor.\r\n\r\nThe preview is read-only \u2014 you cannot edit the file from the sidebar.\r\n\r\n**Hover tooltips:**\r\n\r\nHover over any file or folder in the list to see an information card:\r\n\r\n| Item type | Information shown |\r\n|-----------|------------------|\r\n| Markdown / text file | Last modified date and time \xB7 File size \xB7 Word count (frontmatter excluded) |\r\n| Image / audio / other file | Last modified date and time \xB7 File size |\r\n| Folder | Total file count \xB7 Subfolder count |\r\n\r\nThe word count updates asynchronously from Obsidian\'s file cache and appears within a moment of hover.\r\n\r\n---\r\n\r\n### Your Project\r\n\r\n#### Project Manager\r\n\r\nProjects group a set of documents (binder items) and act as the scope for export, statistics, and the word count goal banner.\r\n\r\n**To create a project:** Use the command **Create new writing project** from the command palette, or click **+ New** in the Launcher panel.\r\n\r\n**To switch projects:** Use the Launcher panel or the project selector at the top of the Binder panel.\r\n\r\n**To edit a project:** Click the pencil icon in the Launcher project card or next to the project selector in the Binder. You can change the title, author, description, total word count goal, and the document folder \u2014 the folder inside the project that holds its documents (for example, renaming a book project\'s `Chapters/` to `Scenes/` renames the folder and moves its files with it; the binder follows automatically, as it also does when you rename the folder directly in the file explorer). The project folder itself keeps its original name \u2014 renaming the title does not move any files.\r\n\r\n**To delete a project:** Click the trash icon in the Launcher project card or next to the project selector in the Binder, then confirm. This removes the project from Writing Studio\'s list only \u2014 the project folder and all its documents stay untouched in your vault.\r\n\r\n<p align="center">\r\n  <img src="assets/edit-project-modal.png" alt="The Edit project modal with fields for project title, author name, total word count goal, and description, and a Save button" width="560">\r\n  <br>\r\n  <em>The Edit project modal \u2014 change the title, author, description, and total word count goal.</em>\r\n</p>\r\n\r\nEach project stores:\r\n- Title, type, author, and description\r\n- Ordered binder with chapters, sections, articles, and notes\r\n- Per-item word count goals, statuses, and export flags\r\n- Optional total word count goal (shown in the Launcher and status bar)\r\n\r\n**Project templates available at creation:**\r\n\r\n| Template | Structure created |\r\n|----------|------------------|\r\n| Blank | Empty \u2014 build your own structure |\r\n| Book | Front Matter, Part 1 / Chapter 1, Back Matter |\r\n| Article series | Series Overview note (with article schedule), Article 1 placeholder |\r\n| Blog collection | Date-organized folder, first post placeholder |\r\n| Journal article | Title Page, Abstract, Keywords, Introduction, Literature Review, Methodology, Findings / Analysis, Discussion, Conclusion, References, Appendices |\r\n| Magazine article | Pitch / Query Notes, Headline & Deck, Lede, Nut Graf, Body, Quotes & Sources, Kicker, Fact-Check Notes, Author Bio |\r\n\r\n---\r\n\r\n#### Writing Binder\r\n\r\nKeeping a book-length manuscript organized means knowing at a glance which chapters are drafted, which are in progress, and what will compile into the finished manuscript. The Binder is a sidebar panel that shows all of that for your active project.\r\n\r\nThe binder reads your folders directly \u2014 the project folder tree *is* the manuscript structure. Organize your work in the binder or in your computer\'s file explorer, and both always match: files created, renamed, moved, or deleted outside Obsidian appear correctly with no scan or import step. A document\'s filename is its title. Status (Draft, In Progress, Complete, Published) shows as a colored stripe on the row\'s left edge, folders carry document-count badges, documents excluded from compile render dimmed, and hovering any row shows its on-disk name and the settings the binder reads from it.\r\n\r\nBelow the manuscript, **Research** and **Exports** are pinned as drawer tabs with live file counts. Research holds markdown notes that never compile (drag documents in and out of it freely); Exports is output-only, written by the export engine. Non-markdown files are visible and openable everywhere but stay outside the manuscript.\r\n\r\n**To open:** Use the command **Open binder** from the command palette, or assign a hotkey in Settings \u2192 Hotkeys.\r\n\r\n**Ordering:**\r\n\r\nDrag to reorder documents and folders. A document\'s position is stored in its own frontmatter (`binder-order`), so it travels with the file; a folder\'s position lives in a name marker (`020~ Part One`) that the binder hides in display. Anything without a saved position sorts naturally \u2014 A to Z, numbers in numeric order \u2014 after ordered items. Reordering never renames your documents.\r\n\r\n**Moving things:**\r\n\r\nDragging physically moves files and folders: drop between rows to reorder, onto a folder to nest inside it, on the empty space below the tree to move to the project root, or onto the Research drawer tab to move a document out of the manuscript. A folder drag carries all its children, and links heal automatically on every move.\r\n\r\n**Control strip:**\r\n\r\nA two-row control strip at the top of the binder keeps the high-frequency writing controls next to your documents, so the daily loop doesn\'t require switching to the launcher tab. The top row is a Draft / Edit / Review segmented control (clicking the active mode switches back to normal). The bottom row holds Focus and Typography toggles, a sprint chip (its menu offers the set-up modal and 10/15/25-minute quick starts; an armed sprint shows a ready chip with the duration), and a **...** menu with the occasional actions: export, publish, preview manuscript, targets dashboard, writing dashboard, and writing log. The launcher keeps its own copies of all controls, and every surface stays in sync no matter where a change is made.\r\n\r\n<p align="center">\r\n  <img src="assets/binder-control-strip.png" alt="The binder control strip with Draft, Edit, and Review on the top row and Focus, Typography, Sprint, and an overflow menu on the bottom row, above the document tree" width="520">\r\n  <br>\r\n  <em>The binder control strip \u2014 writing modes on top; focus, typography, sprint, and overflow controls below.</em>\r\n</p>\r\n\r\n<p align="center">\r\n  <img src="assets/binder-strip-overflow.png" alt="The binder overflow menu open, showing export, publish to WordPress, preview manuscript, targets dashboard, writing dashboard, and writing log" width="520">\r\n  <br>\r\n  <em>The overflow menu holds the less frequent actions: export, publish, preview, and the dashboards and log.</em>\r\n</p>\r\n\r\n**Keyboard navigation:**\r\n\r\nThe binder tree is fully keyboard-operable. Tab to focus the list, then:\r\n\r\n| Key | Action |\r\n|-----|--------|\r\n| `\u2191` / `\u2193` | Move through visible documents and folders |\r\n| `\u2192` | Expand a collapsed folder, or step into an open one |\r\n| `\u2190` | Collapse an open folder, or jump to the parent |\r\n| `Enter` | Open the document, or expand/collapse a folder |\r\n| `F2` | Rename the focused item inline (Enter commits, Escape cancels) |\r\n| `Shift+F10` or menu key | Open the item\'s right-click menu |\r\n\r\n**Opening and renaming documents:**\r\n\r\nA single click on a document opens it immediately. Rename an item from its right-click menu, or by pressing **F2** while it is focused (Enter commits, Escape cancels). Renaming in the binder renames the file itself \u2014 links heal automatically \u2014 and invalid names are rejected with a specific message, never silently altered.\r\n\r\n**Creating documents and folders:**\r\n\r\nToolbar buttons create a document or folder at the manuscript root; a folder\'s right-click menu creates inside it, and a document\'s menu creates beside it. New documents prompt for a title up front rather than being named "Untitled."\r\n\r\n**Right-click menu:**\r\n\r\nRight-click any item for its full set of actions \u2014 rename, set status, set a word count goal, set an optional document type, exclude a document from compile (or re-include it), create a document or folder, or delete to the trash (a folder\'s confirmation states how many files it contains).\r\n\r\n**Organizing with folders:**\r\n\r\nFolders are the structure. The book template creates a part folder for you, and any structure you build \u2014 in the binder or in your file explorer \u2014 is the manuscript\'s structure. Adding a file to a project is simply moving it into the project folder; it appears in the binder immediately, and files copied in outside of Obsidian show up the same way with no import step.\r\n\r\n**Upgrading from an earlier version:**\r\n\r\nThe first time you open an existing project, Writing Studio arranges its folders to match what your old binder showed \u2014 creating folders and moving documents, deleting nothing, and never changing your writing. A one-time notice explains this, and the command **Restore previous binder layout** puts your folders back the way they were if you preferred your earlier arrangement.\r\n\r\n---\r\n\r\n#### Compile Preview\r\n\r\nThe Compile Preview opens a split pane showing all binder documents for the active project concatenated in order, rendered as a finished manuscript.\r\n\r\n**To open:** Use the command **Preview compiled manuscript** from the command palette, or click the **Preview manuscript** button in the Launcher panel.\r\n\r\n---\r\n\r\n### Your Writing Environment\r\n\r\n#### Writing Modes\r\n\r\nThree modes shape how the editor behaves. The current mode is always shown in the status bar. Click the mode pill in the status bar to switch modes.\r\n\r\n| Mode | Purpose |\r\n|------|---------|\r\n| **Draft** | Distraction-free drafting; spell-check and formatting hints suppressed |\r\n| **Edit** | Revision pass; full editor tooling active |\r\n| **Review** | Read-only style; ideal for a final proofread |\r\n| **None** | Normal Obsidian behavior |\r\n\r\n**To switch modes:**\r\n- Click the mode indicator in the status bar.\r\n- Right-click inside the editor, then choose **Switch writing mode \u2192** under **Writing studio options**.\r\n- Assign hotkeys to **Switch to draft mode / Edit mode / Review mode** in Settings \u2192 Hotkeys.\r\n- Use the Writing Studio Launcher panel.\r\n\r\nThe active mode is saved and restored the next time Writing Studio launches \u2014 automatically at startup when **Open on startup** is enabled, or when you next open the Launcher or switch a mode.\r\n\r\n---\r\n\r\n#### Focus Mode\r\n\r\nFocus Mode dims everything in the editor except the paragraph or sentence you are currently writing, reducing visual noise and keeping attention on the active thought.\r\n\r\n**To toggle:** Assign a hotkey to **Toggle focus mode** in Settings \u2192 Hotkeys, or use the toggle in the Launcher panel. Press `Escape` to exit.\r\n\r\n**Settings (Settings \u2192 Focus mode):**\r\n\r\n| Setting | Description |\r\n|---------|-------------|\r\n| Focus unit | Highlight at the **paragraph** or **sentence (line)** level |\r\n| Dim opacity | How opaque the dimmed text appears (10\u201350%) |\r\n| Font size override | Override the editor font size while focused; 0 = use theme default. Takes precedence over Typography Mode\'s font size while Focus Mode is active |\r\n| Auto-hide sidebars | Collapse left and right sidebars when Focus Mode activates |\r\n| Typewriter scroll | Keep the active line vertically centered as you type |\r\n\r\n---\r\n\r\n#### Typography Mode\r\n\r\nTypography Mode applies a consistent, reader-friendly text treatment to the editor: a curated font, constrained line length, controlled line height, and optional letter spacing.\r\n\r\n**To toggle:** Assign a hotkey to **Toggle typography mode** in Settings \u2192 Hotkeys, or use the toggle in the Launcher panel.\r\n\r\n**To change the font while Typography Mode is active:** Right-click inside the editor and choose **Typography font \u2192** under **Writing studio options**. A font picker menu appears with all available fonts; the active font is shown with a checkmark. Selecting a font applies it immediately and saves the setting.\r\n\r\n> **Note on fonts:** Typography fonts are loaded from Google Fonts and require an internet connection the first time each font is used. After the initial load they are cached and work offline.\r\n\r\n**Settings (Settings \u2192 Typography):**\r\n\r\n| Setting | Description |\r\n|---------|-------------|\r\n| Font family | Choose from the curated font list or enter a custom font name |\r\n| Custom font name | Used when **Custom font name\u2026** is selected above |\r\n| Max line length | Characters per line (55\u201380); constrains the editor column width |\r\n| Font size | Editor font size in pixels |\r\n| Line height | Multiplier; default 1.7 |\r\n| Letter spacing | CSS `letter-spacing` value (e.g. `normal`, `0.02em`) |\r\n| Persist across sessions | Restore Typography Mode when Writing Studio next launches |\r\n\r\n**Available fonts:**\r\n\r\n| Option | Font |\r\n|--------|------|\r\n| Monospaced | iA Writer Mono (falls back to Roboto Mono / Courier New) |\r\n| Serif | iA Writer Duo Serif (falls back to Georgia) |\r\n| Sans-serif | iA Writer Quattro (falls back to system sans-serif) |\r\n| Cormorant Garamond | Elegant display serif |\r\n| Crimson Text | Classic book serif |\r\n| EB Garamond | Traditional Garamond revival |\r\n| Libre Baskerville | Readable web serif |\r\n| Libre Caslon Text | Clean slab serif |\r\n| Literata | Designed for long-form reading |\r\n| Lora | Contemporary calligraphic serif |\r\n| Inter | Modern humanist sans-serif |\r\n| Lato | Friendly rounded sans-serif |\r\n| Source Sans 3 | Clean UI sans-serif |\r\n| Custom font name\u2026 | Use any font installed on your system |\r\n\r\n---\r\n\r\n### Tracking Your Progress\r\n\r\n#### Writing Sprint Timer\r\n\r\nThe Sprint Timer runs a timed writing session. When a sprint is active, a floating overlay displays the countdown and gives you full control \u2014 without requiring you to stay on the dashboard.\r\n\r\n**To set up a sprint:**\r\n\r\n- Click **Set up sprint** in the Launcher panel to open the sprint configuration modal.\r\n- Or click one of the **Quick Sprint Options** preset buttons (10 m, 15 m, 25 m) in the Launcher panel to load a duration directly.\r\n\r\nEither path opens the floating overlay in a ready state \u2014 the timer does not start until you press \u25B6 on the overlay itself. This gives you time to navigate to your draft or open the Binder before the clock begins.\r\n\r\n**Sprint configuration modal:**\r\n\r\nThe modal lets you set:\r\n\r\n- Duration (preset or custom, in minutes)\r\n- Word count goal for the session\r\n- Scope (current file or entire project)\r\n\r\nClick **Launch sprint timer** to open the overlay in ready state.\r\n\r\n**Using the floating overlay:**\r\n\r\n| Control | Action |\r\n|---------|--------|\r\n| \u25B6 | Start or resume the sprint |\r\n| \u23F8 | Pause the sprint |\r\n| \u25A0 | Stop and end the sprint |\r\n\r\nThe overlay is draggable \u2014 click and drag the header to reposition it anywhere on screen. It stays on top regardless of writing mode or Focus Mode. The current countdown is also shown in the Obsidian status bar (`\u23F1 MM:SS`) and, when Focus Mode is active, in the focus toolbar.\r\n\r\nWhen the sprint ends, a summary modal shows words written, duration, and words-per-minute. The session is logged to sprint history and optionally appended to your Daily Note.\r\n\r\n**Settings (Settings \u2192 Sprint & goals):**\r\n\r\n| Setting | Description |\r\n|---------|-------------|\r\n| Default sprint duration | Starting value in the sprint modal (minutes) |\r\n| Default daily word goal | Target used in the Writing Dashboard and Launcher |\r\n| Sound notifications | Play a tone when the sprint ends |\r\n| Sprint history retention | Days to keep sprint records before purging |\r\n| Inline goal banner | Show a progress bar below the editor toolbar when a document has a word count goal set |\r\n\r\n---\r\n\r\n#### Word Count Goal\r\n\r\nA per-document word count goal can be set and tracked inline.\r\n\r\n**To set a goal:**\r\n- Use the command **Set word count goal** from the command palette.\r\n- Right-click inside the editor and choose **Set word count goal** under **Writing studio options**.\r\n\r\nWhen a goal is set and **Inline goal banner** is enabled, a progress bar appears below the editor toolbar showing current words, goal, and percentage. It updates in real time as you type.\r\n\r\n---\r\n\r\n#### Session Word Count\r\n\r\nThe status bar shows a `(+N)` delta next to the current file\'s word count, indicating how many words you have added since opening that file this session. The Launcher\'s **Today** card also shows a cumulative session total across all files opened during the current Obsidian session. Both counts reset when Obsidian restarts.\r\n\r\n---\r\n\r\n#### Project Word Count Goal\r\n\r\nWhen an active project has a total word count goal set, a dedicated status bar item shows `{current} / {goal} project words`. This updates automatically as you write. Set a project goal in the Project modal when creating or editing a project.\r\n\r\n---\r\n\r\n#### Writing Dashboard\r\n\r\nThe Writing Dashboard shows session statistics (words written, sprints completed, time), sprint history, daily progress toward your goal, and per-project word counts with reading time.\r\n\r\n**To open:** Use the command **Open writing dashboard** from the command palette, or click the **Writing dashboard** button in the Launcher panel.\r\n\r\n---\r\n\r\n#### Targets Dashboard\r\n\r\nThe Targets Dashboard lets you assign word count goals to individual documents in the active project\'s binder and track progress across the whole project at a glance. Goals can be edited inline in the table. Rows are sortable and filterable by status.\r\n\r\n**To open:** Use the command **Open targets dashboard**, click the **Targets dashboard** button in the Launcher panel, or assign a hotkey in Settings \u2192 Hotkeys.\r\n\r\n---\r\n\r\n#### Daily Writing Log\r\n\r\nThe Writing Log is a sidebar panel that shows your writing history at a glance.\r\n\r\n**To open:** Use the command **Open writing log** from the command palette, or click the **Writing log** button in the Launcher panel.\r\n\r\n**The Writing Log shows:**\r\n- Current streak (days in a row with at least one sprint)\r\n- This session: total session words, sprint words, sprints completed, and minutes written\r\n- Recent activity: a bar chart with one row per day you wrote, each showing word count, sprints completed, and a visual bar proportional to the day\'s output. Days with no writing are collapsed rather than shown as empty rows, so the log stays focused on the days you actually worked.\r\n\r\nWhen **Append to daily note** is enabled (Settings \u2192 Writing log), a summary of each completed sprint is also appended to today\'s Daily Note.\r\n\r\n---\r\n\r\n### Getting Your Work Out\r\n\r\n#### Export Engine\r\n\r\nWhen your draft is ready, the Export Engine converts it to a finished file in your chosen format \u2014 no reformatting required.\r\n\r\n**Supported formats:** Manuscript (HTML) \xB7 PDF \xB7 Word (.docx) \xB7 RTF \xB7 HTML \xB7 Markdown \xB7 EPUB\r\n\r\n**To export:**\r\n- Right-click inside the editor and choose **Export this document** under **Writing studio options**.\r\n- Use the command **Export document** from the command palette.\r\n- Click the **Export** button in the Launcher panel.\r\n- Assign a hotkey to **Export document** in Settings \u2192 Hotkeys.\r\n\r\n**Manuscript format**\r\n\r\nThe Manuscript format produces a self-contained HTML file formatted to industry-standard manuscript conventions:\r\n- Courier New 12 pt, double-spaced, 1-inch margins\r\n- Title page with project title, author name, approximate word count, and optional contact information\r\n- Chapter headings in uppercase, page-break before each\r\n- Scene breaks rendered as `#` (the standard manuscript convention)\r\n\r\nNo external tools are required for manuscript export.\r\n\r\n**Settings (Settings \u2192 Export):**\r\n\r\n| Setting | Description |\r\n|---------|-------------|\r\n| Default export format | Pre-selected format in the export modal |\r\n| Default paper size | Letter (US) or A4 |\r\n| Export font | Font name used in PDF/DOCX output (e.g. `Georgia`) |\r\n| Export font size | Point size for PDF/DOCX output |\r\n| Pandoc path | Full path to the `pandoc` binary if it is not on your system PATH |\r\n| PDF engine | Engine Pandoc uses for PDF export. **Auto** (default) picks an installed LaTeX engine \u2014 `xelatex` or `lualatex` when a custom font is set, `pdflatex` otherwise. Pin a specific engine to always use it; if a pinned engine is not installed the export fails with a message naming it rather than silently substituting another |\r\n| EPUB language | BCP 47 language tag (e.g. `en`, `fr`, `de`) |\r\n| EPUB include cover | Generate a text cover page when no cover image is provided |\r\n\r\n> **Requirement:** Pandoc must be installed for PDF, DOCX, RTF, HTML, and EPUB export. Download from [pandoc.org](https://pandoc.org/installing.html). For PDF export, a LaTeX distribution (e.g. TeX Live or MiKTeX) is also required \u2014 unless the PDF engine setting is pinned to [wkhtmltopdf](https://wkhtmltopdf.org/), which renders PDFs without LaTeX. Manuscript (HTML) export does not require Pandoc.\r\n>\r\n> **Font note:** the export font setting applies only to the LaTeX PDF path (`xelatex`/`lualatex`; `pdflatex` cannot apply custom fonts either). The `wkhtmltopdf` path takes its typography from Pandoc\'s HTML/CSS output, so the export font setting is ignored there \u2014 the plugin tells you when a font was skipped for this reason.\r\n>\r\n> **Formatting note:** the built-in converter used for HTML, Manuscript, and EPUB output supports headings, paragraphs, lists, blockquotes, fenced code blocks, tables, images, and links. Nested lists, setext (underline-style) headings, and footnotes are not converted \u2014 use a Pandoc format (PDF, DOCX, RTF) if your manuscript depends on them.\r\n\r\n---\r\n\r\n#### WordPress Publishing\r\n\r\nPublish your finished draft directly to WordPress without leaving Obsidian. The modal lets you choose the target site, set the post title, status, categories, tags, excerpt, and an optional scheduled publication date.\r\n\r\n**To publish:**\r\n- Right-click inside the editor and choose **Publish to WordPress** under **Writing studio options**.\r\n- Use the command **Publish to WordPress** from the command palette.\r\n- Click the **Publish to WordPress** button in the Launcher panel.\r\n- Assign a hotkey to **Publish to WordPress** in Settings \u2192 Hotkeys.\r\n\r\n**Setting up a site (Settings \u2192 WordPress):**\r\n\r\n1. Click **+ add WordPress site**.\r\n2. Enter a nickname, the site URL (e.g. `https://yourblog.com`), and your WordPress username.\r\n3. Generate an application password in WordPress under **Users \u2192 Profile \u2192 Application passwords** and paste it into the **Application password** field.\r\n4. Click **Test connection** to verify.\r\n\r\n**Per-site options:**\r\n\r\n| Setting | Description |\r\n|---------|-------------|\r\n| Default post status | Draft \xB7 Pending Review \xB7 Published |\r\n| Wikilink handling | **Strip** removes `[[...]]` syntax, leaving plain text \xB7 **Convert** turns wikilinks into URLs |\r\n\r\n**Preserving your credentials across updates**\r\n\r\nWriting Studio stores your WordPress site credentials in your vault\'s `.obsidian/plugins/writing-studio/data.json` file. Obsidian\'s in-app update process does not touch this file \u2014 your credentials are preserved automatically. However, if you uninstall and reinstall the plugin manually, or if a vault sync conflict overwrites `data.json`, credentials will be lost and will need to be re-entered. To avoid this, always use Obsidian\'s built-in Update button rather than uninstalling manually.\r\n\r\n---\r\n\r\n### Supporting Tools\r\n\r\n#### Frontmatter Manager\r\n\r\nWriting Studio automatically manages YAML frontmatter in your documents when **Frontmatter auto-update** is enabled. On every save it updates:\r\n\r\n- `word-count` \u2014 current word count\r\n- `modified` \u2014 last-modified date\r\n\r\nThe `word-count-goal` frontmatter field is read by the inline goal banner and the Word Count Goal modal.\r\n\r\n---\r\n\r\n## Context Menus\r\n\r\nWriting Studio adds items to Obsidian\'s right-click context menus. All Writing Studio items are grouped together under the heading **Writing studio options** to distinguish them from other plugins and Obsidian\'s built-in options.\r\n\r\n### Right-click inside an open document (editor menu)\r\n\r\n| Option | Action |\r\n|--------|--------|\r\n| Export this document | Open the export modal for the current file |\r\n| Publish to WordPress | Open the WordPress publish modal for the current file |\r\n| Set word count goal | Set a word count target for the current document |\r\n| Switch writing mode \u2192 | Open a mode-switcher menu (Draft / Edit / Review / None) |\r\n| Typography font \u2192 | Open a font picker menu to change the typography font (visible only when Typography Mode is active) |\r\n\r\n### Right-click a folder in the file explorer\r\n\r\n| Option | Action |\r\n|--------|--------|\r\n| Open in sidebar explorer | Open the folder in the Folder Sidebar Explorer panel |\r\n\r\n---\r\n\r\n## Commands Reference\r\n\r\nNo default hotkeys are assigned. All commands can be given a hotkey in **Settings \u2192 Hotkeys**.\r\n\r\n| Command | Description |\r\n|---------|-------------|\r\n| Open launcher | Open the launcher sidebar panel |\r\n| Open binder | Open the writing binder sidebar panel |\r\n| Open writing log | Open the daily writing log panel |\r\n| Toggle focus mode | Enable or disable focus mode |\r\n| Toggle typography mode | Enable or disable typography mode |\r\n| Switch to draft mode | Activate draft writing mode |\r\n| Switch to edit mode | Activate edit writing mode |\r\n| Switch to review mode | Activate review writing mode |\r\n| Start writing sprint | Open the sprint timer modal |\r\n| Export document | Export the current document |\r\n| Export project | Export the full project |\r\n| Preview compiled manuscript | Open the compile preview pane |\r\n| Publish to WordPress | Publish the current document to WordPress |\r\n| Create new writing project | Create a new writing project |\r\n| Open writing dashboard | Open the statistics dashboard |\r\n| Open targets dashboard | Open the word count targets panel |\r\n| Set word count goal | Set a per-document word count goal |\r\n| Open folder in sidebar explorer | Search and open a vault folder in the sidebar |\r\n| Restore previous binder layout | Put a project\'s folders back the way they were before the one-time folder arrangement |\r\n\r\n---\r\n\r\n## Settings Overview\r\n\r\nOpen via **Settings \u2192 Writing Studio**.\r\n\r\n| Tab | What it controls |\r\n|-----|-----------------|\r\n| General | Open on startup, default project folder, author name, document type, frontmatter auto-update |\r\n| Focus mode | Focus unit, dim opacity, font override, sidebar behavior, typewriter scroll |\r\n| Typography | Font family, custom font name, line length, font size, line height, letter spacing, persistence |\r\n| Sprint & goals | Sprint duration, daily goal, sound notifications, history retention, inline banner |\r\n| Export | Format, paper size, font, font size, Pandoc path, EPUB language, EPUB cover |\r\n| Writing log | Append sprint summaries to Daily Note |\r\n| WordPress | Site credentials, default post status, wikilink handling |\r\n\r\n---\r\n\r\n## Ribbon Icon\r\n\r\nWriting Studio adds a single icon to the Obsidian ribbon.\r\n\r\n| Icon | Action |\r\n|------|--------|\r\n| Feather | Open the Writing Studio Launcher panel |\r\n\r\nAll other features are accessible from the Launcher panel, the command palette, context menus, or assigned hotkeys.\r\n\r\n---\r\n\r\n## Installation\r\n\r\n1. Download `main.js`, `manifest.json`, and `styles.css` from the latest [GitHub release](../../releases/latest).\r\n2. Create the folder `<vault>/.obsidian/plugins/writing-studio/` if it does not exist.\r\n3. Copy the three files into that folder.\r\n4. In Obsidian, go to **Settings \u2192 Community Plugins**, find **Writing Studio**, and enable it.\r\n\r\n> **Building from source:** Clone the repository, run `npm install`, then `npm run build`. Copy the three output files as above.\r\n\r\n---\r\n\r\n## Requirements\r\n\r\nMost features work out of the box. A few require additional software for specific functions, noted below.\r\n\r\n| Requirement | When needed |\r\n|-------------|-------------|\r\n| Obsidian 1.8.7 or later | Always |\r\n| Desktop (Windows, macOS, Linux) | Always \u2014 this plugin does not run on mobile |\r\n| Internet connection | First use of each Typography Mode font (cached after that) |\r\n| [Pandoc](https://pandoc.org/installing.html) | Export to PDF, DOCX, RTF, HTML, EPUB |\r\n| LaTeX (TeX Live / MiKTeX) or [wkhtmltopdf](https://wkhtmltopdf.org/) | Export to PDF only (wkhtmltopdf must be pinned in the PDF engine setting) |\r\n| WordPress 5.6+ with REST API enabled | WordPress publishing |\r\n| WordPress Application Password | WordPress publishing |\r\n\r\n---\r\n\r\n## Reporting a Bug\r\n\r\nIf something isn\'t working, please open an issue on GitHub:\r\n\r\n**[Submit a bug report](https://github.com/writerP-777/obsidian-writing-studio/issues/new)**\r\n\r\nInclude the following when you report:\r\n\r\n- Writing Studio version (visible in **Settings \u2192 Community Plugins**)\r\n- Obsidian version (visible in **Settings \u2192 About**)\r\n- Operating system (Windows / macOS / Linux) and version\r\n- What you expected to happen\r\n- What actually happened, and any steps to reproduce it\r\n\r\nFeature requests are welcome in the same place \u2014 please label them as **[Feature Request]** in the issue title.\r\n\r\n---\r\n\r\n## Security\r\n\r\n[![CodeQL](https://github.com/writerP-777/obsidian-writing-studio/actions/workflows/codeql.yml/badge.svg)](https://github.com/writerP-777/obsidian-writing-studio/actions/workflows/codeql.yml)\r\n[![OpenSSF Scorecard](https://api.securityscorecards.dev/projects/github.com/writerP-777/obsidian-writing-studio/badge)](https://securityscorecards.dev/viewer/?uri=github.com/writerP-777/obsidian-writing-studio)\r\n[![OpenSSF Baseline](https://www.bestpractices.dev/projects/12832/baseline)](https://www.bestpractices.dev/projects/12832)\r\n[![ESLint](https://github.com/writerP-777/obsidian-writing-studio/actions/workflows/eslint.yml/badge.svg)](https://github.com/writerP-777/obsidian-writing-studio/actions/workflows/eslint.yml)\r\n[![ORCID](https://img.shields.io/badge/ORCID-0009--0009--8598--2069-brightgreen?logo=orcid&logoColor=white)](https://orcid.org/0009-0009-8598-2069)\r\n\r\nEvery push and pull request is scanned automatically:\r\n\r\n| Tool | What it checks |\r\n|------|----------------|\r\n| **CodeQL** | Static analysis for security vulnerabilities (XSS, injection, unsafe patterns) in TypeScript/JavaScript source |\r\n| **OpenSSF Scorecard** | Supply-chain security posture: dependency hygiene, branch protection, signed releases, and more |\r\n| **ESLint** (`eslint-plugin-obsidianmd`) | Obsidian plugin guideline compliance \u2014 fails on any warning or error |\r\n\r\nResults are published to the **Security** tab of this repository (GitHub code scanning).\r\n\r\nFor local development, a pre-commit hook runs ESLint (blocking) and a pre-push hook runs a full CodeQL scan (blocks the push if any HIGH or CRITICAL findings are present). Install the [CodeQL CLI](https://github.com/github/codeql-cli-binaries/releases) to enable local scanning (`winget install GitHub.CodeQL` on Windows).\r\n';
 
 // src/HelpContent.ts
 var start = README_default.indexOf("\n## Features");
@@ -20169,7 +18094,7 @@ content = content.replace(/^!\[[^\]]*\]\((?!https?:\/\/)[^)]*\)[ \t]*$/gm, "");
 var HELP_CONTENT = content;
 
 // src/SettingsTab.ts
-var WritingStudioSettingsTab = class extends import_obsidian30.PluginSettingTab {
+var WritingStudioSettingsTab = class extends import_obsidian27.PluginSettingTab {
   constructor(app, plugin) {
     super(app, plugin);
     this.activeTab = "general";
@@ -20254,63 +18179,57 @@ var WritingStudioSettingsTab = class extends import_obsidian30.PluginSettingTab 
     }
   }
   renderGeneral(el) {
-    new import_obsidian30.Setting(el).setName(t2("settings.general.openOnStartup")).setDesc(t2("settings.general.openOnStartupDesc")).addToggle((toggle) => toggle.setValue(this.plugin.settings.openOnStartup).onChange(async (v) => {
+    new import_obsidian27.Setting(el).setName(t2("settings.general.openOnStartup")).setDesc(t2("settings.general.openOnStartupDesc")).addToggle((toggle) => toggle.setValue(this.plugin.settings.openOnStartup).onChange(async (v) => {
       this.plugin.settings.openOnStartup = v;
       await this.plugin.saveSettings();
     }));
-    new import_obsidian30.Setting(el).setName(t2("settings.general.defaultProjectFolder")).setDesc(t2("settings.general.defaultProjectFolderDesc")).addText((text) => text.setPlaceholder(t2("settings.general.defaultProjectFolderPlaceholder")).setValue(this.plugin.settings.defaultProjectFolder).onChange(async (v) => {
+    new import_obsidian27.Setting(el).setName(t2("settings.general.defaultProjectFolder")).setDesc(t2("settings.general.defaultProjectFolderDesc")).addText((text) => text.setPlaceholder(t2("settings.general.defaultProjectFolderPlaceholder")).setValue(this.plugin.settings.defaultProjectFolder).onChange(async (v) => {
       this.plugin.settings.defaultProjectFolder = v;
       await this.plugin.saveSettings();
     }));
-    new import_obsidian30.Setting(el).setName(t2("settings.general.authorName")).setDesc(t2("settings.general.authorNameDesc")).addText((text) => text.setPlaceholder(t2("settings.general.authorNamePlaceholder")).setValue(this.plugin.settings.authorName).onChange(async (v) => {
+    new import_obsidian27.Setting(el).setName(t2("settings.general.authorName")).setDesc(t2("settings.general.authorNameDesc")).addText((text) => text.setPlaceholder(t2("settings.general.authorNamePlaceholder")).setValue(this.plugin.settings.authorName).onChange(async (v) => {
       this.plugin.settings.authorName = v;
       await this.plugin.saveSettings();
     }));
-    new import_obsidian30.Setting(el).setName(t2("settings.general.defaultDocumentType")).setDesc(t2("settings.general.defaultDocumentTypeDesc")).addDropdown((d) => d.addOption("chapter", t2("settings.general.docType.chapter")).addOption("section", t2("settings.general.docType.section")).addOption("article", t2("settings.general.docType.article")).addOption("note", t2("settings.general.docType.note")).setValue(this.plugin.settings.defaultDocumentType).onChange(async (v) => {
+    new import_obsidian27.Setting(el).setName(t2("settings.general.defaultDocumentType")).setDesc(t2("settings.general.defaultDocumentTypeDesc")).addDropdown((d) => d.addOption("chapter", t2("settings.general.docType.chapter")).addOption("section", t2("settings.general.docType.section")).addOption("article", t2("settings.general.docType.article")).addOption("note", t2("settings.general.docType.note")).setValue(this.plugin.settings.defaultDocumentType).onChange(async (v) => {
       this.plugin.settings.defaultDocumentType = v;
       await this.plugin.saveSettings();
     }));
-    new import_obsidian30.Setting(el).setName(t2("settings.general.frontmatterAutoUpdate")).setDesc(t2("settings.general.frontmatterAutoUpdateDesc")).addToggle((toggle) => toggle.setValue(this.plugin.settings.frontmatterAutoUpdate).onChange(async (v) => {
+    new import_obsidian27.Setting(el).setName(t2("settings.general.frontmatterAutoUpdate")).setDesc(t2("settings.general.frontmatterAutoUpdateDesc")).addToggle((toggle) => toggle.setValue(this.plugin.settings.frontmatterAutoUpdate).onChange(async (v) => {
       this.plugin.settings.frontmatterAutoUpdate = v;
       await this.plugin.saveSettings();
     }));
-    new import_obsidian30.Setting(el).setName(t2("settings.general.experimentalHeading")).setHeading();
-    new import_obsidian30.Setting(el).setName(t2("settings.general.filesystemBinder")).setDesc(t2("settings.general.filesystemBinderDesc")).addToggle((toggle) => toggle.setValue(this.plugin.settings.filesystemBinder).onChange(async (v) => {
-      this.plugin.settings.filesystemBinder = v;
-      await this.plugin.saveSettings();
-      await this.plugin.reopenBinderViews();
-    }));
   }
   renderFocusMode(el) {
-    new import_obsidian30.Setting(el).setName(t2("settings.focus.heading")).setHeading();
-    new import_obsidian30.Setting(el).setName(t2("settings.focus.focusUnit")).setDesc(t2("settings.focus.focusUnitDesc")).addDropdown((d) => d.addOption("paragraph", t2("settings.focus.paragraph")).addOption("sentence", t2("settings.focus.sentence")).setValue(this.plugin.settings.focusUnit).onChange(async (v) => {
+    new import_obsidian27.Setting(el).setName(t2("settings.focus.heading")).setHeading();
+    new import_obsidian27.Setting(el).setName(t2("settings.focus.focusUnit")).setDesc(t2("settings.focus.focusUnitDesc")).addDropdown((d) => d.addOption("paragraph", t2("settings.focus.paragraph")).addOption("sentence", t2("settings.focus.sentence")).setValue(this.plugin.settings.focusUnit).onChange(async (v) => {
       this.plugin.settings.focusUnit = v;
       await this.plugin.saveSettings();
     }));
-    new import_obsidian30.Setting(el).setName(t2("settings.focus.dimOpacity")).setDesc(t2("settings.focus.dimOpacityDesc")).addSlider((s) => s.setLimits(10, 50, 5).setValue(this.plugin.settings.dimOpacity).onChange(async (v) => {
+    new import_obsidian27.Setting(el).setName(t2("settings.focus.dimOpacity")).setDesc(t2("settings.focus.dimOpacityDesc")).addSlider((s) => s.setLimits(10, 50, 5).setValue(this.plugin.settings.dimOpacity).onChange(async (v) => {
       this.plugin.settings.dimOpacity = v;
       await this.plugin.saveSettings();
       this.plugin.focusMode.applyDimOpacity();
     }));
-    new import_obsidian30.Setting(el).setName(t2("settings.focus.fontSizeOverride")).setDesc(t2("settings.focus.fontSizeOverrideDesc")).addText((text) => text.setValue(String(this.plugin.settings.focusFontSize || 0)).onChange(async (v) => {
+    new import_obsidian27.Setting(el).setName(t2("settings.focus.fontSizeOverride")).setDesc(t2("settings.focus.fontSizeOverrideDesc")).addText((text) => text.setValue(String(this.plugin.settings.focusFontSize || 0)).onChange(async (v) => {
       const n = Number(v.trim());
       if (!Number.isInteger(n) || n !== 0 && (n < 8 || n > 72)) return;
       this.plugin.settings.focusFontSize = n;
       await this.plugin.saveSettings();
       this.plugin.focusMode.applyFontSize();
     }));
-    new import_obsidian30.Setting(el).setName(t2("settings.focus.autoHideSidebars")).addToggle((toggle) => toggle.setValue(this.plugin.settings.focusAutoHideSidebars).onChange(async (v) => {
+    new import_obsidian27.Setting(el).setName(t2("settings.focus.autoHideSidebars")).addToggle((toggle) => toggle.setValue(this.plugin.settings.focusAutoHideSidebars).onChange(async (v) => {
       this.plugin.settings.focusAutoHideSidebars = v;
       await this.plugin.saveSettings();
     }));
-    new import_obsidian30.Setting(el).setName(t2("settings.focus.typewriterScroll")).setDesc(t2("settings.focus.typewriterScrollDesc")).addToggle((toggle) => toggle.setValue(this.plugin.settings.typewriterScroll).onChange(async (v) => {
+    new import_obsidian27.Setting(el).setName(t2("settings.focus.typewriterScroll")).setDesc(t2("settings.focus.typewriterScrollDesc")).addToggle((toggle) => toggle.setValue(this.plugin.settings.typewriterScroll).onChange(async (v) => {
       this.plugin.settings.typewriterScroll = v;
       await this.plugin.saveSettings();
     }));
   }
   renderTypography(el) {
-    new import_obsidian30.Setting(el).setName(t2("settings.typography.heading")).setHeading();
-    new import_obsidian30.Setting(el).setName(t2("settings.typography.fontFamily")).addDropdown((d) => {
+    new import_obsidian27.Setting(el).setName(t2("settings.typography.heading")).setHeading();
+    new import_obsidian27.Setting(el).setName(t2("settings.typography.fontFamily")).addDropdown((d) => {
       d.addOption("mono", t2("settings.typography.font.mono"));
       d.addOption("serif", t2("settings.typography.font.serif"));
       d.addOption("sans", t2("settings.typography.font.sans"));
@@ -20332,114 +18251,114 @@ var WritingStudioSettingsTab = class extends import_obsidian30.PluginSettingTab 
         if (this.plugin.typographyMode.isActive()) this.plugin.typographyMode.refreshStyles();
       });
     });
-    new import_obsidian30.Setting(el).setName(t2("settings.typography.customFontName")).setDesc(t2("settings.typography.customFontNameDesc")).addText((text) => text.setPlaceholder(t2("settings.typography.customFontNamePlaceholder")).setValue(this.plugin.settings.customFontName).onChange(async (v) => {
+    new import_obsidian27.Setting(el).setName(t2("settings.typography.customFontName")).setDesc(t2("settings.typography.customFontNameDesc")).addText((text) => text.setPlaceholder(t2("settings.typography.customFontNamePlaceholder")).setValue(this.plugin.settings.customFontName).onChange(async (v) => {
       this.plugin.settings.customFontName = v;
       await this.plugin.saveSettings();
     }));
-    new import_obsidian30.Setting(el).setName(t2("settings.typography.maxLineLength")).setDesc(t2("settings.typography.maxLineLengthDesc")).addSlider((s) => s.setLimits(55, 80, 1).setValue(this.plugin.settings.maxLineLength).onChange(async (v) => {
+    new import_obsidian27.Setting(el).setName(t2("settings.typography.maxLineLength")).setDesc(t2("settings.typography.maxLineLengthDesc")).addSlider((s) => s.setLimits(55, 80, 1).setValue(this.plugin.settings.maxLineLength).onChange(async (v) => {
       this.plugin.settings.maxLineLength = v;
       await this.plugin.saveSettings();
     }));
-    new import_obsidian30.Setting(el).setName(t2("settings.typography.fontSize")).addText((text) => text.setValue(String(this.plugin.settings.typographyFontSize)).onChange(async (v) => {
+    new import_obsidian27.Setting(el).setName(t2("settings.typography.fontSize")).addText((text) => text.setValue(String(this.plugin.settings.typographyFontSize)).onChange(async (v) => {
       const n = Number(v.trim());
       if (!Number.isInteger(n) || n < 8 || n > 72) return;
       this.plugin.settings.typographyFontSize = n;
       await this.plugin.saveSettings();
     }));
-    new import_obsidian30.Setting(el).setName(t2("settings.typography.lineHeight")).setDesc(t2("settings.typography.lineHeightDesc")).addText((text) => text.setValue(String(this.plugin.settings.lineHeight)).onChange(async (v) => {
+    new import_obsidian27.Setting(el).setName(t2("settings.typography.lineHeight")).setDesc(t2("settings.typography.lineHeightDesc")).addText((text) => text.setValue(String(this.plugin.settings.lineHeight)).onChange(async (v) => {
       this.plugin.settings.lineHeight = parseFloat(v) || 1.7;
       await this.plugin.saveSettings();
     }));
-    new import_obsidian30.Setting(el).setName(t2("settings.typography.letterSpacing")).setDesc(t2("settings.typography.letterSpacingDesc")).addText((text) => text.setValue(this.plugin.settings.letterSpacing).onChange(async (v) => {
+    new import_obsidian27.Setting(el).setName(t2("settings.typography.letterSpacing")).setDesc(t2("settings.typography.letterSpacingDesc")).addText((text) => text.setValue(this.plugin.settings.letterSpacing).onChange(async (v) => {
       this.plugin.settings.letterSpacing = v;
       await this.plugin.saveSettings();
     }));
-    new import_obsidian30.Setting(el).setName(t2("settings.typography.persistAcrossSessions")).setDesc(t2("settings.typography.persistAcrossSessionsDesc")).addToggle((toggle) => toggle.setValue(this.plugin.settings.persistTypography).onChange(async (v) => {
+    new import_obsidian27.Setting(el).setName(t2("settings.typography.persistAcrossSessions")).setDesc(t2("settings.typography.persistAcrossSessionsDesc")).addToggle((toggle) => toggle.setValue(this.plugin.settings.persistTypography).onChange(async (v) => {
       this.plugin.settings.persistTypography = v;
       await this.plugin.saveSettings();
     }));
   }
   renderSprint(el) {
-    new import_obsidian30.Setting(el).setName(t2("settings.sprint.heading")).setHeading();
-    new import_obsidian30.Setting(el).setName(t2("settings.sprint.defaultDuration")).addText((text) => text.setValue(String(this.plugin.settings.defaultSprintDuration)).onChange(async (v) => {
+    new import_obsidian27.Setting(el).setName(t2("settings.sprint.heading")).setHeading();
+    new import_obsidian27.Setting(el).setName(t2("settings.sprint.defaultDuration")).addText((text) => text.setValue(String(this.plugin.settings.defaultSprintDuration)).onChange(async (v) => {
       const n = Number(v.trim());
       if (!Number.isInteger(n) || n < 1 || n > 600) return;
       this.plugin.settings.defaultSprintDuration = n;
       await this.plugin.saveSettings();
     }));
-    new import_obsidian30.Setting(el).setName(t2("settings.sprint.defaultDailyGoal")).addText((text) => text.setValue(String(this.plugin.settings.defaultDailyWordGoal)).onChange(async (v) => {
+    new import_obsidian27.Setting(el).setName(t2("settings.sprint.defaultDailyGoal")).addText((text) => text.setValue(String(this.plugin.settings.defaultDailyWordGoal)).onChange(async (v) => {
       const n = Number(v.trim());
       if (!Number.isInteger(n) || n < 0 || n > 1e6) return;
       this.plugin.settings.defaultDailyWordGoal = n;
       await this.plugin.saveSettings();
     }));
-    new import_obsidian30.Setting(el).setName(t2("settings.sprint.soundNotifications")).setDesc(t2("settings.sprint.soundNotificationsDesc")).addToggle((toggle) => toggle.setValue(this.plugin.settings.soundNotifications).onChange(async (v) => {
+    new import_obsidian27.Setting(el).setName(t2("settings.sprint.soundNotifications")).setDesc(t2("settings.sprint.soundNotificationsDesc")).addToggle((toggle) => toggle.setValue(this.plugin.settings.soundNotifications).onChange(async (v) => {
       this.plugin.settings.soundNotifications = v;
       await this.plugin.saveSettings();
     }));
-    new import_obsidian30.Setting(el).setName(t2("settings.sprint.historyRetention")).addText((text) => text.setValue(String(this.plugin.settings.sprintHistoryRetention)).onChange(async (v) => {
+    new import_obsidian27.Setting(el).setName(t2("settings.sprint.historyRetention")).addText((text) => text.setValue(String(this.plugin.settings.sprintHistoryRetention)).onChange(async (v) => {
       const n = Number(v.trim());
       if (!Number.isInteger(n) || n < 1 || n > 3650) return;
       this.plugin.settings.sprintHistoryRetention = n;
       await this.plugin.saveSettings();
     }));
-    new import_obsidian30.Setting(el).setName(t2("settings.sprint.inlineGoalBanner")).setDesc(t2("settings.sprint.inlineGoalBannerDesc")).addToggle((toggle) => toggle.setValue(this.plugin.settings.inlineGoalBanner).onChange(async (v) => {
+    new import_obsidian27.Setting(el).setName(t2("settings.sprint.inlineGoalBanner")).setDesc(t2("settings.sprint.inlineGoalBannerDesc")).addToggle((toggle) => toggle.setValue(this.plugin.settings.inlineGoalBanner).onChange(async (v) => {
       this.plugin.settings.inlineGoalBanner = v;
       await this.plugin.saveSettings();
     }));
   }
   renderExport(el) {
-    new import_obsidian30.Setting(el).setName(t2("settings.export.heading")).setHeading();
-    new import_obsidian30.Setting(el).setName(t2("settings.export.defaultFormat")).addDropdown((d) => d.addOption("md", t2("settings.export.format.md")).addOption("html", t2("settings.export.format.html")).addOption("manuscript", t2("exportModal.format.manuscript")).addOption("epub", t2("exportModal.format.epub")).addOption("pdf", t2("settings.export.format.pdf")).addOption("docx", t2("settings.export.format.docx")).addOption("rtf", t2("settings.export.format.rtf")).setValue(this.plugin.settings.defaultExportFormat).onChange(async (v) => {
+    new import_obsidian27.Setting(el).setName(t2("settings.export.heading")).setHeading();
+    new import_obsidian27.Setting(el).setName(t2("settings.export.defaultFormat")).addDropdown((d) => d.addOption("md", t2("settings.export.format.md")).addOption("html", t2("settings.export.format.html")).addOption("manuscript", t2("exportModal.format.manuscript")).addOption("epub", t2("exportModal.format.epub")).addOption("pdf", t2("settings.export.format.pdf")).addOption("docx", t2("settings.export.format.docx")).addOption("rtf", t2("settings.export.format.rtf")).setValue(this.plugin.settings.defaultExportFormat).onChange(async (v) => {
       this.plugin.settings.defaultExportFormat = v;
       await this.plugin.saveSettings();
     }));
-    new import_obsidian30.Setting(el).setName(t2("settings.export.defaultPaperSize")).addDropdown((d) => d.addOption("letter", t2("settings.export.paperSize.letter")).addOption("a4", t2("settings.export.paperSize.a4")).setValue(this.plugin.settings.defaultPaperSize).onChange(async (v) => {
+    new import_obsidian27.Setting(el).setName(t2("settings.export.defaultPaperSize")).addDropdown((d) => d.addOption("letter", t2("settings.export.paperSize.letter")).addOption("a4", t2("settings.export.paperSize.a4")).setValue(this.plugin.settings.defaultPaperSize).onChange(async (v) => {
       this.plugin.settings.defaultPaperSize = v;
       await this.plugin.saveSettings();
     }));
-    new import_obsidian30.Setting(el).setName(t2("settings.export.exportFont")).addText((text) => text.setPlaceholder("Georgia").setValue(this.plugin.settings.defaultExportFont).onChange(async (v) => {
+    new import_obsidian27.Setting(el).setName(t2("settings.export.exportFont")).addText((text) => text.setPlaceholder("Georgia").setValue(this.plugin.settings.defaultExportFont).onChange(async (v) => {
       this.plugin.settings.defaultExportFont = v;
       await this.plugin.saveSettings();
     }));
-    new import_obsidian30.Setting(el).setName(t2("settings.export.exportFontSize")).addText((text) => text.setValue(String(this.plugin.settings.defaultExportFontSize)).onChange(async (v) => {
+    new import_obsidian27.Setting(el).setName(t2("settings.export.exportFontSize")).addText((text) => text.setValue(String(this.plugin.settings.defaultExportFontSize)).onChange(async (v) => {
       const n = Number(v.trim());
       if (!Number.isInteger(n) || n < 6 || n > 72) return;
       this.plugin.settings.defaultExportFontSize = n;
       await this.plugin.saveSettings();
     }));
-    new import_obsidian30.Setting(el).setName(t2("settings.export.pandocPath")).setDesc(t2("settings.export.pandocPathDesc")).addText((text) => text.setPlaceholder("Pandoc").setValue(this.plugin.settings.pandocPath).onChange(async (v) => {
+    new import_obsidian27.Setting(el).setName(t2("settings.export.pandocPath")).setDesc(t2("settings.export.pandocPathDesc")).addText((text) => text.setPlaceholder("Pandoc").setValue(this.plugin.settings.pandocPath).onChange(async (v) => {
       this.plugin.settings.pandocPath = v;
       await this.plugin.saveSettings();
     }));
-    new import_obsidian30.Setting(el).setName(t2("settings.export.pdfEngine")).setDesc(t2("settings.export.pdfEngineDesc")).addDropdown((d) => d.addOption("auto", t2("settings.export.pdfEngineAuto")).addOption("xelatex", "xelatex").addOption("lualatex", "lualatex").addOption("pdflatex", "pdflatex").addOption("wkhtmltopdf", "wkhtmltopdf").setValue(this.plugin.settings.pdfEngine).onChange(async (v) => {
+    new import_obsidian27.Setting(el).setName(t2("settings.export.pdfEngine")).setDesc(t2("settings.export.pdfEngineDesc")).addDropdown((d) => d.addOption("auto", t2("settings.export.pdfEngineAuto")).addOption("xelatex", "xelatex").addOption("lualatex", "lualatex").addOption("pdflatex", "pdflatex").addOption("wkhtmltopdf", "wkhtmltopdf").setValue(this.plugin.settings.pdfEngine).onChange(async (v) => {
       this.plugin.settings.pdfEngine = v;
       await this.plugin.saveSettings();
     }));
-    new import_obsidian30.Setting(el).setName(t2("settings.export.epubHeading")).setHeading();
-    new import_obsidian30.Setting(el).setName(t2("settings.export.epubLanguage")).setDesc(t2("settings.export.epubLanguageDesc")).addText((text) => text.setPlaceholder("en").setValue(this.plugin.settings.epubLanguage).onChange(async (v) => {
+    new import_obsidian27.Setting(el).setName(t2("settings.export.epubHeading")).setHeading();
+    new import_obsidian27.Setting(el).setName(t2("settings.export.epubLanguage")).setDesc(t2("settings.export.epubLanguageDesc")).addText((text) => text.setPlaceholder("en").setValue(this.plugin.settings.epubLanguage).onChange(async (v) => {
       this.plugin.settings.epubLanguage = v.trim() || "en";
       await this.plugin.saveSettings();
     }));
-    new import_obsidian30.Setting(el).setName(t2("settings.export.includeCover")).setDesc(t2("settings.export.includeCoverDesc")).addToggle((toggle) => toggle.setValue(this.plugin.settings.epubIncludeCover).onChange(async (v) => {
+    new import_obsidian27.Setting(el).setName(t2("settings.export.includeCover")).setDesc(t2("settings.export.includeCoverDesc")).addToggle((toggle) => toggle.setValue(this.plugin.settings.epubIncludeCover).onChange(async (v) => {
       this.plugin.settings.epubIncludeCover = v;
       await this.plugin.saveSettings();
     }));
   }
   renderLog(el) {
-    new import_obsidian30.Setting(el).setName(t2("settings.log.heading")).setHeading();
-    new import_obsidian30.Setting(el).setName(t2("settings.log.appendToDailyNote")).setDesc(t2("settings.log.appendToDailyNoteDesc")).addToggle((toggle) => toggle.setValue(this.plugin.settings.appendToDailyNote).onChange(async (v) => {
+    new import_obsidian27.Setting(el).setName(t2("settings.log.heading")).setHeading();
+    new import_obsidian27.Setting(el).setName(t2("settings.log.appendToDailyNote")).setDesc(t2("settings.log.appendToDailyNoteDesc")).addToggle((toggle) => toggle.setValue(this.plugin.settings.appendToDailyNote).onChange(async (v) => {
       this.plugin.settings.appendToDailyNote = v;
       await this.plugin.saveSettings();
     }));
   }
   renderWordPress(el) {
-    new import_obsidian30.Setting(el).setName(t2("settings.wordpress.sitesHeading")).setHeading();
+    new import_obsidian27.Setting(el).setName(t2("settings.wordpress.sitesHeading")).setHeading();
     const sites = this.plugin.settings.wordPressSites;
     for (let i2 = 0; i2 < sites.length; i2++) {
       this.renderSiteConfig(el, sites[i2], i2);
     }
-    new import_obsidian30.Setting(el).addButton((b) => b.setButtonText(t2("settings.wordpress.addSite")).onClick(async () => {
+    new import_obsidian27.Setting(el).addButton((b) => b.setButtonText(t2("settings.wordpress.addSite")).onClick(async () => {
       this.plugin.settings.wordPressSites.push({
         id: `site-${Date.now()}`,
         nickname: t2("settings.wordpress.newSiteName"),
@@ -20456,8 +18375,8 @@ var WritingStudioSettingsTab = class extends import_obsidian30.PluginSettingTab 
         this.renderWordPress(contentEl);
       }
     }));
-    new import_obsidian30.Setting(el).setName(t2("settings.wordpress.wikilinksHeading")).setHeading();
-    new import_obsidian30.Setting(el).setName(t2("settings.wordpress.defaultWikilinkHandling")).addDropdown((d) => d.addOption("strip", t2("settings.wordpress.wikilinkStrip")).addOption("convert", t2("settings.wordpress.wikilinkConvert")).setValue(this.plugin.settings.wikilinkHandling).onChange(async (v) => {
+    new import_obsidian27.Setting(el).setName(t2("settings.wordpress.wikilinksHeading")).setHeading();
+    new import_obsidian27.Setting(el).setName(t2("settings.wordpress.defaultWikilinkHandling")).addDropdown((d) => d.addOption("strip", t2("settings.wordpress.wikilinkStrip")).addOption("convert", t2("settings.wordpress.wikilinkConvert")).setValue(this.plugin.settings.wikilinkHandling).onChange(async (v) => {
       this.plugin.settings.wikilinkHandling = v;
       await this.plugin.saveSettings();
     }));
@@ -20465,35 +18384,35 @@ var WritingStudioSettingsTab = class extends import_obsidian30.PluginSettingTab 
   renderSiteConfig(container, site, index) {
     const siteEl = container.createDiv("ws-wp-site-config");
     const heading = t2("settings.wordpress.siteHeading", { nickname: site.nickname || t2("settings.wordpress.siteUnnamed") });
-    new import_obsidian30.Setting(siteEl).setName(heading).setHeading();
-    new import_obsidian30.Setting(siteEl).setName(t2("settings.wordpress.nickname")).addText((text) => text.setValue(site.nickname).onChange(async (v) => {
+    new import_obsidian27.Setting(siteEl).setName(heading).setHeading();
+    new import_obsidian27.Setting(siteEl).setName(t2("settings.wordpress.nickname")).addText((text) => text.setValue(site.nickname).onChange(async (v) => {
       site.nickname = v;
       await this.plugin.saveSettings();
     }));
-    new import_obsidian30.Setting(siteEl).setName(t2("settings.wordpress.siteUrl")).addText((text) => text.setPlaceholder("https://example.com").setValue(site.url).onChange(async (v) => {
+    new import_obsidian27.Setting(siteEl).setName(t2("settings.wordpress.siteUrl")).addText((text) => text.setPlaceholder("https://example.com").setValue(site.url).onChange(async (v) => {
       site.url = v;
       await this.plugin.saveSettings();
     }));
-    new import_obsidian30.Setting(siteEl).setName(t2("settings.wordpress.username")).addText((text) => text.setValue(site.username).onChange(async (v) => {
+    new import_obsidian27.Setting(siteEl).setName(t2("settings.wordpress.username")).addText((text) => text.setValue(site.username).onChange(async (v) => {
       site.username = v;
       await this.plugin.saveSettings();
     }));
-    new import_obsidian30.Setting(siteEl).setName(t2("settings.wordpress.appPassword")).setDesc(t2("settings.wordpress.appPasswordDesc")).addText((text) => {
+    new import_obsidian27.Setting(siteEl).setName(t2("settings.wordpress.appPassword")).setDesc(t2("settings.wordpress.appPasswordDesc")).addText((text) => {
       text.inputEl.type = "password";
       text.setValue(site.appPassword).onChange(async (v) => {
         site.appPassword = v;
         await this.plugin.saveSettings();
       });
     });
-    new import_obsidian30.Setting(siteEl).setName(t2("settings.wordpress.defaultPostStatus")).addDropdown((d) => d.addOption("draft", t2("settings.wordpress.postStatus.draft")).addOption("pending", t2("settings.wordpress.postStatus.pending")).addOption("publish", t2("settings.wordpress.postStatus.publish")).setValue(site.defaultStatus).onChange(async (v) => {
+    new import_obsidian27.Setting(siteEl).setName(t2("settings.wordpress.defaultPostStatus")).addDropdown((d) => d.addOption("draft", t2("settings.wordpress.postStatus.draft")).addOption("pending", t2("settings.wordpress.postStatus.pending")).addOption("publish", t2("settings.wordpress.postStatus.publish")).setValue(site.defaultStatus).onChange(async (v) => {
       site.defaultStatus = v;
       await this.plugin.saveSettings();
     }));
-    new import_obsidian30.Setting(siteEl).setName(t2("settings.wordpress.wikilinkHandling")).addDropdown((d) => d.addOption("strip", t2("settings.wordpress.wikilinkHandlingStrip")).addOption("convert", t2("settings.wordpress.wikilinkHandlingConvert")).setValue(site.wikilinkHandling).onChange(async (v) => {
+    new import_obsidian27.Setting(siteEl).setName(t2("settings.wordpress.wikilinkHandling")).addDropdown((d) => d.addOption("strip", t2("settings.wordpress.wikilinkHandlingStrip")).addOption("convert", t2("settings.wordpress.wikilinkHandlingConvert")).setValue(site.wikilinkHandling).onChange(async (v) => {
       site.wikilinkHandling = v;
       await this.plugin.saveSettings();
     }));
-    const testRow = new import_obsidian30.Setting(siteEl).setName(t2("settings.wordpress.testConnection")).setDesc(t2("settings.wordpress.testConnectionDesc"));
+    const testRow = new import_obsidian27.Setting(siteEl).setName(t2("settings.wordpress.testConnection")).setDesc(t2("settings.wordpress.testConnectionDesc"));
     const statusEl = siteEl.createDiv("ws-wp-test-status");
     testRow.addButton((b) => b.setButtonText(t2("settings.wordpress.testConnection")).onClick(async () => {
       statusEl.textContent = t2("settings.wordpress.testing");
@@ -20502,7 +18421,7 @@ var WritingStudioSettingsTab = class extends import_obsidian30.PluginSettingTab 
       statusEl.textContent = result.message;
       statusEl.className = `ws-wp-test-status ${result.success ? "ws-wp-test-ok" : "ws-wp-test-err"}`;
     }));
-    new import_obsidian30.Setting(siteEl).addButton((b) => {
+    new import_obsidian27.Setting(siteEl).addButton((b) => {
       b.setButtonText(t2("settings.wordpress.removeSite"));
       b.buttonEl.addClass("mod-warning");
       b.onClick(async () => {
@@ -20517,10 +18436,10 @@ var WritingStudioSettingsTab = class extends import_obsidian30.PluginSettingTab 
     });
   }
   async renderHelp(el) {
-    this.helpComponent = new import_obsidian30.Component();
+    this.helpComponent = new import_obsidian27.Component();
     this.helpComponent.load();
     el.addClass("ws-help-content");
-    await import_obsidian30.MarkdownRenderer.render(this.app, HELP_CONTENT, el, "", this.helpComponent);
+    await import_obsidian27.MarkdownRenderer.render(this.app, HELP_CONTENT, el, "", this.helpComponent);
     const supportDiv = el.createDiv({ cls: "ws-support-footer" });
     supportDiv.createEl("a", {
       href: "https://buymeacoffee.com/writerp777",
@@ -20536,9 +18455,9 @@ var WritingStudioSettingsTab = class extends import_obsidian30.PluginSettingTab 
 };
 
 // src/WritingLogView.ts
-var import_obsidian31 = require("obsidian");
+var import_obsidian28 = require("obsidian");
 var WRITING_LOG_VIEW_TYPE = "writing-studio-writing-log";
-var WritingLogView = class extends import_obsidian31.ItemView {
+var WritingLogView = class extends import_obsidian28.ItemView {
   constructor(leaf, plugin) {
     super(leaf);
     this.plugin = plugin;
@@ -20565,7 +18484,7 @@ var WritingLogView = class extends import_obsidian31.ItemView {
     const root = this.containerEl.children[1];
     root.empty();
     root.addClass("ws-log-root");
-    const lang = (0, import_obsidian31.getLanguage)();
+    const lang = (0, import_obsidian28.getLanguage)();
     const header = root.createDiv("ws-log-header");
     header.createDiv({ text: t2("log.title"), cls: "ws-log-title" });
     header.createDiv({
@@ -20706,7 +18625,6 @@ var COMMAND_SPECS = [
   { id: "open-folder-sidebar", nameKey: "main.cmd.openFolderSidebar", run: (p) => {
     p.openFolderPicker();
   } },
-  { id: "add-files-to-binder", nameKey: "main.cmd.addFilesToBinder", run: (p) => p.addFilesToBinder() },
   { id: "restore-binder-layout", nameKey: "main.cmd.restoreBinderLayout", run: (p) => p.restoreBinderLayout() }
 ];
 function registerCommands(plugin) {
@@ -20790,7 +18708,7 @@ var StatusBar = class {
 };
 
 // src/GoalBanner.ts
-var import_obsidian32 = require("obsidian");
+var import_obsidian29 = require("obsidian");
 var GoalBanner = class {
   constructor(plugin) {
     this.generation = 0;
@@ -20816,10 +18734,10 @@ var GoalBanner = class {
     const leaf = this.plugin.app.workspace.getMostRecentLeaf();
     if (!leaf) return;
     const view = leaf.view;
-    if (!(view instanceof import_obsidian32.MarkdownView)) return;
+    if (!(view instanceof import_obsidian29.MarkdownView)) return;
     const file = view.file;
     if (!file) return;
-    const goal = await this.plugin.projectManager.getWordCountGoalForFile(file);
+    const goal = this.plugin.projectManager.getWordCountGoalForFile(file);
     if (gen !== this.generation) return;
     if (!goal || goal <= 0) return;
     this.currentGoal = goal;
@@ -20845,18 +18763,18 @@ var GoalBanner = class {
 };
 
 // src/VaultFiles.ts
-var import_obsidian33 = require("obsidian");
+var import_obsidian30 = require("obsidian");
 var ObsidianVaultFiles = class {
   constructor(app) {
     this.app = app;
   }
   async readText(path) {
     const file = this.app.vault.getAbstractFileByPath(path);
-    return file instanceof import_obsidian33.TFile ? this.app.vault.read(file) : null;
+    return file instanceof import_obsidian30.TFile ? this.app.vault.read(file) : null;
   }
   async writeText(path, content2) {
     const existing = this.app.vault.getAbstractFileByPath(path);
-    if (existing instanceof import_obsidian33.TFile) {
+    if (existing instanceof import_obsidian30.TFile) {
       await this.app.vault.modify(existing, content2);
     } else {
       await this.app.vault.create(path, content2);
@@ -20864,18 +18782,18 @@ var ObsidianVaultFiles = class {
   }
   async readBinary(path) {
     const file = this.app.vault.getAbstractFileByPath(path);
-    return file instanceof import_obsidian33.TFile ? this.app.vault.readBinary(file) : null;
+    return file instanceof import_obsidian30.TFile ? this.app.vault.readBinary(file) : null;
   }
   async writeBinary(path, data) {
     const existing = this.app.vault.getAbstractFileByPath(path);
-    if (existing instanceof import_obsidian33.TFile) {
+    if (existing instanceof import_obsidian30.TFile) {
       await this.app.vault.modifyBinary(existing, data);
     } else {
       await this.app.vault.createBinary(path, data);
     }
   }
   async remove(path) {
-    if (this.app.vault.getAbstractFileByPath(path) instanceof import_obsidian33.TFile) {
+    if (this.app.vault.getAbstractFileByPath(path) instanceof import_obsidian30.TFile) {
       await this.app.vault.adapter.remove(path);
     }
   }
@@ -20889,18 +18807,18 @@ var ObsidianVaultFiles = class {
   }
   listSubfolders(path) {
     const folder = this.app.vault.getAbstractFileByPath(path);
-    if (!(folder instanceof import_obsidian33.TFolder)) return [];
-    return folder.children.filter((c) => c instanceof import_obsidian33.TFolder).map((c) => c.path);
+    if (!(folder instanceof import_obsidian30.TFolder)) return [];
+    return folder.children.filter((c) => c instanceof import_obsidian30.TFolder).map((c) => c.path);
   }
   absolutePath(path) {
     const adapter = this.app.vault.adapter;
-    return adapter instanceof import_obsidian33.FileSystemAdapter ? adapter.getFullPath(path) : path;
+    return adapter instanceof import_obsidian30.FileSystemAdapter ? adapter.getFullPath(path) : path;
   }
 };
 
 // src/StudioEvents.ts
-var import_obsidian34 = require("obsidian");
-var StudioEvents = class extends import_obsidian34.Events {
+var import_obsidian31 = require("obsidian");
+var StudioEvents = class extends import_obsidian31.Events {
   onModeChanged(cb) {
     return this.on("mode-changed", (...data) => {
       cb(data[0]);
@@ -20936,7 +18854,7 @@ var StudioEvents = class extends import_obsidian34.Events {
 };
 
 // src/carryOverBridge.ts
-var import_obsidian35 = require("obsidian");
+var import_obsidian33 = require("obsidian");
 
 // src/carryOver.ts
 function parseLegacyBinder(content2) {
@@ -21295,16 +19213,35 @@ async function runRestorePass(compute, io) {
   return result;
 }
 
+// modals/BinderUpdateModal.ts
+var import_obsidian32 = require("obsidian");
+var BinderUpdateModal = class extends import_obsidian32.Modal {
+  onOpen() {
+    const { contentEl } = this;
+    contentEl.empty();
+    contentEl.addClass("ws-binder-update-modal");
+    contentEl.createEl("h2", { text: t2("binderUpdate.title") });
+    contentEl.createEl("p", { text: t2("binderUpdate.body1") });
+    contentEl.createEl("p", { text: t2("binderUpdate.body2") });
+    contentEl.createEl("p", { text: t2("binderUpdate.body3") });
+    const btnRow = contentEl.createDiv("ws-modal-btn-row");
+    btnRow.createEl("button", { cls: "mod-cta", text: t2("binderUpdate.gotIt") }).onclick = () => this.close();
+  }
+  onClose() {
+    this.contentEl.empty();
+  }
+};
+
 // src/carryOverBridge.ts
 function buildDiskState(app) {
-  const at = (path) => app.vault.getAbstractFileByPath((0, import_obsidian35.normalizePath)(path));
+  const at = (path) => app.vault.getAbstractFileByPath((0, import_obsidian33.normalizePath)(path));
   return {
-    fileExists: (path) => at(path) instanceof import_obsidian35.TFile,
-    folderExists: (path) => at(path) instanceof import_obsidian35.TFolder,
+    fileExists: (path) => at(path) instanceof import_obsidian33.TFile,
+    folderExists: (path) => at(path) instanceof import_obsidian33.TFolder,
     subfolderNames: (parentPath2) => {
       const folder = at(parentPath2);
-      if (!(folder instanceof import_obsidian35.TFolder)) return [];
-      return folder.children.filter((c) => c instanceof import_obsidian35.TFolder).map((c) => c.name);
+      if (!(folder instanceof import_obsidian33.TFolder)) return [];
+      return folder.children.filter((c) => c instanceof import_obsidian33.TFolder).map((c) => c.name);
     },
     // The metadata cache can be cold right after vault open; a key it has
     // not indexed yet merely plans as "will write" — the processFrontMatter
@@ -21312,7 +19249,7 @@ function buildDiskState(app) {
     frontmatter: (path) => {
       var _a2, _b2;
       const file = at(path);
-      if (!(file instanceof import_obsidian35.TFile)) return null;
+      if (!(file instanceof import_obsidian33.TFile)) return null;
       return (_b2 = (_a2 = app.metadataCache.getFileCache(file)) == null ? void 0 : _a2.frontmatter) != null ? _b2 : null;
     }
   };
@@ -21320,23 +19257,23 @@ function buildDiskState(app) {
 function obsidianIO(app) {
   return {
     createFolder: async (path) => {
-      await app.vault.createFolder((0, import_obsidian35.normalizePath)(path));
+      await app.vault.createFolder((0, import_obsidian33.normalizePath)(path));
     },
     rename: async (fromPath, toPath) => {
-      const file = app.vault.getAbstractFileByPath((0, import_obsidian35.normalizePath)(fromPath));
+      const file = app.vault.getAbstractFileByPath((0, import_obsidian33.normalizePath)(fromPath));
       if (!file) throw new Error(`not found: ${fromPath}`);
-      await app.fileManager.renameFile(file, (0, import_obsidian35.normalizePath)(toPath));
+      await app.fileManager.renameFile(file, (0, import_obsidian33.normalizePath)(toPath));
     },
     writeFrontmatter: async (path, mutate) => {
-      const file = app.vault.getAbstractFileByPath((0, import_obsidian35.normalizePath)(path));
-      if (!(file instanceof import_obsidian35.TFile)) throw new Error(`not found: ${path}`);
+      const file = app.vault.getAbstractFileByPath((0, import_obsidian33.normalizePath)(path));
+      if (!(file instanceof import_obsidian33.TFile)) throw new Error(`not found: ${path}`);
       await app.fileManager.processFrontMatter(file, mutate);
     }
   };
 }
 async function readLegacyBinder(app, project) {
-  const file = app.vault.getAbstractFileByPath((0, import_obsidian35.normalizePath)(`${project.folderPath}/_binder.json`));
-  if (!(file instanceof import_obsidian35.TFile)) return null;
+  const file = app.vault.getAbstractFileByPath((0, import_obsidian33.normalizePath)(`${project.folderPath}/_binder.json`));
+  if (!(file instanceof import_obsidian33.TFile)) return null;
   return parseLegacyBinder(await app.vault.cachedRead(file));
 }
 function describeReason(reason) {
@@ -21363,7 +19300,7 @@ async function updateFailureLedger(plugin, project, failures) {
     entry.count += 1;
     console.warn(`Writing Studio migration: ${f.kind} failed for ${f.name} \u2014 ${f.reason}`);
     if (entry.count >= 2 && !entry.noticed) {
-      new import_obsidian35.Notice(t2(failureNoticeKey(f.kind), { name: f.name, reason: describeReason(f.reason) }));
+      new import_obsidian33.Notice(t2(failureNoticeKey(f.kind), { name: f.name, reason: describeReason(f.reason) }));
       entry.noticed = true;
     }
     ledger[sig] = entry;
@@ -21379,9 +19316,8 @@ async function updateFailureLedger(plugin, project, failures) {
 }
 var inFlight = /* @__PURE__ */ new Set();
 async function runSilentMigration(plugin) {
-  if (!plugin.settings.filesystemBinder) return;
   const project = plugin.projectManager.getActiveProject();
-  if (!project || inFlight.has(project.id)) return;
+  if (!project || project.binderLayoutRestored || inFlight.has(project.id)) return;
   const legacy = await readLegacyBinder(plugin.app, project);
   if (!legacy) return;
   const compute = () => {
@@ -21393,20 +19329,25 @@ async function runSilentMigration(plugin) {
   try {
     const result = await runMigrationPass(compute, obsidianIO(plugin.app));
     await updateFailureLedger(plugin, project, result.failures);
+    if (!plugin.settings.binderUpdateNoticeSeen) {
+      plugin.settings.binderUpdateNoticeSeen = true;
+      await plugin.saveSettings();
+      new BinderUpdateModal(plugin.app).open();
+    }
   } finally {
     inFlight.delete(project.id);
   }
 }
 async function runRestoreLayout(plugin) {
   const project = plugin.projectManager.getActiveProject();
-  if (!plugin.settings.filesystemBinder || !project) {
-    new import_obsidian35.Notice(t2("binder.migration.restoreUnavailable"));
+  if (!project) {
+    new import_obsidian33.Notice(t2("binder.migration.restoreUnavailable"));
     return;
   }
   if (inFlight.has(project.id)) return;
   const legacy = await readLegacyBinder(plugin.app, project);
   if (!legacy) {
-    new import_obsidian35.Notice(t2("binder.migration.restoreNothing"));
+    new import_obsidian33.Notice(t2("binder.migration.restoreNothing"));
     return;
   }
   const compute = () => {
@@ -21414,63 +19355,199 @@ async function runRestoreLayout(plugin) {
     return { plan: planRestore(legacy.items, project.folderPath, disk), disk };
   };
   if (!restoreHasWork(compute().plan)) {
-    new import_obsidian35.Notice(t2("binder.migration.restoreNothing"));
+    new import_obsidian33.Notice(t2("binder.migration.restoreNothing"));
     return;
   }
   inFlight.add(project.id);
   try {
     const result = await runRestorePass(compute, obsidianIO(plugin.app));
+    project.binderLayoutRestored = true;
+    await plugin.projectManager.saveProject(project);
     for (const f of result.failures) {
       console.warn(`Writing Studio restore: failed for ${f.name} \u2014 ${f.reason}`);
     }
     const leftBehind = result.skipped + result.failures.length;
-    new import_obsidian35.Notice(leftBehind > 0 ? t2("binder.migration.restorePartial", { count: leftBehind }) : t2("binder.migration.restoreDone"));
+    new import_obsidian33.Notice(leftBehind > 0 ? t2("binder.migration.restorePartial", { count: leftBehind }) : t2("binder.migration.restoreDone"));
   } finally {
     inFlight.delete(project.id);
   }
 }
 
-// modals/AddToProjectModal.ts
-var import_obsidian36 = require("obsidian");
-var AddToProjectModal = class extends import_obsidian36.Modal {
-  constructor(app, plugin, file, onConfirm) {
+// modals/PublishModal.ts
+var import_obsidian34 = require("obsidian");
+var PublishModal = class extends import_obsidian34.Modal {
+  constructor(app, plugin, filePath) {
     super(app);
-    this.selectedProjectId = "";
+    this.selectedSiteId = "";
+    this.postTitle = "";
+    this.postStatus = "draft";
+    this.selectedCategoryIds = [];
+    this.tags = [];
+    this.excerpt = "";
+    this.scheduledDate = "";
+    this.categories = [];
     this.plugin = plugin;
-    this.file = file;
-    this.onConfirm = onConfirm;
+    this.filePath = filePath;
   }
-  onOpen() {
+  async onOpen() {
     const { contentEl } = this;
     contentEl.empty();
-    contentEl.addClass("ws-add-to-project-modal");
-    contentEl.createEl("h2", { text: t2("addToProject.title") });
-    const projects = this.plugin.projectManager.getProjects();
-    if (projects.length === 0) {
-      contentEl.createEl("p", { text: t2("addToProject.noProjects"), cls: "ws-empty-state" });
-      const closeBtn = contentEl.createEl("button", { text: t2("addToProject.close") });
-      closeBtn.onclick = () => this.close();
+    contentEl.addClass("ws-publish-modal");
+    contentEl.createEl("h2", { text: t2("publishModal.title") });
+    const sites = this.plugin.settings.wordPressSites;
+    if (sites.length === 0) {
+      contentEl.createEl("p", {
+        text: t2("publishModal.noSites"),
+        cls: "ws-empty-state"
+      });
+      contentEl.createEl("button", { text: t2("publishModal.close") }).onclick = () => this.close();
       return;
     }
-    this.selectedProjectId = projects[0].id;
-    contentEl.createEl("p", { text: t2("addToProject.file", { path: this.file.path }), cls: "ws-add-to-project-path" });
-    new import_obsidian36.Setting(contentEl).setName(t2("addToProject.projectName")).setDesc(t2("addToProject.projectDesc")).addDropdown((d) => {
-      projects.forEach((p) => {
-        d.addOption(p.id, p.title);
+    this.loadExistingMeta();
+    new import_obsidian34.Setting(contentEl).setName(t2("publishModal.siteName")).addDropdown((d) => {
+      sites.forEach((s) => {
+        d.addOption(s.id, s.nickname || s.url);
       });
-      d.setValue(this.selectedProjectId);
+      if (this.selectedSiteId) d.setValue(this.selectedSiteId);
+      else {
+        this.selectedSiteId = sites[0].id;
+        d.setValue(this.selectedSiteId);
+      }
       d.onChange((v) => {
-        this.selectedProjectId = v;
+        this.selectedSiteId = v;
+        void this.loadCategories().then(() => this.render());
       });
     });
+    new import_obsidian34.Setting(contentEl).setName(t2("publishModal.postTitleName")).addText((tx) => tx.setValue(this.postTitle).onChange((v) => {
+      this.postTitle = v;
+    }));
+    new import_obsidian34.Setting(contentEl).setName(t2("publishModal.postStatusName")).addDropdown((d) => d.addOption("draft", t2("publishModal.postStatus.draft")).addOption("pending", t2("publishModal.postStatus.pending")).addOption("publish", t2("publishModal.postStatus.publish")).setValue(this.postStatus).onChange((v) => {
+      this.postStatus = v;
+    }));
+    const site = this.getSite();
+    if (site) {
+      this.categories = await this.plugin.wpClient.getCategories(site);
+    }
+    if (this.categories.length > 0) {
+      new import_obsidian34.Setting(contentEl).setName(t2("publishModal.categoryName"));
+      const catList = contentEl.createDiv("ws-publish-categories");
+      for (const cat of this.categories) {
+        const label = catList.createEl("label", { cls: "ws-publish-cat-label" });
+        const cb = label.createEl("input", { type: "checkbox" });
+        cb.checked = this.selectedCategoryIds.includes(cat.id);
+        cb.onchange = () => {
+          if (cb.checked) {
+            if (!this.selectedCategoryIds.includes(cat.id)) this.selectedCategoryIds.push(cat.id);
+          } else {
+            this.selectedCategoryIds = this.selectedCategoryIds.filter((id) => id !== cat.id);
+          }
+        };
+        label.createSpan({ text: ` ${cat.name} (${cat.count})` });
+      }
+    }
+    new import_obsidian34.Setting(contentEl).setName(t2("publishModal.tagsName")).setDesc(t2("publishModal.tagsDesc")).addText((tx) => tx.setValue(this.tags.join(", ")).onChange((v) => {
+      this.tags = v.split(",").map((s) => s.trim()).filter(Boolean);
+    }));
+    new import_obsidian34.Setting(contentEl).setName(t2("publishModal.excerptName")).addTextArea((tx) => tx.setValue(this.excerpt).onChange((v) => {
+      this.excerpt = v;
+    }));
+    new import_obsidian34.Setting(contentEl).setName(t2("publishModal.scheduleName")).setDesc(t2("publishModal.scheduleDesc")).addText((tx) => tx.setPlaceholder(t2("publishModal.schedulePlaceholder")).setValue(this.scheduledDate).onChange((v) => {
+      this.scheduledDate = v;
+    }));
+    if (this.existingPostId) {
+      const noticeEl = contentEl.createDiv("ws-publish-existing-notice");
+      noticeEl.createSpan({ text: t2("publishModal.existingNotice", { id: this.existingPostId }) });
+      const choiceRow = noticeEl.createDiv("ws-publish-choice");
+      const updateBtn = choiceRow.createEl("button", { text: t2("publishModal.updatePost"), cls: "mod-cta" });
+      updateBtn.onclick = () => {
+        void this.doPublish(true);
+      };
+      const newBtn = choiceRow.createEl("button", { text: t2("publishModal.newPost") });
+      newBtn.onclick = () => {
+        void this.doPublish(false);
+      };
+    }
     const btnRow = contentEl.createDiv("ws-modal-btn-row");
-    const addBtn = btnRow.createEl("button", { cls: "mod-cta", text: t2("addToProject.addBtn") });
-    addBtn.onclick = () => {
-      void this.onConfirm(this.selectedProjectId);
-      this.close();
-    };
-    const cancelBtn = btnRow.createEl("button", { text: t2("addToProject.cancel") });
+    if (!this.existingPostId) {
+      const publishBtn = btnRow.createEl("button", {
+        cls: "mod-cta",
+        text: this.scheduledDate ? t2("publishModal.schedule") : t2("publishModal.publish")
+      });
+      publishBtn.onclick = () => {
+        void this.doPublish(false);
+      };
+    }
+    const cancelBtn = btnRow.createEl("button", { text: t2("publishModal.cancel") });
     cancelBtn.onclick = () => this.close();
+  }
+  render() {
+    void this.onOpen();
+  }
+  loadExistingMeta() {
+    var _a2;
+    const file = this.app.vault.getAbstractFileByPath(this.filePath);
+    if (!(file instanceof import_obsidian34.TFile)) return;
+    const fm = (_a2 = this.app.metadataCache.getFileCache(file)) == null ? void 0 : _a2.frontmatter;
+    if (fm) {
+      this.postTitle = fm["title"] || file.basename;
+      if (fm["wp-post-id"]) this.existingPostId = Number(fm["wp-post-id"]);
+      if (fm["wp-status"]) this.postStatus = fm["wp-status"];
+      if (fm["tags"] && Array.isArray(fm["tags"])) {
+        this.tags = fm["tags"].filter((tag) => tag !== "writing-studio");
+      }
+      if (fm["wp-site"]) {
+        const site = this.plugin.settings.wordPressSites.find((s) => s.nickname === fm["wp-site"]);
+        if (site) this.selectedSiteId = site.id;
+      }
+    }
+  }
+  async loadCategories() {
+    const site = this.getSite();
+    if (!site) return;
+    this.categories = await this.plugin.wpClient.getCategories(site);
+  }
+  getSite() {
+    return this.plugin.settings.wordPressSites.find((s) => s.id === this.selectedSiteId);
+  }
+  async doPublish(updateExisting) {
+    const site = this.getSite();
+    if (!site) {
+      new import_obsidian34.Notice(t2("publishModal.noSiteSelected"));
+      return;
+    }
+    const file = this.app.vault.getAbstractFileByPath(this.filePath);
+    if (!(file instanceof import_obsidian34.TFile)) {
+      new import_obsidian34.Notice(t2("publishModal.fileNotFound"));
+      return;
+    }
+    try {
+      const rawContent = await this.app.vault.read(file);
+      const htmlContent = this.plugin.wpClient.convertMarkdownToHtml(rawContent, site);
+      const result = await this.plugin.wpClient.publish(site, {
+        title: this.postTitle,
+        content: htmlContent,
+        status: this.postStatus,
+        categoryIds: this.selectedCategoryIds,
+        tags: this.tags,
+        excerpt: this.excerpt,
+        scheduledDate: this.scheduledDate || void 0,
+        existingPostId: updateExisting ? this.existingPostId : void 0
+      });
+      await this.app.fileManager.processFrontMatter(file, (fm) => {
+        var _a2;
+        fm["wp-site"] = site.nickname;
+        fm["wp-post-id"] = result.postId;
+        fm["wp-url"] = result.url;
+        fm["wp-status"] = result.status;
+        fm["wp-published"] = result.scheduledDate ? null : localDateString();
+        fm["wp-scheduled"] = (_a2 = result.scheduledDate) != null ? _a2 : null;
+      });
+      const action = this.scheduledDate ? t2("publishModal.scheduled") : t2("publishModal.published");
+      new import_obsidian34.Notice(t2("publishModal.actionNotice", { action, url: result.url }), 1e4);
+      this.close();
+    } catch (e) {
+      new import_obsidian34.Notice(t2("publishModal.publishFailed", { error: e instanceof Error ? e.message : String(e) }));
+    }
   }
   onClose() {
     this.contentEl.empty();
@@ -21528,14 +19605,14 @@ var DEFAULT_SETTINGS = {
   epubIncludeCover: true,
   wordPressSites: [],
   wikilinkHandling: "strip",
-  filesystemBinder: false,
   binderDrawer: {},
+  binderUpdateNoticeSeen: false,
   carryOverFailures: {},
   activeProjectId: null,
   currentWritingMode: "none",
   removedProjectIds: []
 };
-var WritingStudioPlugin = class extends import_obsidian37.Plugin {
+var WritingStudioPlugin = class extends import_obsidian35.Plugin {
   constructor() {
     super(...arguments);
     this.wordCountUpdateTimer = null;
@@ -21551,7 +19628,10 @@ var WritingStudioPlugin = class extends import_obsidian37.Plugin {
     this.fmManager = new FrontmatterManager(this);
     this.projectManager = new ProjectManager(this, this.vaultFiles);
     this.statsTracker = new StatsTracker(this);
-    this.registerEvent(this.projectManager.onBinderChanged(() => {
+    this.registerEvent(this.app.vault.on("create", () => {
+      this.statsTracker.invalidateWordCountCache();
+    }));
+    this.registerEvent(this.app.vault.on("delete", () => {
       this.statsTracker.invalidateWordCountCache();
     }));
     this.registerEvent(this.projectManager.onProjectsChanged(() => {
@@ -21570,7 +19650,7 @@ var WritingStudioPlugin = class extends import_obsidian37.Plugin {
     this.goalBanner = new GoalBanner(this);
     this.registerEditorExtension(this.focusMode.getEditorExtension());
     this.registerView(LAUNCHER_VIEW_TYPE, (leaf) => new LauncherView(leaf, this));
-    this.registerView(BINDER_VIEW_TYPE, (leaf) => this.settings.filesystemBinder ? new FilesystemBinderView(leaf, this) : new BinderView(leaf, this));
+    this.registerView(BINDER_VIEW_TYPE, (leaf) => new FilesystemBinderView(leaf, this));
     this.registerView(COMPILE_PREVIEW_VIEW_TYPE, (leaf) => new CompilePreviewView(leaf, this));
     this.registerView(FOLDER_SIDEBAR_VIEW_TYPE, (leaf) => new FolderSidebarView(leaf));
     this.registerView(WRITING_LOG_VIEW_TYPE, (leaf) => new WritingLogView(leaf, this));
@@ -21605,15 +19685,7 @@ var WritingStudioPlugin = class extends import_obsidian37.Plugin {
     );
     this.registerEvent(
       this.app.workspace.on("file-menu", (menu, file) => {
-        if (file instanceof import_obsidian37.TFile && file.extension === "md") {
-          menu.addItem((i2) => i2.setTitle(t2("main.menu.studioOptions")).setSection("writing-studio").setDisabled(true));
-          menu.addItem(
-            (i2) => i2.setTitle(t2("main.menu.addToProject")).setIcon("book-open").setSection("writing-studio").onClick(() => {
-              void this.addFileToProject(file);
-            })
-          );
-        }
-        if (file instanceof import_obsidian37.TFolder) {
+        if (file instanceof import_obsidian35.TFolder) {
           menu.addItem((i2) => i2.setTitle(t2("main.menu.studioOptions")).setSection("writing-studio").setDisabled(true));
           menu.addItem(
             (i2) => i2.setTitle(t2("main.menu.openSidebar")).setIcon("folder").setSection("writing-studio").onClick(() => {
@@ -21625,7 +19697,7 @@ var WritingStudioPlugin = class extends import_obsidian37.Plugin {
     );
     this.registerEvent(
       this.app.vault.on("modify", (file) => {
-        if (file instanceof import_obsidian37.TFile) {
+        if (file instanceof import_obsidian35.TFile) {
           this.fmManager.scheduleUpdate(file);
           this.statsTracker.invalidateWordCountCache();
           if (this.studioActivated) {
@@ -21637,10 +19709,9 @@ var WritingStudioPlugin = class extends import_obsidian37.Plugin {
     );
     this.registerEvent(
       this.app.vault.on("rename", (file, oldPath) => {
-        if (file instanceof import_obsidian37.TFolder) {
+        this.statsTracker.invalidateWordCountCache();
+        if (file instanceof import_obsidian35.TFolder) {
           void this.projectManager.handleFolderRename(oldPath, file.path);
-        } else if (file instanceof import_obsidian37.TFile && file.extension === "md") {
-          void this.projectManager.repairBinderPaths(oldPath, file.path, file.basename);
         }
       })
     );
@@ -21742,14 +19813,6 @@ var WritingStudioPlugin = class extends import_obsidian37.Plugin {
       }
     }
   }
-  // Rebuilds open binder leaves so the experimental-binder toggle takes
-  // effect immediately — the view class is chosen at leaf creation
-  async reopenBinderViews() {
-    const leaves = this.app.workspace.getLeavesOfType(BINDER_VIEW_TYPE);
-    if (leaves.length === 0) return;
-    for (const leaf of leaves) leaf.detach();
-    await this.openBinder();
-  }
   async openBinder() {
     const existing = this.app.workspace.getLeavesOfType(BINDER_VIEW_TYPE);
     if (existing.length > 0) {
@@ -21804,9 +19867,9 @@ var WritingStudioPlugin = class extends import_obsidian37.Plugin {
   publishCurrentFile() {
     const leaf = this.app.workspace.getMostRecentLeaf();
     const view = leaf == null ? void 0 : leaf.view;
-    const file = view instanceof import_obsidian37.MarkdownView ? view.file : null;
-    if (!(file instanceof import_obsidian37.TFile)) {
-      new import_obsidian37.Notice(t2("main.notice.noMarkdownOpen"));
+    const file = view instanceof import_obsidian35.MarkdownView ? view.file : null;
+    if (!(file instanceof import_obsidian35.TFile)) {
+      new import_obsidian35.Notice(t2("main.notice.noMarkdownOpen"));
       return;
     }
     new PublishModal(this.app, this, file.path).open();
@@ -21844,17 +19907,8 @@ var WritingStudioPlugin = class extends import_obsidian37.Plugin {
       void this.openFolder(folder);
     }).open();
   }
-  async addFilesToBinder() {
-    await this.openBinder();
-    for (const leaf of this.app.workspace.getLeavesOfType(BINDER_VIEW_TYPE)) {
-      if (leaf.view instanceof BinderView) {
-        await leaf.view.scanProjectFolder();
-        break;
-      }
-    }
-  }
   showModeSwitcher(e) {
-    const menu = new import_obsidian37.Menu();
+    const menu = new import_obsidian35.Menu();
     menu.addItem((i2) => i2.setTitle(t2("main.menu.draftMode")).setIcon("pencil").onClick(() => this.writingModes.switchMode("draft")));
     menu.addItem((i2) => i2.setTitle(t2("main.menu.editMode")).setIcon("edit-3").onClick(() => this.writingModes.switchMode("edit")));
     menu.addItem((i2) => i2.setTitle(t2("main.menu.reviewMode")).setIcon("eye").onClick(() => this.writingModes.switchMode("review")));
@@ -21863,7 +19917,7 @@ var WritingStudioPlugin = class extends import_obsidian37.Plugin {
     if (e instanceof MouseEvent) menu.showAtMouseEvent(e);
   }
   showFontPicker(e) {
-    const menu = new import_obsidian37.Menu();
+    const menu = new import_obsidian35.Menu();
     TYPOGRAPHY_FONT_OPTIONS.forEach(({ key }) => {
       menu.addItem((i2) => {
         i2.setTitle(t2(`settings.typography.font.${key}`)).onClick(() => {
@@ -21877,30 +19931,6 @@ var WritingStudioPlugin = class extends import_obsidian37.Plugin {
       });
     });
     if (e instanceof MouseEvent) menu.showAtMouseEvent(e);
-  }
-  addFileToProject(file) {
-    const projects = this.projectManager.getProjects();
-    if (projects.length === 0) {
-      new import_obsidian37.Notice(t2("addToProject.noProjects"));
-      return;
-    }
-    new AddToProjectModal(this.app, this, file, async (projectId) => {
-      const project = projects.find((p) => p.id === projectId);
-      if (!project) return;
-      const binder = await this.projectManager.loadBinder(project);
-      const item = {
-        id: `item-${Date.now()}`,
-        title: file.basename,
-        filePath: file.path,
-        type: resolveDefaultDocumentType(project.type, this.settings.defaultDocumentType),
-        order: binder.items.length + 1,
-        status: "draft",
-        includeInExport: true
-      };
-      binder.items.push(item);
-      await this.projectManager.saveBinder(binder);
-      new import_obsidian37.Notice(t2("main.notice.addedToProject", { file: file.basename, project: project.title }));
-    }).open();
   }
   scheduleLauncherRefresh() {
     if (this.launcherRefreshTimer) window.clearTimeout(this.launcherRefreshTimer);
@@ -21919,7 +19949,7 @@ var WritingStudioPlugin = class extends import_obsidian37.Plugin {
   async updateWordCount() {
     const leaf = this.app.workspace.getMostRecentLeaf();
     const view = leaf == null ? void 0 : leaf.view;
-    if (!(view instanceof import_obsidian37.MarkdownView) || !view.editor) {
+    if (!(view instanceof import_obsidian35.MarkdownView) || !view.editor) {
       this.statusBar.clearWordCount();
       return;
     }
@@ -21931,20 +19961,15 @@ var WritingStudioPlugin = class extends import_obsidian37.Plugin {
       this.statsTracker.updateFileWordCount(file.path, wc);
       sessionDelta = this.statsTracker.getSessionDelta(file.path);
     }
-    const goal = file ? await this.projectManager.getWordCountGoalForFile(file) : void 0;
+    const goal = file ? this.projectManager.getWordCountGoalForFile(file) : void 0;
     this.statusBar.showWordCount(wc, goal, sessionDelta);
     this.focusMode.updateToolbarWordCount(wc);
     if (file) {
-      for (const bl of this.app.workspace.getLeavesOfType(BINDER_VIEW_TYPE)) {
-        if (bl.view instanceof BinderView) {
-          bl.view.updateWordCount(file.path, wc);
-        }
-      }
       this.goalBanner.patch(wc);
     }
   }
 };
-var SprintSummaryModal = class extends import_obsidian37.Modal {
+var SprintSummaryModal = class extends import_obsidian35.Modal {
   constructor(app, session) {
     super(app);
     this.session = session;
@@ -21975,46 +20000,30 @@ var SprintSummaryModal = class extends import_obsidian37.Modal {
     this.contentEl.empty();
   }
 };
-var WordCountGoalModal = class extends import_obsidian37.Modal {
+var WordCountGoalModal = class extends import_obsidian35.Modal {
   constructor(app, plugin, file) {
     super(app);
     this.goal = 0;
-    // Non-null when the file is in the active project's binder — the binder
-    // item is then the authoritative goal store (CONTEXT.md invariant 1) and
-    // frontmatter is neither read nor written. With the experimental
-    // filesystem binder on, frontmatter is the sole authority instead (#229)
-    // and this stays null.
-    this.binderEntry = null;
     this.plugin = plugin;
     this.file = file;
   }
-  async onOpen() {
-    var _a2, _b2;
+  onOpen() {
+    var _a2;
     const { contentEl } = this;
     contentEl.empty();
     contentEl.addClass("ws-goal-modal");
     contentEl.createEl("h2", { text: t2("wordCountGoal.title") });
-    this.binderEntry = this.plugin.settings.filesystemBinder ? null : await this.plugin.projectManager.findBinderEntryForFile(this.file.path);
-    if (this.binderEntry) {
-      this.goal = (_a2 = this.binderEntry.item.wordCountGoal) != null ? _a2 : 0;
-    } else {
-      const cache = this.app.metadataCache.getFileCache(this.file);
-      this.goal = Number((_b2 = cache == null ? void 0 : cache.frontmatter) == null ? void 0 : _b2["word-count-goal"]) || 0;
-    }
-    new import_obsidian37.Setting(contentEl).setName(t2("wordCountGoal.name")).setDesc(t2("wordCountGoal.desc")).addText((tx) => tx.setValue(String(this.goal || "")).setPlaceholder(t2("wordCountGoal.placeholder")).onChange((v) => {
+    const cache = this.app.metadataCache.getFileCache(this.file);
+    this.goal = Number((_a2 = cache == null ? void 0 : cache.frontmatter) == null ? void 0 : _a2["word-count-goal"]) || 0;
+    new import_obsidian35.Setting(contentEl).setName(t2("wordCountGoal.name")).setDesc(t2("wordCountGoal.desc")).addText((tx) => tx.setValue(String(this.goal || "")).setPlaceholder(t2("wordCountGoal.placeholder")).onChange((v) => {
       this.goal = parseInt(v) || 0;
     }));
     const btnRow = contentEl.createDiv("ws-modal-btn-row");
     const saveBtn = btnRow.createEl("button", { cls: "mod-cta", text: t2("wordCountGoal.save") });
     saveBtn.onclick = async () => {
-      if (this.binderEntry) {
-        this.binderEntry.item.wordCountGoal = this.goal;
-        await this.plugin.projectManager.saveBinder(this.binderEntry.binder);
-      } else {
-        await this.app.fileManager.processFrontMatter(this.file, (fm) => {
-          fm["word-count-goal"] = this.goal;
-        });
-      }
+      await this.app.fileManager.processFrontMatter(this.file, (fm) => {
+        fm["word-count-goal"] = this.goal;
+      });
       void this.plugin.goalBanner.show();
       this.close();
     };

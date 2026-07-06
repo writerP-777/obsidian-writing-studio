@@ -243,11 +243,21 @@ Each project stores:
 
 #### Writing Binder
 
-Keeping a book-length manuscript organized means knowing at a glance which chapters are drafted, which are in progress, and how each contributes to your total word count. The Binder is a sidebar panel that shows all of that for your active project.
+Keeping a book-length manuscript organized means knowing at a glance which chapters are drafted, which are in progress, and what will compile into the finished manuscript. The Binder is a sidebar panel that shows all of that for your active project.
 
-Each document shows its title, type (Chapter, Section, Article, Note), status (Draft, In Progress, Complete, Published), and live word count. Documents can be reordered by drag-and-drop and toggled in or out of export.
+The binder reads your folders directly — the project folder tree *is* the manuscript structure. Organize your work in the binder or in your computer's file explorer, and both always match: files created, renamed, moved, or deleted outside Obsidian appear correctly with no scan or import step. A document's filename is its title. Status (Draft, In Progress, Complete, Published) shows as a colored stripe on the row's left edge, folders carry document-count badges, documents excluded from compile render dimmed, and hovering any row shows its on-disk name and the settings the binder reads from it.
+
+Below the manuscript, **Research** and **Exports** are pinned as drawer tabs with live file counts. Research holds markdown notes that never compile (drag documents in and out of it freely); Exports is output-only, written by the export engine. Non-markdown files are visible and openable everywhere but stay outside the manuscript.
 
 **To open:** Use the command **Open binder** from the command palette, or assign a hotkey in Settings → Hotkeys.
+
+**Ordering:**
+
+Drag to reorder documents and folders. A document's position is stored in its own frontmatter (`binder-order`), so it travels with the file; a folder's position lives in a name marker (`020~ Part One`) that the binder hides in display. Anything without a saved position sorts naturally — A to Z, numbers in numeric order — after ordered items. Reordering never renames your documents.
+
+**Moving things:**
+
+Dragging physically moves files and folders: drop between rows to reorder, onto a folder to nest inside it, on the empty space below the tree to move to the project root, or onto the Research drawer tab to move a document out of the manuscript. A folder drag carries all its children, and links heal automatically on every move.
 
 **Control strip:**
 
@@ -271,47 +281,32 @@ The binder tree is fully keyboard-operable. Tab to focus the list, then:
 
 | Key | Action |
 |-----|--------|
-| `↑` / `↓` | Move through visible documents and groups |
-| `→` | Expand a collapsed group, or step into an open one |
-| `←` | Collapse an open group, or jump to the parent |
-| `Enter` | Open the document, or expand/collapse a group |
+| `↑` / `↓` | Move through visible documents and folders |
+| `→` | Expand a collapsed folder, or step into an open one |
+| `←` | Collapse an open folder, or jump to the parent |
+| `Enter` | Open the document, or expand/collapse a folder |
 | `F2` | Rename the focused item inline (Enter commits, Escape cancels) |
 | `Shift+F10` or menu key | Open the item's right-click menu |
 
 **Opening and renaming documents:**
 
-A single click on a document opens it immediately. Renaming has moved off the single click: rename an item from its right-click menu, or by pressing **F2** while it is focused (Enter commits, Escape cancels). This keeps opening a document fast while keeping rename deliberate.
+A single click on a document opens it immediately. Rename an item from its right-click menu, or by pressing **F2** while it is focused (Enter commits, Escape cancels). Renaming in the binder renames the file itself — links heal automatically — and invalid names are rejected with a specific message, never silently altered.
 
-**Creating new documents:**
+**Creating documents and folders:**
 
-When you create a new document, Writing Studio prompts you for a title up front rather than naming the file "Untitled." Type the title and the document is created and added to the binder in one step.
+Toolbar buttons create a document or folder at the manuscript root; a folder's right-click menu creates inside it, and a document's menu creates beside it. New documents prompt for a title up front rather than being named "Untitled."
 
 **Right-click menu:**
 
-Right-click any item in the binder for its full set of actions — open, rename, create a child document, group, or part beneath it, set status, change the item's type, remove it from the binder without deleting the file, or delete the document and its file.
+Right-click any item for its full set of actions — rename, set status, set a word count goal, set an optional document type, exclude a document from compile (or re-include it), create a document or folder, or delete to the trash (a folder's confirmation states how many files it contains).
 
-<p align="center">
-  <img src="assets/binder-context-menu.png" alt="The binder right-click menu showing open, rename, new child document/group/part, set status options, change type options, remove from binder, and delete document and file" width="360">
-  <br>
-  <em>The binder right-click menu — full per-item actions, including change type and remove from binder.</em>
-</p>
+**Organizing with folders:**
 
-**Organizing with groups and parts:**
+Folders are the structure. The book template creates a part folder for you, and any structure you build — in the binder or in your file explorer — is the manuscript's structure. Adding a file to a project is simply moving it into the project folder; it appears in the binder immediately, and files copied in outside of Obsidian show up the same way with no import step.
 
-Groups and parts are structural entries — they organize the binder tree but have no file behind them. The book template creates parts for you, and you can build the same structure by hand: the folder-plus button in the binder toolbar creates a group or part at the root, and an item's right-click menu offers **New child group** / **New child part** beneath it. Clicking a group or part expands or collapses it. A document's type (chapter, section, article, note) can be changed at any time from the same menu via **Change type**.
+**Upgrading from an earlier version:**
 
-**Adding a file to a project:**
-1. Right-click any Markdown file in the file explorer and choose **Add to writing project** under **Writing studio options**.
-2. A modal appears with a dropdown listing all your writing projects.
-3. Select the target project and click **Add to project**.
-
-**Removing a document from the binder:**
-
-To take a document out of the binder without deleting its file, choose **Remove from binder** from the item's right-click menu. The document leaves the binder; the file stays in your vault.
-
-**Adding files copied directly to the project folder:**
-
-If you copied or moved files into the project folder outside of Obsidian and they do not appear in the binder, use the **Add files copied to this folder** button in the binder toolbar (immediately to the right of the **+ document** button). The plugin scans the project folder, lists any files not yet in the binder, and lets you select which ones to add before making any changes.
+The first time you open an existing project, Writing Studio arranges its folders to match what your old binder showed — creating folders and moving documents, deleting nothing, and never changing your writing. A one-time notice explains this, and the command **Restore previous binder layout** puts your folders back the way they were if you preferred your earlier arrangement.
 
 ---
 
@@ -611,12 +606,6 @@ Writing Studio adds items to Obsidian's right-click context menus. All Writing S
 | Switch writing mode → | Open a mode-switcher menu (Draft / Edit / Review / None) |
 | Typography font → | Open a font picker menu to change the typography font (visible only when Typography Mode is active) |
 
-### Right-click a Markdown file in the file explorer
-
-| Option | Action |
-|--------|--------|
-| Add to writing project | Open a project picker and add the file to the selected project |
-
 ### Right-click a folder in the file explorer
 
 | Option | Action |
@@ -649,7 +638,7 @@ No default hotkeys are assigned. All commands can be given a hotkey in **Setting
 | Open targets dashboard | Open the word count targets panel |
 | Set word count goal | Set a per-document word count goal |
 | Open folder in sidebar explorer | Search and open a vault folder in the sidebar |
-| Scan project folder for new files | Scan the active project folder for files not in the binder and import selected files |
+| Restore previous binder layout | Put a project's folders back the way they were before the one-time folder arrangement |
 
 ---
 

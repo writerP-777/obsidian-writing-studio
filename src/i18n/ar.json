@@ -28,10 +28,7 @@
         "note": "ملاحظة"
       },
       "frontmatterAutoUpdate": "التحديث التلقائي للبيانات الأمامية",
-      "frontmatterAutoUpdateDesc": "تحديث عدد الكلمات وتاريخ التعديل تلقائيًا عند الحفظ.",
-      "experimentalHeading": "تجريبي",
-      "filesystemBinder": "مصنّف نظام الملفات",
-      "filesystemBinderDesc": "معاينة للمصنّف المعاد تصميمه: يعرض شجرة مجلد المشروع مباشرة، للقراءة فقط. أوقفه للعودة إلى المصنّف الكلاسيكي."
+      "frontmatterAutoUpdateDesc": "تحديث عدد الكلمات وتاريخ التعديل تلقائيًا عند الحفظ."
     },
     "focus": {
       "heading": "وضع التركيز",
@@ -157,61 +154,27 @@
     "displayText": "ملزمة الكتابة",
     "selectProject": "— اختر مشروعًا —",
     "newProject": "مشروع جديد",
-    "addDocument": "+ مستند",
-    "addFiles": "إضافة الملفات المنسوخة إلى هذا المجلد",
     "targetsDashboard": "لوحة الأهداف",
-    "searchPlaceholder": "بحث في المستندات…",
     "noProjectSelected": "لم يتم اختيار مشروع. أنشئ مشروعًا أو اختر مشروع كتابة للبدء.",
-    "noDocuments": "لا توجد مستندات بعد. انقر على “+ مستند” لإضافة واحد.",
-    "dropToRoot": "↓ أسقط هنا للترقية إلى الجذر",
     "selectProjectFirst": "اختر مشروعًا أولًا.",
-    "cannotFindFile": "تعذّر العثور على الملف: {{filePath}}. حاول إعادة تسميته أو ربطه.",
     "untitledDocument": "بدون عنوان {{time}}",
-    "noNewFiles": "لم يتم العثور على ملفات جديدة في مجلد المشروع.",
-    "pctComplete": "{{pct}}% مكتمل",
-    "copySuffix": "(نسخة)",
     "menu": {
-      "openDocument": "فتح المستند",
-      "newChildDocument": "مستند فرعي جديد",
       "setStatusDraft": "تعيين الحالة: مسودة",
       "setStatusInProgress": "تعيين الحالة: قيد التقدم",
       "setStatusComplete": "تعيين الحالة: مكتمل",
       "setStatusPublished": "تعيين الحالة: منشور",
-      "duplicate": "تكرار",
-      "moveToResearch": "نقل إلى البحث",
-      "publishToWordPress": "نشر على WordPress",
-      "delete": "حذف المستند والملف",
-      "moveUp": "نقل لأعلى",
-      "moveDown": "نقل لأسفل",
       "rename": "إعادة تسمية",
-      "removeFromBinder": "إزالة من الملزمة",
-      "newGroup": "مجموعة جديدة",
-      "newPart": "جزء جديد",
-      "newChildGroup": "مجموعة فرعية جديدة",
-      "newChildPart": "جزء فرعي جديد",
       "changeType": "تغيير النوع: {{type}}"
     },
-    "wordCountSuffix": "{{count}}ك",
-    "fileNotFound": "الملف لم يعد موجودًا: {{path}}",
     "deleteConfirm": {
       "title": "حذف المستند",
-      "message": "هل تريد إزالة \"{{title}}\" من الملزمة ونقل ملفه إلى سلة المهملات؟ لا يمكن استعادة إدخال الملزمة (الحالة، هدف عدد الكلمات، الموضع).",
       "delete": "حذف",
       "cancel": "إلغاء"
     },
-    "noMatches": "لا توجد مستندات مطابقة لـ \"{{query}}\".",
     "titlePrompt": {
       "heading": "مستند جديد",
       "create": "إنشاء"
     },
-    "removeConfirm": {
-      "title": "إزالة من الملزمة",
-      "message": "هل تريد إزالة \"{{title}}\" من الملزمة؟ سيبقى الملف في الخزنة، لكن حالة الإدخال وهدف عدد الكلمات وإعداد التصدير ستُفقد. تنتقل المستندات المتداخلة إلى مكانه.",
-      "remove": "إزالة"
-    },
-    "newGroupOrPart": "مجموعة أو جزء جديد",
-    "untitledGroup": "مجموعة بدون عنوان",
-    "untitledPart": "جزء بدون عنوان",
     "strip": {
       "focus": "تركيز",
       "typography": "طباعة",
@@ -305,10 +268,7 @@
       "writingLog": "سجل الكتابة",
       "publishToWordPress": "نشر على WordPress"
     },
-    "openDocumentFirst": "افتح مستنداً أولاً.",
     "sprintTimer": "مؤقت السباق",
-    "pause": "⏸ إيقاف مؤقت",
-    "stop": "■ إيقاف",
     "startSprint": "⏱ إعداد السباق",
     "quickStart": "خيارات السباق السريع",
     "today": "اليوم",
@@ -451,7 +411,6 @@
   },
   "projectManager": {
     "errorFolderExists": "يوجد بالفعل مجلد باسم \"{{folder}}\" في مجلد مشاريعك. اختر عنوانًا مختلفًا.",
-    "corruptBinder": "تعذرت قراءة ملف _binder.json الخاص بـ \"{{project}}\". تم حفظ نسخة احتياطية باسم _binder.json.bak في مجلد المشروع.",
     "corruptProject": "ملف المشروع في \"{{folder}}\" تالف ولم يتم تحميل المشروع.",
     "corruptLog": "تعذر قراءة سجل الكتابة لـ {{project}} — سيتم بدء سجل جديد."
   },
@@ -543,7 +502,6 @@
     "scopeCurrent": "المستند الحالي",
     "scopeProject": "المشروع بالكامل (بترتيب الموثق)",
     "includeFrontmatter": "تضمين البيانات الأمامية",
-    "includeResearch": "تضمين ملاحظات البحث",
     "includeTitlesAsHeadings": "تضمين عناوين المستندات كعناوين",
     "addTitlePage": "إضافة صفحة عنوان",
     "addTitlePageDesc": "إضافة صفحة عنوان تحتوي على عنوان المشروع والمؤلف والتاريخ.",
@@ -662,16 +620,6 @@
     },
     "close": "إغلاق"
   },
-  "addToProject": {
-    "title": "إضافة إلى مشروع كتابة",
-    "noProjects": "لم يُعثر على مشاريع كتابة. أنشئ مشروعًا أولاً.",
-    "close": "إغلاق",
-    "file": "الملف: {{path}}",
-    "projectName": "مشروع الكتابة",
-    "projectDesc": "إلى أي مشروع كتابة تريد إضافة هذا الملف؟",
-    "addBtn": "إضافة إلى المشروع",
-    "cancel": "إلغاء"
-  },
   "scanFolder": {
     "title": "إضافة ملفات إلى الموثق",
     "desc": "حدد الملفات لإضافتها إلى هذا المشروع:",
@@ -699,7 +647,6 @@
       "setWordCountGoal": "تعيين هدف عدد الكلمات",
       "openWritingLog": "فتح سجل الكتابة",
       "openFolderSidebar": "فتح المجلد في المستكشف الجانبي",
-      "addFilesToBinder": "فحص مجلد المشروع بحثًا عن ملفات جديدة",
       "restoreBinderLayout": "استعادة التخطيط السابق للملزمة"
     },
     "menu": {
@@ -709,7 +656,6 @@
       "setGoal": "تعيين هدف عدد الكلمات",
       "switchMode": "تبديل وضع الكتابة →",
       "typographyFont": "خط الطباعة →",
-      "addToProject": "إضافة إلى مشروع الكتابة",
       "openSidebar": "فتح في المستكشف الجانبي",
       "draftMode": "✍ وضع المسودة",
       "editMode": "✎ وضع التحرير",
@@ -717,8 +663,7 @@
       "normalMode": "عادي (بلا وضع)"
     },
     "notice": {
-      "noMarkdownOpen": "لا يوجد ملف Markdown مفتوح حالياً.",
-      "addedToProject": "تمت إضافة «{{file}}» إلى {{project}}"
+      "noMarkdownOpen": "لا يوجد ملف Markdown مفتوح حالياً."
     },
     "statusBar": {
       "projectWords": "{{total}} / {{goal}} كلمة في المشروع",
@@ -770,5 +715,12 @@
   "epub": {
     "toc": "جدول المحتويات",
     "cover": "الغلاف"
+  },
+  "binderUpdate": {
+    "title": "الملزمة ومجلداتك متزامنتان الآن دائمًا",
+    "body1": "تقرأ الملزمة الآن مجلداتك مباشرة، فلا يمكن أن يختلف الاثنان أبدًا. يمكنك تنظيم عملك هنا أو في مستكشف الملفات على جهازك، وسيتطابق الاثنان دائمًا.",
+    "body2": "لتحقيق ذلك، عند فتح مشروع موجود لأول مرة يتم إنشاء مجلدات ونقل مستنداتك لتطابق ملزمتك القديمة. لا يُحذف أي شيء، ولا يتغير أي شيء مما كتبته.",
+    "body3": "إذا كنت تفضل ترتيبك السابق، يمكنك إعادة مجلداتك: افتح لوحة الأوامر (اضغط Ctrl+P، أو Cmd+P على أجهزة Mac) وابحث عن \"استعادة التخطيط السابق للملزمة\". قد تبقى بضعة مجلدات فارغة أنشأها التحديث؛ يمكنك حذفها.",
+    "gotIt": "حسنًا"
   }
 }

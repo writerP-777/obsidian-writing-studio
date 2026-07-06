@@ -28,10 +28,7 @@
         "note": "노트"
       },
       "frontmatterAutoUpdate": "프론트매터 자동 업데이트",
-      "frontmatterAutoUpdateDesc": "저장 시 단어 수와 수정 날짜를 자동으로 업데이트합니다.",
-      "experimentalHeading": "실험적 기능",
-      "filesystemBinder": "파일 시스템 바인더",
-      "filesystemBinderDesc": "재설계된 바인더 미리보기: 프로젝트 폴더 트리를 읽기 전용으로 직접 표시합니다. 끄면 기존 바인더로 돌아갑니다."
+      "frontmatterAutoUpdateDesc": "저장 시 단어 수와 수정 날짜를 자동으로 업데이트합니다."
     },
     "focus": {
       "heading": "집중 모드",
@@ -157,61 +154,27 @@
     "displayText": "글쓰기 바인더",
     "selectProject": "— 프로젝트 선택 —",
     "newProject": "새 프로젝트",
-    "addDocument": "+ 문서",
-    "addFiles": "이 폴더에 복사된 파일 추가",
     "targetsDashboard": "목표 대시보드",
-    "searchPlaceholder": "문서 검색…",
     "noProjectSelected": "선택된 프로젝트가 없습니다. 글쓰기 프로젝트를 만들거나 선택하여 시작하세요.",
-    "noDocuments": "아직 문서가 없습니다. \"+ 문서\"를 클릭하여 추가하세요.",
-    "dropToRoot": "↓ 여기에 놓아 루트로 올리기",
     "selectProjectFirst": "먼저 프로젝트를 선택하세요.",
-    "cannotFindFile": "파일을 찾을 수 없습니다: {{filePath}}. 문서 이름 바꾸기 또는 다시 연결을 시도해 보세요.",
     "untitledDocument": "제목 없음 {{time}}",
-    "noNewFiles": "프로젝트 폴더에서 새 파일을 찾을 수 없습니다.",
-    "pctComplete": "{{pct}}% 완료",
-    "copySuffix": "(복사)",
     "menu": {
-      "openDocument": "문서 열기",
-      "newChildDocument": "새 하위 문서",
       "setStatusDraft": "상태 설정: 임시글",
       "setStatusInProgress": "상태 설정: 진행 중",
       "setStatusComplete": "상태 설정: 완료",
       "setStatusPublished": "상태 설정: 게시됨",
-      "duplicate": "복제",
-      "moveToResearch": "리서치로 이동",
-      "publishToWordPress": "WordPress에 게시",
-      "delete": "문서와 파일 삭제",
-      "moveUp": "위로 이동",
-      "moveDown": "아래로 이동",
       "rename": "이름 바꾸기",
-      "removeFromBinder": "바인더에서 제거",
-      "newGroup": "새 그룹",
-      "newPart": "새 파트",
-      "newChildGroup": "새 하위 그룹",
-      "newChildPart": "새 하위 파트",
       "changeType": "유형 변경: {{type}}"
     },
-    "wordCountSuffix": "{{count}}자",
-    "fileNotFound": "파일이 더 이상 존재하지 않습니다: {{path}}",
     "deleteConfirm": {
       "title": "문서 삭제",
-      "message": "\"{{title}}\"을(를) 바인더에서 제거하고 파일을 휴지통으로 이동할까요? 바인더 항목(상태, 단어 수 목표, 위치)은 복원할 수 없습니다.",
       "delete": "삭제",
       "cancel": "취소"
     },
-    "noMatches": "\"{{query}}\"와 일치하는 문서가 없습니다.",
     "titlePrompt": {
       "heading": "새 문서",
       "create": "만들기"
     },
-    "removeConfirm": {
-      "title": "바인더에서 제거",
-      "message": "\"{{title}}\"을(를) 바인더에서 제거할까요? 파일은 볼트에 남지만 항목의 상태, 단어 수 목표, 내보내기 설정은 사라집니다. 하위 문서는 그 자리로 올라옵니다.",
-      "remove": "제거"
-    },
-    "newGroupOrPart": "새 그룹 또는 파트",
-    "untitledGroup": "제목 없는 그룹",
-    "untitledPart": "제목 없는 파트",
     "strip": {
       "focus": "집중",
       "typography": "타이포그래피",
@@ -299,10 +262,7 @@
       "writingLog": "글쓰기 로그",
       "publishToWordPress": "WordPress에 게시"
     },
-    "openDocumentFirst": "먼저 문서를 여세요.",
     "sprintTimer": "스프린트 타이머",
-    "pause": "⏸ 일시정지",
-    "stop": "■ 정지",
     "startSprint": "⏱ 스프린트 설정",
     "quickStart": "빠른 스프린트 옵션",
     "today": "오늘",
@@ -435,7 +395,6 @@
   },
   "projectManager": {
     "errorFolderExists": "프로젝트 폴더에 \"{{folder}}\"(이)라는 이름의 폴더가 이미 있습니다. 다른 제목을 선택하세요.",
-    "corruptBinder": "\"{{project}}\"의 _binder.json 파일을 읽을 수 없습니다. 백업이 프로젝트 폴더에 _binder.json.bak(으)로 저장되었습니다.",
     "corruptProject": "\"{{folder}}\"의 프로젝트 파일이 손상되어 프로젝트를 불러올 수 없습니다.",
     "corruptLog": "{{project}}의 글쓰기 로그를 읽을 수 없습니다 — 새 로그를 시작합니다."
   },
@@ -527,7 +486,6 @@
     "scopeCurrent": "현재 문서",
     "scopeProject": "전체 프로젝트 (바인더 순서로)",
     "includeFrontmatter": "프론트매터 포함",
-    "includeResearch": "리서치 노트 포함",
     "includeTitlesAsHeadings": "문서 제목을 제목으로 포함",
     "addTitlePage": "표지 추가",
     "addTitlePageDesc": "프로젝트 제목, 저자 및 날짜가 있는 표지를 앞에 추가합니다.",
@@ -642,16 +600,6 @@
     },
     "close": "닫기"
   },
-  "addToProject": {
-    "title": "글쓰기 프로젝트에 추가",
-    "noProjects": "글쓰기 프로젝트를 찾을 수 없습니다. 먼저 프로젝트를 만드세요.",
-    "close": "닫기",
-    "file": "파일: {{path}}",
-    "projectName": "글쓰기 프로젝트",
-    "projectDesc": "이 파일을 어느 글쓰기 프로젝트에 추가하시겠습니까?",
-    "addBtn": "프로젝트에 추가",
-    "cancel": "취소"
-  },
   "scanFolder": {
     "title": "바인더에 파일 추가",
     "desc": "이 프로젝트에 추가할 파일을 선택하세요:",
@@ -679,7 +627,6 @@
       "setWordCountGoal": "단어 수 목표 설정",
       "openWritingLog": "글쓰기 로그 열기",
       "openFolderSidebar": "사이드바 탐색기에서 폴더 열기",
-      "addFilesToBinder": "프로젝트 폴더에서 새 파일 검색",
       "restoreBinderLayout": "이전 바인더 배치 복원"
     },
     "menu": {
@@ -689,7 +636,6 @@
       "setGoal": "단어 수 목표 설정",
       "switchMode": "글쓰기 모드 전환 →",
       "typographyFont": "타이포그래피 글꼴 →",
-      "addToProject": "글쓰기 프로젝트에 추가",
       "openSidebar": "사이드바 탐색기에서 열기",
       "draftMode": "✍ 초안 모드",
       "editMode": "✎ 편집 모드",
@@ -697,8 +643,7 @@
       "normalMode": "일반 (모드 없음)"
     },
     "notice": {
-      "noMarkdownOpen": "현재 열려 있는 Markdown 파일이 없습니다.",
-      "addedToProject": "\"{{file}}\"을(를) {{project}}에 추가했습니다"
+      "noMarkdownOpen": "현재 열려 있는 Markdown 파일이 없습니다."
     },
     "statusBar": {
       "projectWords": "{{total}} / {{goal}} 프로젝트 단어",
@@ -750,5 +695,12 @@
   "epub": {
     "toc": "목차",
     "cover": "표지"
+  },
+  "binderUpdate": {
+    "title": "바인더와 폴더가 이제 항상 일치합니다",
+    "body1": "바인더가 이제 폴더를 직접 읽으므로 둘이 어긋날 수 없습니다. 여기에서든 컴퓨터의 파일 탐색기에서든 작업을 정리할 수 있으며 항상 일치합니다.",
+    "body2": "이를 위해 기존 프로젝트를 처음 열 때 이전 바인더와 일치하도록 폴더를 만들고 문서를 이동합니다. 아무것도 삭제되지 않으며, 작성한 글은 전혀 바뀌지 않습니다.",
+    "body3": "이전 배치가 더 좋았다면 폴더를 되돌릴 수 있습니다. 명령어 팔레트를 열고(Ctrl+P, Mac에서는 Cmd+P) \"이전 바인더 배치 복원\"을(를) 검색하세요. 업데이트가 만든 빈 폴더 몇 개가 남을 수 있으며, 삭제해도 됩니다.",
+    "gotIt": "확인했어요"
   }
 }

@@ -21,11 +21,9 @@ const TYPE_KEY: Record<string, string> = {
 };
 import { t } from '../src/i18n';
 
-// One dashboard row, source-agnostic: a classic binder item (binderItemId
-// set, goal writes go to the binder) or an experimental-binder document
-// (binderItemId null, frontmatter `word-count-goal` is the sole authority —
-// #229). Classic rows always carry a type and status; experimental rows may
-// have neither.
+// One dashboard row: a manuscript-zone document. Frontmatter
+// `word-count-goal` is the sole goal authority (#229/#233); type and status
+// are optional binder-* frontmatter.
 interface DocStats {
   title: string;
   filePath: string;
@@ -33,7 +31,6 @@ interface DocStats {
   status: DocumentStatus | null;
   goal: number | undefined;
   order: number;
-  binderItemId: string | null;
   wordCount: number;
   readingTime: string;
 }
@@ -92,42 +89,21 @@ export class TargetsDashboardModal extends Modal {
     if (!project) return;
     this.stats = [];
 
-    if (this.plugin.settings.filesystemBinder) {
-      // Experimental binder: the manuscript zone in binder order, goals and
-      // metadata read from frontmatter (#229 goal single-authority)
-      const docs = listManuscriptDocs(this.app, project.folderPath);
-      for (let i = 0; i < docs.length; i++) {
-        const file = docs[i];
-        const fm = this.app.metadataCache.getFileCache(file)?.frontmatter;
-        const rawGoal = Number(fm?.['word-count-goal']);
-        this.stats.push({
-          title: file.basename,
-          filePath: file.path,
-          type: parseBinderType(fm?.['binder-type']),
-          status: parseBinderStatus(fm?.['binder-status']),
-          goal: Number.isFinite(rawGoal) && rawGoal > 0 ? rawGoal : undefined,
-          order: i,
-          binderItemId: null,
-          ...(await this.countFor(file)),
-        });
-      }
-      return;
-    }
-
-    const binder = await this.plugin.projectManager.loadBinder(project);
-    const items = this.plugin.projectManager.flattenBinder(binder.items);
-    for (const item of items) {
-      if (item.type === 'group' || item.type === 'part') continue;
-      const file = this.app.vault.getAbstractFileByPath(item.filePath);
+    // The manuscript zone in binder order, goals and metadata read from
+    // frontmatter (#229 goal single-authority, sole path since #233)
+    const docs = listManuscriptDocs(this.app, project.folderPath);
+    for (let i = 0; i < docs.length; i++) {
+      const file = docs[i];
+      const fm = this.app.metadataCache.getFileCache(file)?.frontmatter;
+      const rawGoal = Number(fm?.['word-count-goal']);
       this.stats.push({
-        title: item.title,
-        filePath: item.filePath,
-        type: item.type,
-        status: item.status,
-        goal: item.wordCountGoal,
-        order: item.order,
-        binderItemId: item.id,
-        ...(file instanceof TFile ? await this.countFor(file) : { wordCount: 0, readingTime: this.plugin.statsTracker.calculateReadingTime(0) }),
+        title: file.basename,
+        filePath: file.path,
+        type: parseBinderType(fm?.['binder-type']),
+        status: parseBinderStatus(fm?.['binder-status']),
+        goal: Number.isFinite(rawGoal) && rawGoal > 0 ? rawGoal : undefined,
+        order: i,
+        ...(await this.countFor(file)),
       });
     }
   }
@@ -140,17 +116,6 @@ export class TargetsDashboardModal extends Modal {
 
   private async saveGoal(stat: DocStats, goal: number | undefined): Promise<void> {
     stat.goal = goal;
-    if (stat.binderItemId !== null) {
-      const project = this.plugin.projectManager.getActiveProject();
-      if (!project) return;
-      const binder = await this.plugin.projectManager.loadBinder(project);
-      const found = this.plugin.projectManager.findItem(binder.items, stat.binderItemId);
-      if (found) {
-        found.wordCountGoal = goal;
-        await this.plugin.projectManager.saveBinder(binder);
-      }
-      return;
-    }
     const file = this.app.vault.getAbstractFileByPath(stat.filePath);
     if (!(file instanceof TFile)) return;
     await this.app.fileManager.processFrontMatter(file, (fm: Record<string, unknown>) => {

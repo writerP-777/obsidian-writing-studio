@@ -12,7 +12,7 @@ export function bookManifest(_project: WritingProject): TemplateManifest {
         type: 'section',
         fileName: 'Front Matter',
         content: templateDoc({
-          title: 'Front Matter', fmType: 'section', order: 1, date,
+          title: 'Front Matter', fmType: 'section', order: 10, date,
           body: '*Title page, dedication, table of contents, and other front matter goes here.*',
         }),
       },
@@ -25,10 +25,12 @@ export function bookManifest(_project: WritingProject): TemplateManifest {
             id: 'item-chapter-1',
             title: 'Chapter 1',
             type: 'chapter',
-            fileName: 'Part 1 - Chapter 1',
+            // Physically inside the Part 1 folder since #233, so the name no
+            // longer needs to carry the part
+            fileName: 'Chapter 1',
             wordCountGoal: 3000,
             content: templateDoc({
-              title: 'Chapter 1', fmType: 'chapter', order: 1, goal: 3000, date,
+              title: 'Chapter 1', fmType: 'chapter', order: 10, goal: 3000, date,
               body: '*Begin your story here.*',
             }),
           },
@@ -40,7 +42,7 @@ export function bookManifest(_project: WritingProject): TemplateManifest {
         type: 'section',
         fileName: 'Back Matter',
         content: templateDoc({
-          title: 'Back Matter', fmType: 'section', order: 3, date,
+          title: 'Back Matter', fmType: 'section', order: 30, date,
           body: '*Acknowledgments, bibliography, author bio, and other back matter goes here.*',
         }),
       },
