@@ -231,8 +231,6 @@
     "title": "Writing Studio",
     "settings": "Settings",
     "project": "Project",
-    "noProjectSelected": "No project selected.",
-    "chooseProject": "— choose project —",
     "wordCount": "{{n}} words",
     "wordGoal": "/ {{n}} goal",
     "pctComplete": "{{pct}}% complete",
@@ -275,7 +273,6 @@
     },
     "sessionWordsTyped": "Session: +{{n}} words typed",
     "dailyGoal": "Daily goal: {{written}} / {{goal}} words",
-    "switchProject": "Switch project",
     "firstRun": {
       "intro": "Writing Studio organizes your writing into projects, each with its own binder of chapters and documents.",
       "hint": "Create a project to scaffold its folder and start writing.",

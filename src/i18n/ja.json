@@ -231,8 +231,6 @@
     "title": "ライティングスタジオ",
     "settings": "設定",
     "project": "プロジェクト",
-    "noProjectSelected": "プロジェクトが選択されていません。",
-    "chooseProject": "— プロジェクトを選択 —",
     "wordCount": "{{n}} 語",
     "wordGoal": "/ {{n}} 目標",
     "pctComplete": "{{pct}}% 完了",
@@ -275,7 +273,6 @@
     "sessionWordsTyped": "セッション：+{{n}} 語",
     "dailyGoal": "1日の目標：{{written}} / {{goal}} 語",
     "sprintInProgress": "スプリント実行中",
-    "switchProject": "プロジェクトを切り替え",
     "firstRun": {
       "intro": "Writing Studioは執筆をプロジェクトとして整理します。各プロジェクトには章とドキュメントのバインダーがあります。",
       "hint": "プロジェクトを作成するとフォルダが用意され、執筆を始められます。",

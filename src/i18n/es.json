@@ -231,8 +231,6 @@
     "title": "Estudio de escritura",
     "settings": "Configuración",
     "project": "Proyecto",
-    "noProjectSelected": "Ningún proyecto seleccionado.",
-    "chooseProject": "— elige proyecto —",
     "wordCount": "{{n}} palabras",
     "wordGoal": "/ {{n}} objetivo",
     "pctComplete": "{{pct}}% completado",
@@ -275,7 +273,6 @@
     "sessionWordsTyped": "Sesión: +{{n}} palabras escritas",
     "dailyGoal": "Meta diaria: {{written}} / {{goal}} palabras",
     "sprintInProgress": "Sprint en curso",
-    "switchProject": "Cambiar de proyecto",
     "firstRun": {
       "intro": "Writing Studio organiza tu escritura en proyectos, cada uno con su propia carpeta de capítulos y documentos.",
       "hint": "Crea un proyecto para generar su carpeta y empezar a escribir.",

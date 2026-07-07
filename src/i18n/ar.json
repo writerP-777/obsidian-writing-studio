@@ -237,8 +237,6 @@
     "title": "استوديو الكتابة",
     "settings": "الإعدادات",
     "project": "المشروع",
-    "noProjectSelected": "لم يتم اختيار مشروع.",
-    "chooseProject": "— اختر مشروعاً —",
     "wordCount": "{{n}} كلمة",
     "wordGoal": "/ {{n}} هدف",
     "pctComplete": "{{pct}}% مكتمل",
@@ -281,7 +279,6 @@
     "sessionWordsTyped": "الجلسة: +{{n}} كلمة مكتوبة",
     "dailyGoal": "الهدف اليومي: {{written}} / {{goal}} كلمة",
     "sprintInProgress": "السباق جارٍ",
-    "switchProject": "تبديل المشروع",
     "firstRun": {
       "intro": "ينظّم Writing Studio كتابتك في مشاريع، لكل منها ملزمة خاصة بالفصول والمستندات.",
       "hint": "أنشئ مشروعًا لإعداد مجلده وابدأ الكتابة.",

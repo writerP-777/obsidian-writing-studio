@@ -2774,8 +2774,6 @@ var en_default = {
     title: "Writing Studio",
     settings: "Settings",
     project: "Project",
-    noProjectSelected: "No project selected.",
-    chooseProject: "\u2014 choose project \u2014",
     wordCount: "{{n}} words",
     wordGoal: "/ {{n}} goal",
     pctComplete: "{{pct}}% complete",
@@ -2818,7 +2816,6 @@ var en_default = {
     },
     sessionWordsTyped: "Session: +{{n}} words typed",
     dailyGoal: "Daily goal: {{written}} / {{goal}} words",
-    switchProject: "Switch project",
     firstRun: {
       intro: "Writing Studio organizes your writing into projects, each with its own binder of chapters and documents.",
       hint: "Create a project to scaffold its folder and start writing.",
@@ -3481,8 +3478,6 @@ var zh_default = {
     title: "\u5199\u4F5C\u5DE5\u4F5C\u5BA4",
     settings: "\u8BBE\u7F6E",
     project: "\u9879\u76EE",
-    noProjectSelected: "\u672A\u9009\u62E9\u9879\u76EE\u3002",
-    chooseProject: "\u2014 \u9009\u62E9\u9879\u76EE \u2014",
     wordCount: "{{n}} \u5B57",
     wordGoal: "/ {{n}} \u76EE\u6807",
     pctComplete: "{{pct}}% \u5B8C\u6210",
@@ -3525,7 +3520,6 @@ var zh_default = {
     sessionWordsTyped: "\u672C\u6B21\uFF1A+{{n}} \u5B57",
     dailyGoal: "\u6BCF\u65E5\u76EE\u6807\uFF1A{{written}} / {{goal}} \u5B57",
     sprintInProgress: "\u51B2\u523A\u8FDB\u884C\u4E2D",
-    switchProject: "\u5207\u6362\u9879\u76EE",
     firstRun: {
       intro: "Writing Studio \u5C06\u60A8\u7684\u5199\u4F5C\u6574\u7406\u4E3A\u9879\u76EE\uFF0C\u6BCF\u4E2A\u9879\u76EE\u90FD\u6709\u81EA\u5DF1\u7684\u7AE0\u8282\u4E0E\u6587\u6863\u6D3B\u9875\u5939\u3002",
       hint: "\u521B\u5EFA\u4E00\u4E2A\u9879\u76EE\u4EE5\u751F\u6210\u5176\u6587\u4EF6\u5939\u5E76\u5F00\u59CB\u5199\u4F5C\u3002",
@@ -4188,8 +4182,6 @@ var hi_default = {
     title: "\u0930\u093E\u0907\u091F\u093F\u0902\u0917 \u0938\u094D\u091F\u0942\u0921\u093F\u092F\u094B",
     settings: "\u0938\u0947\u091F\u093F\u0902\u0917\u094D\u0938",
     project: "\u092A\u094D\u0930\u094B\u091C\u0947\u0915\u094D\u091F",
-    noProjectSelected: "\u0915\u094B\u0908 \u092A\u094D\u0930\u094B\u091C\u0947\u0915\u094D\u091F \u0928\u0939\u0940\u0902 \u091A\u0941\u0928\u093E \u0917\u092F\u093E\u0964",
-    chooseProject: "\u2014 \u092A\u094D\u0930\u094B\u091C\u0947\u0915\u094D\u091F \u091A\u0941\u0928\u0947\u0902 \u2014",
     wordCount: "{{n}} \u0936\u092C\u094D\u0926",
     wordGoal: "/ {{n}} \u0932\u0915\u094D\u0937\u094D\u092F",
     pctComplete: "{{pct}}% \u092A\u0942\u0930\u094D\u0923",
@@ -4232,7 +4224,6 @@ var hi_default = {
     sessionWordsTyped: "\u0938\u0924\u094D\u0930: +{{n}} \u0936\u092C\u094D\u0926 \u0932\u093F\u0916\u0947",
     dailyGoal: "\u0926\u0948\u0928\u093F\u0915 \u0932\u0915\u094D\u0937\u094D\u092F: {{written}} / {{goal}} \u0936\u092C\u094D\u0926",
     sprintInProgress: "\u0938\u094D\u092A\u094D\u0930\u093F\u0902\u091F \u091C\u093E\u0930\u0940 \u0939\u0948",
-    switchProject: "\u092A\u094D\u0930\u094B\u091C\u0947\u0915\u094D\u091F \u092C\u0926\u0932\u0947\u0902",
     firstRun: {
       intro: "Writing Studio \u0906\u092A\u0915\u0947 \u0932\u0947\u0916\u0928 \u0915\u094B \u092A\u094D\u0930\u094B\u091C\u0947\u0915\u094D\u091F \u092E\u0947\u0902 \u0935\u094D\u092F\u0935\u0938\u094D\u0925\u093F\u0924 \u0915\u0930\u0924\u093E \u0939\u0948 \u2014 \u0939\u0930 \u090F\u0915 \u0915\u093E \u0905\u092A\u0928\u093E \u0905\u0927\u094D\u092F\u093E\u092F\u094B\u0902 \u0914\u0930 \u0926\u0938\u094D\u0924\u093E\u0935\u0947\u091C\u093C\u094B\u0902 \u0915\u093E \u092C\u093E\u0907\u0902\u0921\u0930 \u0939\u094B\u0924\u093E \u0939\u0948\u0964",
       hint: "\u092A\u094D\u0930\u094B\u091C\u0947\u0915\u094D\u091F \u092C\u0928\u093E\u090F\u0901, \u0909\u0938\u0915\u093E \u092B\u093C\u094B\u0932\u094D\u0921\u0930 \u0924\u0948\u092F\u093E\u0930 \u0939\u094B\u0917\u093E \u0914\u0930 \u0932\u0947\u0916\u0928 \u0936\u0941\u0930\u0942 \u0915\u0930\u0947\u0902\u0964",
@@ -4895,8 +4886,6 @@ var es_default = {
     title: "Estudio de escritura",
     settings: "Configuraci\xF3n",
     project: "Proyecto",
-    noProjectSelected: "Ning\xFAn proyecto seleccionado.",
-    chooseProject: "\u2014 elige proyecto \u2014",
     wordCount: "{{n}} palabras",
     wordGoal: "/ {{n}} objetivo",
     pctComplete: "{{pct}}% completado",
@@ -4939,7 +4928,6 @@ var es_default = {
     sessionWordsTyped: "Sesi\xF3n: +{{n}} palabras escritas",
     dailyGoal: "Meta diaria: {{written}} / {{goal}} palabras",
     sprintInProgress: "Sprint en curso",
-    switchProject: "Cambiar de proyecto",
     firstRun: {
       intro: "Writing Studio organiza tu escritura en proyectos, cada uno con su propia carpeta de cap\xEDtulos y documentos.",
       hint: "Crea un proyecto para generar su carpeta y empezar a escribir.",
@@ -5608,8 +5596,6 @@ var ar_default = {
     title: "\u0627\u0633\u062A\u0648\u062F\u064A\u0648 \u0627\u0644\u0643\u062A\u0627\u0628\u0629",
     settings: "\u0627\u0644\u0625\u0639\u062F\u0627\u062F\u0627\u062A",
     project: "\u0627\u0644\u0645\u0634\u0631\u0648\u0639",
-    noProjectSelected: "\u0644\u0645 \u064A\u062A\u0645 \u0627\u062E\u062A\u064A\u0627\u0631 \u0645\u0634\u0631\u0648\u0639.",
-    chooseProject: "\u2014 \u0627\u062E\u062A\u0631 \u0645\u0634\u0631\u0648\u0639\u0627\u064B \u2014",
     wordCount: "{{n}} \u0643\u0644\u0645\u0629",
     wordGoal: "/ {{n}} \u0647\u062F\u0641",
     pctComplete: "{{pct}}% \u0645\u0643\u062A\u0645\u0644",
@@ -5652,7 +5638,6 @@ var ar_default = {
     sessionWordsTyped: "\u0627\u0644\u062C\u0644\u0633\u0629: +{{n}} \u0643\u0644\u0645\u0629 \u0645\u0643\u062A\u0648\u0628\u0629",
     dailyGoal: "\u0627\u0644\u0647\u062F\u0641 \u0627\u0644\u064A\u0648\u0645\u064A: {{written}} / {{goal}} \u0643\u0644\u0645\u0629",
     sprintInProgress: "\u0627\u0644\u0633\u0628\u0627\u0642 \u062C\u0627\u0631\u064D",
-    switchProject: "\u062A\u0628\u062F\u064A\u0644 \u0627\u0644\u0645\u0634\u0631\u0648\u0639",
     firstRun: {
       intro: "\u064A\u0646\u0638\u0651\u0645 Writing Studio \u0643\u062A\u0627\u0628\u062A\u0643 \u0641\u064A \u0645\u0634\u0627\u0631\u064A\u0639\u060C \u0644\u0643\u0644 \u0645\u0646\u0647\u0627 \u0645\u0644\u0632\u0645\u0629 \u062E\u0627\u0635\u0629 \u0628\u0627\u0644\u0641\u0635\u0648\u0644 \u0648\u0627\u0644\u0645\u0633\u062A\u0646\u062F\u0627\u062A.",
       hint: "\u0623\u0646\u0634\u0626 \u0645\u0634\u0631\u0648\u0639\u064B\u0627 \u0644\u0625\u0639\u062F\u0627\u062F \u0645\u062C\u0644\u062F\u0647 \u0648\u0627\u0628\u062F\u0623 \u0627\u0644\u0643\u062A\u0627\u0628\u0629.",
@@ -6329,8 +6314,6 @@ var fr_default = {
     title: "Studio d'\xE9criture",
     settings: "Param\xE8tres",
     project: "Projet",
-    noProjectSelected: "Aucun projet s\xE9lectionn\xE9.",
-    chooseProject: "\u2014 choisir un projet \u2014",
     wordCount: "{{n}} mots",
     wordGoal: "/ {{n}} objectif",
     pctComplete: "{{pct}}% termin\xE9",
@@ -6373,7 +6356,6 @@ var fr_default = {
     sessionWordsTyped: "Session : +{{n}} mots \xE9crits",
     dailyGoal: "Objectif quotidien : {{written}} / {{goal}} mots",
     sprintInProgress: "Sprint en cours",
-    switchProject: "Changer de projet",
     firstRun: {
       intro: "Writing Studio organise votre \xE9criture en projets, chacun avec son propre classeur de chapitres et de documents.",
       hint: "Cr\xE9ez un projet pour g\xE9n\xE9rer son dossier et commencer \xE0 \xE9crire.",
@@ -7036,8 +7018,6 @@ var bn_default = {
     title: "\u09B2\u09C7\u0996\u09BE\u09B0 \u09B8\u09CD\u099F\u09C1\u09A1\u09BF\u0993",
     settings: "\u09B8\u09C7\u099F\u09BF\u0982\u09B8",
     project: "\u09AA\u09CD\u09B0\u0995\u09B2\u09CD\u09AA",
-    noProjectSelected: "\u0995\u09CB\u09A8\u09CB \u09AA\u09CD\u09B0\u0995\u09B2\u09CD\u09AA \u09A8\u09BF\u09B0\u09CD\u09AC\u09BE\u099A\u09A8 \u0995\u09B0\u09BE \u09B9\u09AF\u09BC\u09A8\u09BF\u0964",
-    chooseProject: "\u2014 \u09AA\u09CD\u09B0\u0995\u09B2\u09CD\u09AA \u09AC\u09C7\u099B\u09C7 \u09A8\u09BF\u09A8 \u2014",
     wordCount: "{{n}} \u09B6\u09AC\u09CD\u09A6",
     wordGoal: "/ {{n}} \u09B2\u0995\u09CD\u09B7\u09CD\u09AF",
     pctComplete: "{{pct}}% \u09B8\u09AE\u09CD\u09AA\u09A8\u09CD\u09A8",
@@ -7080,7 +7060,6 @@ var bn_default = {
     sessionWordsTyped: "\u09B8\u09C7\u09B6\u09A8: +{{n}} \u09B6\u09AC\u09CD\u09A6 \u099F\u09BE\u0987\u09AA \u0995\u09B0\u09BE \u09B9\u09AF\u09BC\u09C7\u099B\u09C7",
     dailyGoal: "\u09A6\u09C8\u09A8\u09BF\u0995 \u09B2\u0995\u09CD\u09B7\u09CD\u09AF: {{written}} / {{goal}} \u09B6\u09AC\u09CD\u09A6",
     sprintInProgress: "\u09B8\u09CD\u09AA\u09CD\u09B0\u09BF\u09A8\u09CD\u099F \u099A\u09B2\u099B\u09C7",
-    switchProject: "\u09AA\u09CD\u09B0\u0995\u09B2\u09CD\u09AA \u09AA\u09B0\u09BF\u09AC\u09B0\u09CD\u09A4\u09A8 \u0995\u09B0\u09C1\u09A8",
     firstRun: {
       intro: "Writing Studio \u0986\u09AA\u09A8\u09BE\u09B0 \u09B2\u09C7\u0996\u09BE\u0995\u09C7 \u09AA\u09CD\u09B0\u0995\u09B2\u09CD\u09AA\u09C7 \u09B8\u09BE\u099C\u09BE\u09AF\u09BC \u2014 \u09AA\u09CD\u09B0\u09A4\u09BF\u099F\u09BF\u09B0 \u09A8\u09BF\u099C\u09B8\u09CD\u09AC \u0985\u09A7\u09CD\u09AF\u09BE\u09AF\u09BC \u0993 \u09A8\u09A5\u09BF\u09B0 \u09AC\u09BE\u0987\u09A8\u09CD\u09A1\u09BE\u09B0 \u0986\u099B\u09C7\u0964",
       hint: "\u098F\u0995\u099F\u09BF \u09AA\u09CD\u09B0\u0995\u09B2\u09CD\u09AA \u09A4\u09C8\u09B0\u09BF \u0995\u09B0\u09C7 \u098F\u09B0 \u09AB\u09CB\u09B2\u09CD\u09A1\u09BE\u09B0 \u09B8\u09BE\u099C\u09BE\u09A8 \u098F\u09AC\u0982 \u09B2\u09C7\u0996\u09BE \u09B6\u09C1\u09B0\u09C1 \u0995\u09B0\u09C1\u09A8\u0964",
@@ -7743,8 +7722,6 @@ var pt_BR_default = {
     title: "Est\xFAdio de escrita",
     settings: "Configura\xE7\xF5es",
     project: "Projeto",
-    noProjectSelected: "Nenhum projeto selecionado.",
-    chooseProject: "\u2014 escolha um projeto \u2014",
     wordCount: "{{n}} palavras",
     wordGoal: "/ {{n}} objetivo",
     pctComplete: "{{pct}}% conclu\xEDdo",
@@ -7787,7 +7764,6 @@ var pt_BR_default = {
     sessionWordsTyped: "Sess\xE3o: +{{n}} palavras digitadas",
     dailyGoal: "Meta di\xE1ria: {{written}} / {{goal}} palavras",
     sprintInProgress: "Sprint em andamento",
-    switchProject: "Trocar de projeto",
     firstRun: {
       intro: "O Writing Studio organiza sua escrita em projetos, cada um com sua pr\xF3pria pasta de cap\xEDtulos e documentos.",
       hint: "Crie um projeto para gerar sua pasta e come\xE7ar a escrever.",
@@ -8454,8 +8430,6 @@ var ru_default = {
     title: "\u0421\u0442\u0443\u0434\u0438\u044F \u043F\u0438\u0441\u044C\u043C\u0430",
     settings: "\u041D\u0430\u0441\u0442\u0440\u043E\u0439\u043A\u0438",
     project: "\u041F\u0440\u043E\u0435\u043A\u0442",
-    noProjectSelected: "\u041F\u0440\u043E\u0435\u043A\u0442 \u043D\u0435 \u0432\u044B\u0431\u0440\u0430\u043D.",
-    chooseProject: "\u2014 \u0432\u044B\u0431\u0435\u0440\u0438\u0442\u0435 \u043F\u0440\u043E\u0435\u043A\u0442 \u2014",
     wordCount: "{{n}} \u0441\u043B\u043E\u0432",
     wordGoal: "/ {{n}} \u0446\u0435\u043B\u044C",
     pctComplete: "{{pct}}% \u0437\u0430\u0432\u0435\u0440\u0448\u0435\u043D\u043E",
@@ -8498,7 +8472,6 @@ var ru_default = {
     sessionWordsTyped: "\u0421\u0435\u0430\u043D\u0441: +{{n}} \u043D\u0430\u043F\u0438\u0441\u0430\u043D\u043D\u044B\u0445 \u0441\u043B\u043E\u0432",
     dailyGoal: "\u0414\u043D\u0435\u0432\u043D\u0430\u044F \u0446\u0435\u043B\u044C: {{written}} / {{goal}} \u0441\u043B\u043E\u0432",
     sprintInProgress: "\u0421\u043F\u0440\u0438\u043D\u0442 \u0438\u0434\u0451\u0442",
-    switchProject: "\u0421\u043C\u0435\u043D\u0438\u0442\u044C \u043F\u0440\u043E\u0435\u043A\u0442",
     firstRun: {
       intro: "Writing Studio \u043E\u0440\u0433\u0430\u043D\u0438\u0437\u0443\u0435\u0442 \u0432\u0430\u0448\u0435 \u043F\u0438\u0441\u044C\u043C\u043E \u0432 \u043F\u0440\u043E\u0435\u043A\u0442\u044B \u2014 \u0443 \u043A\u0430\u0436\u0434\u043E\u0433\u043E \u0441\u0432\u043E\u044F \u043F\u0430\u043F\u043A\u0430 \u0441 \u0433\u043B\u0430\u0432\u0430\u043C\u0438 \u0438 \u0434\u043E\u043A\u0443\u043C\u0435\u043D\u0442\u0430\u043C\u0438.",
       hint: "\u0421\u043E\u0437\u0434\u0430\u0439\u0442\u0435 \u043F\u0440\u043E\u0435\u043A\u0442, \u0447\u0442\u043E\u0431\u044B \u043F\u043E\u0434\u0433\u043E\u0442\u043E\u0432\u0438\u0442\u044C \u0435\u0433\u043E \u043F\u0430\u043F\u043A\u0443 \u0438 \u043D\u0430\u0447\u0430\u0442\u044C \u043F\u0438\u0441\u0430\u0442\u044C.",
@@ -9169,8 +9142,6 @@ var ja_default = {
     title: "\u30E9\u30A4\u30C6\u30A3\u30F3\u30B0\u30B9\u30BF\u30B8\u30AA",
     settings: "\u8A2D\u5B9A",
     project: "\u30D7\u30ED\u30B8\u30A7\u30AF\u30C8",
-    noProjectSelected: "\u30D7\u30ED\u30B8\u30A7\u30AF\u30C8\u304C\u9078\u629E\u3055\u308C\u3066\u3044\u307E\u305B\u3093\u3002",
-    chooseProject: "\u2014 \u30D7\u30ED\u30B8\u30A7\u30AF\u30C8\u3092\u9078\u629E \u2014",
     wordCount: "{{n}} \u8A9E",
     wordGoal: "/ {{n}} \u76EE\u6A19",
     pctComplete: "{{pct}}% \u5B8C\u4E86",
@@ -9213,7 +9184,6 @@ var ja_default = {
     sessionWordsTyped: "\u30BB\u30C3\u30B7\u30E7\u30F3\uFF1A+{{n}} \u8A9E",
     dailyGoal: "1\u65E5\u306E\u76EE\u6A19\uFF1A{{written}} / {{goal}} \u8A9E",
     sprintInProgress: "\u30B9\u30D7\u30EA\u30F3\u30C8\u5B9F\u884C\u4E2D",
-    switchProject: "\u30D7\u30ED\u30B8\u30A7\u30AF\u30C8\u3092\u5207\u308A\u66FF\u3048",
     firstRun: {
       intro: "Writing Studio\u306F\u57F7\u7B46\u3092\u30D7\u30ED\u30B8\u30A7\u30AF\u30C8\u3068\u3057\u3066\u6574\u7406\u3057\u307E\u3059\u3002\u5404\u30D7\u30ED\u30B8\u30A7\u30AF\u30C8\u306B\u306F\u7AE0\u3068\u30C9\u30AD\u30E5\u30E1\u30F3\u30C8\u306E\u30D0\u30A4\u30F3\u30C0\u30FC\u304C\u3042\u308A\u307E\u3059\u3002",
       hint: "\u30D7\u30ED\u30B8\u30A7\u30AF\u30C8\u3092\u4F5C\u6210\u3059\u308B\u3068\u30D5\u30A9\u30EB\u30C0\u304C\u7528\u610F\u3055\u308C\u3001\u57F7\u7B46\u3092\u59CB\u3081\u3089\u308C\u307E\u3059\u3002",
@@ -9876,8 +9846,6 @@ var de_default = {
     title: "Schreibstudio",
     settings: "Einstellungen",
     project: "Projekt",
-    noProjectSelected: "Kein Projekt ausgew\xE4hlt.",
-    chooseProject: "\u2014 Projekt ausw\xE4hlen \u2014",
     wordCount: "{{n}} W\xF6rter",
     wordGoal: "/ {{n}} Ziel",
     pctComplete: "{{pct}}% abgeschlossen",
@@ -9920,7 +9888,6 @@ var de_default = {
     sessionWordsTyped: "Sitzung: +{{n}} W\xF6rter getippt",
     dailyGoal: "Tagesziel: {{written}} / {{goal}} W\xF6rter",
     sprintInProgress: "Sprint l\xE4uft",
-    switchProject: "Projekt wechseln",
     firstRun: {
       intro: "Writing Studio organisiert dein Schreiben in Projekten, jedes mit einer eigenen Schreibmappe aus Kapiteln und Dokumenten.",
       hint: "Erstelle ein Projekt, um seinen Ordner anzulegen und mit dem Schreiben zu beginnen.",
@@ -10583,8 +10550,6 @@ var ko_default = {
     title: "\uAE00\uC4F0\uAE30 \uC2A4\uD29C\uB514\uC624",
     settings: "\uC124\uC815",
     project: "\uD504\uB85C\uC81D\uD2B8",
-    noProjectSelected: "\uC120\uD0DD\uB41C \uD504\uB85C\uC81D\uD2B8\uAC00 \uC5C6\uC2B5\uB2C8\uB2E4.",
-    chooseProject: "\u2014 \uD504\uB85C\uC81D\uD2B8 \uC120\uD0DD \u2014",
     wordCount: "{{n}} \uB2E8\uC5B4",
     wordGoal: "/ {{n}} \uBAA9\uD45C",
     pctComplete: "{{pct}}% \uC644\uB8CC",
@@ -10627,7 +10592,6 @@ var ko_default = {
     sessionWordsTyped: "\uC138\uC158: +{{n}} \uB2E8\uC5B4 \uC785\uB825",
     dailyGoal: "\uC77C\uC77C \uBAA9\uD45C: {{written}} / {{goal}} \uB2E8\uC5B4",
     sprintInProgress: "\uC2A4\uD504\uB9B0\uD2B8 \uC9C4\uD589 \uC911",
-    switchProject: "\uD504\uB85C\uC81D\uD2B8 \uC804\uD658",
     firstRun: {
       intro: "Writing Studio\uB294 \uAE00\uC4F0\uAE30\uB97C \uD504\uB85C\uC81D\uD2B8\uB85C \uC815\uB9AC\uD569\uB2C8\uB2E4. \uAC01 \uD504\uB85C\uC81D\uD2B8\uC5D0\uB294 \uC7A5\uACFC \uBB38\uC11C\uB85C \uC774\uB8E8\uC5B4\uC9C4 \uBC14\uC778\uB354\uAC00 \uC788\uC2B5\uB2C8\uB2E4.",
       hint: "\uD504\uB85C\uC81D\uD2B8\uB97C \uB9CC\uB4E4\uBA74 \uD3F4\uB354\uAC00 \uC900\uBE44\uB418\uC5B4 \uBC14\uB85C \uAE00\uC4F0\uAE30\uB97C \uC2DC\uC791\uD560 \uC218 \uC788\uC2B5\uB2C8\uB2E4.",
@@ -15962,73 +15926,50 @@ var LauncherView = class extends import_obsidian18.ItemView {
     const card = root.createDiv("ws-launcher-card");
     const cardHeader = card.createDiv("ws-launcher-card-header");
     cardHeader.createSpan({ text: t2("launcher.project"), cls: "ws-launcher-card-label" });
-    if (this.plugin.projectManager.getProjects().length > 0) {
-      const newProjectBtn = cardHeader.createEl("button", { cls: "ws-launcher-icon-btn ws-launcher-new-btn", title: t2("binder.newProject") });
-      (0, import_obsidian18.setIcon)(newProjectBtn, "plus");
-      newProjectBtn.onclick = () => {
+    const projects = this.plugin.projectManager.getProjects();
+    if (!project && projects.length === 0) {
+      const intro = card.createDiv("ws-launcher-first-run");
+      intro.createDiv({ text: t2("launcher.firstRun.intro"), cls: "ws-launcher-first-run-text" });
+      intro.createDiv({ text: t2("launcher.firstRun.hint"), cls: "ws-launcher-first-run-text" });
+      const cta = card.createEl("button", { cls: "ws-launcher-action-btn mod-cta", text: t2("launcher.firstRun.cta") });
+      cta.onclick = () => {
         new ProjectModal(this.app, this.plugin).open();
       };
+      return;
     }
+    const projectRow = card.createDiv("ws-binder-project-row");
+    const selWrap = projectRow.createDiv("ws-binder-project-sel-wrap");
+    const projectSel = selWrap.createEl("select", { cls: "ws-binder-project-sel" });
+    const noOpt = projectSel.createEl("option", { text: t2("binder.selectProject") });
+    noOpt.value = "";
+    for (const p of projects) {
+      const opt = projectSel.createEl("option", { text: p.title });
+      opt.value = p.id;
+      if ((project == null ? void 0 : project.id) === p.id) opt.selected = true;
+    }
+    projectSel.onchange = async () => {
+      await this.plugin.projectManager.setActiveProject(projectSel.value || null);
+    };
+    const selCaret = selWrap.createSpan("ws-binder-project-caret");
+    (0, import_obsidian18.setIcon)(selCaret, "chevrons-up-down");
+    const newProjectBtn = projectRow.createEl("button", { cls: "ws-binder-btn", title: t2("binder.newProject") });
+    (0, import_obsidian18.setIcon)(newProjectBtn, "plus");
+    newProjectBtn.onclick = () => {
+      new ProjectModal(this.app, this.plugin).open();
+    };
     if (project) {
-      const editBtn = cardHeader.createEl("button", { cls: "ws-launcher-icon-btn", title: t2("projectModal.editTitle") });
-      (0, import_obsidian18.setIcon)(editBtn, "pencil");
-      editBtn.onclick = () => {
+      const editProjectBtn = projectRow.createEl("button", { cls: "ws-binder-btn", title: t2("projectModal.editTitle") });
+      (0, import_obsidian18.setIcon)(editProjectBtn, "pencil");
+      editProjectBtn.onclick = () => {
         new ProjectModal(this.app, this.plugin, void 0, project).open();
       };
-      const deleteBtn = cardHeader.createEl("button", { cls: "ws-launcher-icon-btn", title: t2("projectModal.deleteTitle") });
-      (0, import_obsidian18.setIcon)(deleteBtn, "trash");
-      deleteBtn.onclick = () => {
+      const deleteProjectBtn = projectRow.createEl("button", { cls: "ws-binder-btn", title: t2("projectModal.deleteTitle") });
+      (0, import_obsidian18.setIcon)(deleteProjectBtn, "trash");
+      deleteProjectBtn.onclick = () => {
         confirmDeleteProject(this.app, this.plugin, project);
       };
     }
-    if (!project) {
-      const projects2 = this.plugin.projectManager.getProjects();
-      if (projects2.length === 0) {
-        const intro = card.createDiv("ws-launcher-first-run");
-        intro.createDiv({ text: t2("launcher.firstRun.intro"), cls: "ws-launcher-first-run-text" });
-        intro.createDiv({ text: t2("launcher.firstRun.hint"), cls: "ws-launcher-first-run-text" });
-        const cta = card.createEl("button", { cls: "ws-launcher-action-btn mod-cta", text: t2("launcher.firstRun.cta") });
-        cta.onclick = () => {
-          new ProjectModal(this.app, this.plugin).open();
-        };
-        return;
-      }
-      const emptyRow = card.createDiv("ws-launcher-empty");
-      emptyRow.textContent = t2("launcher.noProjectSelected");
-      if (projects2.length > 0) {
-        const sel = card.createEl("select", { cls: "ws-launcher-project-sel" });
-        sel.createEl("option", { text: t2("launcher.chooseProject"), value: "" });
-        for (const p of projects2) {
-          sel.createEl("option", { text: p.title, value: p.id });
-        }
-        sel.onchange = async () => {
-          if (sel.value) {
-            await this.plugin.projectManager.setActiveProject(sel.value);
-            await this.refresh();
-          }
-        };
-      }
-      return;
-    }
-    const nameRow = card.createDiv("ws-launcher-project-name-row");
-    nameRow.createEl("strong", { text: project.title, cls: "ws-launcher-project-name" });
-    const projects = this.plugin.projectManager.getProjects();
-    if (projects.length > 1) {
-      const switchBtn = nameRow.createEl("button", { cls: "ws-launcher-icon-btn" });
-      (0, import_obsidian18.setIcon)(switchBtn, "chevrons-up-down");
-      (0, import_obsidian18.setTooltip)(switchBtn, t2("launcher.switchProject"));
-      switchBtn.onclick = (e) => {
-        const menu = new import_obsidian18.Menu();
-        for (const p of projects) {
-          menu.addItem((i2) => {
-            i2.setTitle(p.title).setChecked(p.id === project.id).onClick(async () => {
-              await this.plugin.projectManager.setActiveProject(p.id);
-            });
-          });
-        }
-        menu.showAtMouseEvent(e);
-      };
-    }
+    if (!project) return;
     try {
       const totalWords = await this.plugin.statsTracker.getTotalWordCount();
       const goal = ((_a2 = project.goals) == null ? void 0 : _a2.totalWordCount) || 0;

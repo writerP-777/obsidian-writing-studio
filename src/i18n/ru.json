@@ -235,8 +235,6 @@
     "title": "Студия письма",
     "settings": "Настройки",
     "project": "Проект",
-    "noProjectSelected": "Проект не выбран.",
-    "chooseProject": "— выберите проект —",
     "wordCount": "{{n}} слов",
     "wordGoal": "/ {{n}} цель",
     "pctComplete": "{{pct}}% завершено",
@@ -279,7 +277,6 @@
     "sessionWordsTyped": "Сеанс: +{{n}} написанных слов",
     "dailyGoal": "Дневная цель: {{written}} / {{goal}} слов",
     "sprintInProgress": "Спринт идёт",
-    "switchProject": "Сменить проект",
     "firstRun": {
       "intro": "Writing Studio организует ваше письмо в проекты — у каждого своя папка с главами и документами.",
       "hint": "Создайте проект, чтобы подготовить его папку и начать писать.",
