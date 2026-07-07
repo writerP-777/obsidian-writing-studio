@@ -484,7 +484,7 @@
     "includeFrontmatter": "包含前置内容",
     "includeTitlesAsHeadings": "将文档标题作为标题包含",
     "addTitlePage": "添加标题页",
-    "addTitlePageDesc": "在开头添加包含项目标题、作者和日期的标题页。",
+    "addTitlePageDesc": "在开头添加标题页，包含导出标题、作者和日期。",
     "previewBtn": "预览编译稿",
     "exportBtn": "导出",
     "exporting": "导出中…",

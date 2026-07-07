@@ -484,7 +484,7 @@
     "includeFrontmatter": "프론트매터 포함",
     "includeTitlesAsHeadings": "문서 제목을 제목으로 포함",
     "addTitlePage": "표지 추가",
-    "addTitlePageDesc": "프로젝트 제목, 저자 및 날짜가 있는 표지를 앞에 추가합니다.",
+    "addTitlePageDesc": "내보내기 제목, 저자, 날짜가 포함된 표지 페이지를 앞에 추가합니다.",
     "previewBtn": "컴파일된 원고 미리보기",
     "exportBtn": "내보내기",
     "exporting": "내보내는 중…",

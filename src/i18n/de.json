@@ -484,7 +484,7 @@
     "includeFrontmatter": "Frontmatter einschließen",
     "includeTitlesAsHeadings": "Dokumenttitel als Überschriften einschließen",
     "addTitlePage": "Titelseite hinzufügen",
-    "addTitlePageDesc": "Eine Titelseite mit Projekttitel, Autor und Datum voranstellen.",
+    "addTitlePageDesc": "Stellt eine Titelseite mit dem Titel des Exports, Autor und Datum voran.",
     "previewBtn": "Kompiliertes Manuskript vorschau",
     "exportBtn": "Exportieren",
     "exporting": "Exportiere…",

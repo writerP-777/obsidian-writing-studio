@@ -484,7 +484,7 @@
     "includeFrontmatter": "Incluir portada",
     "includeTitlesAsHeadings": "Incluir títulos de documento como encabezados",
     "addTitlePage": "Añadir portada",
-    "addTitlePageDesc": "Añade una portada con el título del proyecto, autor y fecha.",
+    "addTitlePageDesc": "Antepone una portada con el título de la exportación, el autor y la fecha.",
     "previewBtn": "Vista previa del manuscrito compilado",
     "exportBtn": "Exportar",
     "exporting": "Exportando…",
