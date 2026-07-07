@@ -12,7 +12,7 @@
 Writing Studio turns Obsidian into a dedicated environment for serious nonfiction work — from your first research notes to a finished, exported manuscript. It bundles a project binder, writing modes, focus and typography tools, sprint timer, progress tracking, manuscript export, and WordPress publishing into a single plugin. A built-in sidebar file explorer lets you browse, preview, and pull content from anywhere in your vault without leaving your draft.
 
 <p align="center">
-  <img src="assets/sidebar-explorer-screenshot.png" alt="Writing Studio with the Launcher panel open on the left, an active draft in the center, and the Folder Sidebar Explorer open to a research folder on the right" width="900">
+  <img src="assets/sidebar-explorer-screenshot.png" alt="Writing Studio with the Launcher panel open on the left, an active draft with its word count goal banner in the center, and the Folder Sidebar Explorer previewing a research file on the right" width="900">
   <br>
   <em>Writing Studio in use — Launcher (left), active draft with word count goal banner (center), Folder Sidebar Explorer open to a research folder (right).</em>
 </p>
@@ -94,9 +94,9 @@ Writing Studio is available in the following languages in addition to English:
 The Launcher is your home base in Writing Studio — a sidebar panel that shows your active project, progress toward your goals, and one-click access to every major feature.
 
 <p align="center">
-  <img src="assets/launcher-project-card.png" alt="The Launcher project card showing the active project name, switcher, edit and delete controls, word count, and a progress bar toward the project goal" width="520">
+  <img src="assets/launcher-project-card.png" alt="The Launcher project card with the project dropdown and the new project, edit, and delete buttons above the word count and project goal" width="520">
   <br>
-  <em>The Launcher project card — active project, word count, and progress toward the project goal.</em>
+  <em>The Launcher project card — switch projects from the dropdown; word count against the project goal below.</em>
 </p>
 
 By default Writing Studio launches automatically when Obsidian loads — the Launcher opens and your last session's writing mode and typography are restored. To disable this, turn off **Open on startup** in **Settings → General**: Obsidian then opens clean, with no Writing Studio status bar items or restored modes, and the studio stays dormant until you launch it yourself. Launching it manually restores your last session state the same way.
@@ -217,9 +217,9 @@ Projects group a set of documents (binder items) and act as the scope for export
 **To delete a project:** Click the trash icon in the Launcher project card or next to the project selector in the Binder, then confirm. This removes the project from Writing Studio's list only — the project folder and all its documents stay untouched in your vault.
 
 <p align="center">
-  <img src="assets/edit-project-modal.png" alt="The Edit project modal with fields for project title, author name, total word count goal, and description, and a Save button" width="560">
+  <img src="assets/edit-project-modal.png" alt="The Edit project modal with fields for project title, author name, document folder, total word count goal, and description, and a Save button" width="560">
   <br>
-  <em>The Edit project modal — change the title, author, description, and total word count goal.</em>
+  <em>The Edit project modal — change the title, author, document folder, description, and total word count goal.</em>
 </p>
 
 Each project stores:
@@ -249,6 +249,12 @@ The binder reads your folders directly — the project folder tree *is* the manu
 
 Below the manuscript, **Research** and **Exports** are pinned as drawer tabs with live file counts. Research holds markdown notes that never compile (drag documents in and out of it freely); Exports is output-only, written by the export engine. Non-markdown files are visible and openable everywhere but stay outside the manuscript.
 
+<p align="center">
+  <img src="assets/binder-tree.png" alt="The binder showing a manuscript tree with folder count badges, colored status stripes, a dimmed compile-excluded document, and Research and Exports drawer tabs with file counts at the bottom" width="520">
+  <br>
+  <em>The binder — status stripes on the left edge, count badges on folders, a dimmed compile-excluded document, and the Research and Exports drawer below.</em>
+</p>
+
 **To open:** Use the command **Open binder** from the command palette, or assign a hotkey in Settings → Hotkeys.
 
 **Ordering:**
@@ -264,7 +270,7 @@ Dragging physically moves files and folders: drop between rows to reorder, onto 
 A two-row control strip at the top of the binder keeps the high-frequency writing controls next to your documents, so the daily loop doesn't require switching to the launcher tab. The top row is a Draft / Edit / Review segmented control (clicking the active mode switches back to normal). The bottom row holds Focus and Typography toggles, a sprint chip (its menu offers the set-up modal and 10/15/25-minute quick starts; an armed sprint shows a ready chip with the duration), and a **...** menu with the occasional actions: export, publish, preview manuscript, targets dashboard, writing dashboard, and writing log. The launcher keeps its own copies of all controls, and every surface stays in sync no matter where a change is made.
 
 <p align="center">
-  <img src="assets/binder-control-strip.png" alt="The binder control strip with Draft, Edit, and Review on the top row and Focus, Typography, Sprint, and an overflow menu on the bottom row, above the document tree" width="520">
+  <img src="assets/binder-control-strip.png" alt="The binder control strip with Draft, Edit, and Review on the top row and Focus, Typography, Sprint, and an overflow menu on the bottom row, above the project selector, toolbar, and document tree" width="520">
   <br>
   <em>The binder control strip — writing modes on top; focus, typography, sprint, and overflow controls below.</em>
 </p>
@@ -299,6 +305,12 @@ Toolbar buttons create a document or folder at the manuscript root; a folder's r
 **Right-click menu:**
 
 Right-click any item for its full set of actions — rename, set status, set a word count goal, set an optional document type, exclude a document from compile (or re-include it), create a document or folder, or delete to the trash (a folder's confirmation states how many files it contains).
+
+<p align="center">
+  <img src="assets/binder-context-menu.png" alt="The binder right-click menu on a document, showing rename, status options, set word count goal, change type options, exclude from compile, new document, new folder, and delete" width="520">
+  <br>
+  <em>A document's right-click menu — status, goal, type, and compile controls in one place.</em>
+</p>
 
 **Organizing with folders:**
 
@@ -524,6 +536,12 @@ When your draft is ready, the Export Engine converts it to a finished file in yo
 The export dialog's **Title** dropdown sets the export's filename, its title page heading, and the file's metadata in one place — the three are always identical. A whole-project or single-document export offers the project name or a title you type yourself; a folder export adds **Folder name** (the default) and **Project — folder** forms. Choosing **Type your own title** keeps Export disabled until you type one, so an export is never accidentally untitled.
 
 The compile preview renders exactly what the dialog's current selections will produce — same documents, same headings, same title page — and when you proceed to export from the preview, your selections carry back into the dialog.
+
+<p align="center">
+  <img src="assets/export-modal-title.png" alt="The export dialog with the Title dropdown open on a folder export, showing Folder name, Project — folder, Project name, and Type your own title" width="560">
+  <br>
+  <em>The Title dropdown — one choice names the filename, the title page, and the file metadata.</em>
+</p>
 
 **Manuscript format**
 
