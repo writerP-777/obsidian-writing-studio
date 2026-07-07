@@ -484,7 +484,7 @@
     "includeFrontmatter": "フロントマターを含める",
     "includeTitlesAsHeadings": "ドキュメントタイトルを見出しとして含める",
     "addTitlePage": "タイトルページを追加",
-    "addTitlePageDesc": "プロジェクトタイトル、著者、日付のタイトルページを先頭に追加します。",
+    "addTitlePageDesc": "エクスポートのタイトル、著者、日付を記載した扉ページを先頭に追加します。",
     "previewBtn": "コンパイル済み原稿をプレビュー",
     "exportBtn": "エクスポート",
     "exporting": "エクスポート中…",

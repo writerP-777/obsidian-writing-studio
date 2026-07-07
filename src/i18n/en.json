@@ -484,7 +484,7 @@
     "includeFrontmatter": "Include frontmatter",
     "includeTitlesAsHeadings": "Include document titles as headings",
     "addTitlePage": "Add title page",
-    "addTitlePageDesc": "Prepend a title page with project title, author, and date.",
+    "addTitlePageDesc": "Prepend a title page with the export's title, author, and date.",
     "previewBtn": "Preview compiled manuscript",
     "exportBtn": "Export",
     "exporting": "Exporting…",

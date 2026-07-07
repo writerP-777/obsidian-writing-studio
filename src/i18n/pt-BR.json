@@ -484,7 +484,7 @@
     "includeFrontmatter": "Incluir metadados",
     "includeTitlesAsHeadings": "Incluir títulos de documentos como títulos",
     "addTitlePage": "Adicionar página de título",
-    "addTitlePageDesc": "Adiciona uma página de título com o título do projeto, autor e data.",
+    "addTitlePageDesc": "Adiciona uma página de título com o título da exportação, autor e data.",
     "previewBtn": "Visualizar manuscrito compilado",
     "exportBtn": "Exportar",
     "exporting": "Exportando…",
