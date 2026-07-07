@@ -231,7 +231,6 @@
     "title": "Writing Studio",
     "settings": "Settings",
     "project": "Project",
-    "newProject": "+ new",
     "noProjectSelected": "No project selected.",
     "chooseProject": "— choose project —",
     "wordCount": "{{n}} words",

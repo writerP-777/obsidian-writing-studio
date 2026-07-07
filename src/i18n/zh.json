@@ -231,7 +231,6 @@
     "title": "写作工作室",
     "settings": "设置",
     "project": "项目",
-    "newProject": "+ 新建",
     "noProjectSelected": "未选择项目。",
     "chooseProject": "— 选择项目 —",
     "wordCount": "{{n}} 字",

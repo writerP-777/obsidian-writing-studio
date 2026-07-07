@@ -231,7 +231,6 @@
     "title": "লেখার স্টুডিও",
     "settings": "সেটিংস",
     "project": "প্রকল্প",
-    "newProject": "+ নতুন",
     "noProjectSelected": "কোনো প্রকল্প নির্বাচন করা হয়নি।",
     "chooseProject": "— প্রকল্প বেছে নিন —",
     "wordCount": "{{n}} শব্দ",

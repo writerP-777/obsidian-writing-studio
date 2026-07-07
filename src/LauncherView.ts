@@ -136,9 +136,11 @@ export class LauncherView extends ItemView {
     const cardHeader = card.createDiv('ws-launcher-card-header');
     cardHeader.createSpan({ text: t('launcher.project'), cls: 'ws-launcher-card-label' });
 
-    // First run: the empty-state CTA below replaces the small "+ new" button
+    // First run: the empty-state CTA below replaces the new-project button.
+    // Boxed "+" icon matching the binder's project-control buttons (#233 audit)
     if (this.plugin.projectManager.getProjects().length > 0) {
-      const newProjectBtn = cardHeader.createEl('button', { cls: 'ws-launcher-text-btn', text: t('launcher.newProject') });
+      const newProjectBtn = cardHeader.createEl('button', { cls: 'ws-launcher-icon-btn ws-launcher-new-btn', title: t('binder.newProject') });
+      setIcon(newProjectBtn, 'plus');
       newProjectBtn.onclick = () => {
         new ProjectModal(this.app, this.plugin).open();
       };
