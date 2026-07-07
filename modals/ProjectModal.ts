@@ -1,7 +1,10 @@
 import { App, Modal, Setting, Notice, normalizePath } from 'obsidian';
 import type WritingStudioPlugin from '../main';
 import { ProjectType, WritingProject, resolveDocumentFolder } from '../models/Project';
-import { validateDocumentFolderName, FolderNameRejection } from '../src/folderRename';
+import {
+  validateDocumentFolderName, FolderNameRejection,
+  documentFolderDisplayName, documentFolderRenameTarget,
+} from '../src/folderRename';
 import { t } from '../src/i18n';
 
 const FOLDER_REJECTION_KEYS: Record<FolderNameRejection, string> = {
@@ -45,7 +48,8 @@ export class ProjectModal extends Modal {
       this.author = this.edit.author;
       this.description = this.edit.description;
       this.goalRaw = String(this.edit.goals?.totalWordCount || '');
-      this.documentFolder = resolveDocumentFolder(this.edit);
+      // Display name only — a folder order marker never shows here
+      this.documentFolder = documentFolderDisplayName(resolveDocumentFolder(this.edit));
     } else {
       // Author was previously taken silently from settings — surfacing it
       // means the manuscript title page never gets a blank author unnoticed
@@ -169,7 +173,7 @@ export class ProjectModal extends Modal {
   // project record and binder, exactly as for a manual rename.
   private async saveEdit(project: WritingProject, submitBtn: HTMLButtonElement): Promise<void> {
     const currentFolder = resolveDocumentFolder(project);
-    if (this.documentFolder !== currentFolder) {
+    if (this.documentFolder !== documentFolderDisplayName(currentFolder)) {
       const renamed = await this.renameDocumentFolder(project, currentFolder);
       if (!renamed) {
         submitBtn.disabled = false;
@@ -199,16 +203,20 @@ export class ProjectModal extends Modal {
   // False (with a notice shown) when validation rejects the name or the
   // vault rename fails — a failed rename never passes silently.
   private async renameDocumentFolder(project: WritingProject, currentFolder: string): Promise<boolean> {
-    const target = normalizePath(`${project.folderPath}/${this.documentFolder}`);
+    // The typed value is a display name; the on-disk target re-attaches the
+    // folder's existing order marker, so a rename here can never cost the
+    // folder its order (#233 audit ruling)
+    const targetName = documentFolderRenameTarget(currentFolder, this.documentFolder);
+    const target = normalizePath(`${project.folderPath}/${targetName}`);
     const targetExists = this.app.vault.getAbstractFileByPath(target) !== null;
-    const verdict = validateDocumentFolderName(this.documentFolder, currentFolder, targetExists);
+    const verdict = validateDocumentFolderName(this.documentFolder, documentFolderDisplayName(currentFolder), targetExists);
     if (!verdict.ok) {
       new Notice(t(FOLDER_REJECTION_KEYS[verdict.reason ?? 'empty'], { name: this.documentFolder }));
       return false;
     }
     const source = this.app.vault.getFolderByPath(normalizePath(`${project.folderPath}/${currentFolder}`));
     if (!source) {
-      new Notice(t('projectModal.folderMissing', { name: currentFolder }));
+      new Notice(t('projectModal.folderMissing', { name: documentFolderDisplayName(currentFolder) }));
       return false;
     }
     try {

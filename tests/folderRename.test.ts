@@ -3,6 +3,8 @@ import { WritingProject, resolveDocumentFolder } from '../models/Project';
 import {
   validateDocumentFolderName,
   RESERVED_PROJECT_FOLDERS,
+  documentFolderDisplayName,
+  documentFolderRenameTarget,
 } from '../src/folderRename';
 import { InMemoryVaultFiles } from './inMemoryVaultFiles';
 
@@ -36,6 +38,26 @@ async function setup(project: WritingProject, folders: string[] = []) {
   await pm.saveProject(project);
   return { pm, files };
 }
+
+// The edit-project modal works in display names (#233 audit ruling): the
+// order marker never shows, and a rename re-attaches it — editing the field
+// can never cost the folder its order.
+describe('document folder display name and rename target', () => {
+  it('strips the order marker for display; a plain name is unchanged', () => {
+    expect(documentFolderDisplayName('005~ Chapters')).toBe('Chapters');
+    expect(documentFolderDisplayName('Chapters')).toBe('Chapters');
+  });
+
+  it('a rename re-attaches the existing marker', () => {
+    expect(documentFolderRenameTarget('005~ Chapters', 'Scenes')).toBe('005~ Scenes');
+    expect(documentFolderRenameTarget('005~ Chapters', 'Chapters')).toBe('005~ Chapters');
+  });
+
+  it('a plain folder stays plain; typed marker syntax is kept byte-for-byte (#239 residual)', () => {
+    expect(documentFolderRenameTarget('Chapters', 'Scenes')).toBe('Scenes');
+    expect(documentFolderRenameTarget('005~ Chapters', '007~ Bond')).toBe('007~ Bond');
+  });
+});
 
 describe('validateDocumentFolderName', () => {
   it('rejects an empty name', () => {
