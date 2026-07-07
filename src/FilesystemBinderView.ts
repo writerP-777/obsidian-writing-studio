@@ -22,7 +22,7 @@ export const BINDER_VIEW_TYPE = 'writing-studio-binder';
 // The frontmatter keys the tooltip surfaces, in display order.
 const TOOLTIP_KEYS = ['binder-order', 'binder-status', 'binder-type', 'binder-compile', 'word-count-goal'];
 
-// Context-menu status entries — reuses the classic binder's labels.
+// Context-menu status entries, in lifecycle order.
 const STATUS_MENU: Array<{ value: DocumentStatus; key: string }> = [
   { value: 'draft', key: 'binder.menu.setStatusDraft' },
   { value: 'in-progress', key: 'binder.menu.setStatusInProgress' },
@@ -86,12 +86,10 @@ interface BinderModel {
   zones: Record<DrawerZone, { folder: TFolder | null; nodes: TreeNode[]; fileCount: number }>;
 }
 
-// Live rendering of the active project's folder tree (ADR 0001, tracer
-// slices 1–4 — #225–#228). The filesystem is the only source of structure;
-// every mutation is a filesystem operation executed through
+// The binder (ADR 0001, implemented at #233): a live rendering of the
+// active project's folder tree. The filesystem is the only source of
+// structure; every mutation is a filesystem operation executed through
 // fileManager.renameFile (links heal) or processFrontMatter (binder-order).
-// It registers under the same view type as the classic binder and is chosen
-// by the experimental setting at leaf creation.
 export class FilesystemBinderView extends ItemView {
   private plugin: WritingStudioPlugin;
   private activeProject: WritingProject | null = null;

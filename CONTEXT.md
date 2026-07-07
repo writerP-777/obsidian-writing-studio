@@ -52,7 +52,6 @@ modals/
   SprintModal.ts           ← configure and launch a sprint
   ExportModal.ts           ← export a document or project
   PublishModal.ts          ← publish current file to WordPress
-  AddToProjectModal.ts     ← add an existing file to a binder
   TargetsDashboardModal.ts ← manage per-document word count goals
   WritingDashboardModal.ts ← view session stats and sprint history
 templates/

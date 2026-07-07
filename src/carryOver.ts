@@ -34,9 +34,9 @@ export interface DiskState {
   frontmatter(path: string): Record<string, unknown> | null;
 }
 
-// Reads the legacy binder without any of loadBinder's machinery — no cache,
-// no corrupt-file backup write. Migration must be provably read-only toward
-// _binder.json, so it never goes near the runtime loader.
+// Parses the legacy binder as inert text. Migration must be provably
+// read-only toward _binder.json, so corrupt input returns null — never a
+// backup write, never a repair.
 export function parseLegacyBinder(content: string): BinderData | null {
   try {
     const data = JSON.parse(content) as BinderData;

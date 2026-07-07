@@ -1,8 +1,8 @@
 // Vault-facing glue for silent migration and the layout restore (#231).
 // Builds the pure engine's DiskState from the live vault, reads the legacy
-// binder without touching the runtime loader (loadBinder caches and writes a
-// .bak on corrupt input — migration must be provably read-only toward
-// _binder.json), runs the passes, and owns the graduated failure ledger
+// binder as inert text (migration must be provably read-only toward
+// _binder.json — no cache, no corrupt-file backup write, no repair),
+// runs the passes, and owns the graduated failure ledger
 // (R2): first failure silent + logged, second consecutive run's failure
 // notices once per signature, success clears the record.
 

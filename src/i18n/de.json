@@ -596,12 +596,6 @@
     },
     "close": "Schließen"
   },
-  "scanFolder": {
-    "title": "Dateien zur Mappe hinzufügen",
-    "desc": "Dateien auswählen, die diesem Projekt hinzugefügt werden sollen:",
-    "addBtn": "Ausgewählte Dateien hinzufügen",
-    "cancel": "Abbrechen"
-  },
   "main": {
     "ribbonTitle": "Schreibstudio öffnen",
     "cmd": {

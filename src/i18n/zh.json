@@ -596,12 +596,6 @@
     },
     "close": "关闭"
   },
-  "scanFolder": {
-    "title": "将文件添加到活页夹",
-    "desc": "选择要添加到此项目的文件：",
-    "addBtn": "添加所选文件",
-    "cancel": "取消"
-  },
   "main": {
     "ribbonTitle": "打开写作工作室",
     "cmd": {
