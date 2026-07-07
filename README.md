@@ -47,7 +47,7 @@ Writing Studio turns Obsidian into a dedicated environment for serious nonfictio
 
 ## Features
 
-**Writing Binder** — Organize your manuscript as an ordered collection of documents with per-item status, word count, and export flags. Drag chapters into order, toggle items in or out of export, and add files from anywhere in your vault.
+**Writing Binder** — Your project's folder tree, rendered as a manuscript. The binder reads your folders directly, so files created, renamed, or moved anywhere — even outside Obsidian — always appear correctly, with no import or scan step. Drag chapters into order, set per-document status and word count goals, and exclude documents from compile with a right-click.
 
 **Project Manager** — Create projects from six templates (blank, book, article series, blog collection, journal article, magazine article), set a total word count goal, and switch between projects from the Launcher.
 
@@ -517,12 +517,19 @@ When your draft is ready, the Export Engine converts it to a finished file in yo
 - Use the command **Export document** from the command palette.
 - Click the **Export** button in the Launcher panel.
 - Assign a hotkey to **Export document** in Settings → Hotkeys.
+- Right-click a folder in the binder and choose **Export folder** to export just that part of the manuscript.
+
+**One title names the export**
+
+The export dialog's **Title** dropdown sets the export's filename, its title page heading, and the file's metadata in one place — the three are always identical. A whole-project or single-document export offers the project name or a title you type yourself; a folder export adds **Folder name** (the default) and **Project — folder** forms. Choosing **Type your own title** keeps Export disabled until you type one, so an export is never accidentally untitled.
+
+The compile preview renders exactly what the dialog's current selections will produce — same documents, same headings, same title page — and when you proceed to export from the preview, your selections carry back into the dialog.
 
 **Manuscript format**
 
 The Manuscript format produces a self-contained HTML file formatted to industry-standard manuscript conventions:
 - Courier New 12 pt, double-spaced, 1-inch margins
-- Title page with project title, author name, approximate word count, and optional contact information
+- Title page with the export's chosen title, author name, approximate word count, and optional contact information
 - Chapter headings in uppercase, page-break before each
 - Scene breaks rendered as `#` (the standard manuscript convention)
 
