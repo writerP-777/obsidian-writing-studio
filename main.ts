@@ -544,7 +544,7 @@ export default class WritingStudioPlugin extends Plugin {
 
   // The migration's road back (#231 inverse pass) — layout-only by ruling:
   // documents return to their legacy paths, markers come off, frontmatter
-  // stays. The #233 upgrade modal will carry the visible affordance.
+  // stays. The one-time upgrade modal names this command (#233).
   async restoreBinderLayout(): Promise<void> {
     await runRestoreLayout(this);
   }

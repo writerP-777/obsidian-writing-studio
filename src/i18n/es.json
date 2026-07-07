@@ -596,12 +596,6 @@
     },
     "close": "Cerrar"
   },
-  "scanFolder": {
-    "title": "Añadir archivos al binder",
-    "desc": "Selecciona los archivos para añadir a este proyecto:",
-    "addBtn": "Añadir archivos seleccionados",
-    "cancel": "Cancelar"
-  },
   "main": {
     "ribbonTitle": "Abrir Writing Studio",
     "cmd": {

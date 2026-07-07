@@ -3145,12 +3145,6 @@ var en_default = {
     },
     close: "Close"
   },
-  scanFolder: {
-    title: "Add files to binder",
-    desc: "Select the files to add to this project:",
-    addBtn: "Add selected files",
-    cancel: "Cancel"
-  },
   main: {
     ribbonTitle: "Open writing studio",
     cmd: {
@@ -3848,12 +3842,6 @@ var zh_default = {
       readingTime: "\u9605\u8BFB\u65F6\u95F4"
     },
     close: "\u5173\u95ED"
-  },
-  scanFolder: {
-    title: "\u5C06\u6587\u4EF6\u6DFB\u52A0\u5230\u6D3B\u9875\u5939",
-    desc: "\u9009\u62E9\u8981\u6DFB\u52A0\u5230\u6B64\u9879\u76EE\u7684\u6587\u4EF6\uFF1A",
-    addBtn: "\u6DFB\u52A0\u6240\u9009\u6587\u4EF6",
-    cancel: "\u53D6\u6D88"
   },
   main: {
     ribbonTitle: "\u6253\u5F00\u5199\u4F5C\u5DE5\u4F5C\u5BA4",
@@ -4553,12 +4541,6 @@ var hi_default = {
     },
     close: "\u092C\u0902\u0926 \u0915\u0930\u0947\u0902"
   },
-  scanFolder: {
-    title: "\u092C\u093E\u0907\u0902\u0921\u0930 \u092E\u0947\u0902 \u092B\u093C\u093E\u0907\u0932\u0947\u0902 \u091C\u094B\u0921\u093C\u0947\u0902",
-    desc: "\u0907\u0938 \u092A\u0930\u093F\u092F\u094B\u091C\u0928\u093E \u092E\u0947\u0902 \u091C\u094B\u0921\u093C\u0928\u0947 \u0915\u0947 \u0932\u093F\u090F \u092B\u093C\u093E\u0907\u0932\u0947\u0902 \u091A\u0941\u0928\u0947\u0902:",
-    addBtn: "\u091A\u0941\u0928\u0940 \u0917\u0908 \u092B\u093C\u093E\u0907\u0932\u0947\u0902 \u091C\u094B\u0921\u093C\u0947\u0902",
-    cancel: "\u0930\u0926\u094D\u0926 \u0915\u0930\u0947\u0902"
-  },
   main: {
     ribbonTitle: "\u0930\u093E\u0907\u091F\u093F\u0902\u0917 \u0938\u094D\u091F\u0942\u0921\u093F\u092F\u094B \u0916\u094B\u0932\u0947\u0902",
     cmd: {
@@ -5256,12 +5238,6 @@ var es_default = {
       readingTime: "Tiempo de lectura"
     },
     close: "Cerrar"
-  },
-  scanFolder: {
-    title: "A\xF1adir archivos al binder",
-    desc: "Selecciona los archivos para a\xF1adir a este proyecto:",
-    addBtn: "A\xF1adir archivos seleccionados",
-    cancel: "Cancelar"
   },
   main: {
     ribbonTitle: "Abrir Writing Studio",
@@ -5981,12 +5957,6 @@ var ar_default = {
     },
     close: "\u0625\u063A\u0644\u0627\u0642"
   },
-  scanFolder: {
-    title: "\u0625\u0636\u0627\u0641\u0629 \u0645\u0644\u0641\u0627\u062A \u0625\u0644\u0649 \u0627\u0644\u0645\u0648\u062B\u0642",
-    desc: "\u062D\u062F\u062F \u0627\u0644\u0645\u0644\u0641\u0627\u062A \u0644\u0625\u0636\u0627\u0641\u062A\u0647\u0627 \u0625\u0644\u0649 \u0647\u0630\u0627 \u0627\u0644\u0645\u0634\u0631\u0648\u0639:",
-    addBtn: "\u0625\u0636\u0627\u0641\u0629 \u0627\u0644\u0645\u0644\u0641\u0627\u062A \u0627\u0644\u0645\u062D\u062F\u062F\u0629",
-    cancel: "\u0625\u0644\u063A\u0627\u0621"
-  },
   main: {
     ribbonTitle: "\u0641\u062A\u062D \u0627\u0633\u062A\u0648\u062F\u064A\u0648 \u0627\u0644\u0643\u062A\u0627\u0628\u0629",
     cmd: {
@@ -6684,12 +6654,6 @@ var fr_default = {
       readingTime: "Temps de lecture"
     },
     close: "Fermer"
-  },
-  scanFolder: {
-    title: "Ajouter des fichiers au binder",
-    desc: "S\xE9lectionnez les fichiers \xE0 ajouter \xE0 ce projet :",
-    addBtn: "Ajouter les fichiers s\xE9lectionn\xE9s",
-    cancel: "Annuler"
   },
   main: {
     ribbonTitle: "Ouvrir Writing Studio",
@@ -7389,12 +7353,6 @@ var bn_default = {
     },
     close: "\u09AC\u09A8\u09CD\u09A7 \u0995\u09B0\u09C1\u09A8"
   },
-  scanFolder: {
-    title: "\u09AC\u09BE\u0987\u09A8\u09CD\u09A1\u09BE\u09B0\u09C7 \u09AB\u09BE\u0987\u09B2 \u09AF\u09CB\u0997 \u0995\u09B0\u09C1\u09A8",
-    desc: "\u098F\u0987 \u09AA\u09CD\u09B0\u0995\u09B2\u09CD\u09AA\u09C7 \u09AF\u09CB\u0997 \u0995\u09B0\u09BE\u09B0 \u099C\u09A8\u09CD\u09AF \u09AB\u09BE\u0987\u09B2 \u09A8\u09BF\u09B0\u09CD\u09AC\u09BE\u099A\u09A8 \u0995\u09B0\u09C1\u09A8:",
-    addBtn: "\u09A8\u09BF\u09B0\u09CD\u09AC\u09BE\u099A\u09BF\u09A4 \u09AB\u09BE\u0987\u09B2 \u09AF\u09CB\u0997 \u0995\u09B0\u09C1\u09A8",
-    cancel: "\u09AC\u09BE\u09A4\u09BF\u09B2"
-  },
   main: {
     ribbonTitle: "\u09B0\u09BE\u0987\u099F\u09BF\u0982 \u09B8\u09CD\u099F\u09C1\u09A1\u09BF\u0993 \u0996\u09C1\u09B2\u09C1\u09A8",
     cmd: {
@@ -8092,12 +8050,6 @@ var pt_BR_default = {
       readingTime: "Tempo de leitura"
     },
     close: "Fechar"
-  },
-  scanFolder: {
-    title: "Adicionar arquivos ao binder",
-    desc: "Selecione os arquivos para adicionar a este projeto:",
-    addBtn: "Adicionar arquivos selecionados",
-    cancel: "Cancelar"
   },
   main: {
     ribbonTitle: "Abrir Writing Studio",
@@ -8809,12 +8761,6 @@ var ru_default = {
     },
     close: "\u0417\u0430\u043A\u0440\u044B\u0442\u044C"
   },
-  scanFolder: {
-    title: "\u0414\u043E\u0431\u0430\u0432\u0438\u0442\u044C \u0444\u0430\u0439\u043B\u044B \u0432 \u0431\u0430\u043D\u0434\u0435\u0440",
-    desc: "\u0412\u044B\u0431\u0435\u0440\u0438\u0442\u0435 \u0444\u0430\u0439\u043B\u044B \u0434\u043B\u044F \u0434\u043E\u0431\u0430\u0432\u043B\u0435\u043D\u0438\u044F \u0432 \u044D\u0442\u043E\u0442 \u043F\u0440\u043E\u0435\u043A\u0442:",
-    addBtn: "\u0414\u043E\u0431\u0430\u0432\u0438\u0442\u044C \u0432\u044B\u0431\u0440\u0430\u043D\u043D\u044B\u0435 \u0444\u0430\u0439\u043B\u044B",
-    cancel: "\u041E\u0442\u043C\u0435\u043D\u0430"
-  },
   main: {
     ribbonTitle: "\u041E\u0442\u043A\u0440\u044B\u0442\u044C Writing Studio",
     cmd: {
@@ -9512,12 +9458,6 @@ var ja_default = {
       readingTime: "\u8AAD\u4E86\u6642\u9593"
     },
     close: "\u9589\u3058\u308B"
-  },
-  scanFolder: {
-    title: "\u30D5\u30A1\u30A4\u30EB\u3092\u30D0\u30A4\u30F3\u30C0\u30FC\u306B\u8FFD\u52A0",
-    desc: "\u3053\u306E\u30D7\u30ED\u30B8\u30A7\u30AF\u30C8\u306B\u8FFD\u52A0\u3059\u308B\u30D5\u30A1\u30A4\u30EB\u3092\u9078\u629E\u3057\u3066\u304F\u3060\u3055\u3044\uFF1A",
-    addBtn: "\u9078\u629E\u3057\u305F\u30D5\u30A1\u30A4\u30EB\u3092\u8FFD\u52A0",
-    cancel: "\u30AD\u30E3\u30F3\u30BB\u30EB"
   },
   main: {
     ribbonTitle: "\u30E9\u30A4\u30C6\u30A3\u30F3\u30B0\u30B9\u30BF\u30B8\u30AA\u3092\u958B\u304F",
@@ -10217,12 +10157,6 @@ var de_default = {
     },
     close: "Schlie\xDFen"
   },
-  scanFolder: {
-    title: "Dateien zur Mappe hinzuf\xFCgen",
-    desc: "Dateien ausw\xE4hlen, die diesem Projekt hinzugef\xFCgt werden sollen:",
-    addBtn: "Ausgew\xE4hlte Dateien hinzuf\xFCgen",
-    cancel: "Abbrechen"
-  },
   main: {
     ribbonTitle: "Schreibstudio \xF6ffnen",
     cmd: {
@@ -10920,12 +10854,6 @@ var ko_default = {
       readingTime: "\uC77D\uAE30 \uC2DC\uAC04"
     },
     close: "\uB2EB\uAE30"
-  },
-  scanFolder: {
-    title: "\uBC14\uC778\uB354\uC5D0 \uD30C\uC77C \uCD94\uAC00",
-    desc: "\uC774 \uD504\uB85C\uC81D\uD2B8\uC5D0 \uCD94\uAC00\uD560 \uD30C\uC77C\uC744 \uC120\uD0DD\uD558\uC138\uC694:",
-    addBtn: "\uC120\uD0DD\uD55C \uD30C\uC77C \uCD94\uAC00",
-    cancel: "\uCDE8\uC18C"
   },
   main: {
     ribbonTitle: "\uAE00\uC4F0\uAE30 \uC2A4\uD29C\uB514\uC624 \uC5F4\uAE30",
@@ -19915,7 +19843,7 @@ var WritingStudioPlugin = class extends import_obsidian35.Plugin {
   }
   // The migration's road back (#231 inverse pass) — layout-only by ruling:
   // documents return to their legacy paths, markers come off, frontmatter
-  // stays. The #233 upgrade modal will carry the visible affordance.
+  // stays. The one-time upgrade modal names this command (#233).
   async restoreBinderLayout() {
     await runRestoreLayout(this);
   }

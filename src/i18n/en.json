@@ -596,12 +596,6 @@
     },
     "close": "Close"
   },
-  "scanFolder": {
-    "title": "Add files to binder",
-    "desc": "Select the files to add to this project:",
-    "addBtn": "Add selected files",
-    "cancel": "Cancel"
-  },
   "main": {
     "ribbonTitle": "Open writing studio",
     "cmd": {
