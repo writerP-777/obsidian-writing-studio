@@ -4,7 +4,7 @@ All notable changes to Writing Studio are documented here.
 
 ---
 
-## [Unreleased]
+## [3.0.0] - 2026-07-06
 
 ### Changed
 - **The binder now reads your folders directly — the project folder tree is the manuscript structure.** The filesystem owns membership, hierarchy, and order; files created, renamed, moved, or deleted outside Obsidian (including in Windows Explorer) appear correctly with no scan or import step, closing the whole class of binder-out-of-step bugs (#219). The first time an existing project is opened, its folders are arranged to match what the old binder showed (see the migration entry below), and a one-time notice explains the change after the first arrangement that actually does anything. `_binder.json` files remain on disk untouched as the dormant restore source; new projects never create one. The redesigned binder is the only binder — the experimental toggle that previewed it is gone. (#233, ADR 0001)

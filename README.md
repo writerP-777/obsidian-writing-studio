@@ -4,7 +4,7 @@
 
 # Writing Studio
 
-**Version 2.11.0** · Desktop only
+**Version 3.0.0** · Desktop only
 
 ![GitHub all releases](https://img.shields.io/github/downloads/writerP-777/obsidian-writing-studio/total)
 [![OpenSSF Best Practices](https://www.bestpractices.dev/projects/12832/badge)](https://www.bestpractices.dev/projects/12832)
