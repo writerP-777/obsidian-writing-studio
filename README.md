@@ -208,7 +208,7 @@ The word count updates asynchronously from Obsidian's file cache and appears wit
 
 Projects group a set of documents (binder items) and act as the scope for export, statistics, and the word count goal banner.
 
-**To create a project:** Use the command **Create new writing project** from the command palette, or click **+ New** in the Launcher panel.
+**To create a project:** Use the command **Create new writing project** from the command palette, or click the **+** button next to the project dropdown in the Launcher or Binder panel.
 
 **To switch projects:** Use the Launcher panel or the project selector at the top of the Binder panel.
 
