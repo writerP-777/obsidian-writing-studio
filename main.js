@@ -40,6 +40,9 @@ var STATUS_COLORS = {
   published: "#3b82f6"
 };
 
+// src/manuscriptTree.ts
+var import_obsidian = require("obsidian");
+
 // src/binderOrder.ts
 function parseFolderPrefix(name) {
   const m = /^(-?\d+)~ (\S.*)$/.exec(name);
@@ -164,6 +167,9 @@ function validateItemName(typed, targetName, siblingNames) {
 
 // src/folderRename.ts
 var RESERVED_PROJECT_FOLDERS = ["Research", "Exports"];
+function isReservedFolderName(name) {
+  return RESERVED_PROJECT_FOLDERS.some((r) => r.toLowerCase() === name.toLowerCase());
+}
 function documentFolderDisplayName(onDiskName) {
   return parseFolderPrefix(onDiskName).displayName;
 }
@@ -190,12 +196,95 @@ function validateDocumentFolderName(name, currentName, targetExists) {
   if (name.trim() === "") return { ok: false, reason: "empty" };
   if (/[\\/:*?"<>|]/.test(name)) return { ok: false, reason: "invalid-chars" };
   if (/[. ]$/.test(name)) return { ok: false, reason: "trailing" };
-  if (RESERVED_PROJECT_FOLDERS.some((r) => r.toLowerCase() === name.toLowerCase())) {
+  if (isReservedFolderName(name)) {
     return { ok: false, reason: "reserved" };
   }
   const caseOnly = name !== currentName && name.toLowerCase() === currentName.toLowerCase();
   if (targetExists && !caseOnly) return { ok: false, reason: "exists" };
   return { ok: true };
+}
+
+// src/manuscriptTree.ts
+function inManuscriptZone(name, isFolder, isRoot) {
+  if (isHiddenName(name)) return false;
+  if (isRoot && isFolder && isReservedFolderName(name)) return false;
+  return true;
+}
+function buildManuscriptTree(app, rootPath, opts = {}) {
+  const docFiles = [];
+  const root = app.vault.getAbstractFileByPath(rootPath);
+  if (!(root instanceof import_obsidian.TFolder)) return { nodes: [], docFiles };
+  const walk = (folder, isRoot) => {
+    var _a2;
+    const entries = folder.children.filter((c) => inManuscriptZone(
+      c.name,
+      c instanceof import_obsidian.TFolder,
+      isRoot && opts.excludeReservedAtRoot !== false
+    )).map((file) => {
+      var _a3, _b2;
+      return {
+        file,
+        name: file.name,
+        isFolder: file instanceof import_obsidian.TFolder,
+        extension: file instanceof import_obsidian.TFile ? file.extension : void 0,
+        binderOrder: file instanceof import_obsidian.TFile && file.extension === "md" ? parseBinderOrder((_b2 = (_a3 = app.metadataCache.getFileCache(file)) == null ? void 0 : _a3.frontmatter) == null ? void 0 : _b2["binder-order"]) : null
+      };
+    });
+    const nodes = [];
+    for (const s of sortSiblings(entries)) {
+      if (s.file instanceof import_obsidian.TFolder) {
+        nodes.push({
+          kind: "folder",
+          title: parseFolderPrefix(s.file.name).displayName,
+          children: walk(s.file, false)
+        });
+      } else if (s.file instanceof import_obsidian.TFile && s.file.extension === "md") {
+        docFiles.push(s.file);
+        const fm = (_a2 = app.metadataCache.getFileCache(s.file)) == null ? void 0 : _a2.frontmatter;
+        nodes.push({
+          kind: "doc",
+          path: s.file.path,
+          title: s.file.name.slice(0, s.file.name.length - s.file.extension.length - 1),
+          compileExcluded: (fm == null ? void 0 : fm["binder-compile"]) === false
+        });
+      }
+    }
+    return nodes;
+  };
+  return { nodes: walk(root, true), docFiles };
+}
+function listManuscriptDocs(app, projectFolderPath) {
+  return buildManuscriptTree(app, projectFolderPath).docFiles;
+}
+var MAX_HEADING_LEVEL = 6;
+function hasCompiledDoc(nodes) {
+  return nodes.some((n) => n.kind === "doc" ? !n.compileExcluded : hasCompiledDoc(n.children));
+}
+function planCompile(nodes, opts) {
+  const out = [];
+  const docLevel = (parentDepth) => {
+    if (!opts.includeTitlesAsHeadings) return null;
+    return opts.includeFolderNames ? Math.min(parentDepth + 1, MAX_HEADING_LEVEL) : 1;
+  };
+  const walk = (children, parentDepth) => {
+    for (const node of children) {
+      if (node.kind === "doc") {
+        if (node.compileExcluded) continue;
+        out.push({ kind: "doc", path: node.path, title: node.title, headingLevel: docLevel(parentDepth) });
+      } else {
+        if (opts.includeFolderNames && hasCompiledDoc(node.children)) {
+          out.push({
+            kind: "heading",
+            level: Math.min(parentDepth + 1, MAX_HEADING_LEVEL),
+            title: node.title
+          });
+        }
+        walk(node.children, parentDepth + 1);
+      }
+    }
+  };
+  walk(nodes, 0);
+  return out;
 }
 
 // src/binderMove.ts
@@ -259,7 +348,7 @@ function planMove(source, destParentPath, destSiblings, insertAt, writeOrder) {
 }
 
 // modals/ProjectModal.ts
-var import_obsidian2 = require("obsidian");
+var import_obsidian3 = require("obsidian");
 
 // models/Project.ts
 var PROJECT_TYPE_DOCUMENT_FOLDER = {
@@ -2544,7 +2633,7 @@ var loadNamespaces = instance.loadNamespaces;
 var loadLanguages = instance.loadLanguages;
 
 // src/i18n.ts
-var import_obsidian = require("obsidian");
+var import_obsidian2 = require("obsidian");
 
 // src/i18n/en.json
 var en_default = {
@@ -10956,7 +11045,7 @@ var ko_default = {
 
 // src/i18n.ts
 async function initI18n() {
-  const lang = (0, import_obsidian.getLanguage)();
+  const lang = (0, import_obsidian2.getLanguage)();
   await instance.init({
     lng: lang,
     fallbackLng: "en",
@@ -10989,7 +11078,7 @@ var FOLDER_REJECTION_KEYS = {
   reserved: "projectModal.folderNameReserved",
   exists: "projectModal.folderNameExists"
 };
-var ProjectModal = class extends import_obsidian2.Modal {
+var ProjectModal = class extends import_obsidian3.Modal {
   // Most callers need no callback — ProjectManager announces the new project
   // itself. Pass onDone only for work beyond refreshing project state.
   constructor(app, plugin, onDone, edit) {
@@ -11020,27 +11109,27 @@ var ProjectModal = class extends import_obsidian2.Modal {
       this.author = this.plugin.settings.authorName;
     }
     let previewEl = null;
-    new import_obsidian2.Setting(contentEl).setName(t2("projectModal.projectTitle")).addText((tx) => tx.setPlaceholder(t2("projectModal.titlePlaceholder")).setValue(this.title).onChange((v) => {
+    new import_obsidian3.Setting(contentEl).setName(t2("projectModal.projectTitle")).addText((tx) => tx.setPlaceholder(t2("projectModal.titlePlaceholder")).setValue(this.title).onChange((v) => {
       this.title = v;
     }));
     if (!this.edit) {
-      new import_obsidian2.Setting(contentEl).setName(t2("projectModal.template")).setDesc(t2("projectModal.templateDesc")).addDropdown((d) => d.addOption("blank", t2("projectModal.templateOption.blank")).addOption("book", t2("projectModal.templateOption.book")).addOption("series", t2("projectModal.templateOption.series")).addOption("blog", t2("projectModal.templateOption.blog")).addOption("journal-article", t2("projectModal.templateOption.journalArticle")).addOption("magazine-article", t2("projectModal.templateOption.magazineArticle")).setValue(this.type).onChange((v) => {
+      new import_obsidian3.Setting(contentEl).setName(t2("projectModal.template")).setDesc(t2("projectModal.templateDesc")).addDropdown((d) => d.addOption("blank", t2("projectModal.templateOption.blank")).addOption("book", t2("projectModal.templateOption.book")).addOption("series", t2("projectModal.templateOption.series")).addOption("blog", t2("projectModal.templateOption.blog")).addOption("journal-article", t2("projectModal.templateOption.journalArticle")).addOption("magazine-article", t2("projectModal.templateOption.magazineArticle")).setValue(this.type).onChange((v) => {
         this.type = v;
         if (previewEl) this.updateTemplatePreview(previewEl, this.type);
       }));
     }
-    new import_obsidian2.Setting(contentEl).setName(t2("settings.general.authorName")).addText((tx) => tx.setValue(this.author).onChange((v) => {
+    new import_obsidian3.Setting(contentEl).setName(t2("settings.general.authorName")).addText((tx) => tx.setValue(this.author).onChange((v) => {
       this.author = v;
     }));
     if (this.edit) {
-      new import_obsidian2.Setting(contentEl).setName(t2("projectModal.documentFolder")).setDesc(t2("projectModal.documentFolderDesc")).addText((tx) => tx.setValue(this.documentFolder).onChange((v) => {
+      new import_obsidian3.Setting(contentEl).setName(t2("projectModal.documentFolder")).setDesc(t2("projectModal.documentFolderDesc")).addText((tx) => tx.setValue(this.documentFolder).onChange((v) => {
         this.documentFolder = v;
       }));
     }
-    new import_obsidian2.Setting(contentEl).setName(t2("projectModal.goalLabel")).setDesc(t2("projectModal.goalDesc")).addText((tx) => tx.setPlaceholder(t2("projectModal.goalPlaceholder")).setValue(this.goalRaw).onChange((v) => {
+    new import_obsidian3.Setting(contentEl).setName(t2("projectModal.goalLabel")).setDesc(t2("projectModal.goalDesc")).addText((tx) => tx.setPlaceholder(t2("projectModal.goalPlaceholder")).setValue(this.goalRaw).onChange((v) => {
       this.goalRaw = v;
     }));
-    new import_obsidian2.Setting(contentEl).setName(t2("projectModal.descriptionLabel")).addTextArea((tx) => tx.setPlaceholder(t2("projectModal.descriptionPlaceholder")).setValue(this.description).onChange((v) => {
+    new import_obsidian3.Setting(contentEl).setName(t2("projectModal.descriptionLabel")).addTextArea((tx) => tx.setPlaceholder(t2("projectModal.descriptionPlaceholder")).setValue(this.description).onChange((v) => {
       this.description = v;
     }));
     if (!this.edit) {
@@ -11054,7 +11143,7 @@ var ProjectModal = class extends import_obsidian2.Modal {
     });
     submitBtn.onclick = async () => {
       if (!this.title.trim()) {
-        new import_obsidian2.Notice(t2("projectModal.errorNoTitle"));
+        new import_obsidian3.Notice(t2("projectModal.errorNoTitle"));
         return;
       }
       submitBtn.disabled = true;
@@ -11083,11 +11172,11 @@ var ProjectModal = class extends import_obsidian2.Modal {
         await this.plugin.projectManager.saveProject(project);
       }
       await this.plugin.projectManager.setActiveProject(project.id);
-      new import_obsidian2.Notice(t2("projectModal.created", { title: project.title }));
+      new import_obsidian3.Notice(t2("projectModal.created", { title: project.title }));
       this.close();
       (_a2 = this.onDone) == null ? void 0 : _a2.call(this);
     } catch (e) {
-      new import_obsidian2.Notice(t2("projectModal.errorCreate", { error: e instanceof Error ? e.message : String(e) }));
+      new import_obsidian3.Notice(t2("projectModal.errorCreate", { error: e instanceof Error ? e.message : String(e) }));
       submitBtn.disabled = false;
       submitBtn.textContent = t2("projectModal.createBtn");
     }
@@ -11117,11 +11206,11 @@ var ProjectModal = class extends import_obsidian2.Modal {
         delete project.goals.totalWordCount;
       }
       await this.plugin.projectManager.saveProject(project);
-      new import_obsidian2.Notice(t2("projectModal.updated", { title: project.title }));
+      new import_obsidian3.Notice(t2("projectModal.updated", { title: project.title }));
       this.close();
       (_a2 = this.onDone) == null ? void 0 : _a2.call(this);
     } catch (e) {
-      new import_obsidian2.Notice(t2("main.operationFailed", { error: e instanceof Error ? e.message : String(e) }));
+      new import_obsidian3.Notice(t2("main.operationFailed", { error: e instanceof Error ? e.message : String(e) }));
       submitBtn.disabled = false;
     }
   }
@@ -11130,23 +11219,23 @@ var ProjectModal = class extends import_obsidian2.Modal {
   async renameDocumentFolder(project, currentFolder) {
     var _a2;
     const targetName = documentFolderRenameTarget(currentFolder, this.documentFolder);
-    const target = (0, import_obsidian2.normalizePath)(`${project.folderPath}/${targetName}`);
+    const target = (0, import_obsidian3.normalizePath)(`${project.folderPath}/${targetName}`);
     const targetExists = this.app.vault.getAbstractFileByPath(target) !== null;
     const verdict = validateDocumentFolderName(this.documentFolder, documentFolderDisplayName(currentFolder), targetExists);
     if (!verdict.ok) {
-      new import_obsidian2.Notice(t2(FOLDER_REJECTION_KEYS[(_a2 = verdict.reason) != null ? _a2 : "empty"], { name: this.documentFolder }));
+      new import_obsidian3.Notice(t2(FOLDER_REJECTION_KEYS[(_a2 = verdict.reason) != null ? _a2 : "empty"], { name: this.documentFolder }));
       return false;
     }
-    const source = this.app.vault.getFolderByPath((0, import_obsidian2.normalizePath)(`${project.folderPath}/${currentFolder}`));
+    const source = this.app.vault.getFolderByPath((0, import_obsidian3.normalizePath)(`${project.folderPath}/${currentFolder}`));
     if (!source) {
-      new import_obsidian2.Notice(t2("projectModal.folderMissing", { name: documentFolderDisplayName(currentFolder) }));
+      new import_obsidian3.Notice(t2("projectModal.folderMissing", { name: documentFolderDisplayName(currentFolder) }));
       return false;
     }
     try {
       await this.app.fileManager.renameFile(source, target);
       return true;
     } catch (e) {
-      new import_obsidian2.Notice(t2("projectModal.folderRenameFailed", { error: e instanceof Error ? e.message : String(e) }));
+      new import_obsidian3.Notice(t2("projectModal.folderRenameFailed", { error: e instanceof Error ? e.message : String(e) }));
       return false;
     }
   }
@@ -11169,83 +11258,6 @@ var ProjectModal = class extends import_obsidian2.Modal {
 
 // modals/TargetsDashboardModal.ts
 var import_obsidian4 = require("obsidian");
-
-// src/manuscriptTree.ts
-var import_obsidian3 = require("obsidian");
-function buildManuscriptTree(app, rootPath, opts = {}) {
-  const docFiles = [];
-  const root = app.vault.getAbstractFileByPath(rootPath);
-  if (!(root instanceof import_obsidian3.TFolder)) return { nodes: [], docFiles };
-  const walk = (folder, isRoot) => {
-    var _a2;
-    const entries = folder.children.filter((c) => !isHiddenName(c.name)).filter((c) => !(isRoot && opts.excludeReservedAtRoot !== false && c instanceof import_obsidian3.TFolder && RESERVED_PROJECT_FOLDERS.some((r) => r.toLowerCase() === c.name.toLowerCase()))).map((file) => {
-      var _a3, _b2;
-      return {
-        file,
-        name: file.name,
-        isFolder: file instanceof import_obsidian3.TFolder,
-        extension: file instanceof import_obsidian3.TFile ? file.extension : void 0,
-        binderOrder: file instanceof import_obsidian3.TFile && file.extension === "md" ? parseBinderOrder((_b2 = (_a3 = app.metadataCache.getFileCache(file)) == null ? void 0 : _a3.frontmatter) == null ? void 0 : _b2["binder-order"]) : null
-      };
-    });
-    const nodes = [];
-    for (const s of sortSiblings(entries)) {
-      if (s.file instanceof import_obsidian3.TFolder) {
-        nodes.push({
-          kind: "folder",
-          title: parseFolderPrefix(s.file.name).displayName,
-          children: walk(s.file, false)
-        });
-      } else if (s.file instanceof import_obsidian3.TFile && s.file.extension === "md") {
-        docFiles.push(s.file);
-        const fm = (_a2 = app.metadataCache.getFileCache(s.file)) == null ? void 0 : _a2.frontmatter;
-        nodes.push({
-          kind: "doc",
-          path: s.file.path,
-          title: s.file.name.slice(0, s.file.name.length - s.file.extension.length - 1),
-          compileExcluded: (fm == null ? void 0 : fm["binder-compile"]) === false
-        });
-      }
-    }
-    return nodes;
-  };
-  return { nodes: walk(root, true), docFiles };
-}
-function listManuscriptDocs(app, projectFolderPath) {
-  return buildManuscriptTree(app, projectFolderPath).docFiles;
-}
-var MAX_HEADING_LEVEL = 6;
-function hasCompiledDoc(nodes) {
-  return nodes.some((n) => n.kind === "doc" ? !n.compileExcluded : hasCompiledDoc(n.children));
-}
-function planCompile(nodes, opts) {
-  const out = [];
-  const docLevel = (parentDepth) => {
-    if (!opts.includeTitlesAsHeadings) return null;
-    return opts.includeFolderNames ? Math.min(parentDepth + 1, MAX_HEADING_LEVEL) : 1;
-  };
-  const walk = (children, parentDepth) => {
-    for (const node of children) {
-      if (node.kind === "doc") {
-        if (node.compileExcluded) continue;
-        out.push({ kind: "doc", path: node.path, title: node.title, headingLevel: docLevel(parentDepth) });
-      } else {
-        if (opts.includeFolderNames && hasCompiledDoc(node.children)) {
-          out.push({
-            kind: "heading",
-            level: Math.min(parentDepth + 1, MAX_HEADING_LEVEL),
-            title: node.title
-          });
-        }
-        walk(node.children, parentDepth + 1);
-      }
-    }
-  };
-  walk(nodes, 0);
-  return out;
-}
-
-// modals/TargetsDashboardModal.ts
 var STATUS_KEY = {
   draft: "targetsDashboard.status.draft",
   "in-progress": "targetsDashboard.status.inProgress",
@@ -11568,6 +11580,9 @@ var ConfirmModal = class extends import_obsidian7.Modal {
 var import_obsidian8 = require("obsidian");
 
 // src/exportTitle.ts
+function exportTitleChoices(hasFolder) {
+  return hasFolder ? ["folder", "project-folder", "project", "custom"] : ["project", "custom"];
+}
 function resolveExportTitle(choice, ctx) {
   var _a2, _b2;
   switch (choice) {
@@ -11649,13 +11664,16 @@ var _ExportModal = class _ExportModal extends import_obsidian8.Modal {
         this.exportScope = v;
       }));
     }
+    const titleChoiceKeys = {
+      folder: "exportModal.titleFolder",
+      "project-folder": "exportModal.titleProjectFolder",
+      project: "exportModal.titleProject",
+      custom: "exportModal.titleCustom"
+    };
     new import_obsidian8.Setting(contentEl).setName(t2("exportModal.titleName")).addDropdown((d) => {
-      if (this.subtreeRoot) {
-        d.addOption("folder", t2("exportModal.titleFolder"));
-        d.addOption("project-folder", t2("exportModal.titleProjectFolder"));
+      for (const choice of exportTitleChoices(!!this.subtreeRoot)) {
+        d.addOption(choice, t2(titleChoiceKeys[choice]));
       }
-      d.addOption("project", t2("exportModal.titleProject"));
-      d.addOption("custom", t2("exportModal.titleCustom"));
       d.setValue(this.titleChoice);
       d.onChange((v) => {
         this.titleChoice = v;
@@ -13098,10 +13116,7 @@ var FilesystemBinderView = class extends import_obsidian14.ItemView {
   buildChildren(folder, isRoot) {
     const nodes = [];
     for (const child of folder.children) {
-      if (isHiddenName(child.name)) continue;
-      if (isRoot && child instanceof import_obsidian14.TFolder && RESERVED_PROJECT_FOLDERS.some((r) => r.toLowerCase() === child.name.toLowerCase())) {
-        continue;
-      }
+      if (!inManuscriptZone(child.name, child instanceof import_obsidian14.TFolder, isRoot)) continue;
       const node = this.buildNode(child);
       if (node) nodes.push(node);
     }

@@ -1,7 +1,7 @@
 import { App, MarkdownView, Modal, Setting, Notice } from 'obsidian';
 import type WritingStudioPlugin from '../main';
 import { ExportFormat, ExportScope, ExportUiState } from '../src/ExportEngine';
-import { ExportTitleChoice, resolveExportTitle } from '../src/exportTitle';
+import { ExportTitleChoice, exportTitleChoices, resolveExportTitle } from '../src/exportTitle';
 import { parseFolderPrefix } from '../src/binderOrder';
 import { t } from '../src/i18n';
 
@@ -111,16 +111,20 @@ export class ExportModal extends Modal {
     }
 
     // One title names the export everywhere — filename, title page, metadata
-    // (#260). The folder-based choices only exist for a folder export.
+    // (#260). The choice list comes from the engine the resolver is tested
+    // against, so the dropdown and the resolution can never disagree.
+    const titleChoiceKeys: Record<ExportTitleChoice, string> = {
+      folder: 'exportModal.titleFolder',
+      'project-folder': 'exportModal.titleProjectFolder',
+      project: 'exportModal.titleProject',
+      custom: 'exportModal.titleCustom',
+    };
     new Setting(contentEl)
       .setName(t('exportModal.titleName'))
       .addDropdown(d => {
-        if (this.subtreeRoot) {
-          d.addOption('folder', t('exportModal.titleFolder'));
-          d.addOption('project-folder', t('exportModal.titleProjectFolder'));
+        for (const choice of exportTitleChoices(!!this.subtreeRoot)) {
+          d.addOption(choice, t(titleChoiceKeys[choice]));
         }
-        d.addOption('project', t('exportModal.titleProject'));
-        d.addOption('custom', t('exportModal.titleCustom'));
         d.setValue(this.titleChoice);
         d.onChange(v => {
           this.titleChoice = v as ExportTitleChoice;
