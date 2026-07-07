@@ -1,7 +1,23 @@
+import { parseFolderPrefix } from './binderOrder';
+import { renameTargetName } from './binderMenu';
+
 // Folders every project reserves for non-document content. createProject
 // scaffolds these next to the document folder; template manifests create
 // nothing else at that level, so this list is complete.
 export const RESERVED_PROJECT_FOLDERS = ['Research', 'Exports'];
+
+// The edit-project modal's Document folder field works in display names:
+// the order marker migration or a reorder attached to the folder is never
+// shown, and a typed name re-attaches the existing marker — the same engine
+// as a binder rename — so an edit there can never cost the folder its order
+// (#233 audit ruling).
+export function documentFolderDisplayName(onDiskName: string): string {
+  return parseFolderPrefix(onDiskName).displayName;
+}
+
+export function documentFolderRenameTarget(onDiskName: string, typed: string): string {
+  return renameTargetName({ name: onDiskName, isFolder: true, binderOrder: null }, typed);
+}
 
 export function baseName(path: string): string {
   const i = path.lastIndexOf('/');

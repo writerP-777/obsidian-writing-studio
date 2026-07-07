@@ -40,36 +40,6 @@ var STATUS_COLORS = {
   published: "#3b82f6"
 };
 
-// src/folderRename.ts
-var RESERVED_PROJECT_FOLDERS = ["Research", "Exports"];
-function baseName(path) {
-  const i2 = path.lastIndexOf("/");
-  return i2 === -1 ? path : path.slice(i2 + 1);
-}
-function parentPath(path) {
-  const i2 = path.lastIndexOf("/");
-  return i2 === -1 ? "" : path.slice(0, i2);
-}
-function pathAtOrUnder(path, prefix) {
-  return path === prefix || path.startsWith(prefix + "/");
-}
-function rewritePathPrefix(path, oldPrefix, newPrefix) {
-  if (path === oldPrefix) return newPrefix;
-  if (path.startsWith(oldPrefix + "/")) return newPrefix + path.slice(oldPrefix.length);
-  return path;
-}
-function validateDocumentFolderName(name, currentName, targetExists) {
-  if (name.trim() === "") return { ok: false, reason: "empty" };
-  if (/[\\/:*?"<>|]/.test(name)) return { ok: false, reason: "invalid-chars" };
-  if (/[. ]$/.test(name)) return { ok: false, reason: "trailing" };
-  if (RESERVED_PROJECT_FOLDERS.some((r) => r.toLowerCase() === name.toLowerCase())) {
-    return { ok: false, reason: "reserved" };
-  }
-  const caseOnly = name !== currentName && name.toLowerCase() === currentName.toLowerCase();
-  if (targetExists && !caseOnly) return { ok: false, reason: "exists" };
-  return { ok: true };
-}
-
 // src/binderOrder.ts
 function parseFolderPrefix(name) {
   const m = /^(-?\d+)~ (\S.*)$/.exec(name);
@@ -150,6 +120,84 @@ function planReorder(sequence, movedIndex) {
   return writes;
 }
 
+// src/binderMenu.ts
+var BINDER_TYPES = ["chapter", "section", "article", "note"];
+function parseBinderType(value) {
+  return typeof value === "string" && BINDER_TYPES.includes(value) ? value : null;
+}
+function parseBinderStatus(value) {
+  return typeof value === "string" && value in STATUS_COLORS ? value : null;
+}
+function menuActionsFor(entry, zone) {
+  if (zone === "exports") return ["delete"];
+  if (!entry.isFolder && entry.extension !== "md") return ["rename", "delete"];
+  if (entry.isFolder && zone === "manuscript") {
+    return ["rename", "export", "newDoc", "newFolder", "delete"];
+  }
+  if (zone === "research" || entry.isFolder) {
+    return ["rename", "newDoc", "newFolder", "delete"];
+  }
+  return ["rename", "status", "goal", "type", "compile", "newDoc", "newFolder", "delete"];
+}
+function renamePrefill(entry) {
+  if (entry.isFolder || entry.extension === "md") return entryDisplayName(entry);
+  return entry.extension ? entry.name.slice(0, entry.name.length - entry.extension.length - 1) : entry.name;
+}
+function renameTargetName(entry, typed) {
+  if (entry.isFolder) {
+    if (parseFolderPrefix(typed).order !== null) return typed;
+    const order = parseFolderPrefix(entry.name).order;
+    return order !== null ? folderNameWithPrefix(typed, order) : typed;
+  }
+  if (!entry.extension) return typed;
+  const suffix = "." + entry.extension;
+  return typed.toLowerCase().endsWith(suffix.toLowerCase()) ? typed : typed + suffix;
+}
+function validateItemName(typed, targetName, siblingNames) {
+  if (typed.trim() === "") return { ok: false, reason: "empty" };
+  if (/[\\/:*?"<>|]/.test(typed)) return { ok: false, reason: "invalid-chars" };
+  if (/[. ]$/.test(typed)) return { ok: false, reason: "trailing" };
+  const lower = targetName.toLowerCase();
+  if (siblingNames.some((n) => n.toLowerCase() === lower)) return { ok: false, reason: "exists" };
+  return { ok: true };
+}
+
+// src/folderRename.ts
+var RESERVED_PROJECT_FOLDERS = ["Research", "Exports"];
+function documentFolderDisplayName(onDiskName) {
+  return parseFolderPrefix(onDiskName).displayName;
+}
+function documentFolderRenameTarget(onDiskName, typed) {
+  return renameTargetName({ name: onDiskName, isFolder: true, binderOrder: null }, typed);
+}
+function baseName(path) {
+  const i2 = path.lastIndexOf("/");
+  return i2 === -1 ? path : path.slice(i2 + 1);
+}
+function parentPath(path) {
+  const i2 = path.lastIndexOf("/");
+  return i2 === -1 ? "" : path.slice(0, i2);
+}
+function pathAtOrUnder(path, prefix) {
+  return path === prefix || path.startsWith(prefix + "/");
+}
+function rewritePathPrefix(path, oldPrefix, newPrefix) {
+  if (path === oldPrefix) return newPrefix;
+  if (path.startsWith(oldPrefix + "/")) return newPrefix + path.slice(oldPrefix.length);
+  return path;
+}
+function validateDocumentFolderName(name, currentName, targetExists) {
+  if (name.trim() === "") return { ok: false, reason: "empty" };
+  if (/[\\/:*?"<>|]/.test(name)) return { ok: false, reason: "invalid-chars" };
+  if (/[. ]$/.test(name)) return { ok: false, reason: "trailing" };
+  if (RESERVED_PROJECT_FOLDERS.some((r) => r.toLowerCase() === name.toLowerCase())) {
+    return { ok: false, reason: "reserved" };
+  }
+  const caseOnly = name !== currentName && name.toLowerCase() === currentName.toLowerCase();
+  if (targetExists && !caseOnly) return { ok: false, reason: "exists" };
+  return { ok: true };
+}
+
 // src/binderMove.ts
 function dropRegion(targetIsFolder, offsetY, height) {
   if (!targetIsFolder) return offsetY < height / 2 ? "before" : "after";
@@ -208,48 +256,6 @@ function planMove(source, destParentPath, destSiblings, insertAt, writeOrder) {
     }
   }
   return ops;
-}
-
-// src/binderMenu.ts
-var BINDER_TYPES = ["chapter", "section", "article", "note"];
-function parseBinderType(value) {
-  return typeof value === "string" && BINDER_TYPES.includes(value) ? value : null;
-}
-function parseBinderStatus(value) {
-  return typeof value === "string" && value in STATUS_COLORS ? value : null;
-}
-function menuActionsFor(entry, zone) {
-  if (zone === "exports") return ["delete"];
-  if (!entry.isFolder && entry.extension !== "md") return ["rename", "delete"];
-  if (entry.isFolder && zone === "manuscript") {
-    return ["rename", "export", "newDoc", "newFolder", "delete"];
-  }
-  if (zone === "research" || entry.isFolder) {
-    return ["rename", "newDoc", "newFolder", "delete"];
-  }
-  return ["rename", "status", "goal", "type", "compile", "newDoc", "newFolder", "delete"];
-}
-function renamePrefill(entry) {
-  if (entry.isFolder || entry.extension === "md") return entryDisplayName(entry);
-  return entry.extension ? entry.name.slice(0, entry.name.length - entry.extension.length - 1) : entry.name;
-}
-function renameTargetName(entry, typed) {
-  if (entry.isFolder) {
-    if (parseFolderPrefix(typed).order !== null) return typed;
-    const order = parseFolderPrefix(entry.name).order;
-    return order !== null ? folderNameWithPrefix(typed, order) : typed;
-  }
-  if (!entry.extension) return typed;
-  const suffix = "." + entry.extension;
-  return typed.toLowerCase().endsWith(suffix.toLowerCase()) ? typed : typed + suffix;
-}
-function validateItemName(typed, targetName, siblingNames) {
-  if (typed.trim() === "") return { ok: false, reason: "empty" };
-  if (/[\\/:*?"<>|]/.test(typed)) return { ok: false, reason: "invalid-chars" };
-  if (/[. ]$/.test(typed)) return { ok: false, reason: "trailing" };
-  const lower = targetName.toLowerCase();
-  if (siblingNames.some((n) => n.toLowerCase() === lower)) return { ok: false, reason: "exists" };
-  return { ok: true };
 }
 
 // modals/ProjectModal.ts
@@ -11081,7 +11087,7 @@ var ProjectModal = class extends import_obsidian2.Modal {
       this.author = this.edit.author;
       this.description = this.edit.description;
       this.goalRaw = String(((_a2 = this.edit.goals) == null ? void 0 : _a2.totalWordCount) || "");
-      this.documentFolder = resolveDocumentFolder(this.edit);
+      this.documentFolder = documentFolderDisplayName(resolveDocumentFolder(this.edit));
     } else {
       this.author = this.plugin.settings.authorName;
     }
@@ -11165,7 +11171,7 @@ var ProjectModal = class extends import_obsidian2.Modal {
   async saveEdit(project, submitBtn) {
     var _a2;
     const currentFolder = resolveDocumentFolder(project);
-    if (this.documentFolder !== currentFolder) {
+    if (this.documentFolder !== documentFolderDisplayName(currentFolder)) {
       const renamed = await this.renameDocumentFolder(project, currentFolder);
       if (!renamed) {
         submitBtn.disabled = false;
@@ -11195,16 +11201,17 @@ var ProjectModal = class extends import_obsidian2.Modal {
   // vault rename fails — a failed rename never passes silently.
   async renameDocumentFolder(project, currentFolder) {
     var _a2;
-    const target = (0, import_obsidian2.normalizePath)(`${project.folderPath}/${this.documentFolder}`);
+    const targetName = documentFolderRenameTarget(currentFolder, this.documentFolder);
+    const target = (0, import_obsidian2.normalizePath)(`${project.folderPath}/${targetName}`);
     const targetExists = this.app.vault.getAbstractFileByPath(target) !== null;
-    const verdict = validateDocumentFolderName(this.documentFolder, currentFolder, targetExists);
+    const verdict = validateDocumentFolderName(this.documentFolder, documentFolderDisplayName(currentFolder), targetExists);
     if (!verdict.ok) {
       new import_obsidian2.Notice(t2(FOLDER_REJECTION_KEYS[(_a2 = verdict.reason) != null ? _a2 : "empty"], { name: this.documentFolder }));
       return false;
     }
     const source = this.app.vault.getFolderByPath((0, import_obsidian2.normalizePath)(`${project.folderPath}/${currentFolder}`));
     if (!source) {
-      new import_obsidian2.Notice(t2("projectModal.folderMissing", { name: currentFolder }));
+      new import_obsidian2.Notice(t2("projectModal.folderMissing", { name: documentFolderDisplayName(currentFolder) }));
       return false;
     }
     try {
