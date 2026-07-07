@@ -1,5 +1,5 @@
 import { App, TFile, TFolder } from 'obsidian';
-import { RESERVED_PROJECT_FOLDERS } from './folderRename';
+import { isReservedFolderName } from './folderRename';
 import { isHiddenName, parseBinderOrder, parseFolderPrefix, sortSiblings } from './binderOrder';
 
 // The manuscript zone as data, for consumers outside the view: the same tree
@@ -34,6 +34,17 @@ export interface ManuscriptTree {
   docFiles: TFile[];
 }
 
+// The zone-membership rule, single-sourced (#233 audit): a child belongs to
+// the manuscript zone unless its name is hidden or — at the project root
+// only — it is a reserved drawer folder. The binder view and this walker
+// both call it, so binder, dashboard, and compile cannot disagree on
+// membership.
+export function inManuscriptZone(name: string, isFolder: boolean, isRoot: boolean): boolean {
+  if (isHiddenName(name)) return false;
+  if (isRoot && isFolder && isReservedFolderName(name)) return false;
+  return true;
+}
+
 // Research and Exports are drawer zones only at the project root; a nested
 // folder that happens to share their name is ordinary manuscript, so subtree
 // walks (rooted inside the zone) must not filter it.
@@ -48,9 +59,8 @@ export function buildManuscriptTree(
 
   const walk = (folder: TFolder, isRoot: boolean): ManuscriptNode[] => {
     const entries = folder.children
-      .filter(c => !isHiddenName(c.name))
-      .filter(c => !(isRoot && opts.excludeReservedAtRoot !== false && c instanceof TFolder &&
-        RESERVED_PROJECT_FOLDERS.some(r => r.toLowerCase() === c.name.toLowerCase())))
+      .filter(c => inManuscriptZone(
+        c.name, c instanceof TFolder, isRoot && opts.excludeReservedAtRoot !== false))
       .map(file => ({
         file,
         name: file.name,

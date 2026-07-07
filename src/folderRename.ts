@@ -6,6 +6,10 @@ import { renameTargetName } from './binderMenu';
 // nothing else at that level, so this list is complete.
 export const RESERVED_PROJECT_FOLDERS = ['Research', 'Exports'];
 
+export function isReservedFolderName(name: string): boolean {
+  return RESERVED_PROJECT_FOLDERS.some(r => r.toLowerCase() === name.toLowerCase());
+}
+
 // The edit-project modal's Document folder field works in display names:
 // the order marker migration or a reorder attached to the folder is never
 // shown, and a typed name re-attaches the existing marker — the same engine
@@ -61,7 +65,7 @@ export function validateDocumentFolderName(
   if (name.trim() === '') return { ok: false, reason: 'empty' };
   if (/[\\/:*?"<>|]/.test(name)) return { ok: false, reason: 'invalid-chars' };
   if (/[. ]$/.test(name)) return { ok: false, reason: 'trailing' };
-  if (RESERVED_PROJECT_FOLDERS.some(r => r.toLowerCase() === name.toLowerCase())) {
+  if (isReservedFolderName(name)) {
     return { ok: false, reason: 'reserved' };
   }
   const caseOnly = name !== currentName && name.toLowerCase() === currentName.toLowerCase();

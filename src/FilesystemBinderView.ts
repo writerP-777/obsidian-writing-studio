@@ -2,7 +2,7 @@ import { App, ItemView, Menu, WorkspaceLeaf, TAbstractFile, TFile, TFolder, Noti
 import type WritingStudioPlugin from '../main';
 import { WritingProject } from '../models/Project';
 import { STATUS_COLORS, DocumentStatus } from '../models/BinderItem';
-import { RESERVED_PROJECT_FOLDERS } from './folderRename';
+import { inManuscriptZone } from './manuscriptTree';
 import { SiblingEntry, sortSiblings, entryDisplayName, isHiddenName, parseBinderOrder } from './binderOrder';
 import { BinderZone, DropRegion, DragSource, MoveEntry, MoveOp, dropRegion, canStartDrag, evaluateDrop, planMove } from './binderMove';
 import { BinderDocType, BINDER_TYPES, ItemNameRejection, menuActionsFor, parseBinderStatus, parseBinderType, renamePrefill, renameTargetName, validateItemName } from './binderMenu';
@@ -318,11 +318,8 @@ export class FilesystemBinderView extends ItemView {
   private buildChildren(folder: TFolder, isRoot: boolean): TreeNode[] {
     const nodes: TreeNode[] = [];
     for (const child of folder.children) {
-      if (isHiddenName(child.name)) continue;
-      if (isRoot && child instanceof TFolder &&
-          RESERVED_PROJECT_FOLDERS.some(r => r.toLowerCase() === child.name.toLowerCase())) {
-        continue;
-      }
+      // Membership is single-sourced with the compile/dashboard walker
+      if (!inManuscriptZone(child.name, child instanceof TFolder, isRoot)) continue;
       const node = this.buildNode(child);
       if (node) nodes.push(node);
     }

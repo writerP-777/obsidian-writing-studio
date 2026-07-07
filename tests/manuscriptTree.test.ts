@@ -1,6 +1,6 @@
 import { App, TFile, TFolder } from 'obsidian';
 import {
-  buildManuscriptTree, listManuscriptDocs, planCompile,
+  buildManuscriptTree, inManuscriptZone, listManuscriptDocs, planCompile,
   ManuscriptNode, CompilePlanItem,
 } from '../src/manuscriptTree';
 
@@ -46,6 +46,27 @@ function makeWorld(fm: Record<string, Record<string, unknown>> = {}): FixtureWor
 }
 
 // ─── buildManuscriptTree ─────────────────────────────────────────────────────
+
+// The single-sourced membership rule (#233 audit): the binder view and the
+// walker both call this, so binder, dashboard, and compile cannot disagree.
+describe('inManuscriptZone', () => {
+  it('excludes hidden names everywhere', () => {
+    expect(inManuscriptZone('_project.json', false, true)).toBe(false);
+    expect(inManuscriptZone('.obsidian-thing', true, false)).toBe(false);
+  });
+
+  it('excludes reserved folders at the root only, case-insensitively', () => {
+    expect(inManuscriptZone('Research', true, true)).toBe(false);
+    expect(inManuscriptZone('exports', true, true)).toBe(false);
+    expect(inManuscriptZone('Research', true, false)).toBe(true); // nested = ordinary manuscript
+    expect(inManuscriptZone('Research.md', false, true)).toBe(true); // a file, not the drawer folder
+  });
+
+  it('admits ordinary children', () => {
+    expect(inManuscriptZone('Chapter 1.md', false, true)).toBe(true);
+    expect(inManuscriptZone('020~ Part One', true, true)).toBe(true);
+  });
+});
 
 describe('buildManuscriptTree', () => {
   it('orders siblings on the shared number line and nests folders', () => {
