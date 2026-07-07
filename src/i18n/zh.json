@@ -231,8 +231,6 @@
     "title": "写作工作室",
     "settings": "设置",
     "project": "项目",
-    "noProjectSelected": "未选择项目。",
-    "chooseProject": "— 选择项目 —",
     "wordCount": "{{n}} 字",
     "wordGoal": "/ {{n}} 目标",
     "pctComplete": "{{pct}}% 完成",
@@ -275,7 +273,6 @@
     "sessionWordsTyped": "本次：+{{n}} 字",
     "dailyGoal": "每日目标：{{written}} / {{goal}} 字",
     "sprintInProgress": "冲刺进行中",
-    "switchProject": "切换项目",
     "firstRun": {
       "intro": "Writing Studio 将您的写作整理为项目，每个项目都有自己的章节与文档活页夹。",
       "hint": "创建一个项目以生成其文件夹并开始写作。",

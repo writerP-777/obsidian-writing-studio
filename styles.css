@@ -1007,47 +1007,12 @@ body.writing-studio-typography .markdown-reading-view .markdown-preview-section 
   padding: 0;
 }
 
-/* Boxed new-project button — matches the binder's project-control buttons */
-.ws-launcher-new-btn {
-  border: 1px solid var(--background-modifier-border);
-  padding: 3px 8px;
-  color: var(--text-normal);
-}
-
 .ws-launcher-text-btn:hover {
   text-decoration: underline;
 }
 
-/* Project card */
-.ws-launcher-empty {
-  color: var(--text-muted);
-  font-size: 12px;
-  margin-bottom: 8px;
-}
-
-.ws-launcher-project-sel {
-  font-size: 12px;
-  padding: 3px 6px;
-  background: var(--background-secondary);
-  border: 1px solid var(--background-modifier-border);
-  border-radius: 4px;
-  color: var(--text-normal);
-  max-width: 100%;
-}
-
-.ws-launcher-project-name-row {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  margin-bottom: 6px;
-  flex-wrap: wrap;
-}
-
-.ws-launcher-project-name {
-  font-size: 14px;
-  color: var(--text-normal);
-}
-
+/* Project card — the project row itself reuses the binder's
+   ws-binder-project-row classes (the binder is the reference, #233 audit) */
 .ws-launcher-wc-row {
   display: flex;
   align-items: baseline;

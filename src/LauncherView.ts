@@ -1,4 +1,4 @@
-import { App, ItemView, Menu, WorkspaceLeaf, setIcon, setTooltip } from 'obsidian';
+import { App, ItemView, WorkspaceLeaf, setIcon } from 'obsidian';
 import type WritingStudioPlugin from '../main';
 import { WritingModeType } from '../models/WritingMode';
 import { ProjectModal } from '../modals/ProjectModal';
@@ -136,88 +136,65 @@ export class LauncherView extends ItemView {
     const cardHeader = card.createDiv('ws-launcher-card-header');
     cardHeader.createSpan({ text: t('launcher.project'), cls: 'ws-launcher-card-label' });
 
-    // First run: the empty-state CTA below replaces the new-project button.
-    // Boxed "+" icon matching the binder's project-control buttons (#233 audit)
-    if (this.plugin.projectManager.getProjects().length > 0) {
-      const newProjectBtn = cardHeader.createEl('button', { cls: 'ws-launcher-icon-btn ws-launcher-new-btn', title: t('binder.newProject') });
-      setIcon(newProjectBtn, 'plus');
-      newProjectBtn.onclick = () => {
+    const projects = this.plugin.projectManager.getProjects();
+
+    // Fresh install — orient toward the create → binder → write loop
+    if (!project && projects.length === 0) {
+      const intro = card.createDiv('ws-launcher-first-run');
+      intro.createDiv({ text: t('launcher.firstRun.intro'), cls: 'ws-launcher-first-run-text' });
+      intro.createDiv({ text: t('launcher.firstRun.hint'), cls: 'ws-launcher-first-run-text' });
+      const cta = card.createEl('button', { cls: 'ws-launcher-action-btn mod-cta', text: t('launcher.firstRun.cta') });
+      cta.onclick = () => {
         new ProjectModal(this.app, this.plugin).open();
       };
+      return;
     }
 
+    // Project row — an exact copy of the binder's (#233 audit ruling: the
+    // binder is the reference), down to the classes, so the two rows can
+    // never drift apart visually
+    const projectRow = card.createDiv('ws-binder-project-row');
+    const selWrap = projectRow.createDiv('ws-binder-project-sel-wrap');
+    const projectSel = selWrap.createEl('select', { cls: 'ws-binder-project-sel' });
+
+    const noOpt = projectSel.createEl('option', { text: t('binder.selectProject') });
+    noOpt.value = '';
+
+    for (const p of projects) {
+      const opt = projectSel.createEl('option', { text: p.title });
+      opt.value = p.id;
+      if (project?.id === p.id) opt.selected = true;
+    }
+
+    projectSel.onchange = async () => {
+      // The active-project-changed event re-renders this panel
+      await this.plugin.projectManager.setActiveProject(projectSel.value || null);
+    };
+
+    const selCaret = selWrap.createSpan('ws-binder-project-caret');
+    setIcon(selCaret, 'chevrons-up-down');
+
+    const newProjectBtn = projectRow.createEl('button', { cls: 'ws-binder-btn', title: t('binder.newProject') });
+    setIcon(newProjectBtn, 'plus');
+    newProjectBtn.onclick = () => {
+      new ProjectModal(this.app, this.plugin).open();
+    };
+
     if (project) {
-      const editBtn = cardHeader.createEl('button', { cls: 'ws-launcher-icon-btn', title: t('projectModal.editTitle') });
-      setIcon(editBtn, 'pencil');
-      editBtn.onclick = () => {
+      const editProjectBtn = projectRow.createEl('button', { cls: 'ws-binder-btn', title: t('projectModal.editTitle') });
+      setIcon(editProjectBtn, 'pencil');
+      editProjectBtn.onclick = () => {
         new ProjectModal(this.app, this.plugin, undefined, project).open();
       };
 
-      const deleteBtn = cardHeader.createEl('button', { cls: 'ws-launcher-icon-btn', title: t('projectModal.deleteTitle') });
-      setIcon(deleteBtn, 'trash');
-      deleteBtn.onclick = () => {
+      const deleteProjectBtn = projectRow.createEl('button', { cls: 'ws-binder-btn', title: t('projectModal.deleteTitle') });
+      setIcon(deleteProjectBtn, 'trash');
+      deleteProjectBtn.onclick = () => {
         confirmDeleteProject(this.app, this.plugin, project);
       };
     }
 
-    if (!project) {
-      const projects = this.plugin.projectManager.getProjects();
-
-      // Fresh install — orient toward the create → binder → write loop
-      if (projects.length === 0) {
-        const intro = card.createDiv('ws-launcher-first-run');
-        intro.createDiv({ text: t('launcher.firstRun.intro'), cls: 'ws-launcher-first-run-text' });
-        intro.createDiv({ text: t('launcher.firstRun.hint'), cls: 'ws-launcher-first-run-text' });
-        const cta = card.createEl('button', { cls: 'ws-launcher-action-btn mod-cta', text: t('launcher.firstRun.cta') });
-        cta.onclick = () => {
-          new ProjectModal(this.app, this.plugin).open();
-        };
-        return;
-      }
-
-      const emptyRow = card.createDiv('ws-launcher-empty');
-      emptyRow.textContent = t('launcher.noProjectSelected');
-
-      if (projects.length > 0) {
-        const sel = card.createEl('select', { cls: 'ws-launcher-project-sel' });
-        sel.createEl('option', { text: t('launcher.chooseProject'), value: '' });
-        for (const p of projects) {
-          sel.createEl('option', { text: p.title, value: p.id });
-        }
-        sel.onchange = async () => {
-          if (sel.value) {
-            await this.plugin.projectManager.setActiveProject(sel.value);
-            await this.refresh();
-          }
-        };
-      }
-      return;
-    }
-
-    // Project name + switcher — the name renders once; with multiple
-    // projects an icon-only menu handles switching (a select here echoed
-    // the title a second time)
-    const nameRow = card.createDiv('ws-launcher-project-name-row');
-    nameRow.createEl('strong', { text: project.title, cls: 'ws-launcher-project-name' });
-
-    const projects = this.plugin.projectManager.getProjects();
-    if (projects.length > 1) {
-      const switchBtn = nameRow.createEl('button', { cls: 'ws-launcher-icon-btn' });
-      setIcon(switchBtn, 'chevrons-up-down');
-      setTooltip(switchBtn, t('launcher.switchProject'));
-      switchBtn.onclick = (e) => {
-        const menu = new Menu();
-        for (const p of projects) {
-          menu.addItem(i => {
-            i.setTitle(p.title).setChecked(p.id === project.id).onClick(async () => {
-              // The active-project-changed event re-renders this panel
-              await this.plugin.projectManager.setActiveProject(p.id);
-            });
-          });
-        }
-        menu.showAtMouseEvent(e);
-      };
-    }
+    if (!project) return;
 
     // Word count + progress
     try {
