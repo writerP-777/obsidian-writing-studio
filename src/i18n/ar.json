@@ -237,7 +237,6 @@
     "title": "استوديو الكتابة",
     "settings": "الإعدادات",
     "project": "المشروع",
-    "newProject": "+ جديد",
     "noProjectSelected": "لم يتم اختيار مشروع.",
     "chooseProject": "— اختر مشروعاً —",
     "wordCount": "{{n}} كلمة",

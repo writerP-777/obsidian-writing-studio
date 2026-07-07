@@ -231,7 +231,6 @@
     "title": "Studio d'écriture",
     "settings": "Paramètres",
     "project": "Projet",
-    "newProject": "+ nouveau",
     "noProjectSelected": "Aucun projet sélectionné.",
     "chooseProject": "— choisir un projet —",
     "wordCount": "{{n}} mots",

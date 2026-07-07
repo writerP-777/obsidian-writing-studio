@@ -185,9 +185,12 @@ export class FilesystemBinderView extends ItemView {
 
     const header = container.createDiv('ws-binder-header');
 
-    // Project selector — identical to the classic binder's project row
+    // Project selector, with the same project-switch chevron the launcher's
+    // switcher carries (#233 audit) — the caret ignores pointer events so
+    // every click lands on the select underneath
     const projectRow = header.createDiv('ws-binder-project-row');
-    const projectSel = projectRow.createEl('select', { cls: 'ws-binder-project-sel' });
+    const selWrap = projectRow.createDiv('ws-binder-project-sel-wrap');
+    const projectSel = selWrap.createEl('select', { cls: 'ws-binder-project-sel' });
     const projects = this.plugin.projectManager.getProjects();
 
     const noOpt = projectSel.createEl('option', { text: t('binder.selectProject') });
@@ -202,6 +205,9 @@ export class FilesystemBinderView extends ItemView {
     projectSel.onchange = async () => {
       await this.plugin.projectManager.setActiveProject(projectSel.value || null);
     };
+
+    const selCaret = selWrap.createSpan('ws-binder-project-caret');
+    setIcon(selCaret, 'chevrons-up-down');
 
     const newProjectBtn = projectRow.createEl('button', { cls: 'ws-binder-btn', title: t('binder.newProject') });
     setIcon(newProjectBtn, 'plus');

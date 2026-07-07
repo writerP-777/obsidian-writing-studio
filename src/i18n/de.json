@@ -231,7 +231,6 @@
     "title": "Schreibstudio",
     "settings": "Einstellungen",
     "project": "Projekt",
-    "newProject": "+ Neu",
     "noProjectSelected": "Kein Projekt ausgewählt.",
     "chooseProject": "— Projekt auswählen —",
     "wordCount": "{{n}} Wörter",

@@ -231,7 +231,6 @@
     "title": "글쓰기 스튜디오",
     "settings": "설정",
     "project": "프로젝트",
-    "newProject": "+ 새로 만들기",
     "noProjectSelected": "선택된 프로젝트가 없습니다.",
     "chooseProject": "— 프로젝트 선택 —",
     "wordCount": "{{n}} 단어",

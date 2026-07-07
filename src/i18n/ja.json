@@ -231,7 +231,6 @@
     "title": "ライティングスタジオ",
     "settings": "設定",
     "project": "プロジェクト",
-    "newProject": "＋新規",
     "noProjectSelected": "プロジェクトが選択されていません。",
     "chooseProject": "— プロジェクトを選択 —",
     "wordCount": "{{n}} 語",

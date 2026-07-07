@@ -146,15 +146,40 @@ body.writing-studio-typography .markdown-reading-view .markdown-preview-section 
   margin-bottom: 8px;
 }
 
+.ws-binder-project-sel-wrap {
+  position: relative;
+  flex: 1;
+  min-width: 0;
+  display: flex;
+}
+
 .ws-binder-project-sel {
   flex: 1;
   min-width: 0;
   font-size: 12px;
-  padding: 3px 6px;
+  padding: 3px 22px 3px 6px;
+  appearance: none;
   background: var(--background-secondary);
   border: 1px solid var(--background-modifier-border);
   border-radius: 4px;
   color: var(--text-normal);
+}
+
+/* Project-switch indicator — same chevron as the launcher's switcher */
+.ws-binder-project-caret {
+  position: absolute;
+  right: 5px;
+  top: 50%;
+  transform: translateY(-50%);
+  pointer-events: none;
+  display: flex;
+  align-items: center;
+  color: var(--text-muted);
+}
+
+.ws-binder-project-caret svg {
+  width: 14px;
+  height: 14px;
 }
 
 .ws-binder-toolbar {
@@ -980,6 +1005,13 @@ body.writing-studio-typography .markdown-reading-view .markdown-preview-section 
   color: var(--ws-accent);
   font-size: 12px;
   padding: 0;
+}
+
+/* Boxed new-project button — matches the binder's project-control buttons */
+.ws-launcher-new-btn {
+  border: 1px solid var(--background-modifier-border);
+  padding: 3px 8px;
+  color: var(--text-normal);
 }
 
 .ws-launcher-text-btn:hover {

@@ -235,7 +235,6 @@
     "title": "Студия письма",
     "settings": "Настройки",
     "project": "Проект",
-    "newProject": "+ новый",
     "noProjectSelected": "Проект не выбран.",
     "chooseProject": "— выберите проект —",
     "wordCount": "{{n}} слов",
