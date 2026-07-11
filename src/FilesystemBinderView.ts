@@ -5,7 +5,7 @@ import { STATUS_COLORS, DocumentStatus } from '../models/BinderItem';
 import { inManuscriptZone } from './manuscriptTree';
 import { SiblingEntry, sortSiblings, entryDisplayName, isHiddenName, parseBinderOrder } from './binderOrder';
 import { BinderZone, DropRegion, DragSource, MoveEntry, MoveOp, dropRegion, canStartDrag, evaluateDrop, planMove } from './binderMove';
-import { BinderDocType, BINDER_TYPES, ItemNameRejection, menuActionsFor, parseBinderStatus, parseBinderType, renamePrefill, renameTargetName, validateItemName } from './binderMenu';
+import { BinderDocType, BINDER_TYPES, ItemNameRejection, menuActionsFor, parseBinderCompile, parseBinderStatus, parseBinderType, renamePrefill, renameTargetName, validateItemName } from './binderMenu';
 import { ProjectModal } from '../modals/ProjectModal';
 import { TargetsDashboardModal } from '../modals/TargetsDashboardModal';
 import { TitlePromptModal } from '../modals/TitlePromptModal';
@@ -369,7 +369,7 @@ export class FilesystemBinderView extends ItemView {
       displayName: entryDisplayName(entry),
       status,
       docType: parseBinderType(fm?.['binder-type']),
-      compileExcluded: fm?.['binder-compile'] === false,
+      compileExcluded: !parseBinderCompile(fm?.['binder-compile']),
       fmLines,
       children: [],
       mdCount: 0,

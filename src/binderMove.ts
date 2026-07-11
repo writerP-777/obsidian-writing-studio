@@ -9,6 +9,7 @@
 // subtree, and only markdown documents cross between manuscript and Research.
 
 import { SiblingEntry, canCarryOrder, planReorder, folderNameWithPrefix } from './binderOrder';
+import { joinPath, parentPath, pathAtOrUnder } from './folderRename';
 
 export type BinderZone = 'manuscript' | 'research' | 'exports';
 export type DropRegion = 'before' | 'after' | 'into';
@@ -53,7 +54,7 @@ export function evaluateDrop(source: DragSource, destParentPath: string, destZon
   if (source.isFolder && destZone !== source.zone) {
     return { kind: 'notice', messageKey: 'binder.fs.folderZoneBlocked' };
   }
-  if (source.isFolder && (destParentPath === source.path || destParentPath.startsWith(source.path + '/'))) {
+  if (source.isFolder && pathAtOrUnder(destParentPath, source.path)) {
     return { kind: 'refuse' };
   }
   return { kind: 'accept' };
@@ -67,15 +68,6 @@ export interface MoveEntry extends SiblingEntry {
 export type MoveOp =
   | { kind: 'rename'; path: string; newPath: string }
   | { kind: 'set-order'; path: string; order: number };
-
-function parentOf(path: string): string {
-  const i = path.lastIndexOf('/');
-  return i < 0 ? '' : path.slice(0, i);
-}
-
-function joinPath(parent: string, name: string): string {
-  return parent ? `${parent}/${name}` : name;
-}
 
 // Turns a drop into the minimal operation list. destSiblings is the
 // destination group in binder order, excluding the source; insertAt is the
@@ -120,7 +112,7 @@ export function planMove(
     if (entry.isFolder) {
       const newName = folderNameWithPrefix(entry.name, w.order);
       if (newName === entry.name) continue;
-      ops.push({ kind: 'rename', path: entry.path, newPath: joinPath(parentOf(entry.path), newName) });
+      ops.push({ kind: 'rename', path: entry.path, newPath: joinPath(parentPath(entry.path), newName) });
     } else {
       ops.push({ kind: 'set-order', path: entry.path, order: w.order });
     }

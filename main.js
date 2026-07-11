@@ -33,6 +33,7 @@ var import_obsidian35 = require("obsidian");
 var import_obsidian14 = require("obsidian");
 
 // models/BinderItem.ts
+var DOCUMENT_STATUSES = ["draft", "in-progress", "complete", "published"];
 var STATUS_COLORS = {
   draft: "#888888",
   "in-progress": "#f59e0b",
@@ -129,7 +130,10 @@ function parseBinderType(value) {
   return typeof value === "string" && BINDER_TYPES.includes(value) ? value : null;
 }
 function parseBinderStatus(value) {
-  return typeof value === "string" && value in STATUS_COLORS ? value : null;
+  return typeof value === "string" && DOCUMENT_STATUSES.includes(value) ? value : null;
+}
+function parseBinderCompile(value) {
+  return value !== false;
 }
 function menuActionsFor(entry, zone) {
   if (zone === "exports") return ["delete"];
@@ -157,9 +161,8 @@ function renameTargetName(entry, typed) {
   return typed.toLowerCase().endsWith(suffix.toLowerCase()) ? typed : typed + suffix;
 }
 function validateItemName(typed, targetName, siblingNames) {
-  if (typed.trim() === "") return { ok: false, reason: "empty" };
-  if (/[\\/:*?"<>|]/.test(typed)) return { ok: false, reason: "invalid-chars" };
-  if (/[. ]$/.test(typed)) return { ok: false, reason: "trailing" };
+  const text = rejectNameText(typed);
+  if (text !== null) return { ok: false, reason: text };
   const lower = targetName.toLowerCase();
   if (siblingNames.some((n) => n.toLowerCase() === lower)) return { ok: false, reason: "exists" };
   return { ok: true };
@@ -184,18 +187,43 @@ function parentPath(path) {
   const i2 = path.lastIndexOf("/");
   return i2 === -1 ? "" : path.slice(0, i2);
 }
+function joinPath(parent, name) {
+  return parent ? `${parent}/${name}` : name;
+}
 function pathAtOrUnder(path, prefix) {
   return path === prefix || path.startsWith(prefix + "/");
+}
+function pathStrictlyUnder(path, prefix) {
+  return path.startsWith(prefix + "/");
 }
 function rewritePathPrefix(path, oldPrefix, newPrefix) {
   if (path === oldPrefix) return newPrefix;
   if (path.startsWith(oldPrefix + "/")) return newPrefix + path.slice(oldPrefix.length);
   return path;
 }
+var ILLEGAL_NAME_CHARS = /[\\/:*?"<>|]/;
+var ILLEGAL_NAME_CHARS_ALL = /[\\/:*?"<>|]/g;
+function hasIllegalNameChars(name) {
+  return ILLEGAL_NAME_CHARS.test(name);
+}
+function replaceIllegalNameChars(name, replacement) {
+  return name.replace(ILLEGAL_NAME_CHARS_ALL, replacement);
+}
+function hasTrailingDotOrSpace(name) {
+  return /[. ]$/.test(name);
+}
+function stripTrailingDotsAndSpaces(name) {
+  return name.replace(/[. ]+$/, "");
+}
+function rejectNameText(name) {
+  if (name.trim() === "") return "empty";
+  if (hasIllegalNameChars(name)) return "invalid-chars";
+  if (hasTrailingDotOrSpace(name)) return "trailing";
+  return null;
+}
 function validateDocumentFolderName(name, currentName, targetExists) {
-  if (name.trim() === "") return { ok: false, reason: "empty" };
-  if (/[\\/:*?"<>|]/.test(name)) return { ok: false, reason: "invalid-chars" };
-  if (/[. ]$/.test(name)) return { ok: false, reason: "trailing" };
+  const text = rejectNameText(name);
+  if (text !== null) return { ok: false, reason: text };
   if (isReservedFolderName(name)) {
     return { ok: false, reason: "reserved" };
   }
@@ -245,7 +273,7 @@ function buildManuscriptTree(app, rootPath, opts = {}) {
           kind: "doc",
           path: s.file.path,
           title: s.file.name.slice(0, s.file.name.length - s.file.extension.length - 1),
-          compileExcluded: (fm == null ? void 0 : fm["binder-compile"]) === false
+          compileExcluded: !parseBinderCompile(fm == null ? void 0 : fm["binder-compile"])
         });
       }
     }
@@ -304,17 +332,10 @@ function evaluateDrop(source, destParentPath, destZone) {
   if (source.isFolder && destZone !== source.zone) {
     return { kind: "notice", messageKey: "binder.fs.folderZoneBlocked" };
   }
-  if (source.isFolder && (destParentPath === source.path || destParentPath.startsWith(source.path + "/"))) {
+  if (source.isFolder && pathAtOrUnder(destParentPath, source.path)) {
     return { kind: "refuse" };
   }
   return { kind: "accept" };
-}
-function parentOf(path) {
-  const i2 = path.lastIndexOf("/");
-  return i2 < 0 ? "" : path.slice(0, i2);
-}
-function joinPath(parent, name) {
-  return parent ? `${parent}/${name}` : name;
 }
 function planMove(source, destParentPath, destSiblings, insertAt, writeOrder) {
   var _a2;
@@ -339,7 +360,7 @@ function planMove(source, destParentPath, destSiblings, insertAt, writeOrder) {
     if (entry.isFolder) {
       const newName = folderNameWithPrefix(entry.name, w.order);
       if (newName === entry.name) continue;
-      ops.push({ kind: "rename", path: entry.path, newPath: joinPath(parentOf(entry.path), newName) });
+      ops.push({ kind: "rename", path: entry.path, newPath: joinPath(parentPath(entry.path), newName) });
     } else {
       ops.push({ kind: "set-order", path: entry.path, order: w.order });
     }
@@ -11599,7 +11620,7 @@ function resolveExportTitle(choice, ctx) {
   }
 }
 function sanitizeTitleForFilename(title) {
-  return title.replace(/[\\/:*?"<>|]/g, "-");
+  return replaceIllegalNameChars(title, "-");
 }
 
 // modals/ExportModal.ts
@@ -13161,7 +13182,7 @@ var FilesystemBinderView = class extends import_obsidian14.ItemView {
       displayName: entryDisplayName(entry),
       status,
       docType: parseBinderType(fm == null ? void 0 : fm["binder-type"]),
-      compileExcluded: (fm == null ? void 0 : fm["binder-compile"]) === false,
+      compileExcluded: !parseBinderCompile(fm == null ? void 0 : fm["binder-compile"]),
       fmLines,
       children: [],
       mdCount: 0
@@ -17579,7 +17600,7 @@ var ProjectManager = class extends import_obsidian24.Events {
   async createProject(title, type, author, description) {
     const rootFolder = this.plugin.settings.defaultProjectFolder || "Writing Projects";
     const id = this.uniqueId("project");
-    const folderName = title.replace(/[\\/:*?"<>|]/g, "-");
+    const folderName = replaceIllegalNameChars(title, "-");
     const folderPath = (0, import_obsidian24.normalizePath)(`${rootFolder}/${folderName}`);
     if (this.files.exists(folderPath)) {
       throw new Error(t2("projectManager.errorFolderExists", { folder: folderName }));
@@ -18749,7 +18770,9 @@ function parseLegacyBinder(content2) {
   }
 }
 function sanitizeTitle(title) {
-  return title.replace(/[\\/:*?"<>|]/g, "").replace(/\s+/g, " ").trim().replace(/[. ]+$/, "");
+  return stripTrailingDotsAndSpaces(
+    replaceIllegalNameChars(title, "").replace(/\s+/g, " ").trim()
+  );
 }
 function docCurrentPath(op) {
   if (op.state === "missing") return null;
@@ -18782,7 +18805,12 @@ function planCarryOver(items, projectFolderPath, disk) {
   assignLeftoverOrders(plan, disk);
   return plan;
 }
-var parentOf2 = (path) => path.split("/").slice(0, -1).join("/");
+var compareAdoptionCandidates = (a, b) => {
+  const aMarked = parseFolderPrefix(a).order !== null;
+  const bMarked = parseFolderPrefix(b).order !== null;
+  if (aMarked !== bMarked) return aMarked ? -1 : 1;
+  return naturalCompare(a, b);
+};
 function planContentFolders(plan, projectFolderPath, disk) {
   const claimed = /* @__PURE__ */ new Set();
   for (const op of plan.folderOps) {
@@ -18792,36 +18820,30 @@ function planContentFolders(plan, projectFolderPath, disk) {
   const blocked = /* @__PURE__ */ new Set();
   for (const op of plan.docOps) {
     if ((op.state === "pending" || op.state === "leftover") && op.originalPath !== "") {
-      blocked.add(parentOf2(op.originalPath));
+      blocked.add(parentPath(op.originalPath));
     }
   }
   const earliest = /* @__PURE__ */ new Map();
   for (const op of plan.docOps) {
     if (op.state !== "done") continue;
     if (op.originalPath === "") continue;
-    const recordedParent = parentOf2(op.originalPath);
+    const recordedParent = parentPath(op.originalPath);
     if (blocked.has(recordedParent)) continue;
-    if (!(recordedParent.length > projectFolderPath.length && recordedParent.startsWith(projectFolderPath + "/"))) continue;
-    if (parentOf2(op.finalPath) !== parentOf2(recordedParent)) continue;
+    if (!pathStrictlyUnder(recordedParent, projectFolderPath)) continue;
+    if (parentPath(op.finalPath) !== parentPath(recordedParent)) continue;
     const current = earliest.get(recordedParent);
     if (current === void 0 || op.order < current) earliest.set(recordedParent, op.order);
   }
   for (const [recordedParent, position] of [...earliest.entries()].sort()) {
-    const parent = parentOf2(recordedParent);
-    const plainName = recordedParent.split("/").pop();
+    const parent = parentPath(recordedParent);
+    const plainName = baseName(recordedParent);
     const candidates = disk.subfolderNames(parent).filter((n) => !claimed.has(`${parent}/${n}`) && parseFolderPrefix(n).displayName.toLowerCase() === plainName.toLowerCase());
     if (candidates.length === 0) continue;
-    candidates.sort((a, b) => {
-      const aMarked = parseFolderPrefix(a).order !== null;
-      const bMarked = parseFolderPrefix(b).order !== null;
-      if (aMarked !== bMarked) return aMarked ? -1 : 1;
-      return naturalCompare(a, b);
-    });
+    candidates.sort(compareAdoptionCandidates);
     const name = candidates[0];
     claimed.add(`${parent}/${name}`);
     if (parseFolderPrefix(name).order !== null) {
       plan.folderOps.push({
-        kind: "folder",
         legacyTitle: plainName,
         displayName: parseFolderPrefix(name).displayName,
         currentPath: null,
@@ -18833,7 +18855,6 @@ function planContentFolders(plan, projectFolderPath, disk) {
     }
     const attached = folderNameWithPrefix(name, position - 5);
     plan.folderOps.push({
-      kind: "folder",
       legacyTitle: plainName,
       displayName: name,
       currentPath: `${parent}/${name}`,
@@ -18867,16 +18888,12 @@ function planFolder(item, position, parentPath2, existingFolders, consumedAdopte
   const candidates = existingFolders.filter((n) => !consumedAdoptees.has(n) && parseFolderPrefix(n).displayName.toLowerCase() === displayName.toLowerCase());
   candidates.sort((a, b) => {
     if (a === minted !== (b === minted)) return a === minted ? -1 : 1;
-    const aMarked = parseFolderPrefix(a).order !== null;
-    const bMarked = parseFolderPrefix(b).order !== null;
-    if (aMarked !== bMarked) return aMarked ? -1 : 1;
-    return naturalCompare(a, b);
+    return compareAdoptionCandidates(a, b);
   });
   const adopted = candidates.length > 0 ? candidates[0] : null;
   if (adopted !== null) consumedAdoptees.add(adopted);
   if (adopted === null) {
     return {
-      kind: "folder",
       legacyTitle: item.title,
       displayName,
       currentPath: null,
@@ -18887,7 +18904,6 @@ function planFolder(item, position, parentPath2, existingFolders, consumedAdopte
   }
   if (parseFolderPrefix(adopted).order !== null) {
     return {
-      kind: "folder",
       legacyTitle: item.title,
       displayName,
       currentPath: null,
@@ -18898,7 +18914,6 @@ function planFolder(item, position, parentPath2, existingFolders, consumedAdopte
   }
   const attached = folderNameWithPrefix(adopted, position);
   return {
-    kind: "folder",
     legacyTitle: item.title,
     displayName,
     currentPath: `${parentPath2}/${adopted}`,
@@ -18908,9 +18923,9 @@ function planFolder(item, position, parentPath2, existingFolders, consumedAdopte
   };
 }
 function planDoc(item, position, parentPath2, disk, claimedBasenames) {
-  var _a2, _b2;
+  var _a2;
   const originalPath = (item.filePath || "").replace(/\\/g, "/");
-  const basename = (_a2 = originalPath.split("/").pop()) != null ? _a2 : "";
+  const basename = baseName(originalPath);
   const finalPath = `${parentPath2}/${basename}`;
   const atOriginal = originalPath !== "" && disk.fileExists(originalPath);
   const atFinal = basename !== "" && disk.fileExists(finalPath);
@@ -18928,10 +18943,9 @@ function planDoc(item, position, parentPath2, disk, claimedBasenames) {
     else state = "done";
   }
   const currentPath = state === "missing" ? null : state === "done" ? finalPath : originalPath;
-  const fm = currentPath !== null ? (_b2 = disk.frontmatter(currentPath)) != null ? _b2 : {} : {};
+  const fm = currentPath !== null ? (_a2 = disk.frontmatter(currentPath)) != null ? _a2 : {} : {};
   const kept = (k) => fm[k] !== void 0 && fm[k] !== null;
   return {
-    kind: "doc",
     originalPath,
     finalPath,
     state,
@@ -18964,7 +18978,7 @@ function assignLeftoverOrders(plan, disk) {
   const positions = /* @__PURE__ */ new Map();
   for (const op of plan.docOps) {
     if (op.state !== "leftover") continue;
-    const parent = op.originalPath.split("/").slice(0, -1).join("/");
+    const parent = parentPath(op.originalPath);
     const next = ((_a2 = positions.get(parent)) != null ? _a2 : 0) + 10;
     positions.set(parent, next);
     op.order = next;
@@ -18982,11 +18996,10 @@ function planRestore(items, projectFolderPath, disk) {
     if (op.action !== "none") continue;
     const parsed = parseFolderPrefix(op.targetName);
     if (parsed.order === null) continue;
-    const parent = parentOf2(op.targetPath);
+    const parent = parentPath(op.targetPath);
     const toPath = `${parent}/${parsed.displayName}`;
     const occupied = disk.folderExists(toPath) || disk.fileExists(toPath);
     folderOps.push({
-      kind: "restore-folder",
       fromPath: op.targetPath,
       toPath,
       state: occupied ? "skipped" : "pending",
@@ -19024,7 +19037,6 @@ function planRestore(items, projectFolderPath, disk) {
       skipReason = "not-found";
     }
     docOps.push({
-      kind: "restore-doc",
       fromPath: op.finalPath,
       toPath,
       ensureFolders: ancestorsWithin(toPath, projectFolderPath),
@@ -19041,20 +19053,16 @@ function ancestorsWithin(filePath, projectFolderPath) {
   let path = "";
   for (const part of parts) {
     path = path === "" ? part : `${path}/${part}`;
-    if (path.length > projectFolderPath.length && path.startsWith(projectFolderPath + "/")) {
+    if (pathStrictlyUnder(path, projectFolderPath)) {
       out.push(path);
     }
   }
   return out;
 }
-var basenameOf = (path) => {
-  var _a2;
-  return (_a2 = path.split("/").pop()) != null ? _a2 : path;
-};
 async function runMigrationPass(compute, io) {
   const result = { changed: 0, failures: [], leftovers: 0, missing: 0 };
   const failedRoots = [];
-  const underFailedRoot = (path) => failedRoots.some((root) => path === root || path.startsWith(root + "/"));
+  const underFailedRoot = (path) => failedRoots.some((root) => pathAtOrUnder(path, root));
   const attemptedFolders = /* @__PURE__ */ new Set();
   const runFolderOps = async () => {
     for (; ; ) {
@@ -19080,7 +19088,7 @@ async function runMigrationPass(compute, io) {
   const afterFolders = compute();
   for (const op of afterFolders.plan.docOps) {
     if (op.state !== "pending") continue;
-    const targetParent = op.finalPath.split("/").slice(0, -1).join("/");
+    const targetParent = parentPath(op.finalPath);
     if (!afterFolders.disk.folderExists(targetParent)) continue;
     try {
       await io.rename(op.originalPath, op.finalPath);
@@ -19088,7 +19096,7 @@ async function runMigrationPass(compute, io) {
     } catch (e) {
       result.failures.push({
         signature: `move|${op.originalPath}`,
-        name: basenameOf(op.originalPath),
+        name: baseName(op.originalPath),
         reason: e instanceof Error ? e.message : String(e),
         kind: "move"
       });
@@ -19105,7 +19113,7 @@ async function runMigrationPass(compute, io) {
       result.leftovers += 1;
       result.failures.push({
         signature: `leftover|${op.originalPath}`,
-        name: basenameOf(op.originalPath),
+        name: baseName(op.originalPath),
         reason: "name-taken",
         kind: "leftover"
       });
@@ -19126,7 +19134,7 @@ async function runMigrationPass(compute, io) {
     } catch (e) {
       result.failures.push({
         signature: `frontmatter|${path}`,
-        name: basenameOf(path),
+        name: baseName(path),
         reason: e instanceof Error ? e.message : String(e),
         kind: "frontmatter"
       });
@@ -19155,7 +19163,7 @@ async function runRestorePass(compute, io) {
     } catch (e) {
       result.failures.push({
         signature: `restore|${op.fromPath}`,
-        name: basenameOf(op.fromPath),
+        name: baseName(op.fromPath),
         reason: e instanceof Error ? e.message : String(e),
         kind: "move"
       });
@@ -19173,7 +19181,7 @@ async function runRestorePass(compute, io) {
     } catch (e) {
       result.failures.push({
         signature: `restore|${op.fromPath}`,
-        name: basenameOf(op.fromPath),
+        name: baseName(op.fromPath),
         reason: e instanceof Error ? e.message : String(e),
         kind: "folder"
       });

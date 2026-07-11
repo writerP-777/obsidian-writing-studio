@@ -22,6 +22,10 @@
 import { BinderData, BinderItem } from '../models/BinderItem';
 import { parseFolderPrefix, folderNameWithPrefix, naturalCompare } from './binderOrder';
 import { parseBinderStatus, parseBinderType } from './binderMenu';
+import {
+  baseName, parentPath, pathAtOrUnder, pathStrictlyUnder,
+  replaceIllegalNameChars, stripTrailingDotsAndSpaces,
+} from './folderRename';
 
 // The one window onto the vault the engine is allowed: existence checks and
 // frontmatter reads. No handle that could write is ever passed in.
@@ -50,11 +54,8 @@ export function parseLegacyBinder(content: string): BinderData | null {
 // component: illegal characters deleted, whitespace runs collapsed, trailing
 // dots and spaces stripped. Documents never pass through here.
 export function sanitizeTitle(title: string): string {
-  return title
-    .replace(/[\\/:*?"<>|]/g, '')
-    .replace(/\s+/g, ' ')
-    .trim()
-    .replace(/[. ]+$/, '');
+  return stripTrailingDotsAndSpaces(
+    replaceIllegalNameChars(title, '').replace(/\s+/g, ' ').trim());
 }
 
 export interface CarryOverFmEntry {
@@ -69,7 +70,6 @@ export interface CarryOverFmEntry {
 export type FolderAction = 'none' | 'create' | 'attach-marker';
 
 export interface CarryOverFolderOp {
-  kind: 'folder';
   legacyTitle: string;
   displayName: string;
   /** On-disk path today (attach-marker only). */
@@ -85,7 +85,6 @@ export interface CarryOverFolderOp {
 export type DocState = 'done' | 'pending' | 'leftover' | 'missing';
 
 export interface CarryOverDocOp {
-  kind: 'doc';
   originalPath: string;
   finalPath: string;
   state: DocState;
@@ -104,7 +103,7 @@ export interface CarryOverPlan {
 
 // Where a document's frontmatter belongs right now: a pending document is
 // still at its original path; done lives at final; a leftover stays put.
-export function docCurrentPath(op: CarryOverDocOp): string | null {
+function docCurrentPath(op: CarryOverDocOp): string | null {
   if (op.state === 'missing') return null;
   return op.state === 'done' ? op.finalPath : op.originalPath;
 }
@@ -147,7 +146,14 @@ export function planCarryOver(
   return plan;
 }
 
-const parentOf = (path: string): string => path.split('/').slice(0, -1).join('/');
+// Marker-carrying names adopt first, then natural order — the tiebreak
+// shared by structural adoption and content-folder matching (#276).
+const compareAdoptionCandidates = (a: string, b: string): number => {
+  const aMarked = parseFolderPrefix(a).order !== null;
+  const bMarked = parseFolderPrefix(b).order !== null;
+  if (aMarked !== bMarked) return aMarked ? -1 : 1;
+  return naturalCompare(a, b);
+};
 
 // #263: a physical folder the legacy binder recorded documents inside is
 // invisible to the legacy file as an item — the classic binder was a flat
@@ -178,7 +184,7 @@ function planContentFolders(
   const blocked = new Set<string>();
   for (const op of plan.docOps) {
     if ((op.state === 'pending' || op.state === 'leftover') && op.originalPath !== '') {
-      blocked.add(parentOf(op.originalPath));
+      blocked.add(parentPath(op.originalPath));
     }
   }
 
@@ -189,35 +195,29 @@ function planContentFolders(
   for (const op of plan.docOps) {
     if (op.state !== 'done') continue;
     if (op.originalPath === '') continue;
-    const recordedParent = parentOf(op.originalPath);
+    const recordedParent = parentPath(op.originalPath);
     if (blocked.has(recordedParent)) continue;
-    if (!(recordedParent.length > projectFolderPath.length
-        && recordedParent.startsWith(projectFolderPath + '/'))) continue;
+    if (!pathStrictlyUnder(recordedParent, projectFolderPath)) continue;
     // Same sibling group: the document's order lands where the folder sits
-    if (parentOf(op.finalPath) !== parentOf(recordedParent)) continue;
+    if (parentPath(op.finalPath) !== parentPath(recordedParent)) continue;
     const current = earliest.get(recordedParent);
     if (current === undefined || op.order < current) earliest.set(recordedParent, op.order);
   }
 
   for (const [recordedParent, position] of [...earliest.entries()].sort()) {
-    const parent = parentOf(recordedParent);
-    const plainName = recordedParent.split('/').pop() as string;
+    const parent = parentPath(recordedParent);
+    const plainName = baseName(recordedParent);
     const candidates = disk.subfolderNames(parent).filter(n =>
       !claimed.has(`${parent}/${n}`) &&
       parseFolderPrefix(n).displayName.toLowerCase() === plainName.toLowerCase());
     if (candidates.length === 0) continue; // folder gone or renamed — never guess
-    candidates.sort((a, b) => {
-      const aMarked = parseFolderPrefix(a).order !== null;
-      const bMarked = parseFolderPrefix(b).order !== null;
-      if (aMarked !== bMarked) return aMarked ? -1 : 1;
-      return naturalCompare(a, b);
-    });
+    candidates.sort(compareAdoptionCandidates);
     const name = candidates[0];
     claimed.add(`${parent}/${name}`);
 
     if (parseFolderPrefix(name).order !== null) {
       plan.folderOps.push({
-        kind: 'folder', legacyTitle: plainName,
+        legacyTitle: plainName,
         displayName: parseFolderPrefix(name).displayName,
         currentPath: null, targetName: name,
         targetPath: `${parent}/${name}`, action: 'none',
@@ -226,7 +226,7 @@ function planContentFolders(
     }
     const attached = folderNameWithPrefix(name, position - 5);
     plan.folderOps.push({
-      kind: 'folder', legacyTitle: plainName, displayName: name,
+      legacyTitle: plainName, displayName: name,
       currentPath: `${parent}/${name}`, targetName: attached,
       targetPath: `${parent}/${attached}`, action: 'attach-marker',
     });
@@ -281,24 +281,21 @@ function planFolder(
     parseFolderPrefix(n).displayName.toLowerCase() === displayName.toLowerCase());
   candidates.sort((a, b) => {
     if ((a === minted) !== (b === minted)) return a === minted ? -1 : 1;
-    const aMarked = parseFolderPrefix(a).order !== null;
-    const bMarked = parseFolderPrefix(b).order !== null;
-    if (aMarked !== bMarked) return aMarked ? -1 : 1;
-    return naturalCompare(a, b);
+    return compareAdoptionCandidates(a, b);
   });
   const adopted = candidates.length > 0 ? candidates[0] : null;
   if (adopted !== null) consumedAdoptees.add(adopted);
 
   if (adopted === null) {
     return {
-      kind: 'folder', legacyTitle: item.title, displayName,
+      legacyTitle: item.title, displayName,
       currentPath: null, targetName: minted,
       targetPath: `${parentPath}/${minted}`, action: 'create',
     };
   }
   if (parseFolderPrefix(adopted).order !== null) {
     return {
-      kind: 'folder', legacyTitle: item.title, displayName,
+      legacyTitle: item.title, displayName,
       currentPath: null, targetName: adopted,
       targetPath: `${parentPath}/${adopted}`, action: 'none',
     };
@@ -307,7 +304,7 @@ function planFolder(
   // The attached name reuses the folder's own typed text, not the title.
   const attached = folderNameWithPrefix(adopted, position);
   return {
-    kind: 'folder', legacyTitle: item.title, displayName,
+    legacyTitle: item.title, displayName,
     currentPath: `${parentPath}/${adopted}`, targetName: attached,
     targetPath: `${parentPath}/${attached}`, action: 'attach-marker',
   };
@@ -321,7 +318,7 @@ function planDoc(
   claimedBasenames: Set<string>,
 ): CarryOverDocOp {
   const originalPath = (item.filePath || '').replace(/\\/g, '/');
-  const basename = originalPath.split('/').pop() ?? '';
+  const basename = baseName(originalPath);
   const finalPath = `${parentPath}/${basename}`;
 
   const atOriginal = originalPath !== '' && disk.fileExists(originalPath);
@@ -350,7 +347,6 @@ function planDoc(
   const kept = (k: string): boolean => fm[k] !== undefined && fm[k] !== null;
 
   return {
-    kind: 'doc',
     originalPath,
     finalPath,
     state,
@@ -388,7 +384,7 @@ function assignLeftoverOrders(plan: CarryOverPlan, disk: DiskState): void {
   const positions = new Map<string, number>();
   for (const op of plan.docOps) {
     if (op.state !== 'leftover') continue;
-    const parent = op.originalPath.split('/').slice(0, -1).join('/');
+    const parent = parentPath(op.originalPath);
     const next = (positions.get(parent) ?? 0) + 10;
     positions.set(parent, next);
     op.order = next;
@@ -403,7 +399,6 @@ function assignLeftoverOrders(plan: CarryOverPlan, disk: DiskState): void {
 // deleted — a folder migration created stays behind (empty) because it is
 // statelessly indistinguishable from a pre-existing adopted folder.
 export interface RestoreDocOp {
-  kind: 'restore-doc';
   /** Where migration put it (or would have). */
   fromPath: string;
   /** The legacy home it returns to. */
@@ -415,7 +410,6 @@ export interface RestoreDocOp {
 }
 
 export interface RestoreFolderOp {
-  kind: 'restore-folder';
   /** Marker-carrying path today. */
   fromPath: string;
   /** Same folder with the marker stripped. */
@@ -455,11 +449,10 @@ export function planRestore(
     if (op.action !== 'none') continue;
     const parsed = parseFolderPrefix(op.targetName);
     if (parsed.order === null) continue; // adopted plain folder — no marker to strip
-    const parent = parentOf(op.targetPath);
+    const parent = parentPath(op.targetPath);
     const toPath = `${parent}/${parsed.displayName}`;
     const occupied = disk.folderExists(toPath) || disk.fileExists(toPath);
     folderOps.push({
-      kind: 'restore-folder',
       fromPath: op.targetPath,
       toPath,
       state: occupied ? 'skipped' : 'pending',
@@ -503,7 +496,6 @@ export function planRestore(
       skipReason = 'not-found';
     }
     docOps.push({
-      kind: 'restore-doc',
       fromPath: op.finalPath,
       toPath,
       ensureFolders: ancestorsWithin(toPath, projectFolderPath),
@@ -524,7 +516,7 @@ function ancestorsWithin(filePath: string, projectFolderPath: string): string[] 
   let path = '';
   for (const part of parts) {
     path = path === '' ? part : `${path}/${part}`;
-    if (path.length > projectFolderPath.length && path.startsWith(projectFolderPath + '/')) {
+    if (pathStrictlyUnder(path, projectFolderPath)) {
       out.push(path);
     }
   }
@@ -558,8 +550,6 @@ export interface PassResult {
   missing: number;
 }
 
-const basenameOf = (path: string): string => path.split('/').pop() ?? path;
-
 // The migration pass (R3): folders → recompute → moves → recompute →
 // frontmatter. Recomputing between phases means no operation ever acts on a
 // path a previous phase changed. Per-item try/catch; a failed folder skips
@@ -571,7 +561,7 @@ export async function runMigrationPass(
   const result: PassResult = { changed: 0, failures: [], leftovers: 0, missing: 0 };
   const failedRoots: string[] = [];
   const underFailedRoot = (path: string): boolean =>
-    failedRoots.some(root => path === root || path.startsWith(root + '/'));
+    failedRoots.some(root => pathAtOrUnder(path, root));
   // Every folder op attempted this run, success or failure — a re-plan sees
   // successes as 'none', and failures must not retry within the run (the
   // graduated notice ledger counts runs, not attempts).
@@ -613,7 +603,7 @@ export async function runMigrationPass(
   const afterFolders = compute();
   for (const op of afterFolders.plan.docOps) {
     if (op.state !== 'pending') continue;
-    const targetParent = op.finalPath.split('/').slice(0, -1).join('/');
+    const targetParent = parentPath(op.finalPath);
     // Dependency skip: the parent's own failure already carries the notice
     if (!afterFolders.disk.folderExists(targetParent)) continue;
     try {
@@ -622,7 +612,7 @@ export async function runMigrationPass(
     } catch (e) {
       result.failures.push({
         signature: `move|${op.originalPath}`,
-        name: basenameOf(op.originalPath),
+        name: baseName(op.originalPath),
         reason: e instanceof Error ? e.message : String(e),
         kind: 'move',
       });
@@ -642,7 +632,7 @@ export async function runMigrationPass(
       result.leftovers += 1;
       result.failures.push({
         signature: `leftover|${op.originalPath}`,
-        name: basenameOf(op.originalPath),
+        name: baseName(op.originalPath),
         reason: 'name-taken',
         kind: 'leftover',
       });
@@ -665,7 +655,7 @@ export async function runMigrationPass(
     } catch (e) {
       result.failures.push({
         signature: `frontmatter|${path}`,
-        name: basenameOf(path),
+        name: baseName(path),
         reason: e instanceof Error ? e.message : String(e),
         kind: 'frontmatter',
       });
@@ -714,7 +704,7 @@ export async function runRestorePass(
     } catch (e) {
       result.failures.push({
         signature: `restore|${op.fromPath}`,
-        name: basenameOf(op.fromPath),
+        name: baseName(op.fromPath),
         reason: e instanceof Error ? e.message : String(e),
         kind: 'move',
       });
@@ -741,7 +731,7 @@ export async function runRestorePass(
     } catch (e) {
       result.failures.push({
         signature: `restore|${op.fromPath}`,
-        name: basenameOf(op.fromPath),
+        name: baseName(op.fromPath),
         reason: e instanceof Error ? e.message : String(e),
         kind: 'folder',
       });

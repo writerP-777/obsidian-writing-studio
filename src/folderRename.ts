@@ -33,10 +33,19 @@ export function parentPath(path: string): string {
   return i === -1 ? '' : path.slice(0, i);
 }
 
+export function joinPath(parent: string, name: string): string {
+  return parent ? `${parent}/${name}` : name;
+}
+
 // Segment-boundary prefix test: 'A/Chapters' covers 'A/Chapters/Ch 1.md' and
 // itself, but never 'A/Chapters-old/x.md'.
 export function pathAtOrUnder(path: string, prefix: string): boolean {
   return path === prefix || path.startsWith(prefix + '/');
+}
+
+// Same boundary, but the prefix itself does not count.
+export function pathStrictlyUnder(path: string, prefix: string): boolean {
+  return path.startsWith(prefix + '/');
 }
 
 export function rewritePathPrefix(path: string, oldPrefix: string, newPrefix: string): string {
@@ -45,7 +54,42 @@ export function rewritePathPrefix(path: string, oldPrefix: string, newPrefix: st
   return path;
 }
 
-export type FolderNameRejection = 'empty' | 'invalid-chars' | 'trailing' | 'reserved' | 'exists';
+// The Windows-illegal filename character class — single home (#276). A test
+// regex and a global replace regex kept separate so .test() never carries
+// lastIndex state.
+const ILLEGAL_NAME_CHARS = /[\\/:*?"<>|]/;
+const ILLEGAL_NAME_CHARS_ALL = /[\\/:*?"<>|]/g;
+
+export function hasIllegalNameChars(name: string): boolean {
+  return ILLEGAL_NAME_CHARS.test(name);
+}
+
+export function replaceIllegalNameChars(name: string, replacement: string): string {
+  return name.replace(ILLEGAL_NAME_CHARS_ALL, replacement);
+}
+
+// Windows also rejects names ending in a dot or space.
+export function hasTrailingDotOrSpace(name: string): boolean {
+  return /[. ]$/.test(name);
+}
+
+export function stripTrailingDotsAndSpaces(name: string): string {
+  return name.replace(/[. ]+$/, '');
+}
+
+export type NameTextRejection = 'empty' | 'invalid-chars' | 'trailing';
+
+// The text checks every typed name passes before any context rule (reserved
+// names, sibling collisions) applies — the shared core of validateItemName
+// and validateDocumentFolderName (#276).
+export function rejectNameText(name: string): NameTextRejection | null {
+  if (name.trim() === '') return 'empty';
+  if (hasIllegalNameChars(name)) return 'invalid-chars';
+  if (hasTrailingDotOrSpace(name)) return 'trailing';
+  return null;
+}
+
+export type FolderNameRejection = NameTextRejection | 'reserved' | 'exists';
 
 export interface FolderNameVerdict {
   ok: boolean;
@@ -62,9 +106,8 @@ export function validateDocumentFolderName(
   currentName: string,
   targetExists: boolean,
 ): FolderNameVerdict {
-  if (name.trim() === '') return { ok: false, reason: 'empty' };
-  if (/[\\/:*?"<>|]/.test(name)) return { ok: false, reason: 'invalid-chars' };
-  if (/[. ]$/.test(name)) return { ok: false, reason: 'trailing' };
+  const text = rejectNameText(name);
+  if (text !== null) return { ok: false, reason: text };
   if (isReservedFolderName(name)) {
     return { ok: false, reason: 'reserved' };
   }

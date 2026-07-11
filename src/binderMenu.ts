@@ -3,8 +3,9 @@
 // what on-disk name a typed value produces, and how names validate.
 
 import { SiblingEntry, parseFolderPrefix, folderNameWithPrefix, entryDisplayName } from './binderOrder';
-import { BinderZone } from './binderMove';
-import { DocumentStatus, STATUS_COLORS } from '../models/BinderItem';
+import type { BinderZone } from './binderMove';
+import { DocumentStatus, DOCUMENT_STATUSES } from '../models/BinderItem';
+import { NameTextRejection, rejectNameText } from './folderRename';
 
 export type MenuAction =
   | 'rename' | 'status' | 'goal' | 'type' | 'compile'
@@ -22,9 +23,15 @@ export function parseBinderType(value: unknown): BinderDocType | null {
 }
 
 export function parseBinderStatus(value: unknown): DocumentStatus | null {
-  return typeof value === 'string' && value in STATUS_COLORS
+  return typeof value === 'string' && (DOCUMENT_STATUSES as readonly string[]).includes(value)
     ? (value as DocumentStatus)
     : null;
+}
+
+// `binder-compile: false` is the only exclusion form; any other value —
+// absent, true, junk — compiles (#229: re-include deletes the key).
+export function parseBinderCompile(value: unknown): boolean {
+  return value !== false;
 }
 
 // Rulings on #229: Exports rows are delete-only (the zone is output-only);
@@ -71,7 +78,7 @@ export function renameTargetName(entry: SiblingEntry, typed: string): string {
   return typed.toLowerCase().endsWith(suffix.toLowerCase()) ? typed : typed + suffix;
 }
 
-export type ItemNameRejection = 'empty' | 'invalid-chars' | 'trailing' | 'exists';
+export type ItemNameRejection = NameTextRejection | 'exists';
 
 export interface ItemNameVerdict {
   ok: boolean;
@@ -89,9 +96,8 @@ export function validateItemName(
   targetName: string,
   siblingNames: string[],
 ): ItemNameVerdict {
-  if (typed.trim() === '') return { ok: false, reason: 'empty' };
-  if (/[\\/:*?"<>|]/.test(typed)) return { ok: false, reason: 'invalid-chars' };
-  if (/[. ]$/.test(typed)) return { ok: false, reason: 'trailing' };
+  const text = rejectNameText(typed);
+  if (text !== null) return { ok: false, reason: text };
   const lower = targetName.toLowerCase();
   if (siblingNames.some(n => n.toLowerCase() === lower)) return { ok: false, reason: 'exists' };
   return { ok: true };
