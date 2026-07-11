@@ -1,6 +1,7 @@
 import { App, TFile, TFolder } from 'obsidian';
 import { isReservedFolderName } from './folderRename';
 import { isHiddenName, parseBinderOrder, parseFolderPrefix, sortSiblings } from './binderOrder';
+import { parseBinderCompile } from './binderMenu';
 
 // The manuscript zone as data, for consumers outside the view: the same tree
 // FilesystemBinderView renders — depth-first, in binder order, hidden names
@@ -86,7 +87,7 @@ export function buildManuscriptTree(
           kind: 'doc',
           path: s.file.path,
           title: s.file.name.slice(0, s.file.name.length - s.file.extension.length - 1),
-          compileExcluded: fm?.['binder-compile'] === false,
+          compileExcluded: !parseBinderCompile(fm?.['binder-compile']),
         });
       }
     }

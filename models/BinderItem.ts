@@ -1,5 +1,9 @@
 export type BinderItemType = 'chapter' | 'section' | 'article' | 'note' | 'group' | 'part';
-export type DocumentStatus = 'draft' | 'in-progress' | 'complete' | 'published';
+
+// The lifecycle states in order — the single source for what counts as a
+// valid `binder-status` value; the color table below is keyed off it.
+export const DOCUMENT_STATUSES = ['draft', 'in-progress', 'complete', 'published'] as const;
+export type DocumentStatus = (typeof DOCUMENT_STATUSES)[number];
 
 export interface BinderItem {
   id: string;
@@ -25,11 +29,4 @@ export const STATUS_COLORS: Record<DocumentStatus, string> = {
   'in-progress': '#f59e0b',
   complete: '#10b981',
   published: '#3b82f6',
-};
-
-export const STATUS_LABELS: Record<DocumentStatus, string> = {
-  draft: 'Draft',
-  'in-progress': 'In Progress',
-  complete: 'Complete',
-  published: 'Published',
 };

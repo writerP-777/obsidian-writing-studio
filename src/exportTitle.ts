@@ -2,6 +2,8 @@
 // and the choice resolves to a single string that names the export everywhere —
 // filename, title page, and file metadata. Pure module, no Obsidian imports.
 
+import { replaceIllegalNameChars } from './folderRename';
+
 export type ExportTitleChoice = 'folder' | 'project-folder' | 'project' | 'custom';
 
 export interface ExportTitleContext {
@@ -40,5 +42,5 @@ export function resolveExportTitle(choice: ExportTitleChoice, ctx: ExportTitleCo
 // The title as it appears in the export's filename — reserved path characters
 // become hyphens; the title is otherwise kept verbatim.
 export function sanitizeTitleForFilename(title: string): string {
-  return title.replace(/[\\/:*?"<>|]/g, '-');
+  return replaceIllegalNameChars(title, '-');
 }

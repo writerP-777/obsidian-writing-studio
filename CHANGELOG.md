@@ -4,6 +4,13 @@ All notable changes to Writing Studio are documented here.
 
 ---
 
+## [Unreleased]
+
+### Changed
+- Internal code consolidation, no behavior change: one shared home for path helpers, the illegal-filename-character rule, and the typed-name validation core; `binder-compile` gains a parser like the other frontmatter keys; the document status list is single-sourced. (#276)
+
+---
+
 ## [3.0.0] - 2026-07-06
 
 ### Changed

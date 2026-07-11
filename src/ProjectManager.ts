@@ -11,6 +11,7 @@ import {
   baseName,
   parentPath,
   pathAtOrUnder,
+  replaceIllegalNameChars,
   rewritePathPrefix,
 } from './folderRename';
 
@@ -84,7 +85,7 @@ export class ProjectManager extends Events {
   ): Promise<WritingProject> {
     const rootFolder = this.plugin.settings.defaultProjectFolder || 'Writing Projects';
     const id = this.uniqueId('project');
-    const folderName = title.replace(/[\\/:*?"<>|]/g, '-');
+    const folderName = replaceIllegalNameChars(title, '-');
     const folderPath = normalizePath(`${rootFolder}/${folderName}`);
 
     // Refuse rather than scaffold into an existing folder — writing into one
