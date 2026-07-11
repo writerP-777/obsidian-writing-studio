@@ -111,3 +111,35 @@ export class Modal {
   onOpen(): void {}
   onClose(): void {}
 }
+
+export class FuzzySuggestModal extends Modal {}
+
+export class TAbstractFile {}
+
+// Minimal view base so view modules load and construct; the app rides in on
+// the leaf, as in the real API. Rendering is never driven in tests.
+export class ItemView extends Component {
+  leaf: unknown;
+  app: unknown;
+  constructor(leaf: unknown) {
+    super();
+    this.leaf = leaf;
+    this.app = (leaf as { app?: unknown } | undefined)?.app;
+  }
+  registerEvent(_ref?: unknown): void {}
+  registerDomEvent(): void {}
+}
+
+export class Menu {
+  addItem(): this {
+    return this;
+  }
+  addSeparator(): this {
+    return this;
+  }
+  showAtMouseEvent(): void {}
+}
+
+export function setIcon(): void {}
+
+export function setTooltip(): void {}
