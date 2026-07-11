@@ -248,6 +248,103 @@ function makeBridgeWorld() {
   return { vault, project, saveProject, plugin: plugin as unknown as WritingStudioPlugin };
 }
 
+// A second project whose legacy binder plans NO work under the real planner:
+// its one document already sits at its recorded path with binder-order,
+// binder-status, and binder-type present, so every write is 'kept' (Q1) and
+// planHasWork is false — decided by the engine, not a mock.
+const NO_WORK_ROOT = 'Q';
+const NO_WORK_LEGACY = JSON.stringify({
+  version: '2.0',
+  projectId: 'p2',
+  items: [
+    { id: 'd9', title: 'Intro', filePath: 'Q/intro.md', type: 'chapter', order: 1, status: 'draft' },
+  ],
+});
+
+function makeTwoProjectWorld() {
+  const vault = new MemVault({
+    folders: [ROOT, `${ROOT}/Chapters`, NO_WORK_ROOT],
+    files: {
+      [`${ROOT}/Chapters/foreword.md`]: { body: 'FOREWORD BODY' },
+      [`${ROOT}/Chapters/chapter-1.md`]: { body: 'CH1 BODY' },
+      [`${ROOT}/Chapters/chapter-2.md`]: { body: 'CH2 BODY' },
+      [`${ROOT}/_binder.json`]: { body: LEGACY },
+      [`${NO_WORK_ROOT}/intro.md`]: { fm: { 'binder-order': 10, 'binder-status': 'draft', 'binder-type': 'chapter' } },
+      [`${NO_WORK_ROOT}/_binder.json`]: { body: NO_WORK_LEGACY },
+    },
+  });
+  const projectA = makeProject();
+  const projectB = makeProject({ id: 'p2', title: 'Other', folderPath: NO_WORK_ROOT });
+  let active = projectA;
+  const plugin = {
+    app: appOver(vault),
+    settings: {
+      binderUpdateNoticeSeen: false,
+      carryOverFailures: {} as Record<string, FailureLedgerEntry>,
+    },
+    saveSettings: jest.fn().mockResolvedValue(undefined),
+    projectManager: {
+      getActiveProject: () => active,
+      saveProject: jest.fn().mockResolvedValue(undefined),
+    },
+  };
+  const activate = (p: WritingProject) => { active = p; };
+  return { vault, projectA, projectB, activate, plugin: plugin as unknown as WritingStudioPlugin };
+}
+
+// #267: "the notice shows once per vault, immediately after the first
+// migration that actually performs work" — with the real planner deciding
+// whether work happened (carryOverBridge.test.ts mocks that decision).
+describe('composed: one-time binder update notice against real migration work', () => {
+  beforeEach(() => {
+    Notice.messages = [];
+    jest.restoreAllMocks();
+  });
+
+  it('A works → notice; B plans no work → no notice; A re-activates → no notice', async () => {
+    const open = jest.spyOn(BinderUpdateModal.prototype, 'open');
+    const { vault, projectA, projectB, activate, plugin } = makeTwoProjectWorld();
+
+    // Project A migrates with real work — the notice fires, once
+    activate(projectA);
+    await runSilentMigration(plugin);
+    expect(vault.files.has(`${ROOT}/foreword.md`)).toBe(true);
+    expect(open).toHaveBeenCalledTimes(1);
+
+    // Project B's plan has no work — no operations, and no second notice
+    activate(projectB);
+    const opsBefore = vault.oplog.length;
+    await runSilentMigration(plugin);
+    expect(vault.oplog.length).toBe(opsBefore);
+    expect(open).toHaveBeenCalledTimes(1);
+
+    // Project A re-activates at steady state — still exactly one notice
+    activate(projectA);
+    await runSilentMigration(plugin);
+    expect(vault.oplog.length).toBe(opsBefore);
+    expect(open).toHaveBeenCalledTimes(1);
+  });
+
+  it('a no-work migration first never consumes the notice — it waits for real work', async () => {
+    const open = jest.spyOn(BinderUpdateModal.prototype, 'open');
+    const { projectA, projectB, activate, plugin } = makeTwoProjectWorld();
+
+    // Project B first: nothing to do, so the vault has seen no notice and
+    // the seen-flag must still be unset — a user whose first-opened project
+    // needs no migration still gets the notice when a later project does.
+    activate(projectB);
+    await runSilentMigration(plugin);
+    expect(open).not.toHaveBeenCalled();
+    expect((plugin.settings as { binderUpdateNoticeSeen: boolean }).binderUpdateNoticeSeen).toBe(false);
+
+    // The first migration that performs work fires it
+    activate(projectA);
+    await runSilentMigration(plugin);
+    expect(open).toHaveBeenCalledTimes(1);
+    expect((plugin.settings as { binderUpdateNoticeSeen: boolean }).binderUpdateNoticeSeen).toBe(true);
+  });
+});
+
 describe('composed: real engine through the real bridge', () => {
   beforeEach(() => {
     Notice.messages = [];
