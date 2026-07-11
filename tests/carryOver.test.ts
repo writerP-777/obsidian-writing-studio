@@ -321,6 +321,72 @@ describe('runMigrationPass — full fidelity', () => {
     expect(fm['binder-order']).toBe(77);
   });
 
+  // #269: Q1 under the event-driven race — a user or plugin frontmatter
+  // write landing after planCarryOver decided kept-flags but before the pass
+  // reaches that document. The cold-cache test above covers a plan that was
+  // blind from the start; these cover a plan that was RIGHT at plan time and
+  // goes stale mid-pass.
+  it('Q1 mid-pass: an external write during phase 2 survives phase 3 (plan recompute)', async () => {
+    const items = [
+      doc('Pending', `${ROOT}/Chapters/pending.md`),
+      doc('Settled', `${ROOT}/settled.md`, { status: 'draft' }),
+    ];
+    const vault = new MemVault({
+      folders: [ROOT, `${ROOT}/Chapters`],
+      files: { [`${ROOT}/Chapters/pending.md`]: {}, [`${ROOT}/settled.md`]: {} },
+    });
+    const io = vault.io();
+    // The user's write lands while phase 2 is moving the other document.
+    const racing: CarryOverIO = {
+      ...io,
+      rename: async (from, to) => {
+        await io.rename(from, to);
+        (vault.files.get(`${ROOT}/settled.md`) as MemFile).fm['binder-status'] = 'published';
+      },
+    };
+    const result = await runMigrationPass(
+      () => ({ plan: planCarryOver(items, ROOT, vault.disk()), disk: vault.disk() }),
+      racing,
+    );
+
+    expect(result.failures).toEqual([]);
+    const fm = (vault.files.get(`${ROOT}/settled.md`) as MemFile).fm;
+    // The user's value won; the untouched key was still written.
+    expect(fm['binder-status']).toBe('published');
+    expect(fm['binder-order']).toBe(20);
+  });
+
+  it('Q1 at the write itself: a value landing after the final plan compute is never overwritten', async () => {
+    const items = [doc('A', `${ROOT}/a.md`, { status: 'draft', wordCountGoal: 2000 })];
+    const vault = new MemVault({
+      folders: [ROOT],
+      files: { [`${ROOT}/a.md`]: {} },
+    });
+    const io = vault.io();
+    // The external write lands between the pass picking up the operation and
+    // the processFrontMatter callback running — the narrowest interleaving;
+    // only the callback's live re-check can catch it.
+    const racing: CarryOverIO = {
+      ...io,
+      writeFrontmatter: async (path, mutate) => {
+        const fm = (vault.files.get(path) as MemFile).fm;
+        fm['binder-status'] = 'published';
+        fm['binder-order'] = 77;
+        await io.writeFrontmatter(path, mutate);
+      },
+    };
+    await runMigrationPass(
+      () => ({ plan: planCarryOver(items, ROOT, vault.disk()), disk: vault.disk() }),
+      racing,
+    );
+
+    const fm = (vault.files.get(`${ROOT}/a.md`) as MemFile).fm;
+    // Both externally-written keys survive; the goal the user never set lands.
+    expect(fm['binder-status']).toBe('published');
+    expect(fm['binder-order']).toBe(77);
+    expect(fm['word-count-goal']).toBe(2000);
+  });
+
   it('R1 execution: the leftover stays put, gets in-place order, and reports name-taken', async () => {
     const items = [
       part('Part', [
