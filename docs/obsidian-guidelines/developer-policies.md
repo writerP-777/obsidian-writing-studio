@@ -1,10 +1,11 @@
 Our goal for community plugins and themes is to make it easy for users to safely modify and expand the capabilities of Obsidian, while prioritizing private and offline usage of the app.
 
-All community plugins and themes added to the Obsidian directory must respect the following policies. Every plugin and theme is individually vetted before being included in the directory. Plugins and themes that don't follow these policies will be removed from the directory.
+All community plugins and themes added to the Obsidian directory must respect the following policies. Plugins and themes that don't follow these policies will be removed from the directory.
 
-These policies only apply to plugins listed in the official Obsidian directory. These policies do not apply to plugins installed outside of the Obsidian directory, but they are nonetheless good practices to follow.
+These policies only apply to plugins listed in the official [Obsidian Community](https://community.obsidian.md/) directory. These policies do not apply to plugins installed outside of the Obsidian directory, but they are nonetheless good practices to follow.
 
 Also read the [[Submission requirements for plugins]]
+
 ## Policies
 
 ### Not allowed
@@ -37,6 +38,19 @@ All community plugins and themes must follow these requirements:
 - Include a [LICENSE file](https://docs.github.com/en/communities/setting-up-your-project-for-healthy-contributions/adding-a-license-to-a-repository) and clearly indicate the license of your plugin or theme.
 - Comply with the original licenses of any code your plugin or theme makes use of, including attribution in the README if required.
 - Respect Obsidian's trademark policy. Don't use the "Obsidian" trademark in a way that could confuse users into thinking your plugin or theme is a first-party creation.
+
+### Forks
+
+We encourage developers to collaborate on fewer high-quality projects than many low-quality ones. Consider contributing to existing projects rather than creating new projects that duplicate existing functionality.
+
+[Forks](https://en.wikipedia.org/wiki/Fork_\(software_development\)) are not allowed in the Community directory unless they meet one of the following criteria:
+
+- The fork has received explicit written approval from the original author in a publicly verifiable way.
+- The fork author can show proof that the original author is unreachable and has not updated the project for at least 6 months.
+
+In both cases, the original author must be credited as a contributor to the new project.
+
+If your project diverges from existing options, it should not be a fork. Start fresh with a new repository and your own code. It should inherit no code from the original repo without explicit permission.
 
 ## Reporting violations
 

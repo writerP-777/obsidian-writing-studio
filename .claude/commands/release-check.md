@@ -29,7 +29,7 @@ Check each item below and report PASS or FAIL. Do not tag until all twelve pass.
 
     Note: this scan keys on the exact previous version string (e.g. `2.8.0`). The `x`-form supported-versions table in SECURITY.md (e.g. `2.8.x`) is covered by the SECURITY.md note below, not by this scan.
 
-**SECURITY.md note:** If this is a minor or major version bump (e.g. 2.4.x → 2.5.0 or 3.0.0), remind Don to update the supported versions table in SECURITY.md before tagging.
+**SECURITY.md note:** If this is a minor or major version bump (X.Y.z → X.(Y+1).0 or (X+1).0.0), remind Don to update the supported versions table in SECURITY.md before tagging.
 
 Report results as a table:
 

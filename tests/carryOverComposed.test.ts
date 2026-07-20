@@ -1,4 +1,4 @@
-// Composed-seam tests from the pre-3.0.0 audit (item 2, ruling on #233).
+// Composed-seam tests from the binder-cutover release audit (item 2, ruling on #233).
 // The engine suite proves the passes in isolation; these tests exercise the
 // two seams that produced every shipped defect in this family:
 //
