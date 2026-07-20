@@ -1276,7 +1276,10 @@ var Translator = class _Translator extends EventEmitter {
     const useOptionsReplaceForData = options.replace && !isString(options.replace);
     let data = useOptionsReplaceForData ? options.replace : options;
     if (useOptionsReplaceForData && typeof options.count !== "undefined") {
-      data.count = options.count;
+      data = {
+        ...data,
+        count: options.count
+      };
     }
     if (this.options.interpolation.defaultVariables) {
       data = {
@@ -1589,10 +1592,10 @@ var Interpolator = class {
     const skipOnVariables = ((_a2 = options == null ? void 0 : options.interpolation) == null ? void 0 : _a2.skipOnVariables) !== void 0 ? options.interpolation.skipOnVariables : this.options.interpolation.skipOnVariables;
     const todos = [{
       regex: this.regexpUnescape,
-      safeValue: (val) => regexSafe(val)
+      safeValue: (val) => val
     }, {
       regex: this.regexp,
-      safeValue: (val) => this.escapeValue ? regexSafe(this.escape(val)) : regexSafe(val)
+      safeValue: (val) => this.escapeValue ? this.escape(val) : val
     }];
     todos.forEach((todo) => {
       replaces = 0;
@@ -1616,9 +1619,9 @@ var Interpolator = class {
           value = makeString(value);
         }
         const safeValue = todo.safeValue(value);
-        str = str.replace(match[0], safeValue);
+        str = str.replace(match[0], regexSafe(safeValue));
         if (skipOnVariables) {
-          todo.regex.lastIndex += value.length;
+          todo.regex.lastIndex += safeValue.length;
           todo.regex.lastIndex -= match[0].length;
         } else {
           todo.regex.lastIndex = 0;
@@ -1669,7 +1672,7 @@ var Interpolator = class {
       clonedOptions = clonedOptions.replace && !isString(clonedOptions.replace) ? clonedOptions.replace : clonedOptions;
       clonedOptions.applyPostProcessor = false;
       delete clonedOptions.defaultValue;
-      const keyEndIndex = /{.*}/.test(match[1]) ? match[1].lastIndexOf("}") + 1 : match[1].indexOf(this.formatSeparator);
+      const keyEndIndex = /{.*}/s.test(match[1]) ? match[1].lastIndexOf("}") + 1 : match[1].indexOf(this.formatSeparator);
       if (keyEndIndex !== -1) {
         formatters = match[1].slice(keyEndIndex).split(this.formatSeparator).map((elem) => elem.trim()).filter(Boolean);
         match[1] = match[1].slice(0, keyEndIndex);
@@ -12176,10 +12179,14 @@ var import_obsidian13 = require("obsidian");
 
 // src/words.ts
 function countWords(content2) {
+  var _a2, _b2;
   const body = content2.replace(/^---\r?\n[\s\S]*?\r?\n---\r?\n?/, "");
   const stripped = body.replace(/```[\s\S]*?```/g, "").replace(/`[^`]*`/g, "").replace(/!\[.*?\]\(.*?\)/g, "").replace(/\[.*?\]\(.*?\)/g, "").replace(/#{1,6}\s/g, "").replace(/[*_~`]/g, "").replace(/\n/g, " ").trim();
   if (!stripped) return 0;
-  return stripped.split(/\s+/).filter((w) => w.length > 0).length;
+  const CJK_CHAR = /[\p{Script=Han}\p{Script=Hiragana}\p{Script=Katakana}]/gu;
+  const cjkCount = (_b2 = (_a2 = stripped.match(CJK_CHAR)) == null ? void 0 : _a2.length) != null ? _b2 : 0;
+  const residual = stripped.replace(CJK_CHAR, " ").replace(/[\u3000-\u303f\uff01-\uff0f\uff1a-\uff20\uff3b-\uff40\uff5b-\uff65]/g, " ");
+  return cjkCount + residual.split(/\s+/).filter((w) => w.length > 0).length;
 }
 
 // src/FolderSidebarView.ts

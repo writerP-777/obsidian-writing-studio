@@ -6,6 +6,11 @@ All notable changes to Writing Studio are documented here.
 
 ## [Unreleased]
 
+### Fixed
+- Chinese and Japanese text is now counted correctly: every Han character and kana counts as one word (你好 = 2 words), the same convention Obsidian's own counter uses, with full-width punctuation (。、！) counting zero. The shared counter feeds every surface — status bar, word-count frontmatter, goals, sprints, stats, and the export title page — so all of them correct together. Existing Chinese and Japanese documents will show higher (accurate) counts on their next edit; goals set against the old undercounts may want revisiting. Korean and all spaced languages are unchanged. (#297)
+
+  > Thank you for taking the time to report this, and for the clear example — '你好' counting as one word instead of two pointed straight to the cause. You've made Writing Studio better for every writer working in Chinese and Japanese, and I'm grateful for it. The fix counts each Han character and kana on its own, the way Obsidian's own counter does, so your character counts will line up as you'd expect. Thanks again for helping strengthen the plugin. — Don
+
 ### Changed
 - Internal code consolidation, no behavior change: one shared home for path helpers, the illegal-filename-character rule, and the typed-name validation core; `binder-compile` gains a parser like the other frontmatter keys; the document status list is single-sourced. (#276)
 
