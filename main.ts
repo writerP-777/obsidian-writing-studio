@@ -44,7 +44,10 @@ import { WritingDashboardModal } from './modals/WritingDashboardModal';
 import { WordPressSite } from './models/WordPressSite';
 import { WritingModeType } from './models/WritingMode';
 
-// Minimal subset of the Notebook Navigator public API (v1.2–2.x) used by Writing Studio.
+// Minimal subset of the Notebook Navigator public API used by Writing Studio.
+// Versions here are NN's API version (currently 2.0.0), which is numbered
+// independently of the NN plugin release version — the plugin is on 3.x while
+// the API contract is still 2.x.
 // Full spec: https://github.com/johansan/notebook-navigator/blob/main/docs/api-reference.md
 interface NNMenuItem {
   setTitle(title: string): this;
@@ -356,11 +359,14 @@ export default class WritingStudioPlugin extends Plugin {
       void runSilentMigration(this);
 
       // Register folder context menu item in Notebook Navigator if installed.
-      // Guard on major version <= 2 per NN's stability policy (breaking changes require v3+).
+      // getVersion() returns NN's API version, NOT the NN plugin version. Guard on
+      // API major <= 2 per NN's stability policy: API 2.x is additive-only, and
+      // breaking changes to documented members require an API major bump. An NN
+      // plugin major bump on its own does not affect this guard.
       const nn = (this.app as AppWithPlugins).plugins.plugins['notebook-navigator']?.api;
       if (nn?.menus?.registerFolderMenu) {
-        const nnMajor = parseInt(nn.getVersion().split('.')[0]);
-        if (nnMajor <= 2) {
+        const nnApiMajor = parseInt(nn.getVersion().split('.')[0]);
+        if (nnApiMajor <= 2) {
           this.nnFolderMenuDispose = nn.menus.registerFolderMenu(({ addItem, folder }) => {
             addItem(item => {
               item.setTitle(t('main.menu.openSidebar')).setIcon('folder').onClick(() => { void this.openFolder(folder); });
