@@ -19715,8 +19715,8 @@ var WritingStudioPlugin = class extends import_obsidian35.Plugin {
       void runSilentMigration(this);
       const nn = (_a2 = this.app.plugins.plugins["notebook-navigator"]) == null ? void 0 : _a2.api;
       if ((_b2 = nn == null ? void 0 : nn.menus) == null ? void 0 : _b2.registerFolderMenu) {
-        const nnMajor = parseInt(nn.getVersion().split(".")[0]);
-        if (nnMajor <= 2) {
+        const nnApiMajor = parseInt(nn.getVersion().split(".")[0]);
+        if (nnApiMajor <= 2) {
           this.nnFolderMenuDispose = nn.menus.registerFolderMenu(({ addItem, folder }) => {
             addItem((item) => {
               item.setTitle(t2("main.menu.openSidebar")).setIcon("folder").onClick(() => {
