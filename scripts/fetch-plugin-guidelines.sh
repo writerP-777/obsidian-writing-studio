@@ -41,8 +41,8 @@ echo "Fetching Obsidian developer standards..."
 echo ""
 
 fetch_doc "Plugin guidelines"              "Plugins/Releasing/Plugin guidelines.md"              "plugin-guidelines.md"
-fetch_doc "Developer policies"             "Developer policies.md"                               "developer-policies.md"
-fetch_doc "Submission requirements"        "Plugins/Releasing/Submission requirements for plugins.md" "submission-requirements.md"
+fetch_doc "Developer policies"             "Community directory/Developer policies.md"           "developer-policies.md"
+fetch_doc "Submission requirements"        "Community directory/Submission requirements for plugins.md" "submission-requirements.md"
 
 # Store fetch timestamp
 date -u +"%Y-%m-%dT%H:%M:%SZ" > "$CACHE_DIR/.fetch-timestamp"
