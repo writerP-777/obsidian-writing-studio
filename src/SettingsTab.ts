@@ -383,6 +383,13 @@ export class WritingStudioSettingsTab extends PluginSettingTab {
         .setValue(this.plugin.settings.pdfEngine)
         .onChange(async v => { this.plugin.settings.pdfEngine = v as PdfEnginePreference; await this.plugin.saveSettings(); }));
 
+    new Setting(el)
+      .setName(t('settings.export.pdfEnginePath'))
+      .setDesc(t('settings.export.pdfEnginePathDesc'))
+      .addText(text => text
+        .setValue(this.plugin.settings.pdfEnginePath)
+        .onChange(async v => { this.plugin.settings.pdfEnginePath = v; await this.plugin.saveSettings(); }));
+
     new Setting(el).setName(t('settings.export.epubHeading')).setHeading();
 
     new Setting(el)

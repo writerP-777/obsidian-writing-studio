@@ -4,6 +4,13 @@ All notable changes to Writing Studio are documented here.
 
 ---
 
+## [Unreleased]
+
+### Fixed
+- PDF export now finds LaTeX engines and pandoc that are installed but invisible to the app's PATH — the common case on macOS, where Dock-launched apps don't see the shell PATH, so a working TeX Live install (`/Library/TeX/texbin`) or Homebrew pandoc was reported missing. Common install locations are searched automatically, and a new **PDF engine location** setting accepts a folder containing the engines or a full path to one engine binary for installs anywhere else. Pinned-engine behavior is unchanged: a pinned engine that is truly absent still fails by name. (#344)
+
+---
+
 ## [3.0.1] - 2026-07-20
 
 ### Fixed

@@ -563,10 +563,13 @@ No external tools are required for manuscript export.
 | Export font size | Point size for PDF/DOCX output |
 | Pandoc path | Full path to the `pandoc` binary if it is not on your system PATH |
 | PDF engine | Engine Pandoc uses for PDF export. **Auto** (default) picks an installed LaTeX engine — `xelatex` or `lualatex` when a custom font is set, `pdflatex` otherwise. Pin a specific engine to always use it; if a pinned engine is not installed the export fails with a message naming it rather than silently substituting another |
+| PDF engine location | Folder containing the PDF engine binaries — or full path to one engine binary — when the engine is not on the system PATH. Leave blank to search the PATH plus common install locations |
 | EPUB language | BCP 47 language tag (e.g. `en`, `fr`, `de`) |
 | EPUB include cover | Generate a text cover page when no cover image is provided |
 
 > **Requirement:** Pandoc must be installed for PDF, DOCX, RTF, HTML, and EPUB export. Download from [pandoc.org](https://pandoc.org/installing.html). For PDF export, a LaTeX distribution (e.g. TeX Live or MiKTeX) is also required — unless the PDF engine setting is pinned to [wkhtmltopdf](https://wkhtmltopdf.org/), which renders PDFs without LaTeX. Manuscript (HTML) export does not require Pandoc.
+>
+> **macOS note:** apps launched from the Dock don't see the shell PATH, so a correctly installed TeX Live or Homebrew binary can still be "not found." Common install locations (`/Library/TeX/texbin`, `/opt/homebrew/bin`, `/usr/local/bin`) are searched automatically; for anything else, set the PDF engine location setting.
 >
 > **Font note:** the export font setting applies only to the LaTeX PDF path (`xelatex`/`lualatex`; `pdflatex` cannot apply custom fonts either). The `wkhtmltopdf` path takes its typography from Pandoc's HTML/CSS output, so the export font setting is ignored there — the plugin tells you when a font was skipped for this reason.
 >
@@ -677,7 +680,7 @@ Open via **Settings → Writing Studio**.
 | Focus mode | Focus unit, dim opacity, font override, sidebar behavior, typewriter scroll |
 | Typography | Font family, custom font name, line length, font size, line height, letter spacing, persistence |
 | Sprint & goals | Sprint duration, daily goal, sound notifications, history retention, inline banner |
-| Export | Format, paper size, font, font size, Pandoc path, EPUB language, EPUB cover |
+| Export | Format, paper size, font, font size, Pandoc path, PDF engine, PDF engine location, EPUB language, EPUB cover |
 | Writing log | Append sprint summaries to Daily Note |
 | WordPress | Site credentials, default post status, wikilink handling |
 

@@ -112,7 +112,9 @@
       "includeCoverDesc": "표지 이미지가 없을 때 텍스트 표지 페이지를 생성합니다.",
       "pdfEngine": "PDF 엔진",
       "pdfEngineDesc": "PDF 내보내기에 사용할 엔진입니다. 자동은 설치된 LaTeX 엔진을 선택합니다. wkhtmltopdf는 LaTeX 없이 작동하지만 내보내기 글꼴 설정이 적용되지 않습니다.",
-      "pdfEngineAuto": "자동(권장)"
+      "pdfEngineAuto": "자동(권장)",
+      "pdfEnginePath": "PDF 엔진 위치",
+      "pdfEnginePathDesc": "PDF 엔진이 있는 폴더 또는 엔진 실행 파일의 전체 경로입니다. 비워 두면 시스템 경로와 일반적인 설치 위치를 검색합니다."
     },
     "log": {
       "heading": "일일 글쓰기 로그",

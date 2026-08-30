@@ -152,6 +152,60 @@ export function classifyPandocFailure(message: string): PandocFailureKind {
   return 'other';
 }
 
+// Install directories a GUI-launched Obsidian cannot see on macOS: Dock and
+// Finder launches get a minimal PATH (path_helper only augments shells), so
+// TeX Live/MacTeX, Homebrew, and /usr/local binaries are invisible to
+// bare-name lookups even when correctly installed (#344). Probing a
+// nonexistent directory just fails that candidate, so the list is not
+// platform-gated.
+export const WELL_KNOWN_BIN_DIRS: readonly string[] = [
+  '/Library/TeX/texbin',
+  '/opt/homebrew/bin',
+  '/usr/local/bin',
+];
+
+const PDF_ENGINE_NAMES: ReadonlySet<string> = new Set(['xelatex', 'lualatex', 'pdflatex', 'wkhtmltopdf']);
+
+const stripWindowsExt = (base: string): string => base.replace(/\.(exe|com)$/i, '');
+
+// Join with the separator style the directory already uses so candidates read
+// naturally in error output on every platform. System binary paths, not vault
+// paths — normalizePath does not apply.
+const joinDir = (dir: string, file: string): string => {
+  const trimmed = dir.replace(/[\\/]+$/, '');
+  return `${trimmed}${trimmed.includes('\\') ? '\\' : '/'}${file}`;
+};
+
+// Pure: the ordered command candidates for locating `name` (#344). Precedence:
+// the configured engine location, then the process PATH (the bare name), then
+// the well-known install directories. A configured value is treated as a
+// directory to search — unless its base name is one of the PDF engines, in
+// which case it locates exactly that engine and contributes nothing to the
+// others (a binary is never invoked as a guessed engine). A configured
+// location that resolves nothing leaves the later candidates intact: it is an
+// additional search location, never an exclusive override.
+export function binaryCandidates(name: string, configuredLocation: string, isWindows: boolean): string[] {
+  const candidates: string[] = [];
+  const addDir = (dir: string, withExe: boolean): void => {
+    candidates.push(joinDir(dir, name));
+    if (withExe) candidates.push(joinDir(dir, `${name}.exe`));
+  };
+  const configured = configuredLocation.trim();
+  if (configured) {
+    const base = stripWindowsExt(configured.split(/[\\/]/).pop() ?? '').toLowerCase();
+    if (base === name) {
+      candidates.push(configured);
+    } else if (!PDF_ENGINE_NAMES.has(base)) {
+      addDir(configured, isWindows);
+    }
+  }
+  candidates.push(name);
+  for (const dir of WELL_KNOWN_BIN_DIRS) {
+    addDir(dir, false);
+  }
+  return candidates;
+}
+
 const MANUSCRIPT_CSS = `
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body {
@@ -607,37 +661,58 @@ ${markdownToHtml(content)}
     return outputPath;
   }
 
-  // Pre-flight for the export modal — false when the configured pandoc
-  // binary cannot be executed. Never throws; never blocks the UI.
-  async isPandocAvailable(): Promise<boolean> {
-    const pandocPath = this.plugin.settings.pandocPath || 'pandoc';
-    try {
-      await execFileAsync(pandocPath, ['--version']);
-      return true;
-    } catch {
-      return false;
+  // Resolve the pandoc command. A customized pandoc path is used exactly as
+  // configured — never substituted; the default searches the process PATH and
+  // then the well-known install directories a GUI-launched Obsidian may not
+  // inherit (#344). Null when nothing responds.
+  private async resolvePandoc(): Promise<string | null> {
+    const configured = (this.plugin.settings.pandocPath || '').trim();
+    if (configured && configured !== 'pandoc') {
+      return await this.firstUsable([configured]);
     }
+    return await this.firstUsable(binaryCandidates('pandoc', '', process.platform === 'win32'));
   }
 
-  // Probe which PDF engines pandoc could use. Mirrors isPandocAvailable:
-  // each probe never throws, so a missing engine is just false.
-  private async detectPdfEngines(): Promise<Record<PdfEngine, boolean>> {
-    const probe = async (bin: PdfEngine): Promise<boolean> => {
+  // Pre-flight for the export modal — false when no usable pandoc binary was
+  // found. Never throws; never blocks the UI.
+  async isPandocAvailable(): Promise<boolean> {
+    return (await this.resolvePandoc()) !== null;
+  }
+
+  // First candidate that answers --version, or null. The command returned is
+  // the exact string later invocations must use — detection passing while the
+  // invocation resolves to a different binary would be a defect (#344).
+  private async firstUsable(candidates: string[]): Promise<string | null> {
+    for (const candidate of candidates) {
       try {
-        await execFileAsync(bin, ['--version']);
-        return true;
+        await execFileAsync(candidate, ['--version']);
+        return candidate;
       } catch {
-        return false;
+        // not here — try the next location
       }
-    };
+    }
+    return null;
+  }
+
+  // Locate which PDF engines pandoc could use, each resolved to the command
+  // that actually responded: the bare name via PATH, or a path from the engine
+  // location setting / well-known install directories (#344). Mirrors
+  // resolvePandoc: a missing engine is just null, never a throw.
+  private async locatePdfEngines(): Promise<Record<PdfEngine, string | null>> {
+    const configured = this.plugin.settings.pdfEnginePath ?? '';
+    const isWindows = process.platform === 'win32';
+    const locate = (bin: PdfEngine): Promise<string | null> =>
+      this.firstUsable(binaryCandidates(bin, configured, isWindows));
     const [xelatex, lualatex, pdflatex, wkhtmltopdf] = await Promise.all([
-      probe('xelatex'), probe('lualatex'), probe('pdflatex'), probe('wkhtmltopdf'),
+      locate('xelatex'), locate('lualatex'), locate('pdflatex'), locate('wkhtmltopdf'),
     ]);
     return { xelatex, lualatex, pdflatex, wkhtmltopdf };
   }
 
-  private async exportPandoc(content: string, outputPath: string, opts: ExportOptions, pdf?: { engine: PdfEngine; keepFont: boolean }): Promise<string> {
-    const pandocPath = this.plugin.settings.pandocPath || 'pandoc';
+  private async exportPandoc(content: string, outputPath: string, opts: ExportOptions, pdf?: { engine: PdfEngine; command: string; keepFont: boolean }): Promise<string> {
+    // Fall back to the configured/bare name on resolution failure so the
+    // invocation still produces the classic classifiable pandoc-missing error.
+    const pandocPath = (await this.resolvePandoc()) ?? (this.plugin.settings.pandocPath || 'pandoc');
     const tempMdPath = outputPath.replace(/\.[^.]+$/, '.tmp.md');
 
     try {
@@ -649,9 +724,11 @@ ${markdownToHtml(content)}
       const args = [absInput, '--from', 'markdown', '-o', absOutput];
 
       // For PDF the engine is chosen explicitly (selectPdfEngine), since mainfont
-      // is only honored by xelatex/lualatex. docx/rtf pass no pdf arg and are unchanged.
+      // is only honored by xelatex/lualatex. docx/rtf pass no pdf arg and are
+      // unchanged. The command is the exact string the probe validated — an
+      // absolute path when the engine was found off the process PATH (#344).
       if (pdf) {
-        args.push(`--pdf-engine=${pdf.engine}`);
+        args.push(`--pdf-engine=${pdf.command}`);
       }
 
       // Skip mainfont when degrading to pdflatex so the export still succeeds
@@ -686,7 +763,13 @@ ${markdownToHtml(content)}
 
   private async exportPdf(content: string, outputPath: string, opts: ExportOptions): Promise<string> {
     const preferred = this.plugin.settings.pdfEngine ?? 'auto';
-    const decision = selectPdfEngine(await this.detectPdfEngines(), !!opts.font, preferred);
+    const located = await this.locatePdfEngines();
+    const decision = selectPdfEngine({
+      xelatex: located.xelatex !== null,
+      lualatex: located.lualatex !== null,
+      pdflatex: located.pdflatex !== null,
+      wkhtmltopdf: located.wkhtmltopdf !== null,
+    }, !!opts.font, preferred);
 
     if (!decision.engine) {
       // A pinned engine fails by name — no silent substitution; auto keeps the
@@ -707,7 +790,13 @@ ${markdownToHtml(content)}
     }
 
     try {
-      return await this.exportPandoc(content, outputPath, opts, { engine: decision.engine, keepFont: decision.keepFont });
+      // located[engine] is non-null whenever selectPdfEngine picked the engine;
+      // the bare name is a type-level fallback only.
+      return await this.exportPandoc(content, outputPath, opts, {
+        engine: decision.engine,
+        command: located[decision.engine] ?? decision.engine,
+        keepFont: decision.keepFont,
+      });
     } catch (e) {
       const raw = e instanceof Error ? e.message : String(e);
       let msg = t('exportEngine.pdfRequiresPandoc');
