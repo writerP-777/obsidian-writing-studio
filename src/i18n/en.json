@@ -112,7 +112,9 @@
       "includeCoverDesc": "Generate a text cover page when no cover image is provided.",
       "pdfEngine": "PDF engine",
       "pdfEngineDesc": "Engine used for PDF export. Auto picks an installed LaTeX engine. wkhtmltopdf works without LaTeX, but the export font setting does not apply to it.",
-      "pdfEngineAuto": "Auto (recommended)"
+      "pdfEngineAuto": "Auto (recommended)",
+      "pdfEnginePath": "PDF engine location",
+      "pdfEnginePathDesc": "Folder containing your PDF engine, or full path to one engine binary. Leave blank to search the system path and common install locations."
     },
     "log": {
       "heading": "Daily writing log",

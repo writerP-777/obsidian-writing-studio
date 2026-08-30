@@ -112,7 +112,9 @@
       "includeCoverDesc": "Générer une page de couverture texte si aucune image de couverture n’est fournie.",
       "pdfEngine": "Moteur PDF",
       "pdfEngineDesc": "Moteur utilisé pour l'export PDF. Auto choisit un moteur LaTeX installé. wkhtmltopdf fonctionne sans LaTeX, mais la police d'export ne s'y applique pas.",
-      "pdfEngineAuto": "Auto (recommandé)"
+      "pdfEngineAuto": "Auto (recommandé)",
+      "pdfEnginePath": "Emplacement du moteur PDF",
+      "pdfEnginePathDesc": "Dossier contenant votre moteur PDF, ou chemin complet vers un binaire de moteur. Laissez vide pour chercher dans le chemin système et les emplacements d'installation courants."
     },
     "log": {
       "heading": "Journal quotidien d’écriture",

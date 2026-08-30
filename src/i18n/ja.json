@@ -112,7 +112,9 @@
       "includeCoverDesc": "カバー画像がない場合、テキストカバーページを自動生成します。",
       "pdfEngine": "PDF エンジン",
       "pdfEngineDesc": "PDF 書き出しに使うエンジンです。自動ではインストール済みの LaTeX エンジンを選びます。wkhtmltopdf は LaTeX 不要ですが、書き出しフォント設定は適用されません。",
-      "pdfEngineAuto": "自動（推奨）"
+      "pdfEngineAuto": "自動（推奨）",
+      "pdfEnginePath": "PDF エンジンの場所",
+      "pdfEnginePathDesc": "PDF エンジンを含むフォルダー、または単一のエンジンバイナリへのフルパス。空欄の場合、システムパスと一般的なインストール場所を検索します。"
     },
     "log": {
       "heading": "毎日の執筆ログ",

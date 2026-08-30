@@ -112,7 +112,9 @@
       "includeCoverDesc": "未提供封面图片时自动生成文字封面页。",
       "pdfEngine": "PDF 引擎",
       "pdfEngineDesc": "用于 PDF 导出的引擎。自动模式会选择已安装的 LaTeX 引擎。wkhtmltopdf 无需 LaTeX 即可使用，但导出字体设置对其无效。",
-      "pdfEngineAuto": "自动（推荐）"
+      "pdfEngineAuto": "自动（推荐）",
+      "pdfEnginePath": "PDF 引擎位置",
+      "pdfEnginePathDesc": "包含 PDF 引擎的文件夹，或某个引擎可执行文件的完整路径。留空则搜索系统路径和常见安装位置。"
     },
     "log": {
       "heading": "每日写作日志",

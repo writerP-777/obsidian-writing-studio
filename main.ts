@@ -120,6 +120,9 @@ export interface WritingStudioSettings {
   defaultExportFontSize: number;
   pandocPath: string;
   pdfEngine: PdfEnginePreference;
+  // Directory holding the PDF engine binaries, or a path to one engine binary,
+  // for installs the process PATH does not cover (#344)
+  pdfEnginePath: string;
   epubLanguage: string;
   epubIncludeCover: boolean;
   // WordPress
@@ -173,6 +176,7 @@ const DEFAULT_SETTINGS: WritingStudioSettings = {
   defaultExportFontSize: 12,
   pandocPath: 'pandoc',
   pdfEngine: 'auto',
+  pdfEnginePath: '',
   epubLanguage: 'en',
   epubIncludeCover: true,
   wordPressSites: [],
