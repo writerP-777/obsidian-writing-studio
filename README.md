@@ -715,7 +715,7 @@ Most features work out of the box. A few require additional software for specifi
 
 | Requirement | When needed |
 |-------------|-------------|
-| Obsidian 1.8.7 or later | Always |
+| Obsidian 1.13.0 or later | Always |
 | Desktop (Windows, macOS, Linux) | Always — this plugin does not run on mobile |
 | Internet connection | First use of each Typography Mode font (cached after that) |
 | [Pandoc](https://pandoc.org/installing.html) | Export to PDF, DOCX, RTF, HTML, EPUB |
