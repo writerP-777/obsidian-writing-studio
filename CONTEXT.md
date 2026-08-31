@@ -2,7 +2,7 @@
 
 An Obsidian community plugin that turns the vault into a professional writing environment.
 Inspired by Scrivener's project/binder model but lives entirely inside Obsidian.
-Desktop-only (`isDesktopOnly: true`). Plugin ID: `writing-studio`, current version: `3.0.2`.
+Desktop-only (`isDesktopOnly: true`). Plugin ID: `writing-studio`, current version: `3.1.0`.
 
 ---
 
@@ -39,7 +39,7 @@ src/
   WritingLogView.ts        ← daily writing-activity log sidebar view
   FolderSidebarView.ts     ← focused folder explorer sidebar view
   HelpContent.ts           ← in-plugin help text
-  SettingsTab.ts           ← tabbed settings UI
+  SettingsTab.ts           ← declarative settings (getSettingDefinitions, Obsidian 1.13+)
 models/
   Project.ts               ← WritingProject, ProjectType, ProjectGoals
   BinderItem.ts            ← BinderItem, BinderData, DocumentStatus
