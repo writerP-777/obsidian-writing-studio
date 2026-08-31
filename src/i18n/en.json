@@ -1,7 +1,6 @@
 {
   "settings": {
     "tab": {
-      "general": "General",
       "focus": "Focus mode",
       "typography": "Typography",
       "sprint": "Sprint & goals",
@@ -9,6 +8,10 @@
       "log": "Writing log",
       "wordpress": "WordPress",
       "help": "How to use"
+    },
+    "validation": {
+      "integerRange": "Enter a whole number between {{min}} and {{max}}.",
+      "integerRangeOrZero": "Enter 0 to clear the override, or a whole number between {{min}} and {{max}}."
     },
     "general": {
       "openOnStartup": "Open on startup",
@@ -31,7 +34,6 @@
       "frontmatterAutoUpdateDesc": "Automatically update word-count and modified date on save."
     },
     "focus": {
-      "heading": "Focus mode",
       "focusUnit": "Focus unit",
       "focusUnitDesc": "Highlight at paragraph or sentence level.",
       "paragraph": "Paragraph",
@@ -45,7 +47,6 @@
       "typewriterScrollDesc": "Keep active line centered on screen."
     },
     "typography": {
-      "heading": "Typography mode",
       "fontFamily": "Font family",
       "font": {
         "mono": "Monospaced (ia writer mono)",
@@ -77,7 +78,6 @@
       "persistAcrossSessionsDesc": "Keep typography mode active when Obsidian reopens."
     },
     "sprint": {
-      "heading": "Sprint & goals",
       "defaultDuration": "Default sprint duration (minutes)",
       "defaultDailyGoal": "Default daily word goal",
       "soundNotifications": "Sound notifications",
@@ -87,7 +87,6 @@
       "inlineGoalBannerDesc": "Show word count goal progress below the title when a document is opened."
     },
     "export": {
-      "heading": "Export",
       "defaultFormat": "Default export format",
       "format": {
         "md": "Markdown (.md)",
@@ -117,18 +116,17 @@
       "pdfEnginePathDesc": "Folder containing your PDF engine, or full path to one engine binary. Leave blank to search the system path and common install locations."
     },
     "log": {
-      "heading": "Daily writing log",
       "appendToDailyNote": "Append to daily note",
       "appendToDailyNoteDesc": "Add a writing activity summary to today’s daily note after each sprint."
     },
     "wordpress": {
       "sitesHeading": "WordPress sites",
+      "noSites": "No sites configured.",
       "addSite": "+ add WordPress site",
       "wikilinksHeading": "Wikilink defaults",
       "defaultWikilinkHandling": "Default wikilink handling",
       "wikilinkStrip": "Strip (convert to plain text)",
       "wikilinkConvert": "Convert to URL",
-      "siteHeading": "Site: {{nickname}}",
       "siteUnnamed": "Unnamed",
       "nickname": "Nickname",
       "siteUrl": "Site URL",
@@ -147,7 +145,6 @@
       "testConnection": "Test connection",
       "testConnectionDesc": "Verify credentials and connectivity.",
       "testing": "Testing…",
-      "removeSite": "Remove site",
       "buyMeACoffee": "Buy me a coffee",
       "newSiteName": "New site"
     }

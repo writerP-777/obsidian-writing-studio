@@ -1,7 +1,6 @@
 {
   "settings": {
     "tab": {
-      "general": "Общие",
       "focus": "Режим фокусировки",
       "typography": "Типографика",
       "sprint": "Спринт и цели",
@@ -9,6 +8,10 @@
       "log": "Журнал написания",
       "wordpress": "WordPress",
       "help": "Как использовать"
+    },
+    "validation": {
+      "integerRange": "Введите целое число от {{min}} до {{max}}.",
+      "integerRangeOrZero": "Введите 0, чтобы сбросить переопределение, или целое число от {{min}} до {{max}}."
     },
     "general": {
       "openOnStartup": "Открывать при запуске",
@@ -31,7 +34,6 @@
       "frontmatterAutoUpdateDesc": "Автоматически обновлять количество слов и дату изменения при сохранении."
     },
     "focus": {
-      "heading": "Режим фокусировки",
       "focusUnit": "Единица фокусировки",
       "focusUnitDesc": "Подсвечивать на уровне абзаца или предложения.",
       "paragraph": "Абзац",
@@ -45,7 +47,6 @@
       "typewriterScrollDesc": "Держать активную строку в центре экрана."
     },
     "typography": {
-      "heading": "Режим типографики",
       "fontFamily": "Семейство шрифтов",
       "font": {
         "mono": "Моноширинный (iA Writer Mono)",
@@ -77,7 +78,6 @@
       "persistAcrossSessionsDesc": "Сохранять режим типографики активным при повторном открытии Obsidian."
     },
     "sprint": {
-      "heading": "Спринт и цели",
       "defaultDuration": "Длительность спринта по умолчанию (минуты)",
       "defaultDailyGoal": "Дневная цель по умолчанию (слова)",
       "soundNotifications": "Звуковые уведомления",
@@ -87,7 +87,6 @@
       "inlineGoalBannerDesc": "Показывать прогресс достижения цели по словам под заголовком при открытии документа."
     },
     "export": {
-      "heading": "Экспорт",
       "defaultFormat": "Формат экспорта по умолчанию",
       "format": {
         "md": "Markdown (.md)",
@@ -117,18 +116,17 @@
       "pdfEnginePathDesc": "Папка с движком PDF или полный путь к исполняемому файлу движка. Оставьте пустым для поиска в системном пути и типичных местах установки."
     },
     "log": {
-      "heading": "Ежедневный журнал написания",
       "appendToDailyNote": "Добавлять в ежедневную заметку",
       "appendToDailyNoteDesc": "Добавлять сводку активности после каждого спринта в сегодняшнюю ежедневную заметку."
     },
     "wordpress": {
       "sitesHeading": "Сайты WordPress",
+      "noSites": "Сайты не настроены.",
       "addSite": "+ добавить сайт WordPress",
       "wikilinksHeading": "Настройки вики-ссылок по умолчанию",
       "defaultWikilinkHandling": "Обработка вики-ссылок по умолчанию",
       "wikilinkStrip": "Удалить (преобразовать в простой текст)",
       "wikilinkConvert": "Преобразовать в URL",
-      "siteHeading": "Сайт: {{nickname}}",
       "siteUnnamed": "Без названия",
       "nickname": "Название",
       "siteUrl": "URL сайта",
@@ -147,7 +145,6 @@
       "testConnection": "Проверить подключение",
       "testConnectionDesc": "Проверить учётные данные и подключение.",
       "testing": "Проверка…",
-      "removeSite": "Удалить сайт",
       "buyMeACoffee": "Купи мне кофе",
       "newSiteName": "Новый сайт"
     }

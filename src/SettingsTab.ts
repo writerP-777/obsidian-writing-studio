@@ -1,548 +1,37 @@
-import { App, Component, MarkdownRenderer, PluginSettingTab, Setting } from 'obsidian';
+import { App, Component, MarkdownRenderer, PluginSettingTab, SettingPage } from 'obsidian';
+import type { Setting, SettingDefinitionItem, SettingDefinitionPage } from 'obsidian';
 import type WritingStudioPlugin from '../main';
-import type { ExportFormat, PdfEnginePreference } from './ExportEngine';
 import { WordPressSite, WPPostStatus } from '../models/WordPressSite';
 import { HELP_CONTENT } from './HelpContent';
 import { t } from './i18n';
 
-export class WritingStudioSettingsTab extends PluginSettingTab {
-  plugin: WritingStudioPlugin;
-  private activeTab = 'general';
-  private helpComponent: Component | null = null;
+// Synthetic control key for WordPress site fields: sites live in an array, not
+// on flat settings keys, so getControlValue/setControlValue route these by id.
+// appPassword is absent deliberately — it renders imperatively (password input).
+const WP_SITE_KEY = /^wpSite\.(.+)\.(nickname|url|username|defaultStatus|wikilinkHandling)$/;
 
-  constructor(app: App, plugin: WritingStudioPlugin) {
-    super(app, plugin);
-    this.plugin = plugin;
-  }
+// Imperative sub-page for the help tab: markdown content rendered through a
+// Component whose lifetime must end when the page is hidden.
+class HelpSettingPage extends SettingPage {
+  private component: Component | null = null;
 
-  // The help tab's MarkdownRenderer component must be unloaded whenever its
-  // DOM is emptied (tab switch) or the dialog closes — display() alone left
-  // it loaded indefinitely.
-  private unloadHelpComponent(): void {
-    if (this.helpComponent) {
-      this.helpComponent.unload();
-      this.helpComponent = null;
-    }
-  }
-
-  hide(): void {
-    this.unloadHelpComponent();
-    super.hide();
+  constructor(private readonly appRef: App) {
+    super();
+    this.title = t('settings.tab.help');
   }
 
   display(): void {
-    this.unloadHelpComponent();
-    const { containerEl } = this;
-    containerEl.empty();
-    containerEl.addClass('ws-settings');
-
-    // Tab bar
-    const tabBar = containerEl.createDiv('ws-settings-tabs');
-    const tabs = [
-      { id: 'general', label: t('settings.tab.general') },
-      { id: 'focus', label: t('settings.tab.focus') },
-      { id: 'typography', label: t('settings.tab.typography') },
-      { id: 'sprint', label: t('settings.tab.sprint') },
-      { id: 'export', label: t('settings.tab.export') },
-      { id: 'log', label: t('settings.tab.log') },
-      { id: 'wordpress', label: t('settings.tab.wordpress') },
-      { id: 'help', label: t('settings.tab.help') },
-    ];
-
-    const contentEl = containerEl.createDiv('ws-settings-content');
-
-    tabs.forEach(tab => {
-      const btn = tabBar.createEl('button', {
-        cls: `ws-settings-tab ${this.activeTab === tab.id ? 'is-active' : ''}`,
-        text: tab.label,
-      });
-      btn.onclick = () => {
-        this.unloadHelpComponent();
-        this.activeTab = tab.id;
-        tabBar.querySelectorAll('.ws-settings-tab').forEach(b => b.removeClass('is-active'));
-        btn.addClass('is-active');
-        contentEl.empty();
-        this.renderActiveTab(tab.id, contentEl);
-      };
-    });
-
-    this.renderActiveTab(this.activeTab, contentEl);
+    this.containerEl.empty();
+    this.containerEl.addClass('ws-help-content');
+    void this.renderContent();
   }
 
-  // Named to avoid shadowing SettingTab.renderTab(), the entry point Obsidian
-  // 1.13+ invokes when opening a tab — a same-named method here silently
-  // replaces it and display() is never called.
-  private renderActiveTab(tab: string, el: HTMLElement): void {
-    switch (tab) {
-      case 'general': this.renderGeneral(el); break;
-      case 'focus': this.renderFocusMode(el); break;
-      case 'typography': this.renderTypography(el); break;
-      case 'sprint': this.renderSprint(el); break;
-      case 'export': this.renderExport(el); break;
-      case 'log': this.renderLog(el); break;
-      case 'wordpress': this.renderWordPress(el); break;
-      case 'help': void this.renderHelp(el); break;
-    }
-  }
-
-  private renderGeneral(el: HTMLElement): void {
-
-    new Setting(el)
-      .setName(t('settings.general.openOnStartup'))
-      .setDesc(t('settings.general.openOnStartupDesc'))
-      .addToggle(toggle => toggle
-        .setValue(this.plugin.settings.openOnStartup)
-        .onChange(async v => { this.plugin.settings.openOnStartup = v; await this.plugin.saveSettings(); }));
-
-    new Setting(el)
-      .setName(t('settings.general.defaultProjectFolder'))
-      .setDesc(t('settings.general.defaultProjectFolderDesc'))
-      .addText(text => text
-        .setPlaceholder(t('settings.general.defaultProjectFolderPlaceholder'))
-        .setValue(this.plugin.settings.defaultProjectFolder)
-        .onChange(async v => { this.plugin.settings.defaultProjectFolder = v; await this.plugin.saveSettings(); }));
-
-    new Setting(el)
-      .setName(t('settings.general.authorName'))
-      .setDesc(t('settings.general.authorNameDesc'))
-      .addText(text => text
-        .setPlaceholder(t('settings.general.authorNamePlaceholder'))
-        .setValue(this.plugin.settings.authorName)
-        .onChange(async v => { this.plugin.settings.authorName = v; await this.plugin.saveSettings(); }));
-
-    new Setting(el)
-      .setName(t('settings.general.defaultDocumentType'))
-      .setDesc(t('settings.general.defaultDocumentTypeDesc'))
-      .addDropdown(d => d
-        .addOption('chapter', t('settings.general.docType.chapter'))
-        .addOption('section', t('settings.general.docType.section'))
-        .addOption('article', t('settings.general.docType.article'))
-        .addOption('note', t('settings.general.docType.note'))
-        .setValue(this.plugin.settings.defaultDocumentType)
-        .onChange(async v => {
-          this.plugin.settings.defaultDocumentType = v as 'chapter' | 'section' | 'article' | 'note';
-          await this.plugin.saveSettings();
-        }));
-
-    new Setting(el)
-      .setName(t('settings.general.frontmatterAutoUpdate'))
-      .setDesc(t('settings.general.frontmatterAutoUpdateDesc'))
-      .addToggle(toggle => toggle
-        .setValue(this.plugin.settings.frontmatterAutoUpdate)
-        .onChange(async v => { this.plugin.settings.frontmatterAutoUpdate = v; await this.plugin.saveSettings(); }));
-
-  }
-
-  private renderFocusMode(el: HTMLElement): void {
-    new Setting(el).setName(t('settings.focus.heading')).setHeading();
-
-    new Setting(el)
-      .setName(t('settings.focus.focusUnit'))
-      .setDesc(t('settings.focus.focusUnitDesc'))
-      .addDropdown(d => d
-        .addOption('paragraph', t('settings.focus.paragraph'))
-        .addOption('sentence', t('settings.focus.sentence'))
-        .setValue(this.plugin.settings.focusUnit)
-        .onChange(async v => {
-          this.plugin.settings.focusUnit = v as 'paragraph' | 'sentence';
-          await this.plugin.saveSettings();
-        }));
-
-    new Setting(el)
-      .setName(t('settings.focus.dimOpacity'))
-      .setDesc(t('settings.focus.dimOpacityDesc'))
-      .addSlider(s => s
-        .setLimits(10, 50, 5)
-        .setValue(this.plugin.settings.dimOpacity)
-        .onChange(async v => {
-          this.plugin.settings.dimOpacity = v;
-          await this.plugin.saveSettings();
-          this.plugin.focusMode.applyDimOpacity();
-        }));
-
-    new Setting(el)
-      .setName(t('settings.focus.fontSizeOverride'))
-      .setDesc(t('settings.focus.fontSizeOverrideDesc'))
-      .addText(text => text
-        .setValue(String(this.plugin.settings.focusFontSize || 0))
-        .onChange(async v => {
-          // 0 clears the override; otherwise require a sane size — applied
-          // live, so intermediate keystrokes ("1" while typing "16") and
-          // junk input must not reach the editor
-          const n = Number(v.trim());
-          if (!Number.isInteger(n) || (n !== 0 && (n < 8 || n > 72))) return;
-          this.plugin.settings.focusFontSize = n;
-          await this.plugin.saveSettings();
-          this.plugin.focusMode.applyFontSize();
-        }));
-
-    new Setting(el)
-      .setName(t('settings.focus.autoHideSidebars'))
-      .addToggle(toggle => toggle
-        .setValue(this.plugin.settings.focusAutoHideSidebars)
-        .onChange(async v => { this.plugin.settings.focusAutoHideSidebars = v; await this.plugin.saveSettings(); }));
-
-    new Setting(el)
-      .setName(t('settings.focus.typewriterScroll'))
-      .setDesc(t('settings.focus.typewriterScrollDesc'))
-      .addToggle(toggle => toggle
-        .setValue(this.plugin.settings.typewriterScroll)
-        .onChange(async v => { this.plugin.settings.typewriterScroll = v; await this.plugin.saveSettings(); }));
-  }
-
-  private renderTypography(el: HTMLElement): void {
-    new Setting(el).setName(t('settings.typography.heading')).setHeading();
-
-    new Setting(el)
-      .setName(t('settings.typography.fontFamily'))
-      .addDropdown(d => {
-        d.addOption('mono', t('settings.typography.font.mono'));
-        d.addOption('serif', t('settings.typography.font.serif'));
-        d.addOption('sans', t('settings.typography.font.sans'));
-        d.addOption('cormorant-garamond', t('settings.typography.font.cormorant-garamond'));
-        d.addOption('crimson-text', t('settings.typography.font.crimson-text'));
-        d.addOption('eb-garamond', t('settings.typography.font.eb-garamond'));
-        d.addOption('libre-baskerville', t('settings.typography.font.libre-baskerville'));
-        d.addOption('libre-caslon-text', t('settings.typography.font.libre-caslon-text'));
-        d.addOption('literata', t('settings.typography.font.literata'));
-        d.addOption('lora', t('settings.typography.font.lora'));
-        d.addOption('inter', t('settings.typography.font.inter'));
-        d.addOption('lato', t('settings.typography.font.lato'));
-        d.addOption('source-sans-3', t('settings.typography.font.source-sans-3'));
-        d.addOption('custom', t('settings.typography.font.custom'));
-        d.setValue(this.plugin.settings.typographyFont);
-        d.onChange(async v => {
-          this.plugin.settings.typographyFont = v;
-          await this.plugin.saveSettings();
-          if (this.plugin.typographyMode.isActive()) this.plugin.typographyMode.refreshStyles();
-        });
-      });
-
-    new Setting(el)
-      .setName(t('settings.typography.customFontName'))
-      .setDesc(t('settings.typography.customFontNameDesc'))
-      .addText(text => text
-        .setPlaceholder(t('settings.typography.customFontNamePlaceholder'))
-        .setValue(this.plugin.settings.customFontName)
-        .onChange(async v => { this.plugin.settings.customFontName = v; await this.plugin.saveSettings(); }));
-
-    new Setting(el)
-      .setName(t('settings.typography.maxLineLength'))
-      .setDesc(t('settings.typography.maxLineLengthDesc'))
-      .addSlider(s => s
-        .setLimits(55, 80, 1)
-        .setValue(this.plugin.settings.maxLineLength)
-        .onChange(async v => { this.plugin.settings.maxLineLength = v; await this.plugin.saveSettings(); }));
-
-    new Setting(el)
-      .setName(t('settings.typography.fontSize'))
-      .addText(text => text
-        .setValue(String(this.plugin.settings.typographyFontSize))
-        .onChange(async v => {
-          const n = Number(v.trim());
-          if (!Number.isInteger(n) || n < 8 || n > 72) return;
-          this.plugin.settings.typographyFontSize = n;
-          await this.plugin.saveSettings();
-        }));
-
-    new Setting(el)
-      .setName(t('settings.typography.lineHeight'))
-      .setDesc(t('settings.typography.lineHeightDesc'))
-      .addText(text => text
-        .setValue(String(this.plugin.settings.lineHeight))
-        .onChange(async v => {
-          this.plugin.settings.lineHeight = parseFloat(v) || 1.7;
-          await this.plugin.saveSettings();
-        }));
-
-    new Setting(el)
-      .setName(t('settings.typography.letterSpacing'))
-      .setDesc(t('settings.typography.letterSpacingDesc'))
-      .addText(text => text
-        .setValue(this.plugin.settings.letterSpacing)
-        .onChange(async v => { this.plugin.settings.letterSpacing = v; await this.plugin.saveSettings(); }));
-
-    new Setting(el)
-      .setName(t('settings.typography.persistAcrossSessions'))
-      .setDesc(t('settings.typography.persistAcrossSessionsDesc'))
-      .addToggle(toggle => toggle
-        .setValue(this.plugin.settings.persistTypography)
-        .onChange(async v => { this.plugin.settings.persistTypography = v; await this.plugin.saveSettings(); }));
-  }
-
-  private renderSprint(el: HTMLElement): void {
-    new Setting(el).setName(t('settings.sprint.heading')).setHeading();
-
-    new Setting(el)
-      .setName(t('settings.sprint.defaultDuration'))
-      .addText(text => text
-        .setValue(String(this.plugin.settings.defaultSprintDuration))
-        .onChange(async v => {
-          const n = Number(v.trim());
-          if (!Number.isInteger(n) || n < 1 || n > 600) return;
-          this.plugin.settings.defaultSprintDuration = n;
-          await this.plugin.saveSettings();
-        }));
-
-    new Setting(el)
-      .setName(t('settings.sprint.defaultDailyGoal'))
-      .addText(text => text
-        .setValue(String(this.plugin.settings.defaultDailyWordGoal))
-        .onChange(async v => {
-          const n = Number(v.trim());
-          if (!Number.isInteger(n) || n < 0 || n > 1000000) return;
-          this.plugin.settings.defaultDailyWordGoal = n;
-          await this.plugin.saveSettings();
-        }));
-
-    new Setting(el)
-      .setName(t('settings.sprint.soundNotifications'))
-      .setDesc(t('settings.sprint.soundNotificationsDesc'))
-      .addToggle(toggle => toggle
-        .setValue(this.plugin.settings.soundNotifications)
-        .onChange(async v => { this.plugin.settings.soundNotifications = v; await this.plugin.saveSettings(); }));
-
-    new Setting(el)
-      .setName(t('settings.sprint.historyRetention'))
-      .addText(text => text
-        .setValue(String(this.plugin.settings.sprintHistoryRetention))
-        .onChange(async v => {
-          const n = Number(v.trim());
-          if (!Number.isInteger(n) || n < 1 || n > 3650) return;
-          this.plugin.settings.sprintHistoryRetention = n;
-          await this.plugin.saveSettings();
-        }));
-
-    new Setting(el)
-      .setName(t('settings.sprint.inlineGoalBanner'))
-      .setDesc(t('settings.sprint.inlineGoalBannerDesc'))
-      .addToggle(toggle => toggle
-        .setValue(this.plugin.settings.inlineGoalBanner)
-        .onChange(async v => { this.plugin.settings.inlineGoalBanner = v; await this.plugin.saveSettings(); }));
-  }
-
-  private renderExport(el: HTMLElement): void {
-    new Setting(el).setName(t('settings.export.heading')).setHeading();
-
-    new Setting(el)
-      .setName(t('settings.export.defaultFormat'))
-      .addDropdown(d => d
-        .addOption('md', t('settings.export.format.md'))
-        .addOption('html', t('settings.export.format.html'))
-        .addOption('manuscript', t('exportModal.format.manuscript'))
-        .addOption('epub', t('exportModal.format.epub'))
-        .addOption('pdf', t('settings.export.format.pdf'))
-        .addOption('docx', t('settings.export.format.docx'))
-        .addOption('rtf', t('settings.export.format.rtf'))
-        .setValue(this.plugin.settings.defaultExportFormat)
-        .onChange(async v => { this.plugin.settings.defaultExportFormat = v as ExportFormat; await this.plugin.saveSettings(); }));
-
-    new Setting(el)
-      .setName(t('settings.export.defaultPaperSize'))
-      .addDropdown(d => d
-        .addOption('letter', t('settings.export.paperSize.letter'))
-        .addOption('a4', t('settings.export.paperSize.a4'))
-        .setValue(this.plugin.settings.defaultPaperSize)
-        .onChange(async v => { this.plugin.settings.defaultPaperSize = v as 'letter' | 'a4'; await this.plugin.saveSettings(); }));
-
-    new Setting(el)
-      .setName(t('settings.export.exportFont'))
-      .addText(text => text
-        .setPlaceholder('Georgia')
-        .setValue(this.plugin.settings.defaultExportFont)
-        .onChange(async v => { this.plugin.settings.defaultExportFont = v; await this.plugin.saveSettings(); }));
-
-    new Setting(el)
-      .setName(t('settings.export.exportFontSize'))
-      .addText(text => text
-        .setValue(String(this.plugin.settings.defaultExportFontSize))
-        .onChange(async v => {
-          const n = Number(v.trim());
-          if (!Number.isInteger(n) || n < 6 || n > 72) return;
-          this.plugin.settings.defaultExportFontSize = n;
-          await this.plugin.saveSettings();
-        }));
-
-    new Setting(el)
-      .setName(t('settings.export.pandocPath'))
-      .setDesc(t('settings.export.pandocPathDesc'))
-      .addText(text => text
-        .setPlaceholder('Pandoc')
-        .setValue(this.plugin.settings.pandocPath)
-        .onChange(async v => { this.plugin.settings.pandocPath = v; await this.plugin.saveSettings(); }));
-
-    new Setting(el)
-      .setName(t('settings.export.pdfEngine'))
-      .setDesc(t('settings.export.pdfEngineDesc'))
-      .addDropdown(d => d
-        .addOption('auto', t('settings.export.pdfEngineAuto'))
-        .addOption('xelatex', 'xelatex')
-        .addOption('lualatex', 'lualatex')
-        .addOption('pdflatex', 'pdflatex')
-        .addOption('wkhtmltopdf', 'wkhtmltopdf')
-        .setValue(this.plugin.settings.pdfEngine)
-        .onChange(async v => { this.plugin.settings.pdfEngine = v as PdfEnginePreference; await this.plugin.saveSettings(); }));
-
-    new Setting(el)
-      .setName(t('settings.export.pdfEnginePath'))
-      .setDesc(t('settings.export.pdfEnginePathDesc'))
-      .addText(text => text
-        .setValue(this.plugin.settings.pdfEnginePath)
-        .onChange(async v => { this.plugin.settings.pdfEnginePath = v; await this.plugin.saveSettings(); }));
-
-    new Setting(el).setName(t('settings.export.epubHeading')).setHeading();
-
-    new Setting(el)
-      .setName(t('settings.export.epubLanguage'))
-      .setDesc(t('settings.export.epubLanguageDesc'))
-      .addText(text => text
-        .setPlaceholder('en')
-        .setValue(this.plugin.settings.epubLanguage)
-        .onChange(async v => { this.plugin.settings.epubLanguage = v.trim() || 'en'; await this.plugin.saveSettings(); }));
-
-    new Setting(el)
-      .setName(t('settings.export.includeCover'))
-      .setDesc(t('settings.export.includeCoverDesc'))
-      .addToggle(toggle => toggle
-        .setValue(this.plugin.settings.epubIncludeCover)
-        .onChange(async v => { this.plugin.settings.epubIncludeCover = v; await this.plugin.saveSettings(); }));
-  }
-
-  private renderLog(el: HTMLElement): void {
-    new Setting(el).setName(t('settings.log.heading')).setHeading();
-
-    new Setting(el)
-      .setName(t('settings.log.appendToDailyNote'))
-      .setDesc(t('settings.log.appendToDailyNoteDesc'))
-      .addToggle(toggle => toggle
-        .setValue(this.plugin.settings.appendToDailyNote)
-        .onChange(async v => { this.plugin.settings.appendToDailyNote = v; await this.plugin.saveSettings(); }));
-  }
-
-  private renderWordPress(el: HTMLElement): void {
-    new Setting(el).setName(t('settings.wordpress.sitesHeading')).setHeading();
-
-    const sites = this.plugin.settings.wordPressSites;
-
-    // Render each site
-    for (let i = 0; i < sites.length; i++) {
-      this.renderSiteConfig(el, sites[i], i);
-    }
-
-    new Setting(el)
-      .addButton(b => b
-        .setButtonText(t('settings.wordpress.addSite'))
-        .onClick(async () => {
-          this.plugin.settings.wordPressSites.push({
-            id: `site-${Date.now()}`,
-            nickname: t('settings.wordpress.newSiteName'),
-            url: '',
-            username: '',
-            appPassword: '',
-            defaultStatus: 'draft',
-            wikilinkHandling: 'strip',
-          });
-          await this.plugin.saveSettings();
-          const contentEl = this.containerEl.querySelector('.ws-settings-content');
-          if (contentEl instanceof HTMLElement) { contentEl.empty(); this.renderWordPress(contentEl); }
-        }));
-
-    new Setting(el).setName(t('settings.wordpress.wikilinksHeading')).setHeading();
-
-    new Setting(el)
-      .setName(t('settings.wordpress.defaultWikilinkHandling'))
-      .addDropdown(d => d
-        .addOption('strip', t('settings.wordpress.wikilinkStrip'))
-        .addOption('convert', t('settings.wordpress.wikilinkConvert'))
-        .setValue(this.plugin.settings.wikilinkHandling)
-        .onChange(async v => { this.plugin.settings.wikilinkHandling = v as 'strip' | 'convert'; await this.plugin.saveSettings(); }));
-  }
-
-  private renderSiteConfig(container: HTMLElement, site: WordPressSite, index: number): void {
-    const siteEl = container.createDiv('ws-wp-site-config');
-    const heading = t('settings.wordpress.siteHeading', { nickname: site.nickname || t('settings.wordpress.siteUnnamed') });
-    new Setting(siteEl).setName(heading).setHeading();
-
-    new Setting(siteEl)
-      .setName(t('settings.wordpress.nickname'))
-      .addText(text => text
-        .setValue(site.nickname)
-        .onChange(async v => { site.nickname = v; await this.plugin.saveSettings(); }));
-
-    new Setting(siteEl)
-      .setName(t('settings.wordpress.siteUrl'))
-      .addText(text => text
-        .setPlaceholder('https://example.com')
-        .setValue(site.url)
-        .onChange(async v => { site.url = v; await this.plugin.saveSettings(); }));
-
-    new Setting(siteEl)
-      .setName(t('settings.wordpress.username'))
-      .addText(text => text
-        .setValue(site.username)
-        .onChange(async v => { site.username = v; await this.plugin.saveSettings(); }));
-
-    new Setting(siteEl)
-      .setName(t('settings.wordpress.appPassword'))
-      .setDesc(t('settings.wordpress.appPasswordDesc'))
-      .addText(text => {
-        text.inputEl.type = 'password';
-        text.setValue(site.appPassword)
-          .onChange(async v => { site.appPassword = v; await this.plugin.saveSettings(); });
-      });
-
-    new Setting(siteEl)
-      .setName(t('settings.wordpress.defaultPostStatus'))
-      .addDropdown(d => d
-        .addOption('draft', t('settings.wordpress.postStatus.draft'))
-        .addOption('pending', t('settings.wordpress.postStatus.pending'))
-        .addOption('publish', t('settings.wordpress.postStatus.publish'))
-        .setValue(site.defaultStatus)
-        .onChange(async v => { site.defaultStatus = v as WPPostStatus; await this.plugin.saveSettings(); }));
-
-    new Setting(siteEl)
-      .setName(t('settings.wordpress.wikilinkHandling'))
-      .addDropdown(d => d
-        .addOption('strip', t('settings.wordpress.wikilinkHandlingStrip'))
-        .addOption('convert', t('settings.wordpress.wikilinkHandlingConvert'))
-        .setValue(site.wikilinkHandling)
-        .onChange(async v => { site.wikilinkHandling = v as 'strip' | 'convert'; await this.plugin.saveSettings(); }));
-
-    const testRow = new Setting(siteEl)
-      .setName(t('settings.wordpress.testConnection'))
-      .setDesc(t('settings.wordpress.testConnectionDesc'));
-
-    const statusEl = siteEl.createDiv('ws-wp-test-status');
-
-    testRow.addButton(b => b
-      .setButtonText(t('settings.wordpress.testConnection'))
-      .onClick(async () => {
-        statusEl.textContent = t('settings.wordpress.testing');
-        statusEl.className = 'ws-wp-test-status ws-wp-test-pending';
-        const result = await this.plugin.wpClient.testConnection(site);
-        statusEl.textContent = result.message;
-        statusEl.className = `ws-wp-test-status ${result.success ? 'ws-wp-test-ok' : 'ws-wp-test-err'}`;
-      }));
-
-    new Setting(siteEl)
-      .addButton(b => {
-        b.setButtonText(t('settings.wordpress.removeSite'));
-        b.buttonEl.addClass('mod-warning');
-        b.onClick(async () => {
-          this.plugin.settings.wordPressSites.splice(index, 1);
-          await this.plugin.saveSettings();
-          const contentEl = this.containerEl.querySelector('.ws-settings-content');
-          if (contentEl instanceof HTMLElement) { contentEl.empty(); this.renderWordPress(contentEl); }
-        });
-      });
-  }
-
-  private async renderHelp(el: HTMLElement): Promise<void> {
-    this.helpComponent = new Component();
-    this.helpComponent.load();
-    el.addClass('ws-help-content');
-    await MarkdownRenderer.render(this.app, HELP_CONTENT, el, '', this.helpComponent);
-    const supportDiv = el.createDiv({ cls: 'ws-support-footer' });
+  private async renderContent(): Promise<void> {
+    this.component?.unload();
+    this.component = new Component();
+    this.component.load();
+    await MarkdownRenderer.render(this.appRef, HELP_CONTENT, this.containerEl, '', this.component);
+    const supportDiv = this.containerEl.createDiv({ cls: 'ws-support-footer' });
     supportDiv.createEl('a', {
       href: 'https://buymeacoffee.com/writerp777',
       attr: { target: '_blank', rel: 'noopener noreferrer' }
@@ -553,5 +42,534 @@ export class WritingStudioSettingsTab extends PluginSettingTab {
         height: '40'
       }
     });
+  }
+
+  hide(): void {
+    this.component?.unload();
+    this.component = null;
+    super.hide();
+  }
+}
+
+export class WritingStudioSettingsTab extends PluginSettingTab {
+  plugin: WritingStudioPlugin;
+
+  constructor(app: App, plugin: WritingStudioPlugin) {
+    super(app, plugin);
+    this.plugin = plugin;
+  }
+
+  getSettingDefinitions(): SettingDefinitionItem[] {
+    return [
+      ...this.generalItems(),
+      this.focusPage(),
+      this.typographyPage(),
+      this.sprintPage(),
+      this.exportPage(),
+      this.logPage(),
+      this.wordPressPage(),
+      {
+        type: 'page',
+        name: t('settings.tab.help'),
+        page: () => new HelpSettingPage(this.app),
+      },
+    ];
+  }
+
+  getControlValue(key: string): unknown {
+    const m = key.match(WP_SITE_KEY);
+    if (m) {
+      const site = this.plugin.settings.wordPressSites.find(s => s.id === m[1]);
+      if (!site) return undefined;
+      switch (m[2]) {
+        case 'nickname': return site.nickname;
+        case 'url': return site.url;
+        case 'username': return site.username;
+        case 'defaultStatus': return site.defaultStatus;
+        case 'wikilinkHandling': return site.wikilinkHandling;
+      }
+    }
+    // Keys come from our own definitions, all of which name real settings
+    // properties (locked by tests) — indexed access needs the record view.
+    return (this.plugin.settings as unknown as Record<string, unknown>)[key];
+  }
+
+  async setControlValue(key: string, value: unknown): Promise<void> {
+    const m = key.match(WP_SITE_KEY);
+    if (m) {
+      const site = this.plugin.settings.wordPressSites.find(s => s.id === m[1]);
+      if (!site) return;
+      switch (m[2]) {
+        case 'nickname': site.nickname = String(value); break;
+        case 'url': site.url = String(value); break;
+        case 'username': site.username = String(value); break;
+        case 'defaultStatus': site.defaultStatus = value as WPPostStatus; break;
+        case 'wikilinkHandling': site.wikilinkHandling = value as 'strip' | 'convert'; break;
+      }
+      await this.plugin.saveSettings();
+      return;
+    }
+    // An empty epub language would produce invalid epub metadata downstream
+    if (key === 'epubLanguage') value = String(value).trim() || 'en';
+    (this.plugin.settings as unknown as Record<string, unknown>)[key] = value;
+    await this.plugin.saveSettings();
+    switch (key) {
+      case 'dimOpacity': this.plugin.focusMode.applyDimOpacity(); break;
+      case 'focusFontSize': this.plugin.focusMode.applyFontSize(); break;
+      case 'typographyFont':
+        if (this.plugin.typographyMode.isActive()) this.plugin.typographyMode.refreshStyles();
+        break;
+    }
+  }
+
+  // Validators return an inline error message; the framework rejects the value
+  private integerRange(min: number, max: number, zeroClears = false) {
+    return (value: number): string | undefined => {
+      const inRange = Number.isInteger(value) && value >= min && value <= max;
+      if (inRange || (zeroClears && value === 0)) return undefined;
+      return t(
+        zeroClears ? 'settings.validation.integerRangeOrZero' : 'settings.validation.integerRange',
+        { min, max },
+      );
+    };
+  }
+
+  private generalItems(): SettingDefinitionItem[] {
+    return [
+      {
+        name: t('settings.general.openOnStartup'),
+        desc: t('settings.general.openOnStartupDesc'),
+        control: { type: 'toggle', key: 'openOnStartup' },
+      },
+      {
+        name: t('settings.general.defaultProjectFolder'),
+        desc: t('settings.general.defaultProjectFolderDesc'),
+        control: {
+          type: 'folder',
+          key: 'defaultProjectFolder',
+          placeholder: t('settings.general.defaultProjectFolderPlaceholder'),
+        },
+      },
+      {
+        name: t('settings.general.authorName'),
+        desc: t('settings.general.authorNameDesc'),
+        control: {
+          type: 'text',
+          key: 'authorName',
+          placeholder: t('settings.general.authorNamePlaceholder'),
+        },
+      },
+      {
+        name: t('settings.general.defaultDocumentType'),
+        desc: t('settings.general.defaultDocumentTypeDesc'),
+        control: {
+          type: 'dropdown',
+          key: 'defaultDocumentType',
+          options: {
+            chapter: t('settings.general.docType.chapter'),
+            section: t('settings.general.docType.section'),
+            article: t('settings.general.docType.article'),
+            note: t('settings.general.docType.note'),
+          },
+        },
+      },
+      {
+        name: t('settings.general.frontmatterAutoUpdate'),
+        desc: t('settings.general.frontmatterAutoUpdateDesc'),
+        control: { type: 'toggle', key: 'frontmatterAutoUpdate' },
+      },
+    ];
+  }
+
+  private focusPage(): SettingDefinitionItem {
+    return {
+      type: 'page',
+      name: t('settings.tab.focus'),
+      items: [
+        {
+          name: t('settings.focus.focusUnit'),
+          desc: t('settings.focus.focusUnitDesc'),
+          control: {
+            type: 'dropdown',
+            key: 'focusUnit',
+            options: {
+              paragraph: t('settings.focus.paragraph'),
+              sentence: t('settings.focus.sentence'),
+            },
+          },
+        },
+        {
+          name: t('settings.focus.dimOpacity'),
+          desc: t('settings.focus.dimOpacityDesc'),
+          control: { type: 'slider', key: 'dimOpacity', min: 10, max: 50, step: 5 },
+        },
+        {
+          name: t('settings.focus.fontSizeOverride'),
+          desc: t('settings.focus.fontSizeOverrideDesc'),
+          control: {
+            type: 'number',
+            key: 'focusFontSize',
+            validate: this.integerRange(8, 72, true),
+          },
+        },
+        {
+          name: t('settings.focus.autoHideSidebars'),
+          control: { type: 'toggle', key: 'focusAutoHideSidebars' },
+        },
+        {
+          name: t('settings.focus.typewriterScroll'),
+          desc: t('settings.focus.typewriterScrollDesc'),
+          control: { type: 'toggle', key: 'typewriterScroll' },
+        },
+      ],
+    };
+  }
+
+  private typographyPage(): SettingDefinitionItem {
+    return {
+      type: 'page',
+      name: t('settings.tab.typography'),
+      items: [
+        {
+          name: t('settings.typography.fontFamily'),
+          control: {
+            type: 'dropdown',
+            key: 'typographyFont',
+            options: {
+              'mono': t('settings.typography.font.mono'),
+              'serif': t('settings.typography.font.serif'),
+              'sans': t('settings.typography.font.sans'),
+              'cormorant-garamond': t('settings.typography.font.cormorant-garamond'),
+              'crimson-text': t('settings.typography.font.crimson-text'),
+              'eb-garamond': t('settings.typography.font.eb-garamond'),
+              'libre-baskerville': t('settings.typography.font.libre-baskerville'),
+              'libre-caslon-text': t('settings.typography.font.libre-caslon-text'),
+              'literata': t('settings.typography.font.literata'),
+              'lora': t('settings.typography.font.lora'),
+              'inter': t('settings.typography.font.inter'),
+              'lato': t('settings.typography.font.lato'),
+              'source-sans-3': t('settings.typography.font.source-sans-3'),
+              'custom': t('settings.typography.font.custom'),
+            },
+          },
+        },
+        {
+          name: t('settings.typography.customFontName'),
+          desc: t('settings.typography.customFontNameDesc'),
+          control: {
+            type: 'text',
+            key: 'customFontName',
+            placeholder: t('settings.typography.customFontNamePlaceholder'),
+          },
+        },
+        {
+          name: t('settings.typography.maxLineLength'),
+          desc: t('settings.typography.maxLineLengthDesc'),
+          control: { type: 'slider', key: 'maxLineLength', min: 55, max: 80, step: 1 },
+        },
+        {
+          name: t('settings.typography.fontSize'),
+          control: {
+            type: 'number',
+            key: 'typographyFontSize',
+            validate: this.integerRange(8, 72),
+          },
+        },
+        {
+          name: t('settings.typography.lineHeight'),
+          desc: t('settings.typography.lineHeightDesc'),
+          control: { type: 'number', key: 'lineHeight', step: 'any', defaultValue: 1.7 },
+        },
+        {
+          name: t('settings.typography.letterSpacing'),
+          desc: t('settings.typography.letterSpacingDesc'),
+          control: { type: 'text', key: 'letterSpacing' },
+        },
+        {
+          name: t('settings.typography.persistAcrossSessions'),
+          desc: t('settings.typography.persistAcrossSessionsDesc'),
+          control: { type: 'toggle', key: 'persistTypography' },
+        },
+      ],
+    };
+  }
+
+  private sprintPage(): SettingDefinitionItem {
+    return {
+      type: 'page',
+      name: t('settings.tab.sprint'),
+      items: [
+        {
+          name: t('settings.sprint.defaultDuration'),
+          control: {
+            type: 'number',
+            key: 'defaultSprintDuration',
+            validate: this.integerRange(1, 600),
+          },
+        },
+        {
+          name: t('settings.sprint.defaultDailyGoal'),
+          control: {
+            type: 'number',
+            key: 'defaultDailyWordGoal',
+            validate: this.integerRange(0, 1000000),
+          },
+        },
+        {
+          name: t('settings.sprint.soundNotifications'),
+          desc: t('settings.sprint.soundNotificationsDesc'),
+          control: { type: 'toggle', key: 'soundNotifications' },
+        },
+        {
+          name: t('settings.sprint.historyRetention'),
+          control: {
+            type: 'number',
+            key: 'sprintHistoryRetention',
+            validate: this.integerRange(1, 3650),
+          },
+        },
+        {
+          name: t('settings.sprint.inlineGoalBanner'),
+          desc: t('settings.sprint.inlineGoalBannerDesc'),
+          control: { type: 'toggle', key: 'inlineGoalBanner' },
+        },
+      ],
+    };
+  }
+
+  private exportPage(): SettingDefinitionItem {
+    return {
+      type: 'page',
+      name: t('settings.tab.export'),
+      items: [
+        {
+          name: t('settings.export.defaultFormat'),
+          control: {
+            type: 'dropdown',
+            key: 'defaultExportFormat',
+            options: {
+              md: t('settings.export.format.md'),
+              html: t('settings.export.format.html'),
+              manuscript: t('exportModal.format.manuscript'),
+              epub: t('exportModal.format.epub'),
+              pdf: t('settings.export.format.pdf'),
+              docx: t('settings.export.format.docx'),
+              rtf: t('settings.export.format.rtf'),
+            },
+          },
+        },
+        {
+          name: t('settings.export.defaultPaperSize'),
+          control: {
+            type: 'dropdown',
+            key: 'defaultPaperSize',
+            options: {
+              letter: t('settings.export.paperSize.letter'),
+              a4: t('settings.export.paperSize.a4'),
+            },
+          },
+        },
+        {
+          name: t('settings.export.exportFont'),
+          control: { type: 'text', key: 'defaultExportFont', placeholder: 'Georgia' },
+        },
+        {
+          name: t('settings.export.exportFontSize'),
+          control: {
+            type: 'number',
+            key: 'defaultExportFontSize',
+            validate: this.integerRange(6, 72),
+          },
+        },
+        {
+          name: t('settings.export.pandocPath'),
+          desc: t('settings.export.pandocPathDesc'),
+          control: { type: 'text', key: 'pandocPath', placeholder: 'Pandoc' },
+        },
+        {
+          name: t('settings.export.pdfEngine'),
+          desc: t('settings.export.pdfEngineDesc'),
+          control: {
+            type: 'dropdown',
+            key: 'pdfEngine',
+            options: {
+              auto: t('settings.export.pdfEngineAuto'),
+              xelatex: 'xelatex',
+              lualatex: 'lualatex',
+              pdflatex: 'pdflatex',
+              wkhtmltopdf: 'wkhtmltopdf',
+            },
+          },
+        },
+        {
+          name: t('settings.export.pdfEnginePath'),
+          desc: t('settings.export.pdfEnginePathDesc'),
+          control: { type: 'text', key: 'pdfEnginePath' },
+        },
+        {
+          type: 'group',
+          heading: t('settings.export.epubHeading'),
+          items: [
+            {
+              name: t('settings.export.epubLanguage'),
+              desc: t('settings.export.epubLanguageDesc'),
+              control: { type: 'text', key: 'epubLanguage', placeholder: 'en' },
+            },
+            {
+              name: t('settings.export.includeCover'),
+              desc: t('settings.export.includeCoverDesc'),
+              control: { type: 'toggle', key: 'epubIncludeCover' },
+            },
+          ],
+        },
+      ],
+    };
+  }
+
+  private logPage(): SettingDefinitionItem {
+    return {
+      type: 'page',
+      name: t('settings.tab.log'),
+      items: [
+        {
+          name: t('settings.log.appendToDailyNote'),
+          desc: t('settings.log.appendToDailyNoteDesc'),
+          control: { type: 'toggle', key: 'appendToDailyNote' },
+        },
+      ],
+    };
+  }
+
+  private wordPressPage(): SettingDefinitionItem {
+    return {
+      type: 'page',
+      name: t('settings.tab.wordpress'),
+      items: [
+        {
+          type: 'list',
+          heading: t('settings.wordpress.sitesHeading'),
+          emptyState: t('settings.wordpress.noSites'),
+          items: this.plugin.settings.wordPressSites.map(site => this.wordPressSitePage(site)),
+          addItem: {
+            name: t('settings.wordpress.addSite'),
+            action: () => { void this.addWordPressSite(); },
+          },
+          onDelete: (index: number) => { void this.deleteWordPressSite(index); },
+        },
+        {
+          type: 'group',
+          heading: t('settings.wordpress.wikilinksHeading'),
+          items: [
+            {
+              name: t('settings.wordpress.defaultWikilinkHandling'),
+              control: {
+                type: 'dropdown',
+                key: 'wikilinkHandling',
+                options: {
+                  strip: t('settings.wordpress.wikilinkStrip'),
+                  convert: t('settings.wordpress.wikilinkConvert'),
+                },
+              },
+            },
+          ],
+        },
+      ],
+    };
+  }
+
+  private wordPressSitePage(site: WordPressSite): SettingDefinitionPage {
+    return {
+      type: 'page',
+      name: site.nickname || t('settings.wordpress.siteUnnamed'),
+      displayValue: () => site.url,
+      items: [
+        {
+          name: t('settings.wordpress.nickname'),
+          control: { type: 'text', key: `wpSite.${site.id}.nickname` },
+        },
+        {
+          name: t('settings.wordpress.siteUrl'),
+          control: { type: 'text', key: `wpSite.${site.id}.url`, placeholder: 'https://example.com' },
+        },
+        {
+          name: t('settings.wordpress.username'),
+          control: { type: 'text', key: `wpSite.${site.id}.username` },
+        },
+        {
+          // A masked input has no declarative control type; render keeps the
+          // password out of the DOM as plain text
+          name: t('settings.wordpress.appPassword'),
+          desc: t('settings.wordpress.appPasswordDesc'),
+          render: (setting: Setting) => {
+            setting.addText(text => {
+              text.inputEl.type = 'password';
+              text.setValue(site.appPassword).onChange(async v => {
+                site.appPassword = v;
+                await this.plugin.saveSettings();
+              });
+            });
+          },
+        },
+        {
+          name: t('settings.wordpress.defaultPostStatus'),
+          control: {
+            type: 'dropdown',
+            key: `wpSite.${site.id}.defaultStatus`,
+            options: {
+              draft: t('settings.wordpress.postStatus.draft'),
+              pending: t('settings.wordpress.postStatus.pending'),
+              publish: t('settings.wordpress.postStatus.publish'),
+            },
+          },
+        },
+        {
+          name: t('settings.wordpress.wikilinkHandling'),
+          control: {
+            type: 'dropdown',
+            key: `wpSite.${site.id}.wikilinkHandling`,
+            options: {
+              strip: t('settings.wordpress.wikilinkHandlingStrip'),
+              convert: t('settings.wordpress.wikilinkHandlingConvert'),
+            },
+          },
+        },
+        {
+          name: t('settings.wordpress.testConnection'),
+          desc: t('settings.wordpress.testConnectionDesc'),
+          render: (setting: Setting) => {
+            const statusEl = setting.descEl.createDiv('ws-wp-test-status');
+            setting.addButton(b => b
+              .setButtonText(t('settings.wordpress.testConnection'))
+              .onClick(async () => {
+                statusEl.textContent = t('settings.wordpress.testing');
+                statusEl.className = 'ws-wp-test-status ws-wp-test-pending';
+                const result = await this.plugin.wpClient.testConnection(site);
+                statusEl.textContent = result.message;
+                statusEl.className = `ws-wp-test-status ${result.success ? 'ws-wp-test-ok' : 'ws-wp-test-err'}`;
+              }));
+          },
+        },
+      ],
+    };
+  }
+
+  private async addWordPressSite(): Promise<void> {
+    this.plugin.settings.wordPressSites.push({
+      id: `site-${Date.now()}`,
+      nickname: t('settings.wordpress.newSiteName'),
+      url: '',
+      username: '',
+      appPassword: '',
+      defaultStatus: 'draft',
+      wikilinkHandling: 'strip',
+    });
+    await this.plugin.saveSettings();
+    this.update();
+  }
+
+  private async deleteWordPressSite(index: number): Promise<void> {
+    this.plugin.settings.wordPressSites.splice(index, 1);
+    await this.plugin.saveSettings();
+    this.update();
   }
 }

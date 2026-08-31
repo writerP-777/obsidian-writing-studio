@@ -672,9 +672,9 @@ No default hotkeys are assigned. All commands can be given a hotkey in **Setting
 
 ## Settings Overview
 
-Open via **Settings → Writing Studio**.
+Open via **Settings → Writing Studio**. General settings appear at the top; each other section opens as its own page. Every setting can also be found by name from Obsidian's settings search (Obsidian 1.13+).
 
-| Tab | What it controls |
+| Section | What it controls |
 |-----|-----------------|
 | General | Open on startup, default project folder, author name, document type, frontmatter auto-update |
 | Focus mode | Focus unit, dim opacity, font override, sidebar behavior, typewriter scroll |

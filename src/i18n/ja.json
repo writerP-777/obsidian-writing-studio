@@ -1,7 +1,6 @@
 {
   "settings": {
     "tab": {
-      "general": "一般",
       "focus": "フォーカスモード",
       "typography": "タイポグラフィ",
       "sprint": "スプリントと目標",
@@ -9,6 +8,10 @@
       "log": "執筆ログ",
       "wordpress": "WordPress",
       "help": "使い方"
+    },
+    "validation": {
+      "integerRange": "{{min}}～{{max}} の整数を入力してください。",
+      "integerRangeOrZero": "0 を入力すると上書きを解除します。または {{min}}～{{max}} の整数を入力してください。"
     },
     "general": {
       "openOnStartup": "起動時に開く",
@@ -31,7 +34,6 @@
       "frontmatterAutoUpdateDesc": "保存時に語数と更新日を自動的に更新します。"
     },
     "focus": {
-      "heading": "フォーカスモード",
       "focusUnit": "フォーカス単位",
       "focusUnitDesc": "段落または文レベルでハイライトします。",
       "paragraph": "段落",
@@ -45,7 +47,6 @@
       "typewriterScrollDesc": "アクティブな行を画面の中央に保ちます。"
     },
     "typography": {
-      "heading": "タイポグラフィモード",
       "fontFamily": "フォントファミリー",
       "font": {
         "mono": "等幅（iA Writer Mono）",
@@ -77,7 +78,6 @@
       "persistAcrossSessionsDesc": "Obsidianを再起動してもタイポグラフィモードを維持します。"
     },
     "sprint": {
-      "heading": "スプリントと目標",
       "defaultDuration": "デフォルトのスプリント時間（分）",
       "defaultDailyGoal": "デフォルトの1日の語数目標",
       "soundNotifications": "サウンド通知",
@@ -87,7 +87,6 @@
       "inlineGoalBannerDesc": "ドキュメントを開いたときにタイトルの下に語数目標の進捗を表示します。"
     },
     "export": {
-      "heading": "エクスポート",
       "defaultFormat": "デフォルトのエクスポート形式",
       "format": {
         "md": "Markdown (.md)",
@@ -117,18 +116,17 @@
       "pdfEnginePathDesc": "PDF エンジンを含むフォルダー、または単一のエンジンバイナリへのフルパス。空欄の場合、システムパスと一般的なインストール場所を検索します。"
     },
     "log": {
-      "heading": "毎日の執筆ログ",
       "appendToDailyNote": "デイリーノートに追記",
       "appendToDailyNoteDesc": "各スプリント後に今日のデイリーノートに執筆活動サマリーを追加します。"
     },
     "wordpress": {
       "sitesHeading": "WordPressサイト",
+      "noSites": "サイトが設定されていません。",
       "addSite": "+ WordPressサイトを追加",
       "wikilinksHeading": "ウィキリンクのデフォルト",
       "defaultWikilinkHandling": "デフォルトのウィキリンク処理",
       "wikilinkStrip": "ストリップ（プレーンテキストに変換）",
       "wikilinkConvert": "URLに変換",
-      "siteHeading": "サイト：{{nickname}}",
       "siteUnnamed": "未命名",
       "nickname": "ニックネーム",
       "siteUrl": "サイトURL",
@@ -147,7 +145,6 @@
       "testConnection": "接続テスト",
       "testConnectionDesc": "認証情報と接続性を確認します。",
       "testing": "テスト中…",
-      "removeSite": "サイトを削除",
       "buyMeACoffee": "コーヒーをおごる",
       "newSiteName": "新しいサイト"
     }

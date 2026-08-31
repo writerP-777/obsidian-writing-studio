@@ -1,7 +1,6 @@
 {
   "settings": {
     "tab": {
-      "general": "Geral",
       "focus": "Modo foco",
       "typography": "Tipografia",
       "sprint": "Sprint e metas",
@@ -9,6 +8,10 @@
       "log": "Log de escrita",
       "wordpress": "WordPress",
       "help": "Como usar"
+    },
+    "validation": {
+      "integerRange": "Insira um número inteiro entre {{min}} e {{max}}.",
+      "integerRangeOrZero": "Insira 0 para limpar a substituição, ou um número inteiro entre {{min}} e {{max}}."
     },
     "general": {
       "openOnStartup": "Abrir ao iniciar",
@@ -31,7 +34,6 @@
       "frontmatterAutoUpdateDesc": "Atualizar automaticamente a contagem de palavras e a data de modificação ao salvar."
     },
     "focus": {
-      "heading": "Modo foco",
       "focusUnit": "Unidade de foco",
       "focusUnitDesc": "Destacar no nível de parágrafo ou frase.",
       "paragraph": "Parágrafo",
@@ -45,7 +47,6 @@
       "typewriterScrollDesc": "Manter a linha ativa centralizada na tela."
     },
     "typography": {
-      "heading": "Modo tipografia",
       "fontFamily": "Família de fonte",
       "font": {
         "mono": "Monoespaçada (iA Writer Mono)",
@@ -77,7 +78,6 @@
       "persistAcrossSessionsDesc": "Manter o modo tipografia ativo quando o Obsidian reabrir."
     },
     "sprint": {
-      "heading": "Sprint e metas",
       "defaultDuration": "Duração padrão do sprint (minutos)",
       "defaultDailyGoal": "Meta diária de palavras padrão",
       "soundNotifications": "Notificações sonoras",
@@ -87,7 +87,6 @@
       "inlineGoalBannerDesc": "Mostrar o progresso da meta de palavras abaixo do título quando um documento for aberto."
     },
     "export": {
-      "heading": "Exportar",
       "defaultFormat": "Formato de exportação padrão",
       "format": {
         "md": "Markdown (.md)",
@@ -117,18 +116,17 @@
       "pdfEnginePathDesc": "Pasta que contém o mecanismo de PDF, ou caminho completo para um binário de mecanismo. Deixe em branco para pesquisar no caminho do sistema e em locais de instalação comuns."
     },
     "log": {
-      "heading": "Log diário de escrita",
       "appendToDailyNote": "Adicionar à nota diária",
       "appendToDailyNoteDesc": "Adicionar um resumo de atividade de escrita à nota diária de hoje após cada sprint."
     },
     "wordpress": {
       "sitesHeading": "Sites WordPress",
+      "noSites": "Nenhum site configurado.",
       "addSite": "+ adicionar site WordPress",
       "wikilinksHeading": "Padrões de wikilinks",
       "defaultWikilinkHandling": "Tratamento padrão de wikilinks",
       "wikilinkStrip": "Remover (converter para texto simples)",
       "wikilinkConvert": "Converter para URL",
-      "siteHeading": "Site: {{nickname}}",
       "siteUnnamed": "Sem nome",
       "nickname": "Apelido",
       "siteUrl": "URL do site",
@@ -147,7 +145,6 @@
       "testConnection": "Testar conexão",
       "testConnectionDesc": "Verificar credenciais e conectividade.",
       "testing": "Testando…",
-      "removeSite": "Remover site",
       "buyMeACoffee": "Me pague um café",
       "newSiteName": "Novo site"
     }
