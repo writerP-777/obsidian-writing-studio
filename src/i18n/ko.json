@@ -1,7 +1,6 @@
 {
   "settings": {
     "tab": {
-      "general": "일반",
       "focus": "집중 모드",
       "typography": "타이포그래피",
       "sprint": "스프린트 및 목표",
@@ -9,6 +8,10 @@
       "log": "글쓰기 로그",
       "wordpress": "WordPress",
       "help": "사용법"
+    },
+    "validation": {
+      "integerRange": "{{min}}에서 {{max}} 사이의 정수를 입력하세요.",
+      "integerRangeOrZero": "재정의를 해제하려면 0을 입력하거나 {{min}}에서 {{max}} 사이의 정수를 입력하세요."
     },
     "general": {
       "openOnStartup": "시작 시 열기",
@@ -31,7 +34,6 @@
       "frontmatterAutoUpdateDesc": "저장 시 단어 수와 수정 날짜를 자동으로 업데이트합니다."
     },
     "focus": {
-      "heading": "집중 모드",
       "focusUnit": "집중 단위",
       "focusUnitDesc": "단락 또는 문장 수준에서 강조 표시합니다.",
       "paragraph": "단락",
@@ -45,7 +47,6 @@
       "typewriterScrollDesc": "활성 줄을 화면 중앙에 유지합니다."
     },
     "typography": {
-      "heading": "타이포그래피 모드",
       "fontFamily": "글꼴 패밀리",
       "font": {
         "mono": "고정폭 (iA Writer Mono)",
@@ -77,7 +78,6 @@
       "persistAcrossSessionsDesc": "Obsidian을 다시 열 때 타이포그래피 모드를 활성 상태로 유지합니다."
     },
     "sprint": {
-      "heading": "스프린트 및 목표",
       "defaultDuration": "기본 스프린트 시간 (분)",
       "defaultDailyGoal": "기본 일일 단어 목표",
       "soundNotifications": "소리 알림",
@@ -87,7 +87,6 @@
       "inlineGoalBannerDesc": "문서를 열 때 제목 아래에 단어 수 목표 진행 상황을 표시합니다."
     },
     "export": {
-      "heading": "내보내기",
       "defaultFormat": "기본 내보내기 형식",
       "format": {
         "md": "Markdown (.md)",
@@ -117,18 +116,17 @@
       "pdfEnginePathDesc": "PDF 엔진이 있는 폴더 또는 엔진 실행 파일의 전체 경로입니다. 비워 두면 시스템 경로와 일반적인 설치 위치를 검색합니다."
     },
     "log": {
-      "heading": "일일 글쓰기 로그",
       "appendToDailyNote": "일일 노트에 추가",
       "appendToDailyNoteDesc": "각 스프린트 후 오늘의 일일 노트에 글쓰기 활동 요약을 추가합니다."
     },
     "wordpress": {
       "sitesHeading": "WordPress 사이트",
+      "noSites": "구성된 사이트가 없습니다.",
       "addSite": "+ WordPress 사이트 추가",
       "wikilinksHeading": "위키링크 기본값",
       "defaultWikilinkHandling": "기본 위키링크 처리",
       "wikilinkStrip": "제거 (일반 텍스트로 변환)",
       "wikilinkConvert": "URL로 변환",
-      "siteHeading": "사이트: {{nickname}}",
       "siteUnnamed": "이름 없음",
       "nickname": "별명",
       "siteUrl": "사이트 URL",
@@ -147,7 +145,6 @@
       "testConnection": "연결 테스트",
       "testConnectionDesc": "자격 증명과 연결을 확인합니다.",
       "testing": "테스트 중…",
-      "removeSite": "사이트 제거",
       "buyMeACoffee": "커피 한 잔 사주기",
       "newSiteName": "새 사이트"
     }

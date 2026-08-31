@@ -4,6 +4,13 @@ All notable changes to Writing Studio are documented here.
 
 ---
 
+## [Unreleased]
+
+### Changed
+- Settings are now searchable from Obsidian's settings search: the whole settings surface moved to Obsidian 1.13's declarative settings API. The former tabs (Focus mode, Typography, Sprint, Export, Writing log, WordPress, Help) are now navigable sub-pages, with the General settings at the top level. WordPress sites are managed as a native list — add with the **+** button, remove with the row's delete button — and each site opens as its own page. The default project folder field now suggests real vault folders as you type. Numeric settings show an inline error for out-of-range input instead of silently ignoring it. Requires Obsidian 1.13.0 or newer; older Obsidian versions keep 3.0.2. (#259)
+
+---
+
 ## [3.0.2] - 2026-08-30
 
 ### Fixed

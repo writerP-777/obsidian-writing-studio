@@ -90,6 +90,18 @@ export class PluginSettingTab {
   }
   display(): void {}
   hide(): void {}
+  update(): void {}
+}
+
+// Minimal base for imperative settings sub-pages; tests drive the model
+// surface (definitions, value routing), never the DOM rendering
+export class SettingPage {
+  rootEl: unknown;
+  titlebarEl: unknown;
+  containerEl: unknown;
+  title = '';
+  display(): void {}
+  hide(): void {}
 }
 
 export class Setting {

@@ -16,7 +16,7 @@ Before finishing any task, verify output does not violate plugin guidelines.
 
 \- @docs/obsidian-dev-docs/en/Plugins/Releasing/Submit your plugin.md
 
-\- @docs/obsidian-dev-docs/en/Plugins/Releasing/Submission requirements for plugins.md
+\- @docs/obsidian-dev-docs/en/Community directory/Submission requirements for plugins.md
 
 \- @docs/obsidian-dev-docs/en/Reference/
 

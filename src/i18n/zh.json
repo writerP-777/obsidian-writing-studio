@@ -1,7 +1,6 @@
 {
   "settings": {
     "tab": {
-      "general": "通用",
       "focus": "专注模式",
       "typography": "排版",
       "sprint": "冲刺与目标",
@@ -9,6 +8,10 @@
       "log": "写作日志",
       "wordpress": "WordPress",
       "help": "使用说明"
+    },
+    "validation": {
+      "integerRange": "请输入 {{min}} 到 {{max}} 之间的整数。",
+      "integerRangeOrZero": "输入 0 以清除覆盖，或输入 {{min}} 到 {{max}} 之间的整数。"
     },
     "general": {
       "openOnStartup": "启动时打开",
@@ -31,7 +34,6 @@
       "frontmatterAutoUpdateDesc": "保存时自动更新字数统计和修改日期。"
     },
     "focus": {
-      "heading": "专注模式",
       "focusUnit": "专注单位",
       "focusUnitDesc": "在段落或句子级别高亮。",
       "paragraph": "段落",
@@ -45,7 +47,6 @@
       "typewriterScrollDesc": "保持当前行居中显示。"
     },
     "typography": {
-      "heading": "排版模式",
       "fontFamily": "字体",
       "font": {
         "mono": "等宽字体（iA Writer Mono）",
@@ -77,7 +78,6 @@
       "persistAcrossSessionsDesc": "Obsidian 重新打开时保持排版模式。"
     },
     "sprint": {
-      "heading": "冲刺与目标",
       "defaultDuration": "默认冲刺时长（分钟）",
       "defaultDailyGoal": "默认每日字数目标",
       "soundNotifications": "声音通知",
@@ -87,7 +87,6 @@
       "inlineGoalBannerDesc": "打开文档时在标题下方显示字数目标进度。"
     },
     "export": {
-      "heading": "导出",
       "defaultFormat": "默认导出格式",
       "format": {
         "md": "Markdown（.md）",
@@ -117,18 +116,17 @@
       "pdfEnginePathDesc": "包含 PDF 引擎的文件夹，或某个引擎可执行文件的完整路径。留空则搜索系统路径和常见安装位置。"
     },
     "log": {
-      "heading": "每日写作日志",
       "appendToDailyNote": "追加到每日笔记",
       "appendToDailyNoteDesc": "每次冲刺后将写作活动摘要添加到今日每日笔记。"
     },
     "wordpress": {
       "sitesHeading": "WordPress 站点",
+      "noSites": "尚未配置站点。",
       "addSite": "+ 添加 WordPress 站点",
       "wikilinksHeading": "维基链接默认设置",
       "defaultWikilinkHandling": "默认维基链接处理",
       "wikilinkStrip": "剥离（转换为纯文本）",
       "wikilinkConvert": "转换为 URL",
-      "siteHeading": "站点：{{nickname}}",
       "siteUnnamed": "未命名",
       "nickname": "昵称",
       "siteUrl": "站点 URL",
@@ -147,7 +145,6 @@
       "testConnection": "测试连接",
       "testConnectionDesc": "验证凭据和连接性。",
       "testing": "测试中…",
-      "removeSite": "删除站点",
       "buyMeACoffee": "请我喝咏啡",
       "newSiteName": "新站点"
     }

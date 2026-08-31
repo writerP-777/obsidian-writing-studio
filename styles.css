@@ -775,14 +775,6 @@ body.writing-studio-typography .markdown-reading-view .markdown-preview-section 
 }
 
 /* ── WordPress Settings ─────────────────────────────────────────── */
-.ws-wp-site-config {
-  padding: 16px;
-  margin-bottom: 16px;
-  background: var(--background-secondary);
-  border: 1px solid var(--background-modifier-border);
-  border-radius: 8px;
-}
-
 .ws-wp-test-status {
   padding: 6px 10px;
   border-radius: 4px;
@@ -804,42 +796,6 @@ body.writing-studio-typography .markdown-reading-view .markdown-preview-section 
   background: rgba(239, 68, 68, 0.1);
   color: #ef4444;
   border: 1px solid #ef4444;
-}
-
-/* ── Settings Tab Bar ───────────────────────────────────────────── */
-.ws-settings {
-  padding-bottom: 40px;
-}
-
-.ws-settings-tabs {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 4px;
-  margin-bottom: 20px;
-  border-bottom: 1px solid var(--background-modifier-border);
-  padding-bottom: 10px;
-}
-
-.ws-settings-tab {
-  background: none;
-  border: 1px solid var(--background-modifier-border);
-  border-radius: 4px;
-  padding: 5px 14px;
-  font-size: 13px;
-  cursor: pointer;
-  color: var(--text-muted);
-  transition: all 0.1s;
-}
-
-.ws-settings-tab:hover {
-  background: var(--background-modifier-hover);
-  color: var(--text-normal);
-}
-
-.ws-settings-tab.is-active {
-  background: var(--ws-accent);
-  color: var(--text-on-accent);
-  border-color: var(--ws-accent);
 }
 
 /* ── Project Modal ──────────────────────────────────────────────── */
@@ -2011,7 +1967,6 @@ body .ws-launcher select {
    up the light fill. Dark mode keeps its theme-adaptive accent unchanged. */
 
 /* (a) Obsidian set to Light, or System resolving to light */
-.theme-light .ws-settings-tab.is-active,
 .theme-light .ws-launcher-mode-btn.is-active,
 .theme-light .ws-launcher-toggle.is-on,
 .theme-light .ws-launcher-action-btn.mod-cta,
@@ -2030,7 +1985,6 @@ body .ws-launcher select {
 
 /* (b) Fallback: OS in light mode, used only if the body theme class is absent */
 @media (prefers-color-scheme: light) {
-  .ws-settings-tab.is-active,
   .ws-launcher-mode-btn.is-active,
   .ws-launcher-toggle.is-on,
   .ws-launcher-action-btn.mod-cta,
@@ -2050,7 +2004,6 @@ body .ws-launcher select {
 
 /* (c) Dark mode: unchanged appearance, re-asserted so it always outranks the
    prefers-color-scheme:light fallback above (e.g. dark Obsidian on a light OS) */
-.theme-dark .ws-settings-tab.is-active,
 .theme-dark .ws-launcher-mode-btn.is-active,
 .theme-dark .ws-launcher-toggle.is-on,
 .theme-dark .ws-launcher-action-btn.mod-cta,

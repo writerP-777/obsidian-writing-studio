@@ -2692,7 +2692,6 @@ var import_obsidian2 = require("obsidian");
 var en_default = {
   settings: {
     tab: {
-      general: "General",
       focus: "Focus mode",
       typography: "Typography",
       sprint: "Sprint & goals",
@@ -2700,6 +2699,10 @@ var en_default = {
       log: "Writing log",
       wordpress: "WordPress",
       help: "How to use"
+    },
+    validation: {
+      integerRange: "Enter a whole number between {{min}} and {{max}}.",
+      integerRangeOrZero: "Enter 0 to clear the override, or a whole number between {{min}} and {{max}}."
     },
     general: {
       openOnStartup: "Open on startup",
@@ -2722,7 +2725,6 @@ var en_default = {
       frontmatterAutoUpdateDesc: "Automatically update word-count and modified date on save."
     },
     focus: {
-      heading: "Focus mode",
       focusUnit: "Focus unit",
       focusUnitDesc: "Highlight at paragraph or sentence level.",
       paragraph: "Paragraph",
@@ -2736,7 +2738,6 @@ var en_default = {
       typewriterScrollDesc: "Keep active line centered on screen."
     },
     typography: {
-      heading: "Typography mode",
       fontFamily: "Font family",
       font: {
         mono: "Monospaced (ia writer mono)",
@@ -2768,7 +2769,6 @@ var en_default = {
       persistAcrossSessionsDesc: "Keep typography mode active when Obsidian reopens."
     },
     sprint: {
-      heading: "Sprint & goals",
       defaultDuration: "Default sprint duration (minutes)",
       defaultDailyGoal: "Default daily word goal",
       soundNotifications: "Sound notifications",
@@ -2778,7 +2778,6 @@ var en_default = {
       inlineGoalBannerDesc: "Show word count goal progress below the title when a document is opened."
     },
     export: {
-      heading: "Export",
       defaultFormat: "Default export format",
       format: {
         md: "Markdown (.md)",
@@ -2808,18 +2807,17 @@ var en_default = {
       pdfEnginePathDesc: "Folder containing your PDF engine, or full path to one engine binary. Leave blank to search the system path and common install locations."
     },
     log: {
-      heading: "Daily writing log",
       appendToDailyNote: "Append to daily note",
       appendToDailyNoteDesc: "Add a writing activity summary to today\u2019s daily note after each sprint."
     },
     wordpress: {
       sitesHeading: "WordPress sites",
+      noSites: "No sites configured.",
       addSite: "+ add WordPress site",
       wikilinksHeading: "Wikilink defaults",
       defaultWikilinkHandling: "Default wikilink handling",
       wikilinkStrip: "Strip (convert to plain text)",
       wikilinkConvert: "Convert to URL",
-      siteHeading: "Site: {{nickname}}",
       siteUnnamed: "Unnamed",
       nickname: "Nickname",
       siteUrl: "Site URL",
@@ -2838,7 +2836,6 @@ var en_default = {
       testConnection: "Test connection",
       testConnectionDesc: "Verify credentials and connectivity.",
       testing: "Testing\u2026",
-      removeSite: "Remove site",
       buyMeACoffee: "Buy me a coffee",
       newSiteName: "New site"
     }
@@ -3392,7 +3389,6 @@ var en_default = {
 var zh_default = {
   settings: {
     tab: {
-      general: "\u901A\u7528",
       focus: "\u4E13\u6CE8\u6A21\u5F0F",
       typography: "\u6392\u7248",
       sprint: "\u51B2\u523A\u4E0E\u76EE\u6807",
@@ -3400,6 +3396,10 @@ var zh_default = {
       log: "\u5199\u4F5C\u65E5\u5FD7",
       wordpress: "WordPress",
       help: "\u4F7F\u7528\u8BF4\u660E"
+    },
+    validation: {
+      integerRange: "\u8BF7\u8F93\u5165 {{min}} \u5230 {{max}} \u4E4B\u95F4\u7684\u6574\u6570\u3002",
+      integerRangeOrZero: "\u8F93\u5165 0 \u4EE5\u6E05\u9664\u8986\u76D6\uFF0C\u6216\u8F93\u5165 {{min}} \u5230 {{max}} \u4E4B\u95F4\u7684\u6574\u6570\u3002"
     },
     general: {
       openOnStartup: "\u542F\u52A8\u65F6\u6253\u5F00",
@@ -3422,7 +3422,6 @@ var zh_default = {
       frontmatterAutoUpdateDesc: "\u4FDD\u5B58\u65F6\u81EA\u52A8\u66F4\u65B0\u5B57\u6570\u7EDF\u8BA1\u548C\u4FEE\u6539\u65E5\u671F\u3002"
     },
     focus: {
-      heading: "\u4E13\u6CE8\u6A21\u5F0F",
       focusUnit: "\u4E13\u6CE8\u5355\u4F4D",
       focusUnitDesc: "\u5728\u6BB5\u843D\u6216\u53E5\u5B50\u7EA7\u522B\u9AD8\u4EAE\u3002",
       paragraph: "\u6BB5\u843D",
@@ -3436,7 +3435,6 @@ var zh_default = {
       typewriterScrollDesc: "\u4FDD\u6301\u5F53\u524D\u884C\u5C45\u4E2D\u663E\u793A\u3002"
     },
     typography: {
-      heading: "\u6392\u7248\u6A21\u5F0F",
       fontFamily: "\u5B57\u4F53",
       font: {
         mono: "\u7B49\u5BBD\u5B57\u4F53\uFF08iA Writer Mono\uFF09",
@@ -3468,7 +3466,6 @@ var zh_default = {
       persistAcrossSessionsDesc: "Obsidian \u91CD\u65B0\u6253\u5F00\u65F6\u4FDD\u6301\u6392\u7248\u6A21\u5F0F\u3002"
     },
     sprint: {
-      heading: "\u51B2\u523A\u4E0E\u76EE\u6807",
       defaultDuration: "\u9ED8\u8BA4\u51B2\u523A\u65F6\u957F\uFF08\u5206\u949F\uFF09",
       defaultDailyGoal: "\u9ED8\u8BA4\u6BCF\u65E5\u5B57\u6570\u76EE\u6807",
       soundNotifications: "\u58F0\u97F3\u901A\u77E5",
@@ -3478,7 +3475,6 @@ var zh_default = {
       inlineGoalBannerDesc: "\u6253\u5F00\u6587\u6863\u65F6\u5728\u6807\u9898\u4E0B\u65B9\u663E\u793A\u5B57\u6570\u76EE\u6807\u8FDB\u5EA6\u3002"
     },
     export: {
-      heading: "\u5BFC\u51FA",
       defaultFormat: "\u9ED8\u8BA4\u5BFC\u51FA\u683C\u5F0F",
       format: {
         md: "Markdown\uFF08.md\uFF09",
@@ -3508,18 +3504,17 @@ var zh_default = {
       pdfEnginePathDesc: "\u5305\u542B PDF \u5F15\u64CE\u7684\u6587\u4EF6\u5939\uFF0C\u6216\u67D0\u4E2A\u5F15\u64CE\u53EF\u6267\u884C\u6587\u4EF6\u7684\u5B8C\u6574\u8DEF\u5F84\u3002\u7559\u7A7A\u5219\u641C\u7D22\u7CFB\u7EDF\u8DEF\u5F84\u548C\u5E38\u89C1\u5B89\u88C5\u4F4D\u7F6E\u3002"
     },
     log: {
-      heading: "\u6BCF\u65E5\u5199\u4F5C\u65E5\u5FD7",
       appendToDailyNote: "\u8FFD\u52A0\u5230\u6BCF\u65E5\u7B14\u8BB0",
       appendToDailyNoteDesc: "\u6BCF\u6B21\u51B2\u523A\u540E\u5C06\u5199\u4F5C\u6D3B\u52A8\u6458\u8981\u6DFB\u52A0\u5230\u4ECA\u65E5\u6BCF\u65E5\u7B14\u8BB0\u3002"
     },
     wordpress: {
       sitesHeading: "WordPress \u7AD9\u70B9",
+      noSites: "\u5C1A\u672A\u914D\u7F6E\u7AD9\u70B9\u3002",
       addSite: "+ \u6DFB\u52A0 WordPress \u7AD9\u70B9",
       wikilinksHeading: "\u7EF4\u57FA\u94FE\u63A5\u9ED8\u8BA4\u8BBE\u7F6E",
       defaultWikilinkHandling: "\u9ED8\u8BA4\u7EF4\u57FA\u94FE\u63A5\u5904\u7406",
       wikilinkStrip: "\u5265\u79BB\uFF08\u8F6C\u6362\u4E3A\u7EAF\u6587\u672C\uFF09",
       wikilinkConvert: "\u8F6C\u6362\u4E3A URL",
-      siteHeading: "\u7AD9\u70B9\uFF1A{{nickname}}",
       siteUnnamed: "\u672A\u547D\u540D",
       nickname: "\u6635\u79F0",
       siteUrl: "\u7AD9\u70B9 URL",
@@ -3538,7 +3533,6 @@ var zh_default = {
       testConnection: "\u6D4B\u8BD5\u8FDE\u63A5",
       testConnectionDesc: "\u9A8C\u8BC1\u51ED\u636E\u548C\u8FDE\u63A5\u6027\u3002",
       testing: "\u6D4B\u8BD5\u4E2D\u2026",
-      removeSite: "\u5220\u9664\u7AD9\u70B9",
       buyMeACoffee: "\u8BF7\u6211\u559D\u548F\u5561",
       newSiteName: "\u65B0\u7AD9\u70B9"
     }
@@ -4092,7 +4086,6 @@ var zh_default = {
 var hi_default = {
   settings: {
     tab: {
-      general: "\u0938\u093E\u092E\u093E\u0928\u094D\u092F",
       focus: "\u092B\u093C\u094B\u0915\u0938 \u092E\u094B\u0921",
       typography: "\u091F\u093E\u0907\u092A\u094B\u0917\u094D\u0930\u093E\u092B\u0940",
       sprint: "\u0938\u094D\u092A\u094D\u0930\u093F\u0902\u091F \u0914\u0930 \u0932\u0915\u094D\u0937\u094D\u092F",
@@ -4100,6 +4093,10 @@ var hi_default = {
       log: "\u0932\u0947\u0916\u0928 \u0932\u0949\u0917",
       wordpress: "WordPress",
       help: "\u0909\u092A\u092F\u094B\u0917 \u0915\u0948\u0938\u0947 \u0915\u0930\u0947\u0902"
+    },
+    validation: {
+      integerRange: "{{min}} \u0914\u0930 {{max}} \u0915\u0947 \u092C\u0940\u091A \u090F\u0915 \u092A\u0942\u0930\u094D\u0923\u093E\u0902\u0915 \u0926\u0930\u094D\u091C \u0915\u0930\u0947\u0902\u0964",
+      integerRangeOrZero: "\u0913\u0935\u0930\u0930\u093E\u0907\u0921 \u0939\u091F\u093E\u0928\u0947 \u0915\u0947 \u0932\u093F\u090F 0 \u0926\u0930\u094D\u091C \u0915\u0930\u0947\u0902, \u092F\u093E {{min}} \u0914\u0930 {{max}} \u0915\u0947 \u092C\u0940\u091A \u090F\u0915 \u092A\u0942\u0930\u094D\u0923\u093E\u0902\u0915 \u0926\u0930\u094D\u091C \u0915\u0930\u0947\u0902\u0964"
     },
     general: {
       openOnStartup: "\u0938\u094D\u091F\u093E\u0930\u094D\u091F\u0905\u092A \u092A\u0930 \u0916\u094B\u0932\u0947\u0902",
@@ -4122,7 +4119,6 @@ var hi_default = {
       frontmatterAutoUpdateDesc: "\u0938\u0939\u0947\u091C\u0928\u0947 \u092A\u0930 \u0936\u092C\u094D\u0926 \u0917\u0923\u0928\u093E \u0914\u0930 \u0938\u0902\u0936\u094B\u0927\u093F\u0924 \u0924\u093F\u0925\u093F \u0938\u094D\u0935\u091A\u093E\u0932\u093F\u0924 \u0930\u0942\u092A \u0938\u0947 \u0905\u092A\u0921\u0947\u091F \u0915\u0930\u0947\u0902\u0964"
     },
     focus: {
-      heading: "\u092B\u093C\u094B\u0915\u0938 \u092E\u094B\u0921",
       focusUnit: "\u092B\u093C\u094B\u0915\u0938 \u0907\u0915\u093E\u0908",
       focusUnitDesc: "\u092A\u0948\u0930\u093E\u0917\u094D\u0930\u093E\u092B \u092F\u093E \u0935\u093E\u0915\u094D\u092F \u0938\u094D\u0924\u0930 \u092A\u0930 \u0939\u093E\u0907\u0932\u093E\u0907\u091F \u0915\u0930\u0947\u0902\u0964",
       paragraph: "\u092A\u0948\u0930\u093E\u0917\u094D\u0930\u093E\u092B",
@@ -4136,7 +4132,6 @@ var hi_default = {
       typewriterScrollDesc: "\u0938\u0915\u094D\u0930\u093F\u092F \u092A\u0902\u0915\u094D\u0924\u093F \u0915\u094B \u0938\u094D\u0915\u094D\u0930\u0940\u0928 \u0915\u0947 \u092E\u0927\u094D\u092F \u092E\u0947\u0902 \u0930\u0916\u0947\u0902\u0964"
     },
     typography: {
-      heading: "\u091F\u093E\u0907\u092A\u094B\u0917\u094D\u0930\u093E\u092B\u0940 \u092E\u094B\u0921",
       fontFamily: "\u092B\u093C\u0949\u0928\u094D\u091F \u092A\u0930\u093F\u0935\u093E\u0930",
       font: {
         mono: "\u092E\u094B\u0928\u094B\u0938\u094D\u092A\u0947\u0938\u094D\u0921 (iA Writer Mono)",
@@ -4168,7 +4163,6 @@ var hi_default = {
       persistAcrossSessionsDesc: "Obsidian \u092A\u0941\u0928\u0903 \u0916\u0941\u0932\u0928\u0947 \u092A\u0930 \u091F\u093E\u0907\u092A\u094B\u0917\u094D\u0930\u093E\u092B\u0940 \u092E\u094B\u0921 \u0938\u0915\u094D\u0930\u093F\u092F \u0930\u0916\u0947\u0902\u0964"
     },
     sprint: {
-      heading: "\u0938\u094D\u092A\u094D\u0930\u093F\u0902\u091F \u0914\u0930 \u0932\u0915\u094D\u0937\u094D\u092F",
       defaultDuration: "\u0921\u093F\u092B\u093C\u0949\u0932\u094D\u091F \u0938\u094D\u092A\u094D\u0930\u093F\u0902\u091F \u0905\u0935\u0927\u093F (\u092E\u093F\u0928\u091F)",
       defaultDailyGoal: "\u0921\u093F\u092B\u093C\u0949\u0932\u094D\u091F \u0926\u0948\u0928\u093F\u0915 \u0936\u092C\u094D\u0926 \u0932\u0915\u094D\u0937\u094D\u092F",
       soundNotifications: "\u0927\u094D\u0935\u0928\u093F \u0938\u0942\u091A\u0928\u093E\u090F\u0902",
@@ -4178,7 +4172,6 @@ var hi_default = {
       inlineGoalBannerDesc: "\u0926\u0938\u094D\u0924\u093E\u0935\u0947\u091C\u093C \u0916\u094B\u0932\u0928\u0947 \u092A\u0930 \u0936\u0940\u0930\u094D\u0937\u0915 \u0915\u0947 \u0928\u0940\u091A\u0947 \u0936\u092C\u094D\u0926 \u0917\u0923\u0928\u093E \u0932\u0915\u094D\u0937\u094D\u092F \u092A\u094D\u0930\u0917\u0924\u093F \u0926\u093F\u0916\u093E\u090F\u0902\u0964"
     },
     export: {
-      heading: "\u0928\u093F\u0930\u094D\u092F\u093E\u0924",
       defaultFormat: "\u0921\u093F\u092B\u093C\u0949\u0932\u094D\u091F \u0928\u093F\u0930\u094D\u092F\u093E\u0924 \u092A\u094D\u0930\u093E\u0930\u0942\u092A",
       format: {
         md: "Markdown (.md)",
@@ -4208,18 +4201,17 @@ var hi_default = {
       pdfEnginePathDesc: "PDF \u0907\u0902\u091C\u0928 \u0935\u093E\u0932\u093E \u092B\u093C\u094B\u0932\u094D\u0921\u0930, \u092F\u093E \u0915\u093F\u0938\u0940 \u090F\u0915 \u0907\u0902\u091C\u0928 \u092C\u093E\u0907\u0928\u0930\u0940 \u0915\u093E \u092A\u0942\u0930\u093E \u092A\u0925\u0964 \u0916\u093E\u0932\u0940 \u091B\u094B\u0921\u093C\u0928\u0947 \u092A\u0930 \u0938\u093F\u0938\u094D\u091F\u092E \u092A\u0925 \u0914\u0930 \u0938\u093E\u092E\u093E\u0928\u094D\u092F \u0907\u0902\u0938\u094D\u091F\u0949\u0932 \u0938\u094D\u0925\u093E\u0928\u094B\u0902 \u092E\u0947\u0902 \u0916\u094B\u091C \u0939\u094B\u0917\u0940\u0964"
     },
     log: {
-      heading: "\u0926\u0948\u0928\u093F\u0915 \u0932\u0947\u0916\u0928 \u0932\u0949\u0917",
       appendToDailyNote: "\u0926\u0948\u0928\u093F\u0915 \u0928\u094B\u091F \u092E\u0947\u0902 \u091C\u094B\u0921\u093C\u0947\u0902",
       appendToDailyNoteDesc: "\u092A\u094D\u0930\u0924\u094D\u092F\u0947\u0915 \u0938\u094D\u092A\u094D\u0930\u093F\u0902\u091F \u0915\u0947 \u092C\u093E\u0926 \u0906\u091C \u0915\u0940 \u0926\u0948\u0928\u093F\u0915 \u0928\u094B\u091F \u092E\u0947\u0902 \u0932\u0947\u0916\u0928 \u0917\u0924\u093F\u0935\u093F\u0927\u093F \u0938\u093E\u0930\u093E\u0902\u0936 \u091C\u094B\u0921\u093C\u0947\u0902\u0964"
     },
     wordpress: {
       sitesHeading: "WordPress \u0938\u093E\u0907\u091F\u0947\u0902",
+      noSites: "\u0915\u094B\u0908 \u0938\u093E\u0907\u091F \u0915\u0949\u0928\u094D\u092B\u093C\u093F\u0917\u0930 \u0928\u0939\u0940\u0902 \u0939\u0948\u0964",
       addSite: "+ WordPress \u0938\u093E\u0907\u091F \u091C\u094B\u0921\u093C\u0947\u0902",
       wikilinksHeading: "\u0935\u093F\u0915\u093F\u0932\u093F\u0902\u0915 \u0921\u093F\u092B\u093C\u0949\u0932\u094D\u091F",
       defaultWikilinkHandling: "\u0921\u093F\u092B\u093C\u0949\u0932\u094D\u091F \u0935\u093F\u0915\u093F\u0932\u093F\u0902\u0915 \u0939\u0948\u0902\u0921\u0932\u093F\u0902\u0917",
       wikilinkStrip: "\u0939\u091F\u093E\u090F\u0902 (\u0938\u093E\u0926\u0947 \u092A\u093E\u0920 \u092E\u0947\u0902 \u092A\u0930\u093F\u0935\u0930\u094D\u0924\u093F\u0924 \u0915\u0930\u0947\u0902)",
       wikilinkConvert: "URL \u092E\u0947\u0902 \u092A\u0930\u093F\u0935\u0930\u094D\u0924\u093F\u0924 \u0915\u0930\u0947\u0902",
-      siteHeading: "\u0938\u093E\u0907\u091F: {{nickname}}",
       siteUnnamed: "\u0905\u0928\u093E\u092E",
       nickname: "\u0909\u092A\u0928\u093E\u092E",
       siteUrl: "\u0938\u093E\u0907\u091F URL",
@@ -4238,7 +4230,6 @@ var hi_default = {
       testConnection: "\u0915\u0928\u0947\u0915\u094D\u0936\u0928 \u092A\u0930\u0940\u0915\u094D\u0937\u0923",
       testConnectionDesc: "\u0915\u094D\u0930\u0947\u0921\u0947\u0902\u0936\u093F\u092F\u0932 \u0914\u0930 \u0915\u0928\u0947\u0915\u094D\u091F\u093F\u0935\u093F\u091F\u0940 \u0938\u0924\u094D\u092F\u093E\u092A\u093F\u0924 \u0915\u0930\u0947\u0902\u0964",
       testing: "\u092A\u0930\u0940\u0915\u094D\u0937\u0923 \u0939\u094B \u0930\u0939\u093E \u0939\u0948\u2026",
-      removeSite: "\u0938\u093E\u0907\u091F \u0939\u091F\u093E\u090F\u0902",
       buyMeACoffee: "\u092E\u0941\u091D\u0947 \u0915\u0949\u092B\u0940 \u0916\u0930\u0940\u0926\u0947\u0902",
       newSiteName: "\u0928\u0908 \u0938\u093E\u0907\u091F"
     }
@@ -4792,7 +4783,6 @@ var hi_default = {
 var es_default = {
   settings: {
     tab: {
-      general: "General",
       focus: "Modo de enfoque",
       typography: "Tipograf\xEDa",
       sprint: "Sprint y objetivos",
@@ -4800,6 +4790,10 @@ var es_default = {
       log: "Registro de escritura",
       wordpress: "WordPress",
       help: "C\xF3mo usar"
+    },
+    validation: {
+      integerRange: "Introduce un n\xFAmero entero entre {{min}} y {{max}}.",
+      integerRangeOrZero: "Introduce 0 para quitar el ajuste, o un n\xFAmero entero entre {{min}} y {{max}}."
     },
     general: {
       openOnStartup: "Abrir al inicio",
@@ -4822,7 +4816,6 @@ var es_default = {
       frontmatterAutoUpdateDesc: "Actualizar autom\xE1ticamente el recuento de palabras y la fecha de modificaci\xF3n al guardar."
     },
     focus: {
-      heading: "Modo de enfoque",
       focusUnit: "Unidad de enfoque",
       focusUnitDesc: "Resaltar a nivel de p\xE1rrafo o de oraci\xF3n.",
       paragraph: "P\xE1rrafo",
@@ -4836,7 +4829,6 @@ var es_default = {
       typewriterScrollDesc: "Mantener la l\xEDnea activa centrada en la pantalla."
     },
     typography: {
-      heading: "Modo de tipograf\xEDa",
       fontFamily: "Familia de fuente",
       font: {
         mono: "Monoespaciada (iA Writer Mono)",
@@ -4868,7 +4860,6 @@ var es_default = {
       persistAcrossSessionsDesc: "Mantener el modo tipograf\xEDa activo cuando Obsidian se reinicie."
     },
     sprint: {
-      heading: "Sprint y objetivos",
       defaultDuration: "Duraci\xF3n predeterminada del sprint (minutos)",
       defaultDailyGoal: "Objetivo diario de palabras predeterminado",
       soundNotifications: "Notificaciones de sonido",
@@ -4878,7 +4869,6 @@ var es_default = {
       inlineGoalBannerDesc: "Mostrar el progreso del objetivo de palabras debajo del t\xEDtulo cuando se abre un documento."
     },
     export: {
-      heading: "Exportar",
       defaultFormat: "Formato de exportaci\xF3n predeterminado",
       format: {
         md: "Markdown (.md)",
@@ -4908,18 +4898,17 @@ var es_default = {
       pdfEnginePathDesc: "Carpeta que contiene el motor de PDF, o ruta completa a un binario de motor. D\xE9jelo vac\xEDo para buscar en la ruta del sistema y en ubicaciones de instalaci\xF3n habituales."
     },
     log: {
-      heading: "Registro diario de escritura",
       appendToDailyNote: "Agregar a la nota diaria",
       appendToDailyNoteDesc: "Agregar un resumen de actividad de escritura a la nota diaria de hoy despu\xE9s de cada sprint."
     },
     wordpress: {
       sitesHeading: "Sitios WordPress",
+      noSites: "No hay sitios configurados.",
       addSite: "+ agregar sitio WordPress",
       wikilinksHeading: "Valores predeterminados de wikilinks",
       defaultWikilinkHandling: "Manejo predeterminado de wikilinks",
       wikilinkStrip: "Eliminar (convertir a texto simple)",
       wikilinkConvert: "Convertir a URL",
-      siteHeading: "Sitio: {{nickname}}",
       siteUnnamed: "Sin nombre",
       nickname: "Apodo",
       siteUrl: "URL del sitio",
@@ -4938,7 +4927,6 @@ var es_default = {
       testConnection: "Probar conexi\xF3n",
       testConnectionDesc: "Verificar credenciales y conectividad.",
       testing: "Probando\u2026",
-      removeSite: "Eliminar sitio",
       buyMeACoffee: "Inv\xEDtame a un caf\xE9",
       newSiteName: "Nuevo sitio"
     }
@@ -5492,7 +5480,6 @@ var es_default = {
 var ar_default = {
   settings: {
     tab: {
-      general: "\u0639\u0627\u0645",
       focus: "\u0648\u0636\u0639 \u0627\u0644\u062A\u0631\u0643\u064A\u0632",
       typography: "\u0627\u0644\u0637\u0628\u0627\u0639\u0629",
       sprint: "\u0627\u0644\u0633\u0628\u0627\u0642 \u0648\u0627\u0644\u0623\u0647\u062F\u0627\u0641",
@@ -5500,6 +5487,10 @@ var ar_default = {
       log: "\u0633\u062C\u0644 \u0627\u0644\u0643\u062A\u0627\u0628\u0629",
       wordpress: "WordPress",
       help: "\u0643\u064A\u0641\u064A\u0629 \u0627\u0644\u0627\u0633\u062A\u062E\u062F\u0627\u0645"
+    },
+    validation: {
+      integerRange: "\u0623\u062F\u062E\u0644 \u0639\u062F\u062F\u064B\u0627 \u0635\u062D\u064A\u062D\u064B\u0627 \u0628\u064A\u0646 {{min}} \u0648{{max}}.",
+      integerRangeOrZero: "\u0623\u062F\u062E\u0644 0 \u0644\u0625\u0632\u0627\u0644\u0629 \u0627\u0644\u062A\u062C\u0627\u0648\u0632\u060C \u0623\u0648 \u0639\u062F\u062F\u064B\u0627 \u0635\u062D\u064A\u062D\u064B\u0627 \u0628\u064A\u0646 {{min}} \u0648{{max}}."
     },
     general: {
       openOnStartup: "\u0641\u062A\u062D \u0639\u0646\u062F \u0628\u062F\u0621 \u0627\u0644\u062A\u0634\u063A\u064A\u0644",
@@ -5522,7 +5513,6 @@ var ar_default = {
       frontmatterAutoUpdateDesc: "\u062A\u062D\u062F\u064A\u062B \u0639\u062F\u062F \u0627\u0644\u0643\u0644\u0645\u0627\u062A \u0648\u062A\u0627\u0631\u064A\u062E \u0627\u0644\u062A\u0639\u062F\u064A\u0644 \u062A\u0644\u0642\u0627\u0626\u064A\u064B\u0627 \u0639\u0646\u062F \u0627\u0644\u062D\u0641\u0638."
     },
     focus: {
-      heading: "\u0648\u0636\u0639 \u0627\u0644\u062A\u0631\u0643\u064A\u0632",
       focusUnit: "\u0648\u062D\u062F\u0629 \u0627\u0644\u062A\u0631\u0643\u064A\u0632",
       focusUnitDesc: "\u0627\u0644\u062A\u0645\u064A\u064A\u0632 \u0639\u0644\u0649 \u0645\u0633\u062A\u0648\u0649 \u0627\u0644\u0641\u0642\u0631\u0629 \u0623\u0648 \u0627\u0644\u062C\u0645\u0644\u0629.",
       paragraph: "\u0641\u0642\u0631\u0629",
@@ -5536,7 +5526,6 @@ var ar_default = {
       typewriterScrollDesc: "\u0625\u0628\u0642\u0627\u0621 \u0627\u0644\u0633\u0637\u0631 \u0627\u0644\u0646\u0634\u0637 \u0641\u064A \u0648\u0633\u0637 \u0627\u0644\u0634\u0627\u0634\u0629."
     },
     typography: {
-      heading: "\u0648\u0636\u0639 \u0627\u0644\u0637\u0628\u0627\u0639\u0629",
       fontFamily: "\u0639\u0627\u0626\u0644\u0629 \u0627\u0644\u062E\u0637",
       font: {
         mono: "\u0623\u062D\u0627\u062F\u064A \u0627\u0644\u0645\u0633\u0627\u0641\u0629 (iA Writer Mono)",
@@ -5568,7 +5557,6 @@ var ar_default = {
       persistAcrossSessionsDesc: "\u0625\u0628\u0642\u0627\u0621 \u0648\u0636\u0639 \u0627\u0644\u0637\u0628\u0627\u0639\u0629 \u0646\u0634\u0637\u064B\u0627 \u0639\u0646\u062F \u0625\u0639\u0627\u062F\u0629 \u0641\u062A\u062D Obsidian."
     },
     sprint: {
-      heading: "\u0627\u0644\u0633\u0628\u0627\u0642 \u0648\u0627\u0644\u0623\u0647\u062F\u0627\u0641",
       defaultDuration: "\u0645\u062F\u0629 \u0627\u0644\u0633\u0628\u0627\u0642 \u0627\u0644\u0627\u0641\u062A\u0631\u0627\u0636\u064A\u0629 (\u062F\u0642\u0627\u0626\u0642)",
       defaultDailyGoal: "\u0647\u062F\u0641 \u0627\u0644\u0643\u0644\u0645\u0627\u062A \u0627\u0644\u064A\u0648\u0645\u064A \u0627\u0644\u0627\u0641\u062A\u0631\u0627\u0636\u064A",
       soundNotifications: "\u0627\u0644\u0625\u0634\u0639\u0627\u0631\u0627\u062A \u0627\u0644\u0635\u0648\u062A\u064A\u0629",
@@ -5578,7 +5566,6 @@ var ar_default = {
       inlineGoalBannerDesc: "\u0639\u0631\u0636 \u062A\u0642\u062F\u0645 \u0647\u062F\u0641 \u0639\u062F\u062F \u0627\u0644\u0643\u0644\u0645\u0627\u062A \u0623\u0633\u0641\u0644 \u0627\u0644\u0639\u0646\u0648\u0627\u0646 \u0639\u0646\u062F \u0641\u062A\u062D \u0645\u0633\u062A\u0646\u062F."
     },
     export: {
-      heading: "\u062A\u0635\u062F\u064A\u0631",
       defaultFormat: "\u062A\u0646\u0633\u064A\u0642 \u0627\u0644\u062A\u0635\u062F\u064A\u0631 \u0627\u0644\u0627\u0641\u062A\u0631\u0627\u0636\u064A",
       format: {
         md: "Markdown (.md)",
@@ -5608,18 +5595,17 @@ var ar_default = {
       pdfEnginePathDesc: "\u0627\u0644\u0645\u062C\u0644\u062F \u0627\u0644\u0630\u064A \u064A\u062D\u062A\u0648\u064A \u0639\u0644\u0649 \u0645\u062D\u0631\u0643 PDF\u060C \u0623\u0648 \u0627\u0644\u0645\u0633\u0627\u0631 \u0627\u0644\u0643\u0627\u0645\u0644 \u0644\u0645\u0644\u0641 \u062A\u0646\u0641\u064A\u0630\u064A \u0644\u0645\u062D\u0631\u0643 \u0648\u0627\u062D\u062F. \u0627\u062A\u0631\u0643\u0647 \u0641\u0627\u0631\u063A\u064B\u0627 \u0644\u0644\u0628\u062D\u062B \u0641\u064A \u0645\u0633\u0627\u0631 \u0627\u0644\u0646\u0638\u0627\u0645 \u0648\u0645\u0648\u0627\u0642\u0639 \u0627\u0644\u062A\u062B\u0628\u064A\u062A \u0627\u0644\u0634\u0627\u0626\u0639\u0629."
     },
     log: {
-      heading: "\u0633\u062C\u0644 \u0627\u0644\u0643\u062A\u0627\u0628\u0629 \u0627\u0644\u064A\u0648\u0645\u064A",
       appendToDailyNote: "\u0625\u0636\u0627\u0641\u0629 \u0625\u0644\u0649 \u0627\u0644\u0645\u0644\u0627\u062D\u0638\u0629 \u0627\u0644\u064A\u0648\u0645\u064A\u0629",
       appendToDailyNoteDesc: "\u0625\u0636\u0627\u0641\u0629 \u0645\u0644\u062E\u0635 \u0646\u0634\u0627\u0637 \u0627\u0644\u0643\u062A\u0627\u0628\u0629 \u0625\u0644\u0649 \u0627\u0644\u0645\u0644\u0627\u062D\u0638\u0629 \u0627\u0644\u064A\u0648\u0645\u064A\u0629 \u0628\u0639\u062F \u0643\u0644 \u0633\u0628\u0627\u0642."
     },
     wordpress: {
       sitesHeading: "\u0645\u0648\u0627\u0642\u0639 WordPress",
+      noSites: "\u0644\u0627 \u062A\u0648\u062C\u062F \u0645\u0648\u0627\u0642\u0639 \u0645\u064F\u0647\u064A\u0623\u0629.",
       addSite: "+ \u0625\u0636\u0627\u0641\u0629 \u0645\u0648\u0642\u0639 WordPress",
       wikilinksHeading: "\u0627\u0644\u0625\u0639\u062F\u0627\u062F\u0627\u062A \u0627\u0644\u0627\u0641\u062A\u0631\u0627\u0636\u064A\u0629 \u0644\u0631\u0648\u0627\u0628\u0637 \u0627\u0644\u0648\u064A\u0643\u064A",
       defaultWikilinkHandling: "\u0645\u0639\u0627\u0644\u062C\u0629 \u0631\u0648\u0627\u0628\u0637 \u0627\u0644\u0648\u064A\u0643\u064A \u0627\u0644\u0627\u0641\u062A\u0631\u0627\u0636\u064A\u0629",
       wikilinkStrip: "\u0625\u0632\u0627\u0644\u0629 (\u062A\u062D\u0648\u064A\u0644 \u0625\u0644\u0649 \u0646\u0635 \u0639\u0627\u062F\u064A)",
       wikilinkConvert: "\u062A\u062D\u0648\u064A\u0644 \u0625\u0644\u0649 URL",
-      siteHeading: "\u0627\u0644\u0645\u0648\u0642\u0639: {{nickname}}",
       siteUnnamed: "\u0628\u062F\u0648\u0646 \u0627\u0633\u0645",
       nickname: "\u0627\u0644\u0644\u0642\u0628",
       siteUrl: "\u0631\u0627\u0628\u0637 \u0627\u0644\u0645\u0648\u0642\u0639",
@@ -5638,7 +5624,6 @@ var ar_default = {
       testConnection: "\u0627\u062E\u062A\u0628\u0627\u0631 \u0627\u0644\u0627\u062A\u0635\u0627\u0644",
       testConnectionDesc: "\u0627\u0644\u062A\u062D\u0642\u0642 \u0645\u0646 \u0628\u064A\u0627\u0646\u0627\u062A \u0627\u0644\u0627\u0639\u062A\u0645\u0627\u062F \u0648\u0627\u0644\u0627\u062A\u0635\u0627\u0644.",
       testing: "\u062C\u0627\u0631\u064D \u0627\u0644\u0627\u062E\u062A\u0628\u0627\u0631\u2026",
-      removeSite: "\u0625\u0632\u0627\u0644\u0629 \u0627\u0644\u0645\u0648\u0642\u0639",
       buyMeACoffee: "\u0627\u0634\u062A\u0631\u0650 \u0644\u064A \u0642\u0647\u0648\u0629",
       newSiteName: "\u0645\u0648\u0642\u0639 \u062C\u062F\u064A\u062F"
     }
@@ -6212,7 +6197,6 @@ var ar_default = {
 var fr_default = {
   settings: {
     tab: {
-      general: "G\xE9n\xE9ral",
       focus: "Mode concentration",
       typography: "Typographie",
       sprint: "Sprint et objectifs",
@@ -6220,6 +6204,10 @@ var fr_default = {
       log: "Journal d\u2019\xE9criture",
       wordpress: "WordPress",
       help: "Mode d\u2019emploi"
+    },
+    validation: {
+      integerRange: "Saisissez un nombre entier entre {{min}} et {{max}}.",
+      integerRangeOrZero: "Saisissez 0 pour effacer le remplacement, ou un nombre entier entre {{min}} et {{max}}."
     },
     general: {
       openOnStartup: "Ouvrir au d\xE9marrage",
@@ -6242,7 +6230,6 @@ var fr_default = {
       frontmatterAutoUpdateDesc: "Mettre \xE0 jour automatiquement le nombre de mots et la date de modification lors de l\u2019enregistrement."
     },
     focus: {
-      heading: "Mode concentration",
       focusUnit: "Unit\xE9 de concentration",
       focusUnitDesc: "Mettre en surbrillance au niveau du paragraphe ou de la phrase.",
       paragraph: "Paragraphe",
@@ -6256,7 +6243,6 @@ var fr_default = {
       typewriterScrollDesc: "Maintenir la ligne active centr\xE9e \xE0 l\u2019\xE9cran."
     },
     typography: {
-      heading: "Mode typographie",
       fontFamily: "Famille de police",
       font: {
         mono: "Monospace (iA Writer Mono)",
@@ -6288,7 +6274,6 @@ var fr_default = {
       persistAcrossSessionsDesc: "Maintenir le mode typographie actif \xE0 la r\xE9ouverture d\u2019Obsidian."
     },
     sprint: {
-      heading: "Sprint et objectifs",
       defaultDuration: "Dur\xE9e de sprint par d\xE9faut (minutes)",
       defaultDailyGoal: "Objectif quotidien de mots par d\xE9faut",
       soundNotifications: "Notifications sonores",
@@ -6298,7 +6283,6 @@ var fr_default = {
       inlineGoalBannerDesc: "Afficher la progression de l\u2019objectif de mots sous le titre \xE0 l\u2019ouverture d\u2019un document."
     },
     export: {
-      heading: "Exporter",
       defaultFormat: "Format d\u2019export par d\xE9faut",
       format: {
         md: "Markdown (.md)",
@@ -6328,18 +6312,17 @@ var fr_default = {
       pdfEnginePathDesc: "Dossier contenant votre moteur PDF, ou chemin complet vers un binaire de moteur. Laissez vide pour chercher dans le chemin syst\xE8me et les emplacements d'installation courants."
     },
     log: {
-      heading: "Journal quotidien d\u2019\xE9criture",
       appendToDailyNote: "Ajouter \xE0 la note quotidienne",
       appendToDailyNoteDesc: "Ajouter un r\xE9sum\xE9 d\u2019activit\xE9 d\u2019\xE9criture \xE0 la note quotidienne d\u2019aujourd\u2019hui apr\xE8s chaque sprint."
     },
     wordpress: {
       sitesHeading: "Sites WordPress",
+      noSites: "Aucun site configur\xE9.",
       addSite: "+ ajouter un site WordPress",
       wikilinksHeading: "Param\xE8tres par d\xE9faut des wikilinks",
       defaultWikilinkHandling: "Gestion par d\xE9faut des wikilinks",
       wikilinkStrip: "Supprimer (convertir en texte brut)",
       wikilinkConvert: "Convertir en URL",
-      siteHeading: "Site\xA0: {{nickname}}",
       siteUnnamed: "Sans nom",
       nickname: "Surnom",
       siteUrl: "URL du site",
@@ -6358,7 +6341,6 @@ var fr_default = {
       testConnection: "Tester la connexion",
       testConnectionDesc: "V\xE9rifier les identifiants et la connectivit\xE9.",
       testing: "Test en cours\u2026",
-      removeSite: "Supprimer le site",
       buyMeACoffee: "Offrez-moi un caf\xE9",
       newSiteName: "Nouveau site"
     }
@@ -6912,7 +6894,6 @@ var fr_default = {
 var bn_default = {
   settings: {
     tab: {
-      general: "\u09B8\u09BE\u09A7\u09BE\u09B0\u09A3",
       focus: "\u09AB\u09CB\u0995\u09BE\u09B8 \u09AE\u09CB\u09A1",
       typography: "\u099F\u09BE\u0987\u09AA\u09CB\u0997\u09CD\u09B0\u09BE\u09AB\u09BF",
       sprint: "\u09B8\u09CD\u09AA\u09CD\u09B0\u09BF\u09A8\u09CD\u099F \u0993 \u09B2\u0995\u09CD\u09B7\u09CD\u09AF",
@@ -6920,6 +6901,10 @@ var bn_default = {
       log: "\u09B2\u09C7\u0996\u09BE\u09B0 \u09B2\u0997",
       wordpress: "WordPress",
       help: "\u0995\u09C0\u09AD\u09BE\u09AC\u09C7 \u09AC\u09CD\u09AF\u09AC\u09B9\u09BE\u09B0 \u0995\u09B0\u09AC\u09C7\u09A8"
+    },
+    validation: {
+      integerRange: "{{min}} \u09A5\u09C7\u0995\u09C7 {{max}} \u098F\u09B0 \u09AE\u09A7\u09CD\u09AF\u09C7 \u098F\u0995\u099F\u09BF \u09AA\u09C2\u09B0\u09CD\u09A3\u09B8\u0982\u0996\u09CD\u09AF\u09BE \u09B2\u09BF\u0996\u09C1\u09A8\u0964",
+      integerRangeOrZero: "\u0993\u09AD\u09BE\u09B0\u09B0\u09BE\u0987\u09A1 \u09AE\u09C1\u099B\u09A4\u09C7 0 \u09B2\u09BF\u0996\u09C1\u09A8, \u0985\u09A5\u09AC\u09BE {{min}} \u09A5\u09C7\u0995\u09C7 {{max}} \u098F\u09B0 \u09AE\u09A7\u09CD\u09AF\u09C7 \u098F\u0995\u099F\u09BF \u09AA\u09C2\u09B0\u09CD\u09A3\u09B8\u0982\u0996\u09CD\u09AF\u09BE \u09B2\u09BF\u0996\u09C1\u09A8\u0964"
     },
     general: {
       openOnStartup: "\u099A\u09BE\u09B2\u09C1 \u09B9\u09B2\u09C7 \u0996\u09C1\u09B2\u09C1\u09A8",
@@ -6942,7 +6927,6 @@ var bn_default = {
       frontmatterAutoUpdateDesc: "\u09B8\u0982\u09B0\u0995\u09CD\u09B7\u09A3\u09C7\u09B0 \u09B8\u09AE\u09AF\u09BC \u09B6\u09AC\u09CD\u09A6 \u09B8\u0982\u0996\u09CD\u09AF\u09BE \u098F\u09AC\u0982 \u09AA\u09B0\u09BF\u09AC\u09B0\u09CD\u09A4\u09A8\u09C7\u09B0 \u09A4\u09BE\u09B0\u09BF\u0996 \u09B8\u09CD\u09AC\u09AF\u09BC\u0982\u0995\u09CD\u09B0\u09BF\u09AF\u09BC\u09AD\u09BE\u09AC\u09C7 \u0986\u09AA\u09A1\u09C7\u099F \u0995\u09B0\u09C1\u09A8\u0964"
     },
     focus: {
-      heading: "\u09AB\u09CB\u0995\u09BE\u09B8 \u09AE\u09CB\u09A1",
       focusUnit: "\u09AB\u09CB\u0995\u09BE\u09B8 \u098F\u0995\u0995",
       focusUnitDesc: "\u0985\u09A8\u09C1\u099A\u09CD\u099B\u09C7\u09A6 \u09AC\u09BE \u09AC\u09BE\u0995\u09CD\u09AF \u09B8\u09CD\u09A4\u09B0\u09C7 \u09B9\u09BE\u0987\u09B2\u09BE\u0987\u099F \u0995\u09B0\u09C1\u09A8\u0964",
       paragraph: "\u0985\u09A8\u09C1\u099A\u09CD\u099B\u09C7\u09A6",
@@ -6956,7 +6940,6 @@ var bn_default = {
       typewriterScrollDesc: "\u09B8\u0995\u09CD\u09B0\u09BF\u09AF\u09BC \u09B2\u09BE\u0987\u09A8 \u09B8\u09CD\u0995\u09CD\u09B0\u09BF\u09A8\u09C7\u09B0 \u09AE\u09BE\u099D\u0996\u09BE\u09A8\u09C7 \u09B0\u09BE\u0996\u09C1\u09A8\u0964"
     },
     typography: {
-      heading: "\u099F\u09BE\u0987\u09AA\u09CB\u0997\u09CD\u09B0\u09BE\u09AB\u09BF \u09AE\u09CB\u09A1",
       fontFamily: "\u09AB\u09A8\u09CD\u099F \u09AA\u09B0\u09BF\u09AC\u09BE\u09B0",
       font: {
         mono: "\u09AE\u09A8\u09CB\u09B8\u09CD\u09AA\u09C7\u09B8\u09A1 (iA Writer Mono)",
@@ -6988,7 +6971,6 @@ var bn_default = {
       persistAcrossSessionsDesc: "Obsidian \u09AA\u09C1\u09A8\u09B0\u09BE\u09AF\u09BC \u0996\u09C1\u09B2\u09B2\u09C7 \u099F\u09BE\u0987\u09AA\u09CB\u0997\u09CD\u09B0\u09BE\u09AB\u09BF \u09AE\u09CB\u09A1 \u09B8\u0995\u09CD\u09B0\u09BF\u09AF\u09BC \u09B0\u09BE\u0996\u09C1\u09A8\u0964"
     },
     sprint: {
-      heading: "\u09B8\u09CD\u09AA\u09CD\u09B0\u09BF\u09A8\u09CD\u099F \u0993 \u09B2\u0995\u09CD\u09B7\u09CD\u09AF",
       defaultDuration: "\u09A1\u09BF\u09AB\u09B2\u09CD\u099F \u09B8\u09CD\u09AA\u09CD\u09B0\u09BF\u09A8\u09CD\u099F \u09B8\u09AE\u09AF\u09BC\u0995\u09BE\u09B2 (\u09AE\u09BF\u09A8\u09BF\u099F)",
       defaultDailyGoal: "\u09A1\u09BF\u09AB\u09B2\u09CD\u099F \u09A6\u09C8\u09A8\u09BF\u0995 \u09B6\u09AC\u09CD\u09A6 \u09B2\u0995\u09CD\u09B7\u09CD\u09AF",
       soundNotifications: "\u09B6\u09AC\u09CD\u09A6 \u09AC\u09BF\u099C\u09CD\u099E\u09AA\u09CD\u09A4\u09BF",
@@ -6998,7 +6980,6 @@ var bn_default = {
       inlineGoalBannerDesc: "\u09A8\u09A5\u09BF \u0996\u09C1\u09B2\u09B2\u09C7 \u09B6\u09BF\u09B0\u09CB\u09A8\u09BE\u09AE\u09C7\u09B0 \u09A8\u09BF\u099A\u09C7 \u09B6\u09AC\u09CD\u09A6 \u0997\u09A3\u09A8\u09BE\u09B0 \u09B2\u0995\u09CD\u09B7\u09CD\u09AF \u0985\u0997\u09CD\u09B0\u0997\u09A4\u09BF \u09A6\u09C7\u0996\u09BE\u09A8\u0964"
     },
     export: {
-      heading: "\u09B0\u09AA\u09CD\u09A4\u09BE\u09A8\u09BF",
       defaultFormat: "\u09A1\u09BF\u09AB\u09B2\u09CD\u099F \u09B0\u09AA\u09CD\u09A4\u09BE\u09A8\u09BF \u09AB\u09B0\u09AE\u09CD\u09AF\u09BE\u099F",
       format: {
         md: "Markdown (.md)",
@@ -7028,18 +7009,17 @@ var bn_default = {
       pdfEnginePathDesc: "PDF \u0987\u099E\u09CD\u099C\u09BF\u09A8 \u09A5\u09BE\u0995\u09BE \u09AB\u09CB\u09B2\u09CD\u09A1\u09BE\u09B0, \u09AC\u09BE \u098F\u0995\u099F\u09BF \u0987\u099E\u09CD\u099C\u09BF\u09A8 \u09AC\u09BE\u0987\u09A8\u09BE\u09B0\u09BF\u09B0 \u09B8\u09AE\u09CD\u09AA\u09C2\u09B0\u09CD\u09A3 \u09AA\u09BE\u09A5\u0964 \u0996\u09BE\u09B2\u09BF \u09B0\u09BE\u0996\u09B2\u09C7 \u09B8\u09BF\u09B8\u09CD\u099F\u09C7\u09AE \u09AA\u09BE\u09A5 \u0993 \u09B8\u09BE\u09A7\u09BE\u09B0\u09A3 \u0987\u09A8\u09B8\u09CD\u099F\u09B2 \u0985\u09AC\u09B8\u09CD\u09A5\u09BE\u09A8\u09C7 \u0996\u09CB\u0981\u099C\u09BE \u09B9\u09AC\u09C7\u0964"
     },
     log: {
-      heading: "\u09A6\u09C8\u09A8\u09BF\u0995 \u09B2\u09C7\u0996\u09BE\u09B0 \u09B2\u0997",
       appendToDailyNote: "\u09A6\u09C8\u09A8\u09BF\u0995 \u09A8\u09CB\u099F\u09C7 \u09AF\u09CB\u0997 \u0995\u09B0\u09C1\u09A8",
       appendToDailyNoteDesc: "\u09AA\u09CD\u09B0\u09A4\u09BF\u099F\u09BF \u09B8\u09CD\u09AA\u09CD\u09B0\u09BF\u09A8\u09CD\u099F\u09C7\u09B0 \u09AA\u09B0\u09C7 \u0986\u099C\u0995\u09C7\u09B0 \u09A6\u09C8\u09A8\u09BF\u0995 \u09A8\u09CB\u099F\u09C7 \u09B2\u09C7\u0996\u09BE\u09B0 \u0995\u09BE\u09B0\u09CD\u09AF\u0995\u09B2\u09BE\u09AA\u09C7\u09B0 \u09B8\u09BE\u09B0\u09B8\u0982\u0995\u09CD\u09B7\u09C7\u09AA \u09AF\u09CB\u0997 \u0995\u09B0\u09C1\u09A8\u0964"
     },
     wordpress: {
       sitesHeading: "WordPress \u09B8\u09BE\u0987\u099F",
+      noSites: "\u0995\u09CB\u09A8\u09CB \u09B8\u09BE\u0987\u099F \u0995\u09A8\u09AB\u09BF\u0997\u09BE\u09B0 \u0995\u09B0\u09BE \u09A8\u09C7\u0987\u0964",
       addSite: "+ WordPress \u09B8\u09BE\u0987\u099F \u09AF\u09CB\u0997 \u0995\u09B0\u09C1\u09A8",
       wikilinksHeading: "\u0989\u0987\u0995\u09BF\u09B2\u09BF\u0982\u0995 \u09A1\u09BF\u09AB\u09B2\u09CD\u099F",
       defaultWikilinkHandling: "\u09A1\u09BF\u09AB\u09B2\u09CD\u099F \u0989\u0987\u0995\u09BF\u09B2\u09BF\u0982\u0995 \u09AA\u09B0\u09BF\u099A\u09BE\u09B2\u09A8\u09BE",
       wikilinkStrip: "\u09B8\u09B0\u09BE\u09A8 (\u09B8\u09BE\u09A6\u09BE \u09AA\u09BE\u09A0\u09CD\u09AF\u09C7 \u09B0\u09C2\u09AA\u09BE\u09A8\u09CD\u09A4\u09B0 \u0995\u09B0\u09C1\u09A8)",
       wikilinkConvert: "URL-\u098F \u09B0\u09C2\u09AA\u09BE\u09A8\u09CD\u09A4\u09B0 \u0995\u09B0\u09C1\u09A8",
-      siteHeading: "\u09B8\u09BE\u0987\u099F: {{nickname}}",
       siteUnnamed: "\u09A8\u09BE\u09AE\u09B9\u09C0\u09A8",
       nickname: "\u09A1\u09BE\u0995\u09A8\u09BE\u09AE",
       siteUrl: "\u09B8\u09BE\u0987\u099F URL",
@@ -7058,7 +7038,6 @@ var bn_default = {
       testConnection: "\u09B8\u0982\u09AF\u09CB\u0997 \u09AA\u09B0\u09C0\u0995\u09CD\u09B7\u09BE",
       testConnectionDesc: "\u09B6\u0982\u09B8\u09BE\u09AA\u09A4\u09CD\u09B0 \u098F\u09AC\u0982 \u09B8\u0982\u09AF\u09CB\u0997 \u09AF\u09BE\u099A\u09BE\u0987 \u0995\u09B0\u09C1\u09A8\u0964",
       testing: "\u09AA\u09B0\u09C0\u0995\u09CD\u09B7\u09BE \u0995\u09B0\u09BE \u09B9\u099A\u09CD\u099B\u09C7\u2026",
-      removeSite: "\u09B8\u09BE\u0987\u099F \u09B8\u09B0\u09BE\u09A8",
       buyMeACoffee: "\u0986\u09AE\u09BE\u0995\u09C7 \u0995\u09AB\u09BF \u0995\u09BF\u09A8\u09C1\u09A8",
       newSiteName: "\u09A8\u09A4\u09C1\u09A8 \u09B8\u09BE\u0987\u099F"
     }
@@ -7612,7 +7591,6 @@ var bn_default = {
 var pt_BR_default = {
   settings: {
     tab: {
-      general: "Geral",
       focus: "Modo foco",
       typography: "Tipografia",
       sprint: "Sprint e metas",
@@ -7620,6 +7598,10 @@ var pt_BR_default = {
       log: "Log de escrita",
       wordpress: "WordPress",
       help: "Como usar"
+    },
+    validation: {
+      integerRange: "Insira um n\xFAmero inteiro entre {{min}} e {{max}}.",
+      integerRangeOrZero: "Insira 0 para limpar a substitui\xE7\xE3o, ou um n\xFAmero inteiro entre {{min}} e {{max}}."
     },
     general: {
       openOnStartup: "Abrir ao iniciar",
@@ -7642,7 +7624,6 @@ var pt_BR_default = {
       frontmatterAutoUpdateDesc: "Atualizar automaticamente a contagem de palavras e a data de modifica\xE7\xE3o ao salvar."
     },
     focus: {
-      heading: "Modo foco",
       focusUnit: "Unidade de foco",
       focusUnitDesc: "Destacar no n\xEDvel de par\xE1grafo ou frase.",
       paragraph: "Par\xE1grafo",
@@ -7656,7 +7637,6 @@ var pt_BR_default = {
       typewriterScrollDesc: "Manter a linha ativa centralizada na tela."
     },
     typography: {
-      heading: "Modo tipografia",
       fontFamily: "Fam\xEDlia de fonte",
       font: {
         mono: "Monoespa\xE7ada (iA Writer Mono)",
@@ -7688,7 +7668,6 @@ var pt_BR_default = {
       persistAcrossSessionsDesc: "Manter o modo tipografia ativo quando o Obsidian reabrir."
     },
     sprint: {
-      heading: "Sprint e metas",
       defaultDuration: "Dura\xE7\xE3o padr\xE3o do sprint (minutos)",
       defaultDailyGoal: "Meta di\xE1ria de palavras padr\xE3o",
       soundNotifications: "Notifica\xE7\xF5es sonoras",
@@ -7698,7 +7677,6 @@ var pt_BR_default = {
       inlineGoalBannerDesc: "Mostrar o progresso da meta de palavras abaixo do t\xEDtulo quando um documento for aberto."
     },
     export: {
-      heading: "Exportar",
       defaultFormat: "Formato de exporta\xE7\xE3o padr\xE3o",
       format: {
         md: "Markdown (.md)",
@@ -7728,18 +7706,17 @@ var pt_BR_default = {
       pdfEnginePathDesc: "Pasta que cont\xE9m o mecanismo de PDF, ou caminho completo para um bin\xE1rio de mecanismo. Deixe em branco para pesquisar no caminho do sistema e em locais de instala\xE7\xE3o comuns."
     },
     log: {
-      heading: "Log di\xE1rio de escrita",
       appendToDailyNote: "Adicionar \xE0 nota di\xE1ria",
       appendToDailyNoteDesc: "Adicionar um resumo de atividade de escrita \xE0 nota di\xE1ria de hoje ap\xF3s cada sprint."
     },
     wordpress: {
       sitesHeading: "Sites WordPress",
+      noSites: "Nenhum site configurado.",
       addSite: "+ adicionar site WordPress",
       wikilinksHeading: "Padr\xF5es de wikilinks",
       defaultWikilinkHandling: "Tratamento padr\xE3o de wikilinks",
       wikilinkStrip: "Remover (converter para texto simples)",
       wikilinkConvert: "Converter para URL",
-      siteHeading: "Site: {{nickname}}",
       siteUnnamed: "Sem nome",
       nickname: "Apelido",
       siteUrl: "URL do site",
@@ -7758,7 +7735,6 @@ var pt_BR_default = {
       testConnection: "Testar conex\xE3o",
       testConnectionDesc: "Verificar credenciais e conectividade.",
       testing: "Testando\u2026",
-      removeSite: "Remover site",
       buyMeACoffee: "Me pague um caf\xE9",
       newSiteName: "Novo site"
     }
@@ -8312,7 +8288,6 @@ var pt_BR_default = {
 var ru_default = {
   settings: {
     tab: {
-      general: "\u041E\u0431\u0449\u0438\u0435",
       focus: "\u0420\u0435\u0436\u0438\u043C \u0444\u043E\u043A\u0443\u0441\u0438\u0440\u043E\u0432\u043A\u0438",
       typography: "\u0422\u0438\u043F\u043E\u0433\u0440\u0430\u0444\u0438\u043A\u0430",
       sprint: "\u0421\u043F\u0440\u0438\u043D\u0442 \u0438 \u0446\u0435\u043B\u0438",
@@ -8320,6 +8295,10 @@ var ru_default = {
       log: "\u0416\u0443\u0440\u043D\u0430\u043B \u043D\u0430\u043F\u0438\u0441\u0430\u043D\u0438\u044F",
       wordpress: "WordPress",
       help: "\u041A\u0430\u043A \u0438\u0441\u043F\u043E\u043B\u044C\u0437\u043E\u0432\u0430\u0442\u044C"
+    },
+    validation: {
+      integerRange: "\u0412\u0432\u0435\u0434\u0438\u0442\u0435 \u0446\u0435\u043B\u043E\u0435 \u0447\u0438\u0441\u043B\u043E \u043E\u0442 {{min}} \u0434\u043E {{max}}.",
+      integerRangeOrZero: "\u0412\u0432\u0435\u0434\u0438\u0442\u0435 0, \u0447\u0442\u043E\u0431\u044B \u0441\u0431\u0440\u043E\u0441\u0438\u0442\u044C \u043F\u0435\u0440\u0435\u043E\u043F\u0440\u0435\u0434\u0435\u043B\u0435\u043D\u0438\u0435, \u0438\u043B\u0438 \u0446\u0435\u043B\u043E\u0435 \u0447\u0438\u0441\u043B\u043E \u043E\u0442 {{min}} \u0434\u043E {{max}}."
     },
     general: {
       openOnStartup: "\u041E\u0442\u043A\u0440\u044B\u0432\u0430\u0442\u044C \u043F\u0440\u0438 \u0437\u0430\u043F\u0443\u0441\u043A\u0435",
@@ -8342,7 +8321,6 @@ var ru_default = {
       frontmatterAutoUpdateDesc: "\u0410\u0432\u0442\u043E\u043C\u0430\u0442\u0438\u0447\u0435\u0441\u043A\u0438 \u043E\u0431\u043D\u043E\u0432\u043B\u044F\u0442\u044C \u043A\u043E\u043B\u0438\u0447\u0435\u0441\u0442\u0432\u043E \u0441\u043B\u043E\u0432 \u0438 \u0434\u0430\u0442\u0443 \u0438\u0437\u043C\u0435\u043D\u0435\u043D\u0438\u044F \u043F\u0440\u0438 \u0441\u043E\u0445\u0440\u0430\u043D\u0435\u043D\u0438\u0438."
     },
     focus: {
-      heading: "\u0420\u0435\u0436\u0438\u043C \u0444\u043E\u043A\u0443\u0441\u0438\u0440\u043E\u0432\u043A\u0438",
       focusUnit: "\u0415\u0434\u0438\u043D\u0438\u0446\u0430 \u0444\u043E\u043A\u0443\u0441\u0438\u0440\u043E\u0432\u043A\u0438",
       focusUnitDesc: "\u041F\u043E\u0434\u0441\u0432\u0435\u0447\u0438\u0432\u0430\u0442\u044C \u043D\u0430 \u0443\u0440\u043E\u0432\u043D\u0435 \u0430\u0431\u0437\u0430\u0446\u0430 \u0438\u043B\u0438 \u043F\u0440\u0435\u0434\u043B\u043E\u0436\u0435\u043D\u0438\u044F.",
       paragraph: "\u0410\u0431\u0437\u0430\u0446",
@@ -8356,7 +8334,6 @@ var ru_default = {
       typewriterScrollDesc: "\u0414\u0435\u0440\u0436\u0430\u0442\u044C \u0430\u043A\u0442\u0438\u0432\u043D\u0443\u044E \u0441\u0442\u0440\u043E\u043A\u0443 \u0432 \u0446\u0435\u043D\u0442\u0440\u0435 \u044D\u043A\u0440\u0430\u043D\u0430."
     },
     typography: {
-      heading: "\u0420\u0435\u0436\u0438\u043C \u0442\u0438\u043F\u043E\u0433\u0440\u0430\u0444\u0438\u043A\u0438",
       fontFamily: "\u0421\u0435\u043C\u0435\u0439\u0441\u0442\u0432\u043E \u0448\u0440\u0438\u0444\u0442\u043E\u0432",
       font: {
         mono: "\u041C\u043E\u043D\u043E\u0448\u0438\u0440\u0438\u043D\u043D\u044B\u0439 (iA Writer Mono)",
@@ -8388,7 +8365,6 @@ var ru_default = {
       persistAcrossSessionsDesc: "\u0421\u043E\u0445\u0440\u0430\u043D\u044F\u0442\u044C \u0440\u0435\u0436\u0438\u043C \u0442\u0438\u043F\u043E\u0433\u0440\u0430\u0444\u0438\u043A\u0438 \u0430\u043A\u0442\u0438\u0432\u043D\u044B\u043C \u043F\u0440\u0438 \u043F\u043E\u0432\u0442\u043E\u0440\u043D\u043E\u043C \u043E\u0442\u043A\u0440\u044B\u0442\u0438\u0438 Obsidian."
     },
     sprint: {
-      heading: "\u0421\u043F\u0440\u0438\u043D\u0442 \u0438 \u0446\u0435\u043B\u0438",
       defaultDuration: "\u0414\u043B\u0438\u0442\u0435\u043B\u044C\u043D\u043E\u0441\u0442\u044C \u0441\u043F\u0440\u0438\u043D\u0442\u0430 \u043F\u043E \u0443\u043C\u043E\u043B\u0447\u0430\u043D\u0438\u044E (\u043C\u0438\u043D\u0443\u0442\u044B)",
       defaultDailyGoal: "\u0414\u043D\u0435\u0432\u043D\u0430\u044F \u0446\u0435\u043B\u044C \u043F\u043E \u0443\u043C\u043E\u043B\u0447\u0430\u043D\u0438\u044E (\u0441\u043B\u043E\u0432\u0430)",
       soundNotifications: "\u0417\u0432\u0443\u043A\u043E\u0432\u044B\u0435 \u0443\u0432\u0435\u0434\u043E\u043C\u043B\u0435\u043D\u0438\u044F",
@@ -8398,7 +8374,6 @@ var ru_default = {
       inlineGoalBannerDesc: "\u041F\u043E\u043A\u0430\u0437\u044B\u0432\u0430\u0442\u044C \u043F\u0440\u043E\u0433\u0440\u0435\u0441\u0441 \u0434\u043E\u0441\u0442\u0438\u0436\u0435\u043D\u0438\u044F \u0446\u0435\u043B\u0438 \u043F\u043E \u0441\u043B\u043E\u0432\u0430\u043C \u043F\u043E\u0434 \u0437\u0430\u0433\u043E\u043B\u043E\u0432\u043A\u043E\u043C \u043F\u0440\u0438 \u043E\u0442\u043A\u0440\u044B\u0442\u0438\u0438 \u0434\u043E\u043A\u0443\u043C\u0435\u043D\u0442\u0430."
     },
     export: {
-      heading: "\u042D\u043A\u0441\u043F\u043E\u0440\u0442",
       defaultFormat: "\u0424\u043E\u0440\u043C\u0430\u0442 \u044D\u043A\u0441\u043F\u043E\u0440\u0442\u0430 \u043F\u043E \u0443\u043C\u043E\u043B\u0447\u0430\u043D\u0438\u044E",
       format: {
         md: "Markdown (.md)",
@@ -8428,18 +8403,17 @@ var ru_default = {
       pdfEnginePathDesc: "\u041F\u0430\u043F\u043A\u0430 \u0441 \u0434\u0432\u0438\u0436\u043A\u043E\u043C PDF \u0438\u043B\u0438 \u043F\u043E\u043B\u043D\u044B\u0439 \u043F\u0443\u0442\u044C \u043A \u0438\u0441\u043F\u043E\u043B\u043D\u044F\u0435\u043C\u043E\u043C\u0443 \u0444\u0430\u0439\u043B\u0443 \u0434\u0432\u0438\u0436\u043A\u0430. \u041E\u0441\u0442\u0430\u0432\u044C\u0442\u0435 \u043F\u0443\u0441\u0442\u044B\u043C \u0434\u043B\u044F \u043F\u043E\u0438\u0441\u043A\u0430 \u0432 \u0441\u0438\u0441\u0442\u0435\u043C\u043D\u043E\u043C \u043F\u0443\u0442\u0438 \u0438 \u0442\u0438\u043F\u0438\u0447\u043D\u044B\u0445 \u043C\u0435\u0441\u0442\u0430\u0445 \u0443\u0441\u0442\u0430\u043D\u043E\u0432\u043A\u0438."
     },
     log: {
-      heading: "\u0415\u0436\u0435\u0434\u043D\u0435\u0432\u043D\u044B\u0439 \u0436\u0443\u0440\u043D\u0430\u043B \u043D\u0430\u043F\u0438\u0441\u0430\u043D\u0438\u044F",
       appendToDailyNote: "\u0414\u043E\u0431\u0430\u0432\u043B\u044F\u0442\u044C \u0432 \u0435\u0436\u0435\u0434\u043D\u0435\u0432\u043D\u0443\u044E \u0437\u0430\u043C\u0435\u0442\u043A\u0443",
       appendToDailyNoteDesc: "\u0414\u043E\u0431\u0430\u0432\u043B\u044F\u0442\u044C \u0441\u0432\u043E\u0434\u043A\u0443 \u0430\u043A\u0442\u0438\u0432\u043D\u043E\u0441\u0442\u0438 \u043F\u043E\u0441\u043B\u0435 \u043A\u0430\u0436\u0434\u043E\u0433\u043E \u0441\u043F\u0440\u0438\u043D\u0442\u0430 \u0432 \u0441\u0435\u0433\u043E\u0434\u043D\u044F\u0448\u043D\u044E\u044E \u0435\u0436\u0435\u0434\u043D\u0435\u0432\u043D\u0443\u044E \u0437\u0430\u043C\u0435\u0442\u043A\u0443."
     },
     wordpress: {
       sitesHeading: "\u0421\u0430\u0439\u0442\u044B WordPress",
+      noSites: "\u0421\u0430\u0439\u0442\u044B \u043D\u0435 \u043D\u0430\u0441\u0442\u0440\u043E\u0435\u043D\u044B.",
       addSite: "+ \u0434\u043E\u0431\u0430\u0432\u0438\u0442\u044C \u0441\u0430\u0439\u0442 WordPress",
       wikilinksHeading: "\u041D\u0430\u0441\u0442\u0440\u043E\u0439\u043A\u0438 \u0432\u0438\u043A\u0438-\u0441\u0441\u044B\u043B\u043E\u043A \u043F\u043E \u0443\u043C\u043E\u043B\u0447\u0430\u043D\u0438\u044E",
       defaultWikilinkHandling: "\u041E\u0431\u0440\u0430\u0431\u043E\u0442\u043A\u0430 \u0432\u0438\u043A\u0438-\u0441\u0441\u044B\u043B\u043E\u043A \u043F\u043E \u0443\u043C\u043E\u043B\u0447\u0430\u043D\u0438\u044E",
       wikilinkStrip: "\u0423\u0434\u0430\u043B\u0438\u0442\u044C (\u043F\u0440\u0435\u043E\u0431\u0440\u0430\u0437\u043E\u0432\u0430\u0442\u044C \u0432 \u043F\u0440\u043E\u0441\u0442\u043E\u0439 \u0442\u0435\u043A\u0441\u0442)",
       wikilinkConvert: "\u041F\u0440\u0435\u043E\u0431\u0440\u0430\u0437\u043E\u0432\u0430\u0442\u044C \u0432 URL",
-      siteHeading: "\u0421\u0430\u0439\u0442: {{nickname}}",
       siteUnnamed: "\u0411\u0435\u0437 \u043D\u0430\u0437\u0432\u0430\u043D\u0438\u044F",
       nickname: "\u041D\u0430\u0437\u0432\u0430\u043D\u0438\u0435",
       siteUrl: "URL \u0441\u0430\u0439\u0442\u0430",
@@ -8458,7 +8432,6 @@ var ru_default = {
       testConnection: "\u041F\u0440\u043E\u0432\u0435\u0440\u0438\u0442\u044C \u043F\u043E\u0434\u043A\u043B\u044E\u0447\u0435\u043D\u0438\u0435",
       testConnectionDesc: "\u041F\u0440\u043E\u0432\u0435\u0440\u0438\u0442\u044C \u0443\u0447\u0451\u0442\u043D\u044B\u0435 \u0434\u0430\u043D\u043D\u044B\u0435 \u0438 \u043F\u043E\u0434\u043A\u043B\u044E\u0447\u0435\u043D\u0438\u0435.",
       testing: "\u041F\u0440\u043E\u0432\u0435\u0440\u043A\u0430\u2026",
-      removeSite: "\u0423\u0434\u0430\u043B\u0438\u0442\u044C \u0441\u0430\u0439\u0442",
       buyMeACoffee: "\u041A\u0443\u043F\u0438 \u043C\u043D\u0435 \u043A\u043E\u0444\u0435",
       newSiteName: "\u041D\u043E\u0432\u044B\u0439 \u0441\u0430\u0439\u0442"
     }
@@ -9024,7 +8997,6 @@ var ru_default = {
 var ja_default = {
   settings: {
     tab: {
-      general: "\u4E00\u822C",
       focus: "\u30D5\u30A9\u30FC\u30AB\u30B9\u30E2\u30FC\u30C9",
       typography: "\u30BF\u30A4\u30DD\u30B0\u30E9\u30D5\u30A3",
       sprint: "\u30B9\u30D7\u30EA\u30F3\u30C8\u3068\u76EE\u6A19",
@@ -9032,6 +9004,10 @@ var ja_default = {
       log: "\u57F7\u7B46\u30ED\u30B0",
       wordpress: "WordPress",
       help: "\u4F7F\u3044\u65B9"
+    },
+    validation: {
+      integerRange: "{{min}}\uFF5E{{max}} \u306E\u6574\u6570\u3092\u5165\u529B\u3057\u3066\u304F\u3060\u3055\u3044\u3002",
+      integerRangeOrZero: "0 \u3092\u5165\u529B\u3059\u308B\u3068\u4E0A\u66F8\u304D\u3092\u89E3\u9664\u3057\u307E\u3059\u3002\u307E\u305F\u306F {{min}}\uFF5E{{max}} \u306E\u6574\u6570\u3092\u5165\u529B\u3057\u3066\u304F\u3060\u3055\u3044\u3002"
     },
     general: {
       openOnStartup: "\u8D77\u52D5\u6642\u306B\u958B\u304F",
@@ -9054,7 +9030,6 @@ var ja_default = {
       frontmatterAutoUpdateDesc: "\u4FDD\u5B58\u6642\u306B\u8A9E\u6570\u3068\u66F4\u65B0\u65E5\u3092\u81EA\u52D5\u7684\u306B\u66F4\u65B0\u3057\u307E\u3059\u3002"
     },
     focus: {
-      heading: "\u30D5\u30A9\u30FC\u30AB\u30B9\u30E2\u30FC\u30C9",
       focusUnit: "\u30D5\u30A9\u30FC\u30AB\u30B9\u5358\u4F4D",
       focusUnitDesc: "\u6BB5\u843D\u307E\u305F\u306F\u6587\u30EC\u30D9\u30EB\u3067\u30CF\u30A4\u30E9\u30A4\u30C8\u3057\u307E\u3059\u3002",
       paragraph: "\u6BB5\u843D",
@@ -9068,7 +9043,6 @@ var ja_default = {
       typewriterScrollDesc: "\u30A2\u30AF\u30C6\u30A3\u30D6\u306A\u884C\u3092\u753B\u9762\u306E\u4E2D\u592E\u306B\u4FDD\u3061\u307E\u3059\u3002"
     },
     typography: {
-      heading: "\u30BF\u30A4\u30DD\u30B0\u30E9\u30D5\u30A3\u30E2\u30FC\u30C9",
       fontFamily: "\u30D5\u30A9\u30F3\u30C8\u30D5\u30A1\u30DF\u30EA\u30FC",
       font: {
         mono: "\u7B49\u5E45\uFF08iA Writer Mono\uFF09",
@@ -9100,7 +9074,6 @@ var ja_default = {
       persistAcrossSessionsDesc: "Obsidian\u3092\u518D\u8D77\u52D5\u3057\u3066\u3082\u30BF\u30A4\u30DD\u30B0\u30E9\u30D5\u30A3\u30E2\u30FC\u30C9\u3092\u7DAD\u6301\u3057\u307E\u3059\u3002"
     },
     sprint: {
-      heading: "\u30B9\u30D7\u30EA\u30F3\u30C8\u3068\u76EE\u6A19",
       defaultDuration: "\u30C7\u30D5\u30A9\u30EB\u30C8\u306E\u30B9\u30D7\u30EA\u30F3\u30C8\u6642\u9593\uFF08\u5206\uFF09",
       defaultDailyGoal: "\u30C7\u30D5\u30A9\u30EB\u30C8\u306E1\u65E5\u306E\u8A9E\u6570\u76EE\u6A19",
       soundNotifications: "\u30B5\u30A6\u30F3\u30C9\u901A\u77E5",
@@ -9110,7 +9083,6 @@ var ja_default = {
       inlineGoalBannerDesc: "\u30C9\u30AD\u30E5\u30E1\u30F3\u30C8\u3092\u958B\u3044\u305F\u3068\u304D\u306B\u30BF\u30A4\u30C8\u30EB\u306E\u4E0B\u306B\u8A9E\u6570\u76EE\u6A19\u306E\u9032\u6357\u3092\u8868\u793A\u3057\u307E\u3059\u3002"
     },
     export: {
-      heading: "\u30A8\u30AF\u30B9\u30DD\u30FC\u30C8",
       defaultFormat: "\u30C7\u30D5\u30A9\u30EB\u30C8\u306E\u30A8\u30AF\u30B9\u30DD\u30FC\u30C8\u5F62\u5F0F",
       format: {
         md: "Markdown (.md)",
@@ -9140,18 +9112,17 @@ var ja_default = {
       pdfEnginePathDesc: "PDF \u30A8\u30F3\u30B8\u30F3\u3092\u542B\u3080\u30D5\u30A9\u30EB\u30C0\u30FC\u3001\u307E\u305F\u306F\u5358\u4E00\u306E\u30A8\u30F3\u30B8\u30F3\u30D0\u30A4\u30CA\u30EA\u3078\u306E\u30D5\u30EB\u30D1\u30B9\u3002\u7A7A\u6B04\u306E\u5834\u5408\u3001\u30B7\u30B9\u30C6\u30E0\u30D1\u30B9\u3068\u4E00\u822C\u7684\u306A\u30A4\u30F3\u30B9\u30C8\u30FC\u30EB\u5834\u6240\u3092\u691C\u7D22\u3057\u307E\u3059\u3002"
     },
     log: {
-      heading: "\u6BCE\u65E5\u306E\u57F7\u7B46\u30ED\u30B0",
       appendToDailyNote: "\u30C7\u30A4\u30EA\u30FC\u30CE\u30FC\u30C8\u306B\u8FFD\u8A18",
       appendToDailyNoteDesc: "\u5404\u30B9\u30D7\u30EA\u30F3\u30C8\u5F8C\u306B\u4ECA\u65E5\u306E\u30C7\u30A4\u30EA\u30FC\u30CE\u30FC\u30C8\u306B\u57F7\u7B46\u6D3B\u52D5\u30B5\u30DE\u30EA\u30FC\u3092\u8FFD\u52A0\u3057\u307E\u3059\u3002"
     },
     wordpress: {
       sitesHeading: "WordPress\u30B5\u30A4\u30C8",
+      noSites: "\u30B5\u30A4\u30C8\u304C\u8A2D\u5B9A\u3055\u308C\u3066\u3044\u307E\u305B\u3093\u3002",
       addSite: "+ WordPress\u30B5\u30A4\u30C8\u3092\u8FFD\u52A0",
       wikilinksHeading: "\u30A6\u30A3\u30AD\u30EA\u30F3\u30AF\u306E\u30C7\u30D5\u30A9\u30EB\u30C8",
       defaultWikilinkHandling: "\u30C7\u30D5\u30A9\u30EB\u30C8\u306E\u30A6\u30A3\u30AD\u30EA\u30F3\u30AF\u51E6\u7406",
       wikilinkStrip: "\u30B9\u30C8\u30EA\u30C3\u30D7\uFF08\u30D7\u30EC\u30FC\u30F3\u30C6\u30AD\u30B9\u30C8\u306B\u5909\u63DB\uFF09",
       wikilinkConvert: "URL\u306B\u5909\u63DB",
-      siteHeading: "\u30B5\u30A4\u30C8\uFF1A{{nickname}}",
       siteUnnamed: "\u672A\u547D\u540D",
       nickname: "\u30CB\u30C3\u30AF\u30CD\u30FC\u30E0",
       siteUrl: "\u30B5\u30A4\u30C8URL",
@@ -9170,7 +9141,6 @@ var ja_default = {
       testConnection: "\u63A5\u7D9A\u30C6\u30B9\u30C8",
       testConnectionDesc: "\u8A8D\u8A3C\u60C5\u5831\u3068\u63A5\u7D9A\u6027\u3092\u78BA\u8A8D\u3057\u307E\u3059\u3002",
       testing: "\u30C6\u30B9\u30C8\u4E2D\u2026",
-      removeSite: "\u30B5\u30A4\u30C8\u3092\u524A\u9664",
       buyMeACoffee: "\u30B3\u30FC\u30D2\u30FC\u3092\u304A\u3054\u308B",
       newSiteName: "\u65B0\u3057\u3044\u30B5\u30A4\u30C8"
     }
@@ -9724,7 +9694,6 @@ var ja_default = {
 var de_default = {
   settings: {
     tab: {
-      general: "Allgemein",
       focus: "Fokusmodus",
       typography: "Typografie",
       sprint: "Sprint & Ziele",
@@ -9732,6 +9701,10 @@ var de_default = {
       log: "Schreibprotokoll",
       wordpress: "WordPress",
       help: "Anleitung"
+    },
+    validation: {
+      integerRange: "Gib eine ganze Zahl zwischen {{min}} und {{max}} ein.",
+      integerRangeOrZero: "Gib 0 ein, um die \xDCberschreibung zu entfernen, oder eine ganze Zahl zwischen {{min}} und {{max}}."
     },
     general: {
       openOnStartup: "Beim Start \xF6ffnen",
@@ -9754,7 +9727,6 @@ var de_default = {
       frontmatterAutoUpdateDesc: "Wortanzahl und \xC4nderungsdatum beim Speichern automatisch aktualisieren."
     },
     focus: {
-      heading: "Fokusmodus",
       focusUnit: "Fokuseinheit",
       focusUnitDesc: "Auf Absatz- oder Satzebene hervorheben.",
       paragraph: "Absatz",
@@ -9768,7 +9740,6 @@ var de_default = {
       typewriterScrollDesc: "Aktive Zeile in der Bildschirmmitte halten."
     },
     typography: {
-      heading: "Typografiemodus",
       fontFamily: "Schriftfamilie",
       font: {
         mono: "Monospace (iA Writer Mono)",
@@ -9800,7 +9771,6 @@ var de_default = {
       persistAcrossSessionsDesc: "Typografiemodus aktiv halten, wenn Obsidian neu gestartet wird."
     },
     sprint: {
-      heading: "Sprint & Ziele",
       defaultDuration: "Standard-Sprintdauer (Minuten)",
       defaultDailyGoal: "Standard-Tagesziel f\xFCr W\xF6rter",
       soundNotifications: "Tonbenachrichtigungen",
@@ -9810,7 +9780,6 @@ var de_default = {
       inlineGoalBannerDesc: "Wortanzahl-Zielfortschritt unterhalb des Titels anzeigen, wenn ein Dokument ge\xF6ffnet wird."
     },
     export: {
-      heading: "Exportieren",
       defaultFormat: "Standard-Exportformat",
       format: {
         md: "Markdown (.md)",
@@ -9840,18 +9809,17 @@ var de_default = {
       pdfEnginePathDesc: "Ordner mit der PDF-Engine oder vollst\xE4ndiger Pfad zu einer Engine-Bin\xE4rdatei. Leer lassen, um im Systempfad und an \xFCblichen Installationsorten zu suchen."
     },
     log: {
-      heading: "T\xE4gliches Schreibprotokoll",
       appendToDailyNote: "An Tagesnotiz anh\xE4ngen",
       appendToDailyNoteDesc: "Nach jedem Sprint eine Zusammenfassung der Schreibaktivit\xE4t zur heutigen Tagesnotiz hinzuf\xFCgen."
     },
     wordpress: {
       sitesHeading: "WordPress-Seiten",
+      noSites: "Keine Websites konfiguriert.",
       addSite: "+ WordPress-Seite hinzuf\xFCgen",
       wikilinksHeading: "Wikilink-Standards",
       defaultWikilinkHandling: "Standard-Wikilinkverarbeitung",
       wikilinkStrip: "Entfernen (in Klartext umwandeln)",
       wikilinkConvert: "In URL umwandeln",
-      siteHeading: "Seite: {{nickname}}",
       siteUnnamed: "Unbenannt",
       nickname: "Spitzname",
       siteUrl: "Seiten-URL",
@@ -9870,7 +9838,6 @@ var de_default = {
       testConnection: "Verbindung testen",
       testConnectionDesc: "Anmeldeinformationen und Konnektivit\xE4t \xFCberpr\xFCfen.",
       testing: "Teste\u2026",
-      removeSite: "Seite entfernen",
       buyMeACoffee: "Kauf mir einen Kaffee",
       newSiteName: "Neue Website"
     }
@@ -10424,7 +10391,6 @@ var de_default = {
 var ko_default = {
   settings: {
     tab: {
-      general: "\uC77C\uBC18",
       focus: "\uC9D1\uC911 \uBAA8\uB4DC",
       typography: "\uD0C0\uC774\uD3EC\uADF8\uB798\uD53C",
       sprint: "\uC2A4\uD504\uB9B0\uD2B8 \uBC0F \uBAA9\uD45C",
@@ -10432,6 +10398,10 @@ var ko_default = {
       log: "\uAE00\uC4F0\uAE30 \uB85C\uADF8",
       wordpress: "WordPress",
       help: "\uC0AC\uC6A9\uBC95"
+    },
+    validation: {
+      integerRange: "{{min}}\uC5D0\uC11C {{max}} \uC0AC\uC774\uC758 \uC815\uC218\uB97C \uC785\uB825\uD558\uC138\uC694.",
+      integerRangeOrZero: "\uC7AC\uC815\uC758\uB97C \uD574\uC81C\uD558\uB824\uBA74 0\uC744 \uC785\uB825\uD558\uAC70\uB098 {{min}}\uC5D0\uC11C {{max}} \uC0AC\uC774\uC758 \uC815\uC218\uB97C \uC785\uB825\uD558\uC138\uC694."
     },
     general: {
       openOnStartup: "\uC2DC\uC791 \uC2DC \uC5F4\uAE30",
@@ -10454,7 +10424,6 @@ var ko_default = {
       frontmatterAutoUpdateDesc: "\uC800\uC7A5 \uC2DC \uB2E8\uC5B4 \uC218\uC640 \uC218\uC815 \uB0A0\uC9DC\uB97C \uC790\uB3D9\uC73C\uB85C \uC5C5\uB370\uC774\uD2B8\uD569\uB2C8\uB2E4."
     },
     focus: {
-      heading: "\uC9D1\uC911 \uBAA8\uB4DC",
       focusUnit: "\uC9D1\uC911 \uB2E8\uC704",
       focusUnitDesc: "\uB2E8\uB77D \uB610\uB294 \uBB38\uC7A5 \uC218\uC900\uC5D0\uC11C \uAC15\uC870 \uD45C\uC2DC\uD569\uB2C8\uB2E4.",
       paragraph: "\uB2E8\uB77D",
@@ -10468,7 +10437,6 @@ var ko_default = {
       typewriterScrollDesc: "\uD65C\uC131 \uC904\uC744 \uD654\uBA74 \uC911\uC559\uC5D0 \uC720\uC9C0\uD569\uB2C8\uB2E4."
     },
     typography: {
-      heading: "\uD0C0\uC774\uD3EC\uADF8\uB798\uD53C \uBAA8\uB4DC",
       fontFamily: "\uAE00\uAF34 \uD328\uBC00\uB9AC",
       font: {
         mono: "\uACE0\uC815\uD3ED (iA Writer Mono)",
@@ -10500,7 +10468,6 @@ var ko_default = {
       persistAcrossSessionsDesc: "Obsidian\uC744 \uB2E4\uC2DC \uC5F4 \uB54C \uD0C0\uC774\uD3EC\uADF8\uB798\uD53C \uBAA8\uB4DC\uB97C \uD65C\uC131 \uC0C1\uD0DC\uB85C \uC720\uC9C0\uD569\uB2C8\uB2E4."
     },
     sprint: {
-      heading: "\uC2A4\uD504\uB9B0\uD2B8 \uBC0F \uBAA9\uD45C",
       defaultDuration: "\uAE30\uBCF8 \uC2A4\uD504\uB9B0\uD2B8 \uC2DC\uAC04 (\uBD84)",
       defaultDailyGoal: "\uAE30\uBCF8 \uC77C\uC77C \uB2E8\uC5B4 \uBAA9\uD45C",
       soundNotifications: "\uC18C\uB9AC \uC54C\uB9BC",
@@ -10510,7 +10477,6 @@ var ko_default = {
       inlineGoalBannerDesc: "\uBB38\uC11C\uB97C \uC5F4 \uB54C \uC81C\uBAA9 \uC544\uB798\uC5D0 \uB2E8\uC5B4 \uC218 \uBAA9\uD45C \uC9C4\uD589 \uC0C1\uD669\uC744 \uD45C\uC2DC\uD569\uB2C8\uB2E4."
     },
     export: {
-      heading: "\uB0B4\uBCF4\uB0B4\uAE30",
       defaultFormat: "\uAE30\uBCF8 \uB0B4\uBCF4\uB0B4\uAE30 \uD615\uC2DD",
       format: {
         md: "Markdown (.md)",
@@ -10540,18 +10506,17 @@ var ko_default = {
       pdfEnginePathDesc: "PDF \uC5D4\uC9C4\uC774 \uC788\uB294 \uD3F4\uB354 \uB610\uB294 \uC5D4\uC9C4 \uC2E4\uD589 \uD30C\uC77C\uC758 \uC804\uCCB4 \uACBD\uB85C\uC785\uB2C8\uB2E4. \uBE44\uC6CC \uB450\uBA74 \uC2DC\uC2A4\uD15C \uACBD\uB85C\uC640 \uC77C\uBC18\uC801\uC778 \uC124\uCE58 \uC704\uCE58\uB97C \uAC80\uC0C9\uD569\uB2C8\uB2E4."
     },
     log: {
-      heading: "\uC77C\uC77C \uAE00\uC4F0\uAE30 \uB85C\uADF8",
       appendToDailyNote: "\uC77C\uC77C \uB178\uD2B8\uC5D0 \uCD94\uAC00",
       appendToDailyNoteDesc: "\uAC01 \uC2A4\uD504\uB9B0\uD2B8 \uD6C4 \uC624\uB298\uC758 \uC77C\uC77C \uB178\uD2B8\uC5D0 \uAE00\uC4F0\uAE30 \uD65C\uB3D9 \uC694\uC57D\uC744 \uCD94\uAC00\uD569\uB2C8\uB2E4."
     },
     wordpress: {
       sitesHeading: "WordPress \uC0AC\uC774\uD2B8",
+      noSites: "\uAD6C\uC131\uB41C \uC0AC\uC774\uD2B8\uAC00 \uC5C6\uC2B5\uB2C8\uB2E4.",
       addSite: "+ WordPress \uC0AC\uC774\uD2B8 \uCD94\uAC00",
       wikilinksHeading: "\uC704\uD0A4\uB9C1\uD06C \uAE30\uBCF8\uAC12",
       defaultWikilinkHandling: "\uAE30\uBCF8 \uC704\uD0A4\uB9C1\uD06C \uCC98\uB9AC",
       wikilinkStrip: "\uC81C\uAC70 (\uC77C\uBC18 \uD14D\uC2A4\uD2B8\uB85C \uBCC0\uD658)",
       wikilinkConvert: "URL\uB85C \uBCC0\uD658",
-      siteHeading: "\uC0AC\uC774\uD2B8: {{nickname}}",
       siteUnnamed: "\uC774\uB984 \uC5C6\uC74C",
       nickname: "\uBCC4\uBA85",
       siteUrl: "\uC0AC\uC774\uD2B8 URL",
@@ -10570,7 +10535,6 @@ var ko_default = {
       testConnection: "\uC5F0\uACB0 \uD14C\uC2A4\uD2B8",
       testConnectionDesc: "\uC790\uACA9 \uC99D\uBA85\uACFC \uC5F0\uACB0\uC744 \uD655\uC778\uD569\uB2C8\uB2E4.",
       testing: "\uD14C\uC2A4\uD2B8 \uC911\u2026",
-      removeSite: "\uC0AC\uC774\uD2B8 \uC81C\uAC70",
       buyMeACoffee: "\uCEE4\uD53C \uD55C \uC794 \uC0AC\uC8FC\uAE30",
       newSiteName: "\uC0C8 \uC0AC\uC774\uD2B8"
     }
@@ -18107,7 +18071,7 @@ var FrontmatterManager = class {
 var import_obsidian27 = require("obsidian");
 
 // README.md
-var README_default = '<p align="center">\r\n  <img src="assets/logo.png" width="120" alt="Writing Studio logo">\r\n</p>\r\n\r\n# Writing Studio\r\n\r\n**Version 3.0.2** \xB7 Desktop only\r\n\r\n![GitHub all releases](https://img.shields.io/github/downloads/writerP-777/obsidian-writing-studio/total)\r\n[![OpenSSF Best Practices](https://www.bestpractices.dev/projects/12832/badge)](https://www.bestpractices.dev/projects/12832)\r\n\r\nWriting Studio turns Obsidian into a dedicated environment for serious nonfiction work \u2014 from your first research notes to a finished, exported manuscript. It bundles a project binder, writing modes, focus and typography tools, sprint timer, progress tracking, manuscript export, and WordPress publishing into a single plugin. A built-in sidebar file explorer lets you browse, preview, and pull content from anywhere in your vault without leaving your draft.\r\n\r\n<p align="center">\r\n  <img src="assets/sidebar-explorer-screenshot.png" alt="Writing Studio with the Launcher panel open on the left, an active draft with its word count goal banner in the center, and the Folder Sidebar Explorer previewing a research file on the right" width="900">\r\n  <br>\r\n  <em>Writing Studio in use \u2014 Launcher (left), active draft with word count goal banner (center), Folder Sidebar Explorer open to a research folder (right).</em>\r\n</p>\r\n\r\n<p align="center">\r\n  <a href="https://buymeacoffee.com/writerp777">\r\n    <img src="https://img.buymeacoffee.com/button-api/?text=Buy%20me%20a%20coffee&slug=writerp777&button_colour=c9a84c&font_colour=000000&font_family=Georgia&outline_colour=000000&coffee_colour=ffffff" alt="Buy me a coffee" height="40">\r\n  </a>\r\n</p>\r\n\r\n## Contents\r\n\r\n- [Features](#features)\r\n- [Language support](#language-support)\r\n- [Writing Studio Launcher](#writing-studio-launcher)\r\n- [Folder Sidebar Explorer](#folder-sidebar-explorer)\r\n- [Your Project](#your-project)\r\n- [Your Writing Environment](#your-writing-environment)\r\n- [Tracking Your Progress](#tracking-your-progress)\r\n- [Getting Your Work Out](#getting-your-work-out)\r\n- [Supporting Tools](#supporting-tools)\r\n- [Context Menus](#context-menus)\r\n- [Commands Reference](#commands-reference)\r\n- [Settings Overview](#settings-overview)\r\n- [Ribbon Icon](#ribbon-icon)\r\n- [Installation](#installation)\r\n- [Requirements](#requirements)\r\n- [Reporting a Bug](#reporting-a-bug)\r\n- [Security](#security)\r\n\r\n---\r\n\r\n## Features\r\n\r\n**Writing Binder** \u2014 Your project\'s folder tree, rendered as a manuscript. The binder reads your folders directly, so files created, renamed, or moved anywhere \u2014 even outside Obsidian \u2014 always appear correctly, with no import or scan step. Drag chapters into order, set per-document status and word count goals, and exclude documents from compile with a right-click.\r\n\r\n**Project Manager** \u2014 Create projects from six templates (blank, book, article series, blog collection, journal article, magazine article), set a total word count goal, and switch between projects from the Launcher.\r\n\r\n**Compile Preview** \u2014 Concatenate all binder documents in order and render them as a finished manuscript in a split pane, without exporting.\r\n\r\n**Writing Modes** \u2014 Switch between Draft (distraction-free), Edit (full tooling), and Review (read-only) modes from the status bar, command palette, context menu, or Launcher.\r\n\r\n**Focus Mode** \u2014 Dim everything except the paragraph or sentence you are writing. Configurable dim level, font size override, sidebar collapse, and typewriter scroll.\r\n\r\n**Typography Mode** \u2014 Apply a curated font, constrained line length, and controlled line height to the editor. Fourteen font options including iA Writer fonts, Google Fonts, and custom system fonts.\r\n\r\n**Sprint Timer** \u2014 Run timed writing sessions with a draggable floating overlay. Set duration, word goal, and scope (file or project). Quick-start presets (10 m, 15 m, 25 m) available from the Launcher.\r\n\r\n**Progress Tracking** \u2014 Live word counts in the status bar and Launcher, session delta tracking, per-document and per-project word count goals with inline progress banners, and a 30-day writing log with streak tracking.\r\n\r\n**Export Engine** \u2014 Export to Manuscript (HTML), PDF, Word (.docx), RTF, HTML, Markdown, and EPUB. Manuscript format produces industry-standard layout with no external tools; other formats require Pandoc.\r\n\r\n**WordPress Publishing** \u2014 Publish directly to WordPress from Obsidian. Set post title, status, categories, tags, excerpt, and scheduled date. Supports multiple sites with per-site credentials and connection testing.\r\n\r\n**Folder Sidebar Explorer** \u2014 Browse any vault folder in a sidebar panel. Search by name or file content, preview Markdown files and images inline, and insert selected text directly into the active editor.\r\n\r\n## Language support\r\n\r\nWriting Studio is available in the following languages in addition to English:\r\n\r\n- Arabic\r\n- Bengali\r\n- Brazilian Portuguese\r\n- Chinese (Simplified)\r\n- French\r\n- German\r\n- Hindi\r\n- Japanese\r\n- Korean\r\n- Russian\r\n- Spanish\r\n\r\n**To change the language:** Open **Settings \u2192 General** in Obsidian, scroll to **Language**, and select your preferred language from the list. Restart Obsidian for the change to take effect. Writing Studio will display in the selected language if it is supported.\r\n\r\n**Found a translation error or missing text?** Please open an issue on GitHub \u2014 [Submit a bug report or enhancement request](https://github.com/writerP-777/obsidian-writing-studio/issues/new) \u2014 and include the language, the location in the plugin where the text appears, and what it currently says. We will address it in the next release.\r\n\r\n### Writing Studio Launcher\r\n\r\nThe Launcher is your home base in Writing Studio \u2014 a sidebar panel that shows your active project, progress toward your goals, and one-click access to every major feature.\r\n\r\n<p align="center">\r\n  <img src="assets/launcher-project-card.png" alt="The Launcher project card with the project dropdown and the new project, edit, and delete buttons above the word count and project goal" width="520">\r\n  <br>\r\n  <em>The Launcher project card \u2014 switch projects from the dropdown; word count against the project goal below.</em>\r\n</p>\r\n\r\nBy default Writing Studio launches automatically when Obsidian loads \u2014 the Launcher opens and your last session\'s writing mode and typography are restored. To disable this, turn off **Open on startup** in **Settings \u2192 General**: Obsidian then opens clean, with no Writing Studio status bar items or restored modes, and the studio stays dormant until you launch it yourself. Launching it manually restores your last session state the same way.\r\n\r\n**To open manually:** Click the feather ribbon icon, or assign a hotkey to **Open launcher** in Settings \u2192 Hotkeys.\r\n\r\n**First run:** In a vault with no projects yet, the Launcher shows an orientation card explaining how projects work, with a **Create your first project** button to get started.\r\n\r\n<p align="center">\r\n  <img src="assets/launcher-first-run.png" alt="The Launcher first-run orientation card with an explanation of projects and a Create your first project button" width="520">\r\n  <br>\r\n  <em>First run \u2014 the orientation card shown before any project exists.</em>\r\n</p>\r\n\r\n**The Launcher includes:**\r\n- Active project name, total word count, and progress toward your project word count goal\r\n- Writing mode selector (Draft / Edit / Review)\r\n- Focus Mode and Typography Mode toggles\r\n- Sprint timer with "Set up sprint" button and Quick Sprint Options presets (10 m, 15 m, 25 m)\r\n- Today card showing words written, sprints completed, session word count, and streak\r\n- Quick-action buttons: Targets Dashboard, Writing Dashboard, Preview manuscript, Export, Writing Log, Publish to WordPress\r\n\r\n---\r\n\r\n### Folder Sidebar Explorer\r\n\r\nThe Folder Sidebar Explorer opens any vault folder in a right-sidebar panel, letting you browse reference material, research notes, or any folder outside your active project without leaving your draft. Unlike the Binder \u2014 which is scoped to your writing project \u2014 the sidebar explorer works with any folder in your vault.\r\n\r\n<p align="center">\r\n  <img src="assets/folder-sidebar-explorer.png" alt="The Folder Sidebar Explorer panel with a Markdown file open in preview, showing the breadcrumb trail, back and root buttons, and the insert selection button" width="340">\r\n  <br>\r\n  <em>The Folder Sidebar Explorer with a research file open in preview \u2014 select text and click insert selection to pull it into your draft.</em>\r\n</p>\r\n\r\n**To open:**\r\n- Use the command **Open folder in sidebar explorer** from the command palette \u2014 a folder picker appears so you can choose which folder to explore.\r\n- Right-click any folder in the file explorer and choose **Open in sidebar explorer** under **Writing studio options**.\r\n- Right-click any folder in [Notebook Navigator](https://github.com/johansan/notebook-navigator) and choose **Open in sidebar explorer** (requires Notebook Navigator to be installed).\r\n- Assign a hotkey in Settings \u2192 Hotkeys.\r\n\r\nThe panel opens in the **right sidebar**. The folder you open becomes the **root folder** for that session \u2014 the breadcrumb trail, the \u2302 root button, and search all operate relative to it.\r\n\r\n**Browsing and navigation:**\r\n\r\n| Feature | How to use |\r\n|---------|-----------|\r\n| Browse into a subfolder | Click the folder |\r\n| Preview a Markdown file | Click the file \u2014 the folder listing is replaced by a rendered preview inside the panel |\r\n| Preview an image | Click the file \u2014 displayed inline |\r\n| Preview audio | Click the file \u2014 player appears inline |\r\n| Other file types | Click the file \u2014 an **Open in editor** button appears |\r\n| Go back | Click **\u2190 back**, or press `Backspace` when the list has keyboard focus |\r\n| Return to root folder | Click **\u2302 root** to jump back to the folder you originally opened |\r\n| Keyboard navigation | Tab to focus the list, then `\u2191` / `\u2193` to move, `Enter` to open, `Backspace` to go back |\r\n| Breadcrumb navigation | Click any segment in the breadcrumb trail to jump directly to that folder |\r\n\r\n**Search:**\r\n\r\nA search bar appears at the top of the folder list. Type your query and press **Enter** to run the search.\r\n\r\n- Searches **both folder/file names and file contents** (`.md` and `.txt` files).\r\n- Frontmatter is excluded from content search to avoid false positives from YAML fields.\r\n- Name matches show the matched term highlighted in the result title.\r\n- Content matches show a text snippet around the match with the term highlighted, plus a **CONTENT** badge to distinguish them from name matches.\r\n- Results always search from the root folder, regardless of which subfolder you are currently browsing.\r\n- Click **\xD7** to clear the search and return to the normal folder view.\r\n\r\n**Sort:**\r\n\r\nA sort dropdown sits next to the search bar. Options:\r\n\r\n| Option | Description |\r\n|--------|-------------|\r\n| Folders \u2191 A-Z | Folders first, then files, both alphabetical (default) |\r\n| Folders \u2191 Z-A | Folders first, then files, both reverse-alphabetical |\r\n| Name A-Z | All items alphabetical, folders and files mixed |\r\n| Name Z-A | All items reverse-alphabetical, mixed |\r\n| Newest first | Sort by last-modified date, newest at top |\r\n| Oldest first | Sort by last-modified date, oldest at top |\r\n\r\n**Copy content to the editor:**\r\n\r\nWhen a Markdown file is open in preview mode (after clicking it in the file list), its text is selectable. To insert a passage into the active editor:\r\n\r\n1. Click a file in the list \u2014 the panel switches to preview mode showing the rendered file.\r\n2. Select the text you want in the preview pane.\r\n3. Click the **\u21A9 insert selection** button in the nav bar.\r\n4. The selected text is inserted at the cursor position in the active editor.\r\n\r\nThe preview is read-only \u2014 you cannot edit the file from the sidebar.\r\n\r\n**Hover tooltips:**\r\n\r\nHover over any file or folder in the list to see an information card:\r\n\r\n| Item type | Information shown |\r\n|-----------|------------------|\r\n| Markdown / text file | Last modified date and time \xB7 File size \xB7 Word count (frontmatter excluded) |\r\n| Image / audio / other file | Last modified date and time \xB7 File size |\r\n| Folder | Total file count \xB7 Subfolder count |\r\n\r\nThe word count updates asynchronously from Obsidian\'s file cache and appears within a moment of hover.\r\n\r\n---\r\n\r\n### Your Project\r\n\r\n#### Project Manager\r\n\r\nProjects group a set of documents (binder items) and act as the scope for export, statistics, and the word count goal banner.\r\n\r\n**To create a project:** Use the command **Create new writing project** from the command palette, or click the **+** button next to the project dropdown in the Launcher or Binder panel.\r\n\r\n**To switch projects:** Use the Launcher panel or the project selector at the top of the Binder panel.\r\n\r\n**To edit a project:** Click the pencil icon in the Launcher project card or next to the project selector in the Binder. You can change the title, author, description, total word count goal, and the document folder \u2014 the folder inside the project that holds its documents (for example, renaming a book project\'s `Chapters/` to `Scenes/` renames the folder and moves its files with it; the binder follows automatically, as it also does when you rename the folder directly in the file explorer). The project folder itself keeps its original name \u2014 renaming the title does not move any files.\r\n\r\n**To delete a project:** Click the trash icon in the Launcher project card or next to the project selector in the Binder, then confirm. This removes the project from Writing Studio\'s list only \u2014 the project folder and all its documents stay untouched in your vault.\r\n\r\n<p align="center">\r\n  <img src="assets/edit-project-modal.png" alt="The Edit project modal with fields for project title, author name, document folder, total word count goal, and description, and a Save button" width="560">\r\n  <br>\r\n  <em>The Edit project modal \u2014 change the title, author, document folder, description, and total word count goal.</em>\r\n</p>\r\n\r\nEach project stores:\r\n- Title, type, author, and description\r\n- Ordered binder with chapters, sections, articles, and notes\r\n- Per-item word count goals, statuses, and export flags\r\n- Optional total word count goal (shown in the Launcher and status bar)\r\n\r\n**Project templates available at creation:**\r\n\r\n| Template | Structure created |\r\n|----------|------------------|\r\n| Blank | Empty \u2014 build your own structure |\r\n| Book | Front Matter, Part 1 / Chapter 1, Back Matter |\r\n| Article series | Series Overview note (with article schedule), Article 1 placeholder |\r\n| Blog collection | Date-organized folder, first post placeholder |\r\n| Journal article | Title Page, Abstract, Keywords, Introduction, Literature Review, Methodology, Findings / Analysis, Discussion, Conclusion, References, Appendices |\r\n| Magazine article | Pitch / Query Notes, Headline & Deck, Lede, Nut Graf, Body, Quotes & Sources, Kicker, Fact-Check Notes, Author Bio |\r\n\r\n---\r\n\r\n#### Writing Binder\r\n\r\nKeeping a book-length manuscript organized means knowing at a glance which chapters are drafted, which are in progress, and what will compile into the finished manuscript. The Binder is a sidebar panel that shows all of that for your active project.\r\n\r\nThe binder reads your folders directly \u2014 the project folder tree *is* the manuscript structure. Organize your work in the binder or in your computer\'s file explorer, and both always match: files created, renamed, moved, or deleted outside Obsidian appear correctly with no scan or import step. A document\'s filename is its title. Status (Draft, In Progress, Complete, Published) shows as a colored stripe on the row\'s left edge, folders carry document-count badges, documents excluded from compile render dimmed, and hovering any row shows its on-disk name and the settings the binder reads from it.\r\n\r\nBelow the manuscript, **Research** and **Exports** are pinned as drawer tabs with live file counts. Research holds markdown notes that never compile (drag documents in and out of it freely); Exports is output-only, written by the export engine. Non-markdown files are visible and openable everywhere but stay outside the manuscript.\r\n\r\n<p align="center">\r\n  <img src="assets/binder-tree.png" alt="The binder showing a manuscript tree with folder count badges, colored status stripes, a dimmed compile-excluded document, and Research and Exports drawer tabs with file counts at the bottom" width="520">\r\n  <br>\r\n  <em>The binder \u2014 status stripes on the left edge, count badges on folders, a dimmed compile-excluded document, and the Research and Exports drawer below.</em>\r\n</p>\r\n\r\n**To open:** Use the command **Open binder** from the command palette, or assign a hotkey in Settings \u2192 Hotkeys.\r\n\r\n**Ordering:**\r\n\r\nDrag to reorder documents and folders. A document\'s position is stored in its own frontmatter (`binder-order`), so it travels with the file; a folder\'s position lives in a name marker (`020~ Part One`) that the binder hides in display. Anything without a saved position sorts naturally \u2014 A to Z, numbers in numeric order \u2014 after ordered items. Reordering never renames your documents.\r\n\r\n**Moving things:**\r\n\r\nDragging physically moves files and folders: drop between rows to reorder, onto a folder to nest inside it, on the empty space below the tree to move to the project root, or onto the Research drawer tab to move a document out of the manuscript. A folder drag carries all its children, and links heal automatically on every move.\r\n\r\n**Control strip:**\r\n\r\nA two-row control strip at the top of the binder keeps the high-frequency writing controls next to your documents, so the daily loop doesn\'t require switching to the launcher tab. The top row is a Draft / Edit / Review segmented control (clicking the active mode switches back to normal). The bottom row holds Focus and Typography toggles, a sprint chip (its menu offers the set-up modal and 10/15/25-minute quick starts; an armed sprint shows a ready chip with the duration), and a **...** menu with the occasional actions: export, publish, preview manuscript, targets dashboard, writing dashboard, and writing log. The launcher keeps its own copies of all controls, and every surface stays in sync no matter where a change is made.\r\n\r\n<p align="center">\r\n  <img src="assets/binder-control-strip.png" alt="The binder control strip with Draft, Edit, and Review on the top row and Focus, Typography, Sprint, and an overflow menu on the bottom row, above the project selector, toolbar, and document tree" width="520">\r\n  <br>\r\n  <em>The binder control strip \u2014 writing modes on top; focus, typography, sprint, and overflow controls below.</em>\r\n</p>\r\n\r\n<p align="center">\r\n  <img src="assets/binder-strip-overflow.png" alt="The binder overflow menu open, showing export, publish to WordPress, preview manuscript, targets dashboard, writing dashboard, and writing log" width="520">\r\n  <br>\r\n  <em>The overflow menu holds the less frequent actions: export, publish, preview, and the dashboards and log.</em>\r\n</p>\r\n\r\n**Keyboard navigation:**\r\n\r\nThe binder tree is fully keyboard-operable. Tab to focus the list, then:\r\n\r\n| Key | Action |\r\n|-----|--------|\r\n| `\u2191` / `\u2193` | Move through visible documents and folders |\r\n| `\u2192` | Expand a collapsed folder, or step into an open one |\r\n| `\u2190` | Collapse an open folder, or jump to the parent |\r\n| `Enter` | Open the document, or expand/collapse a folder |\r\n| `F2` | Rename the focused item inline (Enter commits, Escape cancels) |\r\n| `Shift+F10` or menu key | Open the item\'s right-click menu |\r\n\r\n**Opening and renaming documents:**\r\n\r\nA single click on a document opens it immediately. Rename an item from its right-click menu, or by pressing **F2** while it is focused (Enter commits, Escape cancels). Renaming in the binder renames the file itself \u2014 links heal automatically \u2014 and invalid names are rejected with a specific message, never silently altered.\r\n\r\n**Creating documents and folders:**\r\n\r\nToolbar buttons create a document or folder at the manuscript root; a folder\'s right-click menu creates inside it, and a document\'s menu creates beside it. New documents prompt for a title up front rather than being named "Untitled."\r\n\r\n**Right-click menu:**\r\n\r\nRight-click any item for its full set of actions \u2014 rename, set status, set a word count goal, set an optional document type, exclude a document from compile (or re-include it), create a document or folder, or delete to the trash (a folder\'s confirmation states how many files it contains).\r\n\r\n<p align="center">\r\n  <img src="assets/binder-context-menu.png" alt="The binder right-click menu on a document, showing rename, status options, set word count goal, change type options, exclude from compile, new document, new folder, and delete" width="520">\r\n  <br>\r\n  <em>A document\'s right-click menu \u2014 status, goal, type, and compile controls in one place.</em>\r\n</p>\r\n\r\n**Organizing with folders:**\r\n\r\nFolders are the structure. The book template creates a part folder for you, and any structure you build \u2014 in the binder or in your file explorer \u2014 is the manuscript\'s structure. Adding a file to a project is simply moving it into the project folder; it appears in the binder immediately, and files copied in outside of Obsidian show up the same way with no import step.\r\n\r\n**Upgrading from an earlier version:**\r\n\r\nThe first time you open an existing project, Writing Studio arranges its folders to match what your old binder showed \u2014 creating folders and moving documents, deleting nothing, and never changing your writing. A one-time notice explains this, and the command **Restore previous binder layout** puts your folders back the way they were if you preferred your earlier arrangement. Everything in your project folder is now part of the compiled manuscript. Check the compile preview before your first export, and use Exclude from compile on anything you want left out.\r\n\r\n---\r\n\r\n#### Compile Preview\r\n\r\nThe Compile Preview opens a split pane showing all binder documents for the active project concatenated in order, rendered as a finished manuscript.\r\n\r\n**To open:** Use the command **Preview compiled manuscript** from the command palette, or click the **Preview manuscript** button in the Launcher panel.\r\n\r\n---\r\n\r\n### Your Writing Environment\r\n\r\n#### Writing Modes\r\n\r\nThree modes shape how the editor behaves. The current mode is always shown in the status bar. Click the mode pill in the status bar to switch modes.\r\n\r\n| Mode | Purpose |\r\n|------|---------|\r\n| **Draft** | Distraction-free drafting; spell-check and formatting hints suppressed |\r\n| **Edit** | Revision pass; full editor tooling active |\r\n| **Review** | Read-only style; ideal for a final proofread |\r\n| **None** | Normal Obsidian behavior |\r\n\r\n**To switch modes:**\r\n- Click the mode indicator in the status bar.\r\n- Right-click inside the editor, then choose **Switch writing mode \u2192** under **Writing studio options**.\r\n- Assign hotkeys to **Switch to draft mode / Edit mode / Review mode** in Settings \u2192 Hotkeys.\r\n- Use the Writing Studio Launcher panel.\r\n\r\nThe active mode is saved and restored the next time Writing Studio launches \u2014 automatically at startup when **Open on startup** is enabled, or when you next open the Launcher or switch a mode.\r\n\r\n---\r\n\r\n#### Focus Mode\r\n\r\nFocus Mode dims everything in the editor except the paragraph or sentence you are currently writing, reducing visual noise and keeping attention on the active thought.\r\n\r\n**To toggle:** Assign a hotkey to **Toggle focus mode** in Settings \u2192 Hotkeys, or use the toggle in the Launcher panel. Press `Escape` to exit.\r\n\r\n**Settings (Settings \u2192 Focus mode):**\r\n\r\n| Setting | Description |\r\n|---------|-------------|\r\n| Focus unit | Highlight at the **paragraph** or **sentence (line)** level |\r\n| Dim opacity | How opaque the dimmed text appears (10\u201350%) |\r\n| Font size override | Override the editor font size while focused; 0 = use theme default. Takes precedence over Typography Mode\'s font size while Focus Mode is active |\r\n| Auto-hide sidebars | Collapse left and right sidebars when Focus Mode activates |\r\n| Typewriter scroll | Keep the active line vertically centered as you type |\r\n\r\n---\r\n\r\n#### Typography Mode\r\n\r\nTypography Mode applies a consistent, reader-friendly text treatment to the editor: a curated font, constrained line length, controlled line height, and optional letter spacing.\r\n\r\n**To toggle:** Assign a hotkey to **Toggle typography mode** in Settings \u2192 Hotkeys, or use the toggle in the Launcher panel.\r\n\r\n**To change the font while Typography Mode is active:** Right-click inside the editor and choose **Typography font \u2192** under **Writing studio options**. A font picker menu appears with all available fonts; the active font is shown with a checkmark. Selecting a font applies it immediately and saves the setting.\r\n\r\n> **Note on fonts:** Typography fonts are loaded from Google Fonts and require an internet connection the first time each font is used. After the initial load they are cached and work offline.\r\n\r\n**Settings (Settings \u2192 Typography):**\r\n\r\n| Setting | Description |\r\n|---------|-------------|\r\n| Font family | Choose from the curated font list or enter a custom font name |\r\n| Custom font name | Used when **Custom font name\u2026** is selected above |\r\n| Max line length | Characters per line (55\u201380); constrains the editor column width |\r\n| Font size | Editor font size in pixels |\r\n| Line height | Multiplier; default 1.7 |\r\n| Letter spacing | CSS `letter-spacing` value (e.g. `normal`, `0.02em`) |\r\n| Persist across sessions | Restore Typography Mode when Writing Studio next launches |\r\n\r\n**Available fonts:**\r\n\r\n| Option | Font |\r\n|--------|------|\r\n| Monospaced | iA Writer Mono (falls back to Roboto Mono / Courier New) |\r\n| Serif | iA Writer Duo Serif (falls back to Georgia) |\r\n| Sans-serif | iA Writer Quattro (falls back to system sans-serif) |\r\n| Cormorant Garamond | Elegant display serif |\r\n| Crimson Text | Classic book serif |\r\n| EB Garamond | Traditional Garamond revival |\r\n| Libre Baskerville | Readable web serif |\r\n| Libre Caslon Text | Clean slab serif |\r\n| Literata | Designed for long-form reading |\r\n| Lora | Contemporary calligraphic serif |\r\n| Inter | Modern humanist sans-serif |\r\n| Lato | Friendly rounded sans-serif |\r\n| Source Sans 3 | Clean UI sans-serif |\r\n| Custom font name\u2026 | Use any font installed on your system |\r\n\r\n---\r\n\r\n### Tracking Your Progress\r\n\r\n#### Writing Sprint Timer\r\n\r\nThe Sprint Timer runs a timed writing session. When a sprint is active, a floating overlay displays the countdown and gives you full control \u2014 without requiring you to stay on the dashboard.\r\n\r\n**To set up a sprint:**\r\n\r\n- Click **Set up sprint** in the Launcher panel to open the sprint configuration modal.\r\n- Or click one of the **Quick Sprint Options** preset buttons (10 m, 15 m, 25 m) in the Launcher panel to load a duration directly.\r\n\r\nEither path opens the floating overlay in a ready state \u2014 the timer does not start until you press \u25B6 on the overlay itself. This gives you time to navigate to your draft or open the Binder before the clock begins.\r\n\r\n**Sprint configuration modal:**\r\n\r\nThe modal lets you set:\r\n\r\n- Duration (preset or custom, in minutes)\r\n- Word count goal for the session\r\n- Scope (current file or entire project)\r\n\r\nClick **Launch sprint timer** to open the overlay in ready state.\r\n\r\n**Using the floating overlay:**\r\n\r\n| Control | Action |\r\n|---------|--------|\r\n| \u25B6 | Start or resume the sprint |\r\n| \u23F8 | Pause the sprint |\r\n| \u25A0 | Stop and end the sprint |\r\n\r\nThe overlay is draggable \u2014 click and drag the header to reposition it anywhere on screen. It stays on top regardless of writing mode or Focus Mode. The current countdown is also shown in the Obsidian status bar (`\u23F1 MM:SS`) and, when Focus Mode is active, in the focus toolbar.\r\n\r\nWhen the sprint ends, a summary modal shows words written, duration, and words-per-minute. The session is logged to sprint history and optionally appended to your Daily Note.\r\n\r\n**Settings (Settings \u2192 Sprint & goals):**\r\n\r\n| Setting | Description |\r\n|---------|-------------|\r\n| Default sprint duration | Starting value in the sprint modal (minutes) |\r\n| Default daily word goal | Target used in the Writing Dashboard and Launcher |\r\n| Sound notifications | Play a tone when the sprint ends |\r\n| Sprint history retention | Days to keep sprint records before purging |\r\n| Inline goal banner | Show a progress bar below the editor toolbar when a document has a word count goal set |\r\n\r\n---\r\n\r\n#### Word Count Goal\r\n\r\nA per-document word count goal can be set and tracked inline.\r\n\r\n**To set a goal:**\r\n- Use the command **Set word count goal** from the command palette.\r\n- Right-click inside the editor and choose **Set word count goal** under **Writing studio options**.\r\n\r\nWhen a goal is set and **Inline goal banner** is enabled, a progress bar appears below the editor toolbar showing current words, goal, and percentage. It updates in real time as you type.\r\n\r\n---\r\n\r\n#### Session Word Count\r\n\r\nThe status bar shows a `(+N)` delta next to the current file\'s word count, indicating how many words you have added since opening that file this session. The Launcher\'s **Today** card also shows a cumulative session total across all files opened during the current Obsidian session. Both counts reset when Obsidian restarts.\r\n\r\n---\r\n\r\n#### Project Word Count Goal\r\n\r\nWhen an active project has a total word count goal set, a dedicated status bar item shows `{current} / {goal} project words`. This updates automatically as you write. Set a project goal in the Project modal when creating or editing a project.\r\n\r\n---\r\n\r\n#### Writing Dashboard\r\n\r\nThe Writing Dashboard shows session statistics (words written, sprints completed, time), sprint history, daily progress toward your goal, and per-project word counts with reading time.\r\n\r\n**To open:** Use the command **Open writing dashboard** from the command palette, or click the **Writing dashboard** button in the Launcher panel.\r\n\r\n---\r\n\r\n#### Targets Dashboard\r\n\r\nThe Targets Dashboard lets you assign word count goals to individual documents in the active project\'s binder and track progress across the whole project at a glance. Goals can be edited inline in the table. Rows are sortable and filterable by status.\r\n\r\n**To open:** Use the command **Open targets dashboard**, click the **Targets dashboard** button in the Launcher panel, or assign a hotkey in Settings \u2192 Hotkeys.\r\n\r\n---\r\n\r\n#### Daily Writing Log\r\n\r\nThe Writing Log is a sidebar panel that shows your writing history at a glance.\r\n\r\n**To open:** Use the command **Open writing log** from the command palette, or click the **Writing log** button in the Launcher panel.\r\n\r\n**The Writing Log shows:**\r\n- Current streak (days in a row with at least one sprint)\r\n- This session: total session words, sprint words, sprints completed, and minutes written\r\n- Recent activity: a bar chart with one row per day you wrote, each showing word count, sprints completed, and a visual bar proportional to the day\'s output. Days with no writing are collapsed rather than shown as empty rows, so the log stays focused on the days you actually worked.\r\n\r\nWhen **Append to daily note** is enabled (Settings \u2192 Writing log), a summary of each completed sprint is also appended to today\'s Daily Note.\r\n\r\n---\r\n\r\n### Getting Your Work Out\r\n\r\n#### Export Engine\r\n\r\nWhen your draft is ready, the Export Engine converts it to a finished file in your chosen format \u2014 no reformatting required.\r\n\r\n**Supported formats:** Manuscript (HTML) \xB7 PDF \xB7 Word (.docx) \xB7 RTF \xB7 HTML \xB7 Markdown \xB7 EPUB\r\n\r\n**To export:**\r\n- Right-click inside the editor and choose **Export this document** under **Writing studio options**.\r\n- Use the command **Export document** from the command palette.\r\n- Click the **Export** button in the Launcher panel.\r\n- Assign a hotkey to **Export document** in Settings \u2192 Hotkeys.\r\n- Right-click a folder in the binder and choose **Export folder** to export just that part of the manuscript.\r\n\r\n**One title names the export**\r\n\r\nThe export dialog\'s **Title** dropdown sets the export\'s filename, its title page heading, and the file\'s metadata in one place \u2014 the three are always identical. A whole-project or single-document export offers the project name or a title you type yourself; a folder export adds **Folder name** (the default) and **Project \u2014 folder** forms. Choosing **Type your own title** keeps Export disabled until you type one, so an export is never accidentally untitled.\r\n\r\nThe compile preview renders exactly what the dialog\'s current selections will produce \u2014 same documents, same headings, same title page \u2014 and when you proceed to export from the preview, your selections carry back into the dialog.\r\n\r\n<p align="center">\r\n  <img src="assets/export-modal-title.png" alt="The export dialog with the Title dropdown open on a folder export, showing Folder name, Project \u2014 folder, Project name, and Type your own title" width="560">\r\n  <br>\r\n  <em>The Title dropdown \u2014 one choice names the filename, the title page, and the file metadata.</em>\r\n</p>\r\n\r\n**Manuscript format**\r\n\r\nThe Manuscript format produces a self-contained HTML file formatted to industry-standard manuscript conventions:\r\n- Courier New 12 pt, double-spaced, 1-inch margins\r\n- Title page with the export\'s chosen title, author name, approximate word count, and optional contact information\r\n- Chapter headings in uppercase, page-break before each\r\n- Scene breaks rendered as `#` (the standard manuscript convention)\r\n\r\nNo external tools are required for manuscript export.\r\n\r\n**Settings (Settings \u2192 Export):**\r\n\r\n| Setting | Description |\r\n|---------|-------------|\r\n| Default export format | Pre-selected format in the export modal |\r\n| Default paper size | Letter (US) or A4 |\r\n| Export font | Font name used in PDF/DOCX output (e.g. `Georgia`) |\r\n| Export font size | Point size for PDF/DOCX output |\r\n| Pandoc path | Full path to the `pandoc` binary if it is not on your system PATH |\r\n| PDF engine | Engine Pandoc uses for PDF export. **Auto** (default) picks an installed LaTeX engine \u2014 `xelatex` or `lualatex` when a custom font is set, `pdflatex` otherwise. Pin a specific engine to always use it; if a pinned engine is not installed the export fails with a message naming it rather than silently substituting another |\r\n| PDF engine location | Folder containing the PDF engine binaries \u2014 or full path to one engine binary \u2014 when the engine is not on the system PATH. Leave blank to search the PATH plus common install locations |\r\n| EPUB language | BCP 47 language tag (e.g. `en`, `fr`, `de`) |\r\n| EPUB include cover | Generate a text cover page when no cover image is provided |\r\n\r\n> **Requirement:** Pandoc must be installed for PDF, DOCX, RTF, HTML, and EPUB export. Download from [pandoc.org](https://pandoc.org/installing.html). For PDF export, a LaTeX distribution (e.g. TeX Live or MiKTeX) is also required \u2014 unless the PDF engine setting is pinned to [wkhtmltopdf](https://wkhtmltopdf.org/), which renders PDFs without LaTeX. Manuscript (HTML) export does not require Pandoc.\r\n>\r\n> **macOS note:** apps launched from the Dock don\'t see the shell PATH, so a correctly installed TeX Live or Homebrew binary can still be "not found." Common install locations (`/Library/TeX/texbin`, `/opt/homebrew/bin`, `/usr/local/bin`) are searched automatically; for anything else, set the PDF engine location setting.\r\n>\r\n> **Font note:** the export font setting applies only to the LaTeX PDF path (`xelatex`/`lualatex`; `pdflatex` cannot apply custom fonts either). The `wkhtmltopdf` path takes its typography from Pandoc\'s HTML/CSS output, so the export font setting is ignored there \u2014 the plugin tells you when a font was skipped for this reason.\r\n>\r\n> **Formatting note:** the built-in converter used for HTML, Manuscript, and EPUB output supports headings, paragraphs, lists, blockquotes, fenced code blocks, tables, images, and links. Nested lists, setext (underline-style) headings, and footnotes are not converted \u2014 use a Pandoc format (PDF, DOCX, RTF) if your manuscript depends on them.\r\n\r\n---\r\n\r\n#### WordPress Publishing\r\n\r\nPublish your finished draft directly to WordPress without leaving Obsidian. The modal lets you choose the target site, set the post title, status, categories, tags, excerpt, and an optional scheduled publication date.\r\n\r\n**To publish:**\r\n- Right-click inside the editor and choose **Publish to WordPress** under **Writing studio options**.\r\n- Use the command **Publish to WordPress** from the command palette.\r\n- Click the **Publish to WordPress** button in the Launcher panel.\r\n- Assign a hotkey to **Publish to WordPress** in Settings \u2192 Hotkeys.\r\n\r\n**Setting up a site (Settings \u2192 WordPress):**\r\n\r\n1. Click **+ add WordPress site**.\r\n2. Enter a nickname, the site URL (e.g. `https://yourblog.com`), and your WordPress username.\r\n3. Generate an application password in WordPress under **Users \u2192 Profile \u2192 Application passwords** and paste it into the **Application password** field.\r\n4. Click **Test connection** to verify.\r\n\r\n**Per-site options:**\r\n\r\n| Setting | Description |\r\n|---------|-------------|\r\n| Default post status | Draft \xB7 Pending Review \xB7 Published |\r\n| Wikilink handling | **Strip** removes `[[...]]` syntax, leaving plain text \xB7 **Convert** turns wikilinks into URLs |\r\n\r\n**Preserving your credentials across updates**\r\n\r\nWriting Studio stores your WordPress site credentials in your vault\'s `.obsidian/plugins/writing-studio/data.json` file. Obsidian\'s in-app update process does not touch this file \u2014 your credentials are preserved automatically. However, if you uninstall and reinstall the plugin manually, or if a vault sync conflict overwrites `data.json`, credentials will be lost and will need to be re-entered. To avoid this, always use Obsidian\'s built-in Update button rather than uninstalling manually.\r\n\r\n---\r\n\r\n### Supporting Tools\r\n\r\n#### Frontmatter Manager\r\n\r\nWriting Studio automatically manages YAML frontmatter in your documents when **Frontmatter auto-update** is enabled. On every save it updates:\r\n\r\n- `word-count` \u2014 current word count\r\n- `modified` \u2014 last-modified date\r\n\r\nThe `word-count-goal` frontmatter field is read by the inline goal banner and the Word Count Goal modal.\r\n\r\n---\r\n\r\n## Context Menus\r\n\r\nWriting Studio adds items to Obsidian\'s right-click context menus. All Writing Studio items are grouped together under the heading **Writing studio options** to distinguish them from other plugins and Obsidian\'s built-in options.\r\n\r\n### Right-click inside an open document (editor menu)\r\n\r\n| Option | Action |\r\n|--------|--------|\r\n| Export this document | Open the export modal for the current file |\r\n| Publish to WordPress | Open the WordPress publish modal for the current file |\r\n| Set word count goal | Set a word count target for the current document |\r\n| Switch writing mode \u2192 | Open a mode-switcher menu (Draft / Edit / Review / None) |\r\n| Typography font \u2192 | Open a font picker menu to change the typography font (visible only when Typography Mode is active) |\r\n\r\n### Right-click a folder in the file explorer\r\n\r\n| Option | Action |\r\n|--------|--------|\r\n| Open in sidebar explorer | Open the folder in the Folder Sidebar Explorer panel |\r\n\r\n---\r\n\r\n## Commands Reference\r\n\r\nNo default hotkeys are assigned. All commands can be given a hotkey in **Settings \u2192 Hotkeys**.\r\n\r\n| Command | Description |\r\n|---------|-------------|\r\n| Open launcher | Open the launcher sidebar panel |\r\n| Open binder | Open the writing binder sidebar panel |\r\n| Open writing log | Open the daily writing log panel |\r\n| Toggle focus mode | Enable or disable focus mode |\r\n| Toggle typography mode | Enable or disable typography mode |\r\n| Switch to draft mode | Activate draft writing mode |\r\n| Switch to edit mode | Activate edit writing mode |\r\n| Switch to review mode | Activate review writing mode |\r\n| Start writing sprint | Open the sprint timer modal |\r\n| Export document | Export the current document |\r\n| Export project | Export the full project |\r\n| Preview compiled manuscript | Open the compile preview pane |\r\n| Publish to WordPress | Publish the current document to WordPress |\r\n| Create new writing project | Create a new writing project |\r\n| Open writing dashboard | Open the statistics dashboard |\r\n| Open targets dashboard | Open the word count targets panel |\r\n| Set word count goal | Set a per-document word count goal |\r\n| Open folder in sidebar explorer | Search and open a vault folder in the sidebar |\r\n| Restore previous binder layout | Put a project\'s folders back the way they were before the one-time folder arrangement |\r\n\r\n---\r\n\r\n## Settings Overview\r\n\r\nOpen via **Settings \u2192 Writing Studio**.\r\n\r\n| Tab | What it controls |\r\n|-----|-----------------|\r\n| General | Open on startup, default project folder, author name, document type, frontmatter auto-update |\r\n| Focus mode | Focus unit, dim opacity, font override, sidebar behavior, typewriter scroll |\r\n| Typography | Font family, custom font name, line length, font size, line height, letter spacing, persistence |\r\n| Sprint & goals | Sprint duration, daily goal, sound notifications, history retention, inline banner |\r\n| Export | Format, paper size, font, font size, Pandoc path, PDF engine, PDF engine location, EPUB language, EPUB cover |\r\n| Writing log | Append sprint summaries to Daily Note |\r\n| WordPress | Site credentials, default post status, wikilink handling |\r\n\r\n---\r\n\r\n## Ribbon Icon\r\n\r\nWriting Studio adds a single icon to the Obsidian ribbon.\r\n\r\n| Icon | Action |\r\n|------|--------|\r\n| Feather | Open the Writing Studio Launcher panel |\r\n\r\nAll other features are accessible from the Launcher panel, the command palette, context menus, or assigned hotkeys.\r\n\r\n---\r\n\r\n## Installation\r\n\r\n1. Download `main.js`, `manifest.json`, and `styles.css` from the latest [GitHub release](../../releases/latest).\r\n2. Create the folder `<vault>/.obsidian/plugins/writing-studio/` if it does not exist.\r\n3. Copy the three files into that folder.\r\n4. In Obsidian, go to **Settings \u2192 Community Plugins**, find **Writing Studio**, and enable it.\r\n\r\n> **Building from source:** Clone the repository, run `npm install`, then `npm run build`. Copy the three output files as above.\r\n\r\n---\r\n\r\n## Requirements\r\n\r\nMost features work out of the box. A few require additional software for specific functions, noted below.\r\n\r\n| Requirement | When needed |\r\n|-------------|-------------|\r\n| Obsidian 1.8.7 or later | Always |\r\n| Desktop (Windows, macOS, Linux) | Always \u2014 this plugin does not run on mobile |\r\n| Internet connection | First use of each Typography Mode font (cached after that) |\r\n| [Pandoc](https://pandoc.org/installing.html) | Export to PDF, DOCX, RTF, HTML, EPUB |\r\n| LaTeX (TeX Live / MiKTeX) or [wkhtmltopdf](https://wkhtmltopdf.org/) | Export to PDF only (wkhtmltopdf must be pinned in the PDF engine setting) |\r\n| WordPress 5.6+ with REST API enabled | WordPress publishing |\r\n| WordPress Application Password | WordPress publishing |\r\n\r\n---\r\n\r\n## Reporting a Bug\r\n\r\nIf something isn\'t working, please open an issue on GitHub:\r\n\r\n**[Submit a bug report](https://github.com/writerP-777/obsidian-writing-studio/issues/new)**\r\n\r\nInclude the following when you report:\r\n\r\n- Writing Studio version (visible in **Settings \u2192 Community Plugins**)\r\n- Obsidian version (visible in **Settings \u2192 About**)\r\n- Operating system (Windows / macOS / Linux) and version\r\n- What you expected to happen\r\n- What actually happened, and any steps to reproduce it\r\n\r\nFeature requests are welcome in the same place \u2014 please label them as **[Feature Request]** in the issue title.\r\n\r\n---\r\n\r\n## Security\r\n\r\n[![CodeQL](https://github.com/writerP-777/obsidian-writing-studio/actions/workflows/codeql.yml/badge.svg)](https://github.com/writerP-777/obsidian-writing-studio/actions/workflows/codeql.yml)\r\n[![OpenSSF Scorecard](https://api.securityscorecards.dev/projects/github.com/writerP-777/obsidian-writing-studio/badge)](https://securityscorecards.dev/viewer/?uri=github.com/writerP-777/obsidian-writing-studio)\r\n[![OpenSSF Baseline](https://www.bestpractices.dev/projects/12832/baseline)](https://www.bestpractices.dev/projects/12832)\r\n[![ESLint](https://github.com/writerP-777/obsidian-writing-studio/actions/workflows/eslint.yml/badge.svg)](https://github.com/writerP-777/obsidian-writing-studio/actions/workflows/eslint.yml)\r\n[![ORCID](https://img.shields.io/badge/ORCID-0009--0009--8598--2069-brightgreen?logo=orcid&logoColor=white)](https://orcid.org/0009-0009-8598-2069)\r\n\r\nEvery push and pull request is scanned automatically:\r\n\r\n| Tool | What it checks |\r\n|------|----------------|\r\n| **CodeQL** | Static analysis for security vulnerabilities (XSS, injection, unsafe patterns) in TypeScript/JavaScript source |\r\n| **OpenSSF Scorecard** | Supply-chain security posture: dependency hygiene, branch protection, signed releases, and more |\r\n| **ESLint** (`eslint-plugin-obsidianmd`) | Obsidian plugin guideline compliance \u2014 fails on any warning or error |\r\n\r\nResults are published to the **Security** tab of this repository (GitHub code scanning).\r\n\r\nFor local development, a pre-commit hook runs ESLint (blocking) and a pre-push hook runs a full CodeQL scan (blocks the push if any HIGH or CRITICAL findings are present). Install the [CodeQL CLI](https://github.com/github/codeql-cli-binaries/releases) to enable local scanning (`winget install GitHub.CodeQL` on Windows).\r\n';
+var README_default = '<p align="center">\r\n  <img src="assets/logo.png" width="120" alt="Writing Studio logo">\r\n</p>\r\n\r\n# Writing Studio\r\n\r\n**Version 3.0.2** \xB7 Desktop only\r\n\r\n![GitHub all releases](https://img.shields.io/github/downloads/writerP-777/obsidian-writing-studio/total)\r\n[![OpenSSF Best Practices](https://www.bestpractices.dev/projects/12832/badge)](https://www.bestpractices.dev/projects/12832)\r\n\r\nWriting Studio turns Obsidian into a dedicated environment for serious nonfiction work \u2014 from your first research notes to a finished, exported manuscript. It bundles a project binder, writing modes, focus and typography tools, sprint timer, progress tracking, manuscript export, and WordPress publishing into a single plugin. A built-in sidebar file explorer lets you browse, preview, and pull content from anywhere in your vault without leaving your draft.\r\n\r\n<p align="center">\r\n  <img src="assets/sidebar-explorer-screenshot.png" alt="Writing Studio with the Launcher panel open on the left, an active draft with its word count goal banner in the center, and the Folder Sidebar Explorer previewing a research file on the right" width="900">\r\n  <br>\r\n  <em>Writing Studio in use \u2014 Launcher (left), active draft with word count goal banner (center), Folder Sidebar Explorer open to a research folder (right).</em>\r\n</p>\r\n\r\n<p align="center">\r\n  <a href="https://buymeacoffee.com/writerp777">\r\n    <img src="https://img.buymeacoffee.com/button-api/?text=Buy%20me%20a%20coffee&slug=writerp777&button_colour=c9a84c&font_colour=000000&font_family=Georgia&outline_colour=000000&coffee_colour=ffffff" alt="Buy me a coffee" height="40">\r\n  </a>\r\n</p>\r\n\r\n## Contents\r\n\r\n- [Features](#features)\r\n- [Language support](#language-support)\r\n- [Writing Studio Launcher](#writing-studio-launcher)\r\n- [Folder Sidebar Explorer](#folder-sidebar-explorer)\r\n- [Your Project](#your-project)\r\n- [Your Writing Environment](#your-writing-environment)\r\n- [Tracking Your Progress](#tracking-your-progress)\r\n- [Getting Your Work Out](#getting-your-work-out)\r\n- [Supporting Tools](#supporting-tools)\r\n- [Context Menus](#context-menus)\r\n- [Commands Reference](#commands-reference)\r\n- [Settings Overview](#settings-overview)\r\n- [Ribbon Icon](#ribbon-icon)\r\n- [Installation](#installation)\r\n- [Requirements](#requirements)\r\n- [Reporting a Bug](#reporting-a-bug)\r\n- [Security](#security)\r\n\r\n---\r\n\r\n## Features\r\n\r\n**Writing Binder** \u2014 Your project\'s folder tree, rendered as a manuscript. The binder reads your folders directly, so files created, renamed, or moved anywhere \u2014 even outside Obsidian \u2014 always appear correctly, with no import or scan step. Drag chapters into order, set per-document status and word count goals, and exclude documents from compile with a right-click.\r\n\r\n**Project Manager** \u2014 Create projects from six templates (blank, book, article series, blog collection, journal article, magazine article), set a total word count goal, and switch between projects from the Launcher.\r\n\r\n**Compile Preview** \u2014 Concatenate all binder documents in order and render them as a finished manuscript in a split pane, without exporting.\r\n\r\n**Writing Modes** \u2014 Switch between Draft (distraction-free), Edit (full tooling), and Review (read-only) modes from the status bar, command palette, context menu, or Launcher.\r\n\r\n**Focus Mode** \u2014 Dim everything except the paragraph or sentence you are writing. Configurable dim level, font size override, sidebar collapse, and typewriter scroll.\r\n\r\n**Typography Mode** \u2014 Apply a curated font, constrained line length, and controlled line height to the editor. Fourteen font options including iA Writer fonts, Google Fonts, and custom system fonts.\r\n\r\n**Sprint Timer** \u2014 Run timed writing sessions with a draggable floating overlay. Set duration, word goal, and scope (file or project). Quick-start presets (10 m, 15 m, 25 m) available from the Launcher.\r\n\r\n**Progress Tracking** \u2014 Live word counts in the status bar and Launcher, session delta tracking, per-document and per-project word count goals with inline progress banners, and a 30-day writing log with streak tracking.\r\n\r\n**Export Engine** \u2014 Export to Manuscript (HTML), PDF, Word (.docx), RTF, HTML, Markdown, and EPUB. Manuscript format produces industry-standard layout with no external tools; other formats require Pandoc.\r\n\r\n**WordPress Publishing** \u2014 Publish directly to WordPress from Obsidian. Set post title, status, categories, tags, excerpt, and scheduled date. Supports multiple sites with per-site credentials and connection testing.\r\n\r\n**Folder Sidebar Explorer** \u2014 Browse any vault folder in a sidebar panel. Search by name or file content, preview Markdown files and images inline, and insert selected text directly into the active editor.\r\n\r\n## Language support\r\n\r\nWriting Studio is available in the following languages in addition to English:\r\n\r\n- Arabic\r\n- Bengali\r\n- Brazilian Portuguese\r\n- Chinese (Simplified)\r\n- French\r\n- German\r\n- Hindi\r\n- Japanese\r\n- Korean\r\n- Russian\r\n- Spanish\r\n\r\n**To change the language:** Open **Settings \u2192 General** in Obsidian, scroll to **Language**, and select your preferred language from the list. Restart Obsidian for the change to take effect. Writing Studio will display in the selected language if it is supported.\r\n\r\n**Found a translation error or missing text?** Please open an issue on GitHub \u2014 [Submit a bug report or enhancement request](https://github.com/writerP-777/obsidian-writing-studio/issues/new) \u2014 and include the language, the location in the plugin where the text appears, and what it currently says. We will address it in the next release.\r\n\r\n### Writing Studio Launcher\r\n\r\nThe Launcher is your home base in Writing Studio \u2014 a sidebar panel that shows your active project, progress toward your goals, and one-click access to every major feature.\r\n\r\n<p align="center">\r\n  <img src="assets/launcher-project-card.png" alt="The Launcher project card with the project dropdown and the new project, edit, and delete buttons above the word count and project goal" width="520">\r\n  <br>\r\n  <em>The Launcher project card \u2014 switch projects from the dropdown; word count against the project goal below.</em>\r\n</p>\r\n\r\nBy default Writing Studio launches automatically when Obsidian loads \u2014 the Launcher opens and your last session\'s writing mode and typography are restored. To disable this, turn off **Open on startup** in **Settings \u2192 General**: Obsidian then opens clean, with no Writing Studio status bar items or restored modes, and the studio stays dormant until you launch it yourself. Launching it manually restores your last session state the same way.\r\n\r\n**To open manually:** Click the feather ribbon icon, or assign a hotkey to **Open launcher** in Settings \u2192 Hotkeys.\r\n\r\n**First run:** In a vault with no projects yet, the Launcher shows an orientation card explaining how projects work, with a **Create your first project** button to get started.\r\n\r\n<p align="center">\r\n  <img src="assets/launcher-first-run.png" alt="The Launcher first-run orientation card with an explanation of projects and a Create your first project button" width="520">\r\n  <br>\r\n  <em>First run \u2014 the orientation card shown before any project exists.</em>\r\n</p>\r\n\r\n**The Launcher includes:**\r\n- Active project name, total word count, and progress toward your project word count goal\r\n- Writing mode selector (Draft / Edit / Review)\r\n- Focus Mode and Typography Mode toggles\r\n- Sprint timer with "Set up sprint" button and Quick Sprint Options presets (10 m, 15 m, 25 m)\r\n- Today card showing words written, sprints completed, session word count, and streak\r\n- Quick-action buttons: Targets Dashboard, Writing Dashboard, Preview manuscript, Export, Writing Log, Publish to WordPress\r\n\r\n---\r\n\r\n### Folder Sidebar Explorer\r\n\r\nThe Folder Sidebar Explorer opens any vault folder in a right-sidebar panel, letting you browse reference material, research notes, or any folder outside your active project without leaving your draft. Unlike the Binder \u2014 which is scoped to your writing project \u2014 the sidebar explorer works with any folder in your vault.\r\n\r\n<p align="center">\r\n  <img src="assets/folder-sidebar-explorer.png" alt="The Folder Sidebar Explorer panel with a Markdown file open in preview, showing the breadcrumb trail, back and root buttons, and the insert selection button" width="340">\r\n  <br>\r\n  <em>The Folder Sidebar Explorer with a research file open in preview \u2014 select text and click insert selection to pull it into your draft.</em>\r\n</p>\r\n\r\n**To open:**\r\n- Use the command **Open folder in sidebar explorer** from the command palette \u2014 a folder picker appears so you can choose which folder to explore.\r\n- Right-click any folder in the file explorer and choose **Open in sidebar explorer** under **Writing studio options**.\r\n- Right-click any folder in [Notebook Navigator](https://github.com/johansan/notebook-navigator) and choose **Open in sidebar explorer** (requires Notebook Navigator to be installed).\r\n- Assign a hotkey in Settings \u2192 Hotkeys.\r\n\r\nThe panel opens in the **right sidebar**. The folder you open becomes the **root folder** for that session \u2014 the breadcrumb trail, the \u2302 root button, and search all operate relative to it.\r\n\r\n**Browsing and navigation:**\r\n\r\n| Feature | How to use |\r\n|---------|-----------|\r\n| Browse into a subfolder | Click the folder |\r\n| Preview a Markdown file | Click the file \u2014 the folder listing is replaced by a rendered preview inside the panel |\r\n| Preview an image | Click the file \u2014 displayed inline |\r\n| Preview audio | Click the file \u2014 player appears inline |\r\n| Other file types | Click the file \u2014 an **Open in editor** button appears |\r\n| Go back | Click **\u2190 back**, or press `Backspace` when the list has keyboard focus |\r\n| Return to root folder | Click **\u2302 root** to jump back to the folder you originally opened |\r\n| Keyboard navigation | Tab to focus the list, then `\u2191` / `\u2193` to move, `Enter` to open, `Backspace` to go back |\r\n| Breadcrumb navigation | Click any segment in the breadcrumb trail to jump directly to that folder |\r\n\r\n**Search:**\r\n\r\nA search bar appears at the top of the folder list. Type your query and press **Enter** to run the search.\r\n\r\n- Searches **both folder/file names and file contents** (`.md` and `.txt` files).\r\n- Frontmatter is excluded from content search to avoid false positives from YAML fields.\r\n- Name matches show the matched term highlighted in the result title.\r\n- Content matches show a text snippet around the match with the term highlighted, plus a **CONTENT** badge to distinguish them from name matches.\r\n- Results always search from the root folder, regardless of which subfolder you are currently browsing.\r\n- Click **\xD7** to clear the search and return to the normal folder view.\r\n\r\n**Sort:**\r\n\r\nA sort dropdown sits next to the search bar. Options:\r\n\r\n| Option | Description |\r\n|--------|-------------|\r\n| Folders \u2191 A-Z | Folders first, then files, both alphabetical (default) |\r\n| Folders \u2191 Z-A | Folders first, then files, both reverse-alphabetical |\r\n| Name A-Z | All items alphabetical, folders and files mixed |\r\n| Name Z-A | All items reverse-alphabetical, mixed |\r\n| Newest first | Sort by last-modified date, newest at top |\r\n| Oldest first | Sort by last-modified date, oldest at top |\r\n\r\n**Copy content to the editor:**\r\n\r\nWhen a Markdown file is open in preview mode (after clicking it in the file list), its text is selectable. To insert a passage into the active editor:\r\n\r\n1. Click a file in the list \u2014 the panel switches to preview mode showing the rendered file.\r\n2. Select the text you want in the preview pane.\r\n3. Click the **\u21A9 insert selection** button in the nav bar.\r\n4. The selected text is inserted at the cursor position in the active editor.\r\n\r\nThe preview is read-only \u2014 you cannot edit the file from the sidebar.\r\n\r\n**Hover tooltips:**\r\n\r\nHover over any file or folder in the list to see an information card:\r\n\r\n| Item type | Information shown |\r\n|-----------|------------------|\r\n| Markdown / text file | Last modified date and time \xB7 File size \xB7 Word count (frontmatter excluded) |\r\n| Image / audio / other file | Last modified date and time \xB7 File size |\r\n| Folder | Total file count \xB7 Subfolder count |\r\n\r\nThe word count updates asynchronously from Obsidian\'s file cache and appears within a moment of hover.\r\n\r\n---\r\n\r\n### Your Project\r\n\r\n#### Project Manager\r\n\r\nProjects group a set of documents (binder items) and act as the scope for export, statistics, and the word count goal banner.\r\n\r\n**To create a project:** Use the command **Create new writing project** from the command palette, or click the **+** button next to the project dropdown in the Launcher or Binder panel.\r\n\r\n**To switch projects:** Use the Launcher panel or the project selector at the top of the Binder panel.\r\n\r\n**To edit a project:** Click the pencil icon in the Launcher project card or next to the project selector in the Binder. You can change the title, author, description, total word count goal, and the document folder \u2014 the folder inside the project that holds its documents (for example, renaming a book project\'s `Chapters/` to `Scenes/` renames the folder and moves its files with it; the binder follows automatically, as it also does when you rename the folder directly in the file explorer). The project folder itself keeps its original name \u2014 renaming the title does not move any files.\r\n\r\n**To delete a project:** Click the trash icon in the Launcher project card or next to the project selector in the Binder, then confirm. This removes the project from Writing Studio\'s list only \u2014 the project folder and all its documents stay untouched in your vault.\r\n\r\n<p align="center">\r\n  <img src="assets/edit-project-modal.png" alt="The Edit project modal with fields for project title, author name, document folder, total word count goal, and description, and a Save button" width="560">\r\n  <br>\r\n  <em>The Edit project modal \u2014 change the title, author, document folder, description, and total word count goal.</em>\r\n</p>\r\n\r\nEach project stores:\r\n- Title, type, author, and description\r\n- Ordered binder with chapters, sections, articles, and notes\r\n- Per-item word count goals, statuses, and export flags\r\n- Optional total word count goal (shown in the Launcher and status bar)\r\n\r\n**Project templates available at creation:**\r\n\r\n| Template | Structure created |\r\n|----------|------------------|\r\n| Blank | Empty \u2014 build your own structure |\r\n| Book | Front Matter, Part 1 / Chapter 1, Back Matter |\r\n| Article series | Series Overview note (with article schedule), Article 1 placeholder |\r\n| Blog collection | Date-organized folder, first post placeholder |\r\n| Journal article | Title Page, Abstract, Keywords, Introduction, Literature Review, Methodology, Findings / Analysis, Discussion, Conclusion, References, Appendices |\r\n| Magazine article | Pitch / Query Notes, Headline & Deck, Lede, Nut Graf, Body, Quotes & Sources, Kicker, Fact-Check Notes, Author Bio |\r\n\r\n---\r\n\r\n#### Writing Binder\r\n\r\nKeeping a book-length manuscript organized means knowing at a glance which chapters are drafted, which are in progress, and what will compile into the finished manuscript. The Binder is a sidebar panel that shows all of that for your active project.\r\n\r\nThe binder reads your folders directly \u2014 the project folder tree *is* the manuscript structure. Organize your work in the binder or in your computer\'s file explorer, and both always match: files created, renamed, moved, or deleted outside Obsidian appear correctly with no scan or import step. A document\'s filename is its title. Status (Draft, In Progress, Complete, Published) shows as a colored stripe on the row\'s left edge, folders carry document-count badges, documents excluded from compile render dimmed, and hovering any row shows its on-disk name and the settings the binder reads from it.\r\n\r\nBelow the manuscript, **Research** and **Exports** are pinned as drawer tabs with live file counts. Research holds markdown notes that never compile (drag documents in and out of it freely); Exports is output-only, written by the export engine. Non-markdown files are visible and openable everywhere but stay outside the manuscript.\r\n\r\n<p align="center">\r\n  <img src="assets/binder-tree.png" alt="The binder showing a manuscript tree with folder count badges, colored status stripes, a dimmed compile-excluded document, and Research and Exports drawer tabs with file counts at the bottom" width="520">\r\n  <br>\r\n  <em>The binder \u2014 status stripes on the left edge, count badges on folders, a dimmed compile-excluded document, and the Research and Exports drawer below.</em>\r\n</p>\r\n\r\n**To open:** Use the command **Open binder** from the command palette, or assign a hotkey in Settings \u2192 Hotkeys.\r\n\r\n**Ordering:**\r\n\r\nDrag to reorder documents and folders. A document\'s position is stored in its own frontmatter (`binder-order`), so it travels with the file; a folder\'s position lives in a name marker (`020~ Part One`) that the binder hides in display. Anything without a saved position sorts naturally \u2014 A to Z, numbers in numeric order \u2014 after ordered items. Reordering never renames your documents.\r\n\r\n**Moving things:**\r\n\r\nDragging physically moves files and folders: drop between rows to reorder, onto a folder to nest inside it, on the empty space below the tree to move to the project root, or onto the Research drawer tab to move a document out of the manuscript. A folder drag carries all its children, and links heal automatically on every move.\r\n\r\n**Control strip:**\r\n\r\nA two-row control strip at the top of the binder keeps the high-frequency writing controls next to your documents, so the daily loop doesn\'t require switching to the launcher tab. The top row is a Draft / Edit / Review segmented control (clicking the active mode switches back to normal). The bottom row holds Focus and Typography toggles, a sprint chip (its menu offers the set-up modal and 10/15/25-minute quick starts; an armed sprint shows a ready chip with the duration), and a **...** menu with the occasional actions: export, publish, preview manuscript, targets dashboard, writing dashboard, and writing log. The launcher keeps its own copies of all controls, and every surface stays in sync no matter where a change is made.\r\n\r\n<p align="center">\r\n  <img src="assets/binder-control-strip.png" alt="The binder control strip with Draft, Edit, and Review on the top row and Focus, Typography, Sprint, and an overflow menu on the bottom row, above the project selector, toolbar, and document tree" width="520">\r\n  <br>\r\n  <em>The binder control strip \u2014 writing modes on top; focus, typography, sprint, and overflow controls below.</em>\r\n</p>\r\n\r\n<p align="center">\r\n  <img src="assets/binder-strip-overflow.png" alt="The binder overflow menu open, showing export, publish to WordPress, preview manuscript, targets dashboard, writing dashboard, and writing log" width="520">\r\n  <br>\r\n  <em>The overflow menu holds the less frequent actions: export, publish, preview, and the dashboards and log.</em>\r\n</p>\r\n\r\n**Keyboard navigation:**\r\n\r\nThe binder tree is fully keyboard-operable. Tab to focus the list, then:\r\n\r\n| Key | Action |\r\n|-----|--------|\r\n| `\u2191` / `\u2193` | Move through visible documents and folders |\r\n| `\u2192` | Expand a collapsed folder, or step into an open one |\r\n| `\u2190` | Collapse an open folder, or jump to the parent |\r\n| `Enter` | Open the document, or expand/collapse a folder |\r\n| `F2` | Rename the focused item inline (Enter commits, Escape cancels) |\r\n| `Shift+F10` or menu key | Open the item\'s right-click menu |\r\n\r\n**Opening and renaming documents:**\r\n\r\nA single click on a document opens it immediately. Rename an item from its right-click menu, or by pressing **F2** while it is focused (Enter commits, Escape cancels). Renaming in the binder renames the file itself \u2014 links heal automatically \u2014 and invalid names are rejected with a specific message, never silently altered.\r\n\r\n**Creating documents and folders:**\r\n\r\nToolbar buttons create a document or folder at the manuscript root; a folder\'s right-click menu creates inside it, and a document\'s menu creates beside it. New documents prompt for a title up front rather than being named "Untitled."\r\n\r\n**Right-click menu:**\r\n\r\nRight-click any item for its full set of actions \u2014 rename, set status, set a word count goal, set an optional document type, exclude a document from compile (or re-include it), create a document or folder, or delete to the trash (a folder\'s confirmation states how many files it contains).\r\n\r\n<p align="center">\r\n  <img src="assets/binder-context-menu.png" alt="The binder right-click menu on a document, showing rename, status options, set word count goal, change type options, exclude from compile, new document, new folder, and delete" width="520">\r\n  <br>\r\n  <em>A document\'s right-click menu \u2014 status, goal, type, and compile controls in one place.</em>\r\n</p>\r\n\r\n**Organizing with folders:**\r\n\r\nFolders are the structure. The book template creates a part folder for you, and any structure you build \u2014 in the binder or in your file explorer \u2014 is the manuscript\'s structure. Adding a file to a project is simply moving it into the project folder; it appears in the binder immediately, and files copied in outside of Obsidian show up the same way with no import step.\r\n\r\n**Upgrading from an earlier version:**\r\n\r\nThe first time you open an existing project, Writing Studio arranges its folders to match what your old binder showed \u2014 creating folders and moving documents, deleting nothing, and never changing your writing. A one-time notice explains this, and the command **Restore previous binder layout** puts your folders back the way they were if you preferred your earlier arrangement. Everything in your project folder is now part of the compiled manuscript. Check the compile preview before your first export, and use Exclude from compile on anything you want left out.\r\n\r\n---\r\n\r\n#### Compile Preview\r\n\r\nThe Compile Preview opens a split pane showing all binder documents for the active project concatenated in order, rendered as a finished manuscript.\r\n\r\n**To open:** Use the command **Preview compiled manuscript** from the command palette, or click the **Preview manuscript** button in the Launcher panel.\r\n\r\n---\r\n\r\n### Your Writing Environment\r\n\r\n#### Writing Modes\r\n\r\nThree modes shape how the editor behaves. The current mode is always shown in the status bar. Click the mode pill in the status bar to switch modes.\r\n\r\n| Mode | Purpose |\r\n|------|---------|\r\n| **Draft** | Distraction-free drafting; spell-check and formatting hints suppressed |\r\n| **Edit** | Revision pass; full editor tooling active |\r\n| **Review** | Read-only style; ideal for a final proofread |\r\n| **None** | Normal Obsidian behavior |\r\n\r\n**To switch modes:**\r\n- Click the mode indicator in the status bar.\r\n- Right-click inside the editor, then choose **Switch writing mode \u2192** under **Writing studio options**.\r\n- Assign hotkeys to **Switch to draft mode / Edit mode / Review mode** in Settings \u2192 Hotkeys.\r\n- Use the Writing Studio Launcher panel.\r\n\r\nThe active mode is saved and restored the next time Writing Studio launches \u2014 automatically at startup when **Open on startup** is enabled, or when you next open the Launcher or switch a mode.\r\n\r\n---\r\n\r\n#### Focus Mode\r\n\r\nFocus Mode dims everything in the editor except the paragraph or sentence you are currently writing, reducing visual noise and keeping attention on the active thought.\r\n\r\n**To toggle:** Assign a hotkey to **Toggle focus mode** in Settings \u2192 Hotkeys, or use the toggle in the Launcher panel. Press `Escape` to exit.\r\n\r\n**Settings (Settings \u2192 Focus mode):**\r\n\r\n| Setting | Description |\r\n|---------|-------------|\r\n| Focus unit | Highlight at the **paragraph** or **sentence (line)** level |\r\n| Dim opacity | How opaque the dimmed text appears (10\u201350%) |\r\n| Font size override | Override the editor font size while focused; 0 = use theme default. Takes precedence over Typography Mode\'s font size while Focus Mode is active |\r\n| Auto-hide sidebars | Collapse left and right sidebars when Focus Mode activates |\r\n| Typewriter scroll | Keep the active line vertically centered as you type |\r\n\r\n---\r\n\r\n#### Typography Mode\r\n\r\nTypography Mode applies a consistent, reader-friendly text treatment to the editor: a curated font, constrained line length, controlled line height, and optional letter spacing.\r\n\r\n**To toggle:** Assign a hotkey to **Toggle typography mode** in Settings \u2192 Hotkeys, or use the toggle in the Launcher panel.\r\n\r\n**To change the font while Typography Mode is active:** Right-click inside the editor and choose **Typography font \u2192** under **Writing studio options**. A font picker menu appears with all available fonts; the active font is shown with a checkmark. Selecting a font applies it immediately and saves the setting.\r\n\r\n> **Note on fonts:** Typography fonts are loaded from Google Fonts and require an internet connection the first time each font is used. After the initial load they are cached and work offline.\r\n\r\n**Settings (Settings \u2192 Typography):**\r\n\r\n| Setting | Description |\r\n|---------|-------------|\r\n| Font family | Choose from the curated font list or enter a custom font name |\r\n| Custom font name | Used when **Custom font name\u2026** is selected above |\r\n| Max line length | Characters per line (55\u201380); constrains the editor column width |\r\n| Font size | Editor font size in pixels |\r\n| Line height | Multiplier; default 1.7 |\r\n| Letter spacing | CSS `letter-spacing` value (e.g. `normal`, `0.02em`) |\r\n| Persist across sessions | Restore Typography Mode when Writing Studio next launches |\r\n\r\n**Available fonts:**\r\n\r\n| Option | Font |\r\n|--------|------|\r\n| Monospaced | iA Writer Mono (falls back to Roboto Mono / Courier New) |\r\n| Serif | iA Writer Duo Serif (falls back to Georgia) |\r\n| Sans-serif | iA Writer Quattro (falls back to system sans-serif) |\r\n| Cormorant Garamond | Elegant display serif |\r\n| Crimson Text | Classic book serif |\r\n| EB Garamond | Traditional Garamond revival |\r\n| Libre Baskerville | Readable web serif |\r\n| Libre Caslon Text | Clean slab serif |\r\n| Literata | Designed for long-form reading |\r\n| Lora | Contemporary calligraphic serif |\r\n| Inter | Modern humanist sans-serif |\r\n| Lato | Friendly rounded sans-serif |\r\n| Source Sans 3 | Clean UI sans-serif |\r\n| Custom font name\u2026 | Use any font installed on your system |\r\n\r\n---\r\n\r\n### Tracking Your Progress\r\n\r\n#### Writing Sprint Timer\r\n\r\nThe Sprint Timer runs a timed writing session. When a sprint is active, a floating overlay displays the countdown and gives you full control \u2014 without requiring you to stay on the dashboard.\r\n\r\n**To set up a sprint:**\r\n\r\n- Click **Set up sprint** in the Launcher panel to open the sprint configuration modal.\r\n- Or click one of the **Quick Sprint Options** preset buttons (10 m, 15 m, 25 m) in the Launcher panel to load a duration directly.\r\n\r\nEither path opens the floating overlay in a ready state \u2014 the timer does not start until you press \u25B6 on the overlay itself. This gives you time to navigate to your draft or open the Binder before the clock begins.\r\n\r\n**Sprint configuration modal:**\r\n\r\nThe modal lets you set:\r\n\r\n- Duration (preset or custom, in minutes)\r\n- Word count goal for the session\r\n- Scope (current file or entire project)\r\n\r\nClick **Launch sprint timer** to open the overlay in ready state.\r\n\r\n**Using the floating overlay:**\r\n\r\n| Control | Action |\r\n|---------|--------|\r\n| \u25B6 | Start or resume the sprint |\r\n| \u23F8 | Pause the sprint |\r\n| \u25A0 | Stop and end the sprint |\r\n\r\nThe overlay is draggable \u2014 click and drag the header to reposition it anywhere on screen. It stays on top regardless of writing mode or Focus Mode. The current countdown is also shown in the Obsidian status bar (`\u23F1 MM:SS`) and, when Focus Mode is active, in the focus toolbar.\r\n\r\nWhen the sprint ends, a summary modal shows words written, duration, and words-per-minute. The session is logged to sprint history and optionally appended to your Daily Note.\r\n\r\n**Settings (Settings \u2192 Sprint & goals):**\r\n\r\n| Setting | Description |\r\n|---------|-------------|\r\n| Default sprint duration | Starting value in the sprint modal (minutes) |\r\n| Default daily word goal | Target used in the Writing Dashboard and Launcher |\r\n| Sound notifications | Play a tone when the sprint ends |\r\n| Sprint history retention | Days to keep sprint records before purging |\r\n| Inline goal banner | Show a progress bar below the editor toolbar when a document has a word count goal set |\r\n\r\n---\r\n\r\n#### Word Count Goal\r\n\r\nA per-document word count goal can be set and tracked inline.\r\n\r\n**To set a goal:**\r\n- Use the command **Set word count goal** from the command palette.\r\n- Right-click inside the editor and choose **Set word count goal** under **Writing studio options**.\r\n\r\nWhen a goal is set and **Inline goal banner** is enabled, a progress bar appears below the editor toolbar showing current words, goal, and percentage. It updates in real time as you type.\r\n\r\n---\r\n\r\n#### Session Word Count\r\n\r\nThe status bar shows a `(+N)` delta next to the current file\'s word count, indicating how many words you have added since opening that file this session. The Launcher\'s **Today** card also shows a cumulative session total across all files opened during the current Obsidian session. Both counts reset when Obsidian restarts.\r\n\r\n---\r\n\r\n#### Project Word Count Goal\r\n\r\nWhen an active project has a total word count goal set, a dedicated status bar item shows `{current} / {goal} project words`. This updates automatically as you write. Set a project goal in the Project modal when creating or editing a project.\r\n\r\n---\r\n\r\n#### Writing Dashboard\r\n\r\nThe Writing Dashboard shows session statistics (words written, sprints completed, time), sprint history, daily progress toward your goal, and per-project word counts with reading time.\r\n\r\n**To open:** Use the command **Open writing dashboard** from the command palette, or click the **Writing dashboard** button in the Launcher panel.\r\n\r\n---\r\n\r\n#### Targets Dashboard\r\n\r\nThe Targets Dashboard lets you assign word count goals to individual documents in the active project\'s binder and track progress across the whole project at a glance. Goals can be edited inline in the table. Rows are sortable and filterable by status.\r\n\r\n**To open:** Use the command **Open targets dashboard**, click the **Targets dashboard** button in the Launcher panel, or assign a hotkey in Settings \u2192 Hotkeys.\r\n\r\n---\r\n\r\n#### Daily Writing Log\r\n\r\nThe Writing Log is a sidebar panel that shows your writing history at a glance.\r\n\r\n**To open:** Use the command **Open writing log** from the command palette, or click the **Writing log** button in the Launcher panel.\r\n\r\n**The Writing Log shows:**\r\n- Current streak (days in a row with at least one sprint)\r\n- This session: total session words, sprint words, sprints completed, and minutes written\r\n- Recent activity: a bar chart with one row per day you wrote, each showing word count, sprints completed, and a visual bar proportional to the day\'s output. Days with no writing are collapsed rather than shown as empty rows, so the log stays focused on the days you actually worked.\r\n\r\nWhen **Append to daily note** is enabled (Settings \u2192 Writing log), a summary of each completed sprint is also appended to today\'s Daily Note.\r\n\r\n---\r\n\r\n### Getting Your Work Out\r\n\r\n#### Export Engine\r\n\r\nWhen your draft is ready, the Export Engine converts it to a finished file in your chosen format \u2014 no reformatting required.\r\n\r\n**Supported formats:** Manuscript (HTML) \xB7 PDF \xB7 Word (.docx) \xB7 RTF \xB7 HTML \xB7 Markdown \xB7 EPUB\r\n\r\n**To export:**\r\n- Right-click inside the editor and choose **Export this document** under **Writing studio options**.\r\n- Use the command **Export document** from the command palette.\r\n- Click the **Export** button in the Launcher panel.\r\n- Assign a hotkey to **Export document** in Settings \u2192 Hotkeys.\r\n- Right-click a folder in the binder and choose **Export folder** to export just that part of the manuscript.\r\n\r\n**One title names the export**\r\n\r\nThe export dialog\'s **Title** dropdown sets the export\'s filename, its title page heading, and the file\'s metadata in one place \u2014 the three are always identical. A whole-project or single-document export offers the project name or a title you type yourself; a folder export adds **Folder name** (the default) and **Project \u2014 folder** forms. Choosing **Type your own title** keeps Export disabled until you type one, so an export is never accidentally untitled.\r\n\r\nThe compile preview renders exactly what the dialog\'s current selections will produce \u2014 same documents, same headings, same title page \u2014 and when you proceed to export from the preview, your selections carry back into the dialog.\r\n\r\n<p align="center">\r\n  <img src="assets/export-modal-title.png" alt="The export dialog with the Title dropdown open on a folder export, showing Folder name, Project \u2014 folder, Project name, and Type your own title" width="560">\r\n  <br>\r\n  <em>The Title dropdown \u2014 one choice names the filename, the title page, and the file metadata.</em>\r\n</p>\r\n\r\n**Manuscript format**\r\n\r\nThe Manuscript format produces a self-contained HTML file formatted to industry-standard manuscript conventions:\r\n- Courier New 12 pt, double-spaced, 1-inch margins\r\n- Title page with the export\'s chosen title, author name, approximate word count, and optional contact information\r\n- Chapter headings in uppercase, page-break before each\r\n- Scene breaks rendered as `#` (the standard manuscript convention)\r\n\r\nNo external tools are required for manuscript export.\r\n\r\n**Settings (Settings \u2192 Export):**\r\n\r\n| Setting | Description |\r\n|---------|-------------|\r\n| Default export format | Pre-selected format in the export modal |\r\n| Default paper size | Letter (US) or A4 |\r\n| Export font | Font name used in PDF/DOCX output (e.g. `Georgia`) |\r\n| Export font size | Point size for PDF/DOCX output |\r\n| Pandoc path | Full path to the `pandoc` binary if it is not on your system PATH |\r\n| PDF engine | Engine Pandoc uses for PDF export. **Auto** (default) picks an installed LaTeX engine \u2014 `xelatex` or `lualatex` when a custom font is set, `pdflatex` otherwise. Pin a specific engine to always use it; if a pinned engine is not installed the export fails with a message naming it rather than silently substituting another |\r\n| PDF engine location | Folder containing the PDF engine binaries \u2014 or full path to one engine binary \u2014 when the engine is not on the system PATH. Leave blank to search the PATH plus common install locations |\r\n| EPUB language | BCP 47 language tag (e.g. `en`, `fr`, `de`) |\r\n| EPUB include cover | Generate a text cover page when no cover image is provided |\r\n\r\n> **Requirement:** Pandoc must be installed for PDF, DOCX, RTF, HTML, and EPUB export. Download from [pandoc.org](https://pandoc.org/installing.html). For PDF export, a LaTeX distribution (e.g. TeX Live or MiKTeX) is also required \u2014 unless the PDF engine setting is pinned to [wkhtmltopdf](https://wkhtmltopdf.org/), which renders PDFs without LaTeX. Manuscript (HTML) export does not require Pandoc.\r\n>\r\n> **macOS note:** apps launched from the Dock don\'t see the shell PATH, so a correctly installed TeX Live or Homebrew binary can still be "not found." Common install locations (`/Library/TeX/texbin`, `/opt/homebrew/bin`, `/usr/local/bin`) are searched automatically; for anything else, set the PDF engine location setting.\r\n>\r\n> **Font note:** the export font setting applies only to the LaTeX PDF path (`xelatex`/`lualatex`; `pdflatex` cannot apply custom fonts either). The `wkhtmltopdf` path takes its typography from Pandoc\'s HTML/CSS output, so the export font setting is ignored there \u2014 the plugin tells you when a font was skipped for this reason.\r\n>\r\n> **Formatting note:** the built-in converter used for HTML, Manuscript, and EPUB output supports headings, paragraphs, lists, blockquotes, fenced code blocks, tables, images, and links. Nested lists, setext (underline-style) headings, and footnotes are not converted \u2014 use a Pandoc format (PDF, DOCX, RTF) if your manuscript depends on them.\r\n\r\n---\r\n\r\n#### WordPress Publishing\r\n\r\nPublish your finished draft directly to WordPress without leaving Obsidian. The modal lets you choose the target site, set the post title, status, categories, tags, excerpt, and an optional scheduled publication date.\r\n\r\n**To publish:**\r\n- Right-click inside the editor and choose **Publish to WordPress** under **Writing studio options**.\r\n- Use the command **Publish to WordPress** from the command palette.\r\n- Click the **Publish to WordPress** button in the Launcher panel.\r\n- Assign a hotkey to **Publish to WordPress** in Settings \u2192 Hotkeys.\r\n\r\n**Setting up a site (Settings \u2192 WordPress):**\r\n\r\n1. Click **+ add WordPress site**.\r\n2. Enter a nickname, the site URL (e.g. `https://yourblog.com`), and your WordPress username.\r\n3. Generate an application password in WordPress under **Users \u2192 Profile \u2192 Application passwords** and paste it into the **Application password** field.\r\n4. Click **Test connection** to verify.\r\n\r\n**Per-site options:**\r\n\r\n| Setting | Description |\r\n|---------|-------------|\r\n| Default post status | Draft \xB7 Pending Review \xB7 Published |\r\n| Wikilink handling | **Strip** removes `[[...]]` syntax, leaving plain text \xB7 **Convert** turns wikilinks into URLs |\r\n\r\n**Preserving your credentials across updates**\r\n\r\nWriting Studio stores your WordPress site credentials in your vault\'s `.obsidian/plugins/writing-studio/data.json` file. Obsidian\'s in-app update process does not touch this file \u2014 your credentials are preserved automatically. However, if you uninstall and reinstall the plugin manually, or if a vault sync conflict overwrites `data.json`, credentials will be lost and will need to be re-entered. To avoid this, always use Obsidian\'s built-in Update button rather than uninstalling manually.\r\n\r\n---\r\n\r\n### Supporting Tools\r\n\r\n#### Frontmatter Manager\r\n\r\nWriting Studio automatically manages YAML frontmatter in your documents when **Frontmatter auto-update** is enabled. On every save it updates:\r\n\r\n- `word-count` \u2014 current word count\r\n- `modified` \u2014 last-modified date\r\n\r\nThe `word-count-goal` frontmatter field is read by the inline goal banner and the Word Count Goal modal.\r\n\r\n---\r\n\r\n## Context Menus\r\n\r\nWriting Studio adds items to Obsidian\'s right-click context menus. All Writing Studio items are grouped together under the heading **Writing studio options** to distinguish them from other plugins and Obsidian\'s built-in options.\r\n\r\n### Right-click inside an open document (editor menu)\r\n\r\n| Option | Action |\r\n|--------|--------|\r\n| Export this document | Open the export modal for the current file |\r\n| Publish to WordPress | Open the WordPress publish modal for the current file |\r\n| Set word count goal | Set a word count target for the current document |\r\n| Switch writing mode \u2192 | Open a mode-switcher menu (Draft / Edit / Review / None) |\r\n| Typography font \u2192 | Open a font picker menu to change the typography font (visible only when Typography Mode is active) |\r\n\r\n### Right-click a folder in the file explorer\r\n\r\n| Option | Action |\r\n|--------|--------|\r\n| Open in sidebar explorer | Open the folder in the Folder Sidebar Explorer panel |\r\n\r\n---\r\n\r\n## Commands Reference\r\n\r\nNo default hotkeys are assigned. All commands can be given a hotkey in **Settings \u2192 Hotkeys**.\r\n\r\n| Command | Description |\r\n|---------|-------------|\r\n| Open launcher | Open the launcher sidebar panel |\r\n| Open binder | Open the writing binder sidebar panel |\r\n| Open writing log | Open the daily writing log panel |\r\n| Toggle focus mode | Enable or disable focus mode |\r\n| Toggle typography mode | Enable or disable typography mode |\r\n| Switch to draft mode | Activate draft writing mode |\r\n| Switch to edit mode | Activate edit writing mode |\r\n| Switch to review mode | Activate review writing mode |\r\n| Start writing sprint | Open the sprint timer modal |\r\n| Export document | Export the current document |\r\n| Export project | Export the full project |\r\n| Preview compiled manuscript | Open the compile preview pane |\r\n| Publish to WordPress | Publish the current document to WordPress |\r\n| Create new writing project | Create a new writing project |\r\n| Open writing dashboard | Open the statistics dashboard |\r\n| Open targets dashboard | Open the word count targets panel |\r\n| Set word count goal | Set a per-document word count goal |\r\n| Open folder in sidebar explorer | Search and open a vault folder in the sidebar |\r\n| Restore previous binder layout | Put a project\'s folders back the way they were before the one-time folder arrangement |\r\n\r\n---\r\n\r\n## Settings Overview\r\n\r\nOpen via **Settings \u2192 Writing Studio**. General settings appear at the top; each other section opens as its own page. Every setting can also be found by name from Obsidian\'s settings search (Obsidian 1.13+).\r\n\r\n| Section | What it controls |\r\n|-----|-----------------|\r\n| General | Open on startup, default project folder, author name, document type, frontmatter auto-update |\r\n| Focus mode | Focus unit, dim opacity, font override, sidebar behavior, typewriter scroll |\r\n| Typography | Font family, custom font name, line length, font size, line height, letter spacing, persistence |\r\n| Sprint & goals | Sprint duration, daily goal, sound notifications, history retention, inline banner |\r\n| Export | Format, paper size, font, font size, Pandoc path, PDF engine, PDF engine location, EPUB language, EPUB cover |\r\n| Writing log | Append sprint summaries to Daily Note |\r\n| WordPress | Site credentials, default post status, wikilink handling |\r\n\r\n---\r\n\r\n## Ribbon Icon\r\n\r\nWriting Studio adds a single icon to the Obsidian ribbon.\r\n\r\n| Icon | Action |\r\n|------|--------|\r\n| Feather | Open the Writing Studio Launcher panel |\r\n\r\nAll other features are accessible from the Launcher panel, the command palette, context menus, or assigned hotkeys.\r\n\r\n---\r\n\r\n## Installation\r\n\r\n1. Download `main.js`, `manifest.json`, and `styles.css` from the latest [GitHub release](../../releases/latest).\r\n2. Create the folder `<vault>/.obsidian/plugins/writing-studio/` if it does not exist.\r\n3. Copy the three files into that folder.\r\n4. In Obsidian, go to **Settings \u2192 Community Plugins**, find **Writing Studio**, and enable it.\r\n\r\n> **Building from source:** Clone the repository, run `npm install`, then `npm run build`. Copy the three output files as above.\r\n\r\n---\r\n\r\n## Requirements\r\n\r\nMost features work out of the box. A few require additional software for specific functions, noted below.\r\n\r\n| Requirement | When needed |\r\n|-------------|-------------|\r\n| Obsidian 1.8.7 or later | Always |\r\n| Desktop (Windows, macOS, Linux) | Always \u2014 this plugin does not run on mobile |\r\n| Internet connection | First use of each Typography Mode font (cached after that) |\r\n| [Pandoc](https://pandoc.org/installing.html) | Export to PDF, DOCX, RTF, HTML, EPUB |\r\n| LaTeX (TeX Live / MiKTeX) or [wkhtmltopdf](https://wkhtmltopdf.org/) | Export to PDF only (wkhtmltopdf must be pinned in the PDF engine setting) |\r\n| WordPress 5.6+ with REST API enabled | WordPress publishing |\r\n| WordPress Application Password | WordPress publishing |\r\n\r\n---\r\n\r\n## Reporting a Bug\r\n\r\nIf something isn\'t working, please open an issue on GitHub:\r\n\r\n**[Submit a bug report](https://github.com/writerP-777/obsidian-writing-studio/issues/new)**\r\n\r\nInclude the following when you report:\r\n\r\n- Writing Studio version (visible in **Settings \u2192 Community Plugins**)\r\n- Obsidian version (visible in **Settings \u2192 About**)\r\n- Operating system (Windows / macOS / Linux) and version\r\n- What you expected to happen\r\n- What actually happened, and any steps to reproduce it\r\n\r\nFeature requests are welcome in the same place \u2014 please label them as **[Feature Request]** in the issue title.\r\n\r\n---\r\n\r\n## Security\r\n\r\n[![CodeQL](https://github.com/writerP-777/obsidian-writing-studio/actions/workflows/codeql.yml/badge.svg)](https://github.com/writerP-777/obsidian-writing-studio/actions/workflows/codeql.yml)\r\n[![OpenSSF Scorecard](https://api.securityscorecards.dev/projects/github.com/writerP-777/obsidian-writing-studio/badge)](https://securityscorecards.dev/viewer/?uri=github.com/writerP-777/obsidian-writing-studio)\r\n[![OpenSSF Baseline](https://www.bestpractices.dev/projects/12832/baseline)](https://www.bestpractices.dev/projects/12832)\r\n[![ESLint](https://github.com/writerP-777/obsidian-writing-studio/actions/workflows/eslint.yml/badge.svg)](https://github.com/writerP-777/obsidian-writing-studio/actions/workflows/eslint.yml)\r\n[![ORCID](https://img.shields.io/badge/ORCID-0009--0009--8598--2069-brightgreen?logo=orcid&logoColor=white)](https://orcid.org/0009-0009-8598-2069)\r\n\r\nEvery push and pull request is scanned automatically:\r\n\r\n| Tool | What it checks |\r\n|------|----------------|\r\n| **CodeQL** | Static analysis for security vulnerabilities (XSS, injection, unsafe patterns) in TypeScript/JavaScript source |\r\n| **OpenSSF Scorecard** | Supply-chain security posture: dependency hygiene, branch protection, signed releases, and more |\r\n| **ESLint** (`eslint-plugin-obsidianmd`) | Obsidian plugin guideline compliance \u2014 fails on any warning or error |\r\n\r\nResults are published to the **Security** tab of this repository (GitHub code scanning).\r\n\r\nFor local development, a pre-commit hook runs ESLint (blocking) and a pre-push hook runs a full CodeQL scan (blocks the push if any HIGH or CRITICAL findings are present). Install the [CodeQL CLI](https://github.com/github/codeql-cli-binaries/releases) to enable local scanning (`winget install GitHub.CodeQL` on Windows).\r\n';
 
 // src/HelpContent.ts
 var start = README_default.indexOf("\n## Features");
@@ -18118,357 +18082,26 @@ content = content.replace(/^!\[[^\]]*\]\((?!https?:\/\/)[^)]*\)[ \t]*$/gm, "");
 var HELP_CONTENT = content;
 
 // src/SettingsTab.ts
-var WritingStudioSettingsTab = class extends import_obsidian27.PluginSettingTab {
-  constructor(app, plugin) {
-    super(app, plugin);
-    this.activeTab = "general";
-    this.helpComponent = null;
-    this.plugin = plugin;
-  }
-  // The help tab's MarkdownRenderer component must be unloaded whenever its
-  // DOM is emptied (tab switch) or the dialog closes — display() alone left
-  // it loaded indefinitely.
-  unloadHelpComponent() {
-    if (this.helpComponent) {
-      this.helpComponent.unload();
-      this.helpComponent = null;
-    }
-  }
-  hide() {
-    this.unloadHelpComponent();
-    super.hide();
+var WP_SITE_KEY = /^wpSite\.(.+)\.(nickname|url|username|defaultStatus|wikilinkHandling)$/;
+var HelpSettingPage = class extends import_obsidian27.SettingPage {
+  constructor(appRef) {
+    super();
+    this.appRef = appRef;
+    this.component = null;
+    this.title = t2("settings.tab.help");
   }
   display() {
-    this.unloadHelpComponent();
-    const { containerEl } = this;
-    containerEl.empty();
-    containerEl.addClass("ws-settings");
-    const tabBar = containerEl.createDiv("ws-settings-tabs");
-    const tabs = [
-      { id: "general", label: t2("settings.tab.general") },
-      { id: "focus", label: t2("settings.tab.focus") },
-      { id: "typography", label: t2("settings.tab.typography") },
-      { id: "sprint", label: t2("settings.tab.sprint") },
-      { id: "export", label: t2("settings.tab.export") },
-      { id: "log", label: t2("settings.tab.log") },
-      { id: "wordpress", label: t2("settings.tab.wordpress") },
-      { id: "help", label: t2("settings.tab.help") }
-    ];
-    const contentEl = containerEl.createDiv("ws-settings-content");
-    tabs.forEach((tab) => {
-      const btn = tabBar.createEl("button", {
-        cls: `ws-settings-tab ${this.activeTab === tab.id ? "is-active" : ""}`,
-        text: tab.label
-      });
-      btn.onclick = () => {
-        this.unloadHelpComponent();
-        this.activeTab = tab.id;
-        tabBar.querySelectorAll(".ws-settings-tab").forEach((b) => b.removeClass("is-active"));
-        btn.addClass("is-active");
-        contentEl.empty();
-        this.renderActiveTab(tab.id, contentEl);
-      };
-    });
-    this.renderActiveTab(this.activeTab, contentEl);
+    this.containerEl.empty();
+    this.containerEl.addClass("ws-help-content");
+    void this.renderContent();
   }
-  // Named to avoid shadowing SettingTab.renderTab(), the entry point Obsidian
-  // 1.13+ invokes when opening a tab — a same-named method here silently
-  // replaces it and display() is never called.
-  renderActiveTab(tab, el) {
-    switch (tab) {
-      case "general":
-        this.renderGeneral(el);
-        break;
-      case "focus":
-        this.renderFocusMode(el);
-        break;
-      case "typography":
-        this.renderTypography(el);
-        break;
-      case "sprint":
-        this.renderSprint(el);
-        break;
-      case "export":
-        this.renderExport(el);
-        break;
-      case "log":
-        this.renderLog(el);
-        break;
-      case "wordpress":
-        this.renderWordPress(el);
-        break;
-      case "help":
-        void this.renderHelp(el);
-        break;
-    }
-  }
-  renderGeneral(el) {
-    new import_obsidian27.Setting(el).setName(t2("settings.general.openOnStartup")).setDesc(t2("settings.general.openOnStartupDesc")).addToggle((toggle) => toggle.setValue(this.plugin.settings.openOnStartup).onChange(async (v) => {
-      this.plugin.settings.openOnStartup = v;
-      await this.plugin.saveSettings();
-    }));
-    new import_obsidian27.Setting(el).setName(t2("settings.general.defaultProjectFolder")).setDesc(t2("settings.general.defaultProjectFolderDesc")).addText((text) => text.setPlaceholder(t2("settings.general.defaultProjectFolderPlaceholder")).setValue(this.plugin.settings.defaultProjectFolder).onChange(async (v) => {
-      this.plugin.settings.defaultProjectFolder = v;
-      await this.plugin.saveSettings();
-    }));
-    new import_obsidian27.Setting(el).setName(t2("settings.general.authorName")).setDesc(t2("settings.general.authorNameDesc")).addText((text) => text.setPlaceholder(t2("settings.general.authorNamePlaceholder")).setValue(this.plugin.settings.authorName).onChange(async (v) => {
-      this.plugin.settings.authorName = v;
-      await this.plugin.saveSettings();
-    }));
-    new import_obsidian27.Setting(el).setName(t2("settings.general.defaultDocumentType")).setDesc(t2("settings.general.defaultDocumentTypeDesc")).addDropdown((d) => d.addOption("chapter", t2("settings.general.docType.chapter")).addOption("section", t2("settings.general.docType.section")).addOption("article", t2("settings.general.docType.article")).addOption("note", t2("settings.general.docType.note")).setValue(this.plugin.settings.defaultDocumentType).onChange(async (v) => {
-      this.plugin.settings.defaultDocumentType = v;
-      await this.plugin.saveSettings();
-    }));
-    new import_obsidian27.Setting(el).setName(t2("settings.general.frontmatterAutoUpdate")).setDesc(t2("settings.general.frontmatterAutoUpdateDesc")).addToggle((toggle) => toggle.setValue(this.plugin.settings.frontmatterAutoUpdate).onChange(async (v) => {
-      this.plugin.settings.frontmatterAutoUpdate = v;
-      await this.plugin.saveSettings();
-    }));
-  }
-  renderFocusMode(el) {
-    new import_obsidian27.Setting(el).setName(t2("settings.focus.heading")).setHeading();
-    new import_obsidian27.Setting(el).setName(t2("settings.focus.focusUnit")).setDesc(t2("settings.focus.focusUnitDesc")).addDropdown((d) => d.addOption("paragraph", t2("settings.focus.paragraph")).addOption("sentence", t2("settings.focus.sentence")).setValue(this.plugin.settings.focusUnit).onChange(async (v) => {
-      this.plugin.settings.focusUnit = v;
-      await this.plugin.saveSettings();
-    }));
-    new import_obsidian27.Setting(el).setName(t2("settings.focus.dimOpacity")).setDesc(t2("settings.focus.dimOpacityDesc")).addSlider((s) => s.setLimits(10, 50, 5).setValue(this.plugin.settings.dimOpacity).onChange(async (v) => {
-      this.plugin.settings.dimOpacity = v;
-      await this.plugin.saveSettings();
-      this.plugin.focusMode.applyDimOpacity();
-    }));
-    new import_obsidian27.Setting(el).setName(t2("settings.focus.fontSizeOverride")).setDesc(t2("settings.focus.fontSizeOverrideDesc")).addText((text) => text.setValue(String(this.plugin.settings.focusFontSize || 0)).onChange(async (v) => {
-      const n = Number(v.trim());
-      if (!Number.isInteger(n) || n !== 0 && (n < 8 || n > 72)) return;
-      this.plugin.settings.focusFontSize = n;
-      await this.plugin.saveSettings();
-      this.plugin.focusMode.applyFontSize();
-    }));
-    new import_obsidian27.Setting(el).setName(t2("settings.focus.autoHideSidebars")).addToggle((toggle) => toggle.setValue(this.plugin.settings.focusAutoHideSidebars).onChange(async (v) => {
-      this.plugin.settings.focusAutoHideSidebars = v;
-      await this.plugin.saveSettings();
-    }));
-    new import_obsidian27.Setting(el).setName(t2("settings.focus.typewriterScroll")).setDesc(t2("settings.focus.typewriterScrollDesc")).addToggle((toggle) => toggle.setValue(this.plugin.settings.typewriterScroll).onChange(async (v) => {
-      this.plugin.settings.typewriterScroll = v;
-      await this.plugin.saveSettings();
-    }));
-  }
-  renderTypography(el) {
-    new import_obsidian27.Setting(el).setName(t2("settings.typography.heading")).setHeading();
-    new import_obsidian27.Setting(el).setName(t2("settings.typography.fontFamily")).addDropdown((d) => {
-      d.addOption("mono", t2("settings.typography.font.mono"));
-      d.addOption("serif", t2("settings.typography.font.serif"));
-      d.addOption("sans", t2("settings.typography.font.sans"));
-      d.addOption("cormorant-garamond", t2("settings.typography.font.cormorant-garamond"));
-      d.addOption("crimson-text", t2("settings.typography.font.crimson-text"));
-      d.addOption("eb-garamond", t2("settings.typography.font.eb-garamond"));
-      d.addOption("libre-baskerville", t2("settings.typography.font.libre-baskerville"));
-      d.addOption("libre-caslon-text", t2("settings.typography.font.libre-caslon-text"));
-      d.addOption("literata", t2("settings.typography.font.literata"));
-      d.addOption("lora", t2("settings.typography.font.lora"));
-      d.addOption("inter", t2("settings.typography.font.inter"));
-      d.addOption("lato", t2("settings.typography.font.lato"));
-      d.addOption("source-sans-3", t2("settings.typography.font.source-sans-3"));
-      d.addOption("custom", t2("settings.typography.font.custom"));
-      d.setValue(this.plugin.settings.typographyFont);
-      d.onChange(async (v) => {
-        this.plugin.settings.typographyFont = v;
-        await this.plugin.saveSettings();
-        if (this.plugin.typographyMode.isActive()) this.plugin.typographyMode.refreshStyles();
-      });
-    });
-    new import_obsidian27.Setting(el).setName(t2("settings.typography.customFontName")).setDesc(t2("settings.typography.customFontNameDesc")).addText((text) => text.setPlaceholder(t2("settings.typography.customFontNamePlaceholder")).setValue(this.plugin.settings.customFontName).onChange(async (v) => {
-      this.plugin.settings.customFontName = v;
-      await this.plugin.saveSettings();
-    }));
-    new import_obsidian27.Setting(el).setName(t2("settings.typography.maxLineLength")).setDesc(t2("settings.typography.maxLineLengthDesc")).addSlider((s) => s.setLimits(55, 80, 1).setValue(this.plugin.settings.maxLineLength).onChange(async (v) => {
-      this.plugin.settings.maxLineLength = v;
-      await this.plugin.saveSettings();
-    }));
-    new import_obsidian27.Setting(el).setName(t2("settings.typography.fontSize")).addText((text) => text.setValue(String(this.plugin.settings.typographyFontSize)).onChange(async (v) => {
-      const n = Number(v.trim());
-      if (!Number.isInteger(n) || n < 8 || n > 72) return;
-      this.plugin.settings.typographyFontSize = n;
-      await this.plugin.saveSettings();
-    }));
-    new import_obsidian27.Setting(el).setName(t2("settings.typography.lineHeight")).setDesc(t2("settings.typography.lineHeightDesc")).addText((text) => text.setValue(String(this.plugin.settings.lineHeight)).onChange(async (v) => {
-      this.plugin.settings.lineHeight = parseFloat(v) || 1.7;
-      await this.plugin.saveSettings();
-    }));
-    new import_obsidian27.Setting(el).setName(t2("settings.typography.letterSpacing")).setDesc(t2("settings.typography.letterSpacingDesc")).addText((text) => text.setValue(this.plugin.settings.letterSpacing).onChange(async (v) => {
-      this.plugin.settings.letterSpacing = v;
-      await this.plugin.saveSettings();
-    }));
-    new import_obsidian27.Setting(el).setName(t2("settings.typography.persistAcrossSessions")).setDesc(t2("settings.typography.persistAcrossSessionsDesc")).addToggle((toggle) => toggle.setValue(this.plugin.settings.persistTypography).onChange(async (v) => {
-      this.plugin.settings.persistTypography = v;
-      await this.plugin.saveSettings();
-    }));
-  }
-  renderSprint(el) {
-    new import_obsidian27.Setting(el).setName(t2("settings.sprint.heading")).setHeading();
-    new import_obsidian27.Setting(el).setName(t2("settings.sprint.defaultDuration")).addText((text) => text.setValue(String(this.plugin.settings.defaultSprintDuration)).onChange(async (v) => {
-      const n = Number(v.trim());
-      if (!Number.isInteger(n) || n < 1 || n > 600) return;
-      this.plugin.settings.defaultSprintDuration = n;
-      await this.plugin.saveSettings();
-    }));
-    new import_obsidian27.Setting(el).setName(t2("settings.sprint.defaultDailyGoal")).addText((text) => text.setValue(String(this.plugin.settings.defaultDailyWordGoal)).onChange(async (v) => {
-      const n = Number(v.trim());
-      if (!Number.isInteger(n) || n < 0 || n > 1e6) return;
-      this.plugin.settings.defaultDailyWordGoal = n;
-      await this.plugin.saveSettings();
-    }));
-    new import_obsidian27.Setting(el).setName(t2("settings.sprint.soundNotifications")).setDesc(t2("settings.sprint.soundNotificationsDesc")).addToggle((toggle) => toggle.setValue(this.plugin.settings.soundNotifications).onChange(async (v) => {
-      this.plugin.settings.soundNotifications = v;
-      await this.plugin.saveSettings();
-    }));
-    new import_obsidian27.Setting(el).setName(t2("settings.sprint.historyRetention")).addText((text) => text.setValue(String(this.plugin.settings.sprintHistoryRetention)).onChange(async (v) => {
-      const n = Number(v.trim());
-      if (!Number.isInteger(n) || n < 1 || n > 3650) return;
-      this.plugin.settings.sprintHistoryRetention = n;
-      await this.plugin.saveSettings();
-    }));
-    new import_obsidian27.Setting(el).setName(t2("settings.sprint.inlineGoalBanner")).setDesc(t2("settings.sprint.inlineGoalBannerDesc")).addToggle((toggle) => toggle.setValue(this.plugin.settings.inlineGoalBanner).onChange(async (v) => {
-      this.plugin.settings.inlineGoalBanner = v;
-      await this.plugin.saveSettings();
-    }));
-  }
-  renderExport(el) {
-    new import_obsidian27.Setting(el).setName(t2("settings.export.heading")).setHeading();
-    new import_obsidian27.Setting(el).setName(t2("settings.export.defaultFormat")).addDropdown((d) => d.addOption("md", t2("settings.export.format.md")).addOption("html", t2("settings.export.format.html")).addOption("manuscript", t2("exportModal.format.manuscript")).addOption("epub", t2("exportModal.format.epub")).addOption("pdf", t2("settings.export.format.pdf")).addOption("docx", t2("settings.export.format.docx")).addOption("rtf", t2("settings.export.format.rtf")).setValue(this.plugin.settings.defaultExportFormat).onChange(async (v) => {
-      this.plugin.settings.defaultExportFormat = v;
-      await this.plugin.saveSettings();
-    }));
-    new import_obsidian27.Setting(el).setName(t2("settings.export.defaultPaperSize")).addDropdown((d) => d.addOption("letter", t2("settings.export.paperSize.letter")).addOption("a4", t2("settings.export.paperSize.a4")).setValue(this.plugin.settings.defaultPaperSize).onChange(async (v) => {
-      this.plugin.settings.defaultPaperSize = v;
-      await this.plugin.saveSettings();
-    }));
-    new import_obsidian27.Setting(el).setName(t2("settings.export.exportFont")).addText((text) => text.setPlaceholder("Georgia").setValue(this.plugin.settings.defaultExportFont).onChange(async (v) => {
-      this.plugin.settings.defaultExportFont = v;
-      await this.plugin.saveSettings();
-    }));
-    new import_obsidian27.Setting(el).setName(t2("settings.export.exportFontSize")).addText((text) => text.setValue(String(this.plugin.settings.defaultExportFontSize)).onChange(async (v) => {
-      const n = Number(v.trim());
-      if (!Number.isInteger(n) || n < 6 || n > 72) return;
-      this.plugin.settings.defaultExportFontSize = n;
-      await this.plugin.saveSettings();
-    }));
-    new import_obsidian27.Setting(el).setName(t2("settings.export.pandocPath")).setDesc(t2("settings.export.pandocPathDesc")).addText((text) => text.setPlaceholder("Pandoc").setValue(this.plugin.settings.pandocPath).onChange(async (v) => {
-      this.plugin.settings.pandocPath = v;
-      await this.plugin.saveSettings();
-    }));
-    new import_obsidian27.Setting(el).setName(t2("settings.export.pdfEngine")).setDesc(t2("settings.export.pdfEngineDesc")).addDropdown((d) => d.addOption("auto", t2("settings.export.pdfEngineAuto")).addOption("xelatex", "xelatex").addOption("lualatex", "lualatex").addOption("pdflatex", "pdflatex").addOption("wkhtmltopdf", "wkhtmltopdf").setValue(this.plugin.settings.pdfEngine).onChange(async (v) => {
-      this.plugin.settings.pdfEngine = v;
-      await this.plugin.saveSettings();
-    }));
-    new import_obsidian27.Setting(el).setName(t2("settings.export.pdfEnginePath")).setDesc(t2("settings.export.pdfEnginePathDesc")).addText((text) => text.setValue(this.plugin.settings.pdfEnginePath).onChange(async (v) => {
-      this.plugin.settings.pdfEnginePath = v;
-      await this.plugin.saveSettings();
-    }));
-    new import_obsidian27.Setting(el).setName(t2("settings.export.epubHeading")).setHeading();
-    new import_obsidian27.Setting(el).setName(t2("settings.export.epubLanguage")).setDesc(t2("settings.export.epubLanguageDesc")).addText((text) => text.setPlaceholder("en").setValue(this.plugin.settings.epubLanguage).onChange(async (v) => {
-      this.plugin.settings.epubLanguage = v.trim() || "en";
-      await this.plugin.saveSettings();
-    }));
-    new import_obsidian27.Setting(el).setName(t2("settings.export.includeCover")).setDesc(t2("settings.export.includeCoverDesc")).addToggle((toggle) => toggle.setValue(this.plugin.settings.epubIncludeCover).onChange(async (v) => {
-      this.plugin.settings.epubIncludeCover = v;
-      await this.plugin.saveSettings();
-    }));
-  }
-  renderLog(el) {
-    new import_obsidian27.Setting(el).setName(t2("settings.log.heading")).setHeading();
-    new import_obsidian27.Setting(el).setName(t2("settings.log.appendToDailyNote")).setDesc(t2("settings.log.appendToDailyNoteDesc")).addToggle((toggle) => toggle.setValue(this.plugin.settings.appendToDailyNote).onChange(async (v) => {
-      this.plugin.settings.appendToDailyNote = v;
-      await this.plugin.saveSettings();
-    }));
-  }
-  renderWordPress(el) {
-    new import_obsidian27.Setting(el).setName(t2("settings.wordpress.sitesHeading")).setHeading();
-    const sites = this.plugin.settings.wordPressSites;
-    for (let i2 = 0; i2 < sites.length; i2++) {
-      this.renderSiteConfig(el, sites[i2], i2);
-    }
-    new import_obsidian27.Setting(el).addButton((b) => b.setButtonText(t2("settings.wordpress.addSite")).onClick(async () => {
-      this.plugin.settings.wordPressSites.push({
-        id: `site-${Date.now()}`,
-        nickname: t2("settings.wordpress.newSiteName"),
-        url: "",
-        username: "",
-        appPassword: "",
-        defaultStatus: "draft",
-        wikilinkHandling: "strip"
-      });
-      await this.plugin.saveSettings();
-      const contentEl = this.containerEl.querySelector(".ws-settings-content");
-      if (contentEl instanceof HTMLElement) {
-        contentEl.empty();
-        this.renderWordPress(contentEl);
-      }
-    }));
-    new import_obsidian27.Setting(el).setName(t2("settings.wordpress.wikilinksHeading")).setHeading();
-    new import_obsidian27.Setting(el).setName(t2("settings.wordpress.defaultWikilinkHandling")).addDropdown((d) => d.addOption("strip", t2("settings.wordpress.wikilinkStrip")).addOption("convert", t2("settings.wordpress.wikilinkConvert")).setValue(this.plugin.settings.wikilinkHandling).onChange(async (v) => {
-      this.plugin.settings.wikilinkHandling = v;
-      await this.plugin.saveSettings();
-    }));
-  }
-  renderSiteConfig(container, site, index) {
-    const siteEl = container.createDiv("ws-wp-site-config");
-    const heading = t2("settings.wordpress.siteHeading", { nickname: site.nickname || t2("settings.wordpress.siteUnnamed") });
-    new import_obsidian27.Setting(siteEl).setName(heading).setHeading();
-    new import_obsidian27.Setting(siteEl).setName(t2("settings.wordpress.nickname")).addText((text) => text.setValue(site.nickname).onChange(async (v) => {
-      site.nickname = v;
-      await this.plugin.saveSettings();
-    }));
-    new import_obsidian27.Setting(siteEl).setName(t2("settings.wordpress.siteUrl")).addText((text) => text.setPlaceholder("https://example.com").setValue(site.url).onChange(async (v) => {
-      site.url = v;
-      await this.plugin.saveSettings();
-    }));
-    new import_obsidian27.Setting(siteEl).setName(t2("settings.wordpress.username")).addText((text) => text.setValue(site.username).onChange(async (v) => {
-      site.username = v;
-      await this.plugin.saveSettings();
-    }));
-    new import_obsidian27.Setting(siteEl).setName(t2("settings.wordpress.appPassword")).setDesc(t2("settings.wordpress.appPasswordDesc")).addText((text) => {
-      text.inputEl.type = "password";
-      text.setValue(site.appPassword).onChange(async (v) => {
-        site.appPassword = v;
-        await this.plugin.saveSettings();
-      });
-    });
-    new import_obsidian27.Setting(siteEl).setName(t2("settings.wordpress.defaultPostStatus")).addDropdown((d) => d.addOption("draft", t2("settings.wordpress.postStatus.draft")).addOption("pending", t2("settings.wordpress.postStatus.pending")).addOption("publish", t2("settings.wordpress.postStatus.publish")).setValue(site.defaultStatus).onChange(async (v) => {
-      site.defaultStatus = v;
-      await this.plugin.saveSettings();
-    }));
-    new import_obsidian27.Setting(siteEl).setName(t2("settings.wordpress.wikilinkHandling")).addDropdown((d) => d.addOption("strip", t2("settings.wordpress.wikilinkHandlingStrip")).addOption("convert", t2("settings.wordpress.wikilinkHandlingConvert")).setValue(site.wikilinkHandling).onChange(async (v) => {
-      site.wikilinkHandling = v;
-      await this.plugin.saveSettings();
-    }));
-    const testRow = new import_obsidian27.Setting(siteEl).setName(t2("settings.wordpress.testConnection")).setDesc(t2("settings.wordpress.testConnectionDesc"));
-    const statusEl = siteEl.createDiv("ws-wp-test-status");
-    testRow.addButton((b) => b.setButtonText(t2("settings.wordpress.testConnection")).onClick(async () => {
-      statusEl.textContent = t2("settings.wordpress.testing");
-      statusEl.className = "ws-wp-test-status ws-wp-test-pending";
-      const result = await this.plugin.wpClient.testConnection(site);
-      statusEl.textContent = result.message;
-      statusEl.className = `ws-wp-test-status ${result.success ? "ws-wp-test-ok" : "ws-wp-test-err"}`;
-    }));
-    new import_obsidian27.Setting(siteEl).addButton((b) => {
-      b.setButtonText(t2("settings.wordpress.removeSite"));
-      b.buttonEl.addClass("mod-warning");
-      b.onClick(async () => {
-        this.plugin.settings.wordPressSites.splice(index, 1);
-        await this.plugin.saveSettings();
-        const contentEl = this.containerEl.querySelector(".ws-settings-content");
-        if (contentEl instanceof HTMLElement) {
-          contentEl.empty();
-          this.renderWordPress(contentEl);
-        }
-      });
-    });
-  }
-  async renderHelp(el) {
-    this.helpComponent = new import_obsidian27.Component();
-    this.helpComponent.load();
-    el.addClass("ws-help-content");
-    await import_obsidian27.MarkdownRenderer.render(this.app, HELP_CONTENT, el, "", this.helpComponent);
-    const supportDiv = el.createDiv({ cls: "ws-support-footer" });
+  async renderContent() {
+    var _a2;
+    (_a2 = this.component) == null ? void 0 : _a2.unload();
+    this.component = new import_obsidian27.Component();
+    this.component.load();
+    await import_obsidian27.MarkdownRenderer.render(this.appRef, HELP_CONTENT, this.containerEl, "", this.component);
+    const supportDiv = this.containerEl.createDiv({ cls: "ws-support-footer" });
     supportDiv.createEl("a", {
       href: "https://buymeacoffee.com/writerp777",
       attr: { target: "_blank", rel: "noopener noreferrer" }
@@ -18479,6 +18112,536 @@ var WritingStudioSettingsTab = class extends import_obsidian27.PluginSettingTab 
         height: "40"
       }
     });
+  }
+  hide() {
+    var _a2;
+    (_a2 = this.component) == null ? void 0 : _a2.unload();
+    this.component = null;
+    super.hide();
+  }
+};
+var WritingStudioSettingsTab = class extends import_obsidian27.PluginSettingTab {
+  constructor(app, plugin) {
+    super(app, plugin);
+    this.plugin = plugin;
+  }
+  getSettingDefinitions() {
+    return [
+      ...this.generalItems(),
+      this.focusPage(),
+      this.typographyPage(),
+      this.sprintPage(),
+      this.exportPage(),
+      this.logPage(),
+      this.wordPressPage(),
+      {
+        type: "page",
+        name: t2("settings.tab.help"),
+        page: () => new HelpSettingPage(this.app)
+      }
+    ];
+  }
+  getControlValue(key) {
+    const m = key.match(WP_SITE_KEY);
+    if (m) {
+      const site = this.plugin.settings.wordPressSites.find((s) => s.id === m[1]);
+      if (!site) return void 0;
+      switch (m[2]) {
+        case "nickname":
+          return site.nickname;
+        case "url":
+          return site.url;
+        case "username":
+          return site.username;
+        case "defaultStatus":
+          return site.defaultStatus;
+        case "wikilinkHandling":
+          return site.wikilinkHandling;
+      }
+    }
+    return this.plugin.settings[key];
+  }
+  async setControlValue(key, value) {
+    const m = key.match(WP_SITE_KEY);
+    if (m) {
+      const site = this.plugin.settings.wordPressSites.find((s) => s.id === m[1]);
+      if (!site) return;
+      switch (m[2]) {
+        case "nickname":
+          site.nickname = String(value);
+          break;
+        case "url":
+          site.url = String(value);
+          break;
+        case "username":
+          site.username = String(value);
+          break;
+        case "defaultStatus":
+          site.defaultStatus = value;
+          break;
+        case "wikilinkHandling":
+          site.wikilinkHandling = value;
+          break;
+      }
+      await this.plugin.saveSettings();
+      return;
+    }
+    if (key === "epubLanguage") value = String(value).trim() || "en";
+    this.plugin.settings[key] = value;
+    await this.plugin.saveSettings();
+    switch (key) {
+      case "dimOpacity":
+        this.plugin.focusMode.applyDimOpacity();
+        break;
+      case "focusFontSize":
+        this.plugin.focusMode.applyFontSize();
+        break;
+      case "typographyFont":
+        if (this.plugin.typographyMode.isActive()) this.plugin.typographyMode.refreshStyles();
+        break;
+    }
+  }
+  // Validators return an inline error message; the framework rejects the value
+  integerRange(min, max, zeroClears = false) {
+    return (value) => {
+      const inRange = Number.isInteger(value) && value >= min && value <= max;
+      if (inRange || zeroClears && value === 0) return void 0;
+      return t2(
+        zeroClears ? "settings.validation.integerRangeOrZero" : "settings.validation.integerRange",
+        { min, max }
+      );
+    };
+  }
+  generalItems() {
+    return [
+      {
+        name: t2("settings.general.openOnStartup"),
+        desc: t2("settings.general.openOnStartupDesc"),
+        control: { type: "toggle", key: "openOnStartup" }
+      },
+      {
+        name: t2("settings.general.defaultProjectFolder"),
+        desc: t2("settings.general.defaultProjectFolderDesc"),
+        control: {
+          type: "folder",
+          key: "defaultProjectFolder",
+          placeholder: t2("settings.general.defaultProjectFolderPlaceholder")
+        }
+      },
+      {
+        name: t2("settings.general.authorName"),
+        desc: t2("settings.general.authorNameDesc"),
+        control: {
+          type: "text",
+          key: "authorName",
+          placeholder: t2("settings.general.authorNamePlaceholder")
+        }
+      },
+      {
+        name: t2("settings.general.defaultDocumentType"),
+        desc: t2("settings.general.defaultDocumentTypeDesc"),
+        control: {
+          type: "dropdown",
+          key: "defaultDocumentType",
+          options: {
+            chapter: t2("settings.general.docType.chapter"),
+            section: t2("settings.general.docType.section"),
+            article: t2("settings.general.docType.article"),
+            note: t2("settings.general.docType.note")
+          }
+        }
+      },
+      {
+        name: t2("settings.general.frontmatterAutoUpdate"),
+        desc: t2("settings.general.frontmatterAutoUpdateDesc"),
+        control: { type: "toggle", key: "frontmatterAutoUpdate" }
+      }
+    ];
+  }
+  focusPage() {
+    return {
+      type: "page",
+      name: t2("settings.tab.focus"),
+      items: [
+        {
+          name: t2("settings.focus.focusUnit"),
+          desc: t2("settings.focus.focusUnitDesc"),
+          control: {
+            type: "dropdown",
+            key: "focusUnit",
+            options: {
+              paragraph: t2("settings.focus.paragraph"),
+              sentence: t2("settings.focus.sentence")
+            }
+          }
+        },
+        {
+          name: t2("settings.focus.dimOpacity"),
+          desc: t2("settings.focus.dimOpacityDesc"),
+          control: { type: "slider", key: "dimOpacity", min: 10, max: 50, step: 5 }
+        },
+        {
+          name: t2("settings.focus.fontSizeOverride"),
+          desc: t2("settings.focus.fontSizeOverrideDesc"),
+          control: {
+            type: "number",
+            key: "focusFontSize",
+            validate: this.integerRange(8, 72, true)
+          }
+        },
+        {
+          name: t2("settings.focus.autoHideSidebars"),
+          control: { type: "toggle", key: "focusAutoHideSidebars" }
+        },
+        {
+          name: t2("settings.focus.typewriterScroll"),
+          desc: t2("settings.focus.typewriterScrollDesc"),
+          control: { type: "toggle", key: "typewriterScroll" }
+        }
+      ]
+    };
+  }
+  typographyPage() {
+    return {
+      type: "page",
+      name: t2("settings.tab.typography"),
+      items: [
+        {
+          name: t2("settings.typography.fontFamily"),
+          control: {
+            type: "dropdown",
+            key: "typographyFont",
+            options: {
+              "mono": t2("settings.typography.font.mono"),
+              "serif": t2("settings.typography.font.serif"),
+              "sans": t2("settings.typography.font.sans"),
+              "cormorant-garamond": t2("settings.typography.font.cormorant-garamond"),
+              "crimson-text": t2("settings.typography.font.crimson-text"),
+              "eb-garamond": t2("settings.typography.font.eb-garamond"),
+              "libre-baskerville": t2("settings.typography.font.libre-baskerville"),
+              "libre-caslon-text": t2("settings.typography.font.libre-caslon-text"),
+              "literata": t2("settings.typography.font.literata"),
+              "lora": t2("settings.typography.font.lora"),
+              "inter": t2("settings.typography.font.inter"),
+              "lato": t2("settings.typography.font.lato"),
+              "source-sans-3": t2("settings.typography.font.source-sans-3"),
+              "custom": t2("settings.typography.font.custom")
+            }
+          }
+        },
+        {
+          name: t2("settings.typography.customFontName"),
+          desc: t2("settings.typography.customFontNameDesc"),
+          control: {
+            type: "text",
+            key: "customFontName",
+            placeholder: t2("settings.typography.customFontNamePlaceholder")
+          }
+        },
+        {
+          name: t2("settings.typography.maxLineLength"),
+          desc: t2("settings.typography.maxLineLengthDesc"),
+          control: { type: "slider", key: "maxLineLength", min: 55, max: 80, step: 1 }
+        },
+        {
+          name: t2("settings.typography.fontSize"),
+          control: {
+            type: "number",
+            key: "typographyFontSize",
+            validate: this.integerRange(8, 72)
+          }
+        },
+        {
+          name: t2("settings.typography.lineHeight"),
+          desc: t2("settings.typography.lineHeightDesc"),
+          control: { type: "number", key: "lineHeight", step: "any", defaultValue: 1.7 }
+        },
+        {
+          name: t2("settings.typography.letterSpacing"),
+          desc: t2("settings.typography.letterSpacingDesc"),
+          control: { type: "text", key: "letterSpacing" }
+        },
+        {
+          name: t2("settings.typography.persistAcrossSessions"),
+          desc: t2("settings.typography.persistAcrossSessionsDesc"),
+          control: { type: "toggle", key: "persistTypography" }
+        }
+      ]
+    };
+  }
+  sprintPage() {
+    return {
+      type: "page",
+      name: t2("settings.tab.sprint"),
+      items: [
+        {
+          name: t2("settings.sprint.defaultDuration"),
+          control: {
+            type: "number",
+            key: "defaultSprintDuration",
+            validate: this.integerRange(1, 600)
+          }
+        },
+        {
+          name: t2("settings.sprint.defaultDailyGoal"),
+          control: {
+            type: "number",
+            key: "defaultDailyWordGoal",
+            validate: this.integerRange(0, 1e6)
+          }
+        },
+        {
+          name: t2("settings.sprint.soundNotifications"),
+          desc: t2("settings.sprint.soundNotificationsDesc"),
+          control: { type: "toggle", key: "soundNotifications" }
+        },
+        {
+          name: t2("settings.sprint.historyRetention"),
+          control: {
+            type: "number",
+            key: "sprintHistoryRetention",
+            validate: this.integerRange(1, 3650)
+          }
+        },
+        {
+          name: t2("settings.sprint.inlineGoalBanner"),
+          desc: t2("settings.sprint.inlineGoalBannerDesc"),
+          control: { type: "toggle", key: "inlineGoalBanner" }
+        }
+      ]
+    };
+  }
+  exportPage() {
+    return {
+      type: "page",
+      name: t2("settings.tab.export"),
+      items: [
+        {
+          name: t2("settings.export.defaultFormat"),
+          control: {
+            type: "dropdown",
+            key: "defaultExportFormat",
+            options: {
+              md: t2("settings.export.format.md"),
+              html: t2("settings.export.format.html"),
+              manuscript: t2("exportModal.format.manuscript"),
+              epub: t2("exportModal.format.epub"),
+              pdf: t2("settings.export.format.pdf"),
+              docx: t2("settings.export.format.docx"),
+              rtf: t2("settings.export.format.rtf")
+            }
+          }
+        },
+        {
+          name: t2("settings.export.defaultPaperSize"),
+          control: {
+            type: "dropdown",
+            key: "defaultPaperSize",
+            options: {
+              letter: t2("settings.export.paperSize.letter"),
+              a4: t2("settings.export.paperSize.a4")
+            }
+          }
+        },
+        {
+          name: t2("settings.export.exportFont"),
+          control: { type: "text", key: "defaultExportFont", placeholder: "Georgia" }
+        },
+        {
+          name: t2("settings.export.exportFontSize"),
+          control: {
+            type: "number",
+            key: "defaultExportFontSize",
+            validate: this.integerRange(6, 72)
+          }
+        },
+        {
+          name: t2("settings.export.pandocPath"),
+          desc: t2("settings.export.pandocPathDesc"),
+          control: { type: "text", key: "pandocPath", placeholder: "Pandoc" }
+        },
+        {
+          name: t2("settings.export.pdfEngine"),
+          desc: t2("settings.export.pdfEngineDesc"),
+          control: {
+            type: "dropdown",
+            key: "pdfEngine",
+            options: {
+              auto: t2("settings.export.pdfEngineAuto"),
+              xelatex: "xelatex",
+              lualatex: "lualatex",
+              pdflatex: "pdflatex",
+              wkhtmltopdf: "wkhtmltopdf"
+            }
+          }
+        },
+        {
+          name: t2("settings.export.pdfEnginePath"),
+          desc: t2("settings.export.pdfEnginePathDesc"),
+          control: { type: "text", key: "pdfEnginePath" }
+        },
+        {
+          type: "group",
+          heading: t2("settings.export.epubHeading"),
+          items: [
+            {
+              name: t2("settings.export.epubLanguage"),
+              desc: t2("settings.export.epubLanguageDesc"),
+              control: { type: "text", key: "epubLanguage", placeholder: "en" }
+            },
+            {
+              name: t2("settings.export.includeCover"),
+              desc: t2("settings.export.includeCoverDesc"),
+              control: { type: "toggle", key: "epubIncludeCover" }
+            }
+          ]
+        }
+      ]
+    };
+  }
+  logPage() {
+    return {
+      type: "page",
+      name: t2("settings.tab.log"),
+      items: [
+        {
+          name: t2("settings.log.appendToDailyNote"),
+          desc: t2("settings.log.appendToDailyNoteDesc"),
+          control: { type: "toggle", key: "appendToDailyNote" }
+        }
+      ]
+    };
+  }
+  wordPressPage() {
+    return {
+      type: "page",
+      name: t2("settings.tab.wordpress"),
+      items: [
+        {
+          type: "list",
+          heading: t2("settings.wordpress.sitesHeading"),
+          emptyState: t2("settings.wordpress.noSites"),
+          items: this.plugin.settings.wordPressSites.map((site) => this.wordPressSitePage(site)),
+          addItem: {
+            name: t2("settings.wordpress.addSite"),
+            action: () => {
+              void this.addWordPressSite();
+            }
+          },
+          onDelete: (index) => {
+            void this.deleteWordPressSite(index);
+          }
+        },
+        {
+          type: "group",
+          heading: t2("settings.wordpress.wikilinksHeading"),
+          items: [
+            {
+              name: t2("settings.wordpress.defaultWikilinkHandling"),
+              control: {
+                type: "dropdown",
+                key: "wikilinkHandling",
+                options: {
+                  strip: t2("settings.wordpress.wikilinkStrip"),
+                  convert: t2("settings.wordpress.wikilinkConvert")
+                }
+              }
+            }
+          ]
+        }
+      ]
+    };
+  }
+  wordPressSitePage(site) {
+    return {
+      type: "page",
+      name: site.nickname || t2("settings.wordpress.siteUnnamed"),
+      displayValue: () => site.url,
+      items: [
+        {
+          name: t2("settings.wordpress.nickname"),
+          control: { type: "text", key: `wpSite.${site.id}.nickname` }
+        },
+        {
+          name: t2("settings.wordpress.siteUrl"),
+          control: { type: "text", key: `wpSite.${site.id}.url`, placeholder: "https://example.com" }
+        },
+        {
+          name: t2("settings.wordpress.username"),
+          control: { type: "text", key: `wpSite.${site.id}.username` }
+        },
+        {
+          // A masked input has no declarative control type; render keeps the
+          // password out of the DOM as plain text
+          name: t2("settings.wordpress.appPassword"),
+          desc: t2("settings.wordpress.appPasswordDesc"),
+          render: (setting) => {
+            setting.addText((text) => {
+              text.inputEl.type = "password";
+              text.setValue(site.appPassword).onChange(async (v) => {
+                site.appPassword = v;
+                await this.plugin.saveSettings();
+              });
+            });
+          }
+        },
+        {
+          name: t2("settings.wordpress.defaultPostStatus"),
+          control: {
+            type: "dropdown",
+            key: `wpSite.${site.id}.defaultStatus`,
+            options: {
+              draft: t2("settings.wordpress.postStatus.draft"),
+              pending: t2("settings.wordpress.postStatus.pending"),
+              publish: t2("settings.wordpress.postStatus.publish")
+            }
+          }
+        },
+        {
+          name: t2("settings.wordpress.wikilinkHandling"),
+          control: {
+            type: "dropdown",
+            key: `wpSite.${site.id}.wikilinkHandling`,
+            options: {
+              strip: t2("settings.wordpress.wikilinkHandlingStrip"),
+              convert: t2("settings.wordpress.wikilinkHandlingConvert")
+            }
+          }
+        },
+        {
+          name: t2("settings.wordpress.testConnection"),
+          desc: t2("settings.wordpress.testConnectionDesc"),
+          render: (setting) => {
+            const statusEl = setting.descEl.createDiv("ws-wp-test-status");
+            setting.addButton((b) => b.setButtonText(t2("settings.wordpress.testConnection")).onClick(async () => {
+              statusEl.textContent = t2("settings.wordpress.testing");
+              statusEl.className = "ws-wp-test-status ws-wp-test-pending";
+              const result = await this.plugin.wpClient.testConnection(site);
+              statusEl.textContent = result.message;
+              statusEl.className = `ws-wp-test-status ${result.success ? "ws-wp-test-ok" : "ws-wp-test-err"}`;
+            }));
+          }
+        }
+      ]
+    };
+  }
+  async addWordPressSite() {
+    this.plugin.settings.wordPressSites.push({
+      id: `site-${Date.now()}`,
+      nickname: t2("settings.wordpress.newSiteName"),
+      url: "",
+      username: "",
+      appPassword: "",
+      defaultStatus: "draft",
+      wikilinkHandling: "strip"
+    });
+    await this.plugin.saveSettings();
+    this.update();
+  }
+  async deleteWordPressSite(index) {
+    this.plugin.settings.wordPressSites.splice(index, 1);
+    await this.plugin.saveSettings();
+    this.update();
   }
 };
 
