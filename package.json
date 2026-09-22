@@ -14,17 +14,17 @@
     "check:scorecard": "bash scripts/scorecard-check.sh"
   },
   "overrides": {
-    "@codemirror/state": "6.7.4",
-    "@codemirror/view": "6.43.11"
+    "@codemirror/state": "6.7.5",
+    "@codemirror/view": "6.43.12"
   },
   "devDependencies": {
-    "@codemirror/state": "6.7.4",
-    "@codemirror/view": "6.43.11",
+    "@codemirror/state": "6.7.5",
+    "@codemirror/view": "6.43.12",
     "@types/jest": "^30.0.0",
-    "@types/node": "^26.5.1",
+    "@types/node": "^26.6.1",
     "esbuild": "0.28.2",
     "eslint-plugin-obsidianmd": "^0.4.2",
-    "jest": "^30.5.1",
+    "jest": "^30.5.2",
     "obsidian": "^1.13.1",
     "ts-jest": "^29.4.12",
     "tslib": "2.8.1",
