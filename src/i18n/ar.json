@@ -464,7 +464,9 @@
     "projectFolderExists": "يوجد مجلد باسم \"{{name}}\" بالفعل. اختر عنوانًا مختلفًا.",
     "projectFolderMissing": "لم يتم العثور على مجلد المشروع \"{{name}}\" في الخزنة.",
     "projectFolderRenameFailed": "تعذّرت إعادة تسمية مجلد المشروع: {{error}}",
-    "updatedFolderRenamed": "تم تحديث المشروع \"{{title}}\"! تمت إعادة تسمية المجلد إلى \"{{name}}\"."
+    "updatedFolderRenamed": "تم تحديث المشروع \"{{title}}\"! تمت إعادة تسمية المجلد إلى \"{{name}}\".",
+    "renameFolderLabel": "إعادة تسمية مجلد المشروع أيضًا",
+    "renameFolderDesc": "يُبقي اسم المجلد متوافقًا مع العنوان. أوقفه لتغيير العنوان فقط."
   },
   "sprintModal": {
     "setupTitle": "إعداد السباق",

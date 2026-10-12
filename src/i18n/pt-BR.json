@@ -448,7 +448,9 @@
     "projectFolderExists": "Já existe uma pasta chamada \"{{name}}\". Escolha outro título.",
     "projectFolderMissing": "A pasta do projeto \"{{name}}\" não foi encontrada no cofre.",
     "projectFolderRenameFailed": "Não foi possível renomear a pasta do projeto: {{error}}",
-    "updatedFolderRenamed": "Projeto \"{{title}}\" atualizado! Pasta renomeada para \"{{name}}\"."
+    "updatedFolderRenamed": "Projeto \"{{title}}\" atualizado! Pasta renomeada para \"{{name}}\".",
+    "renameFolderLabel": "Renomear também a pasta do projeto",
+    "renameFolderDesc": "Mantém o nome da pasta alinhado ao título. Desative para alterar apenas o título."
   },
   "sprintModal": {
     "setupTitle": "Configurar sprint",

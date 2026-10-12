@@ -448,7 +448,9 @@
     "projectFolderExists": "Ein Ordner namens \"{{name}}\" existiert bereits. Wählen Sie einen anderen Titel.",
     "projectFolderMissing": "Der Projektordner \"{{name}}\" wurde im Vault nicht gefunden.",
     "projectFolderRenameFailed": "Der Projektordner konnte nicht umbenannt werden: {{error}}",
-    "updatedFolderRenamed": "Projekt \"{{title}}\" aktualisiert! Ordner umbenannt in \"{{name}}\"."
+    "updatedFolderRenamed": "Projekt \"{{title}}\" aktualisiert! Ordner umbenannt in \"{{name}}\".",
+    "renameFolderLabel": "Projektordner ebenfalls umbenennen",
+    "renameFolderDesc": "Hält den Ordnernamen mit dem Titel in Einklang. Ausschalten, um nur den Titel zu ändern."
   },
   "sprintModal": {
     "setupTitle": "Sprint einrichten",

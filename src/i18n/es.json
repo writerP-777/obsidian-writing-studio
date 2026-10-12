@@ -448,7 +448,9 @@
     "projectFolderExists": "Ya existe una carpeta llamada \"{{name}}\". Elige otro título.",
     "projectFolderMissing": "No se encontró la carpeta del proyecto \"{{name}}\" en la bóveda.",
     "projectFolderRenameFailed": "No se pudo renombrar la carpeta del proyecto: {{error}}",
-    "updatedFolderRenamed": "¡Proyecto \"{{title}}\" actualizado! Carpeta renombrada a \"{{name}}\"."
+    "updatedFolderRenamed": "¡Proyecto \"{{title}}\" actualizado! Carpeta renombrada a \"{{name}}\".",
+    "renameFolderLabel": "Renombrar también la carpeta del proyecto",
+    "renameFolderDesc": "Mantiene el nombre de la carpeta a la par con el título. Desactívalo para cambiar solo el título."
   },
   "sprintModal": {
     "setupTitle": "Configurar sprint",

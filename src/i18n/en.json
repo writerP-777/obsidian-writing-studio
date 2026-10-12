@@ -448,7 +448,9 @@
     "projectFolderExists": "A folder named \"{{name}}\" already exists. Choose a different title.",
     "projectFolderMissing": "The project folder \"{{name}}\" was not found in the vault.",
     "projectFolderRenameFailed": "Could not rename the project folder: {{error}}",
-    "updatedFolderRenamed": "Project \"{{title}}\" updated! Folder renamed to \"{{name}}\"."
+    "updatedFolderRenamed": "Project \"{{title}}\" updated! Folder renamed to \"{{name}}\".",
+    "renameFolderLabel": "Also rename the project folder",
+    "renameFolderDesc": "Keeps the folder name in step with the title. Turn off to change the title only."
   },
   "sprintModal": {
     "setupTitle": "Set up sprint",

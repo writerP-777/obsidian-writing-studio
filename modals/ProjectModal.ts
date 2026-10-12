@@ -34,6 +34,8 @@ export class ProjectModal extends Modal {
   private goalRaw = '';
   private description = '';
   private documentFolder = '';
+  // Edit mode: whether a title change also renames the project folder (#391).
+  private renameFolder = true;
 
   // Most callers need no callback — ProjectManager announces the new project
   // itself. Pass onDone only for work beyond refreshing project state.
@@ -82,8 +84,20 @@ export class ProjectModal extends Modal {
         }));
 
     if (this.edit) {
+      const project = this.edit;
       folderHintEl = contentEl.createDiv('ws-project-folder-hint');
-      this.updateFolderHint(folderHintEl, this.edit);
+      this.updateFolderHint(folderHintEl, project);
+      // Off means "change the title only" — for a writer whose folder name
+      // is deliberately different from the title.
+      new Setting(contentEl)
+        .setName(t('projectModal.renameFolderLabel'))
+        .setDesc(t('projectModal.renameFolderDesc'))
+        .addToggle(tg => tg
+          .setValue(this.renameFolder)
+          .onChange(v => {
+            this.renameFolder = v;
+            if (folderHintEl) this.updateFolderHint(folderHintEl, project);
+          }));
     }
 
     if (!this.edit) {
@@ -199,7 +213,7 @@ export class ProjectModal extends Modal {
     const titleChanged = newTitle !== project.title;
     const folderPlan = planProjectFolderForTitle(newTitle, baseName(project.folderPath));
     let folderRenamed = false;
-    if (titleChanged && folderPlan.renames) {
+    if (this.renameFolder && titleChanged && folderPlan.renames) {
       folderRenamed = await this.renameProjectFolder(project, folderPlan.name);
       if (!folderRenamed) {
         submitBtn.disabled = false;
@@ -238,6 +252,7 @@ export class ProjectModal extends Modal {
 
   private updateFolderHint(el: HTMLElement, project: WritingProject): void {
     el.empty();
+    if (!this.renameFolder) return;
     const plan = planProjectFolderForTitle(this.title, baseName(project.folderPath));
     if (!plan.renames) return;
     el.createEl('p', { text: t('projectModal.folderWillRename', { name: plan.name }) });

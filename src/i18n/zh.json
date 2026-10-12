@@ -448,7 +448,9 @@
     "projectFolderExists": "名为“{{name}}”的文件夹已存在。请选择其他标题。",
     "projectFolderMissing": "在仓库中找不到项目文件夹“{{name}}”。",
     "projectFolderRenameFailed": "无法重命名项目文件夹：{{error}}",
-    "updatedFolderRenamed": "项目“{{title}}”已更新！文件夹已重命名为“{{name}}”。"
+    "updatedFolderRenamed": "项目“{{title}}”已更新！文件夹已重命名为“{{name}}”。",
+    "renameFolderLabel": "同时重命名项目文件夹",
+    "renameFolderDesc": "使文件夹名称与标题保持一致。关闭后仅更改标题。"
   },
   "sprintModal": {
     "setupTitle": "设置冲刺",

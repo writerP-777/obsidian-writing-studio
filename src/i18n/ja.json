@@ -448,7 +448,9 @@
     "projectFolderExists": "「{{name}}」という名前のフォルダーは既に存在します。別のタイトルを選んでください。",
     "projectFolderMissing": "プロジェクトフォルダー「{{name}}」が保管庫に見つかりませんでした。",
     "projectFolderRenameFailed": "プロジェクトフォルダーの名前を変更できませんでした: {{error}}",
-    "updatedFolderRenamed": "プロジェクト「{{title}}」を更新しました。フォルダー名を「{{name}}」に変更しました。"
+    "updatedFolderRenamed": "プロジェクト「{{title}}」を更新しました。フォルダー名を「{{name}}」に変更しました。",
+    "renameFolderLabel": "プロジェクトフォルダーの名前も変更する",
+    "renameFolderDesc": "フォルダー名をタイトルに合わせて保ちます。タイトルだけを変更するにはオフにしてください。"
   },
   "sprintModal": {
     "setupTitle": "スプリントを設定",

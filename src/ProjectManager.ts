@@ -69,6 +69,17 @@ export class ProjectManager extends Events {
       // Deleted projects keep their files in the vault, so the folder scan
       // still finds them — the tombstone list is what keeps them out
       if (this.plugin.settings.removedProjectIds.includes(project.id)) return null;
+      // The folder the record sits in is the truth. A folder renamed or
+      // moved while the plugin could not follow (outside Obsidian, or
+      // before the rename handler existed) leaves a stale folderPath that
+      // every path-dependent surface then misses — and a save would write
+      // the record back to the stale location (#391 fallout). Repair it
+      // silently; the title is left alone.
+      const actualPath = normalizePath(folderPath);
+      if (project.folderPath !== actualPath) {
+        project.folderPath = actualPath;
+        await this.writeJson(normalizePath(`${actualPath}/_project.json`), project);
+      }
       this.projects.set(project.id, project);
       return project;
     } catch {

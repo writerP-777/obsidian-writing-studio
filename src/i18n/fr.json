@@ -448,7 +448,9 @@
     "projectFolderExists": "Un dossier nommé « {{name}} » existe déjà. Choisissez un autre titre.",
     "projectFolderMissing": "Le dossier du projet « {{name}} » est introuvable dans le coffre.",
     "projectFolderRenameFailed": "Impossible de renommer le dossier du projet : {{error}}",
-    "updatedFolderRenamed": "Projet « {{title}} » mis à jour ! Dossier renommé en « {{name}} »."
+    "updatedFolderRenamed": "Projet « {{title}} » mis à jour ! Dossier renommé en « {{name}} ».",
+    "renameFolderLabel": "Renommer aussi le dossier du projet",
+    "renameFolderDesc": "Garde le nom du dossier aligné sur le titre. Désactivez pour ne changer que le titre."
   },
   "sprintModal": {
     "setupTitle": "Configurer un sprint",

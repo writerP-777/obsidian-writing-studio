@@ -458,7 +458,9 @@
     "projectFolderExists": "Папка с именем «{{name}}» уже существует. Выберите другое название.",
     "projectFolderMissing": "Папка проекта «{{name}}» не найдена в хранилище.",
     "projectFolderRenameFailed": "Не удалось переименовать папку проекта: {{error}}",
-    "updatedFolderRenamed": "Проект «{{title}}» обновлён! Папка переименована в «{{name}}»."
+    "updatedFolderRenamed": "Проект «{{title}}» обновлён! Папка переименована в «{{name}}».",
+    "renameFolderLabel": "Также переименовать папку проекта",
+    "renameFolderDesc": "Держит имя папки в соответствии с названием. Выключите, чтобы изменить только название."
   },
   "sprintModal": {
     "setupTitle": "Настроить спринт",

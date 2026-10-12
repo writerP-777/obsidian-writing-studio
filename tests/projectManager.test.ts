@@ -140,6 +140,52 @@ describe('ProjectManager.createProject name collision', () => {
   });
 });
 
+// #391 fallout — a project folder renamed or moved while the plugin could
+// not follow leaves a stale folderPath in the record. The folder the record
+// sits in is the truth; loading repairs the record and persists it there.
+describe('ProjectManager.loadProject repairs a stale folderPath', () => {
+  it('repoints folderPath to the folder the record was found in and persists it', async () => {
+    const files = new InMemoryVaultFiles();
+    files.folders.add('Projects/Acts is Not Normal');
+    files.files.set('Projects/Acts is Not Normal/_project.json',
+      JSON.stringify({ ...makeProject(), id: 'a', title: 'Acts is Normative', folderPath: 'Projects/Acts is Normative' }));
+    const pm = new ProjectManager(makePlugin(), files);
+
+    await pm.loadAllProjects();
+
+    const project = pm.getProject('a');
+    expect(project?.folderPath).toBe('Projects/Acts is Not Normal');
+    const saved = JSON.parse(files.files.get('Projects/Acts is Not Normal/_project.json') as string) as WritingProject;
+    expect(saved.folderPath).toBe('Projects/Acts is Not Normal');
+    // Nothing is written to the stale location
+    expect(files.files.has('Projects/Acts is Normative/_project.json')).toBe(false);
+  });
+
+  it('leaves the title alone — only the path is repaired', async () => {
+    const files = new InMemoryVaultFiles();
+    files.folders.add('Projects/Acts is Not Normal');
+    files.files.set('Projects/Acts is Not Normal/_project.json',
+      JSON.stringify({ ...makeProject(), id: 'a', title: 'Acts is Normative', folderPath: 'Projects/Acts is Normative' }));
+    const pm = new ProjectManager(makePlugin(), files);
+
+    await pm.loadAllProjects();
+
+    expect(pm.getProject('a')?.title).toBe('Acts is Normative');
+  });
+
+  it('does not rewrite a record whose path is already correct', async () => {
+    const files = new InMemoryVaultFiles();
+    files.folders.add('Projects/Book A');
+    const raw = JSON.stringify({ ...makeProject(), id: 'a', folderPath: 'Projects/Book A' });
+    files.files.set('Projects/Book A/_project.json', raw);
+    const pm = new ProjectManager(makePlugin(), files);
+
+    await pm.loadAllProjects();
+
+    expect(files.files.get('Projects/Book A/_project.json')).toBe(raw);
+  });
+});
+
 describe('ProjectManager.loadAllProjects', () => {
   it('loads projects from the immediate subfolders of the root', async () => {
     const files = new InMemoryVaultFiles();
