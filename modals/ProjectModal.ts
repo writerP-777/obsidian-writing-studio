@@ -4,6 +4,8 @@ import { ProjectType, WritingProject, resolveDocumentFolder } from '../models/Pr
 import {
   validateDocumentFolderName, FolderNameRejection,
   documentFolderDisplayName, documentFolderRenameTarget,
+  planProjectFolderForTitle, validateProjectFolderName, ProjectFolderRejection,
+  baseName, parentPath, joinPath,
 } from '../src/folderRename';
 import { t } from '../src/i18n';
 
@@ -13,6 +15,11 @@ const FOLDER_REJECTION_KEYS: Record<FolderNameRejection, string> = {
   trailing: 'projectModal.folderNameTrailing',
   reserved: 'projectModal.folderNameReserved',
   exists: 'projectModal.folderNameExists',
+};
+
+const PROJECT_FOLDER_REJECTION_KEYS: Record<ProjectFolderRejection, string> = {
+  empty: 'projectModal.projectFolderEmpty',
+  exists: 'projectModal.projectFolderExists',
 };
 
 export class ProjectModal extends Modal {
@@ -27,6 +34,8 @@ export class ProjectModal extends Modal {
   private goalRaw = '';
   private description = '';
   private documentFolder = '';
+  // Edit mode: whether a title change also renames the project folder (#391).
+  private renameFolder = true;
 
   // Most callers need no callback — ProjectManager announces the new project
   // itself. Pass onDone only for work beyond refreshing project state.
@@ -59,12 +68,37 @@ export class ProjectModal extends Modal {
     // Declared early so the dropdown onChange closure can reference it; assigned below.
     let previewEl: HTMLElement | null = null;
 
+    // Edit mode: a live hint under the title says what saving will do to the
+    // project folder (#391) — renamed to what, and why the name differs from
+    // the title when it does. Empty (and hidden) while nothing would move.
+    let folderHintEl: HTMLElement | null = null;
+
     new Setting(contentEl)
       .setName(t('projectModal.projectTitle'))
       .addText(tx => tx
         .setPlaceholder(t('projectModal.titlePlaceholder'))
         .setValue(this.title)
-        .onChange(v => { this.title = v; }));
+        .onChange(v => {
+          this.title = v;
+          if (folderHintEl && this.edit) this.updateFolderHint(folderHintEl, this.edit);
+        }));
+
+    if (this.edit) {
+      const project = this.edit;
+      folderHintEl = contentEl.createDiv('ws-project-folder-hint');
+      this.updateFolderHint(folderHintEl, project);
+      // Off means "change the title only" — for a writer whose folder name
+      // is deliberately different from the title.
+      new Setting(contentEl)
+        .setName(t('projectModal.renameFolderLabel'))
+        .setDesc(t('projectModal.renameFolderDesc'))
+        .addToggle(tg => tg
+          .setValue(this.renameFolder)
+          .onChange(v => {
+            this.renameFolder = v;
+            if (folderHintEl) this.updateFolderHint(folderHintEl, project);
+          }));
+    }
 
     if (!this.edit) {
       new Setting(contentEl)
@@ -167,11 +201,25 @@ export class ProjectModal extends Modal {
     }
   }
 
-  // Retitling is display-only — the project folder keeps the name it was
-  // scaffolded with. Only the document folder can be renamed here, and that
-  // rename happens in the vault; the rename-event handler updates the
-  // project record and binder, exactly as for a manual rename.
+  // A changed title also renames the project folder (#391); the document
+  // folder can be renamed here too. Both renames happen in the vault, so
+  // links heal and the rename-event handler updates the project record and
+  // binder exactly as for a manual rename. Order matters: the project folder
+  // moves first so the document-folder rename resolves inside the new path.
+  // Editing other fields never moves the folder, even when title and folder
+  // are already out of step.
   private async saveEdit(project: WritingProject, submitBtn: HTMLButtonElement): Promise<void> {
+    const newTitle = this.title.trim();
+    const titleChanged = newTitle !== project.title;
+    const folderPlan = planProjectFolderForTitle(newTitle, baseName(project.folderPath));
+    let folderRenamed = false;
+    if (this.renameFolder && titleChanged && folderPlan.renames) {
+      folderRenamed = await this.renameProjectFolder(project, folderPlan.name);
+      if (!folderRenamed) {
+        submitBtn.disabled = false;
+        return;
+      }
+    }
     const currentFolder = resolveDocumentFolder(project);
     if (this.documentFolder !== documentFolderDisplayName(currentFolder)) {
       const renamed = await this.renameDocumentFolder(project, currentFolder);
@@ -181,7 +229,7 @@ export class ProjectModal extends Modal {
       }
     }
     try {
-      project.title = this.title.trim();
+      project.title = newTitle;
       project.author = this.author.trim();
       project.description = this.description;
       const goal = parseInt(this.goalRaw) || 0;
@@ -191,12 +239,55 @@ export class ProjectModal extends Modal {
         delete project.goals.totalWordCount;
       }
       await this.plugin.projectManager.saveProject(project);
-      new Notice(t('projectModal.updated', { title: project.title }));
+      new Notice(folderRenamed
+        ? t('projectModal.updatedFolderRenamed', { title: project.title, name: folderPlan.name })
+        : t('projectModal.updated', { title: project.title }));
       this.close();
       this.onDone?.();
     } catch (e) {
       new Notice(t('main.operationFailed', { error: e instanceof Error ? e.message : String(e) }));
       submitBtn.disabled = false;
+    }
+  }
+
+  private updateFolderHint(el: HTMLElement, project: WritingProject): void {
+    el.empty();
+    if (!this.renameFolder) return;
+    const plan = planProjectFolderForTitle(this.title, baseName(project.folderPath));
+    if (!plan.renames) return;
+    el.createEl('p', { text: t('projectModal.folderWillRename', { name: plan.name }) });
+    if (plan.substituted) {
+      el.createEl('p', { text: t('projectModal.folderCharsReplaced') });
+    }
+  }
+
+  // Renames the project folder to `targetName` (already derived from the
+  // title, so legal by construction). False (with a notice shown) when the
+  // name is empty, a different folder already has it, the source is missing,
+  // or the vault rename fails — a failed rename never passes silently. On
+  // success folderPath is repointed here as well as by the rename-event
+  // handler, so the rest of the save never depends on event timing.
+  private async renameProjectFolder(project: WritingProject, targetName: string): Promise<boolean> {
+    const currentName = baseName(project.folderPath);
+    const target = normalizePath(joinPath(parentPath(project.folderPath), targetName));
+    const targetExists = this.app.vault.getAbstractFileByPath(target) !== null;
+    const verdict = validateProjectFolderName(targetName, currentName, targetExists);
+    if (!verdict.ok) {
+      new Notice(t(PROJECT_FOLDER_REJECTION_KEYS[verdict.reason ?? 'empty'], { name: targetName }));
+      return false;
+    }
+    const source = this.app.vault.getFolderByPath(normalizePath(project.folderPath));
+    if (!source) {
+      new Notice(t('projectModal.projectFolderMissing', { name: currentName }));
+      return false;
+    }
+    try {
+      await this.app.fileManager.renameFile(source, target);
+      project.folderPath = target;
+      return true;
+    } catch (e) {
+      new Notice(t('projectModal.projectFolderRenameFailed', { error: e instanceof Error ? e.message : String(e) }));
+      return false;
     }
   }
 

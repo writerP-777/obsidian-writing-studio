@@ -11,7 +11,7 @@ import {
   baseName,
   parentPath,
   pathAtOrUnder,
-  replaceIllegalNameChars,
+  projectFolderNameForTitle,
   rewritePathPrefix,
 } from './folderRename';
 
@@ -69,6 +69,17 @@ export class ProjectManager extends Events {
       // Deleted projects keep their files in the vault, so the folder scan
       // still finds them — the tombstone list is what keeps them out
       if (this.plugin.settings.removedProjectIds.includes(project.id)) return null;
+      // The folder the record sits in is the truth. A folder renamed or
+      // moved while the plugin could not follow (outside Obsidian, or
+      // before the rename handler existed) leaves a stale folderPath that
+      // every path-dependent surface then misses — and a save would write
+      // the record back to the stale location (#391 fallout). Repair it
+      // silently; the title is left alone.
+      const actualPath = normalizePath(folderPath);
+      if (project.folderPath !== actualPath) {
+        project.folderPath = actualPath;
+        await this.writeJson(normalizePath(`${actualPath}/_project.json`), project);
+      }
       this.projects.set(project.id, project);
       return project;
     } catch {
@@ -85,7 +96,7 @@ export class ProjectManager extends Events {
   ): Promise<WritingProject> {
     const rootFolder = this.plugin.settings.defaultProjectFolder || 'Writing Projects';
     const id = this.uniqueId('project');
-    const folderName = replaceIllegalNameChars(title, '-');
+    const folderName = projectFolderNameForTitle(title);
     const folderPath = normalizePath(`${rootFolder}/${folderName}`);
 
     // Refuse rather than scaffold into an existing folder — writing into one
@@ -227,10 +238,20 @@ export class ProjectManager extends Events {
   // under the renamed path, and documentFolder is renamed along with the
   // folder it names. Idempotent — a replayed event finds nothing to change.
   // The binder needs no repair since #233 — it renders disk truth.
+  //
+  // Renaming the project folder itself also retitles the project (#391) —
+  // but only when the title exactly equalled the old folder name. A title
+  // the writer set apart from the folder ("My Book: A Novel" over
+  // "My Book- A Novel") is theirs and is never overwritten. Ancestor renames
+  // never touch the title.
   async handleFolderRename(oldPath: string, newPath: string): Promise<void> {
     for (const project of this.getProjects()) {
       if (pathAtOrUnder(project.folderPath, oldPath)) {
+        const isProjectFolder = project.folderPath === oldPath;
         project.folderPath = rewritePathPrefix(project.folderPath, oldPath, newPath);
+        if (isProjectFolder && project.title === baseName(oldPath)) {
+          project.title = baseName(newPath);
+        }
         await this.saveProject(project);
       }
 

@@ -441,7 +441,16 @@
     "folderNameReserved": "« {{name}} » est un dossier réservé du projet.",
     "folderNameExists": "Un dossier nommé « {{name}} » existe déjà dans ce projet.",
     "folderMissing": "Le dossier des documents « {{name}} » est introuvable dans le coffre.",
-    "folderRenameFailed": "Impossible de renommer le dossier des documents : {{error}}"
+    "folderRenameFailed": "Impossible de renommer le dossier des documents : {{error}}",
+    "folderWillRename": "Le dossier du projet sera renommé en « {{name}} ».",
+    "folderCharsReplaced": "Les caractères \\ / : * ? \" < > | ne sont pas autorisés dans les noms de dossier et sont remplacés par -.",
+    "projectFolderEmpty": "Ce titre ne laisse aucun nom de dossier utilisable. Ajoutez des lettres ou des chiffres.",
+    "projectFolderExists": "Un dossier nommé « {{name}} » existe déjà. Choisissez un autre titre.",
+    "projectFolderMissing": "Le dossier du projet « {{name}} » est introuvable dans le coffre.",
+    "projectFolderRenameFailed": "Impossible de renommer le dossier du projet : {{error}}",
+    "updatedFolderRenamed": "Projet « {{title}} » mis à jour ! Dossier renommé en « {{name}} ».",
+    "renameFolderLabel": "Renommer aussi le dossier du projet",
+    "renameFolderDesc": "Garde le nom du dossier aligné sur le titre. Désactivez pour ne changer que le titre."
   },
   "sprintModal": {
     "setupTitle": "Configurer un sprint",

@@ -5,6 +5,9 @@ import {
   RESERVED_PROJECT_FOLDERS,
   documentFolderDisplayName,
   documentFolderRenameTarget,
+  projectFolderNameForTitle,
+  planProjectFolderForTitle,
+  validateProjectFolderName,
 } from '../src/folderRename';
 import { InMemoryVaultFiles } from './inMemoryVaultFiles';
 
@@ -196,5 +199,112 @@ describe('ProjectManager.handleFolderRename', () => {
 
     expect(projectSaves).not.toHaveBeenCalled();
     expect(project.documentFolder).toBe('Text');
+  });
+});
+
+// #391 — renaming the project folder in Obsidian's file explorer retitles
+// the project, but only when the title and the folder name were in step.
+describe('ProjectManager.handleFolderRename retitles the project (#391)', () => {
+  it('a title equal to the old folder name follows the rename', async () => {
+    const project = makeProject({ title: 'My Book' });
+    const { pm, files } = await setup(project);
+
+    await pm.handleFolderRename('Projects/My Book', 'Projects/My Novel');
+
+    expect(project.title).toBe('My Novel');
+    expect(project.folderPath).toBe('Projects/My Novel');
+    const saved = JSON.parse(files.files.get('Projects/My Novel/_project.json') as string) as WritingProject;
+    expect(saved.title).toBe('My Novel');
+  });
+
+  it('a title set apart from the folder is never overwritten', async () => {
+    const project = makeProject({ title: 'My Book: A Novel', folderPath: 'Projects/My Book- A Novel' });
+    const { pm } = await setup(project);
+
+    await pm.handleFolderRename('Projects/My Book- A Novel', 'Projects/Other');
+
+    expect(project.title).toBe('My Book: A Novel');
+    expect(project.folderPath).toBe('Projects/Other');
+  });
+
+  it('renaming an ancestor folder repoints the path and leaves the title alone', async () => {
+    const project = makeProject({ title: 'My Book' });
+    const { pm } = await setup(project);
+
+    await pm.handleFolderRename('Projects', 'Writing');
+
+    expect(project.folderPath).toBe('Writing/My Book');
+    expect(project.title).toBe('My Book');
+  });
+
+  it('renaming the document folder leaves the title alone', async () => {
+    const project = makeProject({ title: 'Chapters', documentFolder: 'Chapters' });
+    const { pm } = await setup(project, ['Projects/My Book/Chapters']);
+
+    await pm.handleFolderRename('Projects/My Book/Chapters', 'Projects/My Book/Text');
+
+    expect(project.title).toBe('Chapters');
+    expect(project.documentFolder).toBe('Text');
+  });
+});
+
+// #391 — the one derivation shared by createProject and the edit modal's
+// title rename: the title keeps its punctuation, the folder stays legal.
+describe('projectFolderNameForTitle', () => {
+  it('passes an ordinary title through unchanged', () => {
+    expect(projectFolderNameForTitle('My Book')).toBe('My Book');
+  });
+
+  it('replaces every illegal filename character with a hyphen', () => {
+    expect(projectFolderNameForTitle('My Book: A Novel')).toBe('My Book- A Novel');
+    expect(projectFolderNameForTitle('a\\b/c:d*e?f"g<h>i|j')).toBe('a-b-c-d-e-f-g-h-i-j');
+  });
+
+  it('trims the title and strips trailing dots and spaces', () => {
+    expect(projectFolderNameForTitle('  Draft One. ')).toBe('Draft One');
+    expect(projectFolderNameForTitle('Ending...')).toBe('Ending');
+  });
+
+  it('yields an empty name when nothing usable remains', () => {
+    expect(projectFolderNameForTitle('...')).toBe('');
+    expect(projectFolderNameForTitle('   ')).toBe('');
+  });
+});
+
+describe('planProjectFolderForTitle', () => {
+  it('reports no rename when the title maps to the current folder', () => {
+    expect(planProjectFolderForTitle('My Book', 'My Book')).toEqual({ name: 'My Book', renames: false, substituted: false });
+  });
+
+  it('reports a plain rename for a legal new title', () => {
+    expect(planProjectFolderForTitle('My Novel', 'My Book')).toEqual({ name: 'My Novel', renames: true, substituted: false });
+  });
+
+  it('reports a substituted rename when the title has illegal characters', () => {
+    expect(planProjectFolderForTitle('My Book: A Novel', 'My Book'))
+      .toEqual({ name: 'My Book- A Novel', renames: true, substituted: true });
+  });
+
+  it('a punctuated title whose folder already carries the substitution needs no rename', () => {
+    expect(planProjectFolderForTitle('My Book: A Novel', 'My Book- A Novel'))
+      .toEqual({ name: 'My Book- A Novel', renames: false, substituted: true });
+  });
+});
+
+describe('validateProjectFolderName', () => {
+  it('rejects an empty derived name', () => {
+    expect(validateProjectFolderName('', 'My Book', false)).toEqual({ ok: false, reason: 'empty' });
+  });
+
+  it('rejects a name another folder already has', () => {
+    expect(validateProjectFolderName('Other', 'My Book', true)).toEqual({ ok: false, reason: 'exists' });
+  });
+
+  it('proceeds on a case-only rename even though the target "exists"', () => {
+    expect(validateProjectFolderName('my book', 'My Book', true)).toEqual({ ok: true });
+  });
+
+  it('accepts an ordinary new name', () => {
+    expect(validateProjectFolderName('My Novel', 'My Book', false)).toEqual({ ok: true });
   });
 });

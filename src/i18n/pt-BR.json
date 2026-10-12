@@ -441,7 +441,16 @@
     "folderNameReserved": "\"{{name}}\" é uma pasta reservada do projeto.",
     "folderNameExists": "Já existe uma pasta chamada \"{{name}}\" neste projeto.",
     "folderMissing": "A pasta de documentos \"{{name}}\" não foi encontrada no cofre.",
-    "folderRenameFailed": "Não foi possível renomear a pasta de documentos: {{error}}"
+    "folderRenameFailed": "Não foi possível renomear a pasta de documentos: {{error}}",
+    "folderWillRename": "A pasta do projeto será renomeada para \"{{name}}\".",
+    "folderCharsReplaced": "Os caracteres \\ / : * ? \" < > | não são permitidos em nomes de pasta e são substituídos por -.",
+    "projectFolderEmpty": "Este título não deixa nenhum nome de pasta utilizável. Adicione letras ou números.",
+    "projectFolderExists": "Já existe uma pasta chamada \"{{name}}\". Escolha outro título.",
+    "projectFolderMissing": "A pasta do projeto \"{{name}}\" não foi encontrada no cofre.",
+    "projectFolderRenameFailed": "Não foi possível renomear a pasta do projeto: {{error}}",
+    "updatedFolderRenamed": "Projeto \"{{title}}\" atualizado! Pasta renomeada para \"{{name}}\".",
+    "renameFolderLabel": "Renomear também a pasta do projeto",
+    "renameFolderDesc": "Mantém o nome da pasta alinhado ao título. Desative para alterar apenas o título."
   },
   "sprintModal": {
     "setupTitle": "Configurar sprint",
