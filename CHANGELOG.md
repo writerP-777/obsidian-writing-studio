@@ -4,7 +4,7 @@ All notable changes to Writing Studio are documented here.
 
 ---
 
-## [3.2.0] - Unreleased
+## [3.2.0] - 2026-10-12
 
 ### Changed
 - Renaming a project now renames its folder. Changing the title in the edit-project dialog renames the project folder to match and moves every file with it; a hint under the title field shows the folder name before you save, says when characters not allowed in folder names (`\ / : * ? " < > |`) are replaced with `-`, and the save is refused with a message if a folder with that name already exists. An **Also rename the project folder** toggle in the dialog, on by default, lets you change the title alone. The reverse works too: renaming the project folder in Obsidian's file explorer updates the project's title, as long as the title and folder name matched beforehand — a title set apart from its folder is never overwritten. (#391)
