@@ -115,3 +115,56 @@ export function validateDocumentFolderName(
   if (targetExists && !caseOnly) return { ok: false, reason: 'exists' };
   return { ok: true };
 }
+
+// The folder name a project title maps to — the single derivation shared by
+// createProject and the edit-project modal's title rename (#391). Illegal
+// filename characters become "-" so a title keeps its punctuation
+// ("My Book: A Novel") while its folder stays legal ("My Book- A Novel");
+// trailing dots and spaces are dropped because Windows refuses them.
+export function projectFolderNameForTitle(title: string): string {
+  return stripTrailingDotsAndSpaces(replaceIllegalNameChars(title.trim(), '-'));
+}
+
+export interface ProjectFolderPlan {
+  // The on-disk name the title maps to.
+  name: string;
+  // True when the folder name differs from the current one — a save renames.
+  renames: boolean;
+  // True when the derivation changed the typed text — the UI explains why.
+  substituted: boolean;
+}
+
+// What saving `title` means for a project living in a folder currently
+// named `currentFolderName`. Pure: the modal shows this as a live hint and
+// acts on it at save time.
+export function planProjectFolderForTitle(title: string, currentFolderName: string): ProjectFolderPlan {
+  const name = projectFolderNameForTitle(title);
+  return {
+    name,
+    renames: name !== currentFolderName,
+    substituted: name !== title.trim(),
+  };
+}
+
+export type ProjectFolderRejection = 'empty' | 'exists';
+
+export interface ProjectFolderVerdict {
+  ok: boolean;
+  reason?: ProjectFolderRejection;
+}
+
+// Validates a derived project-folder name before the rename. The text
+// rules of validateDocumentFolderName do not apply — derivation already
+// made the name legal — so only emptiness and a collision can refuse it.
+// A case-only change is the same folder on case-insensitive filesystems
+// and proceeds even though the target "exists".
+export function validateProjectFolderName(
+  name: string,
+  currentName: string,
+  targetExists: boolean,
+): ProjectFolderVerdict {
+  if (name === '') return { ok: false, reason: 'empty' };
+  const caseOnly = name !== currentName && name.toLowerCase() === currentName.toLowerCase();
+  if (targetExists && !caseOnly) return { ok: false, reason: 'exists' };
+  return { ok: true };
+}

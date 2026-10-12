@@ -118,6 +118,17 @@ describe('ProjectManager.createProject name collision', () => {
     expect(files.files.has('Projects/Fresh Title/_binder.json')).toBe(false);
   });
 
+  it('keeps the title as typed while the folder gets the legal name (#391)', async () => {
+    const files = new InMemoryVaultFiles();
+    const pm = new ProjectManager(makePlugin(), files);
+
+    const project = await pm.createProject('My Book: A Novel.', 'blank', '', '');
+
+    expect(project.title).toBe('My Book: A Novel.');
+    expect(project.folderPath).toBe('Projects/My Book- A Novel');
+    expect(files.folders).toContain('Projects/My Book- A Novel');
+  });
+
   it('never writes a _binder.json, even for a templated project type', async () => {
     const files = new InMemoryVaultFiles();
     const pm = new ProjectManager(makePlugin(), files);

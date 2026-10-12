@@ -441,7 +441,14 @@
     "folderNameReserved": "\"{{name}}\" es una carpeta reservada del proyecto.",
     "folderNameExists": "Ya existe una carpeta llamada \"{{name}}\" en este proyecto.",
     "folderMissing": "No se encontró la carpeta de documentos \"{{name}}\" en la bóveda.",
-    "folderRenameFailed": "No se pudo renombrar la carpeta de documentos: {{error}}"
+    "folderRenameFailed": "No se pudo renombrar la carpeta de documentos: {{error}}",
+    "folderWillRename": "La carpeta del proyecto pasará a llamarse \"{{name}}\".",
+    "folderCharsReplaced": "Los caracteres \\ / : * ? \" < > | no se permiten en nombres de carpeta y se sustituyen por -.",
+    "projectFolderEmpty": "Este título no deja ningún nombre de carpeta utilizable. Añade letras o números.",
+    "projectFolderExists": "Ya existe una carpeta llamada \"{{name}}\". Elige otro título.",
+    "projectFolderMissing": "No se encontró la carpeta del proyecto \"{{name}}\" en la bóveda.",
+    "projectFolderRenameFailed": "No se pudo renombrar la carpeta del proyecto: {{error}}",
+    "updatedFolderRenamed": "¡Proyecto \"{{title}}\" actualizado! Carpeta renombrada a \"{{name}}\"."
   },
   "sprintModal": {
     "setupTitle": "Configurar sprint",

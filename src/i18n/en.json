@@ -441,7 +441,14 @@
     "folderNameReserved": "\"{{name}}\" is a reserved project folder.",
     "folderNameExists": "A folder named \"{{name}}\" already exists in this project.",
     "folderMissing": "The document folder \"{{name}}\" was not found in the vault.",
-    "folderRenameFailed": "Could not rename the document folder: {{error}}"
+    "folderRenameFailed": "Could not rename the document folder: {{error}}",
+    "folderWillRename": "The project folder will be renamed to \"{{name}}\".",
+    "folderCharsReplaced": "Characters \\ / : * ? \" < > | are not allowed in folder names and are replaced with -.",
+    "projectFolderEmpty": "This title leaves no usable folder name. Add some letters or numbers.",
+    "projectFolderExists": "A folder named \"{{name}}\" already exists. Choose a different title.",
+    "projectFolderMissing": "The project folder \"{{name}}\" was not found in the vault.",
+    "projectFolderRenameFailed": "Could not rename the project folder: {{error}}",
+    "updatedFolderRenamed": "Project \"{{title}}\" updated! Folder renamed to \"{{name}}\"."
   },
   "sprintModal": {
     "setupTitle": "Set up sprint",

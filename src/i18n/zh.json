@@ -441,7 +441,14 @@
     "folderNameReserved": "“{{name}}”是项目保留的文件夹。",
     "folderNameExists": "此项目中已存在名为“{{name}}”的文件夹。",
     "folderMissing": "在仓库中未找到文档文件夹“{{name}}”。",
-    "folderRenameFailed": "无法重命名文档文件夹：{{error}}"
+    "folderRenameFailed": "无法重命名文档文件夹：{{error}}",
+    "folderWillRename": "项目文件夹将重命名为“{{name}}”。",
+    "folderCharsReplaced": "字符 \\ / : * ? \" < > | 不能用于文件夹名称，将被替换为 -。",
+    "projectFolderEmpty": "此标题无法生成可用的文件夹名称。请添加字母或数字。",
+    "projectFolderExists": "名为“{{name}}”的文件夹已存在。请选择其他标题。",
+    "projectFolderMissing": "在仓库中找不到项目文件夹“{{name}}”。",
+    "projectFolderRenameFailed": "无法重命名项目文件夹：{{error}}",
+    "updatedFolderRenamed": "项目“{{title}}”已更新！文件夹已重命名为“{{name}}”。"
   },
   "sprintModal": {
     "setupTitle": "设置冲刺",

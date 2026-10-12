@@ -441,7 +441,14 @@
     "folderNameReserved": "「{{name}}」はプロジェクト用に予約されたフォルダです。",
     "folderNameExists": "「{{name}}」という名前のフォルダはこのプロジェクトに既に存在します。",
     "folderMissing": "ドキュメントフォルダ「{{name}}」が保管庫内に見つかりませんでした。",
-    "folderRenameFailed": "ドキュメントフォルダの名前を変更できませんでした: {{error}}"
+    "folderRenameFailed": "ドキュメントフォルダの名前を変更できませんでした: {{error}}",
+    "folderWillRename": "プロジェクトフォルダーの名前は「{{name}}」に変更されます。",
+    "folderCharsReplaced": "文字 \\ / : * ? \" < > | はフォルダー名に使用できないため、- に置き換えられます。",
+    "projectFolderEmpty": "このタイトルからは使用できるフォルダー名が作れません。文字や数字を加えてください。",
+    "projectFolderExists": "「{{name}}」という名前のフォルダーは既に存在します。別のタイトルを選んでください。",
+    "projectFolderMissing": "プロジェクトフォルダー「{{name}}」が保管庫に見つかりませんでした。",
+    "projectFolderRenameFailed": "プロジェクトフォルダーの名前を変更できませんでした: {{error}}",
+    "updatedFolderRenamed": "プロジェクト「{{title}}」を更新しました。フォルダー名を「{{name}}」に変更しました。"
   },
   "sprintModal": {
     "setupTitle": "スプリントを設定",

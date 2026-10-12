@@ -451,7 +451,14 @@
     "folderNameReserved": "«{{name}}» — зарезервированная папка проекта.",
     "folderNameExists": "Папка с именем «{{name}}» уже существует в этом проекте.",
     "folderMissing": "Папка документов «{{name}}» не найдена в хранилище.",
-    "folderRenameFailed": "Не удалось переименовать папку документов: {{error}}"
+    "folderRenameFailed": "Не удалось переименовать папку документов: {{error}}",
+    "folderWillRename": "Папка проекта будет переименована в «{{name}}».",
+    "folderCharsReplaced": "Символы \\ / : * ? \" < > | недопустимы в именах папок и заменяются на -.",
+    "projectFolderEmpty": "Из этого названия не получается имя папки. Добавьте буквы или цифры.",
+    "projectFolderExists": "Папка с именем «{{name}}» уже существует. Выберите другое название.",
+    "projectFolderMissing": "Папка проекта «{{name}}» не найдена в хранилище.",
+    "projectFolderRenameFailed": "Не удалось переименовать папку проекта: {{error}}",
+    "updatedFolderRenamed": "Проект «{{title}}» обновлён! Папка переименована в «{{name}}»."
   },
   "sprintModal": {
     "setupTitle": "Настроить спринт",

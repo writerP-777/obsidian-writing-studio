@@ -799,6 +799,22 @@ body.writing-studio-typography .markdown-reading-view .markdown-preview-section 
 }
 
 /* ── Project Modal ──────────────────────────────────────────────── */
+/* Live hint under the title field: what saving will do to the project
+   folder. Empty when the title maps to the current folder unchanged. */
+.ws-project-folder-hint {
+  font-size: var(--font-ui-smaller);
+  color: var(--text-muted);
+  margin: -6px 0 12px;
+}
+
+.ws-project-folder-hint:empty {
+  display: none;
+}
+
+.ws-project-folder-hint p {
+  margin: 0 0 4px;
+}
+
 .ws-template-preview {
   background: var(--background-secondary);
   border: 1px solid var(--background-modifier-border);
