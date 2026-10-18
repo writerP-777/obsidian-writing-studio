@@ -1,5 +1,6 @@
 import {
   App,
+  Editor,
   MarkdownView,
   Modal,
   Notice,
@@ -9,6 +10,8 @@ import {
   TFile,
   TFolder,
   Menu,
+  normalizePath,
+  stringifyYaml,
 } from 'obsidian';
 
 import { FilesystemBinderView, BinderDrawerPref, BINDER_VIEW_TYPE } from './src/FilesystemBinderView';
@@ -19,7 +22,11 @@ import { FocusMode } from './src/FocusMode';
 import { TypographyMode } from './src/TypographyMode';
 import { WritingModes } from './src/WritingModes';
 import { SprintTimer } from './src/SprintTimer';
-import { ExportEngine, type ExportFormat, type ExportUiState, type PdfEnginePreference } from './src/ExportEngine';
+import { ExportEngine, type ExportFormat, type ExportUiState, type PdfEnginePreference, type CitationStyleSetting } from './src/ExportEngine';
+import { buildSourceIndex } from './src/sourceIndex';
+import { sourceFrontmatter, sourceFileBasename, NewSourceFields } from './src/sources';
+import { InsertCitationModal } from './modals/InsertCitationModal';
+import { AddSourceModal } from './modals/AddSourceModal';
 import { WordPressClient } from './src/WordPressClient';
 import { ProjectManager } from './src/ProjectManager';
 import { StatsTracker } from './src/StatsTracker';
@@ -124,6 +131,10 @@ export interface WritingStudioSettings {
   // Directory holding the PDF engine binaries, or a path to one engine binary,
   // for installs the process PATH does not cover (#344)
   pdfEnginePath: string;
+  // How citations print: the built-in Chicago author-date or notes style, or
+  // a CSL file of the writer's own (Pandoc formats only)
+  citationStyle: CitationStyleSetting;
+  cslPath: string;
   epubLanguage: string;
   epubIncludeCover: boolean;
   // WordPress
@@ -178,6 +189,8 @@ const DEFAULT_SETTINGS: WritingStudioSettings = {
   pandocPath: 'pandoc',
   pdfEngine: 'auto',
   pdfEnginePath: '',
+  citationStyle: 'author-date',
+  cslPath: '',
   epubLanguage: 'en',
   epubIncludeCover: true,
   wordPressSites: [],
@@ -289,6 +302,7 @@ export default class WritingStudioPlugin extends Plugin {
         menu.addItem(i => i.setTitle(t('main.menu.exportDoc')).setIcon('download').setSection('writing-studio').onClick(() => new ExportModal(this.app, this).open()));
         menu.addItem(i => i.setTitle(t('main.menu.publish')).setIcon('globe').setSection('writing-studio').onClick(() => this.publishCurrentFile()));
         menu.addItem(i => i.setTitle(t('main.menu.setGoal')).setIcon('target').setSection('writing-studio').onClick(() => this.setWordCountGoal(view.file)));
+        menu.addItem(i => i.setTitle(t('citations.insertMenu')).setIcon('quote').setSection('writing-studio').onClick(() => this.insertCitation(_editor)));
         menu.addItem(i => i.setTitle(t('main.menu.switchMode')).setIcon('layout-dashboard').setSection('writing-studio').onClick((e: MouseEvent | KeyboardEvent) => this.showModeSwitcher(e)));
         if (this.typographyMode.isActive()) {
           menu.addItem(i => i.setTitle(t('main.menu.typographyFont')).setIcon('type').setSection('writing-studio').onClick((e: MouseEvent | KeyboardEvent) => this.showFontPicker(e)));
@@ -501,6 +515,42 @@ export default class WritingStudioPlugin extends Plugin {
 
   // The outline lives in the main pane as a tab: one per workspace, revealed
   // and refreshed on every open so it always shows the active project.
+  // The citation picker: every source in the vault, inserted at the cursor
+  // in Pandoc's spelling so it exports everywhere.
+  insertCitation(editor: Editor): void {
+    const project = this.projectManager.getActiveProject();
+    const sources = buildSourceIndex(this.app, project?.folderPath ?? null).all();
+    new InsertCitationModal(this.app, sources, text => {
+      editor.replaceSelection(text);
+      editor.focus();
+    }).open();
+  }
+
+  // The Add source form writes a note into the project's Research folder
+  // with the properties the citation engine reads, then opens it so the
+  // writer can add their own notes under the properties.
+  addSource(): void {
+    const project = this.projectManager.getActiveProject();
+    if (!project) {
+      new Notice(t('binder.selectProjectFirst'));
+      return;
+    }
+    const taken = new Set(buildSourceIndex(this.app, project.folderPath).all().map(s => s.citekey));
+    new AddSourceModal(this.app, taken, async (fields: NewSourceFields) => {
+      const folder = normalizePath(`${project.folderPath}/Research`);
+      await this.vaultFiles.ensureFolder(folder);
+      const base = sourceFileBasename(fields);
+      let path = normalizePath(`${folder}/${base}.md`);
+      for (let n = 2; this.vaultFiles.exists(path); n++) {
+        path = normalizePath(`${folder}/${base} ${n}.md`);
+      }
+      const content = `---\n${stringifyYaml(sourceFrontmatter(fields))}---\n\n`;
+      const file = await this.app.vault.create(path, content);
+      new Notice(t('citations.sourceAdded', { key: fields.citekey }));
+      await this.app.workspace.getLeaf('tab').openFile(file);
+    }).open();
+  }
+
   async openOutline(): Promise<void> {
     const existing = this.app.workspace.getLeavesOfType(OUTLINE_VIEW_TYPE);
 

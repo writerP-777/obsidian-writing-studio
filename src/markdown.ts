@@ -2,8 +2,9 @@
 // and EPUB export paths and by WordPress publishing. Handles ATX headings,
 // paragraphs, unordered/ordered lists, blockquotes, fenced code blocks,
 // horizontal rules, pipe tables, images, links, bold/italic, and inline code.
-// Known limitations (documented in the README): nested lists, setext
-// headings, and footnotes are not converted.
+// Footnotes are lifted out beforehand by footnotes.ts (renderSectionHtml).
+// Known limitations (documented in the README): nested lists and setext
+// headings are not converted.
 
 // Converts inline markdown spans (images, bold, italic, code, links) within
 // a text node. HTML-escapes first, so raw HTML in prose stays inert.

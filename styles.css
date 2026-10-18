@@ -2563,3 +2563,120 @@ body .ws-launcher select {
   width: 15px;
   height: 15px;
 }
+
+/* ─── Citations: export dialog summary ─────────────────────────────────── */
+.ws-export-citations {
+  margin: 4px 0 12px;
+  padding: 8px 12px;
+  border-radius: var(--radius-m);
+  background: var(--background-secondary);
+  font-size: var(--font-ui-small);
+  color: var(--text-muted);
+}
+.ws-export-citations-label {
+  font-weight: var(--font-semibold);
+  color: var(--text-normal);
+  margin-right: 8px;
+}
+.ws-export-citations-warning {
+  margin-top: 4px;
+  color: var(--text-warning);
+}
+
+/* ─── Citations: insert-citation picker ────────────────────────────────── */
+.ws-cite-modal h2 { margin-bottom: 8px; }
+.ws-cite-search {
+  position: relative;
+  margin-bottom: 8px;
+}
+.ws-cite-search-icon {
+  position: absolute;
+  left: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--text-muted);
+  display: flex;
+}
+.ws-cite-search-icon svg { width: 16px; height: 16px; }
+.ws-cite-search-input {
+  width: 100%;
+  padding-left: 32px;
+}
+.ws-cite-list {
+  max-height: 320px;
+  overflow-y: auto;
+  border: 1px solid var(--background-modifier-border);
+  border-radius: var(--radius-m);
+  margin-bottom: 12px;
+}
+.ws-cite-row {
+  padding: 8px 12px;
+  cursor: pointer;
+  border-bottom: 1px solid var(--background-modifier-border);
+}
+.ws-cite-row:last-child { border-bottom: none; }
+.ws-cite-row.is-selected {
+  background: var(--background-modifier-hover);
+}
+.ws-cite-row-head {
+  display: flex;
+  gap: 8px;
+  align-items: baseline;
+  font-size: var(--font-ui-small);
+}
+.ws-cite-author { font-weight: var(--font-semibold); }
+.ws-cite-year { color: var(--text-muted); }
+.ws-cite-key {
+  margin-left: auto;
+  font-family: var(--font-monospace);
+  font-size: var(--font-ui-smaller);
+  color: var(--text-faint);
+}
+.ws-cite-title {
+  margin-top: 2px;
+  color: var(--text-normal);
+}
+.ws-cite-empty {
+  padding: 16px 12px;
+  color: var(--text-muted);
+  text-align: center;
+}
+.ws-cite-empty p { margin: 0 0 6px; }
+.ws-cite-hint {
+  font-size: var(--font-ui-smaller);
+  color: var(--text-faint);
+}
+.ws-cite-page-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 4px;
+}
+.ws-cite-page-input { width: 120px; }
+
+/* ─── Citations: add-source form ───────────────────────────────────────── */
+.ws-source-modal { width: min(640px, 90vw); }
+.ws-source-intro {
+  margin: 0 0 12px;
+  color: var(--text-muted);
+  font-size: var(--font-ui-small);
+}
+.ws-source-modal .ws-source-wide { width: 320px; max-width: 100%; }
+.ws-source-modal .ws-source-narrow { width: 120px; }
+.ws-source-modal .ws-source-authors { width: 320px; max-width: 100%; }
+.ws-source-modal .ws-source-key { width: 200px; font-family: var(--font-monospace); }
+
+/* ─── Citations: binder drawer add-source button ───────────────────────── */
+.ws-fsb-drawer-add {
+  margin-left: auto;
+  background: none;
+  border: none;
+  box-shadow: none;
+  padding: 2px 6px;
+  color: var(--text-muted);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+}
+.ws-fsb-drawer-add:hover { color: var(--text-normal); }
+.ws-fsb-drawer-add svg { width: 15px; height: 15px; }

@@ -113,7 +113,15 @@
       "pdfEngineDesc": "Moteur utilisé pour l'export PDF. Auto choisit un moteur LaTeX installé. wkhtmltopdf fonctionne sans LaTeX, mais la police d'export ne s'y applique pas.",
       "pdfEngineAuto": "Auto (recommandé)",
       "pdfEnginePath": "Emplacement du moteur PDF",
-      "pdfEnginePathDesc": "Dossier contenant votre moteur PDF, ou chemin complet vers un binaire de moteur. Laissez vide pour chercher dans le chemin système et les emplacements d'installation courants."
+      "pdfEnginePathDesc": "Dossier contenant votre moteur PDF, ou chemin complet vers un binaire de moteur. Laissez vide pour chercher dans le chemin système et les emplacements d'installation courants.",
+      "citationsHeading": "Citations",
+      "citationStyle": "Style de citation",
+      "citationStyleDesc": "Comment les citations et la page des ouvrages cités s’affichent. Auteur-date place (Smith 2020) dans le texte ; Notes transforme chaque citation en note de bas de page. Un fichier de style personnalisé ne s’applique qu’au PDF, à Word et au RTF ; les autres formats utilisent auteur-date.",
+      "citationStyleAuthorDate": "Auteur-date (Chicago)",
+      "citationStyleNotes": "Notes (Chicago)",
+      "citationStyleCustom": "Fichier de style personnalisé (.csl)",
+      "cslPath": "Fichier de style personnalisé",
+      "cslPathDesc": "Chemin d’un fichier .csl, dans le coffre ou n’importe où sur le disque. Utilisé quand le style de citation est « Fichier de style personnalisé »."
     },
     "log": {
       "appendToDailyNote": "Ajouter à la note quotidienne",
@@ -511,7 +519,15 @@
     "titleProject": "Nom du projet",
     "titleCustom": "Saisissez votre propre titre",
     "customTitleName": "Titre personnalisé",
-    "customTitlePlaceholder": "Saisissez un titre"
+    "customTitlePlaceholder": "Saisissez un titre",
+    "citationsLabel": "Citations",
+    "citationSummary": "{{citations}} vers {{sources}} · Style : {{style}}",
+    "citationCount_one": "{{count}} citation",
+    "citationCount_other": "{{count}} citations",
+    "sourceCount_one": "{{count}} source",
+    "sourceCount_other": "{{count}} sources",
+    "citationUnresolved_one": "{{count}} citation n’a pas de source : {{keys}}",
+    "citationUnresolved_other": "{{count}} citations n’ont pas de source : {{keys}}"
   },
   "publishModal": {
     "title": "Publier sur WordPress",
@@ -631,7 +647,9 @@
       "openWritingLog": "Ouvrir le journal d'écriture",
       "openFolderSidebar": "Ouvrir le dossier dans l'explorateur latéral",
       "restoreBinderLayout": "Restaurer la disposition précédente du classeur",
-      "openOutline": "Ouvrir le plan"
+      "openOutline": "Ouvrir le plan",
+      "insertCitation": "Insérer une citation",
+      "addSource": "Ajouter une source"
     },
     "menu": {
       "studioOptions": "Options de Writing Studio",
@@ -745,5 +763,65 @@
     "openDoc": "Ouvrir « {{name}} »",
     "expand": "Déplier « {{name}} »",
     "collapse": "Replier « {{name}} »"
+  },
+  "citations": {
+    "worksCited": "Ouvrages cités",
+    "bibliography": "Bibliographie",
+    "notes": "Notes",
+    "returnToText": "Retour au texte",
+    "sectionFallback": "Section {{n}}",
+    "unresolvedNotice_one": "{{count}} citation n’a pas de source correspondante : {{keys}}",
+    "unresolvedNotice_other": "{{count}} citations n’ont pas de source correspondante : {{keys}}",
+    "collisionNotice": "Deux notes partagent une clé de citation. Celle du dossier Research est utilisée ; ignorée : {{keys}}",
+    "insertTitle": "Insérer une citation",
+    "insertMenu": "Insérer une citation…",
+    "insertBtn": "Insérer",
+    "noSources": "Aucune source pour l’instant.",
+    "noSourcesHint": "Ajoutez-en une avec le bouton livre de l’onglet Research du classeur, ou donnez à n’importe quelle note la propriété « citekey ».",
+    "searchPlaceholder": "Rechercher par auteur, année ou titre",
+    "noMatches": "Aucune source ne correspond.",
+    "pageLabel": "Page (facultatif)",
+    "pagePlaceholder": "12 ou 12-14",
+    "pageHint": "Laissez vide pour citer l’ouvrage entier.",
+    "addSource": "Ajouter une source…",
+    "addSourceTitle": "Ajouter une source",
+    "addSourceIntro": "Renseignez ce que vous savez. Une note avec ces informations est enregistrée dans le dossier Research et vous pouvez la citer avec « Insérer une citation ».",
+    "addSourceBtn": "Ajouter la source",
+    "sourceAdded": "Source ajoutée. Citez-la avec [@{{key}}].",
+    "titleRequired": "Donnez un titre à la source.",
+    "citekeyInvalid": "La clé de citation peut contenir des lettres, des chiffres et _ : . - et doit commencer par une lettre ou un chiffre.",
+    "citekeyTaken": "La clé de citation {{key}} est déjà utilisée par une autre source.",
+    "type": {
+      "book": "Livre",
+      "chapter": "Chapitre d’un livre",
+      "articleJournal": "Article de revue",
+      "articleMagazine": "Article de magazine",
+      "articleNewspaper": "Article de journal",
+      "webpage": "Page web",
+      "thesis": "Thèse ou mémoire",
+      "report": "Rapport"
+    },
+    "field": {
+      "type": "Type",
+      "title": "Titre",
+      "authors": "Auteurs",
+      "authorsDesc": "Un par ligne, prénom d’abord (Jane Smith). Les organisations conviennent aussi.",
+      "year": "Année",
+      "bookTitle": "Titre du livre",
+      "editors": "Directeurs de publication",
+      "journal": "Revue",
+      "publication": "Publication",
+      "website": "Site web",
+      "volume": "Volume",
+      "issue": "Numéro",
+      "pages": "Pages",
+      "publisher": "Éditeur",
+      "university": "Université",
+      "place": "Lieu de publication",
+      "link": "URL ou DOI",
+      "linkDesc": "Une adresse web ou un DOI tel que 10.1000/xyz123.",
+      "citekey": "Clé de citation",
+      "citekeyDesc": "Sert à citer cette source, par exemple [@smith2020]. Remplie pour vous ; modifiez-la si vous le souhaitez."
+    }
   }
 }

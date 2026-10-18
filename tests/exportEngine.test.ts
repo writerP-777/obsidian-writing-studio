@@ -30,12 +30,18 @@ async function makeFsWorld(flat = false) {
 
   const plugin = {
     app: {
-      vault: { getAbstractFileByPath: (p: string) => byPath.get(p) ?? null },
+      vault: {
+        getAbstractFileByPath: (p: string) => byPath.get(p) ?? null,
+        getMarkdownFiles: () => [...byPath.values()].filter((f): f is TFile => f instanceof TFile),
+      },
       metadataCache: {
         getFileCache: (f: TFile) => {
           const fm = fmByPath.get(f.path);
           return fm ? { frontmatter: fm } : null;
         },
+        // Shortest-path resolution: a bare basename finds the note anywhere
+        getFirstLinkpathDest: (link: string) =>
+          [...byPath.values()].find(f => f instanceof TFile && f.name === `${link}.md`) ?? null,
       },
     },
     settings: { defaultProjectFolder: 'Projects', authorName: 'Avery', filesystemBinder: true },
@@ -73,7 +79,7 @@ async function makeFsWorld(flat = false) {
     addDoc(research, 'Notes.md', 'Research notes body.');
   }
 
-  return { files, pm, engine, plugin };
+  return { files, pm, engine, plugin, byPath, fmByPath };
 }
 
 function projectOpts(overrides: Partial<ExportOptions> = {}): ExportOptions {
@@ -397,5 +403,57 @@ describe('ExportEngine.export markdown end to end', () => {
     const written = files.files.get(outputPath);
     expect(written).toContain('First body.');
     expect(files.folders).toContain('Projects/My Book/Exports');
+  });
+});
+
+// ─── Citations and footnotes ──────────────────────────────────────────────────
+
+describe('citations from research notes', () => {
+  async function citedWorld() {
+    const w = await makeFsWorld(true);
+    const root = w.plugin.app.vault.getAbstractFileByPath('Projects/My Book') as TFolder;
+    const research = new TFolder('Projects/My Book/Research');
+    root.children.push(research);
+    const addSource = (name: string, fm: Record<string, unknown>) => {
+      const f = new TFile(`${research.path}/${name}`, 'md');
+      research.children.push(f);
+      w.byPath.set(f.path, f);
+      w.fmByPath.set(f.path, fm);
+      w.files.files.set(f.path, '---\n---\nnotes');
+    };
+    addSource('Smith 2020.md', { citekey: 'smith2020', title: 'The Long Argument', author: 'Jane Smith', year: 2020, publisher: 'Riverhead', place: 'New York' });
+    addSource('Lee 2018.md', { citekey: 'lee2018', type: 'chapter', title: 'Counting What Counts', author: 'Marcus Lee', year: 2018, 'container-title': 'Measuring Institutions', pages: '44–71' });
+    w.files.files.set('Projects/My Book/One.md', 'Ideas [@smith2020, p. 12] and [[Lee 2018|p. 51]].[^1]\n\n[^1]: A note.');
+    w.files.files.set('Projects/My Book/Two.md', 'Again [@smith2020, p. 40]. Missing [@ghost].');
+    return w;
+  }
+
+  it('author-date: markdown export cites in place and appends Works cited', async () => {
+    const w = await citedWorld();
+    const out = await w.engine.export(projectOpts({ format: 'md', addTitlePage: false, includeTitlesAsHeadings: false }));
+    const md = w.files.files.get(out) ?? '';
+    expect(md).toContain('Ideas (Smith 2020, 12) and (Lee 2018, 51).[^1]');
+    expect(md).toContain('Again (Smith 2020, 40). Missing ([@ghost?]).');
+    expect(md).toContain('# Works cited\n\nLee, Marcus. 2018. “Counting What Counts.” In *Measuring Institutions*, 44–71.\n\nSmith, Jane. 2020. *The Long Argument*. New York: Riverhead.');
+  });
+
+  it('notes: citations become footnotes, full then short, with a bibliography', async () => {
+    const w = await citedWorld();
+    (w.plugin.settings as { citationStyle?: string }).citationStyle = 'notes';
+    const out = await w.engine.export(projectOpts({ format: 'md', addTitlePage: false, includeTitlesAsHeadings: false }));
+    const md = w.files.files.get(out) ?? '';
+    expect(md).toContain('Ideas^[Jane Smith, *The Long Argument* (New York: Riverhead, 2020), 12.] and.^[Marcus Lee, “Counting What Counts,” in *Measuring Institutions* (2018), 51.][^1]');
+    expect(md).toContain('# Bibliography');
+  });
+
+  it('html export numbers footnotes per section and gathers them under Notes', async () => {
+    const w = await citedWorld();
+    const out = await w.engine.export(projectOpts({ format: 'html', addTitlePage: false, includeTitlesAsHeadings: true }));
+    const html = w.files.files.get(out) ?? '';
+    expect(html).toContain('<sup class="ws-fn-ref" id="fnref-s1-1"><a href="#fn-s1-1">1</a></sup>');
+    expect(html).toContain('<section class="ws-notes">\n<h1>Notes</h1>');
+    expect(html).toContain('<li id="fn-s1-1">A note.');
+    expect(html).toContain('<section class="ws-references">');
+    expect(html).not.toContain('[^1]');
   });
 });

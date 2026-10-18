@@ -34,8 +34,8 @@ function makeEngine(settings: Record<string, unknown> = {}) {
   files.files.set('Doc.md', 'Body text.');
   const plugin = {
     app: {
-      vault: { getAbstractFileByPath: () => null },
-      metadataCache: { getFileCache: () => null },
+      vault: { getAbstractFileByPath: () => null, getMarkdownFiles: () => [] },
+      metadataCache: { getFileCache: () => null, getFirstLinkpathDest: () => null },
     },
     projectManager: { getActiveProject: () => null },
     settings: { pandocPath: 'pandoc', pdfEngine: 'auto', pdfEnginePath: '', ...settings },

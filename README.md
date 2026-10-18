@@ -67,6 +67,8 @@ Writing Studio turns Obsidian into a dedicated environment for serious nonfictio
 
 **Export Engine** — Export to Manuscript (HTML), PDF, Word (.docx), RTF, HTML, Markdown, and EPUB. Manuscript format produces industry-standard layout with no external tools; other formats require Pandoc.
 
+**Sources, Citations & Footnotes** — Any note with a `citekey` property is a source, including literature notes from Zotero Integration or the Citations plugin. Cite with `[@smith2020, p. 12]` or a wikilink to the source note, and every export carries the citations and a works-cited page in Chicago author-date or notes style. Footnotes now survive every format. An **Add source** form and an **Insert citation** picker mean nobody has to type a citation key by hand.
+
 **WordPress Publishing** — Publish directly to WordPress from Obsidian. Set post title, status, categories, tags, excerpt, and scheduled date. Supports multiple sites with per-site credentials and connection testing.
 
 **Folder Sidebar Explorer** — Browse any vault folder in a sidebar panel. Search by name or file content, preview Markdown files and images inline, and insert selected text directly into the active editor.
@@ -255,7 +257,7 @@ The binder reads your folders directly — the project folder tree *is* the manu
 
 **Synopsis:** Right-click a document and choose **Edit synopsis…** to give it one or two sentences on what the section argues or covers. The synopsis is stored as a `synopsis` property on the document, so you can also read and edit it in Obsidian's Properties panel at the top of the note. It shows in the row's hover tooltip, and the **Show synopses** button in the binder toolbar puts each synopsis under its title so you can read the argument straight down the tree. The Outline view, described below, shows and edits the same synopses as a table.
 
-Below the manuscript, **Research** and **Exports** are pinned as drawer tabs with live file counts. Research holds markdown notes that never compile (drag documents in and out of it freely); Exports is output-only, written by the export engine. Non-markdown files are visible and openable everywhere but stay outside the manuscript.
+Below the manuscript, **Research** and **Exports** are pinned as drawer tabs with live file counts. Research holds markdown notes that never compile (drag documents in and out of it freely); Exports is output-only, written by the export engine. Non-markdown files are visible and openable everywhere but stay outside the manuscript. The book button on the Research tab bar opens the **Add source** form, which writes a research note the citation engine can cite (see Sources and Citations, below).
 
 <p align="center">
   <img src="assets/binder-tree.png" alt="The binder showing a manuscript tree with folder count badges, colored status stripes, a dimmed compile-excluded document, and Research and Exports drawer tabs with file counts at the bottom" width="520">
@@ -350,6 +352,56 @@ The footer totals the whole manuscript and, until every section has one, says ho
 Everything the outline shows comes from the documents themselves (`synopsis`, `binder-status`, and `word-count-goal` properties), so the binder, the outline, and the targets dashboard can never disagree, and the table updates on its own as you write.
 
 **To open:** Click **Open outline** on the project card in the Launcher, the outline button in the binder toolbar, or use the command **Open outline**.
+
+---
+
+#### Sources and Citations
+
+Nonfiction rests on sources, and the sources already live in your vault. Writing Studio turns the notes you have into citations and a works-cited page without a reference manager in the loop.
+
+**What counts as a source.** Any markdown note, anywhere in the vault, whose properties include a `citekey`. Literature notes produced by Zotero Integration or the Citations plugin already carry one, so they work as they are. The engine reads the fields it finds, under the names those tools and ordinary writers use: `title`; `author`, `authors`, or `creators` (a plain name, a list, "Last, First", or Zotero-style name objects); `year`, `date`, or `issued`; `type` or `itemType` (book, chapter, journal article, magazine or newspaper article, web page, thesis, report; anything else is treated as a book); `publisher`, `place`, `journal` or `container-title`, `volume`, `issue`, `pages`, `edition`, `editor`, `doi`, `url`, and `accessed`. If two notes share a citekey, the one in the project's Research folder wins and a notice names the other.
+
+**Adding a source without typing YAML.** Click the book button on the Research tab of the binder, right-click any research note and choose **Add source…**, or run the command **Add source**. The form asks for the type, title, authors (one per line, first name first), year, and the fields that type needs. The citation key is filled in for you from the first author's surname and the year (`smith2020`, then `smith2020a` if that is taken) and can be changed. Saving creates a note such as `Research/Smith 2020 - The Long Argument.md` with the properties set and an empty body for your own notes, and opens it.
+
+```yaml
+---
+citekey: smith2020
+type: book
+title: "The Long Argument: Why Reform Fails"
+author:
+  - Jane Smith
+year: 2020
+publisher: Riverhead
+place: New York
+---
+```
+
+**Citing in a draft.** Two spellings work, and you can mix them:
+
+| You type | Meaning |
+|----------|---------|
+| `[@smith2020]` | Cite the work |
+| `[@smith2020, p. 12]` | Cite page 12 (`pp. 12-14` for a range, `chap. 3` for anything else) |
+| `[@lee2018; @okafor2021]` | Two works in one citation |
+| `[see @smith2020, p. 12]` | A prefix prints before the citation |
+| `@smith2020` | The author is part of the sentence: "As Smith (2020) shows…" |
+| `[-@smith2020]` | Year only, when the author was just named |
+| `[[Smith 2020]]` | A wikilink to a source note is a citation |
+| `[[Smith 2020\|p. 12]]` | The wikilink's alias is the page |
+
+Wikilinks to notes without a citekey behave exactly as before. To cite without remembering a key, right-click in the editor and choose **Insert citation…** (or run the command **Insert citation**): the picker searches author, year, and title, takes an optional page, and inserts the citation at the cursor.
+
+**Citation style.** Set once under Settings → Export → Citations:
+
+- **Author-date (Chicago)**, the default: `(Smith 2020, 12)` in the text and a **Works cited** page at the end.
+- **Notes (Chicago)**: each citation becomes a footnote, in full form the first time a source appears in a chapter and short form after, with a **Bibliography** page at the end. Your own footnotes and citation notes share one numbering sequence, in order of appearance.
+- **Custom style file (.csl)**: any Citation Style Language file, for APA, MLA, or a house style. Applies to PDF, Word, and RTF, where Pandoc's citeproc does the formatting; the other formats use the built-in author-date style.
+
+**Every format gets the works-cited page.** PDF, Word, and RTF hand the cited sources to Pandoc as a bibliography and run with `--citeproc` (the Notes setting ships its own compact Chicago notes style, so no download is needed). HTML, Manuscript, EPUB, Markdown, and the compile preview are formatted by the plugin itself in the two Chicago styles. Only sources you actually cite appear. A citation whose key matches no source is left visible as `[@key?]` and a notice names it, so the export never silently drops a reference.
+
+**Footnotes everywhere.** The built-in converter now handles reference footnotes (`[^1]` with its `[^1]: text` definition) and inline footnotes (`^[text]`). Numbering restarts with each chapter. HTML and Manuscript collect every note under a **Notes** heading at the end, grouped by chapter; EPUB keeps each chapter's notes at the end of that chapter with the markup reading systems use to show them as popups; Markdown export keeps footnote syntax as it is; PDF, Word, and RTF had footnotes already.
+
+**Before you export,** the export dialog reports what it found: "12 citations to 8 sources · Style: Author-date (Chicago)", and in warning color any key that matches nothing.
 
 ---
 
@@ -595,6 +647,8 @@ No external tools are required for manuscript export.
 | Pandoc path | Full path to the `pandoc` binary if it is not on your system PATH |
 | PDF engine | Engine Pandoc uses for PDF export. **Auto** (default) picks an installed LaTeX engine — `xelatex` or `lualatex` when a custom font is set, `pdflatex` otherwise. Pin a specific engine to always use it; if a pinned engine is not installed the export fails with a message naming it rather than silently substituting another |
 | PDF engine location | Folder containing the PDF engine binaries — or full path to one engine binary — when the engine is not on the system PATH. Leave blank to search the PATH plus common install locations |
+| Citation style | **Author-date (Chicago)** puts `(Smith 2020)` in the text with a Works cited page; **Notes (Chicago)** turns each citation into a footnote with a Bibliography page; **Custom style file (.csl)** applies any CSL style to PDF, Word, and RTF (other formats fall back to author-date). See Sources and Citations, above |
+| Custom style file | Path to a `.csl` file, inside the vault or anywhere on disk, used when the citation style is set to custom |
 | EPUB language | BCP 47 language tag (e.g. `en`, `fr`, `de`) |
 | EPUB include cover | Generate a text cover page when no cover image is provided |
 
@@ -604,7 +658,7 @@ No external tools are required for manuscript export.
 >
 > **Font note:** the export font setting applies only to the LaTeX PDF path (`xelatex`/`lualatex`; `pdflatex` cannot apply custom fonts either). The `wkhtmltopdf` path takes its typography from Pandoc's HTML/CSS output, so the export font setting is ignored there — the plugin tells you when a font was skipped for this reason.
 >
-> **Formatting note:** the built-in converter used for HTML, Manuscript, and EPUB output supports headings, paragraphs, lists, blockquotes, fenced code blocks, tables, images, and links. Nested lists, setext (underline-style) headings, and footnotes are not converted — use a Pandoc format (PDF, DOCX, RTF) if your manuscript depends on them.
+> **Formatting note:** the built-in converter used for HTML, Manuscript, and EPUB output supports headings, paragraphs, lists, blockquotes, fenced code blocks, tables, images, links, footnotes, and citations. Nested lists and setext (underline-style) headings are not converted — use a Pandoc format (PDF, DOCX, RTF) if your manuscript depends on them.
 
 ---
 
@@ -662,6 +716,7 @@ Writing Studio adds items to Obsidian's right-click context menus. All Writing S
 | Export this document | Open the export modal for the current file |
 | Publish to WordPress | Open the WordPress publish modal for the current file |
 | Set word count goal | Set a word count target for the current document |
+| Insert citation… | Pick a source from the vault and insert a citation at the cursor |
 | Switch writing mode → | Open a mode-switcher menu (Draft / Edit / Review / None) |
 | Typography font → | Open a font picker menu to change the typography font (visible only when Typography Mode is active) |
 
@@ -692,6 +747,8 @@ No default hotkeys are assigned. All commands can be given a hotkey in **Setting
 | Export project | Export the full project |
 | Preview compiled manuscript | Open the compile preview pane |
 | Open outline | Open the outline of the active project: every section's synopsis, status, and words against goal |
+| Insert citation | Pick a source from the vault and insert a citation at the cursor |
+| Add source | Open the form that writes a citable source note into the project's Research folder |
 | Publish to WordPress | Publish the current document to WordPress |
 | Create new writing project | Create a new writing project |
 | Open writing dashboard | Open the statistics dashboard |
@@ -712,7 +769,7 @@ Open via **Settings → Writing Studio**. General settings appear at the top; ea
 | Focus mode | Focus unit, dim opacity, font override, sidebar behavior, typewriter scroll |
 | Typography | Font family, custom font name, line length, font size, line height, letter spacing, persistence |
 | Sprint & goals | Sprint duration, daily goal, sound notifications, history retention, inline banner |
-| Export | Format, paper size, font, font size, Pandoc path, PDF engine, PDF engine location, EPUB language, EPUB cover |
+| Export | Format, paper size, font, font size, Pandoc path, PDF engine, PDF engine location, citation style, custom style file, EPUB language, EPUB cover |
 | Writing log | Append sprint summaries to Daily Note |
 | WordPress | Site credentials, default post status, wikilink handling |
 

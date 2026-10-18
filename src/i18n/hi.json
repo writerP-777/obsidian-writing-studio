@@ -113,7 +113,15 @@
       "pdfEngineDesc": "PDF निर्यात के लिए उपयोग होने वाला इंजन। स्वचालित मोड इंस्टॉल किया गया LaTeX इंजन चुनता है। wkhtmltopdf बिना LaTeX के काम करता है, लेकिन निर्यात फ़ॉन्ट सेटिंग उस पर लागू नहीं होती।",
       "pdfEngineAuto": "स्वचालित (अनुशंसित)",
       "pdfEnginePath": "PDF इंजन स्थान",
-      "pdfEnginePathDesc": "PDF इंजन वाला फ़ोल्डर, या किसी एक इंजन बाइनरी का पूरा पथ। खाली छोड़ने पर सिस्टम पथ और सामान्य इंस्टॉल स्थानों में खोज होगी।"
+      "pdfEnginePathDesc": "PDF इंजन वाला फ़ोल्डर, या किसी एक इंजन बाइनरी का पूरा पथ। खाली छोड़ने पर सिस्टम पथ और सामान्य इंस्टॉल स्थानों में खोज होगी।",
+      "citationsHeading": "उद्धरण",
+      "citationStyle": "उद्धरण शैली",
+      "citationStyleDesc": "उद्धरण और उद्धृत कृतियों का पृष्ठ कैसे छपेंगे। लेखक-तिथि पाठ में (Smith 2020) रखती है; टिप्पणियाँ हर उद्धरण को पादटिप्पणी बना देती हैं। कस्टम शैली फ़ाइल केवल PDF, Word और RTF पर लागू होती है; बाकी प्रारूप लेखक-तिथि उपयोग करते हैं।",
+      "citationStyleAuthorDate": "लेखक-तिथि (शिकागो)",
+      "citationStyleNotes": "टिप्पणियाँ (शिकागो)",
+      "citationStyleCustom": "कस्टम शैली फ़ाइल (.csl)",
+      "cslPath": "कस्टम शैली फ़ाइल",
+      "cslPathDesc": ".csl फ़ाइल का पथ, वॉल्ट के भीतर या डिस्क पर कहीं भी। तब उपयोग होता है जब उद्धरण शैली \"कस्टम शैली फ़ाइल\" हो।"
     },
     "log": {
       "appendToDailyNote": "दैनिक नोट में जोड़ें",
@@ -511,7 +519,15 @@
     "titleProject": "प्रोजेक्ट नाम",
     "titleCustom": "अपना शीर्षक लिखें",
     "customTitleName": "कस्टम शीर्षक",
-    "customTitlePlaceholder": "शीर्षक दर्ज करें"
+    "customTitlePlaceholder": "शीर्षक दर्ज करें",
+    "citationsLabel": "उद्धरण",
+    "citationSummary": "{{citations}}, {{sources}} · शैली: {{style}}",
+    "citationCount_one": "{{count}} उद्धरण",
+    "citationCount_other": "{{count}} उद्धरण",
+    "sourceCount_one": "{{count}} स्रोत",
+    "sourceCount_other": "{{count}} स्रोत",
+    "citationUnresolved_one": "{{count}} उद्धरण का कोई स्रोत नहीं: {{keys}}",
+    "citationUnresolved_other": "{{count}} उद्धरणों का कोई स्रोत नहीं: {{keys}}"
   },
   "publishModal": {
     "title": "WordPress पर प्रकाशित करें",
@@ -631,7 +647,9 @@
       "openWritingLog": "राइटिंग लॉग खोलें",
       "openFolderSidebar": "साइडबार एक्सप्लोरर में फ़ोल्डर खोलें",
       "restoreBinderLayout": "बाइंडर की पिछली व्यवस्था बहाल करें",
-      "openOutline": "रूपरेखा खोलें"
+      "openOutline": "रूपरेखा खोलें",
+      "insertCitation": "उद्धरण डालें",
+      "addSource": "स्रोत जोड़ें"
     },
     "menu": {
       "studioOptions": "राइटिंग स्टूडियो विकल्प",
@@ -745,5 +763,65 @@
     "openDoc": "\"{{name}}\" खोलें",
     "expand": "\"{{name}}\" फैलाएँ",
     "collapse": "\"{{name}}\" समेटें"
+  },
+  "citations": {
+    "worksCited": "उद्धृत कृतियाँ",
+    "bibliography": "संदर्भ सूची",
+    "notes": "टिप्पणियाँ",
+    "returnToText": "पाठ पर लौटें",
+    "sectionFallback": "खंड {{n}}",
+    "unresolvedNotice_one": "{{count}} उद्धरण का कोई मेल खाता स्रोत नहीं है: {{keys}}",
+    "unresolvedNotice_other": "{{count}} उद्धरणों का कोई मेल खाता स्रोत नहीं है: {{keys}}",
+    "collisionNotice": "दो नोट एक ही उद्धरण कुंजी साझा करते हैं। Research फ़ोल्डर वाला उपयोग किया गया; छोड़ा गया: {{keys}}",
+    "insertTitle": "उद्धरण डालें",
+    "insertMenu": "उद्धरण डालें…",
+    "insertBtn": "डालें",
+    "noSources": "अभी कोई स्रोत नहीं है।",
+    "noSourcesHint": "बाइंडर के Research टैब पर पुस्तक बटन से एक जोड़ें, या किसी भी नोट को \"citekey\" गुण दें।",
+    "searchPlaceholder": "लेखक, वर्ष या शीर्षक से खोजें",
+    "noMatches": "कोई स्रोत मेल नहीं खाता।",
+    "pageLabel": "पृष्ठ (वैकल्पिक)",
+    "pagePlaceholder": "12 या 12-14",
+    "pageHint": "पूरी कृति उद्धृत करने के लिए खाली छोड़ें।",
+    "addSource": "स्रोत जोड़ें…",
+    "addSourceTitle": "स्रोत जोड़ें",
+    "addSourceIntro": "जो जानते हैं वह भरें। इन विवरणों वाला एक नोट Research फ़ोल्डर में सहेजा जाता है, और आप इसे \"उद्धरण डालें\" से उद्धृत कर सकते हैं।",
+    "addSourceBtn": "स्रोत जोड़ें",
+    "sourceAdded": "स्रोत जोड़ा गया। इसे [@{{key}}] से उद्धृत करें।",
+    "titleRequired": "स्रोत को एक शीर्षक दें।",
+    "citekeyInvalid": "उद्धरण कुंजी में केवल अक्षर, अंक और _ : . - हो सकते हैं और यह अक्षर या अंक से शुरू होनी चाहिए।",
+    "citekeyTaken": "उद्धरण कुंजी {{key}} पहले से किसी अन्य स्रोत द्वारा उपयोग में है।",
+    "type": {
+      "book": "पुस्तक",
+      "chapter": "पुस्तक का अध्याय",
+      "articleJournal": "जर्नल लेख",
+      "articleMagazine": "पत्रिका लेख",
+      "articleNewspaper": "समाचार पत्र लेख",
+      "webpage": "वेब पृष्ठ",
+      "thesis": "शोध प्रबंध",
+      "report": "रिपोर्ट"
+    },
+    "field": {
+      "type": "प्रकार",
+      "title": "शीर्षक",
+      "authors": "लेखक",
+      "authorsDesc": "प्रति पंक्ति एक, पहले नाम पहले (Jane Smith)। संस्थाएँ भी चलेंगी।",
+      "year": "वर्ष",
+      "bookTitle": "पुस्तक का शीर्षक",
+      "editors": "संपादक",
+      "journal": "जर्नल",
+      "publication": "प्रकाशन",
+      "website": "वेबसाइट",
+      "volume": "खंड",
+      "issue": "अंक",
+      "pages": "पृष्ठ",
+      "publisher": "प्रकाशक",
+      "university": "विश्वविद्यालय",
+      "place": "प्रकाशन स्थान",
+      "link": "URL या DOI",
+      "linkDesc": "एक वेब पता, या 10.1000/xyz123 जैसा DOI।",
+      "citekey": "उद्धरण कुंजी",
+      "citekeyDesc": "इस स्रोत को उद्धृत करने के लिए उपयोग होती है, जैसे [@smith2020]। आपके लिए भर दी गई है; चाहें तो बदलें।"
+    }
   }
 }

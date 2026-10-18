@@ -29,9 +29,9 @@ describe('menuActionsFor — zone and kind rulings (#229)', () => {
 
   it('research rows never get the manuscript metadata actions', () => {
     expect(menuActionsFor(doc('Notes.md'), 'research')).toEqual(
-      ['rename', 'newDoc', 'newFolder', 'delete']);
+      ['rename', 'newDoc', 'newSource', 'newFolder', 'delete']);
     expect(menuActionsFor(folder('Interviews'), 'research')).toEqual(
-      ['rename', 'newDoc', 'newFolder', 'delete']);
+      ['rename', 'newDoc', 'newSource', 'newFolder', 'delete']);
     expect(menuActionsFor(pdf('scan.pdf'), 'research')).toEqual(['rename', 'delete']);
   });
 

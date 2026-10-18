@@ -10,6 +10,11 @@ import { markdownToHtml } from './markdown';
 import { buildManuscriptTree, planCompile, CompilePlanItem } from './manuscriptTree';
 import { parseFolderPrefix } from './binderOrder';
 import { ExportTitleChoice, sanitizeTitleForFilename } from './exportTitle';
+import { buildSourceIndex, SourceIndex } from './sourceIndex';
+import { renderCitations, preparePandocSections, citationReport, CiteLabels, CitationReport } from './citeRender';
+import { CHICAGO_NOTES_CSL } from './chicagoNotesCsl';
+import { renderSectionHtml, SectionHtml } from './footnotes';
+import type { CitationStyle } from './chicago';
 
 const execFileAsync = promisify(execFile);
 
@@ -47,6 +52,13 @@ export interface ExportOptions {
   authorContact?: string;
 }
 
+// The compile with citations rendered by the built-in formatter: one
+// markdown string per compiled section, plus the references section.
+export interface RenderedCompile {
+  sections: string[];
+  references: string | null;
+}
+
 /**
  * The export dialog's selections, carried between the dialog and the compile
  * preview so the preview renders exactly what the export would produce (#260).
@@ -76,6 +88,10 @@ export function defaultExportUiState(subtreeRoot?: string): ExportUiState {
     customTitle: '',
   };
 }
+
+// The citation style setting: the two built-in Chicago styles, or a CSL file
+// of the writer's own that only the Pandoc formats can apply.
+export type CitationStyleSetting = CitationStyle | 'custom';
 
 export type PdfEngine = 'xelatex' | 'lualatex' | 'pdflatex' | 'wkhtmltopdf';
 
@@ -312,6 +328,80 @@ export class ExportEngine {
     return compiled.split(SECTION_BREAK).join('\n\n---\n\n');
   }
 
+  // ─── Citations ─────────────────────────────────────────────────────────────
+
+  // Every note in the vault with a citekey, the project's Research folder
+  // winning collisions. Built per export — the metadata cache is the source.
+  private sourceIndex(): SourceIndex {
+    return buildSourceIndex(this.app, this.plugin.projectManager.getActiveProject()?.folderPath ?? null);
+  }
+
+  private citeLabels(): CiteLabels {
+    return { worksCited: t('citations.worksCited'), bibliography: t('citations.bibliography') };
+  }
+
+  // The style the built-in formatter applies. A custom CSL file is Pandoc-only,
+  // so the built-in paths fall back to author-date (the setting says so).
+  private builtInStyle(): CitationStyle {
+    const setting = this.plugin.settings.citationStyle ?? 'author-date';
+    return setting === 'notes' ? 'notes' : 'author-date';
+  }
+
+  // The compile as the built-in paths render it: citations formatted in
+  // place and the references section (works cited or bibliography) last.
+  // Unresolved keys and citekey collisions are reported once per compile.
+  async compileRendered(opts: ExportOptions): Promise<RenderedCompile> {
+    const sections = (await this.compileContent(opts)).split(SECTION_BREAK);
+    const index = this.sourceIndex();
+    const rendered = renderCitations({
+      sections, style: this.builtInStyle(), sources: index, labels: this.citeLabels(), headingLevel: 1,
+    });
+    this.reportCitationProblems(rendered.unresolved, index.collisions);
+    return { sections: rendered.sections, references: rendered.references };
+  }
+
+  // The rendered compile as one markdown string with section sentinels —
+  // what the Markdown export writes and the compile preview shows.
+  async compileMarkdown(opts: ExportOptions): Promise<string> {
+    const r = await this.compileRendered(opts);
+    return (r.references ? [...r.sections, r.references] : r.sections).join(SECTION_BREAK);
+  }
+
+  // What the export dialog shows before anyone exports: how many citations
+  // point at how many sources, and which keys match nothing.
+  async citationSummary(opts: ExportOptions): Promise<CitationReport> {
+    const sections = (await this.compileContent(opts)).split(SECTION_BREAK);
+    return citationReport(sections, this.sourceIndex());
+  }
+
+  private reportCitationProblems(unresolved: string[], collisions: string[]): void {
+    if (unresolved.length > 0) {
+      new Notice(t('citations.unresolvedNotice', { count: unresolved.length, keys: unresolved.map(k => `@${k}`).join(', ') }));
+    }
+    if (collisions.length > 0) {
+      new Notice(t('citations.collisionNotice', { keys: collisions.join(', ') }));
+    }
+  }
+
+  // The compile as Pandoc receives it: citations in Pandoc's spelling, the
+  // same Obsidian-markdown cleanup the built-in paths get, a references div
+  // for citeproc to fill, and the cited sources as CSL-JSON.
+  private async compilePandoc(opts: ExportOptions): Promise<{ markdown: string; items: Record<string, unknown>[] }> {
+    const sections = (await this.compileContent(opts)).split(SECTION_BREAK);
+    const index = this.sourceIndex();
+    const prep = preparePandocSections(sections, index, this.builtInStyle(), this.citeLabels(), 1);
+    this.reportCitationProblems(prep.unresolved, index.collisions);
+    const cleaned = prep.sections.map(s => this.preprocessObsidianMarkdown(s));
+    return { markdown: this.toMarkdown(cleaned.join(SECTION_BREAK)), items: prep.items };
+  }
+
+  // The first heading of a section, for grouping notes by chapter; a section
+  // without one is named by position.
+  private sectionTitle(md: string, index: number): string {
+    const m = /^#{1,6}\s+(.+)$/m.exec(md);
+    return m ? m[1].replace(/[*_`]/g, '').trim() : t('citations.sectionFallback', { n: index + 1 });
+  }
+
   async export(opts: ExportOptions): Promise<string> {
     const project = this.plugin.projectManager.getActiveProject();
 
@@ -334,19 +424,18 @@ export class ExportEngine {
       return this.exportManuscript(opts, `${baseFile}.html`);
     }
 
-    const compiled = this.toMarkdown(await this.compileContent(opts));
-
     switch (opts.format) {
       case 'md':
-        return this.exportMarkdown(compiled, `${baseFile}.md`);
+        return this.exportMarkdown(this.toMarkdown(await this.compileMarkdown(opts)), `${baseFile}.md`);
       case 'html':
-        return this.exportHtml(compiled, `${baseFile}.html`, this.resolveTitle(opts), opts);
+        return this.exportHtml(await this.compileRendered(opts), `${baseFile}.html`, this.resolveTitle(opts), opts);
       case 'docx':
-        return this.exportPandoc(compiled, `${baseFile}.docx`, opts);
       case 'rtf':
-        return this.exportPandoc(compiled, `${baseFile}.rtf`, opts);
-      case 'pdf':
-        return this.exportPdf(compiled, `${baseFile}.pdf`, opts);
+      case 'pdf': {
+        const { markdown, items } = await this.compilePandoc(opts);
+        if (opts.format === 'pdf') return this.exportPdf(markdown, `${baseFile}.pdf`, opts, items);
+        return this.exportPandoc(markdown, `${baseFile}.${opts.format}`, opts, undefined, items);
+      }
       default:
         throw new Error(`Unsupported format: ${opts.format as string}`);
     }
@@ -362,40 +451,46 @@ export class ExportEngine {
     const date = localDateString();
 
     const chapters: EpubChapter[] = [];
+    const notesOpts = { epub: true, returnLabel: t('citations.returnToText') };
+    // A chapter's notes stay with the chapter, numbered from 1, in the
+    // markup readers use to show them as popups.
+    const chapterHtml = (md: string, id: string): string => {
+      const r = renderSectionHtml(this.preprocessObsidianMarkdown(md), id, notesOpts);
+      const notes = r.notesHtml ? `\n<section epub:type="footnotes" class="ws-notes">\n${r.notesHtml}\n</section>` : '';
+      return this.htmlToXhtml(`${r.bodyHtml}${notes}`);
+    };
 
     if (opts.scope === 'current') {
       const path = opts.currentFile ?? this.activeMarkdownPath();
       if (!path) {
         throw new Error(t('exportEngine.noActiveDocument'));
       }
-      let content = await this.files.readText(path);
-      if (content === null) {
-        throw new Error(t('exportEngine.noActiveDocument'));
-      }
-      if (!opts.includeFrontmatter) {
-        content = content.replace(/^---\r?\n[\s\S]*?\r?\n---\r?\n?/, '');
-      }
-      content = this.preprocessObsidianMarkdown(content.trim());
-      const htmlContent = this.htmlToXhtml(markdownToHtml(content));
+      const rendered = await this.compileRendered({ ...opts, addTitlePage: false });
+      const content = rendered.sections[0] ?? '';
       const basename = path.split('/').pop()?.replace(/\.md$/, '') ?? path;
-      chapters.push({ id: 'chapter-1', title: basename, htmlContent });
+      chapters.push({ id: 'chapter-1', title: basename, htmlContent: chapterHtml(content, 'chapter-1') });
+      if (rendered.references) {
+        chapters.push({ id: 'chapter-2', title: this.sectionTitle(rendered.references, 1), htmlContent: chapterHtml(rendered.references, 'chapter-2') });
+      }
     } else if (opts.scope === 'project' && project) {
       // Folder headings have no chapter home in epub — the option is ignored
       // (ruling on #232); chapters are the zone's documents in binder order.
+      const plan = this.manuscriptPlan(project.folderPath, opts, false).filter(item => item.kind === 'doc');
+      const rendered = await this.compileRendered({ ...opts, addTitlePage: false, includeFolderNamesAsHeadings: false });
       let idx = 1;
-      for (const item of this.manuscriptPlan(project.folderPath, opts, false)) {
-        if (item.kind !== 'doc') continue;
-        let content = await this.files.readText(item.path);
-        if (content === null) continue;
-        if (!opts.includeFrontmatter) {
-          content = content.replace(/^---\r?\n[\s\S]*?\r?\n---\r?\n?/, '');
-        }
-        content = this.preprocessObsidianMarkdown(content.trim());
+      rendered.sections.forEach((section, i) => {
+        const item = plan[i];
+        if (!item || item.kind !== 'doc') return;
+        let content = section;
         if (opts.includeTitlesAsHeadings) {
           content = content.replace(/^# [^\n]*\n+/, '').trim();
         }
-        const htmlContent = this.htmlToXhtml(markdownToHtml(content));
-        chapters.push({ id: `chapter-${idx++}`, title: item.title, htmlContent });
+        const id = `chapter-${idx++}`;
+        chapters.push({ id, title: item.title, htmlContent: chapterHtml(content, id) });
+      });
+      if (rendered.references) {
+        const id = `chapter-${idx++}`;
+        chapters.push({ id, title: this.sectionTitle(rendered.references, idx), htmlContent: chapterHtml(rendered.references, id) });
       }
     }
 
@@ -552,13 +647,13 @@ export class ExportEngine {
     const title  = this.resolveTitle(opts);
 
     // Compile without auto title page — we build a proper manuscript title page instead
-    const compiled = await this.compileContent({ ...opts, addTitlePage: false });
-
-    // Split on section separators (added by compileContent between documents)
-    const sections = compiled.split(SECTION_BREAK);
+    const rendered = await this.compileRendered({ ...opts, addTitlePage: false });
+    const sections = rendered.sections;
+    const notesLabel = t('citations.returnToText');
 
     const htmlSections: string[] = [];
-    for (const section of sections) {
+    const notesBySection: { title: string; html: string }[] = [];
+    const convert = (section: string, scope: string): SectionHtml => {
       let md = section.trim();
 
       // Convert standalone scene break markers to a unique placeholder before HTML conversion
@@ -568,15 +663,31 @@ export class ExportEngine {
 
       md = this.preprocessObsidianMarkdown(md);
 
-      let html = markdownToHtml(md);
+      const r = renderSectionHtml(md, scope, { returnLabel: notesLabel });
 
       // Restore scene breaks and uppercase chapter headings
-      html = html.replace(/<p>__SCENE_BREAK__<\/p>/g, '<p class="ws-ms-scene">#</p>');
+      let html = r.bodyHtml.replace(/<p>__SCENE_BREAK__<\/p>/g, '<p class="ws-ms-scene">#</p>');
       html = html.replace(/<h([12])>(.*?)<\/h\1>/g, (_m, lvl, text) =>
         `<h${lvl}>${(text as string).toUpperCase()}</h${lvl}>`
       );
+      return { ...r, bodyHtml: html };
+    };
 
-      htmlSections.push(html);
+    sections.forEach((section, i) => {
+      const r = convert(section, `s${i + 1}`);
+      htmlSections.push(r.bodyHtml);
+      if (r.notesHtml) notesBySection.push({ title: this.sectionTitle(section, i), html: r.notesHtml });
+    });
+
+    // Back matter: the notes (grouped by chapter when more than one has
+    // any), then the works-cited list or bibliography.
+    if (notesBySection.length > 0) {
+      const groups = notesBySection.map(g =>
+        `${notesBySection.length > 1 ? `<h3>${this.escapeHtml(g.title)}</h3>\n` : ''}${g.html}`);
+      htmlSections.push(`<section class="ws-notes">\n<h1>${this.escapeHtml(t('citations.notes')).toUpperCase()}</h1>\n${groups.join('\n')}\n</section>`);
+    }
+    if (rendered.references) {
+      htmlSections.push(`<section class="ws-references">\n${convert(rendered.references, 'refs').bodyHtml}\n</section>`);
     }
 
     const bodyHtml = htmlSections.join('\n');
@@ -630,9 +741,25 @@ ${bodyHtml}
     return outputPath;
   }
 
-  private async exportHtml(content: string, outputPath: string, title: string, opts: ExportOptions): Promise<string> {
+  private async exportHtml(rendered: RenderedCompile, outputPath: string, title: string, opts: ExportOptions): Promise<string> {
     const font = opts.font || 'Georgia';
     const fontSize = opts.fontSize || 16;
+    const returnLabel = t('citations.returnToText');
+    const bodies: string[] = [];
+    const notesBySection: { title: string; html: string }[] = [];
+    rendered.sections.forEach((section, i) => {
+      const r = renderSectionHtml(this.preprocessObsidianMarkdown(section), `s${i + 1}`, { returnLabel });
+      bodies.push(r.bodyHtml);
+      if (r.notesHtml) notesBySection.push({ title: this.sectionTitle(section, i), html: r.notesHtml });
+    });
+    if (notesBySection.length > 0) {
+      const groups = notesBySection.map(g =>
+        `${notesBySection.length > 1 ? `<h2>${this.escapeHtml(g.title)}</h2>\n` : ''}${g.html}`);
+      bodies.push(`<section class="ws-notes">\n<h1>${this.escapeHtml(t('citations.notes'))}</h1>\n${groups.join('\n')}\n</section>`);
+    }
+    if (rendered.references) {
+      bodies.push(`<section class="ws-references">\n${markdownToHtml(rendered.references)}\n</section>`);
+    }
     const html = `<!DOCTYPE html>
 <html lang="${getLanguage()}">
 <head>
@@ -650,10 +777,16 @@ ${bodyHtml}
     blockquote p { margin: 0; }
     pre { background: #f5f5f5; padding: 1em; border-radius: 4px; overflow-x: auto; margin: 0 0 1em; }
     pre code { font-family: "Courier New", monospace; font-size: 0.875em; }
+    sup.ws-fn-ref { font-size: 0.75em; line-height: 0; }
+    sup.ws-fn-ref a { text-decoration: none; }
+    .ws-notes { margin-top: 3em; font-size: 0.9em; }
+    .ws-notes ol { padding-left: 1.5em; }
+    .ws-fn-back { text-decoration: none; margin-left: 0.25em; }
+    .ws-references p { padding-left: 2em; text-indent: -2em; }
   </style>
 </head>
 <body>
-${markdownToHtml(content)}
+${bodies.join('\n<hr>\n')}
 </body>
 </html>`;
     await this.files.writeText(outputPath, html);
@@ -709,11 +842,40 @@ ${markdownToHtml(content)}
     return { xelatex, lualatex, pdflatex, wkhtmltopdf };
   }
 
-  private async exportPandoc(content: string, outputPath: string, opts: ExportOptions, pdf?: { engine: PdfEngine; command: string; keepFont: boolean }): Promise<string> {
+  // The --csl argument for the citation style setting: nothing for
+  // author-date (Pandoc's own default is Chicago author-date), the compact
+  // bundled style for notes, the writer's file for custom. A custom path may
+  // be inside the vault or anywhere on disk.
+  private async cslArgument(tempBase: string, temps: string[]): Promise<string | null> {
+    const setting = this.plugin.settings.citationStyle ?? 'author-date';
+    if (setting === 'notes') {
+      const path = `${tempBase}.tmp.csl`;
+      await this.files.writeText(path, CHICAGO_NOTES_CSL);
+      temps.push(path);
+      return `--csl=${this.files.absolutePath(path)}`;
+    }
+    if (setting === 'custom') {
+      const configured = (this.plugin.settings.cslPath ?? '').trim();
+      if (!configured) return null;
+      const vaultPath = normalizePath(configured);
+      return `--csl=${this.files.exists(vaultPath) ? this.files.absolutePath(vaultPath) : configured}`;
+    }
+    return null;
+  }
+
+  private async exportPandoc(
+    content: string,
+    outputPath: string,
+    opts: ExportOptions,
+    pdf?: { engine: PdfEngine; command: string; keepFont: boolean },
+    bibliography: Record<string, unknown>[] = [],
+  ): Promise<string> {
     // Fall back to the configured/bare name on resolution failure so the
     // invocation still produces the classic classifiable pandoc-missing error.
     const pandocPath = (await this.resolvePandoc()) ?? (this.plugin.settings.pandocPath || 'pandoc');
-    const tempMdPath = outputPath.replace(/\.[^.]+$/, '.tmp.md');
+    const tempBase = outputPath.replace(/\.[^.]+$/, '');
+    const tempMdPath = `${tempBase}.tmp.md`;
+    const temps = [tempMdPath];
 
     try {
       await this.files.writeText(tempMdPath, content);
@@ -722,6 +884,17 @@ ${markdownToHtml(content)}
       const absInput = this.files.absolutePath(tempMdPath);
 
       const args = [absInput, '--from', 'markdown', '-o', absOutput];
+
+      // Citations: hand citeproc the cited sources and the style. Nothing is
+      // added when the manuscript cites nothing, so plain exports are unchanged.
+      if (bibliography.length > 0) {
+        const bibPath = `${tempBase}.tmp.json`;
+        await this.files.writeText(bibPath, JSON.stringify(bibliography));
+        temps.push(bibPath);
+        args.push('--citeproc', `--bibliography=${this.files.absolutePath(bibPath)}`);
+        const csl = await this.cslArgument(tempBase, temps);
+        if (csl) args.push(csl);
+      }
 
       // For PDF the engine is chosen explicitly (selectPdfEngine), since mainfont
       // is only honored by xelatex/lualatex. docx/rtf pass no pdf arg and are
@@ -755,13 +928,13 @@ ${markdownToHtml(content)}
       }
       throw new Error(`Pandoc export failed: ${raw}\n${hint}`);
     } finally {
-      // Remove the temp file outright — trashing it accumulated a .tmp.md
+      // Remove the temp files outright — trashing them accumulated a .tmp.md
       // in .trash/ on every pandoc export
-      await this.files.remove(tempMdPath);
+      for (const path of temps) await this.files.remove(path);
     }
   }
 
-  private async exportPdf(content: string, outputPath: string, opts: ExportOptions): Promise<string> {
+  private async exportPdf(content: string, outputPath: string, opts: ExportOptions, bibliography: Record<string, unknown>[] = []): Promise<string> {
     const preferred = this.plugin.settings.pdfEngine ?? 'auto';
     const located = await this.locatePdfEngines();
     const decision = selectPdfEngine({
@@ -796,7 +969,7 @@ ${markdownToHtml(content)}
         engine: decision.engine,
         command: located[decision.engine] ?? decision.engine,
         keepFont: decision.keepFont,
-      });
+      }, bibliography);
     } catch (e) {
       const raw = e instanceof Error ? e.message : String(e);
       let msg = t('exportEngine.pdfRequiresPandoc');

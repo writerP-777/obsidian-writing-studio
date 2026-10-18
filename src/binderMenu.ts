@@ -9,7 +9,7 @@ import { NameTextRejection, rejectNameText } from './folderRename';
 
 export type MenuAction =
   | 'rename' | 'synopsis' | 'status' | 'goal' | 'type' | 'compile'
-  | 'export' | 'newDoc' | 'newFolder' | 'delete';
+  | 'export' | 'newDoc' | 'newSource' | 'newFolder' | 'delete';
 
 // The synopsis key is unprefixed on purpose: it is the key Scrivener imports
 // (Longhand, Binders) already write, so a converted project shows its
@@ -62,8 +62,8 @@ export function parseBinderCompile(value: unknown): boolean {
 }
 
 // Rulings on #229: Exports rows are delete-only (the zone is output-only);
-// Research rows offer rename/delete/new-document/new-folder but never the
-// manuscript metadata actions; non-markdown files are rename+delete wherever
+// Research rows offer rename/delete/new-document/new-source/new-folder but
+// never the manuscript metadata actions; non-markdown files are rename+delete wherever
 // they are mutable at all. Manuscript folders additionally offer subtree
 // export (#232) — Research folders never do, the zone never compiles.
 export function menuActionsFor(entry: SiblingEntry, zone: BinderZone): MenuAction[] {
@@ -72,7 +72,10 @@ export function menuActionsFor(entry: SiblingEntry, zone: BinderZone): MenuActio
   if (entry.isFolder && zone === 'manuscript') {
     return ['rename', 'export', 'newDoc', 'newFolder', 'delete'];
   }
-  if (zone === 'research' || entry.isFolder) {
+  if (zone === 'research') {
+    return ['rename', 'newDoc', 'newSource', 'newFolder', 'delete'];
+  }
+  if (entry.isFolder) {
     return ['rename', 'newDoc', 'newFolder', 'delete'];
   }
   return ['rename', 'synopsis', 'status', 'goal', 'type', 'compile', 'newDoc', 'newFolder', 'delete'];
