@@ -27,6 +27,9 @@ export class AddSourceModal extends Modal {
   onOpen(): void {
     const { contentEl } = this;
     contentEl.empty();
+    // The width belongs on the dialog itself — set on the content alone it
+    // overflowed the dialog and the right-hand controls were clipped.
+    this.modalEl.addClass('ws-source-dialog');
     contentEl.addClass('ws-source-modal');
     contentEl.createEl('h2', { text: t('citations.addSourceTitle') });
     contentEl.createEl('p', { cls: 'ws-source-intro', text: t('citations.addSourceIntro') });
