@@ -408,6 +408,30 @@ export class WritingStudioSettingsTab extends PluginSettingTab {
         },
         {
           type: 'group',
+          heading: t('settings.export.citationsHeading'),
+          items: [
+            {
+              name: t('settings.export.citationStyle'),
+              desc: t('settings.export.citationStyleDesc'),
+              control: {
+                type: 'dropdown',
+                key: 'citationStyle',
+                options: {
+                  'author-date': t('settings.export.citationStyleAuthorDate'),
+                  notes: t('settings.export.citationStyleNotes'),
+                  custom: t('settings.export.citationStyleCustom'),
+                },
+              },
+            },
+            {
+              name: t('settings.export.cslPath'),
+              desc: t('settings.export.cslPathDesc'),
+              control: { type: 'text', key: 'cslPath', placeholder: 'Styles/apa.csl' },
+            },
+          ],
+        },
+        {
+          type: 'group',
           heading: t('settings.export.epubHeading'),
           items: [
             {

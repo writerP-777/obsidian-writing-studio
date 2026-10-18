@@ -113,7 +113,15 @@
       "pdfEngineDesc": "Engine für den PDF-Export. Auto wählt eine installierte LaTeX-Engine. wkhtmltopdf funktioniert ohne LaTeX, die Exportschriftart gilt dort jedoch nicht.",
       "pdfEngineAuto": "Automatisch (empfohlen)",
       "pdfEnginePath": "Speicherort der PDF-Engine",
-      "pdfEnginePathDesc": "Ordner mit der PDF-Engine oder vollständiger Pfad zu einer Engine-Binärdatei. Leer lassen, um im Systempfad und an üblichen Installationsorten zu suchen."
+      "pdfEnginePathDesc": "Ordner mit der PDF-Engine oder vollständiger Pfad zu einer Engine-Binärdatei. Leer lassen, um im Systempfad und an üblichen Installationsorten zu suchen.",
+      "citationsHeading": "Zitate",
+      "citationStyle": "Zitierstil",
+      "citationStyleDesc": "Wie Zitate und das Literaturverzeichnis erscheinen. Autor-Jahr setzt (Smith 2020) in den Text; Anmerkungen macht aus jedem Zitat eine Fußnote. Eine eigene Stildatei gilt nur für PDF, Word und RTF; die anderen Formate verwenden Autor-Jahr.",
+      "citationStyleAuthorDate": "Autor-Jahr (Chicago)",
+      "citationStyleNotes": "Anmerkungen (Chicago)",
+      "citationStyleCustom": "Eigene Stildatei (.csl)",
+      "cslPath": "Eigene Stildatei",
+      "cslPathDesc": "Pfad zu einer .csl-Datei, im Vault oder irgendwo auf der Festplatte. Wird verwendet, wenn der Zitierstil „Eigene Stildatei“ ist."
     },
     "log": {
       "appendToDailyNote": "An Tagesnotiz anhängen",
@@ -511,7 +519,15 @@
     "titleProject": "Projektname",
     "titleCustom": "Eigenen Titel eingeben",
     "customTitleName": "Eigener Titel",
-    "customTitlePlaceholder": "Titel eingeben"
+    "customTitlePlaceholder": "Titel eingeben",
+    "citationsLabel": "Zitate",
+    "citationSummary": "{{citations}} zu {{sources}} · Stil: {{style}}",
+    "citationCount_one": "{{count}} Zitat",
+    "citationCount_other": "{{count}} Zitate",
+    "sourceCount_one": "{{count}} Quelle",
+    "sourceCount_other": "{{count}} Quellen",
+    "citationUnresolved_one": "{{count}} Zitat hat keine Quelle: {{keys}}",
+    "citationUnresolved_other": "{{count}} Zitate haben keine Quelle: {{keys}}"
   },
   "publishModal": {
     "title": "Auf WordPress veröffentlichen",
@@ -631,7 +647,9 @@
       "openWritingLog": "Schreibprotokoll öffnen",
       "openFolderSidebar": "Ordner im Sidebar-Explorer öffnen",
       "restoreBinderLayout": "Vorheriges Mappen-Layout wiederherstellen",
-      "openOutline": "Gliederung öffnen"
+      "openOutline": "Gliederung öffnen",
+      "insertCitation": "Zitat einfügen",
+      "addSource": "Quelle hinzufügen"
     },
     "menu": {
       "studioOptions": "Schreibstudio-Optionen",
@@ -745,5 +763,65 @@
     "openDoc": "„{{name}}“ öffnen",
     "expand": "„{{name}}“ ausklappen",
     "collapse": "„{{name}}“ einklappen"
+  },
+  "citations": {
+    "worksCited": "Zitierte Werke",
+    "bibliography": "Bibliografie",
+    "notes": "Anmerkungen",
+    "returnToText": "Zurück zum Text",
+    "sectionFallback": "Abschnitt {{n}}",
+    "unresolvedNotice_one": "{{count}} Zitat hat keine passende Quelle: {{keys}}",
+    "unresolvedNotice_other": "{{count}} Zitate haben keine passende Quelle: {{keys}}",
+    "collisionNotice": "Zwei Notizen teilen sich einen Zitierschlüssel. Die im Ordner „Research“ wird verwendet; übersprungen: {{keys}}",
+    "insertTitle": "Zitat einfügen",
+    "insertMenu": "Zitat einfügen…",
+    "insertBtn": "Einfügen",
+    "noSources": "Noch keine Quellen.",
+    "noSourcesHint": "Fügen Sie eine über die Buch-Schaltfläche im Research-Tab des Binders hinzu, oder geben Sie einer beliebigen Notiz die Eigenschaft „citekey“.",
+    "searchPlaceholder": "Nach Autor, Jahr oder Titel suchen",
+    "noMatches": "Keine passenden Quellen.",
+    "pageLabel": "Seite (optional)",
+    "pagePlaceholder": "12 oder 12-14",
+    "pageHint": "Leer lassen, um das ganze Werk zu zitieren.",
+    "addSource": "Quelle hinzufügen…",
+    "addSourceTitle": "Quelle hinzufügen",
+    "addSourceIntro": "Tragen Sie ein, was Sie wissen. Eine Notiz mit diesen Angaben wird im Ordner „Research“ gespeichert und lässt sich mit „Zitat einfügen“ zitieren.",
+    "addSourceBtn": "Quelle hinzufügen",
+    "sourceAdded": "Quelle hinzugefügt. Zitieren mit [@{{key}}].",
+    "titleRequired": "Geben Sie der Quelle einen Titel.",
+    "citekeyInvalid": "Der Zitierschlüssel darf Buchstaben, Ziffern sowie _ : . - enthalten und muss mit einem Buchstaben oder einer Ziffer beginnen.",
+    "citekeyTaken": "Der Zitierschlüssel {{key}} wird bereits von einer anderen Quelle verwendet.",
+    "type": {
+      "book": "Buch",
+      "chapter": "Kapitel in einem Buch",
+      "articleJournal": "Zeitschriftenartikel",
+      "articleMagazine": "Magazinartikel",
+      "articleNewspaper": "Zeitungsartikel",
+      "webpage": "Webseite",
+      "thesis": "Abschlussarbeit oder Dissertation",
+      "report": "Bericht"
+    },
+    "field": {
+      "type": "Typ",
+      "title": "Titel",
+      "authors": "Autoren",
+      "authorsDesc": "Eine Person pro Zeile, Vorname zuerst (Jane Smith). Organisationen sind ebenfalls möglich.",
+      "year": "Jahr",
+      "bookTitle": "Buchtitel",
+      "editors": "Herausgeber",
+      "journal": "Zeitschrift",
+      "publication": "Publikation",
+      "website": "Website",
+      "volume": "Band",
+      "issue": "Heft",
+      "pages": "Seiten",
+      "publisher": "Verlag",
+      "university": "Universität",
+      "place": "Erscheinungsort",
+      "link": "URL oder DOI",
+      "linkDesc": "Eine Webadresse oder eine DOI wie 10.1000/xyz123.",
+      "citekey": "Zitierschlüssel",
+      "citekeyDesc": "Wird zum Zitieren dieser Quelle verwendet, zum Beispiel [@smith2020]. Wird automatisch ausgefüllt; Sie können ihn ändern."
+    }
   }
 }

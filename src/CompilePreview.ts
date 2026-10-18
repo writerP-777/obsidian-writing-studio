@@ -78,7 +78,7 @@ export class CompilePreviewView extends ItemView {
     this.sourcePath = project ? normalizePath(`${project.folderPath}/_compile.md`) : '';
 
     try {
-      this.content = this.plugin.exportEngine.toMarkdown(await this.plugin.exportEngine.compileContent(exportOpts));
+      this.content = this.plugin.exportEngine.toMarkdown(await this.plugin.exportEngine.compileMarkdown(exportOpts));
     } catch (e) {
       this.content = '';
       new Notice(t('exportModal.exportFailed', { error: e instanceof Error ? e.message : String(e) }));

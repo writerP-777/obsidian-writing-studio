@@ -113,7 +113,15 @@
       "pdfEngineDesc": "PDF 書き出しに使うエンジンです。自動ではインストール済みの LaTeX エンジンを選びます。wkhtmltopdf は LaTeX 不要ですが、書き出しフォント設定は適用されません。",
       "pdfEngineAuto": "自動（推奨）",
       "pdfEnginePath": "PDF エンジンの場所",
-      "pdfEnginePathDesc": "PDF エンジンを含むフォルダー、または単一のエンジンバイナリへのフルパス。空欄の場合、システムパスと一般的なインストール場所を検索します。"
+      "pdfEnginePathDesc": "PDF エンジンを含むフォルダー、または単一のエンジンバイナリへのフルパス。空欄の場合、システムパスと一般的なインストール場所を検索します。",
+      "citationsHeading": "引用",
+      "citationStyle": "引用スタイル",
+      "citationStyleDesc": "引用と参考文献ページの表示方法。著者・年方式は本文に (Smith 2020) を入れ、注方式は各引用を脚注にします。独自のスタイルファイルは PDF・Word・RTF のみに適用され、他の形式は著者・年方式になります。",
+      "citationStyleAuthorDate": "著者・年（シカゴ）",
+      "citationStyleNotes": "注（シカゴ）",
+      "citationStyleCustom": "独自のスタイルファイル（.csl）",
+      "cslPath": "独自のスタイルファイル",
+      "cslPathDesc": ".csl ファイルのパス。保管庫内でもディスク上のどこでも構いません。引用スタイルが「独自のスタイルファイル」のときに使われます。"
     },
     "log": {
       "appendToDailyNote": "デイリーノートに追記",
@@ -511,7 +519,15 @@
     "titleProject": "プロジェクト名",
     "titleCustom": "自分でタイトルを入力",
     "customTitleName": "カスタムタイトル",
-    "customTitlePlaceholder": "タイトルを入力"
+    "customTitlePlaceholder": "タイトルを入力",
+    "citationsLabel": "引用",
+    "citationSummary": "{{citations}}、{{sources}} · スタイル: {{style}}",
+    "citationCount_one": "{{count}} 件の引用",
+    "citationCount_other": "{{count}} 件の引用",
+    "sourceCount_one": "{{count}} 件の出典",
+    "sourceCount_other": "{{count}} 件の出典",
+    "citationUnresolved_one": "{{count}} 件の引用に出典がありません: {{keys}}",
+    "citationUnresolved_other": "{{count}} 件の引用に出典がありません: {{keys}}"
   },
   "publishModal": {
     "title": "WordPressに公開",
@@ -631,7 +647,9 @@
       "openWritingLog": "執筆ログを開く",
       "openFolderSidebar": "サイドバーエクスプローラーでフォルダを開く",
       "restoreBinderLayout": "以前のバインダー配置を復元",
-      "openOutline": "アウトラインを開く"
+      "openOutline": "アウトラインを開く",
+      "insertCitation": "引用を挿入",
+      "addSource": "出典を追加"
     },
     "menu": {
       "studioOptions": "ライティングスタジオのオプション",
@@ -745,5 +763,65 @@
     "openDoc": "「{{name}}」を開く",
     "expand": "「{{name}}」を展開",
     "collapse": "「{{name}}」を折りたたむ"
+  },
+  "citations": {
+    "worksCited": "参考文献",
+    "bibliography": "参考文献一覧",
+    "notes": "注",
+    "returnToText": "本文に戻る",
+    "sectionFallback": "セクション {{n}}",
+    "unresolvedNotice_one": "{{count}} 件の引用に対応する出典がありません: {{keys}}",
+    "unresolvedNotice_other": "{{count}} 件の引用に対応する出典がありません: {{keys}}",
+    "collisionNotice": "2 つのノートが同じ引用キーを使っています。Research フォルダー内のものを使用し、次はスキップしました: {{keys}}",
+    "insertTitle": "引用を挿入",
+    "insertMenu": "引用を挿入…",
+    "insertBtn": "挿入",
+    "noSources": "出典はまだありません。",
+    "noSourcesHint": "バインダーの Research タブにある本のボタンから追加するか、任意のノートに「citekey」プロパティを付けてください。",
+    "searchPlaceholder": "著者・年・タイトルで検索",
+    "noMatches": "一致する出典がありません。",
+    "pageLabel": "ページ（任意）",
+    "pagePlaceholder": "12 または 12-14",
+    "pageHint": "空欄にすると作品全体を引用します。",
+    "addSource": "出典を追加…",
+    "addSourceTitle": "出典を追加",
+    "addSourceIntro": "わかる範囲で入力してください。この情報を持つノートが Research フォルダーに保存され、「引用を挿入」から引用できます。",
+    "addSourceBtn": "出典を追加",
+    "sourceAdded": "出典を追加しました。[@{{key}}] で引用できます。",
+    "titleRequired": "出典にタイトルを付けてください。",
+    "citekeyInvalid": "引用キーに使えるのは英数字と _ : . - のみで、先頭は英数字にしてください。",
+    "citekeyTaken": "引用キー {{key}} は別の出典で既に使われています。",
+    "type": {
+      "book": "書籍",
+      "chapter": "書籍の章",
+      "articleJournal": "学術誌の論文",
+      "articleMagazine": "雑誌記事",
+      "articleNewspaper": "新聞記事",
+      "webpage": "ウェブページ",
+      "thesis": "学位論文",
+      "report": "報告書"
+    },
+    "field": {
+      "type": "種類",
+      "title": "タイトル",
+      "authors": "著者",
+      "authorsDesc": "1 行に 1 人、名・姓の順（Jane Smith）。団体名も使えます。",
+      "year": "年",
+      "bookTitle": "書籍のタイトル",
+      "editors": "編者",
+      "journal": "学術誌",
+      "publication": "掲載誌",
+      "website": "ウェブサイト",
+      "volume": "巻",
+      "issue": "号",
+      "pages": "ページ",
+      "publisher": "出版社",
+      "university": "大学",
+      "place": "出版地",
+      "link": "URL または DOI",
+      "linkDesc": "ウェブアドレス、または 10.1000/xyz123 のような DOI。",
+      "citekey": "引用キー",
+      "citekeyDesc": "この出典を引用するときに使います（例: [@smith2020]）。自動入力されますが変更できます。"
+    }
   }
 }

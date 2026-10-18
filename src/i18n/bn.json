@@ -113,7 +113,15 @@
       "pdfEngineDesc": "PDF এক্সপোর্টে ব্যবহৃত ইঞ্জিন। স্বয়ংক্রিয় মোড ইনস্টল করা LaTeX ইঞ্জিন বেছে নেয়। wkhtmltopdf LaTeX ছাড়াই কাজ করে, তবে এক্সপোর্ট ফন্ট সেটিং এতে প্রযোজ্য নয়।",
       "pdfEngineAuto": "স্বয়ংক্রিয় (প্রস্তাবিত)",
       "pdfEnginePath": "PDF ইঞ্জিনের অবস্থান",
-      "pdfEnginePathDesc": "PDF ইঞ্জিন থাকা ফোল্ডার, বা একটি ইঞ্জিন বাইনারির সম্পূর্ণ পাথ। খালি রাখলে সিস্টেম পাথ ও সাধারণ ইনস্টল অবস্থানে খোঁজা হবে।"
+      "pdfEnginePathDesc": "PDF ইঞ্জিন থাকা ফোল্ডার, বা একটি ইঞ্জিন বাইনারির সম্পূর্ণ পাথ। খালি রাখলে সিস্টেম পাথ ও সাধারণ ইনস্টল অবস্থানে খোঁজা হবে।",
+      "citationsHeading": "উদ্ধৃতি",
+      "citationStyle": "উদ্ধৃতি শৈলী",
+      "citationStyleDesc": "উদ্ধৃতি ও উদ্ধৃত রচনার পৃষ্ঠা কীভাবে ছাপা হবে। লেখক-তারিখ পাঠের মধ্যে (Smith 2020) বসায়; টীকা প্রতিটি উদ্ধৃতিকে পাদটীকায় পরিণত করে। নিজস্ব শৈলী ফাইল শুধু PDF, Word ও RTF-এ প্রযোজ্য; অন্য ফরম্যাটগুলো লেখক-তারিখ ব্যবহার করে।",
+      "citationStyleAuthorDate": "লেখক-তারিখ (শিকাগো)",
+      "citationStyleNotes": "টীকা (শিকাগো)",
+      "citationStyleCustom": "নিজস্ব শৈলী ফাইল (.csl)",
+      "cslPath": "নিজস্ব শৈলী ফাইল",
+      "cslPathDesc": ".csl ফাইলের পথ, ভল্টের ভেতরে বা ডিস্কের যেকোনো জায়গায়। উদ্ধৃতি শৈলী \"নিজস্ব শৈলী ফাইল\" হলে ব্যবহৃত হয়।"
     },
     "log": {
       "appendToDailyNote": "দৈনিক নোটে যোগ করুন",
@@ -511,7 +519,15 @@
     "titleProject": "প্রজেক্টের নাম",
     "titleCustom": "নিজের শিরোনাম লিখুন",
     "customTitleName": "কাস্টম শিরোনাম",
-    "customTitlePlaceholder": "একটি শিরোনাম লিখুন"
+    "customTitlePlaceholder": "একটি শিরোনাম লিখুন",
+    "citationsLabel": "উদ্ধৃতি",
+    "citationSummary": "{{citations}}, {{sources}} · শৈলী: {{style}}",
+    "citationCount_one": "{{count}}টি উদ্ধৃতি",
+    "citationCount_other": "{{count}}টি উদ্ধৃতি",
+    "sourceCount_one": "{{count}}টি উৎস",
+    "sourceCount_other": "{{count}}টি উৎস",
+    "citationUnresolved_one": "{{count}}টি উদ্ধৃতির কোনো উৎস নেই: {{keys}}",
+    "citationUnresolved_other": "{{count}}টি উদ্ধৃতির কোনো উৎস নেই: {{keys}}"
   },
   "publishModal": {
     "title": "WordPress-এ প্রকাশ করুন",
@@ -631,7 +647,9 @@
       "openWritingLog": "রাইটিং লগ খুলুন",
       "openFolderSidebar": "সাইডবার এক্সপ্লোরারে ফোল্ডার খুলুন",
       "restoreBinderLayout": "বাইন্ডারের আগের বিন্যাস ফিরিয়ে আনুন",
-      "openOutline": "রূপরেখা খুলুন"
+      "openOutline": "রূপরেখা খুলুন",
+      "insertCitation": "উদ্ধৃতি যোগ করুন",
+      "addSource": "উৎস যোগ করুন"
     },
     "menu": {
       "studioOptions": "রাইটিং স্টুডিও বিকল্প",
@@ -745,5 +763,65 @@
     "openDoc": "\"{{name}}\" খুলুন",
     "expand": "\"{{name}}\" প্রসারিত করুন",
     "collapse": "\"{{name}}\" গুটিয়ে নিন"
+  },
+  "citations": {
+    "worksCited": "উদ্ধৃত রচনাসমূহ",
+    "bibliography": "গ্রন্থপঞ্জি",
+    "notes": "টীকা",
+    "returnToText": "মূল পাঠে ফিরুন",
+    "sectionFallback": "অংশ {{n}}",
+    "unresolvedNotice_one": "{{count}}টি উদ্ধৃতির মিলে যাওয়া কোনো উৎস নেই: {{keys}}",
+    "unresolvedNotice_other": "{{count}}টি উদ্ধৃতির মিলে যাওয়া কোনো উৎস নেই: {{keys}}",
+    "collisionNotice": "দুটি নোট একই উদ্ধৃতি কী ব্যবহার করছে। Research ফোল্ডারেরটি ব্যবহার করা হয়েছে; বাদ দেওয়া হয়েছে: {{keys}}",
+    "insertTitle": "উদ্ধৃতি যোগ করুন",
+    "insertMenu": "উদ্ধৃতি যোগ করুন…",
+    "insertBtn": "যোগ করুন",
+    "noSources": "এখনো কোনো উৎস নেই।",
+    "noSourcesHint": "বাইন্ডারের Research ট্যাবে বই বোতাম দিয়ে একটি যোগ করুন, অথবা যেকোনো নোটে \"citekey\" প্রপার্টি দিন।",
+    "searchPlaceholder": "লেখক, বছর বা শিরোনাম দিয়ে খুঁজুন",
+    "noMatches": "কোনো উৎস মেলেনি।",
+    "pageLabel": "পৃষ্ঠা (ঐচ্ছিক)",
+    "pagePlaceholder": "12 বা 12-14",
+    "pageHint": "পুরো রচনা উদ্ধৃত করতে খালি রাখুন।",
+    "addSource": "উৎস যোগ করুন…",
+    "addSourceTitle": "উৎস যোগ করুন",
+    "addSourceIntro": "যা জানেন তা পূরণ করুন। এই তথ্যসহ একটি নোট Research ফোল্ডারে সংরক্ষিত হয়, এবং \"উদ্ধৃতি যোগ করুন\" দিয়ে সেটি উদ্ধৃত করতে পারবেন।",
+    "addSourceBtn": "উৎস যোগ করুন",
+    "sourceAdded": "উৎস যোগ হয়েছে। [@{{key}}] দিয়ে উদ্ধৃত করুন।",
+    "titleRequired": "উৎসের একটি শিরোনাম দিন।",
+    "citekeyInvalid": "উদ্ধৃতি কী-তে শুধু অক্ষর, সংখ্যা এবং _ : . - থাকতে পারে এবং তা অক্ষর বা সংখ্যা দিয়ে শুরু হতে হবে।",
+    "citekeyTaken": "উদ্ধৃতি কী {{key}} ইতিমধ্যে অন্য একটি উৎসে ব্যবহৃত হচ্ছে।",
+    "type": {
+      "book": "বই",
+      "chapter": "বইয়ের অধ্যায়",
+      "articleJournal": "জার্নাল প্রবন্ধ",
+      "articleMagazine": "ম্যাগাজিন নিবন্ধ",
+      "articleNewspaper": "সংবাদপত্রের নিবন্ধ",
+      "webpage": "ওয়েব পৃষ্ঠা",
+      "thesis": "থিসিস বা অভিসন্দর্ভ",
+      "report": "প্রতিবেদন"
+    },
+    "field": {
+      "type": "ধরন",
+      "title": "শিরোনাম",
+      "authors": "লেখক",
+      "authorsDesc": "প্রতি লাইনে একজন, আগে নাম (Jane Smith)। প্রতিষ্ঠানও চলবে।",
+      "year": "বছর",
+      "bookTitle": "বইয়ের শিরোনাম",
+      "editors": "সম্পাদক",
+      "journal": "জার্নাল",
+      "publication": "প্রকাশনা",
+      "website": "ওয়েবসাইট",
+      "volume": "খণ্ড",
+      "issue": "সংখ্যা",
+      "pages": "পৃষ্ঠা",
+      "publisher": "প্রকাশক",
+      "university": "বিশ্ববিদ্যালয়",
+      "place": "প্রকাশের স্থান",
+      "link": "URL বা DOI",
+      "linkDesc": "একটি ওয়েব ঠিকানা, অথবা 10.1000/xyz123-এর মতো DOI।",
+      "citekey": "উদ্ধৃতি কী",
+      "citekeyDesc": "এই উৎস উদ্ধৃত করতে ব্যবহৃত হয়, যেমন [@smith2020]। স্বয়ংক্রিয়ভাবে পূরণ হয়েছে; চাইলে বদলান।"
+    }
   }
 }

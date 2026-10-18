@@ -1,6 +1,6 @@
 import { App, MarkdownView, Modal, Setting, Notice } from 'obsidian';
 import type WritingStudioPlugin from '../main';
-import { ExportFormat, ExportScope, ExportUiState } from '../src/ExportEngine';
+import { ExportFormat, ExportOptions, ExportScope, ExportUiState } from '../src/ExportEngine';
 import { ExportTitleChoice, exportTitleChoices, resolveExportTitle } from '../src/exportTitle';
 import { parseFolderPrefix } from '../src/binderOrder';
 import { t } from '../src/i18n';
@@ -24,6 +24,7 @@ export class ExportModal extends Modal {
   private coverImagePath = '';
   private authorContact = '';
   private exportBtn: HTMLButtonElement | null = null;
+  private citationsEl: HTMLElement | null = null;
   private pandocWarningEl: HTMLElement | null = null;
   // Checked once per modal open, only when a pandoc format is selected
   private pandocAvailable: boolean | null = null;
@@ -107,7 +108,7 @@ export class ExportModal extends Modal {
           .addOption('current', t('exportModal.scopeCurrent'))
           .addOption('project', t('exportModal.scopeProject'))
           .setValue(this.exportScope)
-          .onChange(v => { this.exportScope = v as ExportScope; }));
+          .onChange(v => { this.exportScope = v as ExportScope; this.updateCitationSummary(); }));
     }
 
     // One title names the export everywhere — filename, title page, metadata
@@ -143,6 +144,11 @@ export class ExportModal extends Modal {
           this.updateExportEnabled();
         }));
     customTitleSetting.settingEl.toggleClass('ws-hidden', this.titleChoice !== 'custom');
+
+    // What the compile cites, before anyone exports: hidden until the count
+    // is known, and hidden for a manuscript with no citations at all.
+    this.citationsEl = contentEl.createDiv('ws-export-citations ws-hidden');
+    this.updateCitationSummary();
 
     new Setting(contentEl)
       .setName(t('exportModal.includeFrontmatter'))
@@ -249,6 +255,56 @@ export class ExportModal extends Modal {
       titleChoice: this.titleChoice,
       customTitle: this.customTitle,
     };
+  }
+
+  // "12 citations to 8 sources · Style: Author-date (Chicago)", plus the keys
+  // that match no source. Computed from the same compile the export runs.
+  private updateCitationSummary(): void {
+    const el = this.citationsEl;
+    if (!el) return;
+    const opts: ExportOptions = {
+      format: 'md',
+      scope: this.exportScope,
+      subtreeRoot: this.subtreeRoot,
+      currentFile: this.currentFilePath,
+      includeFrontmatter: false,
+      includeTitlesAsHeadings: false,
+      paperSize: 'letter',
+      font: '',
+      fontSize: 12,
+      addTitlePage: false,
+    };
+    void this.plugin.exportEngine.citationSummary(opts).then(report => {
+      el.empty();
+      if (report.citationCount === 0 && report.unresolved.length === 0) {
+        el.addClass('ws-hidden');
+        return;
+      }
+      el.removeClass('ws-hidden');
+      const styleKey: Record<string, string> = {
+        'author-date': 'settings.export.citationStyleAuthorDate',
+        notes: 'settings.export.citationStyleNotes',
+        custom: 'settings.export.citationStyleCustom',
+      };
+      const style = t(styleKey[this.plugin.settings.citationStyle] ?? styleKey['author-date']);
+      el.createSpan({ cls: 'ws-export-citations-label', text: t('exportModal.citationsLabel') });
+      el.createSpan({
+        text: t('exportModal.citationSummary', {
+          citations: t('exportModal.citationCount', { count: report.citationCount }),
+          sources: t('exportModal.sourceCount', { count: report.sourceCount }),
+          style,
+        }),
+      });
+      if (report.unresolved.length > 0) {
+        el.createDiv({
+          cls: 'ws-export-citations-warning',
+          text: t('exportModal.citationUnresolved', {
+            count: report.unresolved.length,
+            keys: report.unresolved.map(k => `@${k}`).join(', '),
+          }),
+        });
+      }
+    }).catch(() => { el.addClass('ws-hidden'); });
   }
 
   // Warning only — the export attempt itself stays allowed

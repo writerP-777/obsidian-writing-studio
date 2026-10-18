@@ -113,7 +113,15 @@
       "pdfEngineDesc": "Motor usado para exportar a PDF. Auto elige un motor LaTeX instalado. wkhtmltopdf funciona sin LaTeX, pero la fuente de exportación no se aplica con él.",
       "pdfEngineAuto": "Auto (recomendado)",
       "pdfEnginePath": "Ubicación del motor de PDF",
-      "pdfEnginePathDesc": "Carpeta que contiene el motor de PDF, o ruta completa a un binario de motor. Déjelo vacío para buscar en la ruta del sistema y en ubicaciones de instalación habituales."
+      "pdfEnginePathDesc": "Carpeta que contiene el motor de PDF, o ruta completa a un binario de motor. Déjelo vacío para buscar en la ruta del sistema y en ubicaciones de instalación habituales.",
+      "citationsHeading": "Citas",
+      "citationStyle": "Estilo de cita",
+      "citationStyleDesc": "Cómo se imprimen las citas y la página de obras citadas. Autor-fecha pone (Smith 2020) en el texto; Notas convierte cada cita en una nota al pie. Un archivo de estilo propio se aplica solo a PDF, Word y RTF; los demás formatos usan autor-fecha.",
+      "citationStyleAuthorDate": "Autor-fecha (Chicago)",
+      "citationStyleNotes": "Notas (Chicago)",
+      "citationStyleCustom": "Archivo de estilo propio (.csl)",
+      "cslPath": "Archivo de estilo propio",
+      "cslPathDesc": "Ruta a un archivo .csl, dentro de la bóveda o en cualquier lugar del disco. Se usa cuando el estilo de cita es \"Archivo de estilo propio\"."
     },
     "log": {
       "appendToDailyNote": "Agregar a la nota diaria",
@@ -511,7 +519,15 @@
     "titleProject": "Nombre del proyecto",
     "titleCustom": "Escribe tu propio título",
     "customTitleName": "Título personalizado",
-    "customTitlePlaceholder": "Introduce un título"
+    "customTitlePlaceholder": "Introduce un título",
+    "citationsLabel": "Citas",
+    "citationSummary": "{{citations}} a {{sources}} · Estilo: {{style}}",
+    "citationCount_one": "{{count}} cita",
+    "citationCount_other": "{{count}} citas",
+    "sourceCount_one": "{{count}} fuente",
+    "sourceCount_other": "{{count}} fuentes",
+    "citationUnresolved_one": "{{count}} cita no tiene fuente: {{keys}}",
+    "citationUnresolved_other": "{{count}} citas no tienen fuente: {{keys}}"
   },
   "publishModal": {
     "title": "Publicar en WordPress",
@@ -631,7 +647,9 @@
       "openWritingLog": "Abrir registro de escritura",
       "openFolderSidebar": "Abrir carpeta en el explorador lateral",
       "restoreBinderLayout": "Restaurar la disposición anterior de la carpeta de escritura",
-      "openOutline": "Abrir esquema"
+      "openOutline": "Abrir esquema",
+      "insertCitation": "Insertar cita",
+      "addSource": "Añadir fuente"
     },
     "menu": {
       "studioOptions": "Opciones de Writing Studio",
@@ -745,5 +763,65 @@
     "openDoc": "Abrir «{{name}}»",
     "expand": "Expandir «{{name}}»",
     "collapse": "Contraer «{{name}}»"
+  },
+  "citations": {
+    "worksCited": "Obras citadas",
+    "bibliography": "Bibliografía",
+    "notes": "Notas",
+    "returnToText": "Volver al texto",
+    "sectionFallback": "Sección {{n}}",
+    "unresolvedNotice_one": "{{count}} cita no tiene fuente correspondiente: {{keys}}",
+    "unresolvedNotice_other": "{{count}} citas no tienen fuente correspondiente: {{keys}}",
+    "collisionNotice": "Dos notas comparten una clave de cita. Se usa la de la carpeta Research; omitida: {{keys}}",
+    "insertTitle": "Insertar cita",
+    "insertMenu": "Insertar cita…",
+    "insertBtn": "Insertar",
+    "noSources": "Aún no hay fuentes.",
+    "noSourcesHint": "Añada una con el botón del libro en la pestaña Research del binder, o dé a cualquier nota la propiedad \"citekey\".",
+    "searchPlaceholder": "Buscar por autor, año o título",
+    "noMatches": "Ninguna fuente coincide.",
+    "pageLabel": "Página (opcional)",
+    "pagePlaceholder": "12 o 12-14",
+    "pageHint": "Déjelo vacío para citar la obra completa.",
+    "addSource": "Añadir fuente…",
+    "addSourceTitle": "Añadir una fuente",
+    "addSourceIntro": "Rellene lo que sepa. Se guarda una nota con estos datos en la carpeta Research y puede citarla con \"Insertar cita\".",
+    "addSourceBtn": "Añadir fuente",
+    "sourceAdded": "Fuente añadida. Cítela con [@{{key}}].",
+    "titleRequired": "Dé un título a la fuente.",
+    "citekeyInvalid": "La clave de cita puede usar letras, dígitos y _ : . - y debe empezar por una letra o un dígito.",
+    "citekeyTaken": "La clave de cita {{key}} ya la usa otra fuente.",
+    "type": {
+      "book": "Libro",
+      "chapter": "Capítulo de un libro",
+      "articleJournal": "Artículo de revista académica",
+      "articleMagazine": "Artículo de revista",
+      "articleNewspaper": "Artículo de periódico",
+      "webpage": "Página web",
+      "thesis": "Tesis",
+      "report": "Informe"
+    },
+    "field": {
+      "type": "Tipo",
+      "title": "Título",
+      "authors": "Autores",
+      "authorsDesc": "Uno por línea, nombre primero (Jane Smith). También valen organizaciones.",
+      "year": "Año",
+      "bookTitle": "Título del libro",
+      "editors": "Editores",
+      "journal": "Revista",
+      "publication": "Publicación",
+      "website": "Sitio web",
+      "volume": "Volumen",
+      "issue": "Número",
+      "pages": "Páginas",
+      "publisher": "Editorial",
+      "university": "Universidad",
+      "place": "Lugar de publicación",
+      "link": "URL o DOI",
+      "linkDesc": "Una dirección web o un DOI como 10.1000/xyz123.",
+      "citekey": "Clave de cita",
+      "citekeyDesc": "Se usa para citar esta fuente, por ejemplo [@smith2020]. Se rellena automáticamente; puede cambiarla."
+    }
   }
 }

@@ -15,7 +15,7 @@ function lookup(key: string): string | undefined {
 
 describe('command registry integrity', () => {
   it('covers the full command surface', () => {
-    expect(COMMAND_SPECS.length).toBe(20);
+    expect(COMMAND_SPECS.length).toBe(22);
   });
 
   it('has unique kebab-case ids', () => {

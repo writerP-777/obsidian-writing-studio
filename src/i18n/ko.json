@@ -113,7 +113,15 @@
       "pdfEngineDesc": "PDF 내보내기에 사용할 엔진입니다. 자동은 설치된 LaTeX 엔진을 선택합니다. wkhtmltopdf는 LaTeX 없이 작동하지만 내보내기 글꼴 설정이 적용되지 않습니다.",
       "pdfEngineAuto": "자동(권장)",
       "pdfEnginePath": "PDF 엔진 위치",
-      "pdfEnginePathDesc": "PDF 엔진이 있는 폴더 또는 엔진 실행 파일의 전체 경로입니다. 비워 두면 시스템 경로와 일반적인 설치 위치를 검색합니다."
+      "pdfEnginePathDesc": "PDF 엔진이 있는 폴더 또는 엔진 실행 파일의 전체 경로입니다. 비워 두면 시스템 경로와 일반적인 설치 위치를 검색합니다.",
+      "citationsHeading": "인용",
+      "citationStyle": "인용 스타일",
+      "citationStyleDesc": "인용과 인용 문헌 페이지를 표시하는 방식입니다. 저자-연도는 본문에 (Smith 2020)을 넣고, 주석은 각 인용을 각주로 만듭니다. 사용자 스타일 파일은 PDF, Word, RTF에만 적용되며 다른 형식은 저자-연도를 사용합니다.",
+      "citationStyleAuthorDate": "저자-연도(시카고)",
+      "citationStyleNotes": "주석(시카고)",
+      "citationStyleCustom": "사용자 스타일 파일(.csl)",
+      "cslPath": "사용자 스타일 파일",
+      "cslPathDesc": ".csl 파일 경로입니다. 보관소 안이든 디스크 어디든 괜찮습니다. 인용 스타일이 \"사용자 스타일 파일\"일 때 사용됩니다."
     },
     "log": {
       "appendToDailyNote": "일일 노트에 추가",
@@ -511,7 +519,15 @@
     "titleProject": "프로젝트 이름",
     "titleCustom": "직접 제목 입력",
     "customTitleName": "사용자 지정 제목",
-    "customTitlePlaceholder": "제목 입력"
+    "customTitlePlaceholder": "제목 입력",
+    "citationsLabel": "인용",
+    "citationSummary": "{{citations}}, {{sources}} · 스타일: {{style}}",
+    "citationCount_one": "인용 {{count}}개",
+    "citationCount_other": "인용 {{count}}개",
+    "sourceCount_one": "출처 {{count}}개",
+    "sourceCount_other": "출처 {{count}}개",
+    "citationUnresolved_one": "인용 {{count}}개에 출처가 없습니다: {{keys}}",
+    "citationUnresolved_other": "인용 {{count}}개에 출처가 없습니다: {{keys}}"
   },
   "publishModal": {
     "title": "WordPress에 게시",
@@ -631,7 +647,9 @@
       "openWritingLog": "글쓰기 로그 열기",
       "openFolderSidebar": "사이드바 탐색기에서 폴더 열기",
       "restoreBinderLayout": "이전 바인더 배치 복원",
-      "openOutline": "아웃라인 열기"
+      "openOutline": "아웃라인 열기",
+      "insertCitation": "인용 삽입",
+      "addSource": "출처 추가"
     },
     "menu": {
       "studioOptions": "글쓰기 스튜디오 옵션",
@@ -745,5 +763,65 @@
     "openDoc": "\"{{name}}\" 열기",
     "expand": "\"{{name}}\" 펼치기",
     "collapse": "\"{{name}}\" 접기"
+  },
+  "citations": {
+    "worksCited": "인용 문헌",
+    "bibliography": "참고 문헌",
+    "notes": "주석",
+    "returnToText": "본문으로 돌아가기",
+    "sectionFallback": "섹션 {{n}}",
+    "unresolvedNotice_one": "인용 {{count}}개에 해당하는 출처가 없습니다: {{keys}}",
+    "unresolvedNotice_other": "인용 {{count}}개에 해당하는 출처가 없습니다: {{keys}}",
+    "collisionNotice": "두 노트가 같은 인용 키를 사용합니다. Research 폴더의 노트를 사용하고 다음은 건너뜁니다: {{keys}}",
+    "insertTitle": "인용 삽입",
+    "insertMenu": "인용 삽입…",
+    "insertBtn": "삽입",
+    "noSources": "아직 출처가 없습니다.",
+    "noSourcesHint": "바인더의 Research 탭에 있는 책 버튼으로 추가하거나, 아무 노트에나 \"citekey\" 속성을 추가하세요.",
+    "searchPlaceholder": "저자, 연도 또는 제목으로 검색",
+    "noMatches": "일치하는 출처가 없습니다.",
+    "pageLabel": "페이지(선택)",
+    "pagePlaceholder": "12 또는 12-14",
+    "pageHint": "비워 두면 저작 전체를 인용합니다.",
+    "addSource": "출처 추가…",
+    "addSourceTitle": "출처 추가",
+    "addSourceIntro": "아는 내용을 입력하세요. 이 정보가 담긴 노트가 Research 폴더에 저장되며 \"인용 삽입\"으로 인용할 수 있습니다.",
+    "addSourceBtn": "출처 추가",
+    "sourceAdded": "출처를 추가했습니다. [@{{key}}]로 인용하세요.",
+    "titleRequired": "출처에 제목을 입력하세요.",
+    "citekeyInvalid": "인용 키에는 영문자, 숫자, _ : . - 만 쓸 수 있으며 영문자나 숫자로 시작해야 합니다.",
+    "citekeyTaken": "인용 키 {{key}}은(는) 이미 다른 출처에서 사용 중입니다.",
+    "type": {
+      "book": "단행본",
+      "chapter": "단행본의 장",
+      "articleJournal": "학술지 논문",
+      "articleMagazine": "잡지 기사",
+      "articleNewspaper": "신문 기사",
+      "webpage": "웹 페이지",
+      "thesis": "학위 논문",
+      "report": "보고서"
+    },
+    "field": {
+      "type": "유형",
+      "title": "제목",
+      "authors": "저자",
+      "authorsDesc": "한 줄에 한 명, 이름 먼저(Jane Smith). 기관명도 가능합니다.",
+      "year": "연도",
+      "bookTitle": "책 제목",
+      "editors": "편집자",
+      "journal": "학술지",
+      "publication": "간행물",
+      "website": "웹사이트",
+      "volume": "권",
+      "issue": "호",
+      "pages": "쪽",
+      "publisher": "출판사",
+      "university": "대학",
+      "place": "출판지",
+      "link": "URL 또는 DOI",
+      "linkDesc": "웹 주소 또는 10.1000/xyz123 같은 DOI.",
+      "citekey": "인용 키",
+      "citekeyDesc": "이 출처를 인용할 때 사용합니다(예: [@smith2020]). 자동으로 채워지며 원하면 바꿀 수 있습니다."
+    }
   }
 }

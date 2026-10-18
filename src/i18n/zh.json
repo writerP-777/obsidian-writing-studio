@@ -113,7 +113,15 @@
       "pdfEngineDesc": "用于 PDF 导出的引擎。自动模式会选择已安装的 LaTeX 引擎。wkhtmltopdf 无需 LaTeX 即可使用，但导出字体设置对其无效。",
       "pdfEngineAuto": "自动（推荐）",
       "pdfEnginePath": "PDF 引擎位置",
-      "pdfEnginePathDesc": "包含 PDF 引擎的文件夹，或某个引擎可执行文件的完整路径。留空则搜索系统路径和常见安装位置。"
+      "pdfEnginePathDesc": "包含 PDF 引擎的文件夹，或某个引擎可执行文件的完整路径。留空则搜索系统路径和常见安装位置。",
+      "citationsHeading": "引用",
+      "citationStyle": "引用样式",
+      "citationStyleDesc": "引用和引用文献页的呈现方式。作者-年份在正文中插入 (Smith 2020)；注释把每处引用变成脚注。自定义样式文件仅适用于 PDF、Word 和 RTF，其他格式使用作者-年份。",
+      "citationStyleAuthorDate": "作者-年份（芝加哥）",
+      "citationStyleNotes": "注释（芝加哥）",
+      "citationStyleCustom": "自定义样式文件（.csl）",
+      "cslPath": "自定义样式文件",
+      "cslPathDesc": ".csl 文件的路径，可在仓库内或磁盘上任意位置。引用样式为“自定义样式文件”时使用。"
     },
     "log": {
       "appendToDailyNote": "追加到每日笔记",
@@ -511,7 +519,15 @@
     "titleProject": "项目名称",
     "titleCustom": "输入自己的标题",
     "customTitleName": "自定义标题",
-    "customTitlePlaceholder": "输入标题"
+    "customTitlePlaceholder": "输入标题",
+    "citationsLabel": "引用",
+    "citationSummary": "{{citations}}，{{sources}} · 样式：{{style}}",
+    "citationCount_one": "{{count}} 处引用",
+    "citationCount_other": "{{count}} 处引用",
+    "sourceCount_one": "{{count}} 个来源",
+    "sourceCount_other": "{{count}} 个来源",
+    "citationUnresolved_one": "{{count}} 处引用没有来源：{{keys}}",
+    "citationUnresolved_other": "{{count}} 处引用没有来源：{{keys}}"
   },
   "publishModal": {
     "title": "发布到 WordPress",
@@ -631,7 +647,9 @@
       "openWritingLog": "打开写作日志",
       "openFolderSidebar": "在侧边栏浏览器中打开文件夹",
       "restoreBinderLayout": "恢复活页夹的先前布局",
-      "openOutline": "打开大纲"
+      "openOutline": "打开大纲",
+      "insertCitation": "插入引用",
+      "addSource": "添加来源"
     },
     "menu": {
       "studioOptions": "写作工作室选项",
@@ -745,5 +763,65 @@
     "openDoc": "打开“{{name}}”",
     "expand": "展开“{{name}}”",
     "collapse": "折叠“{{name}}”"
+  },
+  "citations": {
+    "worksCited": "引用文献",
+    "bibliography": "参考书目",
+    "notes": "注释",
+    "returnToText": "返回正文",
+    "sectionFallback": "第 {{n}} 节",
+    "unresolvedNotice_one": "{{count}} 处引用没有对应的来源：{{keys}}",
+    "unresolvedNotice_other": "{{count}} 处引用没有对应的来源：{{keys}}",
+    "collisionNotice": "两条笔记使用了同一个引用键。已使用 Research 文件夹中的那条，跳过：{{keys}}",
+    "insertTitle": "插入引用",
+    "insertMenu": "插入引用…",
+    "insertBtn": "插入",
+    "noSources": "还没有来源。",
+    "noSourcesHint": "通过活页夹 Research 标签上的书本按钮添加一个，或给任意笔记加上“citekey”属性。",
+    "searchPlaceholder": "按作者、年份或标题搜索",
+    "noMatches": "没有匹配的来源。",
+    "pageLabel": "页码（可选）",
+    "pagePlaceholder": "12 或 12-14",
+    "pageHint": "留空则引用整部作品。",
+    "addSource": "添加来源…",
+    "addSourceTitle": "添加来源",
+    "addSourceIntro": "填写您知道的信息。包含这些信息的笔记会保存到 Research 文件夹，之后可用“插入引用”引用它。",
+    "addSourceBtn": "添加来源",
+    "sourceAdded": "来源已添加。用 [@{{key}}] 引用它。",
+    "titleRequired": "请为来源填写标题。",
+    "citekeyInvalid": "引用键只能包含字母、数字和 _ : . -，并且必须以字母或数字开头。",
+    "citekeyTaken": "引用键 {{key}} 已被另一个来源使用。",
+    "type": {
+      "book": "图书",
+      "chapter": "图书章节",
+      "articleJournal": "期刊论文",
+      "articleMagazine": "杂志文章",
+      "articleNewspaper": "报纸文章",
+      "webpage": "网页",
+      "thesis": "学位论文",
+      "report": "报告"
+    },
+    "field": {
+      "type": "类型",
+      "title": "标题",
+      "authors": "作者",
+      "authorsDesc": "每行一位，名在前（Jane Smith）。也可以是机构名。",
+      "year": "年份",
+      "bookTitle": "书名",
+      "editors": "编者",
+      "journal": "期刊",
+      "publication": "出版物",
+      "website": "网站",
+      "volume": "卷",
+      "issue": "期",
+      "pages": "页码",
+      "publisher": "出版社",
+      "university": "大学",
+      "place": "出版地",
+      "link": "URL 或 DOI",
+      "linkDesc": "网址，或形如 10.1000/xyz123 的 DOI。",
+      "citekey": "引用键",
+      "citekeyDesc": "用于引用此来源，例如 [@smith2020]。已自动填写，可按需修改。"
+    }
   }
 }

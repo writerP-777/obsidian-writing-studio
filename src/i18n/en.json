@@ -113,7 +113,15 @@
       "pdfEngineDesc": "Engine used for PDF export. Auto picks an installed LaTeX engine. wkhtmltopdf works without LaTeX, but the export font setting does not apply to it.",
       "pdfEngineAuto": "Auto (recommended)",
       "pdfEnginePath": "PDF engine location",
-      "pdfEnginePathDesc": "Folder containing your PDF engine, or full path to one engine binary. Leave blank to search the system path and common install locations."
+      "pdfEnginePathDesc": "Folder containing your PDF engine, or full path to one engine binary. Leave blank to search the system path and common install locations.",
+      "citationsHeading": "Citations",
+      "citationStyle": "Citation style",
+      "citationStyleDesc": "How citations and the works-cited page print. Author-date puts (Smith 2020) in the text; Notes turns each citation into a footnote. A custom style file applies to PDF, Word, and RTF only; the other formats use author-date.",
+      "citationStyleAuthorDate": "Author-date (Chicago)",
+      "citationStyleNotes": "Notes (Chicago)",
+      "citationStyleCustom": "Custom style file (.csl)",
+      "cslPath": "Custom style file",
+      "cslPathDesc": "Path to a .csl file, inside the vault or anywhere on disk. Used when the citation style is \"Custom style file\"."
     },
     "log": {
       "appendToDailyNote": "Append to daily note",
@@ -511,7 +519,15 @@
     "titleProject": "Project name",
     "titleCustom": "Type your own title",
     "customTitleName": "Custom title",
-    "customTitlePlaceholder": "Enter a title"
+    "customTitlePlaceholder": "Enter a title",
+    "citationsLabel": "Citations",
+    "citationSummary": "{{citations}} to {{sources}} · Style: {{style}}",
+    "citationCount_one": "{{count}} citation",
+    "citationCount_other": "{{count}} citations",
+    "sourceCount_one": "{{count}} source",
+    "sourceCount_other": "{{count}} sources",
+    "citationUnresolved_one": "{{count}} citation has no source: {{keys}}",
+    "citationUnresolved_other": "{{count}} citations have no source: {{keys}}"
   },
   "publishModal": {
     "title": "Publish to WordPress",
@@ -631,7 +647,9 @@
       "openWritingLog": "Open writing log",
       "openFolderSidebar": "Open folder in sidebar explorer",
       "restoreBinderLayout": "Restore previous binder layout",
-      "openOutline": "Open outline"
+      "openOutline": "Open outline",
+      "insertCitation": "Insert citation",
+      "addSource": "Add source"
     },
     "menu": {
       "studioOptions": "Writing studio options",
@@ -745,5 +763,65 @@
     "openDoc": "Open \"{{name}}\"",
     "expand": "Expand \"{{name}}\"",
     "collapse": "Collapse \"{{name}}\""
+  },
+  "citations": {
+    "worksCited": "Works cited",
+    "bibliography": "Bibliography",
+    "notes": "Notes",
+    "returnToText": "Return to text",
+    "sectionFallback": "Section {{n}}",
+    "unresolvedNotice_one": "{{count}} citation has no matching source: {{keys}}",
+    "unresolvedNotice_other": "{{count}} citations have no matching source: {{keys}}",
+    "collisionNotice": "Two notes share a citation key. The one in the Research folder is used; skipped: {{keys}}",
+    "insertTitle": "Insert citation",
+    "insertMenu": "Insert citation…",
+    "insertBtn": "Insert",
+    "noSources": "No sources yet.",
+    "noSourcesHint": "Add one with the book button on the Research tab of the binder, or give any note a \"citekey\" property.",
+    "searchPlaceholder": "Search by author, year, or title",
+    "noMatches": "No sources match.",
+    "pageLabel": "Page (optional)",
+    "pagePlaceholder": "12 or 12-14",
+    "pageHint": "Leave empty to cite the whole work.",
+    "addSource": "Add source…",
+    "addSourceTitle": "Add a source",
+    "addSourceIntro": "Fill in what you know. A note with these details is saved in the Research folder, and you can cite it with \"Insert citation\".",
+    "addSourceBtn": "Add source",
+    "sourceAdded": "Source added. Cite it with [@{{key}}].",
+    "titleRequired": "Give the source a title.",
+    "citekeyInvalid": "The citation key may use letters, digits, and _ : . - and must start with a letter or digit.",
+    "citekeyTaken": "The citation key {{key}} is already used by another source.",
+    "type": {
+      "book": "Book",
+      "chapter": "Chapter in a book",
+      "articleJournal": "Journal article",
+      "articleMagazine": "Magazine article",
+      "articleNewspaper": "Newspaper article",
+      "webpage": "Web page",
+      "thesis": "Thesis or dissertation",
+      "report": "Report"
+    },
+    "field": {
+      "type": "Type",
+      "title": "Title",
+      "authors": "Authors",
+      "authorsDesc": "One per line, first name first (Jane Smith). Organizations work too.",
+      "year": "Year",
+      "bookTitle": "Book title",
+      "editors": "Editors",
+      "journal": "Journal",
+      "publication": "Publication",
+      "website": "Website",
+      "volume": "Volume",
+      "issue": "Issue",
+      "pages": "Pages",
+      "publisher": "Publisher",
+      "university": "University",
+      "place": "Place of publication",
+      "link": "URL or DOI",
+      "linkDesc": "A web address, or a DOI such as 10.1000/xyz123.",
+      "citekey": "Citation key",
+      "citekeyDesc": "Used to cite this source, for example [@smith2020]. Filled in for you; change it if you like."
+    }
   }
 }

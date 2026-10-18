@@ -216,10 +216,12 @@ export class EpubEngine {
 </ncx>`;
   }
 
+  // The epub namespace carries footnote semantics (noteref/footnote), which
+  // reading systems use to show a chapter's notes as popups.
   private chapterXhtml(title: string, body: string): string {
     return `<?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="${this.lang}">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops" xml:lang="${this.lang}">
 <head>
   <meta charset="UTF-8"/>
   <title>${this.x(title)}</title>
@@ -339,6 +341,11 @@ pre {
 code { font-family: monospace; font-size: 0.9em; }
 strong { font-weight: bold; }
 em { font-style: italic; }
+sup.ws-fn-ref { font-size: 0.75em; line-height: 0; }
+sup.ws-fn-ref a { text-decoration: none; }
+.ws-notes { margin-top: 2em; padding-top: 1em; border-top: 1px solid #ccc; font-size: 0.9em; }
+.ws-notes ol { margin-left: 1.5em; }
+.ws-fn-back { text-decoration: none; margin-left: 0.25em; }
 `;
   }
 }

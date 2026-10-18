@@ -41,6 +41,8 @@ const baseSettings = () => ({
   pandocPath: '',
   pdfEngine: 'auto',
   pdfEnginePath: '',
+  citationStyle: 'author-date',
+  cslPath: '',
   epubLanguage: 'en',
   epubIncludeCover: true,
   wordPressSites: [

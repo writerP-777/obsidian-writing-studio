@@ -510,6 +510,14 @@ export class FilesystemBinderView extends ItemView {
       });
     }
 
+    // Research is where sources live, so the form to add one sits on its tab
+    // bar — the one place a writer new to citations is sure to look.
+    const addSourceBtn = tabs.createEl('button', { cls: 'ws-fsb-drawer-add' });
+    setIcon(addSourceBtn, 'book-plus');
+    setTooltip(addSourceBtn, t('citations.addSource'));
+    addSourceBtn.ariaLabel = t('citations.addSource');
+    addSourceBtn.onclick = () => { this.plugin.addSource(); };
+
     if (pref.open) {
       const zoneDef = DRAWER_ZONES.find(z => z.zone === pref.tab) ?? DRAWER_ZONES[0];
       const zone = model.zones[zoneDef.zone];
@@ -929,6 +937,10 @@ export class FilesystemBinderView extends ItemView {
         if (actions.has('newDoc')) {
           menu.addItem(i => i.setTitle(t('binder.titlePrompt.heading')).setIcon('file-plus')
             .onClick(() => this.promptCreate(parent, false)));
+        }
+        if (actions.has('newSource')) {
+          menu.addItem(i => i.setTitle(t('citations.addSource')).setIcon('book-plus')
+            .onClick(() => { this.plugin.addSource(); }));
         }
         if (actions.has('newFolder')) {
           menu.addItem(i => i.setTitle(t('binder.fs.newFolder')).setIcon('folder-plus')
