@@ -777,7 +777,7 @@
     "insertMenu": "Insérer une citation…",
     "insertBtn": "Insérer",
     "noSources": "Aucune source pour l’instant.",
-    "noSourcesHint": "Ajoutez-en une avec le bouton livre de l’onglet Research du classeur, ou donnez à n’importe quelle note la propriété « citekey ».",
+    "noSourcesHint": "Ajoutez-en une avec le bouton « Ajouter une source » sous le manuscrit dans le classeur, ou donnez à n’importe quelle note la propriété « citekey ».",
     "searchPlaceholder": "Rechercher par auteur, année ou titre",
     "noMatches": "Aucune source ne correspond.",
     "pageLabel": "Page (facultatif)",
@@ -822,6 +822,8 @@
       "linkDesc": "Une adresse web ou un DOI tel que 10.1000/xyz123.",
       "citekey": "Clé de citation",
       "citekeyDesc": "Sert à citer cette source, par exemple [@smith2020]. Remplie pour vous ; modifiez-la si vous le souhaitez."
-    }
+    },
+    "addSourceShort": "Ajouter une source",
+    "addSourceTooltip": "Ajouter un livre, un article ou une page web à citer"
   }
 }
