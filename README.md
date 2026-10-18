@@ -49,6 +49,8 @@ Writing Studio turns Obsidian into a dedicated environment for serious nonfictio
 
 **Writing Binder** — Your project's folder tree, rendered as a manuscript. The binder reads your folders directly, so files created, renamed, or moved anywhere — even outside Obsidian — always appear correctly, with no import or scan step. Drag chapters into order, set per-document status and word count goals, and exclude documents from compile with a right-click.
 
+**Outline** — Give each section a one-paragraph synopsis, the claim it makes, and the Outline view lays the whole project out as an editable table: synopsis, status, and words against goal, section by section, with part totals. Copy it out as an annotated table of contents for a book proposal.
+
 **Project Manager** — Create projects from six templates (blank, book, article series, blog collection, journal article, magazine article), set a total word count goal, and switch between projects from the Launcher.
 
 **Compile Preview** — Concatenate all binder documents in order and render them as a finished manuscript in a split pane, without exporting.
@@ -251,6 +253,8 @@ Keeping a book-length manuscript organized means knowing at a glance which chapt
 
 The binder reads your folders directly — the project folder tree *is* the manuscript structure. Organize your work in the binder or in your computer's file explorer, and both always match: files created, renamed, moved, or deleted outside Obsidian appear correctly with no scan or import step. A document's filename is its title. Status (Draft, In Progress, Complete, Published) shows as a colored stripe on the row's left edge, folders carry document-count badges, documents excluded from compile render dimmed, and hovering any row shows its on-disk name and the settings the binder reads from it.
 
+**Synopsis:** Right-click a document and choose **Edit synopsis…** to give it one or two sentences on what the section argues or covers. The synopsis is stored as a `synopsis` property on the document, so you can also read and edit it in Obsidian's Properties panel at the top of the note. It shows in the row's hover tooltip, and the **Show synopses** button in the binder toolbar puts each synopsis under its title so you can read the argument straight down the tree. The Outline view, described below, shows and edits the same synopses as a table.
+
 Below the manuscript, **Research** and **Exports** are pinned as drawer tabs with live file counts. Research holds markdown notes that never compile (drag documents in and out of it freely); Exports is output-only, written by the export engine. Non-markdown files are visible and openable everywhere but stay outside the manuscript.
 
 <p align="center">
@@ -323,6 +327,29 @@ Folders are the structure. The book template creates a part folder for you, and 
 **Upgrading from an earlier version:**
 
 The first time you open an existing project, Writing Studio arranges its folders to match what your old binder showed — creating folders and moving documents, deleting nothing, and never changing your writing. A one-time notice explains this, and the command **Restore previous binder layout** puts your folders back the way they were if you preferred your earlier arrangement. Everything in your project folder is now part of the compiled manuscript. Check the compile preview before your first export, and use Exclude from compile on anything you want left out.
+
+---
+
+#### Outline
+
+A nonfiction manuscript is an argument, and the Outline is where you check that the argument holds together before you polish the prose. It opens in the main pane as a table of every section in the manuscript, in binder order:
+
+| Column | What it shows |
+|--------|---------------|
+| Section | The document title, indented under its part. Click it to open the document in a new tab; the outline stays open. Click a part's name to collapse or expand it. |
+| Synopsis | What the section argues or covers. Click to edit in place; Ctrl+Enter (Cmd+Enter on Mac) saves, Escape cancels. An empty cell says *Add a synopsis…*. |
+| Status | Draft, In progress, Complete, or Published, as a dropdown. Changing it here is the same as changing it in the binder. |
+| Words | The section's current word count. Part rows show the total for everything inside them. |
+| Goal | The section's word count goal, editable. Part rows show the sum of the goals inside them. |
+| Progress | Words against goal, as a bar and a percentage. |
+
+The footer totals the whole manuscript and, until every section has one, says how many sections still have no synopsis. A status filter at the top narrows the table to one status while keeping the parts those sections sit in. Documents excluded from compile render dimmed, and the status colour stripe from the binder appears on the left edge of each row.
+
+**Copy outline** puts the whole outline on the clipboard as an indented list of titles and synopses, ready to paste into a book proposal, an email to an editor, or a planning note.
+
+Everything the outline shows comes from the documents themselves (`synopsis`, `binder-status`, and `word-count-goal` properties), so the binder, the outline, and the targets dashboard can never disagree, and the table updates on its own as you write.
+
+**To open:** Click **Open outline** on the project card in the Launcher, the outline button in the binder toolbar, or use the command **Open outline**.
 
 ---
 
@@ -664,6 +691,7 @@ No default hotkeys are assigned. All commands can be given a hotkey in **Setting
 | Export document | Export the current document |
 | Export project | Export the full project |
 | Preview compiled manuscript | Open the compile preview pane |
+| Open outline | Open the outline of the active project: every section's synopsis, status, and words against goal |
 | Publish to WordPress | Publish the current document to WordPress |
 | Create new writing project | Create a new writing project |
 | Open writing dashboard | Open the statistics dashboard |

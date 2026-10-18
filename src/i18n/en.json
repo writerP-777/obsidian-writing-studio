@@ -163,7 +163,8 @@
       "setStatusComplete": "Set status: complete",
       "setStatusPublished": "Set status: published",
       "rename": "Rename",
-      "changeType": "Change type: {{type}}"
+      "changeType": "Change type: {{type}}",
+      "editSynopsis": "Edit synopsis…"
     },
     "deleteConfirm": {
       "title": "Delete document",
@@ -223,7 +224,9 @@
       "restorePartial_other": "Previous binder layout restored. {{count}} items could not be moved back.",
       "restoreNothing": "Nothing to restore.",
       "restoreUnavailable": "Restoring the layout needs the experimental filesystem binder and an active project."
-    }
+    },
+    "toggleSynopses": "Show each section's synopsis under its title",
+    "openOutline": "Open the outline"
   },
   "launcher": {
     "displayText": "Writing studio",
@@ -256,7 +259,8 @@
       "previewManuscript": "Preview manuscript",
       "export": "Export",
       "writingLog": "Writing log",
-      "publishToWordPress": "Publish to WordPress"
+      "publishToWordPress": "Publish to WordPress",
+      "outline": "Outline"
     },
     "sprintTimer": "Sprint timer",
     "startSprint": "⏱ Set up sprint",
@@ -276,7 +280,8 @@
       "intro": "Writing Studio organizes your writing into projects, each with its own binder of chapters and documents.",
       "hint": "Create a project to scaffold its folder and start writing.",
       "cta": "Create your first project"
-    }
+    },
+    "openOutline": "Open outline"
   },
   "log": {
     "displayText": "Writing log",
@@ -625,7 +630,8 @@
       "setWordCountGoal": "Set word count goal",
       "openWritingLog": "Open writing log",
       "openFolderSidebar": "Open folder in sidebar explorer",
-      "restoreBinderLayout": "Restore previous binder layout"
+      "restoreBinderLayout": "Restore previous binder layout",
+      "openOutline": "Open outline"
     },
     "menu": {
       "studioOptions": "Writing studio options",
@@ -700,5 +706,44 @@
     "body2": "To do this, the first time you open an existing project it creates folders and moves your documents to match your old binder. Nothing is deleted, and none of your writing is changed.",
     "body3": "If you preferred your earlier arrangement, you can put your folders back: open the command palette (press Ctrl+P, or Cmd+P on a Mac) and search for \"Restore previous binder layout.\" A few empty folders the update created may remain; you can delete them.",
     "gotIt": "Got it"
+  },
+  "synopsis": {
+    "title": "Synopsis for \"{{name}}\"",
+    "hint": "One or two sentences on what this section argues or covers. It shows in the binder and the outline.",
+    "placeholder": "What does this section say?",
+    "save": "Save",
+    "cancel": "Cancel"
+  },
+  "outline": {
+    "displayText": "Outline",
+    "heading": "Outline · {{project}}",
+    "noProject": "No project selected. Choose a project in the binder or the launcher to see its outline.",
+    "empty": "This project has no documents yet. Add a document in the binder and it appears here.",
+    "noMatches": "No sections have that status.",
+    "intro": "Add a short synopsis to each section and the outline becomes a one-page view of your argument. Click \"Add a synopsis…\" in any row to start.",
+    "addSynopsis": "Add a synopsis…",
+    "synopsisTooltip": "What this section argues or covers. Click to edit. Ctrl+Enter saves, Escape cancels.",
+    "statusTooltip": "Where this section stands: draft, in progress, complete, or published",
+    "goalTooltip": "Word count goal for this section",
+    "copy": "Copy outline",
+    "copyTooltip": "Copy the outline as an indented list of titles and synopses",
+    "copied": "Outline copied. Paste it into any document or email.",
+    "filterAll": "All statuses",
+    "filterTooltip": "Show only sections with this status",
+    "noStatus": "No status",
+    "col": {
+      "section": "Section",
+      "synopsis": "Synopsis",
+      "status": "Status",
+      "words": "Words",
+      "goal": "Goal",
+      "progress": "Progress"
+    },
+    "total": "Total",
+    "missing_one": "{{count}} section has no synopsis yet.",
+    "missing_other": "{{count}} sections have no synopsis yet.",
+    "openDoc": "Open \"{{name}}\"",
+    "expand": "Expand \"{{name}}\"",
+    "collapse": "Collapse \"{{name}}\""
   }
 }

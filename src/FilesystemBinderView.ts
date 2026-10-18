@@ -5,10 +5,11 @@ import { STATUS_COLORS, DocumentStatus } from '../models/BinderItem';
 import { inManuscriptZone } from './manuscriptTree';
 import { SiblingEntry, sortSiblings, entryDisplayName, isHiddenName, parseBinderOrder } from './binderOrder';
 import { BinderZone, DropRegion, DragSource, MoveEntry, MoveOp, dropRegion, canStartDrag, evaluateDrop, planMove } from './binderMove';
-import { BinderDocType, BINDER_TYPES, ItemNameRejection, menuActionsFor, parseBinderCompile, parseBinderStatus, parseBinderType, renamePrefill, renameTargetName, validateItemName } from './binderMenu';
+import { BinderDocType, BINDER_TYPES, ItemNameRejection, SYNOPSIS_KEY, menuActionsFor, parseBinderCompile, parseBinderStatus, parseBinderType, parseSynopsis, renamePrefill, renameTargetName, validateItemName } from './binderMenu';
 import { ProjectModal } from '../modals/ProjectModal';
 import { TargetsDashboardModal } from '../modals/TargetsDashboardModal';
 import { TitlePromptModal } from '../modals/TitlePromptModal';
+import { SynopsisModal } from '../modals/SynopsisModal';
 import { ConfirmModal } from '../modals/ConfirmModal';
 import { ExportModal } from '../modals/ExportModal';
 import { confirmDeleteProject } from '../modals/confirmDeleteProject';
@@ -20,7 +21,7 @@ import { applyFocus } from './FolderSidebarView';
 export const BINDER_VIEW_TYPE = 'writing-studio-binder';
 
 // The frontmatter keys the tooltip surfaces, in display order.
-const TOOLTIP_KEYS = ['binder-order', 'binder-status', 'binder-type', 'binder-compile', 'word-count-goal'];
+const TOOLTIP_KEYS = ['binder-order', 'binder-status', 'binder-type', 'binder-compile', 'word-count-goal', SYNOPSIS_KEY];
 
 // Context-menu status entries, in lifecycle order.
 const STATUS_MENU: Array<{ value: DocumentStatus; key: string }> = [
@@ -60,6 +61,8 @@ interface TreeNode extends SiblingEntry {
   status: DocumentStatus | null;
   docType: BinderDocType | null;
   compileExcluded: boolean;
+  /** `synopsis` frontmatter (documents only); shown as a second row line on demand. */
+  synopsis: string | null;
   /** Raw frontmatter lines for the tooltip (documents only). */
   fmLines: string[];
   children: TreeNode[];
@@ -100,6 +103,7 @@ export class FilesystemBinderView extends ItemView {
   // View-local presentation state — deliberately unpersisted in this slice.
   private collapsed = new Set<string>();
   private showCounts = true;
+  private showSynopses = false;
   private navRows: Array<{ el: HTMLElement; node: TreeNode; depth: number; hasChildren: boolean; isExpanded: boolean }> = [];
   private navFocusPath: string | null = null;
   // Drag state (#227/#228): the source is plain data so a mid-drag
@@ -251,6 +255,21 @@ export class FilesystemBinderView extends ItemView {
       this.renderList(this.buildModel());
     };
 
+    const synopsesBtn = toolbar.createEl('button', { cls: 'ws-binder-btn ws-fsb-synopses-btn' });
+    synopsesBtn.ariaLabel = t('binder.toggleSynopses');
+    setIcon(synopsesBtn, 'text');
+    setTooltip(synopsesBtn, t('binder.toggleSynopses'));
+    synopsesBtn.toggleClass('is-active', this.showSynopses);
+    synopsesBtn.onclick = () => {
+      this.showSynopses = !this.showSynopses;
+      synopsesBtn.toggleClass('is-active', this.showSynopses);
+      this.renderList(this.buildModel());
+    };
+
+    const outlineBtn = toolbar.createEl('button', { cls: 'ws-binder-btn', title: t('binder.openOutline') });
+    setIcon(outlineBtn, 'list-tree');
+    outlineBtn.onclick = () => { void this.plugin.openOutline(); };
+
     const dashBtn = toolbar.createEl('button', { cls: 'ws-binder-btn', title: t('binder.targetsDashboard') });
     setIcon(dashBtn, 'target');
     dashBtn.onclick = () => {
@@ -337,6 +356,7 @@ export class FilesystemBinderView extends ItemView {
         status: null,
         docType: null,
         compileExcluded: false,
+        synopsis: null,
         fmLines: [],
         children,
         mdCount: children.reduce((n, c) => n + (c.isFolder ? c.mdCount : (c.extension === 'md' ? 1 : 0)), 0),
@@ -370,6 +390,7 @@ export class FilesystemBinderView extends ItemView {
       status,
       docType: parseBinderType(fm?.['binder-type']),
       compileExcluded: !parseBinderCompile(fm?.['binder-compile']),
+      synopsis: parseSynopsis(fm?.[SYNOPSIS_KEY]),
       fmLines,
       children: [],
       mdCount: 0,
@@ -561,7 +582,17 @@ export class FilesystemBinderView extends ItemView {
         row.createSpan('ws-binder-toggle ws-binder-toggle-leaf');
       }
 
-      row.createSpan({ cls: 'ws-fsb-title', text: node.displayName });
+      // With synopses shown, a document that has one becomes a two-line
+      // row: title, then the synopsis in muted text. Rows without one keep
+      // the single-line layout, so the tree stays dense where it can.
+      if (this.showSynopses && node.synopsis) {
+        row.addClass('ws-fsb-two-line');
+        const text = row.createDiv('ws-fsb-text');
+        text.createSpan({ cls: 'ws-fsb-title', text: node.displayName });
+        text.createDiv({ cls: 'ws-fsb-synopsis', text: node.synopsis });
+      } else {
+        row.createSpan({ cls: 'ws-fsb-title', text: node.displayName });
+      }
 
       if (node.isFolder && this.showCounts) {
         row.createSpan({ cls: 'ws-fsb-count', text: String(node.mdCount) });
@@ -834,6 +865,11 @@ export class FilesystemBinderView extends ItemView {
         .onClick(() => this.promptRename(node)));
     }
 
+    if (actions.has('synopsis') && doc) {
+      menu.addItem(i => i.setTitle(t('binder.menu.editSynopsis')).setIcon('text')
+        .onClick(() => this.promptSynopsis(node, doc)));
+    }
+
     // Subtree export (#232): the export modal compiles this folder's
     // documents in binder order, depth rebased to the folder
     if (actions.has('export') && node.file instanceof TFolder) {
@@ -908,6 +944,18 @@ export class FilesystemBinderView extends ItemView {
     }
 
     return menu;
+  }
+
+  // The synopsis dialog writes `synopsis` frontmatter; an emptied box removes
+  // the key rather than leaving an empty string behind.
+  private promptSynopsis(node: TreeNode, doc: TFile): void {
+    new SynopsisModal(this.app, node.displayName, node.synopsis ?? '', async (value) => {
+      if (value === (node.synopsis ?? '')) return;
+      await this.writeDocMeta(doc, fm => {
+        if (value) fm[SYNOPSIS_KEY] = value;
+        else delete fm[SYNOPSIS_KEY];
+      });
+    }).open();
   }
 
   private promptRename(node: TreeNode): void {

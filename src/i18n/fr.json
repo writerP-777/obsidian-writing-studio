@@ -163,7 +163,8 @@
       "setStatusComplete": "Définir le statut : terminé",
       "setStatusPublished": "Définir le statut : publié",
       "rename": "Renommer",
-      "changeType": "Changer le type : {{type}}"
+      "changeType": "Changer le type : {{type}}",
+      "editSynopsis": "Modifier le synopsis…"
     },
     "deleteConfirm": {
       "title": "Supprimer le document",
@@ -223,7 +224,9 @@
       "restorePartial_other": "Disposition précédente restaurée. {{count}} éléments n’ont pas pu être remis en place.",
       "restoreNothing": "Rien à restaurer.",
       "restoreUnavailable": "La restauration de la disposition nécessite le classeur expérimental basé sur le système de fichiers et un projet actif."
-    }
+    },
+    "toggleSynopses": "Afficher le synopsis de chaque section sous son titre",
+    "openOutline": "Ouvrir le plan"
   },
   "launcher": {
     "displayText": "Studio d'écriture",
@@ -256,7 +259,8 @@
       "previewManuscript": "Aperçu du manuscrit",
       "export": "Exporter",
       "writingLog": "Journal d'écriture",
-      "publishToWordPress": "Publier sur WordPress"
+      "publishToWordPress": "Publier sur WordPress",
+      "outline": "Plan"
     },
     "sprintTimer": "Minuteur de sprint",
     "startSprint": "⏱ Configurer un sprint",
@@ -276,7 +280,8 @@
       "intro": "Writing Studio organise votre écriture en projets, chacun avec son propre classeur de chapitres et de documents.",
       "hint": "Créez un projet pour générer son dossier et commencer à écrire.",
       "cta": "Créer votre premier projet"
-    }
+    },
+    "openOutline": "Ouvrir le plan"
   },
   "log": {
     "displayText": "Journal d'écriture",
@@ -625,7 +630,8 @@
       "setWordCountGoal": "Définir un objectif de nombre de mots",
       "openWritingLog": "Ouvrir le journal d'écriture",
       "openFolderSidebar": "Ouvrir le dossier dans l'explorateur latéral",
-      "restoreBinderLayout": "Restaurer la disposition précédente du classeur"
+      "restoreBinderLayout": "Restaurer la disposition précédente du classeur",
+      "openOutline": "Ouvrir le plan"
     },
     "menu": {
       "studioOptions": "Options de Writing Studio",
@@ -700,5 +706,44 @@
     "body2": "Pour cela, à la première ouverture d’un projet existant, des dossiers sont créés et vos documents déplacés pour correspondre à votre ancien classeur. Rien n’est supprimé et rien de ce que vous avez écrit n’est modifié.",
     "body3": "Si vous préfériez votre organisation précédente, vous pouvez remettre vos dossiers en place : ouvrez la palette de commandes (Ctrl+P, ou Cmd+P sur Mac) et recherchez « Restaurer la disposition précédente du classeur ». Quelques dossiers vides créés par la mise à jour peuvent subsister ; vous pouvez les supprimer.",
     "gotIt": "Compris"
+  },
+  "synopsis": {
+    "title": "Synopsis de « {{name}} »",
+    "hint": "Une ou deux phrases sur ce que cette section soutient ou couvre. Il apparaît dans le classeur et dans le plan.",
+    "placeholder": "Que dit cette section ?",
+    "save": "Enregistrer",
+    "cancel": "Annuler"
+  },
+  "outline": {
+    "displayText": "Plan",
+    "heading": "Plan · {{project}}",
+    "noProject": "Aucun projet sélectionné. Choisissez un projet dans le classeur ou le lanceur pour voir son plan.",
+    "empty": "Ce projet ne contient encore aucun document. Ajoutez un document dans le classeur et il apparaîtra ici.",
+    "noMatches": "Aucune section n’a ce statut.",
+    "intro": "Donnez un court synopsis à chaque section et le plan devient une vue d’une page de votre argumentation. Cliquez sur « Ajouter un synopsis… » dans n’importe quelle ligne pour commencer.",
+    "addSynopsis": "Ajouter un synopsis…",
+    "synopsisTooltip": "Ce que cette section soutient ou couvre. Cliquez pour modifier. Ctrl+Entrée enregistre, Échap annule.",
+    "statusTooltip": "État de cette section : brouillon, en cours, terminée ou publiée",
+    "goalTooltip": "Objectif de mots pour cette section",
+    "copy": "Copier le plan",
+    "copyTooltip": "Copier le plan sous forme de liste indentée de titres et de synopsis",
+    "copied": "Plan copié. Collez-le dans n’importe quel document ou e-mail.",
+    "filterAll": "Tous les statuts",
+    "filterTooltip": "N’afficher que les sections ayant ce statut",
+    "noStatus": "Sans statut",
+    "col": {
+      "section": "Section",
+      "synopsis": "Synopsis",
+      "status": "Statut",
+      "words": "Mots",
+      "goal": "Objectif",
+      "progress": "Progression"
+    },
+    "total": "Total",
+    "missing_one": "{{count}} section n’a pas encore de synopsis.",
+    "missing_other": "{{count}} sections n’ont pas encore de synopsis.",
+    "openDoc": "Ouvrir « {{name}} »",
+    "expand": "Déplier « {{name}} »",
+    "collapse": "Replier « {{name}} »"
   }
 }

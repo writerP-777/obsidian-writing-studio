@@ -163,7 +163,8 @@
       "setStatusComplete": "Status setzen: Abgeschlossen",
       "setStatusPublished": "Status setzen: Veröffentlicht",
       "rename": "Umbenennen",
-      "changeType": "Typ ändern: {{type}}"
+      "changeType": "Typ ändern: {{type}}",
+      "editSynopsis": "Zusammenfassung bearbeiten…"
     },
     "deleteConfirm": {
       "title": "Dokument löschen",
@@ -223,7 +224,9 @@
       "restorePartial_other": "Vorheriges Mappen-Layout wiederhergestellt. {{count}} Elemente konnten nicht zurückverschoben werden.",
       "restoreNothing": "Nichts wiederherzustellen.",
       "restoreUnavailable": "Die Wiederherstellung des Layouts benötigt die experimentelle Dateisystem-Mappe und ein aktives Projekt."
-    }
+    },
+    "toggleSynopses": "Zusammenfassung jedes Abschnitts unter dem Titel anzeigen",
+    "openOutline": "Gliederung öffnen"
   },
   "launcher": {
     "displayText": "Schreibstudio",
@@ -256,7 +259,8 @@
       "previewManuscript": "Manuskript vorschau",
       "export": "Exportieren",
       "writingLog": "Schreibprotokoll",
-      "publishToWordPress": "Auf WordPress veröffentlichen"
+      "publishToWordPress": "Auf WordPress veröffentlichen",
+      "outline": "Gliederung"
     },
     "sprintTimer": "Sprint-Timer",
     "startSprint": "⏱ Sprint einrichten",
@@ -276,7 +280,8 @@
       "intro": "Writing Studio organisiert dein Schreiben in Projekten, jedes mit einer eigenen Schreibmappe aus Kapiteln und Dokumenten.",
       "hint": "Erstelle ein Projekt, um seinen Ordner anzulegen und mit dem Schreiben zu beginnen.",
       "cta": "Erstelle dein erstes Projekt"
-    }
+    },
+    "openOutline": "Gliederung öffnen"
   },
   "log": {
     "displayText": "Schreibprotokoll",
@@ -625,7 +630,8 @@
       "setWordCountGoal": "Wortziel festlegen",
       "openWritingLog": "Schreibprotokoll öffnen",
       "openFolderSidebar": "Ordner im Sidebar-Explorer öffnen",
-      "restoreBinderLayout": "Vorheriges Mappen-Layout wiederherstellen"
+      "restoreBinderLayout": "Vorheriges Mappen-Layout wiederherstellen",
+      "openOutline": "Gliederung öffnen"
     },
     "menu": {
       "studioOptions": "Schreibstudio-Optionen",
@@ -700,5 +706,44 @@
     "body2": "Dazu werden beim ersten Öffnen eines bestehenden Projekts Ordner angelegt und Ihre Dokumente passend zu Ihrer alten Mappe verschoben. Nichts wird gelöscht, und an Ihren Texten ändert sich nichts.",
     "body3": "Wenn Ihnen Ihre frühere Anordnung lieber war, können Sie Ihre Ordner zurücksetzen: Öffnen Sie die Befehlspalette (Strg+P, auf dem Mac Cmd+P) und suchen Sie nach „Vorheriges Mappen-Layout wiederherstellen“. Einige vom Update angelegte leere Ordner können zurückbleiben; Sie können sie löschen.",
     "gotIt": "Verstanden"
+  },
+  "synopsis": {
+    "title": "Zusammenfassung für „{{name}}“",
+    "hint": "Ein oder zwei Sätze dazu, was dieser Abschnitt behauptet oder behandelt. Sie erscheint im Binder und in der Gliederung.",
+    "placeholder": "Was sagt dieser Abschnitt aus?",
+    "save": "Speichern",
+    "cancel": "Abbrechen"
+  },
+  "outline": {
+    "displayText": "Gliederung",
+    "heading": "Gliederung · {{project}}",
+    "noProject": "Kein Projekt ausgewählt. Wählen Sie im Binder oder im Launcher ein Projekt, um seine Gliederung zu sehen.",
+    "empty": "Dieses Projekt enthält noch keine Dokumente. Fügen Sie im Binder ein Dokument hinzu, und es erscheint hier.",
+    "noMatches": "Kein Abschnitt hat diesen Status.",
+    "intro": "Geben Sie jedem Abschnitt eine kurze Zusammenfassung, und die Gliederung wird zur Einseiten-Ansicht Ihrer Argumentation. Klicken Sie in einer Zeile auf „Zusammenfassung hinzufügen…“, um zu beginnen.",
+    "addSynopsis": "Zusammenfassung hinzufügen…",
+    "synopsisTooltip": "Was dieser Abschnitt behauptet oder behandelt. Zum Bearbeiten klicken. Strg+Eingabe speichert, Esc bricht ab.",
+    "statusTooltip": "Stand dieses Abschnitts: Entwurf, in Arbeit, fertig oder veröffentlicht",
+    "goalTooltip": "Wortzahl-Ziel für diesen Abschnitt",
+    "copy": "Gliederung kopieren",
+    "copyTooltip": "Die Gliederung als eingerückte Liste aus Titeln und Zusammenfassungen kopieren",
+    "copied": "Gliederung kopiert. Fügen Sie sie in ein beliebiges Dokument oder eine E-Mail ein.",
+    "filterAll": "Alle Status",
+    "filterTooltip": "Nur Abschnitte mit diesem Status anzeigen",
+    "noStatus": "Kein Status",
+    "col": {
+      "section": "Abschnitt",
+      "synopsis": "Zusammenfassung",
+      "status": "Status",
+      "words": "Wörter",
+      "goal": "Ziel",
+      "progress": "Fortschritt"
+    },
+    "total": "Gesamt",
+    "missing_one": "{{count}} Abschnitt hat noch keine Zusammenfassung.",
+    "missing_other": "{{count}} Abschnitte haben noch keine Zusammenfassung.",
+    "openDoc": "„{{name}}“ öffnen",
+    "expand": "„{{name}}“ ausklappen",
+    "collapse": "„{{name}}“ einklappen"
   }
 }

@@ -135,9 +135,9 @@ describe('buildManuscriptTree', () => {
 // ─── planCompile ─────────────────────────────────────────────────────────────
 
 const doc = (title: string, compileExcluded = false): ManuscriptNode =>
-  ({ kind: 'doc', path: `${title}.md`, title, compileExcluded });
+  ({ kind: 'doc', path: `${title}.md`, title, compileExcluded, synopsis: null, status: null, goal: null });
 const folder = (title: string, children: ManuscriptNode[]): ManuscriptNode =>
-  ({ kind: 'folder', title, children });
+  ({ kind: 'folder', path: title, title, children });
 
 const render = (items: CompilePlanItem[]): string[] =>
   items.map(i => i.kind === 'heading'

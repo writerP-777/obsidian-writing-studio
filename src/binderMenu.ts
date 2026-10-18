@@ -8,8 +8,35 @@ import { DocumentStatus, DOCUMENT_STATUSES } from '../models/BinderItem';
 import { NameTextRejection, rejectNameText } from './folderRename';
 
 export type MenuAction =
-  | 'rename' | 'status' | 'goal' | 'type' | 'compile'
+  | 'rename' | 'synopsis' | 'status' | 'goal' | 'type' | 'compile'
   | 'export' | 'newDoc' | 'newFolder' | 'delete';
+
+// The synopsis key is unprefixed on purpose: it is the key Scrivener imports
+// (Longhand, Binders) already write, so a converted project shows its
+// synopses with no extra step. Like `word-count-goal`, it describes the
+// document rather than the binder's mechanics.
+export const SYNOPSIS_KEY = 'synopsis';
+
+// A synopsis is one paragraph: typed line breaks and runs of whitespace
+// collapse to single spaces so the stored value survives YAML round-trips
+// and renders on one line everywhere it is shown.
+export function normalizeSynopsis(typed: string): string {
+  return typed.replace(/\s+/g, ' ').trim();
+}
+
+// A non-empty string is a synopsis; absent, empty, or any other type reads
+// as "no synopsis" — never as the string "null" or "[object Object]".
+export function parseSynopsis(value: unknown): string | null {
+  if (typeof value !== 'string') return null;
+  const text = normalizeSynopsis(value);
+  return text.length > 0 ? text : null;
+}
+
+// `word-count-goal` is a positive whole number; anything else is no goal.
+export function parseWordCountGoal(value: unknown): number | null {
+  const n = typeof value === 'number' ? value : Number(value);
+  return Number.isFinite(n) && n > 0 ? Math.floor(n) : null;
+}
 
 // The optional `binder-type` document types — group/part are structural
 // legacy concepts with no place in a filesystem-owned binder.
@@ -48,7 +75,7 @@ export function menuActionsFor(entry: SiblingEntry, zone: BinderZone): MenuActio
   if (zone === 'research' || entry.isFolder) {
     return ['rename', 'newDoc', 'newFolder', 'delete'];
   }
-  return ['rename', 'status', 'goal', 'type', 'compile', 'newDoc', 'newFolder', 'delete'];
+  return ['rename', 'synopsis', 'status', 'goal', 'type', 'compile', 'newDoc', 'newFolder', 'delete'];
 }
 
 // What the rename prompt prefills: folders show their display name (order

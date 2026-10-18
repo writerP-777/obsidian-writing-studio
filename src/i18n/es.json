@@ -163,7 +163,8 @@
       "setStatusComplete": "Establecer estado: completo",
       "setStatusPublished": "Establecer estado: publicado",
       "rename": "Renombrar",
-      "changeType": "Cambiar tipo: {{type}}"
+      "changeType": "Cambiar tipo: {{type}}",
+      "editSynopsis": "Editar sinopsis…"
     },
     "deleteConfirm": {
       "title": "Eliminar documento",
@@ -223,7 +224,9 @@
       "restorePartial_other": "Disposición anterior restaurada. {{count}} elementos no pudieron volver a su lugar.",
       "restoreNothing": "Nada que restaurar.",
       "restoreUnavailable": "Restaurar la disposición necesita la carpeta de escritura experimental del sistema de archivos y un proyecto activo."
-    }
+    },
+    "toggleSynopses": "Mostrar la sinopsis de cada sección bajo su título",
+    "openOutline": "Abrir el esquema"
   },
   "launcher": {
     "displayText": "Estudio de escritura",
@@ -256,7 +259,8 @@
       "previewManuscript": "Vista previa del manuscrito",
       "export": "Exportar",
       "writingLog": "Registro de escritura",
-      "publishToWordPress": "Publicar en WordPress"
+      "publishToWordPress": "Publicar en WordPress",
+      "outline": "Esquema"
     },
     "sprintTimer": "Temporizador de sprint",
     "startSprint": "⏱ Configurar sprint",
@@ -276,7 +280,8 @@
       "intro": "Writing Studio organiza tu escritura en proyectos, cada uno con su propia carpeta de capítulos y documentos.",
       "hint": "Crea un proyecto para generar su carpeta y empezar a escribir.",
       "cta": "Crea tu primer proyecto"
-    }
+    },
+    "openOutline": "Abrir esquema"
   },
   "log": {
     "displayText": "Registro de escritura",
@@ -625,7 +630,8 @@
       "setWordCountGoal": "Establecer objetivo de recuento de palabras",
       "openWritingLog": "Abrir registro de escritura",
       "openFolderSidebar": "Abrir carpeta en el explorador lateral",
-      "restoreBinderLayout": "Restaurar la disposición anterior de la carpeta de escritura"
+      "restoreBinderLayout": "Restaurar la disposición anterior de la carpeta de escritura",
+      "openOutline": "Abrir esquema"
     },
     "menu": {
       "studioOptions": "Opciones de Writing Studio",
@@ -700,5 +706,44 @@
     "body2": "Para ello, la primera vez que abras un proyecto existente se crean carpetas y se mueven tus documentos para reflejar tu carpeta de escritura anterior. No se elimina nada y tu escritura no cambia en absoluto.",
     "body3": "Si preferías tu disposición anterior, puedes recuperar tus carpetas: abre la paleta de comandos (pulsa Ctrl+P, o Cmd+P en Mac) y busca «Restaurar la disposición anterior de la carpeta de escritura». Pueden quedar algunas carpetas vacías creadas por la actualización; puedes eliminarlas.",
     "gotIt": "Entendido"
+  },
+  "synopsis": {
+    "title": "Sinopsis de «{{name}}»",
+    "hint": "Una o dos frases sobre lo que esta sección sostiene o trata. Se muestra en el archivador y en el esquema.",
+    "placeholder": "¿Qué dice esta sección?",
+    "save": "Guardar",
+    "cancel": "Cancelar"
+  },
+  "outline": {
+    "displayText": "Esquema",
+    "heading": "Esquema · {{project}}",
+    "noProject": "No hay ningún proyecto seleccionado. Elige un proyecto en el archivador o en el lanzador para ver su esquema.",
+    "empty": "Este proyecto aún no tiene documentos. Añade un documento en el archivador y aparecerá aquí.",
+    "noMatches": "Ninguna sección tiene ese estado.",
+    "intro": "Añade una sinopsis breve a cada sección y el esquema se convertirá en una vista de una página de tu argumento. Haz clic en «Añadir una sinopsis…» en cualquier fila para empezar.",
+    "addSynopsis": "Añadir una sinopsis…",
+    "synopsisTooltip": "Lo que esta sección sostiene o trata. Haz clic para editar. Ctrl+Intro guarda, Esc cancela.",
+    "statusTooltip": "Estado de esta sección: borrador, en progreso, completa o publicada",
+    "goalTooltip": "Objetivo de palabras para esta sección",
+    "copy": "Copiar esquema",
+    "copyTooltip": "Copiar el esquema como una lista sangrada de títulos y sinopsis",
+    "copied": "Esquema copiado. Pégalo en cualquier documento o correo.",
+    "filterAll": "Todos los estados",
+    "filterTooltip": "Mostrar solo las secciones con este estado",
+    "noStatus": "Sin estado",
+    "col": {
+      "section": "Sección",
+      "synopsis": "Sinopsis",
+      "status": "Estado",
+      "words": "Palabras",
+      "goal": "Objetivo",
+      "progress": "Progreso"
+    },
+    "total": "Total",
+    "missing_one": "{{count}} sección aún no tiene sinopsis.",
+    "missing_other": "{{count}} secciones aún no tienen sinopsis.",
+    "openDoc": "Abrir «{{name}}»",
+    "expand": "Expandir «{{name}}»",
+    "collapse": "Contraer «{{name}}»"
   }
 }

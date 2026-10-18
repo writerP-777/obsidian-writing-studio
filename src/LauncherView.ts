@@ -218,8 +218,15 @@ export class LauncherView extends ItemView {
       console.error('[Writing Studio] project card stats', e);
     }
 
-    const binderBtn = card.createEl('button', { cls: 'ws-launcher-action-btn', text: t('launcher.openBinder') });
+    // The two project views side by side: the binder (structure) and the
+    // outline (the argument, section by section)
+    const viewBtns = card.createDiv('ws-launcher-project-btns');
+    const binderBtn = viewBtns.createEl('button', { cls: 'ws-launcher-action-btn', text: t('launcher.openBinder') });
     binderBtn.onclick = () => { void this.plugin.openBinder(); };
+    const outlineBtn = viewBtns.createEl('button', { cls: 'ws-launcher-action-btn' });
+    setIcon(outlineBtn.createSpan('ws-launcher-btn-icon'), 'list-tree');
+    outlineBtn.createSpan({ text: t('launcher.openOutline') });
+    outlineBtn.onclick = () => { void this.plugin.openOutline(); };
   }
 
   // ── Writing Mode Selector ────────────────────────────────────────

@@ -163,7 +163,8 @@
       "setStatusComplete": "ステータスを設定：完了",
       "setStatusPublished": "ステータスを設定：公開済み",
       "rename": "名前を変更",
-      "changeType": "タイプを変更：{{type}}"
+      "changeType": "タイプを変更：{{type}}",
+      "editSynopsis": "概要を編集…"
     },
     "deleteConfirm": {
       "title": "ドキュメントを削除",
@@ -223,7 +224,9 @@
       "restorePartial_other": "以前の配置を復元しました。{{count}} 件は元に戻せませんでした。",
       "restoreNothing": "復元するものがありません。",
       "restoreUnavailable": "配置の復元には、実験的なファイルシステムバインダーとアクティブなプロジェクトが必要です。"
-    }
+    },
+    "toggleSynopses": "各セクションの概要をタイトルの下に表示",
+    "openOutline": "アウトラインを開く"
   },
   "launcher": {
     "displayText": "ライティングスタジオ",
@@ -256,7 +259,8 @@
       "previewManuscript": "原稿をプレビュー",
       "export": "エクスポート",
       "writingLog": "執筆ログ",
-      "publishToWordPress": "WordPressに公開"
+      "publishToWordPress": "WordPressに公開",
+      "outline": "アウトライン"
     },
     "sprintTimer": "スプリントタイマー",
     "startSprint": "⏱ スプリントを設定",
@@ -276,7 +280,8 @@
       "intro": "Writing Studioは執筆をプロジェクトとして整理します。各プロジェクトには章とドキュメントのバインダーがあります。",
       "hint": "プロジェクトを作成するとフォルダが用意され、執筆を始められます。",
       "cta": "最初のプロジェクトを作成"
-    }
+    },
+    "openOutline": "アウトラインを開く"
   },
   "log": {
     "displayText": "執筆ログ",
@@ -625,7 +630,8 @@
       "setWordCountGoal": "語数目標を設定",
       "openWritingLog": "執筆ログを開く",
       "openFolderSidebar": "サイドバーエクスプローラーでフォルダを開く",
-      "restoreBinderLayout": "以前のバインダー配置を復元"
+      "restoreBinderLayout": "以前のバインダー配置を復元",
+      "openOutline": "アウトラインを開く"
     },
     "menu": {
       "studioOptions": "ライティングスタジオのオプション",
@@ -700,5 +706,44 @@
     "body2": "そのため、既存のプロジェクトを最初に開いたときに、以前のバインダーに合わせてフォルダを作成し、ドキュメントを移動します。何も削除されず、あなたの文章は一切変更されません。",
     "body3": "以前の配置に戻したい場合は、コマンドパレット（Ctrl+P、MacではCmd+P）を開いて「以前のバインダー配置を復元」を検索してください。アップデートで作成された空のフォルダがいくつか残ることがあります。削除してかまいません。",
     "gotIt": "わかりました"
+  },
+  "synopsis": {
+    "title": "「{{name}}」の概要",
+    "hint": "このセクションが主張または扱う内容を1〜2文で。バインダーとアウトラインに表示されます。",
+    "placeholder": "このセクションは何を述べていますか？",
+    "save": "保存",
+    "cancel": "キャンセル"
+  },
+  "outline": {
+    "displayText": "アウトライン",
+    "heading": "アウトライン · {{project}}",
+    "noProject": "プロジェクトが選択されていません。バインダーまたはランチャーでプロジェクトを選ぶと、そのアウトラインが表示されます。",
+    "empty": "このプロジェクトにはまだドキュメントがありません。バインダーでドキュメントを追加すると、ここに表示されます。",
+    "noMatches": "このステータスのセクションはありません。",
+    "intro": "各セクションに短い概要を付けると、アウトラインが論旨の1ページ全体像になります。任意の行の「概要を追加…」をクリックして始めてください。",
+    "addSynopsis": "概要を追加…",
+    "synopsisTooltip": "このセクションが主張または扱う内容。クリックして編集。Ctrl+Enterで保存、Escでキャンセル。",
+    "statusTooltip": "このセクションの状態：下書き、進行中、完了、公開済み",
+    "goalTooltip": "このセクションの目標語数",
+    "copy": "アウトラインをコピー",
+    "copyTooltip": "タイトルと概要のインデント付きリストとしてアウトラインをコピー",
+    "copied": "アウトラインをコピーしました。任意のドキュメントやメールに貼り付けてください。",
+    "filterAll": "すべてのステータス",
+    "filterTooltip": "このステータスのセクションだけを表示",
+    "noStatus": "ステータスなし",
+    "col": {
+      "section": "セクション",
+      "synopsis": "概要",
+      "status": "ステータス",
+      "words": "語数",
+      "goal": "目標",
+      "progress": "進捗"
+    },
+    "total": "合計",
+    "missing_one": "{{count}} 個のセクションにまだ概要がありません。",
+    "missing_other": "{{count}} 個のセクションにまだ概要がありません。",
+    "openDoc": "「{{name}}」を開く",
+    "expand": "「{{name}}」を展開",
+    "collapse": "「{{name}}」を折りたたむ"
   }
 }

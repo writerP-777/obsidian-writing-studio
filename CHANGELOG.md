@@ -4,6 +4,14 @@ All notable changes to Writing Studio are documented here.
 
 ---
 
+## [3.3.0] - Unreleased
+
+### Added
+- Every manuscript document can now carry a synopsis: one or two sentences on what the section argues or covers. Right-click a document in the binder and choose **Edit synopsis…**, or edit the `synopsis` property in Obsidian's Properties panel. A **Show synopses** button in the binder toolbar puts each synopsis under its title, and the row's hover tooltip lists it with the other properties the binder reads.
+- A new **Outline** view, opened from the project card in the Launcher, the binder toolbar, or the **Open outline** command, lays the active project out as a table: section, synopsis, status, words, goal, and progress, with parts collapsible and carrying subtree totals. Synopsis, status, and goal are editable in place and write the same document properties the binder uses. A status filter narrows the table, the footer counts sections still missing a synopsis, and **Copy outline** copies the whole thing as an indented list of titles and synopses for a book proposal or an email to an editor.
+
+---
+
 ## [3.2.0] - 2026-10-12
 
 ### Changed

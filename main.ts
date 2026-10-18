@@ -13,6 +13,7 @@ import {
 
 import { FilesystemBinderView, BinderDrawerPref, BINDER_VIEW_TYPE } from './src/FilesystemBinderView';
 import { CompilePreviewView, COMPILE_PREVIEW_VIEW_TYPE } from './src/CompilePreview';
+import { OutlineView, OUTLINE_VIEW_TYPE } from './src/OutlineView';
 import { LauncherView, LAUNCHER_VIEW_TYPE } from './src/LauncherView';
 import { FocusMode } from './src/FocusMode';
 import { TypographyMode } from './src/TypographyMode';
@@ -250,6 +251,7 @@ export default class WritingStudioPlugin extends Plugin {
     this.registerView(LAUNCHER_VIEW_TYPE, (leaf) => new LauncherView(leaf, this));
     this.registerView(BINDER_VIEW_TYPE, (leaf) => new FilesystemBinderView(leaf, this));
     this.registerView(COMPILE_PREVIEW_VIEW_TYPE, (leaf) => new CompilePreviewView(leaf, this));
+    this.registerView(OUTLINE_VIEW_TYPE, (leaf) => new OutlineView(leaf, this));
     this.registerView(FOLDER_SIDEBAR_VIEW_TYPE, (leaf) => new FolderSidebarView(leaf));
     this.registerView(WRITING_LOG_VIEW_TYPE, (leaf) => new WritingLogView(leaf, this));
 
@@ -494,6 +496,26 @@ export default class WritingStudioPlugin extends Plugin {
 
     if (leaf.view instanceof CompilePreviewView) {
       await leaf.view.loadContent(state);
+    }
+  }
+
+  // The outline lives in the main pane as a tab: one per workspace, revealed
+  // and refreshed on every open so it always shows the active project.
+  async openOutline(): Promise<void> {
+    const existing = this.app.workspace.getLeavesOfType(OUTLINE_VIEW_TYPE);
+
+    let leaf: WorkspaceLeaf;
+    if (existing.length > 0) {
+      leaf = existing[0];
+    } else {
+      leaf = this.app.workspace.getLeaf('tab');
+      await leaf.setViewState({ type: OUTLINE_VIEW_TYPE, active: true });
+    }
+
+    void this.app.workspace.revealLeaf(leaf);
+
+    if (leaf.view instanceof OutlineView) {
+      await leaf.view.refresh();
     }
   }
 

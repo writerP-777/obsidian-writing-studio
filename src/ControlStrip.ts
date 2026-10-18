@@ -123,6 +123,9 @@ export class ControlStrip {
       void this.plugin.openCompilePreview();
     }));
     menu.addSeparator();
+    menu.addItem(i => i.setTitle(t('launcher.action.outline')).setIcon('list-tree').onClick(() => {
+      void this.plugin.openOutline();
+    }));
     menu.addItem(i => i.setTitle(t('launcher.action.targetsDashboard')).setIcon('target').onClick(() => {
       new TargetsDashboardModal(this.plugin.app, this.plugin).open();
     }));
