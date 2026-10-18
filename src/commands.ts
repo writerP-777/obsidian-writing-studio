@@ -27,6 +27,7 @@ export const COMMAND_SPECS: CommandSpec[] = [
   { id: 'export-document', nameKey: 'main.cmd.exportDocument', run: p => { p.exportDocument(); } },
   { id: 'export-project', nameKey: 'main.cmd.exportProject', run: p => { p.exportProject(); } },
   { id: 'preview-manuscript', nameKey: 'main.cmd.previewManuscript', run: p => p.openCompilePreview() },
+  { id: 'open-outline', nameKey: 'main.cmd.openOutline', run: p => p.openOutline() },
   { id: 'publish-wordpress', nameKey: 'main.cmd.publishWordPress', run: p => { p.publishCurrentFile(); } },
   { id: 'new-project', nameKey: 'main.cmd.newProject', run: p => { p.newProject(); } },
   { id: 'open-dashboard', nameKey: 'main.cmd.openDashboard', run: p => { p.openWritingDashboard(); } },

@@ -163,7 +163,8 @@
       "setStatusComplete": "Definir status: concluído",
       "setStatusPublished": "Definir status: publicado",
       "rename": "Renomear",
-      "changeType": "Alterar tipo: {{type}}"
+      "changeType": "Alterar tipo: {{type}}",
+      "editSynopsis": "Editar sinopse…"
     },
     "deleteConfirm": {
       "title": "Excluir documento",
@@ -223,7 +224,9 @@
       "restorePartial_other": "Layout anterior restaurado. {{count}} itens não puderam voltar ao lugar.",
       "restoreNothing": "Nada a restaurar.",
       "restoreUnavailable": "Restaurar o layout precisa da pasta de escrita experimental do sistema de arquivos e de um projeto ativo."
-    }
+    },
+    "toggleSynopses": "Mostrar a sinopse de cada seção abaixo do título",
+    "openOutline": "Abrir o esboço"
   },
   "launcher": {
     "displayText": "Estúdio de escrita",
@@ -256,7 +259,8 @@
       "previewManuscript": "Visualizar manuscrito",
       "export": "Exportar",
       "writingLog": "Diário de escrita",
-      "publishToWordPress": "Publicar no WordPress"
+      "publishToWordPress": "Publicar no WordPress",
+      "outline": "Esboço"
     },
     "sprintTimer": "Cronômetro de sprint",
     "startSprint": "⏱ Configurar sprint",
@@ -276,7 +280,8 @@
       "intro": "O Writing Studio organiza sua escrita em projetos, cada um com sua própria pasta de capítulos e documentos.",
       "hint": "Crie um projeto para gerar sua pasta e começar a escrever.",
       "cta": "Crie seu primeiro projeto"
-    }
+    },
+    "openOutline": "Abrir esboço"
   },
   "log": {
     "displayText": "Diário de escrita",
@@ -625,7 +630,8 @@
       "setWordCountGoal": "Definir meta de contagem de palavras",
       "openWritingLog": "Abrir registro de escrita",
       "openFolderSidebar": "Abrir pasta no explorador lateral",
-      "restoreBinderLayout": "Restaurar o layout anterior da pasta de escrita"
+      "restoreBinderLayout": "Restaurar o layout anterior da pasta de escrita",
+      "openOutline": "Abrir esboço"
     },
     "menu": {
       "studioOptions": "Opções do Writing Studio",
@@ -700,5 +706,44 @@
     "body2": "Para isso, na primeira vez que você abrir um projeto existente, ele cria pastas e move seus documentos para refletir sua pasta de escrita antiga. Nada é excluído, e nada do que você escreveu é alterado.",
     "body3": "Se você preferia sua organização anterior, pode restaurar suas pastas: abra a paleta de comandos (pressione Ctrl+P, ou Cmd+P no Mac) e procure por \"Restaurar o layout anterior da pasta de escrita\". Algumas pastas vazias criadas pela atualização podem permanecer; você pode excluí-las.",
     "gotIt": "Entendi"
+  },
+  "synopsis": {
+    "title": "Sinopse de \"{{name}}\"",
+    "hint": "Uma ou duas frases sobre o que esta seção defende ou aborda. Ela aparece no fichário e no esboço.",
+    "placeholder": "O que esta seção diz?",
+    "save": "Salvar",
+    "cancel": "Cancelar"
+  },
+  "outline": {
+    "displayText": "Esboço",
+    "heading": "Esboço · {{project}}",
+    "noProject": "Nenhum projeto selecionado. Escolha um projeto no fichário ou no iniciador para ver o esboço.",
+    "empty": "Este projeto ainda não tem documentos. Adicione um documento no fichário e ele aparecerá aqui.",
+    "noMatches": "Nenhuma seção tem esse status.",
+    "intro": "Dê uma sinopse curta a cada seção e o esboço se torna uma visão de uma página do seu argumento. Clique em \"Adicionar uma sinopse…\" em qualquer linha para começar.",
+    "addSynopsis": "Adicionar uma sinopse…",
+    "synopsisTooltip": "O que esta seção defende ou aborda. Clique para editar. Ctrl+Enter salva, Esc cancela.",
+    "statusTooltip": "Situação desta seção: rascunho, em andamento, concluída ou publicada",
+    "goalTooltip": "Meta de palavras para esta seção",
+    "copy": "Copiar esboço",
+    "copyTooltip": "Copiar o esboço como uma lista recuada de títulos e sinopses",
+    "copied": "Esboço copiado. Cole em qualquer documento ou e-mail.",
+    "filterAll": "Todos os status",
+    "filterTooltip": "Mostrar apenas as seções com este status",
+    "noStatus": "Sem status",
+    "col": {
+      "section": "Seção",
+      "synopsis": "Sinopse",
+      "status": "Status",
+      "words": "Palavras",
+      "goal": "Meta",
+      "progress": "Progresso"
+    },
+    "total": "Total",
+    "missing_one": "{{count}} seção ainda não tem sinopse.",
+    "missing_other": "{{count}} seções ainda não têm sinopse.",
+    "openDoc": "Abrir \"{{name}}\"",
+    "expand": "Expandir \"{{name}}\"",
+    "collapse": "Recolher \"{{name}}\""
   }
 }

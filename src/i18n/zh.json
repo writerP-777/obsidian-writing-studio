@@ -163,7 +163,8 @@
       "setStatusComplete": "设置状态：完成",
       "setStatusPublished": "设置状态：已发布",
       "rename": "重命名",
-      "changeType": "更改类型：{{type}}"
+      "changeType": "更改类型：{{type}}",
+      "editSynopsis": "编辑摘要…"
     },
     "deleteConfirm": {
       "title": "删除文档",
@@ -223,7 +224,9 @@
       "restorePartial_other": "已恢复先前布局。{{count}} 个项目无法移回原位。",
       "restoreNothing": "没有可恢复的内容。",
       "restoreUnavailable": "恢复布局需要启用实验性文件系统活页夹并有一个活动项目。"
-    }
+    },
+    "toggleSynopses": "在每个章节标题下方显示其摘要",
+    "openOutline": "打开大纲"
   },
   "launcher": {
     "displayText": "写作工作室",
@@ -256,7 +259,8 @@
       "previewManuscript": "预览稿件",
       "export": "导出",
       "writingLog": "写作日志",
-      "publishToWordPress": "发布到 WordPress"
+      "publishToWordPress": "发布到 WordPress",
+      "outline": "大纲"
     },
     "sprintTimer": "冲刺计时器",
     "startSprint": "⏱ 设置冲刺",
@@ -276,7 +280,8 @@
       "intro": "Writing Studio 将您的写作整理为项目，每个项目都有自己的章节与文档活页夹。",
       "hint": "创建一个项目以生成其文件夹并开始写作。",
       "cta": "创建您的第一个项目"
-    }
+    },
+    "openOutline": "打开大纲"
   },
   "log": {
     "displayText": "写作日志",
@@ -625,7 +630,8 @@
       "setWordCountGoal": "设置字数目标",
       "openWritingLog": "打开写作日志",
       "openFolderSidebar": "在侧边栏浏览器中打开文件夹",
-      "restoreBinderLayout": "恢复活页夹的先前布局"
+      "restoreBinderLayout": "恢复活页夹的先前布局",
+      "openOutline": "打开大纲"
     },
     "menu": {
       "studioOptions": "写作工作室选项",
@@ -700,5 +706,44 @@
     "body2": "为此，首次打开现有项目时会创建文件夹并移动文档，使其与旧的活页夹一致。不会删除任何内容，你写的文字也不会有任何改动。",
     "body3": "如果你更喜欢之前的排列方式，可以还原文件夹：打开命令面板（按 Ctrl+P，Mac 上按 Cmd+P），搜索“恢复活页夹的先前布局”。更新创建的少数空文件夹可能会保留，你可以删除它们。",
     "gotIt": "知道了"
+  },
+  "synopsis": {
+    "title": "“{{name}}”的摘要",
+    "hint": "用一两句话说明本章节的论点或内容。它会显示在活页夹和大纲中。",
+    "placeholder": "本章节说了什么？",
+    "save": "保存",
+    "cancel": "取消"
+  },
+  "outline": {
+    "displayText": "大纲",
+    "heading": "大纲 · {{project}}",
+    "noProject": "未选择项目。请在活页夹或启动器中选择一个项目以查看其大纲。",
+    "empty": "此项目还没有文档。在活页夹中添加文档后，它会显示在这里。",
+    "noMatches": "没有处于该状态的章节。",
+    "intro": "为每个章节添加简短摘要，大纲就会成为你论证的一页概览。点击任意一行中的“添加摘要…”即可开始。",
+    "addSynopsis": "添加摘要…",
+    "synopsisTooltip": "本章节的论点或内容。点击编辑。Ctrl+Enter 保存，Esc 取消。",
+    "statusTooltip": "本章节的状态：草稿、进行中、已完成或已发布",
+    "goalTooltip": "本章节的字数目标",
+    "copy": "复制大纲",
+    "copyTooltip": "将大纲复制为带缩进的标题和摘要列表",
+    "copied": "大纲已复制。可粘贴到任何文档或邮件中。",
+    "filterAll": "所有状态",
+    "filterTooltip": "仅显示此状态的章节",
+    "noStatus": "无状态",
+    "col": {
+      "section": "章节",
+      "synopsis": "摘要",
+      "status": "状态",
+      "words": "字数",
+      "goal": "目标",
+      "progress": "进度"
+    },
+    "total": "合计",
+    "missing_one": "{{count}} 个章节还没有摘要。",
+    "missing_other": "{{count}} 个章节还没有摘要。",
+    "openDoc": "打开“{{name}}”",
+    "expand": "展开“{{name}}”",
+    "collapse": "折叠“{{name}}”"
   }
 }

@@ -163,7 +163,8 @@
       "setStatusComplete": "상태 설정: 완료",
       "setStatusPublished": "상태 설정: 게시됨",
       "rename": "이름 바꾸기",
-      "changeType": "유형 변경: {{type}}"
+      "changeType": "유형 변경: {{type}}",
+      "editSynopsis": "개요 편집…"
     },
     "deleteConfirm": {
       "title": "문서 삭제",
@@ -223,7 +224,9 @@
       "restorePartial_other": "이전 배치를 복원했습니다. {{count}}개 항목은 되돌리지 못했습니다.",
       "restoreNothing": "복원할 항목이 없습니다.",
       "restoreUnavailable": "배치 복원에는 실험적 파일 시스템 바인더와 활성 프로젝트가 필요합니다."
-    }
+    },
+    "toggleSynopses": "각 섹션의 개요를 제목 아래에 표시",
+    "openOutline": "아웃라인 열기"
   },
   "launcher": {
     "displayText": "글쓰기 스튜디오",
@@ -256,7 +259,8 @@
       "previewManuscript": "원고 미리보기",
       "export": "내보내기",
       "writingLog": "글쓰기 로그",
-      "publishToWordPress": "WordPress에 게시"
+      "publishToWordPress": "WordPress에 게시",
+      "outline": "아웃라인"
     },
     "sprintTimer": "스프린트 타이머",
     "startSprint": "⏱ 스프린트 설정",
@@ -276,7 +280,8 @@
       "intro": "Writing Studio는 글쓰기를 프로젝트로 정리합니다. 각 프로젝트에는 장과 문서로 이루어진 바인더가 있습니다.",
       "hint": "프로젝트를 만들면 폴더가 준비되어 바로 글쓰기를 시작할 수 있습니다.",
       "cta": "첫 프로젝트 만들기"
-    }
+    },
+    "openOutline": "아웃라인 열기"
   },
   "log": {
     "displayText": "글쓰기 로그",
@@ -625,7 +630,8 @@
       "setWordCountGoal": "단어 수 목표 설정",
       "openWritingLog": "글쓰기 로그 열기",
       "openFolderSidebar": "사이드바 탐색기에서 폴더 열기",
-      "restoreBinderLayout": "이전 바인더 배치 복원"
+      "restoreBinderLayout": "이전 바인더 배치 복원",
+      "openOutline": "아웃라인 열기"
     },
     "menu": {
       "studioOptions": "글쓰기 스튜디오 옵션",
@@ -700,5 +706,44 @@
     "body2": "이를 위해 기존 프로젝트를 처음 열 때 이전 바인더와 일치하도록 폴더를 만들고 문서를 이동합니다. 아무것도 삭제되지 않으며, 작성한 글은 전혀 바뀌지 않습니다.",
     "body3": "이전 배치가 더 좋았다면 폴더를 되돌릴 수 있습니다. 명령어 팔레트를 열고(Ctrl+P, Mac에서는 Cmd+P) \"이전 바인더 배치 복원\"을(를) 검색하세요. 업데이트가 만든 빈 폴더 몇 개가 남을 수 있으며, 삭제해도 됩니다.",
     "gotIt": "확인했어요"
+  },
+  "synopsis": {
+    "title": "\"{{name}}\"의 개요",
+    "hint": "이 섹션이 주장하거나 다루는 내용을 한두 문장으로. 바인더와 아웃라인에 표시됩니다.",
+    "placeholder": "이 섹션은 무엇을 말하나요?",
+    "save": "저장",
+    "cancel": "취소"
+  },
+  "outline": {
+    "displayText": "아웃라인",
+    "heading": "아웃라인 · {{project}}",
+    "noProject": "선택된 프로젝트가 없습니다. 바인더나 런처에서 프로젝트를 선택하면 아웃라인이 표시됩니다.",
+    "empty": "이 프로젝트에는 아직 문서가 없습니다. 바인더에서 문서를 추가하면 여기에 표시됩니다.",
+    "noMatches": "해당 상태의 섹션이 없습니다.",
+    "intro": "각 섹션에 짧은 개요를 추가하면 아웃라인이 논지의 한 페이지 요약이 됩니다. 아무 행의 \"개요 추가…\"를 클릭해 시작하세요.",
+    "addSynopsis": "개요 추가…",
+    "synopsisTooltip": "이 섹션이 주장하거나 다루는 내용. 클릭하여 편집. Ctrl+Enter로 저장, Esc로 취소.",
+    "statusTooltip": "이 섹션의 상태: 초안, 진행 중, 완료, 또는 게시됨",
+    "goalTooltip": "이 섹션의 목표 단어 수",
+    "copy": "아웃라인 복사",
+    "copyTooltip": "제목과 개요를 들여쓴 목록으로 아웃라인 복사",
+    "copied": "아웃라인을 복사했습니다. 어떤 문서나 이메일에든 붙여넣으세요.",
+    "filterAll": "모든 상태",
+    "filterTooltip": "이 상태의 섹션만 표시",
+    "noStatus": "상태 없음",
+    "col": {
+      "section": "섹션",
+      "synopsis": "개요",
+      "status": "상태",
+      "words": "단어",
+      "goal": "목표",
+      "progress": "진행률"
+    },
+    "total": "합계",
+    "missing_one": "{{count}}개 섹션에 아직 개요가 없습니다.",
+    "missing_other": "{{count}}개 섹션에 아직 개요가 없습니다.",
+    "openDoc": "\"{{name}}\" 열기",
+    "expand": "\"{{name}}\" 펼치기",
+    "collapse": "\"{{name}}\" 접기"
   }
 }

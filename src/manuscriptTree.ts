@@ -1,7 +1,10 @@
 import { App, TFile, TFolder } from 'obsidian';
 import { isReservedFolderName } from './folderRename';
 import { isHiddenName, parseBinderOrder, parseFolderPrefix, sortSiblings } from './binderOrder';
-import { parseBinderCompile } from './binderMenu';
+import {
+  parseBinderCompile, parseBinderStatus, parseSynopsis, parseWordCountGoal, SYNOPSIS_KEY,
+} from './binderMenu';
+import type { DocumentStatus } from '../models/BinderItem';
 
 // The manuscript zone as data, for consumers outside the view: the same tree
 // FilesystemBinderView renders — depth-first, in binder order, hidden names
@@ -18,10 +21,17 @@ export interface ManuscriptDoc {
   title: string;
   /** `binder-compile: false` — excluded from every compile output. */
   compileExcluded: boolean;
+  /** `synopsis` frontmatter, normalized to one paragraph; null when absent. */
+  synopsis: string | null;
+  /** `binder-status` frontmatter; null when absent or unrecognized. */
+  status: DocumentStatus | null;
+  /** `word-count-goal` frontmatter; null when absent or not a positive number. */
+  goal: number | null;
 }
 
 export interface ManuscriptFolder {
   kind: 'folder';
+  path: string;
   /** Order-marker-stripped display name. */
   title: string;
   children: ManuscriptNode[];
@@ -77,6 +87,7 @@ export function buildManuscriptTree(
       if (s.file instanceof TFolder) {
         nodes.push({
           kind: 'folder',
+          path: s.file.path,
           title: parseFolderPrefix(s.file.name).displayName,
           children: walk(s.file, false),
         });
@@ -88,6 +99,9 @@ export function buildManuscriptTree(
           path: s.file.path,
           title: s.file.name.slice(0, s.file.name.length - s.file.extension.length - 1),
           compileExcluded: !parseBinderCompile(fm?.['binder-compile']),
+          synopsis: parseSynopsis(fm?.[SYNOPSIS_KEY]),
+          status: parseBinderStatus(fm?.['binder-status']),
+          goal: parseWordCountGoal(fm?.['word-count-goal']),
         });
       }
     }
