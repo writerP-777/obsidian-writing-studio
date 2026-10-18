@@ -2655,16 +2655,20 @@ body .ws-launcher select {
 .ws-cite-page-input { width: 120px; }
 
 /* ─── Citations: add-source form ───────────────────────────────────────── */
-.ws-source-modal { width: min(640px, 90vw); }
+.modal.ws-source-dialog {
+  width: 640px;
+  max-width: 92vw;
+}
 .ws-source-intro {
   margin: 0 0 12px;
   color: var(--text-muted);
   font-size: var(--font-ui-small);
 }
-.ws-source-modal .ws-source-wide { width: 320px; max-width: 100%; }
+.ws-source-modal .ws-source-wide { width: 300px; max-width: 100%; }
 .ws-source-modal .ws-source-narrow { width: 120px; }
-.ws-source-modal .ws-source-authors { width: 320px; max-width: 100%; }
+.ws-source-modal .ws-source-authors { width: 300px; max-width: 100%; }
 .ws-source-modal .ws-source-key { width: 200px; font-family: var(--font-monospace); }
+.ws-source-modal .setting-item-control { flex-wrap: wrap; }
 
 /* ─── Citations: binder drawer add-source button ───────────────────────── */
 /* Sits on the drawer tab bar as a third item, labeled, so a writer looking

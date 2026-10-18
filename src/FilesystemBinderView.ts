@@ -508,15 +508,17 @@ export class FilesystemBinderView extends ItemView {
         const group = zone.nodes.filter(n => n.file.path !== src.path).map(toMoveEntry);
         void this.executeZoneDrop(src, zoneFolderPath, group);
       });
-    }
 
-    // Research is where sources live, so the form to add one sits on its tab
-    // bar — the one place a writer new to citations is sure to look.
-    const addSourceBtn = tabs.createEl('button', { cls: 'ws-fsb-drawer-add' });
-    setIcon(addSourceBtn.createSpan('ws-fsb-drawer-add-icon'), 'book-plus');
-    addSourceBtn.createSpan({ cls: 'ws-fsb-drawer-add-label', text: t('citations.addSourceShort') });
-    setTooltip(addSourceBtn, t('citations.addSourceTooltip'));
-    addSourceBtn.onclick = () => { this.plugin.addSource(); };
+      // Research is where sources live, so the form to add one sits right
+      // beside the Research tab, before Exports — the pair reads as one.
+      if (zoneDef.zone === 'research') {
+        const addSourceBtn = tabs.createEl('button', { cls: 'ws-fsb-drawer-add' });
+        setIcon(addSourceBtn.createSpan('ws-fsb-drawer-add-icon'), 'book-plus');
+        addSourceBtn.createSpan({ cls: 'ws-fsb-drawer-add-label', text: t('citations.addSourceShort') });
+        setTooltip(addSourceBtn, t('citations.addSourceTooltip'));
+        addSourceBtn.onclick = () => { this.plugin.addSource(); };
+      }
+    }
 
     if (pref.open) {
       const zoneDef = DRAWER_ZONES.find(z => z.zone === pref.tab) ?? DRAWER_ZONES[0];
