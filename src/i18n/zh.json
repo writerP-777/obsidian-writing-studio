@@ -777,7 +777,7 @@
     "insertMenu": "插入引用…",
     "insertBtn": "插入",
     "noSources": "还没有来源。",
-    "noSourcesHint": "通过活页夹 Research 标签上的书本按钮添加一个，或给任意笔记加上“citekey”属性。",
+    "noSourcesHint": "通过活页夹中稿件下方的“添加来源”按钮添加一个，或给任意笔记加上“citekey”属性。",
     "searchPlaceholder": "按作者、年份或标题搜索",
     "noMatches": "没有匹配的来源。",
     "pageLabel": "页码（可选）",
@@ -822,6 +822,8 @@
       "linkDesc": "网址，或形如 10.1000/xyz123 的 DOI。",
       "citekey": "引用键",
       "citekeyDesc": "用于引用此来源，例如 [@smith2020]。已自动填写，可按需修改。"
-    }
+    },
+    "addSourceShort": "添加来源",
+    "addSourceTooltip": "添加可引用的图书、文章或网页"
   }
 }

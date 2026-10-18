@@ -777,7 +777,7 @@
     "insertMenu": "인용 삽입…",
     "insertBtn": "삽입",
     "noSources": "아직 출처가 없습니다.",
-    "noSourcesHint": "바인더의 Research 탭에 있는 책 버튼으로 추가하거나, 아무 노트에나 \"citekey\" 속성을 추가하세요.",
+    "noSourcesHint": "바인더에서 원고 아래의 \"출처 추가\" 버튼으로 추가하거나, 아무 노트에나 \"citekey\" 속성을 추가하세요.",
     "searchPlaceholder": "저자, 연도 또는 제목으로 검색",
     "noMatches": "일치하는 출처가 없습니다.",
     "pageLabel": "페이지(선택)",
@@ -822,6 +822,8 @@
       "linkDesc": "웹 주소 또는 10.1000/xyz123 같은 DOI.",
       "citekey": "인용 키",
       "citekeyDesc": "이 출처를 인용할 때 사용합니다(예: [@smith2020]). 자동으로 채워지며 원하면 바꿀 수 있습니다."
-    }
+    },
+    "addSourceShort": "출처 추가",
+    "addSourceTooltip": "인용할 수 있는 책, 기사 또는 웹 페이지 추가"
   }
 }

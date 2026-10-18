@@ -777,7 +777,7 @@
     "insertMenu": "Insert citation…",
     "insertBtn": "Insert",
     "noSources": "No sources yet.",
-    "noSourcesHint": "Add one with the book button on the Research tab of the binder, or give any note a \"citekey\" property.",
+    "noSourcesHint": "Add one with the \"Add source\" button below the manuscript in the binder, or give any note a \"citekey\" property.",
     "searchPlaceholder": "Search by author, year, or title",
     "noMatches": "No sources match.",
     "pageLabel": "Page (optional)",
@@ -822,6 +822,8 @@
       "linkDesc": "A web address, or a DOI such as 10.1000/xyz123.",
       "citekey": "Citation key",
       "citekeyDesc": "Used to cite this source, for example [@smith2020]. Filled in for you; change it if you like."
-    }
+    },
+    "addSourceShort": "Add source",
+    "addSourceTooltip": "Add a book, article, or web page you can cite"
   }
 }

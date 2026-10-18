@@ -513,9 +513,9 @@ export class FilesystemBinderView extends ItemView {
     // Research is where sources live, so the form to add one sits on its tab
     // bar — the one place a writer new to citations is sure to look.
     const addSourceBtn = tabs.createEl('button', { cls: 'ws-fsb-drawer-add' });
-    setIcon(addSourceBtn, 'book-plus');
-    setTooltip(addSourceBtn, t('citations.addSource'));
-    addSourceBtn.ariaLabel = t('citations.addSource');
+    setIcon(addSourceBtn.createSpan('ws-fsb-drawer-add-icon'), 'book-plus');
+    addSourceBtn.createSpan({ cls: 'ws-fsb-drawer-add-label', text: t('citations.addSourceShort') });
+    setTooltip(addSourceBtn, t('citations.addSourceTooltip'));
     addSourceBtn.onclick = () => { this.plugin.addSource(); };
 
     if (pref.open) {

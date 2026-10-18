@@ -777,7 +777,7 @@
     "insertMenu": "Zitat einfügen…",
     "insertBtn": "Einfügen",
     "noSources": "Noch keine Quellen.",
-    "noSourcesHint": "Fügen Sie eine über die Buch-Schaltfläche im Research-Tab des Binders hinzu, oder geben Sie einer beliebigen Notiz die Eigenschaft „citekey“.",
+    "noSourcesHint": "Fügen Sie eine über die Schaltfläche „Quelle hinzufügen“ unter dem Manuskript im Binder hinzu, oder geben Sie einer beliebigen Notiz die Eigenschaft „citekey“.",
     "searchPlaceholder": "Nach Autor, Jahr oder Titel suchen",
     "noMatches": "Keine passenden Quellen.",
     "pageLabel": "Seite (optional)",
@@ -822,6 +822,8 @@
       "linkDesc": "Eine Webadresse oder eine DOI wie 10.1000/xyz123.",
       "citekey": "Zitierschlüssel",
       "citekeyDesc": "Wird zum Zitieren dieser Quelle verwendet, zum Beispiel [@smith2020]. Wird automatisch ausgefüllt; Sie können ihn ändern."
-    }
+    },
+    "addSourceShort": "Quelle hinzufügen",
+    "addSourceTooltip": "Ein Buch, einen Artikel oder eine Webseite zum Zitieren hinzufügen"
   }
 }

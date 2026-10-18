@@ -777,7 +777,7 @@
     "insertMenu": "引用を挿入…",
     "insertBtn": "挿入",
     "noSources": "出典はまだありません。",
-    "noSourcesHint": "バインダーの Research タブにある本のボタンから追加するか、任意のノートに「citekey」プロパティを付けてください。",
+    "noSourcesHint": "バインダーの原稿の下にある「出典を追加」ボタンから追加するか、任意のノートに「citekey」プロパティを付けてください。",
     "searchPlaceholder": "著者・年・タイトルで検索",
     "noMatches": "一致する出典がありません。",
     "pageLabel": "ページ（任意）",
@@ -822,6 +822,8 @@
       "linkDesc": "ウェブアドレス、または 10.1000/xyz123 のような DOI。",
       "citekey": "引用キー",
       "citekeyDesc": "この出典を引用するときに使います（例: [@smith2020]）。自動入力されますが変更できます。"
-    }
+    },
+    "addSourceShort": "出典を追加",
+    "addSourceTooltip": "引用できる書籍・記事・ウェブページを追加"
   }
 }

@@ -2667,16 +2667,27 @@ body .ws-launcher select {
 .ws-source-modal .ws-source-key { width: 200px; font-family: var(--font-monospace); }
 
 /* ─── Citations: binder drawer add-source button ───────────────────────── */
+/* Sits on the drawer tab bar as a third item, labeled, so a writer looking
+   for sources finds it without hunting for an icon */
 .ws-fsb-drawer-add {
-  margin-left: auto;
-  background: none;
-  border: none;
-  box-shadow: none;
-  padding: 2px 6px;
-  color: var(--text-muted);
-  cursor: pointer;
+  flex: 0 0 auto;
   display: flex;
   align-items: center;
+  gap: 5px;
+  padding: 6px 10px;
+  background: none;
+  border: none;
+  border-bottom: 2px solid transparent;
+  border-radius: 0;
+  box-shadow: none;
+  font-size: 12px;
+  color: var(--text-accent);
+  cursor: pointer;
 }
-.ws-fsb-drawer-add:hover { color: var(--text-normal); }
-.ws-fsb-drawer-add svg { width: 15px; height: 15px; }
+.ws-fsb-drawer-add:hover {
+  background: var(--background-modifier-hover);
+  color: var(--text-accent-hover);
+}
+.ws-fsb-drawer-add-icon { display: flex; }
+.ws-fsb-drawer-add-icon svg { width: 15px; height: 15px; }
+.ws-fsb-drawer-add-label { white-space: nowrap; }
