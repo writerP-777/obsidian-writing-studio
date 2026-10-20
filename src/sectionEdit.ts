@@ -124,9 +124,16 @@ export function splitSection(text: string, offset: number): SplitResult | null {
   headBody = withoutRanges(headBody, removeFromHead);
   tailBody = withoutRanges(tailBody, removeFromTail);
 
+  // Definitions that move or copy are appended; consecutive definitions sit
+  // on adjacent lines, as a writer would type them.
+  const isDefLine = (text: string): boolean => /\[\^[^\]\s]+\]:[^\n]*$/.test(text);
   const assemble = (main: string, appended: string[]): string => {
-    const parts = [main.trim(), ...appended].filter(p => p.length > 0);
-    return parts.length ? parts.join('\n\n') + '\n' : '';
+    let out = main.trim();
+    for (const block of appended) {
+      if (!out) { out = block; continue; }
+      out += (isDefLine(out) ? '\n' : '\n\n') + block;
+    }
+    return out ? out + '\n' : '';
   };
   return {
     head: fm + assemble(headBody, toHead),
@@ -181,23 +188,38 @@ function relabelFootnotes(body: string, map: Map<string, string>): string {
 }
 
 // Appends the second section's text to the first. The first section's
-// properties are kept and the second's dropped; footnote labels the two
-// share are renumbered in the second (numeric labels continue the count,
-// named ones get a `-2` suffix) so each note keeps its own text.
+// properties are kept and the second's dropped. Footnotes: a label the two
+// share with the same definition text is one note (the split copies shared
+// notes to both halves, so a split-then-merge must fold them back); a
+// shared label with different text is renumbered in the second (numeric
+// labels continue the count, named ones get a `-2` suffix). The optional
+// heading is skipped when the second section already starts with it.
 export function mergeSections(first: string, second: string, opts: MergeOptions = {}): string {
   const a = splitFrontmatter(first);
   const b = splitFrontmatter(second);
 
-  const used = footnoteLabels(a.body);
-  const bLabels = footnoteLabels(b.body);
-  for (const l of bLabels) used.add(l);
+  const aDefs = new Map(footnoteDefinitions(a.body).map(d => [d.id, d]));
+  const aLabels = footnoteLabels(a.body);
+  const bDefs = footnoteDefinitions(b.body);
+  const bDefById = new Map(bDefs.map(d => [d.id, d]));
+  const used = new Set([...aLabels, ...footnoteLabels(b.body)]);
   let nextNumber = 0;
   for (const l of used) {
     if (/^\d+$/.test(l)) nextNumber = Math.max(nextNumber, Number(l));
   }
+
+  const defText = (d: DefBlock): string => d.text.replace(/^\[\^[^\]\s]+\]:\s*/, '').replace(/\s+/g, ' ').trim();
   const map = new Map<string, string>();
-  for (const l of bLabels) {
-    if (!footnoteLabels(a.body).has(l)) continue;
+  const dropDefs: DefBlock[] = [];
+  for (const l of footnoteLabels(b.body)) {
+    if (!aLabels.has(l)) continue;
+    const aDef = aDefs.get(l);
+    const bDef = bDefById.get(l);
+    if (aDef && bDef && defText(aDef) === defText(bDef)) {
+      // Same note on both sides: keep the first's definition, drop the copy
+      dropDefs.push(bDef);
+      continue;
+    }
     let candidate: string;
     if (/^\d+$/.test(l)) {
       candidate = String(++nextNumber);
@@ -209,9 +231,12 @@ export function mergeSections(first: string, second: string, opts: MergeOptions 
     used.add(candidate);
     map.set(l, candidate);
   }
-  const secondBody = relabelFootnotes(b.body, map);
+  const secondBody = relabelFootnotes(withoutRanges(b.body, dropDefs), map).trim();
 
   const heading = opts.headingTitle?.trim();
-  const parts = [a.body.trim(), heading ? `## ${heading}` : '', secondBody.trim()].filter(p => p.length > 0);
+  const firstLine = secondBody.split('\n')[0] ?? '';
+  const alreadyHeaded = heading !== undefined && heading !== ''
+    && (headingText(firstLine) ?? '').toLowerCase() === heading.toLowerCase();
+  const parts = [a.body.trim(), heading && !alreadyHeaded ? `## ${heading}` : '', secondBody].filter(p => p.length > 0);
   return a.fm + (parts.length ? parts.join('\n\n') + '\n' : '');
 }
