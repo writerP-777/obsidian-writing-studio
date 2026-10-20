@@ -172,7 +172,9 @@
       "setStatusPublished": "Установить статус: опубликован",
       "rename": "Переименовать",
       "changeType": "Изменить тип: {{type}}",
-      "editSynopsis": "Изменить синопсис…"
+      "editSynopsis": "Изменить синопсис…",
+      "mergeNext": "Объединить со следующим разделом…",
+      "renameCitekey": "Переименовать ключ цитирования…"
     },
     "deleteConfirm": {
       "title": "Удалить документ",
@@ -238,7 +240,8 @@
       "restoreUnavailable": "Для восстановления расположения нужны экспериментальная файловая папка записей и активный проект."
     },
     "toggleSynopses": "Показывать синопсис каждого раздела под его названием",
-    "openOutline": "Открыть план"
+    "openOutline": "Открыть план",
+    "findReplace": "Найти и заменить в проекте"
   },
   "launcher": {
     "displayText": "Студия письма",
@@ -667,7 +670,10 @@
       "restoreBinderLayout": "Восстановить прежнее расположение папки записей",
       "openOutline": "Открыть план",
       "insertCitation": "Вставить ссылку",
-      "addSource": "Добавить источник"
+      "addSource": "Добавить источник",
+      "splitSection": "Разделить раздел по курсору",
+      "findReplace": "Найти и заменить в проекте",
+      "renameCitekey": "Переименовать ключ цитирования"
     },
     "menu": {
       "studioOptions": "Параметры Writing Studio",
@@ -680,7 +686,8 @@
       "draftMode": "✍ Режим черновика",
       "editMode": "✎ Режим редактирования",
       "reviewMode": "👁 Режим проверки",
-      "normalMode": "Обычный (без режима)"
+      "normalMode": "Обычный (без режима)",
+      "splitSection": "Разделить раздел здесь…"
     },
     "notice": {
       "noMarkdownOpen": "В данный момент не открыт ни один Markdown-файл."
@@ -846,6 +853,82 @@
       "citekeyDesc": "Используется для ссылки на этот источник, например [@smith2020]. Заполняется автоматически; при желании измените."
     },
     "addSourceShort": "Добавить источник",
-    "addSourceTooltip": "Добавить книгу, статью или веб-страницу для цитирования"
+    "addSourceTooltip": "Добавить книгу, статью или веб-страницу для цитирования",
+    "renameKeyTitle": "Переименовать ключ цитирования",
+    "renameKeySource": "Источник",
+    "renameKeyCurrent": "Текущий",
+    "renameKeyNew": "Новый ключ",
+    "renameKeyUsage": "Используется в {{citations}} в {{where}}. Все они будут обновлены.",
+    "renameKeyUnused": "В этом проекте пока нигде не цитируется.",
+    "renameKeyBtn": "Переименовать",
+    "renameKeySame": "Это текущий ключ. Введите другой.",
+    "renameKeyDone_one": "Переименовано в @{{key}} в {{count}} цитате.",
+    "renameKeyDone_few": "Переименовано в @{{key}} в {{count}} цитатах.",
+    "renameKeyDone_many": "Переименовано в @{{key}} в {{count}} цитатах.",
+    "renameKeyDone_other": "Переименовано в @{{key}} в {{count}} цитатах.",
+    "notASource": "У этой заметки нет ключа цитирования. Откройте заметку-источник или создайте её через «Добавить источник».",
+    "countCitations_one": "{{count}} цитате",
+    "countCitations_few": "{{count}} цитатах",
+    "countCitations_many": "{{count}} цитатах",
+    "countCitations_other": "{{count}} цитатах",
+    "countSections_one": "{{count}} разделе",
+    "countSections_few": "{{count}} разделах",
+    "countSections_many": "{{count}} разделах",
+    "countSections_other": "{{count}} разделах",
+    "countNotes_one": "{{count}} заметке исследования",
+    "countNotes_few": "{{count}} заметках исследования",
+    "countNotes_many": "{{count}} заметках исследования",
+    "countNotes_other": "{{count}} заметках исследования",
+    "countJoin": " и "
+  },
+  "sections": {
+    "splitTitle": "Разделить раздел",
+    "splitHint": "Всё от курсора до конца «{{name}}» переходит в новый раздел, который встанет в папке сразу после текущего.",
+    "splitBtn": "Разделить",
+    "splitDone": "Разделено. «{{name}}» начинается там, где стоял курсор.",
+    "splitInFrontmatter": "Поставьте курсор в текст ниже свойств и попробуйте снова.",
+    "splitNotManuscript": "Разделение работает в разделе рукописи активного проекта. Откройте такой раздел и попробуйте снова.",
+    "mergeTitle": "Объединить разделы",
+    "mergeMessage": "«{{first}}» и «{{second}}» станут одним разделом с названием «{{first}}».",
+    "mergeHeadingToggle": "Добавить «{{second}}» как заголовок на стыке",
+    "mergeTrashHint": "Второй файл попадёт в корзину, так что его можно вернуть.",
+    "mergeBtn": "Объединить",
+    "mergeDone": "Объединено. «{{second}}» лежит в корзине."
+  },
+  "findReplace": {
+    "title": "Найти и заменить в проекте",
+    "findLabel": "Найти",
+    "replaceLabel": "Заменить",
+    "matchCase": "Учитывать регистр",
+    "wholeWord": "Слово целиком",
+    "includeResearch": "Включая заметки исследования",
+    "loading": "Чтение проекта…",
+    "typeToFind": "Введите слово или фразу для поиска.",
+    "noMatches": "Совпадений нет.",
+    "summary_one": "{{count}} совпадение в {{sections}}",
+    "summary_few": "{{count}} совпадения в {{sections}}",
+    "summary_many": "{{count}} совпадений в {{sections}}",
+    "summary_other": "{{count}} совпадения в {{sections}}",
+    "sections_one": "{{count}} разделе",
+    "sections_few": "{{count}} разделах",
+    "sections_many": "{{count}} разделах",
+    "sections_other": "{{count}} разделах",
+    "replaceSelected": "Заменить выбранные ({{count}})",
+    "replaceAll": "Заменить все",
+    "undo": "Отменить последнюю замену",
+    "close": "Закрыть",
+    "openDoc": "Открыть «{{name}}»",
+    "researchTag": "исследование",
+    "replaced_one": "Заменено {{count}} совпадение в {{sections}}.",
+    "replaced_few": "Заменено {{count}} совпадения в {{sections}}.",
+    "replaced_many": "Заменено {{count}} совпадений в {{sections}}.",
+    "replaced_other": "Заменено {{count}} совпадения в {{sections}}.",
+    "skippedChanged": "Пропущено, потому что файл изменился после поиска: {{names}}. Выполните поиск снова, чтобы увидеть текущий текст.",
+    "nothingToUndo": "Отменять нечего.",
+    "undone_one": "Отменено. {{count}} файл возвращён в прежнее состояние.",
+    "undone_few": "Отменено. {{count}} файла возвращены в прежнее состояние.",
+    "undone_many": "Отменено. {{count}} файлов возвращены в прежнее состояние.",
+    "undone_other": "Отменено. {{count}} файла возвращены в прежнее состояние.",
+    "undoSkipped": "Оставлены без изменений, потому что менялись после замены: {{names}}"
   }
 }

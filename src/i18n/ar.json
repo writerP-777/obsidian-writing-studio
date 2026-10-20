@@ -172,7 +172,9 @@
       "setStatusPublished": "تعيين الحالة: منشور",
       "rename": "إعادة تسمية",
       "changeType": "تغيير النوع: {{type}}",
-      "editSynopsis": "تحرير الملخص…"
+      "editSynopsis": "تحرير الملخص…",
+      "mergeNext": "دمج مع القسم التالي…",
+      "renameCitekey": "إعادة تسمية مفتاح الاقتباس…"
     },
     "deleteConfirm": {
       "title": "حذف المستند",
@@ -240,7 +242,8 @@
       "restoreUnavailable": "تتطلب استعادة التخطيط تفعيل ملزمة نظام الملفات التجريبية ووجود مشروع نشط."
     },
     "toggleSynopses": "إظهار ملخص كل قسم أسفل عنوانه",
-    "openOutline": "فتح المخطط"
+    "openOutline": "فتح المخطط",
+    "findReplace": "بحث واستبدال في المشروع"
   },
   "launcher": {
     "displayText": "استوديو الكتابة",
@@ -681,7 +684,10 @@
       "restoreBinderLayout": "استعادة التخطيط السابق للملزمة",
       "openOutline": "فتح المخطط",
       "insertCitation": "إدراج استشهاد",
-      "addSource": "إضافة مصدر"
+      "addSource": "إضافة مصدر",
+      "splitSection": "تقسيم القسم عند المؤشر",
+      "findReplace": "بحث واستبدال في المشروع",
+      "renameCitekey": "إعادة تسمية مفتاح الاقتباس"
     },
     "menu": {
       "studioOptions": "خيارات استوديو الكتابة",
@@ -694,7 +700,8 @@
       "draftMode": "✍ وضع المسودة",
       "editMode": "✎ وضع التحرير",
       "reviewMode": "👁 وضع المراجعة",
-      "normalMode": "عادي (بلا وضع)"
+      "normalMode": "عادي (بلا وضع)",
+      "splitSection": "تقسيم القسم هنا…"
     },
     "notice": {
       "noMarkdownOpen": "لا يوجد ملف Markdown مفتوح حالياً."
@@ -864,6 +871,98 @@
       "citekeyDesc": "يُستخدم للاستشهاد بهذا المصدر، مثل [@smith2020]. يُملأ تلقائيًا ويمكنك تغييره."
     },
     "addSourceShort": "إضافة مصدر",
-    "addSourceTooltip": "أضف كتابًا أو مقالًا أو صفحة ويب يمكنك الاستشهاد بها"
+    "addSourceTooltip": "أضف كتابًا أو مقالًا أو صفحة ويب يمكنك الاستشهاد بها",
+    "renameKeyTitle": "إعادة تسمية مفتاح الاقتباس",
+    "renameKeySource": "المصدر",
+    "renameKeyCurrent": "الحالي",
+    "renameKeyNew": "المفتاح الجديد",
+    "renameKeyUsage": "مستخدم في {{citations}} عبر {{where}}. سيتم تحديثها جميعًا.",
+    "renameKeyUnused": "لم يُقتبس بعد في أي موضع من هذا المشروع.",
+    "renameKeyBtn": "إعادة تسمية",
+    "renameKeySame": "هذا هو المفتاح الحالي. اكتب مفتاحًا مختلفًا.",
+    "renameKeyDone_zero": "أُعيدت التسمية إلى @{{key}} دون أي اقتباس.",
+    "renameKeyDone_one": "أُعيدت التسمية إلى @{{key}} في اقتباس واحد.",
+    "renameKeyDone_two": "أُعيدت التسمية إلى @{{key}} في اقتباسين.",
+    "renameKeyDone_few": "أُعيدت التسمية إلى @{{key}} في {{count}} اقتباسات.",
+    "renameKeyDone_many": "أُعيدت التسمية إلى @{{key}} في {{count}} اقتباسًا.",
+    "renameKeyDone_other": "أُعيدت التسمية إلى @{{key}} في {{count}} اقتباس.",
+    "notASource": "لا تحمل هذه الملاحظة مفتاح اقتباس. افتح ملاحظة مصدر، أو أنشئ واحدة عبر «إضافة مصدر».",
+    "countCitations_zero": "لا اقتباسات",
+    "countCitations_one": "اقتباس واحد",
+    "countCitations_two": "اقتباسين",
+    "countCitations_few": "{{count}} اقتباسات",
+    "countCitations_many": "{{count}} اقتباسًا",
+    "countCitations_other": "{{count}} اقتباس",
+    "countSections_zero": "لا أقسام",
+    "countSections_one": "قسم واحد",
+    "countSections_two": "قسمين",
+    "countSections_few": "{{count}} أقسام",
+    "countSections_many": "{{count}} قسمًا",
+    "countSections_other": "{{count}} قسم",
+    "countNotes_zero": "لا ملاحظات بحث",
+    "countNotes_one": "ملاحظة بحث واحدة",
+    "countNotes_two": "ملاحظتي بحث",
+    "countNotes_few": "{{count}} ملاحظات بحث",
+    "countNotes_many": "{{count}} ملاحظة بحث",
+    "countNotes_other": "{{count}} ملاحظة بحث",
+    "countJoin": " و"
+  },
+  "sections": {
+    "splitTitle": "تقسيم القسم",
+    "splitHint": "ينتقل كل ما بين المؤشر ونهاية «{{name}}» إلى القسم الجديد، الذي يوضع بعده مباشرةً في المصنّف.",
+    "splitBtn": "تقسيم",
+    "splitDone": "تم التقسيم. يبدأ «{{name}}» من حيث كان المؤشر.",
+    "splitInFrontmatter": "ضع المؤشر داخل النص، أسفل الخصائص، ثم حاول مجددًا.",
+    "splitNotManuscript": "يعمل التقسيم على قسم من مخطوطة المشروع النشط. افتح قسمًا وحاول مجددًا.",
+    "mergeTitle": "دمج الأقسام",
+    "mergeMessage": "يصبح «{{first}}» و«{{second}}» قسمًا واحدًا باسم «{{first}}».",
+    "mergeHeadingToggle": "إضافة «{{second}}» عنوانًا عند نقطة الوصل",
+    "mergeTrashHint": "ينتقل الملف الثاني إلى سلة المهملات، فيمكنك استعادته.",
+    "mergeBtn": "دمج",
+    "mergeDone": "تم الدمج. «{{second}}» في سلة المهملات."
+  },
+  "findReplace": {
+    "title": "بحث واستبدال في المشروع",
+    "findLabel": "بحث عن",
+    "replaceLabel": "استبدال بـ",
+    "matchCase": "مطابقة حالة الأحرف",
+    "wholeWord": "كلمة كاملة",
+    "includeResearch": "تضمين ملاحظات البحث",
+    "loading": "جارٍ قراءة المشروع…",
+    "typeToFind": "اكتب كلمة أو عبارة للبحث عنها.",
+    "noMatches": "لا توجد نتائج.",
+    "summary_zero": "لا نتائج في {{sections}}",
+    "summary_one": "نتيجة واحدة في {{sections}}",
+    "summary_two": "نتيجتان في {{sections}}",
+    "summary_few": "{{count}} نتائج في {{sections}}",
+    "summary_many": "{{count}} نتيجة في {{sections}}",
+    "summary_other": "{{count}} نتيجة في {{sections}}",
+    "sections_zero": "لا أقسام",
+    "sections_one": "قسم واحد",
+    "sections_two": "قسمين",
+    "sections_few": "{{count}} أقسام",
+    "sections_many": "{{count}} قسمًا",
+    "sections_other": "{{count}} قسم",
+    "replaceSelected": "استبدال المحدد ({{count}})",
+    "replaceAll": "استبدال الكل",
+    "undo": "تراجع عن آخر استبدال",
+    "close": "إغلاق",
+    "openDoc": "فتح «{{name}}»",
+    "researchTag": "بحث",
+    "replaced_zero": "لم يُستبدل شيء في {{sections}}.",
+    "replaced_one": "استُبدلت نتيجة واحدة في {{sections}}.",
+    "replaced_two": "استُبدلت نتيجتان في {{sections}}.",
+    "replaced_few": "استُبدلت {{count}} نتائج في {{sections}}.",
+    "replaced_many": "استُبدلت {{count}} نتيجة في {{sections}}.",
+    "replaced_other": "استُبدلت {{count}} نتيجة في {{sections}}.",
+    "skippedChanged": "تم التخطي لأن الملف تغيّر منذ البحث: {{names}}. ابحث مجددًا لرؤية النص الحالي.",
+    "nothingToUndo": "لا شيء للتراجع عنه.",
+    "undone_zero": "اكتمل التراجع. لم يُعَد أي ملف.",
+    "undone_one": "اكتمل التراجع. أُعيد ملف واحد إلى حالته السابقة.",
+    "undone_two": "اكتمل التراجع. أُعيد ملفان إلى حالتهما السابقة.",
+    "undone_few": "اكتمل التراجع. أُعيدت {{count}} ملفات إلى حالتها السابقة.",
+    "undone_many": "اكتمل التراجع. أُعيد {{count}} ملفًا إلى حالته السابقة.",
+    "undone_other": "اكتمل التراجع. أُعيد {{count}} ملف إلى حالته السابقة.",
+    "undoSkipped": "تُركت كما هي لأنها تغيّرت بعد الاستبدال: {{names}}"
   }
 }

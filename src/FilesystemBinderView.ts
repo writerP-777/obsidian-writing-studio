@@ -270,6 +270,10 @@ export class FilesystemBinderView extends ItemView {
     setIcon(outlineBtn, 'list-tree');
     outlineBtn.onclick = () => { void this.plugin.openOutline(); };
 
+    const findBtn = toolbar.createEl('button', { cls: 'ws-binder-btn', title: t('binder.findReplace') });
+    setIcon(findBtn, 'replace');
+    findBtn.onclick = () => { this.plugin.openFindReplace(); };
+
     const dashBtn = toolbar.createEl('button', { cls: 'ws-binder-btn', title: t('binder.targetsDashboard') });
     setIcon(dashBtn, 'target');
     dashBtn.onclick = () => {
@@ -918,6 +922,28 @@ export class FilesystemBinderView extends ItemView {
       }
     }
 
+    // Merge joins this document with the one after it in the same folder —
+    // one direction only, so the action reads the same on every row that
+    // offers it; the last document in a folder simply does not.
+    if (actions.has('merge') && doc) {
+      const next = this.nextDocSibling(node);
+      if (next) {
+        menu.addSeparator();
+        menu.addItem(i => i.setTitle(t('binder.menu.mergeNext')).setIcon('merge')
+          .onClick(() => { this.plugin.mergeWithNext(doc, next); }));
+      }
+    }
+
+    // A research note is a source when it carries a citekey; only then can
+    // the key be renamed.
+    if (actions.has('renameKey') && doc) {
+      const citekey: unknown = this.app.metadataCache.getFileCache(doc)?.frontmatter?.citekey;
+      if (typeof citekey === 'string' && citekey) {
+        menu.addItem(i => i.setTitle(t('binder.menu.renameCitekey')).setIcon('key-round')
+          .onClick(() => { this.plugin.renameCitationKey(doc); }));
+      }
+    }
+
     if (actions.has('compile') && doc) {
       const excluded = node.compileExcluded;
       menu.addSeparator();
@@ -958,6 +984,25 @@ export class FilesystemBinderView extends ItemView {
     }
 
     return menu;
+  }
+
+  // The markdown document that follows `node` among its manuscript siblings,
+  // or null when a folder or nothing comes next.
+  private nextDocSibling(node: TreeNode): TFile | null {
+    const find = (nodes: TreeNode[]): TFile | null | undefined => {
+      const idx = nodes.findIndex(n => n.file.path === node.file.path);
+      if (idx >= 0) {
+        const next = nodes[idx + 1];
+        return next && !next.isFolder && next.extension === 'md' && next.file instanceof TFile ? next.file : null;
+      }
+      for (const n of nodes) {
+        if (!n.isFolder) continue;
+        const found = find(n.children);
+        if (found !== undefined) return found;
+      }
+      return undefined;
+    };
+    return find(this.model?.manuscript ?? []) ?? null;
   }
 
   // The synopsis dialog writes `synopsis` frontmatter; an emptied box removes

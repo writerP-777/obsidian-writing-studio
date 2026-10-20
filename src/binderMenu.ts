@@ -8,8 +8,8 @@ import { DocumentStatus, DOCUMENT_STATUSES } from '../models/BinderItem';
 import { NameTextRejection, rejectNameText } from './folderRename';
 
 export type MenuAction =
-  | 'rename' | 'synopsis' | 'status' | 'goal' | 'type' | 'compile'
-  | 'export' | 'newDoc' | 'newSource' | 'newFolder' | 'delete';
+  | 'rename' | 'synopsis' | 'status' | 'goal' | 'type' | 'compile' | 'merge'
+  | 'export' | 'newDoc' | 'newSource' | 'renameKey' | 'newFolder' | 'delete';
 
 // The synopsis key is unprefixed on purpose: it is the key Scrivener imports
 // (Longhand, Binders) already write, so a converted project shows its
@@ -66,6 +66,9 @@ export function parseBinderCompile(value: unknown): boolean {
 // never the manuscript metadata actions; non-markdown files are rename+delete wherever
 // they are mutable at all. Manuscript folders additionally offer subtree
 // export (#232) — Research folders never do, the zone never compiles.
+// Two actions are conditional on what the view knows: `merge` (manuscript
+// documents) is shown only when a document follows in the same folder, and
+// `renameKey` (research notes) only when the note carries a citekey.
 export function menuActionsFor(entry: SiblingEntry, zone: BinderZone): MenuAction[] {
   if (zone === 'exports') return ['delete'];
   if (!entry.isFolder && entry.extension !== 'md') return ['rename', 'delete'];
@@ -73,12 +76,14 @@ export function menuActionsFor(entry: SiblingEntry, zone: BinderZone): MenuActio
     return ['rename', 'export', 'newDoc', 'newFolder', 'delete'];
   }
   if (zone === 'research') {
-    return ['rename', 'newDoc', 'newSource', 'newFolder', 'delete'];
+    return entry.isFolder
+      ? ['rename', 'newDoc', 'newSource', 'newFolder', 'delete']
+      : ['rename', 'renameKey', 'newDoc', 'newSource', 'newFolder', 'delete'];
   }
   if (entry.isFolder) {
     return ['rename', 'newDoc', 'newFolder', 'delete'];
   }
-  return ['rename', 'synopsis', 'status', 'goal', 'type', 'compile', 'newDoc', 'newFolder', 'delete'];
+  return ['rename', 'synopsis', 'status', 'goal', 'type', 'compile', 'merge', 'newDoc', 'newFolder', 'delete'];
 }
 
 // What the rename prompt prefills: folders show their display name (order
@@ -109,6 +114,18 @@ export function renameTargetName(entry: SiblingEntry, typed: string): string {
 }
 
 export type ItemNameRejection = NameTextRejection | 'exists';
+
+// The notice key for a rejected name — shared by the binder and the split
+// prompt so a bad name is refused in the same words everywhere.
+export function nameRejectionKey(reason: ItemNameRejection | undefined): string {
+  const keys: Record<ItemNameRejection, string> = {
+    empty: 'binder.fs.nameEmpty',
+    'invalid-chars': 'binder.fs.nameInvalidChars',
+    trailing: 'binder.fs.nameTrailing',
+    exists: 'binder.fs.nameExists',
+  };
+  return keys[reason ?? 'empty'];
+}
 
 export interface ItemNameVerdict {
   ok: boolean;

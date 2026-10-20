@@ -172,7 +172,9 @@
       "setStatusPublished": "设置状态：已发布",
       "rename": "重命名",
       "changeType": "更改类型：{{type}}",
-      "editSynopsis": "编辑摘要…"
+      "editSynopsis": "编辑摘要…",
+      "mergeNext": "与下一章节合并…",
+      "renameCitekey": "重命名引用键…"
     },
     "deleteConfirm": {
       "title": "删除文档",
@@ -234,7 +236,8 @@
       "restoreUnavailable": "恢复布局需要启用实验性文件系统活页夹并有一个活动项目。"
     },
     "toggleSynopses": "在每个章节标题下方显示其摘要",
-    "openOutline": "打开大纲"
+    "openOutline": "打开大纲",
+    "findReplace": "在项目中查找和替换"
   },
   "launcher": {
     "displayText": "写作工作室",
@@ -649,7 +652,10 @@
       "restoreBinderLayout": "恢复活页夹的先前布局",
       "openOutline": "打开大纲",
       "insertCitation": "插入引用",
-      "addSource": "添加来源"
+      "addSource": "添加来源",
+      "splitSection": "在光标处拆分章节",
+      "findReplace": "在项目中查找和替换",
+      "renameCitekey": "重命名引用键"
     },
     "menu": {
       "studioOptions": "写作工作室选项",
@@ -662,7 +668,8 @@
       "draftMode": "✍ 草稿模式",
       "editMode": "✎ 编辑模式",
       "reviewMode": "👁 审阅模式",
-      "normalMode": "普通（无模式）"
+      "normalMode": "普通（无模式）",
+      "splitSection": "在此处拆分章节…"
     },
     "notice": {
       "noMarkdownOpen": "当前没有打开的 Markdown 文件。"
@@ -824,6 +831,66 @@
       "citekeyDesc": "用于引用此来源，例如 [@smith2020]。已自动填写，可按需修改。"
     },
     "addSourceShort": "添加来源",
-    "addSourceTooltip": "添加可引用的图书、文章或网页"
+    "addSourceTooltip": "添加可引用的图书、文章或网页",
+    "renameKeyTitle": "重命名引用键",
+    "renameKeySource": "来源",
+    "renameKeyCurrent": "当前",
+    "renameKeyNew": "新键",
+    "renameKeyUsage": "在{{where}}的 {{citations}} 中使用。所有引用都会更新。",
+    "renameKeyUnused": "本项目中尚未引用。",
+    "renameKeyBtn": "重命名",
+    "renameKeySame": "这就是当前的键。请输入另一个。",
+    "renameKeyDone_one": "已在 {{count}} 处引用中重命名为 @{{key}}。",
+    "renameKeyDone_other": "已在 {{count}} 处引用中重命名为 @{{key}}。",
+    "notASource": "这条笔记没有引用键。请打开一条来源笔记，或用“添加来源”新建一条。",
+    "countCitations_one": "{{count}} 处引用",
+    "countCitations_other": "{{count}} 处引用",
+    "countSections_one": "{{count}} 个章节",
+    "countSections_other": "{{count}} 个章节",
+    "countNotes_one": "{{count}} 条研究笔记",
+    "countNotes_other": "{{count}} 条研究笔记",
+    "countJoin": "和"
+  },
+  "sections": {
+    "splitTitle": "拆分章节",
+    "splitHint": "从光标到“{{name}}”末尾的全部内容将移入新章节，并在活页夹中紧随其后。",
+    "splitBtn": "拆分",
+    "splitDone": "已拆分。“{{name}}”从光标所在处开始。",
+    "splitInFrontmatter": "请把光标放到属性下方的正文中，然后重试。",
+    "splitNotManuscript": "拆分只适用于当前项目书稿中的章节。请打开一个章节后重试。",
+    "mergeTitle": "合并章节",
+    "mergeMessage": "“{{first}}”和“{{second}}”将合为一个名为“{{first}}”的章节。",
+    "mergeHeadingToggle": "在衔接处把“{{second}}”添加为标题",
+    "mergeTrashHint": "第二个文件会移到回收站，因此可以找回。",
+    "mergeBtn": "合并",
+    "mergeDone": "已合并。“{{second}}”已在回收站中。"
+  },
+  "findReplace": {
+    "title": "在项目中查找和替换",
+    "findLabel": "查找",
+    "replaceLabel": "替换为",
+    "matchCase": "区分大小写",
+    "wholeWord": "全字匹配",
+    "includeResearch": "包含研究笔记",
+    "loading": "正在读取项目…",
+    "typeToFind": "输入要查找的词或短语。",
+    "noMatches": "没有匹配项。",
+    "summary_one": "{{sections}}中有 {{count}} 个匹配项",
+    "summary_other": "{{sections}}中有 {{count}} 个匹配项",
+    "sections_one": "{{count}} 个章节",
+    "sections_other": "{{count}} 个章节",
+    "replaceSelected": "替换所选（{{count}}）",
+    "replaceAll": "全部替换",
+    "undo": "撤销上次替换",
+    "close": "关闭",
+    "openDoc": "打开“{{name}}”",
+    "researchTag": "研究",
+    "replaced_one": "已在{{sections}}中替换 {{count}} 个匹配项。",
+    "replaced_other": "已在{{sections}}中替换 {{count}} 个匹配项。",
+    "skippedChanged": "已跳过，因为文件在搜索后有改动：{{names}}。请重新搜索以查看当前文本。",
+    "nothingToUndo": "没有可撤销的操作。",
+    "undone_one": "已撤销。{{count}} 个文件已恢复原样。",
+    "undone_other": "已撤销。{{count}} 个文件已恢复原样。",
+    "undoSkipped": "以下文件在替换后有改动，未予更改：{{names}}"
   }
 }

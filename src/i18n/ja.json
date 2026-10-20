@@ -172,7 +172,9 @@
       "setStatusPublished": "ステータスを設定：公開済み",
       "rename": "名前を変更",
       "changeType": "タイプを変更：{{type}}",
-      "editSynopsis": "概要を編集…"
+      "editSynopsis": "概要を編集…",
+      "mergeNext": "次のセクションと結合…",
+      "renameCitekey": "引用キーを変更…"
     },
     "deleteConfirm": {
       "title": "ドキュメントを削除",
@@ -234,7 +236,8 @@
       "restoreUnavailable": "配置の復元には、実験的なファイルシステムバインダーとアクティブなプロジェクトが必要です。"
     },
     "toggleSynopses": "各セクションの概要をタイトルの下に表示",
-    "openOutline": "アウトラインを開く"
+    "openOutline": "アウトラインを開く",
+    "findReplace": "プロジェクト内で検索と置換"
   },
   "launcher": {
     "displayText": "ライティングスタジオ",
@@ -649,7 +652,10 @@
       "restoreBinderLayout": "以前のバインダー配置を復元",
       "openOutline": "アウトラインを開く",
       "insertCitation": "引用を挿入",
-      "addSource": "出典を追加"
+      "addSource": "出典を追加",
+      "splitSection": "カーソル位置でセクションを分割",
+      "findReplace": "プロジェクト内で検索と置換",
+      "renameCitekey": "引用キーを変更"
     },
     "menu": {
       "studioOptions": "ライティングスタジオのオプション",
@@ -662,7 +668,8 @@
       "draftMode": "✍ 下書きモード",
       "editMode": "✎ 編集モード",
       "reviewMode": "👁 レビューモード",
-      "normalMode": "ノーマル（モードなし）"
+      "normalMode": "ノーマル（モードなし）",
+      "splitSection": "ここでセクションを分割…"
     },
     "notice": {
       "noMarkdownOpen": "現在開いているMarkdownファイルがありません。"
@@ -824,6 +831,66 @@
       "citekeyDesc": "この出典を引用するときに使います（例: [@smith2020]）。自動入力されますが変更できます。"
     },
     "addSourceShort": "出典を追加",
-    "addSourceTooltip": "引用できる書籍・記事・ウェブページを追加"
+    "addSourceTooltip": "引用できる書籍・記事・ウェブページを追加",
+    "renameKeyTitle": "引用キーを変更",
+    "renameKeySource": "出典",
+    "renameKeyCurrent": "現在",
+    "renameKeyNew": "新しいキー",
+    "renameKeyUsage": "{{where}}の{{citations}}で使われています。すべて更新されます。",
+    "renameKeyUnused": "このプロジェクトではまだ引用されていません。",
+    "renameKeyBtn": "変更",
+    "renameKeySame": "それは現在のキーです。別のキーを入力してください。",
+    "renameKeyDone_one": "{{count}} 件の引用で @{{key}} に変更しました。",
+    "renameKeyDone_other": "{{count}} 件の引用で @{{key}} に変更しました。",
+    "notASource": "このノートには引用キーがありません。出典ノートを開くか、「出典を追加」で作成してください。",
+    "countCitations_one": "{{count}} 件の引用",
+    "countCitations_other": "{{count}} 件の引用",
+    "countSections_one": "{{count}} セクション",
+    "countSections_other": "{{count}} セクション",
+    "countNotes_one": "{{count}} 件のリサーチノート",
+    "countNotes_other": "{{count}} 件のリサーチノート",
+    "countJoin": "と"
+  },
+  "sections": {
+    "splitTitle": "セクションを分割",
+    "splitHint": "カーソルから「{{name}}」の末尾までがすべて新しいセクションに移り、バインダーではその直後に置かれます。",
+    "splitBtn": "分割",
+    "splitDone": "分割しました。「{{name}}」はカーソルのあった位置から始まります。",
+    "splitInFrontmatter": "プロパティの下の本文にカーソルを置いて、もう一度お試しください。",
+    "splitNotManuscript": "分割は、アクティブなプロジェクトの原稿セクションで使えます。セクションを開いてもう一度お試しください。",
+    "mergeTitle": "セクションを結合",
+    "mergeMessage": "「{{first}}」と「{{second}}」は「{{first}}」という1つのセクションになります。",
+    "mergeHeadingToggle": "つなぎ目に「{{second}}」を見出しとして追加",
+    "mergeTrashHint": "2つ目のファイルはゴミ箱に移動するので、あとから戻せます。",
+    "mergeBtn": "結合",
+    "mergeDone": "結合しました。「{{second}}」はゴミ箱にあります。"
+  },
+  "findReplace": {
+    "title": "プロジェクト内で検索と置換",
+    "findLabel": "検索",
+    "replaceLabel": "置換",
+    "matchCase": "大文字と小文字を区別",
+    "wholeWord": "単語単位",
+    "includeResearch": "リサーチノートを含める",
+    "loading": "プロジェクトを読み込んでいます…",
+    "typeToFind": "検索する語句を入力してください。",
+    "noMatches": "一致はありません。",
+    "summary_one": "{{sections}}に {{count}} 件の一致",
+    "summary_other": "{{sections}}に {{count}} 件の一致",
+    "sections_one": "{{count}} セクション",
+    "sections_other": "{{count}} セクション",
+    "replaceSelected": "選択したものを置換（{{count}}）",
+    "replaceAll": "すべて置換",
+    "undo": "直前の置換を元に戻す",
+    "close": "閉じる",
+    "openDoc": "「{{name}}」を開く",
+    "researchTag": "リサーチ",
+    "replaced_one": "{{sections}}で {{count}} 件を置換しました。",
+    "replaced_other": "{{sections}}で {{count}} 件を置換しました。",
+    "skippedChanged": "検索後にファイルが変更されたためスキップしました: {{names}}。現在のテキストを見るにはもう一度検索してください。",
+    "nothingToUndo": "元に戻す操作はありません。",
+    "undone_one": "元に戻しました。{{count}} 個のファイルを以前の状態に戻しました。",
+    "undone_other": "元に戻しました。{{count}} 個のファイルを以前の状態に戻しました。",
+    "undoSkipped": "置換後に変更されたため、そのままにしました: {{names}}"
   }
 }

@@ -1,4 +1,4 @@
-import { App, TFile, TFolder } from 'obsidian';
+import { App, TFile, TFolder, normalizePath } from 'obsidian';
 import { isReservedFolderName } from './folderRename';
 import { isHiddenName, parseBinderOrder, parseFolderPrefix, sortSiblings } from './binderOrder';
 import {
@@ -115,6 +115,24 @@ export function listManuscriptDocs(app: App, projectFolderPath: string): TFile[]
   return buildManuscriptTree(app, projectFolderPath).docFiles;
 }
 
+// The project's research notes: every markdown file under Research, hidden
+// names excluded, in path order. Find and replace and citation-key renames
+// reach into them; compile never does.
+export function listResearchDocs(app: App, projectFolderPath: string): TFile[] {
+  const folder = app.vault.getAbstractFileByPath(normalizePath(`${projectFolderPath}/Research`));
+  if (!(folder instanceof TFolder)) return [];
+  const out: TFile[] = [];
+  const walk = (f: TFolder): void => {
+    for (const c of f.children) {
+      if (isHiddenName(c.name)) continue;
+      if (c instanceof TFolder) walk(c);
+      else if (c instanceof TFile && c.extension === 'md') out.push(c);
+    }
+  };
+  walk(folder);
+  return out.sort((a, b) => a.path.localeCompare(b.path));
+}
+
 // ─── Compile plan (#232) ─────────────────────────────────────────────────────
 
 export interface CompilePlanOptions {
@@ -172,4 +190,14 @@ export function planCompile(nodes: ManuscriptNode[], opts: CompilePlanOptions): 
   };
   walk(nodes, 0);
   return out;
+}
+
+// Whether a path names a manuscript document of the project: a markdown
+// file under the project folder whose every path segment passes the zone
+// rule (so nothing hidden, and nothing under Research or Exports).
+export function isManuscriptPath(path: string, projectFolderPath: string): boolean {
+  const prefix = projectFolderPath.endsWith('/') ? projectFolderPath : projectFolderPath + '/';
+  if (!path.startsWith(prefix) || !path.toLowerCase().endsWith('.md')) return false;
+  const segments = path.slice(prefix.length).split('/');
+  return segments.every((seg, i) => inManuscriptZone(seg, i < segments.length - 1, i === 0));
 }

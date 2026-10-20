@@ -1,6 +1,6 @@
 import { App, TFile, TFolder } from 'obsidian';
 import {
-  buildManuscriptTree, inManuscriptZone, listManuscriptDocs, planCompile,
+  buildManuscriptTree, inManuscriptZone, isManuscriptPath, listManuscriptDocs, planCompile,
   ManuscriptNode, CompilePlanItem,
 } from '../src/manuscriptTree';
 
@@ -207,5 +207,22 @@ describe('planCompile', () => {
     const on = planCompile(flat, { includeFolderNames: true, includeTitlesAsHeadings: true });
     const off = planCompile(flat, { includeFolderNames: false, includeTitlesAsHeadings: true });
     expect(on).toEqual(off);
+  });
+});
+
+describe('isManuscriptPath', () => {
+  const root = 'Writing Projects/Book';
+  it('accepts markdown documents anywhere in the manuscript zone', () => {
+    expect(isManuscriptPath(`${root}/Chapter 1.md`, root)).toBe(true);
+    expect(isManuscriptPath(`${root}/020~ Part One/Chapter 2.md`, root)).toBe(true);
+    expect(isManuscriptPath(`${root}/Part/Research/Nested.md`, root)).toBe(true);
+  });
+  it('rejects research, exports, hidden plumbing, non-markdown, and other projects', () => {
+    expect(isManuscriptPath(`${root}/Research/Smith 2020.md`, root)).toBe(false);
+    expect(isManuscriptPath(`${root}/Exports/Book.md`, root)).toBe(false);
+    expect(isManuscriptPath(`${root}/_project.json`, root)).toBe(false);
+    expect(isManuscriptPath(`${root}/map.pdf`, root)).toBe(false);
+    expect(isManuscriptPath(`Writing Projects/Other/Chapter 1.md`, root)).toBe(false);
+    expect(isManuscriptPath(`${root}.md`, root)).toBe(false);
   });
 });

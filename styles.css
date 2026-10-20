@@ -2695,3 +2695,144 @@ body .ws-launcher select {
 .ws-fsb-drawer-add-icon { display: flex; }
 .ws-fsb-drawer-add-icon svg { width: 15px; height: 15px; }
 .ws-fsb-drawer-add-label { white-space: nowrap; }
+
+/* ─── Split section prompt ─────────────────────────────────────────────── */
+.ws-title-prompt-hint {
+  margin: 8px 0 0;
+  font-size: var(--font-ui-small);
+  color: var(--text-muted);
+}
+
+/* ─── Merge sections dialog ────────────────────────────────────────────── */
+.ws-merge-modal .setting-item { border-top: none; padding-top: 4px; }
+.ws-merge-hint {
+  margin: 4px 0 0;
+  font-size: var(--font-ui-small);
+  color: var(--text-muted);
+}
+
+/* ─── Find and replace in project ──────────────────────────────────────── */
+.modal.ws-find-dialog {
+  width: 680px;
+  max-width: 94vw;
+}
+.ws-find-fields {
+  display: grid;
+  grid-template-columns: max-content 1fr;
+  gap: 8px 12px;
+  align-items: center;
+  margin-bottom: 8px;
+}
+.ws-find-row { display: contents; }
+.ws-find-row label { color: var(--text-muted); font-size: var(--font-ui-small); }
+.ws-find-input { width: 100%; }
+.ws-find-options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 18px;
+  margin-bottom: 10px;
+  font-size: var(--font-ui-small);
+}
+.ws-find-option {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+}
+.ws-find-summary {
+  margin: 0 0 6px;
+  font-size: var(--font-ui-small);
+  color: var(--text-muted);
+}
+.ws-find-results {
+  max-height: 46vh;
+  overflow-y: auto;
+  border: 1px solid var(--background-modifier-border);
+  border-radius: var(--radius-m);
+  margin-bottom: 12px;
+  min-height: 48px;
+}
+.ws-find-group { border-bottom: 1px solid var(--background-modifier-border); }
+.ws-find-group:last-child { border-bottom: none; }
+.ws-find-group-head {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 10px;
+  background: var(--background-secondary);
+  position: sticky;
+  top: 0;
+}
+.ws-find-chevron {
+  display: flex;
+  cursor: pointer;
+  color: var(--text-muted);
+}
+.ws-find-chevron svg { width: 14px; height: 14px; }
+.ws-find-group-title {
+  background: none;
+  border: none;
+  box-shadow: none;
+  padding: 0 2px;
+  height: auto;
+  font-weight: var(--font-semibold);
+  color: var(--text-normal);
+  cursor: pointer;
+}
+.ws-find-group-title:hover { color: var(--text-accent); text-decoration: underline; }
+.ws-find-tag {
+  font-size: var(--font-ui-smaller);
+  color: var(--text-muted);
+  border: 1px solid var(--background-modifier-border);
+  border-radius: var(--radius-s);
+  padding: 0 5px;
+}
+.ws-find-count {
+  margin-left: auto;
+  font-size: var(--font-ui-smaller);
+  color: var(--text-faint);
+}
+.ws-find-match {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  padding: 4px 10px 4px 30px;
+  cursor: pointer;
+  font-size: var(--font-ui-small);
+}
+.ws-find-match:hover { background: var(--background-modifier-hover); }
+.ws-find-snippet {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  color: var(--text-muted);
+}
+.ws-find-hit {
+  color: var(--text-normal);
+  background: var(--text-highlight-bg);
+  border-radius: 2px;
+  padding: 0 1px;
+}
+.ws-find-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+}
+.ws-find-close { margin-left: auto; }
+
+/* ─── Rename citation key ──────────────────────────────────────────────── */
+.ws-rename-key-grid {
+  display: grid;
+  grid-template-columns: max-content 1fr;
+  gap: 8px 14px;
+  align-items: center;
+  margin-bottom: 10px;
+}
+.ws-rename-key-label { color: var(--text-muted); font-size: var(--font-ui-small); }
+.ws-rename-key-mono { font-family: var(--font-monospace); }
+.ws-rename-key-input { width: 100%; font-family: var(--font-monospace); }
+.ws-rename-key-usage {
+  margin: 0 0 4px;
+  font-size: var(--font-ui-small);
+  color: var(--text-muted);
+}

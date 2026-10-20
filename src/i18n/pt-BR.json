@@ -172,7 +172,9 @@
       "setStatusPublished": "Definir status: publicado",
       "rename": "Renomear",
       "changeType": "Alterar tipo: {{type}}",
-      "editSynopsis": "Editar sinopse…"
+      "editSynopsis": "Editar sinopse…",
+      "mergeNext": "Mesclar com a próxima seção…",
+      "renameCitekey": "Renomear a chave de citação…"
     },
     "deleteConfirm": {
       "title": "Excluir documento",
@@ -234,7 +236,8 @@
       "restoreUnavailable": "Restaurar o layout precisa da pasta de escrita experimental do sistema de arquivos e de um projeto ativo."
     },
     "toggleSynopses": "Mostrar a sinopse de cada seção abaixo do título",
-    "openOutline": "Abrir o esboço"
+    "openOutline": "Abrir o esboço",
+    "findReplace": "Localizar e substituir no projeto"
   },
   "launcher": {
     "displayText": "Estúdio de escrita",
@@ -649,7 +652,10 @@
       "restoreBinderLayout": "Restaurar o layout anterior da pasta de escrita",
       "openOutline": "Abrir esboço",
       "insertCitation": "Inserir citação",
-      "addSource": "Adicionar fonte"
+      "addSource": "Adicionar fonte",
+      "splitSection": "Dividir a seção no cursor",
+      "findReplace": "Localizar e substituir no projeto",
+      "renameCitekey": "Renomear a chave de citação"
     },
     "menu": {
       "studioOptions": "Opções do Writing Studio",
@@ -662,7 +668,8 @@
       "draftMode": "✍ Modo rascunho",
       "editMode": "✎ Modo edição",
       "reviewMode": "👁 Modo revisão",
-      "normalMode": "Normal (sem modo)"
+      "normalMode": "Normal (sem modo)",
+      "splitSection": "Dividir a seção aqui…"
     },
     "notice": {
       "noMarkdownOpen": "Nenhum arquivo Markdown está aberto no momento."
@@ -824,6 +831,66 @@
       "citekeyDesc": "Usada para citar esta fonte, por exemplo [@smith2020]. Preenchida automaticamente; altere se quiser."
     },
     "addSourceShort": "Adicionar fonte",
-    "addSourceTooltip": "Adicionar um livro, artigo ou página da web para citar"
+    "addSourceTooltip": "Adicionar um livro, artigo ou página da web para citar",
+    "renameKeyTitle": "Renomear a chave de citação",
+    "renameKeySource": "Fonte",
+    "renameKeyCurrent": "Atual",
+    "renameKeyNew": "Nova chave",
+    "renameKeyUsage": "Usada em {{citations}} em {{where}}. Todas serão atualizadas.",
+    "renameKeyUnused": "Ainda não citada neste projeto.",
+    "renameKeyBtn": "Renomear",
+    "renameKeySame": "Essa é a chave atual. Digite outra.",
+    "renameKeyDone_one": "Renomeada para @{{key}} em {{count}} citação.",
+    "renameKeyDone_other": "Renomeada para @{{key}} em {{count}} citações.",
+    "notASource": "Esta nota não tem chave de citação. Abra uma nota de fonte ou crie uma com “Adicionar fonte”.",
+    "countCitations_one": "{{count}} citação",
+    "countCitations_other": "{{count}} citações",
+    "countSections_one": "{{count}} seção",
+    "countSections_other": "{{count}} seções",
+    "countNotes_one": "{{count}} nota de pesquisa",
+    "countNotes_other": "{{count}} notas de pesquisa",
+    "countJoin": " e "
+  },
+  "sections": {
+    "splitTitle": "Dividir a seção",
+    "splitHint": "Tudo do cursor até o fim de “{{name}}” vai para a nova seção, colocada logo depois no fichário.",
+    "splitBtn": "Dividir",
+    "splitDone": "Dividido. “{{name}}” começa onde o cursor estava.",
+    "splitInFrontmatter": "Coloque o cursor no texto, abaixo das propriedades, e tente de novo.",
+    "splitNotManuscript": "Dividir funciona em uma seção do manuscrito do projeto ativo. Abra uma e tente de novo.",
+    "mergeTitle": "Mesclar seções",
+    "mergeMessage": "“{{first}}” e “{{second}}” viram uma única seção chamada “{{first}}”.",
+    "mergeHeadingToggle": "Adicionar “{{second}}” como título no ponto de junção",
+    "mergeTrashHint": "O segundo arquivo vai para a lixeira, então você pode recuperá-lo.",
+    "mergeBtn": "Mesclar",
+    "mergeDone": "Mesclado. “{{second}}” está na lixeira."
+  },
+  "findReplace": {
+    "title": "Localizar e substituir no projeto",
+    "findLabel": "Localizar",
+    "replaceLabel": "Substituir",
+    "matchCase": "Diferenciar maiúsculas de minúsculas",
+    "wholeWord": "Palavra inteira",
+    "includeResearch": "Incluir notas de pesquisa",
+    "loading": "Lendo o projeto…",
+    "typeToFind": "Digite uma palavra ou frase para localizar.",
+    "noMatches": "Nenhuma ocorrência.",
+    "summary_one": "{{count}} ocorrência em {{sections}}",
+    "summary_other": "{{count}} ocorrências em {{sections}}",
+    "sections_one": "{{count}} seção",
+    "sections_other": "{{count}} seções",
+    "replaceSelected": "Substituir selecionadas ({{count}})",
+    "replaceAll": "Substituir tudo",
+    "undo": "Desfazer a última substituição",
+    "close": "Fechar",
+    "openDoc": "Abrir “{{name}}”",
+    "researchTag": "pesquisa",
+    "replaced_one": "{{count}} ocorrência substituída em {{sections}}.",
+    "replaced_other": "{{count}} ocorrências substituídas em {{sections}}.",
+    "skippedChanged": "Ignorado porque o arquivo mudou desde a busca: {{names}}. Busque de novo para ver o texto atual.",
+    "nothingToUndo": "Nada a desfazer.",
+    "undone_one": "Desfeito. {{count}} arquivo restaurado como estava.",
+    "undone_other": "Desfeito. {{count}} arquivos restaurados como estavam.",
+    "undoSkipped": "Deixados como estão porque mudaram depois da substituição: {{names}}"
   }
 }

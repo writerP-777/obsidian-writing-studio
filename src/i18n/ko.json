@@ -172,7 +172,9 @@
       "setStatusPublished": "상태 설정: 게시됨",
       "rename": "이름 바꾸기",
       "changeType": "유형 변경: {{type}}",
-      "editSynopsis": "개요 편집…"
+      "editSynopsis": "개요 편집…",
+      "mergeNext": "다음 섹션과 합치기…",
+      "renameCitekey": "인용 키 이름 바꾸기…"
     },
     "deleteConfirm": {
       "title": "문서 삭제",
@@ -234,7 +236,8 @@
       "restoreUnavailable": "배치 복원에는 실험적 파일 시스템 바인더와 활성 프로젝트가 필요합니다."
     },
     "toggleSynopses": "각 섹션의 개요를 제목 아래에 표시",
-    "openOutline": "아웃라인 열기"
+    "openOutline": "아웃라인 열기",
+    "findReplace": "프로젝트에서 찾기 및 바꾸기"
   },
   "launcher": {
     "displayText": "글쓰기 스튜디오",
@@ -649,7 +652,10 @@
       "restoreBinderLayout": "이전 바인더 배치 복원",
       "openOutline": "아웃라인 열기",
       "insertCitation": "인용 삽입",
-      "addSource": "출처 추가"
+      "addSource": "출처 추가",
+      "splitSection": "커서 위치에서 섹션 나누기",
+      "findReplace": "프로젝트에서 찾기 및 바꾸기",
+      "renameCitekey": "인용 키 이름 바꾸기"
     },
     "menu": {
       "studioOptions": "글쓰기 스튜디오 옵션",
@@ -662,7 +668,8 @@
       "draftMode": "✍ 초안 모드",
       "editMode": "✎ 편집 모드",
       "reviewMode": "👁 검토 모드",
-      "normalMode": "일반 (모드 없음)"
+      "normalMode": "일반 (모드 없음)",
+      "splitSection": "여기서 섹션 나누기…"
     },
     "notice": {
       "noMarkdownOpen": "현재 열려 있는 Markdown 파일이 없습니다."
@@ -824,6 +831,66 @@
       "citekeyDesc": "이 출처를 인용할 때 사용합니다(예: [@smith2020]). 자동으로 채워지며 원하면 바꿀 수 있습니다."
     },
     "addSourceShort": "출처 추가",
-    "addSourceTooltip": "인용할 수 있는 책, 기사 또는 웹 페이지 추가"
+    "addSourceTooltip": "인용할 수 있는 책, 기사 또는 웹 페이지 추가",
+    "renameKeyTitle": "인용 키 이름 바꾸기",
+    "renameKeySource": "출처",
+    "renameKeyCurrent": "현재",
+    "renameKeyNew": "새 키",
+    "renameKeyUsage": "{{where}}의 {{citations}}에서 사용 중입니다. 모두 업데이트됩니다.",
+    "renameKeyUnused": "이 프로젝트에서 아직 인용되지 않았습니다.",
+    "renameKeyBtn": "이름 바꾸기",
+    "renameKeySame": "현재 키와 같습니다. 다른 키를 입력하세요.",
+    "renameKeyDone_one": "인용 {{count}}곳에서 @{{key}}(으)로 바꿨습니다.",
+    "renameKeyDone_other": "인용 {{count}}곳에서 @{{key}}(으)로 바꿨습니다.",
+    "notASource": "이 노트에는 인용 키가 없습니다. 출처 노트를 열거나 \"출처 추가\"로 만드세요.",
+    "countCitations_one": "인용 {{count}}곳",
+    "countCitations_other": "인용 {{count}}곳",
+    "countSections_one": "섹션 {{count}}개",
+    "countSections_other": "섹션 {{count}}개",
+    "countNotes_one": "연구 노트 {{count}}개",
+    "countNotes_other": "연구 노트 {{count}}개",
+    "countJoin": " 및 "
+  },
+  "sections": {
+    "splitTitle": "섹션 나누기",
+    "splitHint": "커서부터 \"{{name}}\" 끝까지의 모든 내용이 새 섹션으로 옮겨지며, 바인더에서 바로 뒤에 놓입니다.",
+    "splitBtn": "나누기",
+    "splitDone": "나눴습니다. \"{{name}}\"은(는) 커서가 있던 곳에서 시작합니다.",
+    "splitInFrontmatter": "속성 아래 본문에 커서를 두고 다시 시도하세요.",
+    "splitNotManuscript": "나누기는 활성 프로젝트 원고의 섹션에서만 됩니다. 섹션을 열고 다시 시도하세요.",
+    "mergeTitle": "섹션 합치기",
+    "mergeMessage": "\"{{first}}\"과(와) \"{{second}}\"이(가) \"{{first}}\"이라는 하나의 섹션이 됩니다.",
+    "mergeHeadingToggle": "이어지는 자리에 \"{{second}}\"을(를) 제목으로 추가",
+    "mergeTrashHint": "두 번째 파일은 휴지통으로 이동하므로 되돌릴 수 있습니다.",
+    "mergeBtn": "합치기",
+    "mergeDone": "합쳤습니다. \"{{second}}\"은(는) 휴지통에 있습니다."
+  },
+  "findReplace": {
+    "title": "프로젝트에서 찾기 및 바꾸기",
+    "findLabel": "찾기",
+    "replaceLabel": "바꾸기",
+    "matchCase": "대소문자 구분",
+    "wholeWord": "단어 단위",
+    "includeResearch": "연구 노트 포함",
+    "loading": "프로젝트를 읽는 중…",
+    "typeToFind": "찾을 단어나 문구를 입력하세요.",
+    "noMatches": "일치하는 항목이 없습니다.",
+    "summary_one": "{{sections}}에서 {{count}}개 일치",
+    "summary_other": "{{sections}}에서 {{count}}개 일치",
+    "sections_one": "{{count}}개 섹션",
+    "sections_other": "{{count}}개 섹션",
+    "replaceSelected": "선택 항목 바꾸기({{count}})",
+    "replaceAll": "모두 바꾸기",
+    "undo": "마지막 바꾸기 실행 취소",
+    "close": "닫기",
+    "openDoc": "\"{{name}}\" 열기",
+    "researchTag": "연구",
+    "replaced_one": "{{sections}}에서 {{count}}개를 바꿨습니다.",
+    "replaced_other": "{{sections}}에서 {{count}}개를 바꿨습니다.",
+    "skippedChanged": "검색 후 파일이 바뀌어 건너뛰었습니다: {{names}}. 현재 텍스트를 보려면 다시 검색하세요.",
+    "nothingToUndo": "실행 취소할 것이 없습니다.",
+    "undone_one": "실행 취소했습니다. 파일 {{count}}개를 원래대로 되돌렸습니다.",
+    "undone_other": "실행 취소했습니다. 파일 {{count}}개를 원래대로 되돌렸습니다.",
+    "undoSkipped": "바꾸기 이후에 수정되어 그대로 두었습니다: {{names}}"
   }
 }

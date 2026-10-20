@@ -172,7 +172,9 @@
       "setStatusPublished": "স্ট্যাটাস সেট করুন: প্রকাশিত",
       "rename": "নাম পরিবর্তন করুন",
       "changeType": "ধরন পরিবর্তন: {{type}}",
-      "editSynopsis": "সারসংক্ষেপ সম্পাদনা করুন…"
+      "editSynopsis": "সারসংক্ষেপ সম্পাদনা করুন…",
+      "mergeNext": "পরের অনুচ্ছেদের সাথে মেলান…",
+      "renameCitekey": "উদ্ধৃতি কী-এর নাম বদলান…"
     },
     "deleteConfirm": {
       "title": "নথি মুছুন",
@@ -234,7 +236,8 @@
       "restoreUnavailable": "বিন্যাস ফেরাতে পরীক্ষামূলক ফাইল-সিস্টেম বাইন্ডার এবং একটি সক্রিয় প্রকল্প দরকার।"
     },
     "toggleSynopses": "প্রতিটি অংশের সারসংক্ষেপ তার শিরোনামের নিচে দেখান",
-    "openOutline": "রূপরেখা খুলুন"
+    "openOutline": "রূপরেখা খুলুন",
+    "findReplace": "প্রকল্পে খুঁজুন ও প্রতিস্থাপন করুন"
   },
   "launcher": {
     "displayText": "লেখার স্টুডিও",
@@ -649,7 +652,10 @@
       "restoreBinderLayout": "বাইন্ডারের আগের বিন্যাস ফিরিয়ে আনুন",
       "openOutline": "রূপরেখা খুলুন",
       "insertCitation": "উদ্ধৃতি যোগ করুন",
-      "addSource": "উৎস যোগ করুন"
+      "addSource": "উৎস যোগ করুন",
+      "splitSection": "কার্সারে অনুচ্ছেদ ভাগ করুন",
+      "findReplace": "প্রকল্পে খুঁজুন ও প্রতিস্থাপন করুন",
+      "renameCitekey": "উদ্ধৃতি কী-এর নাম বদলান"
     },
     "menu": {
       "studioOptions": "রাইটিং স্টুডিও বিকল্প",
@@ -662,7 +668,8 @@
       "draftMode": "✍ ড্রাফট মোড",
       "editMode": "✎ এডিট মোড",
       "reviewMode": "👁 রিভিউ মোড",
-      "normalMode": "স্বাভাবিক (কোনো মোড নেই)"
+      "normalMode": "স্বাভাবিক (কোনো মোড নেই)",
+      "splitSection": "এখানে অনুচ্ছেদ ভাগ করুন…"
     },
     "notice": {
       "noMarkdownOpen": "বর্তমানে কোনো Markdown ফাইল খোলা নেই।"
@@ -824,6 +831,66 @@
       "citekeyDesc": "এই উৎস উদ্ধৃত করতে ব্যবহৃত হয়, যেমন [@smith2020]। স্বয়ংক্রিয়ভাবে পূরণ হয়েছে; চাইলে বদলান।"
     },
     "addSourceShort": "উৎস যোগ করুন",
-    "addSourceTooltip": "উদ্ধৃত করার মতো বই, নিবন্ধ বা ওয়েব পৃষ্ঠা যোগ করুন"
+    "addSourceTooltip": "উদ্ধৃত করার মতো বই, নিবন্ধ বা ওয়েব পৃষ্ঠা যোগ করুন",
+    "renameKeyTitle": "উদ্ধৃতি কী-এর নাম বদলান",
+    "renameKeySource": "উৎস",
+    "renameKeyCurrent": "বর্তমান",
+    "renameKeyNew": "নতুন কী",
+    "renameKeyUsage": "{{where}}-এর {{citations}}-এ ব্যবহৃত। সবগুলো হালনাগাদ হবে।",
+    "renameKeyUnused": "এই প্রকল্পে এখনো কোথাও উদ্ধৃত হয়নি।",
+    "renameKeyBtn": "নাম বদলান",
+    "renameKeySame": "এটিই বর্তমান কী। অন্য একটি লিখুন।",
+    "renameKeyDone_one": "{{count}}টি উদ্ধৃতিতে @{{key}} করা হয়েছে।",
+    "renameKeyDone_other": "{{count}}টি উদ্ধৃতিতে @{{key}} করা হয়েছে।",
+    "notASource": "এই নোটে উদ্ধৃতি কী নেই। একটি উৎস নোট খুলুন, বা \"উৎস যোগ করুন\" দিয়ে একটি তৈরি করুন।",
+    "countCitations_one": "{{count}}টি উদ্ধৃতি",
+    "countCitations_other": "{{count}}টি উদ্ধৃতি",
+    "countSections_one": "{{count}}টি অনুচ্ছেদ",
+    "countSections_other": "{{count}}টি অনুচ্ছেদ",
+    "countNotes_one": "{{count}}টি গবেষণা নোট",
+    "countNotes_other": "{{count}}টি গবেষণা নোট",
+    "countJoin": " ও "
+  },
+  "sections": {
+    "splitTitle": "অনুচ্ছেদ ভাগ করুন",
+    "splitHint": "কার্সার থেকে \"{{name}}\"-এর শেষ পর্যন্ত সবকিছু নতুন অনুচ্ছেদে চলে যাবে, যা বাইন্ডারে এর ঠিক পরে থাকবে।",
+    "splitBtn": "ভাগ করুন",
+    "splitDone": "ভাগ হয়েছে। \"{{name}}\" সেখান থেকে শুরু হয় যেখানে কার্সার ছিল।",
+    "splitInFrontmatter": "কার্সারটি বৈশিষ্ট্যের নিচে লেখার মধ্যে রাখুন এবং আবার চেষ্টা করুন।",
+    "splitNotManuscript": "ভাগ করা সক্রিয় প্রকল্পের পাণ্ডুলিপির কোনো অনুচ্ছেদে কাজ করে। একটি খুলে আবার চেষ্টা করুন।",
+    "mergeTitle": "অনুচ্ছেদ মেলান",
+    "mergeMessage": "\"{{first}}\" ও \"{{second}}\" মিলে \"{{first}}\" নামের একটি অনুচ্ছেদ হবে।",
+    "mergeHeadingToggle": "সংযোগস্থলে \"{{second}}\" শিরোনাম হিসেবে যোগ করুন",
+    "mergeTrashHint": "দ্বিতীয় ফাইলটি ট্র্যাশে যায়, তাই আপনি তা ফিরিয়ে আনতে পারবেন।",
+    "mergeBtn": "মেলান",
+    "mergeDone": "মেলানো হয়েছে। \"{{second}}\" ট্র্যাশে আছে।"
+  },
+  "findReplace": {
+    "title": "প্রকল্পে খুঁজুন ও প্রতিস্থাপন করুন",
+    "findLabel": "খুঁজুন",
+    "replaceLabel": "প্রতিস্থাপন",
+    "matchCase": "বড়-ছোট হাতের অক্ষর মেলান",
+    "wholeWord": "সম্পূর্ণ শব্দ",
+    "includeResearch": "গবেষণা নোট অন্তর্ভুক্ত করুন",
+    "loading": "প্রকল্প পড়া হচ্ছে…",
+    "typeToFind": "খোঁজার জন্য একটি শব্দ বা বাক্যাংশ লিখুন।",
+    "noMatches": "কোনো মিল নেই।",
+    "summary_one": "{{sections}}-এ {{count}}টি মিল",
+    "summary_other": "{{sections}}-এ {{count}}টি মিল",
+    "sections_one": "{{count}}টি অনুচ্ছেদ",
+    "sections_other": "{{count}}টি অনুচ্ছেদ",
+    "replaceSelected": "নির্বাচিতগুলো প্রতিস্থাপন করুন ({{count}})",
+    "replaceAll": "সব প্রতিস্থাপন করুন",
+    "undo": "শেষ প্রতিস্থাপন বাতিল করুন",
+    "close": "বন্ধ করুন",
+    "openDoc": "\"{{name}}\" খুলুন",
+    "researchTag": "গবেষণা",
+    "replaced_one": "{{sections}}-এ {{count}}টি মিল প্রতিস্থাপিত হয়েছে।",
+    "replaced_other": "{{sections}}-এ {{count}}টি মিল প্রতিস্থাপিত হয়েছে।",
+    "skippedChanged": "বাদ দেওয়া হয়েছে কারণ খোঁজার পরে ফাইলটি বদলে গেছে: {{names}}। বর্তমান লেখা দেখতে আবার খুঁজুন।",
+    "nothingToUndo": "বাতিল করার কিছু নেই।",
+    "undone_one": "বাতিল হয়েছে। {{count}}টি ফাইল আগের মতো ফিরিয়ে আনা হয়েছে।",
+    "undone_other": "বাতিল হয়েছে। {{count}}টি ফাইল আগের মতো ফিরিয়ে আনা হয়েছে।",
+    "undoSkipped": "প্রতিস্থাপনের পরে বদলে যাওয়ায় যেমন ছিল তেমনই রাখা হয়েছে: {{names}}"
   }
 }

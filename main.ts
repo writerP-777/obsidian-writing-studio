@@ -27,6 +27,20 @@ import { buildSourceIndex } from './src/sourceIndex';
 import { sourceFrontmatter, sourceFileBasename, NewSourceFields } from './src/sources';
 import { InsertCitationModal } from './modals/InsertCitationModal';
 import { AddSourceModal } from './modals/AddSourceModal';
+import { TitlePromptModal } from './modals/TitlePromptModal';
+import { MergeSectionsModal } from './modals/MergeSectionsModal';
+import { FindReplaceModal } from './modals/FindReplaceModal';
+import { RenameCitekeyModal } from './modals/RenameCitekeyModal';
+import { splitSection, suggestSplitTitle, mergeSections } from './src/sectionEdit';
+import { rewriteCitekey, countKeyUses } from './src/citekeyRename';
+import type { ReplaceRecord } from './src/projectSearch';
+import { inManuscriptZone, isManuscriptPath, listManuscriptDocs, listResearchDocs } from './src/manuscriptTree';
+import { sortSiblings, parseBinderOrder } from './src/binderOrder';
+import { planMove, MoveEntry } from './src/binderMove';
+import { nameRejectionKey, renameTargetName, validateItemName } from './src/binderMenu';
+import { namesInText } from './src/chicago';
+import { safeHandler } from './src/safeHandler';
+import type { WritingProject } from './models/Project';
 import { WordPressClient } from './src/WordPressClient';
 import { ProjectManager } from './src/ProjectManager';
 import { StatsTracker } from './src/StatsTracker';
@@ -220,6 +234,9 @@ export default class WritingStudioPlugin extends Plugin {
   vaultFiles!: VaultFiles;
   studioEvents!: StudioEvents;
 
+  // The last project-wide replace, held for "Undo last replace" until the
+  // next replace or a restart (snapshots are not yet in the set).
+  replaceLedger: ReplaceRecord[] | null = null;
   private wordCountUpdateTimer: number | null = null;
   private launcherRefreshTimer: number | null = null;
   private nnFolderMenuDispose: (() => void) | undefined;
@@ -303,6 +320,11 @@ export default class WritingStudioPlugin extends Plugin {
         menu.addItem(i => i.setTitle(t('main.menu.publish')).setIcon('globe').setSection('writing-studio').onClick(() => this.publishCurrentFile()));
         menu.addItem(i => i.setTitle(t('main.menu.setGoal')).setIcon('target').setSection('writing-studio').onClick(() => this.setWordCountGoal(view.file)));
         menu.addItem(i => i.setTitle(t('citations.insertMenu')).setIcon('quote').setSection('writing-studio').onClick(() => this.insertCitation(_editor)));
+        // Split is offered only where it applies: a manuscript section of
+        // the active project, never a research note or a stray file
+        if (this.manuscriptProjectFor(view.file)) {
+          menu.addItem(i => i.setTitle(t('main.menu.splitSection')).setIcon('scissors').setSection('writing-studio').onClick(() => this.splitSectionAtCursor(_editor, view.file)));
+        }
         menu.addItem(i => i.setTitle(t('main.menu.switchMode')).setIcon('layout-dashboard').setSection('writing-studio').onClick((e: MouseEvent | KeyboardEvent) => this.showModeSwitcher(e)));
         if (this.typographyMode.isActive()) {
           menu.addItem(i => i.setTitle(t('main.menu.typographyFont')).setIcon('type').setSection('writing-studio').onClick((e: MouseEvent | KeyboardEvent) => this.showFontPicker(e)));
@@ -610,6 +632,180 @@ export default class WritingStudioPlugin extends Plugin {
   setWordCountGoal(file: TFile | null): void {
     if (!file) return;
     new WordCountGoalModal(this.app, this, file).open();
+  }
+
+  // ─── Sections: split, merge, find and replace, citation keys ──────────────
+
+  // The active project when `file` is one of its manuscript documents.
+  private manuscriptProjectFor(file: TFile | null): WritingProject | null {
+    const project = this.projectManager.getActiveProject();
+    if (!file || !project || !isManuscriptPath(file.path, project.folderPath)) return null;
+    return project;
+  }
+
+  private docTitle(file: TFile): string {
+    return file.name.slice(0, file.name.length - file.extension.length - 1);
+  }
+
+  // A folder's manuscript-zone children in binder order, as the drag
+  // planner sees them.
+  private manuscriptSiblings(parent: TFolder, projectFolder: string): MoveEntry[] {
+    const isRoot = parent.path === projectFolder;
+    const entries: MoveEntry[] = [];
+    for (const c of parent.children) {
+      if (!inManuscriptZone(c.name, c instanceof TFolder, isRoot)) continue;
+      entries.push({
+        name: c.name,
+        isFolder: c instanceof TFolder,
+        path: c.path,
+        extension: c instanceof TFile ? c.extension : undefined,
+        binderOrder: c instanceof TFile && c.extension === 'md'
+          ? parseBinderOrder(this.app.metadataCache.getFileCache(c)?.frontmatter?.['binder-order'])
+          : null,
+      });
+    }
+    return sortSiblings(entries);
+  }
+
+  // Split at the cursor: the text from the cursor on becomes a new section
+  // placed right after this one, with the same status and type, its own
+  // binder-order (the drag planner decides the value), and the footnote
+  // definitions it uses. The head stays in the editor, so Undo there still
+  // works on the text it kept.
+  splitSectionAtCursor(editor: Editor, file: TFile | null): void {
+    const project = this.manuscriptProjectFor(file);
+    const parent = file?.parent;
+    if (!file || !project || !parent) {
+      new Notice(t('sections.splitNotManuscript'));
+      return;
+    }
+    const text = editor.getValue();
+    const offset = editor.posToOffset(editor.getCursor());
+    const split = splitSection(text, offset);
+    if (!split) {
+      new Notice(t('sections.splitInFrontmatter'));
+      return;
+    }
+    const title = this.docTitle(file);
+    new TitlePromptModal(
+      this.app,
+      t('sections.splitTitle'),
+      suggestSplitTitle(text, offset, title),
+      t('sections.splitBtn'),
+      t('synopsis.cancel'),
+      async (typed) => {
+        const target = renameTargetName({ name: '', isFolder: false, extension: 'md', binderOrder: null }, typed);
+        const verdict = validateItemName(typed, target, parent.children.map(c => c.name));
+        if (!verdict.ok) {
+          new Notice(t(nameRejectionKey(verdict.reason), { name: target }));
+          return;
+        }
+        const newPath = normalizePath(`${parent.path}/${target}`);
+        const siblings = this.manuscriptSiblings(parent, project.folderPath);
+        const idx = siblings.findIndex(s => s.path === file.path);
+        const source: MoveEntry = { name: target, isFolder: false, extension: 'md', binderOrder: null, path: newPath };
+        const ops = planMove(source, parent.path, siblings, idx + 1, true);
+
+        const fm: Record<string, unknown> = {};
+        const cache = this.app.metadataCache.getFileCache(file)?.frontmatter;
+        for (const key of ['binder-status', 'binder-type']) {
+          const v: unknown = cache?.[key];
+          if (v !== undefined && v !== null) fm[key] = v;
+        }
+        const own = ops.find(o => o.kind === 'set-order' && o.path === newPath);
+        if (own?.kind === 'set-order') fm['binder-order'] = own.order;
+        const content = (Object.keys(fm).length ? `---\n${stringifyYaml(fm)}---\n\n` : '') + split.tail;
+
+        editor.setValue(split.head);
+        editor.setCursor({ line: editor.lastLine(), ch: 0 });
+        const created = await this.app.vault.create(newPath, content);
+        for (const op of ops) {
+          if (op.path === newPath) continue;
+          const f = this.app.vault.getAbstractFileByPath(op.path);
+          if (!f) continue;
+          if (op.kind === 'rename') {
+            await this.app.fileManager.renameFile(f, normalizePath(op.newPath));
+          } else if (f instanceof TFile) {
+            await this.app.fileManager.processFrontMatter(f, (m: Record<string, unknown>) => { m['binder-order'] = op.order; });
+          }
+        }
+        new Notice(t('sections.splitDone', { name: this.docTitle(created) }));
+        await this.app.workspace.getLeaf('tab').openFile(created);
+      },
+      t('sections.splitHint', { name: title }),
+    ).open();
+  }
+
+  // Merge the next section into this one. The second file goes to the
+  // trash by the user's "Deleted files" setting — never deleted outright.
+  mergeWithNext(first: TFile, second: TFile): void {
+    const secondTitle = this.docTitle(second);
+    new MergeSectionsModal(this.app, this.docTitle(first), secondTitle, async (addHeading) => {
+      const a = await this.app.vault.read(first);
+      const b = await this.app.vault.read(second);
+      await this.app.vault.modify(first, mergeSections(a, b, { headingTitle: addHeading ? secondTitle : null }));
+      await this.app.fileManager.trashFile(second);
+      new Notice(t('sections.mergeDone', { second: secondTitle }));
+    }).open();
+  }
+
+  openFindReplace(): void {
+    const project = this.projectManager.getActiveProject();
+    if (!project) {
+      new Notice(t('binder.selectProjectFirst'));
+      return;
+    }
+    new FindReplaceModal(this.app, this, project.folderPath).open();
+  }
+
+  // Rename a source's citation key everywhere in the project: the key on
+  // the note, and every @key citation in manuscript and research notes.
+  // Wikilink citations name the file, so they need nothing.
+  renameCitationKey(file: TFile | null): void {
+    const project = this.projectManager.getActiveProject();
+    if (!project) {
+      new Notice(t('binder.selectProjectFirst'));
+      return;
+    }
+    const key: unknown = file ? this.app.metadataCache.getFileCache(file)?.frontmatter?.citekey : undefined;
+    if (!file || typeof key !== 'string' || !key) {
+      new Notice(t('citations.notASource'));
+      return;
+    }
+    const index = buildSourceIndex(this.app, project.folderPath);
+    const source = index.byKey(key);
+    const who = source ? (source.authors.length ? namesInText(source.authors) : namesInText(source.editors)) : '';
+    const label = source
+      ? [who, source.year ? `(${source.year})` : '', source.title].filter(s => s.length > 0).join(' ')
+      : this.docTitle(file);
+    const taken = new Set(index.all().map(s => s.citekey));
+
+    safeHandler(async () => {
+      const uses = new Map<TFile, number>();
+      let citations = 0;
+      let sections = 0;
+      let notes = 0;
+      for (const f of listManuscriptDocs(this.app, project.folderPath)) {
+        const n = countKeyUses(await this.app.vault.cachedRead(f), key);
+        if (n > 0) { uses.set(f, n); citations += n; sections++; }
+      }
+      for (const f of listResearchDocs(this.app, project.folderPath)) {
+        const n = countKeyUses(await this.app.vault.cachedRead(f), key);
+        if (n > 0) { uses.set(f, n); citations += n; notes++; }
+      }
+      new RenameCitekeyModal(this.app, label, key, taken, { citations, sections, notes }, async (newKey) => {
+        await this.app.fileManager.processFrontMatter(file, (fm: Record<string, unknown>) => { fm.citekey = newKey; });
+        let count = 0;
+        for (const f of uses.keys()) {
+          await this.app.vault.process(f, (data) => {
+            const r = rewriteCitekey(data, key, newKey);
+            count += r.count;
+            return r.text;
+          });
+        }
+        new Notice(t('citations.renameKeyDone', { key: newKey, count }));
+      }).open();
+    })();
   }
 
   startSprint(): void {
