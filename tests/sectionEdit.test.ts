@@ -61,7 +61,6 @@ describe('splitSection', () => {
       'Tail cites b.[^b] And both again.[^both]',
       '',
       '[^b]: Only the tail.',
-      '',
       '[^both]: Shared note',
       '    with a continuation line.',
       '',
@@ -131,6 +130,45 @@ describe('mergeSections', () => {
       '[^note-2]: Second named.',
       '',
     ].join('\n'));
+  });
+
+  it('folds a footnote the split copied to both halves back into one note', () => {
+    const first = 'Head cites one.[^1]\n\n[^1]: Smith, The Long Argument, 12.\n';
+    const second = 'Tail cites one too.[^1] And two.[^2]\n\n[^1]: Smith, The Long Argument, 12.\n[^2]: Only the tail.\n';
+    expect(mergeSections(first, second)).toBe([
+      'Head cites one.[^1]',
+      '',
+      '[^1]: Smith, The Long Argument, 12.',
+      '',
+      'Tail cites one too.[^1] And two.[^2]',
+      '',
+      '[^2]: Only the tail.',
+      '',
+    ].join('\n'));
+  });
+
+  it('round-trips a split and a merge of the same text', () => {
+    const doc = 'A.[^1] B.[^both]\n\n## Part two\n\nC.[^both] D.[^2]\n\n[^1]: One.\n[^both]: Shared.\n[^2]: Two.\n';
+    const r = splitSection(doc, doc.indexOf('## Part two'));
+    expect(r).not.toBeNull();
+    const merged = mergeSections(r?.head ?? '', r?.tail ?? '', { headingTitle: 'Part two' });
+    expect(merged).toBe([
+      'A.[^1] B.[^both]',
+      '',
+      '[^1]: One.',
+      '[^both]: Shared.',
+      '',
+      '## Part two',
+      '',
+      'C.[^both] D.[^2]',
+      '',
+      '[^2]: Two.',
+      '',
+    ].join('\n'));
+  });
+
+  it('does not add the heading when the second section already starts with it', () => {
+    expect(mergeSections('One.\n', '## Part Two\n\nTwo.\n', { headingTitle: 'part two' })).toBe('One.\n\n## Part Two\n\nTwo.\n');
   });
 
   it('handles an empty first body', () => {
