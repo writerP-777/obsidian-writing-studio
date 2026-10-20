@@ -172,7 +172,9 @@
       "setStatusPublished": "Status setzen: Veröffentlicht",
       "rename": "Umbenennen",
       "changeType": "Typ ändern: {{type}}",
-      "editSynopsis": "Zusammenfassung bearbeiten…"
+      "editSynopsis": "Zusammenfassung bearbeiten…",
+      "mergeNext": "Mit nächstem Abschnitt zusammenführen…",
+      "renameCitekey": "Zitierschlüssel umbenennen…"
     },
     "deleteConfirm": {
       "title": "Dokument löschen",
@@ -234,7 +236,8 @@
       "restoreUnavailable": "Die Wiederherstellung des Layouts benötigt die experimentelle Dateisystem-Mappe und ein aktives Projekt."
     },
     "toggleSynopses": "Zusammenfassung jedes Abschnitts unter dem Titel anzeigen",
-    "openOutline": "Gliederung öffnen"
+    "openOutline": "Gliederung öffnen",
+    "findReplace": "Im Projekt suchen und ersetzen"
   },
   "launcher": {
     "displayText": "Schreibstudio",
@@ -649,7 +652,10 @@
       "restoreBinderLayout": "Vorheriges Mappen-Layout wiederherstellen",
       "openOutline": "Gliederung öffnen",
       "insertCitation": "Zitat einfügen",
-      "addSource": "Quelle hinzufügen"
+      "addSource": "Quelle hinzufügen",
+      "splitSection": "Abschnitt am Cursor teilen",
+      "findReplace": "Im Projekt suchen und ersetzen",
+      "renameCitekey": "Zitierschlüssel umbenennen"
     },
     "menu": {
       "studioOptions": "Schreibstudio-Optionen",
@@ -662,7 +668,8 @@
       "draftMode": "✍ Entwurfsmodus",
       "editMode": "✎ Bearbeitungsmodus",
       "reviewMode": "👁 Überprüfungsmodus",
-      "normalMode": "Normal (kein Modus)"
+      "normalMode": "Normal (kein Modus)",
+      "splitSection": "Abschnitt hier teilen…"
     },
     "notice": {
       "noMarkdownOpen": "Keine Markdown-Datei ist aktuell geöffnet."
@@ -824,6 +831,66 @@
       "citekeyDesc": "Wird zum Zitieren dieser Quelle verwendet, zum Beispiel [@smith2020]. Wird automatisch ausgefüllt; Sie können ihn ändern."
     },
     "addSourceShort": "Quelle hinzufügen",
-    "addSourceTooltip": "Ein Buch, einen Artikel oder eine Webseite zum Zitieren hinzufügen"
+    "addSourceTooltip": "Ein Buch, einen Artikel oder eine Webseite zum Zitieren hinzufügen",
+    "renameKeyTitle": "Zitierschlüssel umbenennen",
+    "renameKeySource": "Quelle",
+    "renameKeyCurrent": "Aktuell",
+    "renameKeyNew": "Neuer Schlüssel",
+    "renameKeyUsage": "Verwendet in {{citations}} in {{where}}. Alle werden aktualisiert.",
+    "renameKeyUnused": "In diesem Projekt noch nirgends zitiert.",
+    "renameKeyBtn": "Umbenennen",
+    "renameKeySame": "Das ist der aktuelle Schlüssel. Geben Sie einen anderen ein.",
+    "renameKeyDone_one": "In {{count}} Zitat zu @{{key}} umbenannt.",
+    "renameKeyDone_other": "In {{count}} Zitaten zu @{{key}} umbenannt.",
+    "notASource": "Diese Notiz hat keinen Zitierschlüssel. Öffnen Sie eine Quellennotiz oder legen Sie eine mit „Quelle hinzufügen“ an.",
+    "countCitations_one": "{{count}} Zitat",
+    "countCitations_other": "{{count}} Zitaten",
+    "countSections_one": "{{count}} Abschnitt",
+    "countSections_other": "{{count}} Abschnitten",
+    "countNotes_one": "{{count}} Recherchenotiz",
+    "countNotes_other": "{{count}} Recherchenotizen",
+    "countJoin": " und "
+  },
+  "sections": {
+    "splitTitle": "Abschnitt teilen",
+    "splitHint": "Alles vom Cursor bis zum Ende von „{{name}}“ wandert in den neuen Abschnitt, der im Binder direkt dahinter steht.",
+    "splitBtn": "Teilen",
+    "splitDone": "Geteilt. „{{name}}“ beginnt dort, wo der Cursor stand.",
+    "splitInFrontmatter": "Setzen Sie den Cursor in den Text unterhalb der Eigenschaften und versuchen Sie es erneut.",
+    "splitNotManuscript": "Teilen funktioniert in einem Abschnitt des Manuskripts des aktiven Projekts. Öffnen Sie einen und versuchen Sie es erneut.",
+    "mergeTitle": "Abschnitte zusammenführen",
+    "mergeMessage": "„{{first}}“ und „{{second}}“ werden ein Abschnitt namens „{{first}}“.",
+    "mergeHeadingToggle": "„{{second}}“ als Überschrift an der Nahtstelle einfügen",
+    "mergeTrashHint": "Die zweite Datei kommt in den Papierkorb, Sie können sie also zurückholen.",
+    "mergeBtn": "Zusammenführen",
+    "mergeDone": "Zusammengeführt. „{{second}}“ liegt im Papierkorb."
+  },
+  "findReplace": {
+    "title": "Im Projekt suchen und ersetzen",
+    "findLabel": "Suchen",
+    "replaceLabel": "Ersetzen",
+    "matchCase": "Groß-/Kleinschreibung beachten",
+    "wholeWord": "Ganzes Wort",
+    "includeResearch": "Recherchenotizen einbeziehen",
+    "loading": "Projekt wird gelesen…",
+    "typeToFind": "Geben Sie ein Wort oder eine Wendung ein.",
+    "noMatches": "Keine Treffer.",
+    "summary_one": "{{count}} Treffer in {{sections}}",
+    "summary_other": "{{count}} Treffer in {{sections}}",
+    "sections_one": "{{count}} Abschnitt",
+    "sections_other": "{{count}} Abschnitten",
+    "replaceSelected": "Ausgewählte ersetzen ({{count}})",
+    "replaceAll": "Alle ersetzen",
+    "undo": "Letztes Ersetzen rückgängig",
+    "close": "Schließen",
+    "openDoc": "„{{name}}“ öffnen",
+    "researchTag": "Recherche",
+    "replaced_one": "{{count}} Treffer in {{sections}} ersetzt.",
+    "replaced_other": "{{count}} Treffer in {{sections}} ersetzt.",
+    "skippedChanged": "Übersprungen, weil die Datei seit der Suche geändert wurde: {{names}}. Suchen Sie erneut, um den aktuellen Text zu sehen.",
+    "nothingToUndo": "Nichts rückgängig zu machen.",
+    "undone_one": "Rückgängig gemacht. {{count}} Datei wiederhergestellt.",
+    "undone_other": "Rückgängig gemacht. {{count}} Dateien wiederhergestellt.",
+    "undoSkipped": "Unverändert gelassen, weil sie nach dem Ersetzen geändert wurden: {{names}}"
   }
 }

@@ -172,7 +172,9 @@
       "setStatusPublished": "स्थिति सेट करें: प्रकाशित",
       "rename": "नाम बदलें",
       "changeType": "प्रकार बदलें: {{type}}",
-      "editSynopsis": "सारांश संपादित करें…"
+      "editSynopsis": "सारांश संपादित करें…",
+      "mergeNext": "अगले अनुभाग के साथ मिलाएँ…",
+      "renameCitekey": "उद्धरण कुंजी का नाम बदलें…"
     },
     "deleteConfirm": {
       "title": "दस्तावेज़ हटाएं",
@@ -234,7 +236,8 @@
       "restoreUnavailable": "व्यवस्था बहाल करने के लिए प्रयोगात्मक फ़ाइल-सिस्टम बाइंडर और एक सक्रिय प्रोजेक्ट आवश्यक है।"
     },
     "toggleSynopses": "हर अनुभाग का सारांश उसके शीर्षक के नीचे दिखाएँ",
-    "openOutline": "रूपरेखा खोलें"
+    "openOutline": "रूपरेखा खोलें",
+    "findReplace": "प्रोजेक्ट में खोजें और बदलें"
   },
   "launcher": {
     "displayText": "राइटिंग स्टूडियो",
@@ -649,7 +652,10 @@
       "restoreBinderLayout": "बाइंडर की पिछली व्यवस्था बहाल करें",
       "openOutline": "रूपरेखा खोलें",
       "insertCitation": "उद्धरण डालें",
-      "addSource": "स्रोत जोड़ें"
+      "addSource": "स्रोत जोड़ें",
+      "splitSection": "कर्सर पर अनुभाग विभाजित करें",
+      "findReplace": "प्रोजेक्ट में खोजें और बदलें",
+      "renameCitekey": "उद्धरण कुंजी का नाम बदलें"
     },
     "menu": {
       "studioOptions": "राइटिंग स्टूडियो विकल्प",
@@ -662,7 +668,8 @@
       "draftMode": "✍ ड्राफ़्ट मोड",
       "editMode": "✎ एडिट मोड",
       "reviewMode": "👁 रिव्यू मोड",
-      "normalMode": "सामान्य (कोई मोड नहीं)"
+      "normalMode": "सामान्य (कोई मोड नहीं)",
+      "splitSection": "यहाँ अनुभाग विभाजित करें…"
     },
     "notice": {
       "noMarkdownOpen": "वर्तमान में कोई Markdown फ़ाइल नहीं खुली है।"
@@ -824,6 +831,66 @@
       "citekeyDesc": "इस स्रोत को उद्धृत करने के लिए उपयोग होती है, जैसे [@smith2020]। आपके लिए भर दी गई है; चाहें तो बदलें।"
     },
     "addSourceShort": "स्रोत जोड़ें",
-    "addSourceTooltip": "उद्धृत करने योग्य पुस्तक, लेख या वेब पृष्ठ जोड़ें"
+    "addSourceTooltip": "उद्धृत करने योग्य पुस्तक, लेख या वेब पृष्ठ जोड़ें",
+    "renameKeyTitle": "उद्धरण कुंजी का नाम बदलें",
+    "renameKeySource": "स्रोत",
+    "renameKeyCurrent": "वर्तमान",
+    "renameKeyNew": "नई कुंजी",
+    "renameKeyUsage": "{{where}} में {{citations}} में प्रयुक्त। सभी अपडेट किए जाएँगे।",
+    "renameKeyUnused": "इस प्रोजेक्ट में अभी कहीं उद्धृत नहीं।",
+    "renameKeyBtn": "नाम बदलें",
+    "renameKeySame": "यही वर्तमान कुंजी है। कोई दूसरी लिखें।",
+    "renameKeyDone_one": "{{count}} उद्धरण में @{{key}} कर दिया गया।",
+    "renameKeyDone_other": "{{count}} उद्धरणों में @{{key}} कर दिया गया।",
+    "notASource": "इस नोट में उद्धरण कुंजी नहीं है। कोई स्रोत नोट खोलें, या \"स्रोत जोड़ें\" से एक बनाएँ।",
+    "countCitations_one": "{{count}} उद्धरण",
+    "countCitations_other": "{{count}} उद्धरणों",
+    "countSections_one": "{{count}} अनुभाग",
+    "countSections_other": "{{count}} अनुभागों",
+    "countNotes_one": "{{count}} शोध नोट",
+    "countNotes_other": "{{count}} शोध नोट्स",
+    "countJoin": " और "
+  },
+  "sections": {
+    "splitTitle": "अनुभाग विभाजित करें",
+    "splitHint": "कर्सर से \"{{name}}\" के अंत तक की सारी सामग्री नए अनुभाग में चली जाएगी, जो बाइंडर में इसके ठीक बाद रखा जाएगा।",
+    "splitBtn": "विभाजित करें",
+    "splitDone": "विभाजित हो गया। \"{{name}}\" वहीं से शुरू होता है जहाँ कर्सर था।",
+    "splitInFrontmatter": "कर्सर को गुणों के नीचे पाठ में रखें और फिर से कोशिश करें।",
+    "splitNotManuscript": "विभाजन सक्रिय प्रोजेक्ट की पांडुलिपि के किसी अनुभाग पर काम करता है। एक खोलें और फिर से कोशिश करें।",
+    "mergeTitle": "अनुभाग मिलाएँ",
+    "mergeMessage": "\"{{first}}\" और \"{{second}}\" मिलकर \"{{first}}\" नाम का एक अनुभाग बन जाएँगे।",
+    "mergeHeadingToggle": "जोड़ के स्थान पर \"{{second}}\" को शीर्षक के रूप में जोड़ें",
+    "mergeTrashHint": "दूसरी फ़ाइल ट्रैश में जाती है, इसलिए आप उसे वापस पा सकते हैं।",
+    "mergeBtn": "मिलाएँ",
+    "mergeDone": "मिला दिया गया। \"{{second}}\" ट्रैश में है।"
+  },
+  "findReplace": {
+    "title": "प्रोजेक्ट में खोजें और बदलें",
+    "findLabel": "खोजें",
+    "replaceLabel": "बदलें",
+    "matchCase": "केस मिलाएँ",
+    "wholeWord": "पूरा शब्द",
+    "includeResearch": "शोध नोट्स शामिल करें",
+    "loading": "प्रोजेक्ट पढ़ा जा रहा है…",
+    "typeToFind": "खोजने के लिए कोई शब्द या वाक्यांश लिखें।",
+    "noMatches": "कोई मिलान नहीं।",
+    "summary_one": "{{sections}} में {{count}} मिलान",
+    "summary_other": "{{sections}} में {{count}} मिलान",
+    "sections_one": "{{count}} अनुभाग",
+    "sections_other": "{{count}} अनुभागों",
+    "replaceSelected": "चयनित बदलें ({{count}})",
+    "replaceAll": "सभी बदलें",
+    "undo": "पिछला बदलाव पूर्ववत करें",
+    "close": "बंद करें",
+    "openDoc": "\"{{name}}\" खोलें",
+    "researchTag": "शोध",
+    "replaced_one": "{{sections}} में {{count}} मिलान बदला गया।",
+    "replaced_other": "{{sections}} में {{count}} मिलान बदले गए।",
+    "skippedChanged": "छोड़ दिया गया क्योंकि खोज के बाद फ़ाइल बदल गई: {{names}}। वर्तमान पाठ देखने के लिए फिर से खोजें।",
+    "nothingToUndo": "पूर्ववत करने के लिए कुछ नहीं।",
+    "undone_one": "पूर्ववत हो गया। {{count}} फ़ाइल पहले जैसी कर दी गई।",
+    "undone_other": "पूर्ववत हो गया। {{count}} फ़ाइलें पहले जैसी कर दी गईं।",
+    "undoSkipped": "बदलाव के बाद बदल जाने के कारण जैसी थीं वैसी छोड़ दी गईं: {{names}}"
   }
 }

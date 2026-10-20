@@ -27,7 +27,7 @@ __export(main_exports, {
   default: () => WritingStudioPlugin
 });
 module.exports = __toCommonJS(main_exports);
-var import_obsidian40 = require("obsidian");
+var import_obsidian43 = require("obsidian");
 
 // src/FilesystemBinderView.ts
 var import_obsidian15 = require("obsidian");
@@ -155,12 +155,12 @@ function menuActionsFor(entry, zone) {
     return ["rename", "export", "newDoc", "newFolder", "delete"];
   }
   if (zone === "research") {
-    return ["rename", "newDoc", "newSource", "newFolder", "delete"];
+    return entry.isFolder ? ["rename", "newDoc", "newSource", "newFolder", "delete"] : ["rename", "renameKey", "newDoc", "newSource", "newFolder", "delete"];
   }
   if (entry.isFolder) {
     return ["rename", "newDoc", "newFolder", "delete"];
   }
-  return ["rename", "synopsis", "status", "goal", "type", "compile", "newDoc", "newFolder", "delete"];
+  return ["rename", "synopsis", "status", "goal", "type", "compile", "merge", "newDoc", "newFolder", "delete"];
 }
 function renamePrefill(entry) {
   if (entry.isFolder || entry.extension === "md") return entryDisplayName(entry);
@@ -175,6 +175,15 @@ function renameTargetName(entry, typed) {
   if (!entry.extension) return typed;
   const suffix = "." + entry.extension;
   return typed.toLowerCase().endsWith(suffix.toLowerCase()) ? typed : typed + suffix;
+}
+function nameRejectionKey(reason) {
+  const keys = {
+    empty: "binder.fs.nameEmpty",
+    "invalid-chars": "binder.fs.nameInvalidChars",
+    trailing: "binder.fs.nameTrailing",
+    exists: "binder.fs.nameExists"
+  };
+  return keys[reason != null ? reason : "empty"];
 }
 function validateItemName(typed, targetName, siblingNames) {
   const text = rejectNameText(typed);
@@ -321,6 +330,20 @@ function buildManuscriptTree(app, rootPath, opts = {}) {
 function listManuscriptDocs(app, projectFolderPath) {
   return buildManuscriptTree(app, projectFolderPath).docFiles;
 }
+function listResearchDocs(app, projectFolderPath) {
+  const folder = app.vault.getAbstractFileByPath((0, import_obsidian.normalizePath)(`${projectFolderPath}/Research`));
+  if (!(folder instanceof import_obsidian.TFolder)) return [];
+  const out = [];
+  const walk = (f) => {
+    for (const c of f.children) {
+      if (isHiddenName(c.name)) continue;
+      if (c instanceof import_obsidian.TFolder) walk(c);
+      else if (c instanceof import_obsidian.TFile && c.extension === "md") out.push(c);
+    }
+  };
+  walk(folder);
+  return out.sort((a, b) => a.path.localeCompare(b.path));
+}
 var MAX_HEADING_LEVEL = 6;
 function hasCompiledDoc(nodes) {
   return nodes.some((n) => n.kind === "doc" ? !n.compileExcluded : hasCompiledDoc(n.children));
@@ -350,6 +373,12 @@ function planCompile(nodes, opts) {
   };
   walk(nodes, 0);
   return out;
+}
+function isManuscriptPath(path, projectFolderPath) {
+  const prefix = projectFolderPath.endsWith("/") ? projectFolderPath : projectFolderPath + "/";
+  if (!path.startsWith(prefix) || !path.toLowerCase().endsWith(".md")) return false;
+  const segments = path.slice(prefix.length).split("/");
+  return segments.every((seg, i2) => inManuscriptZone(seg, i2 < segments.length - 1, i2 === 0));
 }
 
 // src/binderMove.ts
@@ -1480,7 +1509,8 @@ var LanguageUtil = class {
       addCode(this.formatLanguageCode(code));
     }
     fallbackCodes.forEach((fc) => {
-      if (!codes.includes(fc)) addCode(this.formatLanguageCode(fc));
+      const formattedFc = this.formatLanguageCode(fc);
+      if (!codes.includes(formattedFc)) addCode(formattedFc);
     });
     if (cacheKey !== null) {
       this.resolveHierarchyCache[cacheKey] = codes;
@@ -1631,7 +1661,7 @@ var Interpolator = class {
     };
     this.regexp = getOrResetRegExp(this.regexp, `${this.prefix}(.+?)${this.suffix}`);
     this.regexpUnescape = getOrResetRegExp(this.regexpUnescape, `${this.prefix}${this.unescapePrefix}(.+?)${this.unescapeSuffix}${this.suffix}`);
-    this.nestingRegexp = getOrResetRegExp(this.nestingRegexp, `${this.nestingPrefix}((?:[^()"']+|"[^"]*"|'[^']*'|\\((?:[^()]|"[^"]*"|'[^']*')*\\))*?)${this.nestingSuffix}`);
+    this.nestingRegexp = getOrResetRegExp(this.nestingRegexp, `${this.nestingPrefix}((?:[^()"']|"[^"]*"|'[^']*'|\\((?:[^()"']|"[^"]*"|'[^']*')*\\))*?)${this.nestingSuffix}`);
   }
   interpolate(str2, data, lng, options) {
     var _a2;
@@ -1737,7 +1767,10 @@ var Interpolator = class {
       if (clonedOptions.defaultValue && clonedOptions.defaultValue.includes(this.prefix)) delete clonedOptions.defaultValue;
       return key;
     };
-    while (match = this.nestingRegexp.exec(str2)) {
+    const nestingRegexp = new RegExp(this.nestingRegexp);
+    let out = "";
+    let lastEnd = 0;
+    while (match = nestingRegexp.exec(str2)) {
       let formatters = [];
       clonedOptions = {
         ...options
@@ -1763,10 +1796,11 @@ var Interpolator = class {
           interpolationkey: match[1].trim()
         }), value.trim());
       }
-      str2 = str2.replace(match[0], regexSafe(makeString(value)));
+      out += str2.slice(lastEnd, match.index) + makeString(value);
+      lastEnd = nestingRegexp.lastIndex;
       this.regexp.lastIndex = 0;
     }
-    return str2;
+    return lastEnd ? out + str2.slice(lastEnd) : str2;
   }
 };
 var parseFormatStr = (formatStr) => {
@@ -2582,7 +2616,11 @@ var I18n = class _I18n extends EventEmitter {
     }
     if (this.hasResourceBundle(lng, ns)) return true;
     if (!this.services.backendConnector.backend || this.options.resources && !this.options.partialBundledLanguages) return true;
-    if (loadNotPending(lng, ns) && (!fallbackLng || loadNotPending(lastLng, ns))) return true;
+    const {
+      languageUtils
+    } = this.services;
+    const loadLng = !options.lng ? lng : languageUtils.isSupportedCode(lng) && languageUtils.toResolveHierarchy(lng, false)[0];
+    if ((!loadLng || loadNotPending(loadLng, ns)) && (!fallbackLng || loadNotPending(lastLng, ns))) return true;
     return false;
   }
   loadNamespaces(ns, callback) {
@@ -2644,6 +2682,7 @@ var I18n = class _I18n extends EventEmitter {
     if (forkResourceStore) delete options.forkResourceStore;
     const mergedOptions = {
       ...this.options,
+      preload: false,
       ...options,
       ...{
         isClone: true
@@ -2907,7 +2946,9 @@ var en_default = {
       setStatusPublished: "Set status: published",
       rename: "Rename",
       changeType: "Change type: {{type}}",
-      editSynopsis: "Edit synopsis\u2026"
+      editSynopsis: "Edit synopsis\u2026",
+      mergeNext: "Merge with next section\u2026",
+      renameCitekey: "Rename citation key\u2026"
     },
     deleteConfirm: {
       title: "Delete document",
@@ -2969,7 +3010,8 @@ var en_default = {
       restoreUnavailable: "Restoring the layout needs the experimental filesystem binder and an active project."
     },
     toggleSynopses: "Show each section's synopsis under its title",
-    openOutline: "Open the outline"
+    openOutline: "Open the outline",
+    findReplace: "Find and replace in project"
   },
   launcher: {
     displayText: "Writing studio",
@@ -3384,7 +3426,10 @@ var en_default = {
       restoreBinderLayout: "Restore previous binder layout",
       openOutline: "Open outline",
       insertCitation: "Insert citation",
-      addSource: "Add source"
+      addSource: "Add source",
+      splitSection: "Split section at cursor",
+      findReplace: "Find and replace in project",
+      renameCitekey: "Rename citation key"
     },
     menu: {
       studioOptions: "Writing studio options",
@@ -3397,7 +3442,8 @@ var en_default = {
       draftMode: "\u270D Draft mode",
       editMode: "\u270E Edit mode",
       reviewMode: "\u{1F441} Review mode",
-      normalMode: "Normal (no mode)"
+      normalMode: "Normal (no mode)",
+      splitSection: "Split section here\u2026"
     },
     notice: {
       noMarkdownOpen: "No Markdown file is currently open."
@@ -3559,7 +3605,67 @@ var en_default = {
       citekeyDesc: "Used to cite this source, for example [@smith2020]. Filled in for you; change it if you like."
     },
     addSourceShort: "Add source",
-    addSourceTooltip: "Add a book, article, or web page you can cite"
+    addSourceTooltip: "Add a book, article, or web page you can cite",
+    renameKeyTitle: "Rename citation key",
+    renameKeySource: "Source",
+    renameKeyCurrent: "Current",
+    renameKeyNew: "New key",
+    renameKeyUsage: "Used in {{citations}} across {{where}}. All of them will be updated.",
+    renameKeyUnused: "Not cited anywhere in this project yet.",
+    renameKeyBtn: "Rename",
+    renameKeySame: "That is the current key. Type a different one.",
+    renameKeyDone_one: "Renamed to @{{key}} in {{count}} citation.",
+    renameKeyDone_other: "Renamed to @{{key}} in {{count}} citations.",
+    notASource: 'This note has no citation key. Open a source note, or add one with "Add source".',
+    countCitations_one: "{{count}} citation",
+    countCitations_other: "{{count}} citations",
+    countSections_one: "{{count}} section",
+    countSections_other: "{{count}} sections",
+    countNotes_one: "{{count}} research note",
+    countNotes_other: "{{count}} research notes",
+    countJoin: " and "
+  },
+  sections: {
+    splitTitle: "Split section",
+    splitHint: 'Everything from the cursor to the end of "{{name}}" moves into the new section, placed right after it in the binder.',
+    splitBtn: "Split",
+    splitDone: 'Split. "{{name}}" starts where the cursor was.',
+    splitInFrontmatter: "Put the cursor in the text, below the properties, and try again.",
+    splitNotManuscript: "Split works on a section of the active project's manuscript. Open one and try again.",
+    mergeTitle: "Merge sections",
+    mergeMessage: '"{{first}}" and "{{second}}" become one section named "{{first}}".',
+    mergeHeadingToggle: 'Add "{{second}}" as a heading where the two join',
+    mergeTrashHint: "The second file goes to the trash, so you can get it back.",
+    mergeBtn: "Merge",
+    mergeDone: 'Merged. "{{second}}" is in the trash.'
+  },
+  findReplace: {
+    title: "Find and replace in project",
+    findLabel: "Find",
+    replaceLabel: "Replace",
+    matchCase: "Match case",
+    wholeWord: "Whole word",
+    includeResearch: "Include research notes",
+    loading: "Reading the project\u2026",
+    typeToFind: "Type a word or phrase to find.",
+    noMatches: "No matches.",
+    summary_one: "{{count}} match in {{sections}}",
+    summary_other: "{{count}} matches in {{sections}}",
+    sections_one: "{{count}} section",
+    sections_other: "{{count}} sections",
+    replaceSelected: "Replace selected ({{count}})",
+    replaceAll: "Replace all",
+    undo: "Undo last replace",
+    close: "Close",
+    openDoc: 'Open "{{name}}"',
+    researchTag: "research",
+    replaced_one: "Replaced {{count}} match in {{sections}}.",
+    replaced_other: "Replaced {{count}} matches in {{sections}}.",
+    skippedChanged: "Skipped because the file changed since the search: {{names}}. Search again to see the current text.",
+    nothingToUndo: "Nothing to undo.",
+    undone_one: "Undo complete. {{count}} file put back the way it was.",
+    undone_other: "Undo complete. {{count}} files put back the way they were.",
+    undoSkipped: "Left alone because they changed after the replace: {{names}}"
   }
 };
 
@@ -3738,7 +3844,9 @@ var zh_default = {
       setStatusPublished: "\u8BBE\u7F6E\u72B6\u6001\uFF1A\u5DF2\u53D1\u5E03",
       rename: "\u91CD\u547D\u540D",
       changeType: "\u66F4\u6539\u7C7B\u578B\uFF1A{{type}}",
-      editSynopsis: "\u7F16\u8F91\u6458\u8981\u2026"
+      editSynopsis: "\u7F16\u8F91\u6458\u8981\u2026",
+      mergeNext: "\u4E0E\u4E0B\u4E00\u7AE0\u8282\u5408\u5E76\u2026",
+      renameCitekey: "\u91CD\u547D\u540D\u5F15\u7528\u952E\u2026"
     },
     deleteConfirm: {
       title: "\u5220\u9664\u6587\u6863",
@@ -3800,7 +3908,8 @@ var zh_default = {
       restoreUnavailable: "\u6062\u590D\u5E03\u5C40\u9700\u8981\u542F\u7528\u5B9E\u9A8C\u6027\u6587\u4EF6\u7CFB\u7EDF\u6D3B\u9875\u5939\u5E76\u6709\u4E00\u4E2A\u6D3B\u52A8\u9879\u76EE\u3002"
     },
     toggleSynopses: "\u5728\u6BCF\u4E2A\u7AE0\u8282\u6807\u9898\u4E0B\u65B9\u663E\u793A\u5176\u6458\u8981",
-    openOutline: "\u6253\u5F00\u5927\u7EB2"
+    openOutline: "\u6253\u5F00\u5927\u7EB2",
+    findReplace: "\u5728\u9879\u76EE\u4E2D\u67E5\u627E\u548C\u66FF\u6362"
   },
   launcher: {
     displayText: "\u5199\u4F5C\u5DE5\u4F5C\u5BA4",
@@ -4215,7 +4324,10 @@ var zh_default = {
       restoreBinderLayout: "\u6062\u590D\u6D3B\u9875\u5939\u7684\u5148\u524D\u5E03\u5C40",
       openOutline: "\u6253\u5F00\u5927\u7EB2",
       insertCitation: "\u63D2\u5165\u5F15\u7528",
-      addSource: "\u6DFB\u52A0\u6765\u6E90"
+      addSource: "\u6DFB\u52A0\u6765\u6E90",
+      splitSection: "\u5728\u5149\u6807\u5904\u62C6\u5206\u7AE0\u8282",
+      findReplace: "\u5728\u9879\u76EE\u4E2D\u67E5\u627E\u548C\u66FF\u6362",
+      renameCitekey: "\u91CD\u547D\u540D\u5F15\u7528\u952E"
     },
     menu: {
       studioOptions: "\u5199\u4F5C\u5DE5\u4F5C\u5BA4\u9009\u9879",
@@ -4228,7 +4340,8 @@ var zh_default = {
       draftMode: "\u270D \u8349\u7A3F\u6A21\u5F0F",
       editMode: "\u270E \u7F16\u8F91\u6A21\u5F0F",
       reviewMode: "\u{1F441} \u5BA1\u9605\u6A21\u5F0F",
-      normalMode: "\u666E\u901A\uFF08\u65E0\u6A21\u5F0F\uFF09"
+      normalMode: "\u666E\u901A\uFF08\u65E0\u6A21\u5F0F\uFF09",
+      splitSection: "\u5728\u6B64\u5904\u62C6\u5206\u7AE0\u8282\u2026"
     },
     notice: {
       noMarkdownOpen: "\u5F53\u524D\u6CA1\u6709\u6253\u5F00\u7684 Markdown \u6587\u4EF6\u3002"
@@ -4390,7 +4503,67 @@ var zh_default = {
       citekeyDesc: "\u7528\u4E8E\u5F15\u7528\u6B64\u6765\u6E90\uFF0C\u4F8B\u5982 [@smith2020]\u3002\u5DF2\u81EA\u52A8\u586B\u5199\uFF0C\u53EF\u6309\u9700\u4FEE\u6539\u3002"
     },
     addSourceShort: "\u6DFB\u52A0\u6765\u6E90",
-    addSourceTooltip: "\u6DFB\u52A0\u53EF\u5F15\u7528\u7684\u56FE\u4E66\u3001\u6587\u7AE0\u6216\u7F51\u9875"
+    addSourceTooltip: "\u6DFB\u52A0\u53EF\u5F15\u7528\u7684\u56FE\u4E66\u3001\u6587\u7AE0\u6216\u7F51\u9875",
+    renameKeyTitle: "\u91CD\u547D\u540D\u5F15\u7528\u952E",
+    renameKeySource: "\u6765\u6E90",
+    renameKeyCurrent: "\u5F53\u524D",
+    renameKeyNew: "\u65B0\u952E",
+    renameKeyUsage: "\u5728{{where}}\u7684 {{citations}} \u4E2D\u4F7F\u7528\u3002\u6240\u6709\u5F15\u7528\u90FD\u4F1A\u66F4\u65B0\u3002",
+    renameKeyUnused: "\u672C\u9879\u76EE\u4E2D\u5C1A\u672A\u5F15\u7528\u3002",
+    renameKeyBtn: "\u91CD\u547D\u540D",
+    renameKeySame: "\u8FD9\u5C31\u662F\u5F53\u524D\u7684\u952E\u3002\u8BF7\u8F93\u5165\u53E6\u4E00\u4E2A\u3002",
+    renameKeyDone_one: "\u5DF2\u5728 {{count}} \u5904\u5F15\u7528\u4E2D\u91CD\u547D\u540D\u4E3A @{{key}}\u3002",
+    renameKeyDone_other: "\u5DF2\u5728 {{count}} \u5904\u5F15\u7528\u4E2D\u91CD\u547D\u540D\u4E3A @{{key}}\u3002",
+    notASource: "\u8FD9\u6761\u7B14\u8BB0\u6CA1\u6709\u5F15\u7528\u952E\u3002\u8BF7\u6253\u5F00\u4E00\u6761\u6765\u6E90\u7B14\u8BB0\uFF0C\u6216\u7528\u201C\u6DFB\u52A0\u6765\u6E90\u201D\u65B0\u5EFA\u4E00\u6761\u3002",
+    countCitations_one: "{{count}} \u5904\u5F15\u7528",
+    countCitations_other: "{{count}} \u5904\u5F15\u7528",
+    countSections_one: "{{count}} \u4E2A\u7AE0\u8282",
+    countSections_other: "{{count}} \u4E2A\u7AE0\u8282",
+    countNotes_one: "{{count}} \u6761\u7814\u7A76\u7B14\u8BB0",
+    countNotes_other: "{{count}} \u6761\u7814\u7A76\u7B14\u8BB0",
+    countJoin: "\u548C"
+  },
+  sections: {
+    splitTitle: "\u62C6\u5206\u7AE0\u8282",
+    splitHint: "\u4ECE\u5149\u6807\u5230\u201C{{name}}\u201D\u672B\u5C3E\u7684\u5168\u90E8\u5185\u5BB9\u5C06\u79FB\u5165\u65B0\u7AE0\u8282\uFF0C\u5E76\u5728\u6D3B\u9875\u5939\u4E2D\u7D27\u968F\u5176\u540E\u3002",
+    splitBtn: "\u62C6\u5206",
+    splitDone: "\u5DF2\u62C6\u5206\u3002\u201C{{name}}\u201D\u4ECE\u5149\u6807\u6240\u5728\u5904\u5F00\u59CB\u3002",
+    splitInFrontmatter: "\u8BF7\u628A\u5149\u6807\u653E\u5230\u5C5E\u6027\u4E0B\u65B9\u7684\u6B63\u6587\u4E2D\uFF0C\u7136\u540E\u91CD\u8BD5\u3002",
+    splitNotManuscript: "\u62C6\u5206\u53EA\u9002\u7528\u4E8E\u5F53\u524D\u9879\u76EE\u4E66\u7A3F\u4E2D\u7684\u7AE0\u8282\u3002\u8BF7\u6253\u5F00\u4E00\u4E2A\u7AE0\u8282\u540E\u91CD\u8BD5\u3002",
+    mergeTitle: "\u5408\u5E76\u7AE0\u8282",
+    mergeMessage: "\u201C{{first}}\u201D\u548C\u201C{{second}}\u201D\u5C06\u5408\u4E3A\u4E00\u4E2A\u540D\u4E3A\u201C{{first}}\u201D\u7684\u7AE0\u8282\u3002",
+    mergeHeadingToggle: "\u5728\u8854\u63A5\u5904\u628A\u201C{{second}}\u201D\u6DFB\u52A0\u4E3A\u6807\u9898",
+    mergeTrashHint: "\u7B2C\u4E8C\u4E2A\u6587\u4EF6\u4F1A\u79FB\u5230\u56DE\u6536\u7AD9\uFF0C\u56E0\u6B64\u53EF\u4EE5\u627E\u56DE\u3002",
+    mergeBtn: "\u5408\u5E76",
+    mergeDone: "\u5DF2\u5408\u5E76\u3002\u201C{{second}}\u201D\u5DF2\u5728\u56DE\u6536\u7AD9\u4E2D\u3002"
+  },
+  findReplace: {
+    title: "\u5728\u9879\u76EE\u4E2D\u67E5\u627E\u548C\u66FF\u6362",
+    findLabel: "\u67E5\u627E",
+    replaceLabel: "\u66FF\u6362\u4E3A",
+    matchCase: "\u533A\u5206\u5927\u5C0F\u5199",
+    wholeWord: "\u5168\u5B57\u5339\u914D",
+    includeResearch: "\u5305\u542B\u7814\u7A76\u7B14\u8BB0",
+    loading: "\u6B63\u5728\u8BFB\u53D6\u9879\u76EE\u2026",
+    typeToFind: "\u8F93\u5165\u8981\u67E5\u627E\u7684\u8BCD\u6216\u77ED\u8BED\u3002",
+    noMatches: "\u6CA1\u6709\u5339\u914D\u9879\u3002",
+    summary_one: "{{sections}}\u4E2D\u6709 {{count}} \u4E2A\u5339\u914D\u9879",
+    summary_other: "{{sections}}\u4E2D\u6709 {{count}} \u4E2A\u5339\u914D\u9879",
+    sections_one: "{{count}} \u4E2A\u7AE0\u8282",
+    sections_other: "{{count}} \u4E2A\u7AE0\u8282",
+    replaceSelected: "\u66FF\u6362\u6240\u9009\uFF08{{count}}\uFF09",
+    replaceAll: "\u5168\u90E8\u66FF\u6362",
+    undo: "\u64A4\u9500\u4E0A\u6B21\u66FF\u6362",
+    close: "\u5173\u95ED",
+    openDoc: "\u6253\u5F00\u201C{{name}}\u201D",
+    researchTag: "\u7814\u7A76",
+    replaced_one: "\u5DF2\u5728{{sections}}\u4E2D\u66FF\u6362 {{count}} \u4E2A\u5339\u914D\u9879\u3002",
+    replaced_other: "\u5DF2\u5728{{sections}}\u4E2D\u66FF\u6362 {{count}} \u4E2A\u5339\u914D\u9879\u3002",
+    skippedChanged: "\u5DF2\u8DF3\u8FC7\uFF0C\u56E0\u4E3A\u6587\u4EF6\u5728\u641C\u7D22\u540E\u6709\u6539\u52A8\uFF1A{{names}}\u3002\u8BF7\u91CD\u65B0\u641C\u7D22\u4EE5\u67E5\u770B\u5F53\u524D\u6587\u672C\u3002",
+    nothingToUndo: "\u6CA1\u6709\u53EF\u64A4\u9500\u7684\u64CD\u4F5C\u3002",
+    undone_one: "\u5DF2\u64A4\u9500\u3002{{count}} \u4E2A\u6587\u4EF6\u5DF2\u6062\u590D\u539F\u6837\u3002",
+    undone_other: "\u5DF2\u64A4\u9500\u3002{{count}} \u4E2A\u6587\u4EF6\u5DF2\u6062\u590D\u539F\u6837\u3002",
+    undoSkipped: "\u4EE5\u4E0B\u6587\u4EF6\u5728\u66FF\u6362\u540E\u6709\u6539\u52A8\uFF0C\u672A\u4E88\u66F4\u6539\uFF1A{{names}}"
   }
 };
 
@@ -4569,7 +4742,9 @@ var hi_default = {
       setStatusPublished: "\u0938\u094D\u0925\u093F\u0924\u093F \u0938\u0947\u091F \u0915\u0930\u0947\u0902: \u092A\u094D\u0930\u0915\u093E\u0936\u093F\u0924",
       rename: "\u0928\u093E\u092E \u092C\u0926\u0932\u0947\u0902",
       changeType: "\u092A\u094D\u0930\u0915\u093E\u0930 \u092C\u0926\u0932\u0947\u0902: {{type}}",
-      editSynopsis: "\u0938\u093E\u0930\u093E\u0902\u0936 \u0938\u0902\u092A\u093E\u0926\u093F\u0924 \u0915\u0930\u0947\u0902\u2026"
+      editSynopsis: "\u0938\u093E\u0930\u093E\u0902\u0936 \u0938\u0902\u092A\u093E\u0926\u093F\u0924 \u0915\u0930\u0947\u0902\u2026",
+      mergeNext: "\u0905\u0917\u0932\u0947 \u0905\u0928\u0941\u092D\u093E\u0917 \u0915\u0947 \u0938\u093E\u0925 \u092E\u093F\u0932\u093E\u090F\u0901\u2026",
+      renameCitekey: "\u0909\u0926\u094D\u0927\u0930\u0923 \u0915\u0941\u0902\u091C\u0940 \u0915\u093E \u0928\u093E\u092E \u092C\u0926\u0932\u0947\u0902\u2026"
     },
     deleteConfirm: {
       title: "\u0926\u0938\u094D\u0924\u093E\u0935\u0947\u091C\u093C \u0939\u091F\u093E\u090F\u0902",
@@ -4631,7 +4806,8 @@ var hi_default = {
       restoreUnavailable: "\u0935\u094D\u092F\u0935\u0938\u094D\u0925\u093E \u092C\u0939\u093E\u0932 \u0915\u0930\u0928\u0947 \u0915\u0947 \u0932\u093F\u090F \u092A\u094D\u0930\u092F\u094B\u0917\u093E\u0924\u094D\u092E\u0915 \u092B\u093C\u093E\u0907\u0932-\u0938\u093F\u0938\u094D\u091F\u092E \u092C\u093E\u0907\u0902\u0921\u0930 \u0914\u0930 \u090F\u0915 \u0938\u0915\u094D\u0930\u093F\u092F \u092A\u094D\u0930\u094B\u091C\u0947\u0915\u094D\u091F \u0906\u0935\u0936\u094D\u092F\u0915 \u0939\u0948\u0964"
     },
     toggleSynopses: "\u0939\u0930 \u0905\u0928\u0941\u092D\u093E\u0917 \u0915\u093E \u0938\u093E\u0930\u093E\u0902\u0936 \u0909\u0938\u0915\u0947 \u0936\u0940\u0930\u094D\u0937\u0915 \u0915\u0947 \u0928\u0940\u091A\u0947 \u0926\u093F\u0916\u093E\u090F\u0901",
-    openOutline: "\u0930\u0942\u092A\u0930\u0947\u0916\u093E \u0916\u094B\u0932\u0947\u0902"
+    openOutline: "\u0930\u0942\u092A\u0930\u0947\u0916\u093E \u0916\u094B\u0932\u0947\u0902",
+    findReplace: "\u092A\u094D\u0930\u094B\u091C\u0947\u0915\u094D\u091F \u092E\u0947\u0902 \u0916\u094B\u091C\u0947\u0902 \u0914\u0930 \u092C\u0926\u0932\u0947\u0902"
   },
   launcher: {
     displayText: "\u0930\u093E\u0907\u091F\u093F\u0902\u0917 \u0938\u094D\u091F\u0942\u0921\u093F\u092F\u094B",
@@ -5046,7 +5222,10 @@ var hi_default = {
       restoreBinderLayout: "\u092C\u093E\u0907\u0902\u0921\u0930 \u0915\u0940 \u092A\u093F\u091B\u0932\u0940 \u0935\u094D\u092F\u0935\u0938\u094D\u0925\u093E \u092C\u0939\u093E\u0932 \u0915\u0930\u0947\u0902",
       openOutline: "\u0930\u0942\u092A\u0930\u0947\u0916\u093E \u0916\u094B\u0932\u0947\u0902",
       insertCitation: "\u0909\u0926\u094D\u0927\u0930\u0923 \u0921\u093E\u0932\u0947\u0902",
-      addSource: "\u0938\u094D\u0930\u094B\u0924 \u091C\u094B\u0921\u093C\u0947\u0902"
+      addSource: "\u0938\u094D\u0930\u094B\u0924 \u091C\u094B\u0921\u093C\u0947\u0902",
+      splitSection: "\u0915\u0930\u094D\u0938\u0930 \u092A\u0930 \u0905\u0928\u0941\u092D\u093E\u0917 \u0935\u093F\u092D\u093E\u091C\u093F\u0924 \u0915\u0930\u0947\u0902",
+      findReplace: "\u092A\u094D\u0930\u094B\u091C\u0947\u0915\u094D\u091F \u092E\u0947\u0902 \u0916\u094B\u091C\u0947\u0902 \u0914\u0930 \u092C\u0926\u0932\u0947\u0902",
+      renameCitekey: "\u0909\u0926\u094D\u0927\u0930\u0923 \u0915\u0941\u0902\u091C\u0940 \u0915\u093E \u0928\u093E\u092E \u092C\u0926\u0932\u0947\u0902"
     },
     menu: {
       studioOptions: "\u0930\u093E\u0907\u091F\u093F\u0902\u0917 \u0938\u094D\u091F\u0942\u0921\u093F\u092F\u094B \u0935\u093F\u0915\u0932\u094D\u092A",
@@ -5059,7 +5238,8 @@ var hi_default = {
       draftMode: "\u270D \u0921\u094D\u0930\u093E\u092B\u093C\u094D\u091F \u092E\u094B\u0921",
       editMode: "\u270E \u090F\u0921\u093F\u091F \u092E\u094B\u0921",
       reviewMode: "\u{1F441} \u0930\u093F\u0935\u094D\u092F\u0942 \u092E\u094B\u0921",
-      normalMode: "\u0938\u093E\u092E\u093E\u0928\u094D\u092F (\u0915\u094B\u0908 \u092E\u094B\u0921 \u0928\u0939\u0940\u0902)"
+      normalMode: "\u0938\u093E\u092E\u093E\u0928\u094D\u092F (\u0915\u094B\u0908 \u092E\u094B\u0921 \u0928\u0939\u0940\u0902)",
+      splitSection: "\u092F\u0939\u093E\u0901 \u0905\u0928\u0941\u092D\u093E\u0917 \u0935\u093F\u092D\u093E\u091C\u093F\u0924 \u0915\u0930\u0947\u0902\u2026"
     },
     notice: {
       noMarkdownOpen: "\u0935\u0930\u094D\u0924\u092E\u093E\u0928 \u092E\u0947\u0902 \u0915\u094B\u0908 Markdown \u092B\u093C\u093E\u0907\u0932 \u0928\u0939\u0940\u0902 \u0916\u0941\u0932\u0940 \u0939\u0948\u0964"
@@ -5221,7 +5401,67 @@ var hi_default = {
       citekeyDesc: "\u0907\u0938 \u0938\u094D\u0930\u094B\u0924 \u0915\u094B \u0909\u0926\u094D\u0927\u0943\u0924 \u0915\u0930\u0928\u0947 \u0915\u0947 \u0932\u093F\u090F \u0909\u092A\u092F\u094B\u0917 \u0939\u094B\u0924\u0940 \u0939\u0948, \u091C\u0948\u0938\u0947 [@smith2020]\u0964 \u0906\u092A\u0915\u0947 \u0932\u093F\u090F \u092D\u0930 \u0926\u0940 \u0917\u0908 \u0939\u0948; \u091A\u093E\u0939\u0947\u0902 \u0924\u094B \u092C\u0926\u0932\u0947\u0902\u0964"
     },
     addSourceShort: "\u0938\u094D\u0930\u094B\u0924 \u091C\u094B\u0921\u093C\u0947\u0902",
-    addSourceTooltip: "\u0909\u0926\u094D\u0927\u0943\u0924 \u0915\u0930\u0928\u0947 \u092F\u094B\u0917\u094D\u092F \u092A\u0941\u0938\u094D\u0924\u0915, \u0932\u0947\u0916 \u092F\u093E \u0935\u0947\u092C \u092A\u0943\u0937\u094D\u0920 \u091C\u094B\u0921\u093C\u0947\u0902"
+    addSourceTooltip: "\u0909\u0926\u094D\u0927\u0943\u0924 \u0915\u0930\u0928\u0947 \u092F\u094B\u0917\u094D\u092F \u092A\u0941\u0938\u094D\u0924\u0915, \u0932\u0947\u0916 \u092F\u093E \u0935\u0947\u092C \u092A\u0943\u0937\u094D\u0920 \u091C\u094B\u0921\u093C\u0947\u0902",
+    renameKeyTitle: "\u0909\u0926\u094D\u0927\u0930\u0923 \u0915\u0941\u0902\u091C\u0940 \u0915\u093E \u0928\u093E\u092E \u092C\u0926\u0932\u0947\u0902",
+    renameKeySource: "\u0938\u094D\u0930\u094B\u0924",
+    renameKeyCurrent: "\u0935\u0930\u094D\u0924\u092E\u093E\u0928",
+    renameKeyNew: "\u0928\u0908 \u0915\u0941\u0902\u091C\u0940",
+    renameKeyUsage: "{{where}} \u092E\u0947\u0902 {{citations}} \u092E\u0947\u0902 \u092A\u094D\u0930\u092F\u0941\u0915\u094D\u0924\u0964 \u0938\u092D\u0940 \u0905\u092A\u0921\u0947\u091F \u0915\u093F\u090F \u091C\u093E\u090F\u0901\u0917\u0947\u0964",
+    renameKeyUnused: "\u0907\u0938 \u092A\u094D\u0930\u094B\u091C\u0947\u0915\u094D\u091F \u092E\u0947\u0902 \u0905\u092D\u0940 \u0915\u0939\u0940\u0902 \u0909\u0926\u094D\u0927\u0943\u0924 \u0928\u0939\u0940\u0902\u0964",
+    renameKeyBtn: "\u0928\u093E\u092E \u092C\u0926\u0932\u0947\u0902",
+    renameKeySame: "\u092F\u0939\u0940 \u0935\u0930\u094D\u0924\u092E\u093E\u0928 \u0915\u0941\u0902\u091C\u0940 \u0939\u0948\u0964 \u0915\u094B\u0908 \u0926\u0942\u0938\u0930\u0940 \u0932\u093F\u0916\u0947\u0902\u0964",
+    renameKeyDone_one: "{{count}} \u0909\u0926\u094D\u0927\u0930\u0923 \u092E\u0947\u0902 @{{key}} \u0915\u0930 \u0926\u093F\u092F\u093E \u0917\u092F\u093E\u0964",
+    renameKeyDone_other: "{{count}} \u0909\u0926\u094D\u0927\u0930\u0923\u094B\u0902 \u092E\u0947\u0902 @{{key}} \u0915\u0930 \u0926\u093F\u092F\u093E \u0917\u092F\u093E\u0964",
+    notASource: '\u0907\u0938 \u0928\u094B\u091F \u092E\u0947\u0902 \u0909\u0926\u094D\u0927\u0930\u0923 \u0915\u0941\u0902\u091C\u0940 \u0928\u0939\u0940\u0902 \u0939\u0948\u0964 \u0915\u094B\u0908 \u0938\u094D\u0930\u094B\u0924 \u0928\u094B\u091F \u0916\u094B\u0932\u0947\u0902, \u092F\u093E "\u0938\u094D\u0930\u094B\u0924 \u091C\u094B\u0921\u093C\u0947\u0902" \u0938\u0947 \u090F\u0915 \u092C\u0928\u093E\u090F\u0901\u0964',
+    countCitations_one: "{{count}} \u0909\u0926\u094D\u0927\u0930\u0923",
+    countCitations_other: "{{count}} \u0909\u0926\u094D\u0927\u0930\u0923\u094B\u0902",
+    countSections_one: "{{count}} \u0905\u0928\u0941\u092D\u093E\u0917",
+    countSections_other: "{{count}} \u0905\u0928\u0941\u092D\u093E\u0917\u094B\u0902",
+    countNotes_one: "{{count}} \u0936\u094B\u0927 \u0928\u094B\u091F",
+    countNotes_other: "{{count}} \u0936\u094B\u0927 \u0928\u094B\u091F\u094D\u0938",
+    countJoin: " \u0914\u0930 "
+  },
+  sections: {
+    splitTitle: "\u0905\u0928\u0941\u092D\u093E\u0917 \u0935\u093F\u092D\u093E\u091C\u093F\u0924 \u0915\u0930\u0947\u0902",
+    splitHint: '\u0915\u0930\u094D\u0938\u0930 \u0938\u0947 "{{name}}" \u0915\u0947 \u0905\u0902\u0924 \u0924\u0915 \u0915\u0940 \u0938\u093E\u0930\u0940 \u0938\u093E\u092E\u0917\u094D\u0930\u0940 \u0928\u090F \u0905\u0928\u0941\u092D\u093E\u0917 \u092E\u0947\u0902 \u091A\u0932\u0940 \u091C\u093E\u090F\u0917\u0940, \u091C\u094B \u092C\u093E\u0907\u0902\u0921\u0930 \u092E\u0947\u0902 \u0907\u0938\u0915\u0947 \u0920\u0940\u0915 \u092C\u093E\u0926 \u0930\u0916\u093E \u091C\u093E\u090F\u0917\u093E\u0964',
+    splitBtn: "\u0935\u093F\u092D\u093E\u091C\u093F\u0924 \u0915\u0930\u0947\u0902",
+    splitDone: '\u0935\u093F\u092D\u093E\u091C\u093F\u0924 \u0939\u094B \u0917\u092F\u093E\u0964 "{{name}}" \u0935\u0939\u0940\u0902 \u0938\u0947 \u0936\u0941\u0930\u0942 \u0939\u094B\u0924\u093E \u0939\u0948 \u091C\u0939\u093E\u0901 \u0915\u0930\u094D\u0938\u0930 \u0925\u093E\u0964',
+    splitInFrontmatter: "\u0915\u0930\u094D\u0938\u0930 \u0915\u094B \u0917\u0941\u0923\u094B\u0902 \u0915\u0947 \u0928\u0940\u091A\u0947 \u092A\u093E\u0920 \u092E\u0947\u0902 \u0930\u0916\u0947\u0902 \u0914\u0930 \u092B\u093F\u0930 \u0938\u0947 \u0915\u094B\u0936\u093F\u0936 \u0915\u0930\u0947\u0902\u0964",
+    splitNotManuscript: "\u0935\u093F\u092D\u093E\u091C\u0928 \u0938\u0915\u094D\u0930\u093F\u092F \u092A\u094D\u0930\u094B\u091C\u0947\u0915\u094D\u091F \u0915\u0940 \u092A\u093E\u0902\u0921\u0941\u0932\u093F\u092A\u093F \u0915\u0947 \u0915\u093F\u0938\u0940 \u0905\u0928\u0941\u092D\u093E\u0917 \u092A\u0930 \u0915\u093E\u092E \u0915\u0930\u0924\u093E \u0939\u0948\u0964 \u090F\u0915 \u0916\u094B\u0932\u0947\u0902 \u0914\u0930 \u092B\u093F\u0930 \u0938\u0947 \u0915\u094B\u0936\u093F\u0936 \u0915\u0930\u0947\u0902\u0964",
+    mergeTitle: "\u0905\u0928\u0941\u092D\u093E\u0917 \u092E\u093F\u0932\u093E\u090F\u0901",
+    mergeMessage: '"{{first}}" \u0914\u0930 "{{second}}" \u092E\u093F\u0932\u0915\u0930 "{{first}}" \u0928\u093E\u092E \u0915\u093E \u090F\u0915 \u0905\u0928\u0941\u092D\u093E\u0917 \u092C\u0928 \u091C\u093E\u090F\u0901\u0917\u0947\u0964',
+    mergeHeadingToggle: '\u091C\u094B\u0921\u093C \u0915\u0947 \u0938\u094D\u0925\u093E\u0928 \u092A\u0930 "{{second}}" \u0915\u094B \u0936\u0940\u0930\u094D\u0937\u0915 \u0915\u0947 \u0930\u0942\u092A \u092E\u0947\u0902 \u091C\u094B\u0921\u093C\u0947\u0902',
+    mergeTrashHint: "\u0926\u0942\u0938\u0930\u0940 \u092B\u093C\u093E\u0907\u0932 \u091F\u094D\u0930\u0948\u0936 \u092E\u0947\u0902 \u091C\u093E\u0924\u0940 \u0939\u0948, \u0907\u0938\u0932\u093F\u090F \u0906\u092A \u0909\u0938\u0947 \u0935\u093E\u092A\u0938 \u092A\u093E \u0938\u0915\u0924\u0947 \u0939\u0948\u0902\u0964",
+    mergeBtn: "\u092E\u093F\u0932\u093E\u090F\u0901",
+    mergeDone: '\u092E\u093F\u0932\u093E \u0926\u093F\u092F\u093E \u0917\u092F\u093E\u0964 "{{second}}" \u091F\u094D\u0930\u0948\u0936 \u092E\u0947\u0902 \u0939\u0948\u0964'
+  },
+  findReplace: {
+    title: "\u092A\u094D\u0930\u094B\u091C\u0947\u0915\u094D\u091F \u092E\u0947\u0902 \u0916\u094B\u091C\u0947\u0902 \u0914\u0930 \u092C\u0926\u0932\u0947\u0902",
+    findLabel: "\u0916\u094B\u091C\u0947\u0902",
+    replaceLabel: "\u092C\u0926\u0932\u0947\u0902",
+    matchCase: "\u0915\u0947\u0938 \u092E\u093F\u0932\u093E\u090F\u0901",
+    wholeWord: "\u092A\u0942\u0930\u093E \u0936\u092C\u094D\u0926",
+    includeResearch: "\u0936\u094B\u0927 \u0928\u094B\u091F\u094D\u0938 \u0936\u093E\u092E\u093F\u0932 \u0915\u0930\u0947\u0902",
+    loading: "\u092A\u094D\u0930\u094B\u091C\u0947\u0915\u094D\u091F \u092A\u0922\u093C\u093E \u091C\u093E \u0930\u0939\u093E \u0939\u0948\u2026",
+    typeToFind: "\u0916\u094B\u091C\u0928\u0947 \u0915\u0947 \u0932\u093F\u090F \u0915\u094B\u0908 \u0936\u092C\u094D\u0926 \u092F\u093E \u0935\u093E\u0915\u094D\u092F\u093E\u0902\u0936 \u0932\u093F\u0916\u0947\u0902\u0964",
+    noMatches: "\u0915\u094B\u0908 \u092E\u093F\u0932\u093E\u0928 \u0928\u0939\u0940\u0902\u0964",
+    summary_one: "{{sections}} \u092E\u0947\u0902 {{count}} \u092E\u093F\u0932\u093E\u0928",
+    summary_other: "{{sections}} \u092E\u0947\u0902 {{count}} \u092E\u093F\u0932\u093E\u0928",
+    sections_one: "{{count}} \u0905\u0928\u0941\u092D\u093E\u0917",
+    sections_other: "{{count}} \u0905\u0928\u0941\u092D\u093E\u0917\u094B\u0902",
+    replaceSelected: "\u091A\u092F\u0928\u093F\u0924 \u092C\u0926\u0932\u0947\u0902 ({{count}})",
+    replaceAll: "\u0938\u092D\u0940 \u092C\u0926\u0932\u0947\u0902",
+    undo: "\u092A\u093F\u091B\u0932\u093E \u092C\u0926\u0932\u093E\u0935 \u092A\u0942\u0930\u094D\u0935\u0935\u0924 \u0915\u0930\u0947\u0902",
+    close: "\u092C\u0902\u0926 \u0915\u0930\u0947\u0902",
+    openDoc: '"{{name}}" \u0916\u094B\u0932\u0947\u0902',
+    researchTag: "\u0936\u094B\u0927",
+    replaced_one: "{{sections}} \u092E\u0947\u0902 {{count}} \u092E\u093F\u0932\u093E\u0928 \u092C\u0926\u0932\u093E \u0917\u092F\u093E\u0964",
+    replaced_other: "{{sections}} \u092E\u0947\u0902 {{count}} \u092E\u093F\u0932\u093E\u0928 \u092C\u0926\u0932\u0947 \u0917\u090F\u0964",
+    skippedChanged: "\u091B\u094B\u0921\u093C \u0926\u093F\u092F\u093E \u0917\u092F\u093E \u0915\u094D\u092F\u094B\u0902\u0915\u093F \u0916\u094B\u091C \u0915\u0947 \u092C\u093E\u0926 \u092B\u093C\u093E\u0907\u0932 \u092C\u0926\u0932 \u0917\u0908: {{names}}\u0964 \u0935\u0930\u094D\u0924\u092E\u093E\u0928 \u092A\u093E\u0920 \u0926\u0947\u0916\u0928\u0947 \u0915\u0947 \u0932\u093F\u090F \u092B\u093F\u0930 \u0938\u0947 \u0916\u094B\u091C\u0947\u0902\u0964",
+    nothingToUndo: "\u092A\u0942\u0930\u094D\u0935\u0935\u0924 \u0915\u0930\u0928\u0947 \u0915\u0947 \u0932\u093F\u090F \u0915\u0941\u091B \u0928\u0939\u0940\u0902\u0964",
+    undone_one: "\u092A\u0942\u0930\u094D\u0935\u0935\u0924 \u0939\u094B \u0917\u092F\u093E\u0964 {{count}} \u092B\u093C\u093E\u0907\u0932 \u092A\u0939\u0932\u0947 \u091C\u0948\u0938\u0940 \u0915\u0930 \u0926\u0940 \u0917\u0908\u0964",
+    undone_other: "\u092A\u0942\u0930\u094D\u0935\u0935\u0924 \u0939\u094B \u0917\u092F\u093E\u0964 {{count}} \u092B\u093C\u093E\u0907\u0932\u0947\u0902 \u092A\u0939\u0932\u0947 \u091C\u0948\u0938\u0940 \u0915\u0930 \u0926\u0940 \u0917\u0908\u0902\u0964",
+    undoSkipped: "\u092C\u0926\u0932\u093E\u0935 \u0915\u0947 \u092C\u093E\u0926 \u092C\u0926\u0932 \u091C\u093E\u0928\u0947 \u0915\u0947 \u0915\u093E\u0930\u0923 \u091C\u0948\u0938\u0940 \u0925\u0940\u0902 \u0935\u0948\u0938\u0940 \u091B\u094B\u0921\u093C \u0926\u0940 \u0917\u0908\u0902: {{names}}"
   }
 };
 
@@ -5400,7 +5640,9 @@ var es_default = {
       setStatusPublished: "Establecer estado: publicado",
       rename: "Renombrar",
       changeType: "Cambiar tipo: {{type}}",
-      editSynopsis: "Editar sinopsis\u2026"
+      editSynopsis: "Editar sinopsis\u2026",
+      mergeNext: "Fusionar con la secci\xF3n siguiente\u2026",
+      renameCitekey: "Renombrar la clave de cita\u2026"
     },
     deleteConfirm: {
       title: "Eliminar documento",
@@ -5462,7 +5704,8 @@ var es_default = {
       restoreUnavailable: "Restaurar la disposici\xF3n necesita la carpeta de escritura experimental del sistema de archivos y un proyecto activo."
     },
     toggleSynopses: "Mostrar la sinopsis de cada secci\xF3n bajo su t\xEDtulo",
-    openOutline: "Abrir el esquema"
+    openOutline: "Abrir el esquema",
+    findReplace: "Buscar y reemplazar en el proyecto"
   },
   launcher: {
     displayText: "Estudio de escritura",
@@ -5877,7 +6120,10 @@ var es_default = {
       restoreBinderLayout: "Restaurar la disposici\xF3n anterior de la carpeta de escritura",
       openOutline: "Abrir esquema",
       insertCitation: "Insertar cita",
-      addSource: "A\xF1adir fuente"
+      addSource: "A\xF1adir fuente",
+      splitSection: "Dividir la secci\xF3n en el cursor",
+      findReplace: "Buscar y reemplazar en el proyecto",
+      renameCitekey: "Renombrar la clave de cita"
     },
     menu: {
       studioOptions: "Opciones de Writing Studio",
@@ -5890,7 +6136,8 @@ var es_default = {
       draftMode: "\u270D Modo borrador",
       editMode: "\u270E Modo edici\xF3n",
       reviewMode: "\u{1F441} Modo revisi\xF3n",
-      normalMode: "Normal (sin modo)"
+      normalMode: "Normal (sin modo)",
+      splitSection: "Dividir la secci\xF3n aqu\xED\u2026"
     },
     notice: {
       noMarkdownOpen: "No hay ning\xFAn archivo Markdown abierto actualmente."
@@ -6052,7 +6299,67 @@ var es_default = {
       citekeyDesc: "Se usa para citar esta fuente, por ejemplo [@smith2020]. Se rellena autom\xE1ticamente; puede cambiarla."
     },
     addSourceShort: "A\xF1adir fuente",
-    addSourceTooltip: "A\xF1adir un libro, art\xEDculo o p\xE1gina web que pueda citar"
+    addSourceTooltip: "A\xF1adir un libro, art\xEDculo o p\xE1gina web que pueda citar",
+    renameKeyTitle: "Renombrar la clave de cita",
+    renameKeySource: "Fuente",
+    renameKeyCurrent: "Actual",
+    renameKeyNew: "Nueva clave",
+    renameKeyUsage: "Usada en {{citations}} repartidas en {{where}}. Todas se actualizar\xE1n.",
+    renameKeyUnused: "A\xFAn no se cita en este proyecto.",
+    renameKeyBtn: "Renombrar",
+    renameKeySame: "Esa es la clave actual. Escribe otra.",
+    renameKeyDone_one: "Renombrada a @{{key}} en {{count}} cita.",
+    renameKeyDone_other: "Renombrada a @{{key}} en {{count}} citas.",
+    notASource: "Esta nota no tiene clave de cita. Abre una nota de fuente o crea una con \xABA\xF1adir fuente\xBB.",
+    countCitations_one: "{{count}} cita",
+    countCitations_other: "{{count}} citas",
+    countSections_one: "{{count}} secci\xF3n",
+    countSections_other: "{{count}} secciones",
+    countNotes_one: "{{count}} nota de investigaci\xF3n",
+    countNotes_other: "{{count}} notas de investigaci\xF3n",
+    countJoin: " y "
+  },
+  sections: {
+    splitTitle: "Dividir la secci\xF3n",
+    splitHint: "Todo lo que va del cursor al final de \xAB{{name}}\xBB pasa a la nueva secci\xF3n, colocada justo despu\xE9s en el archivador.",
+    splitBtn: "Dividir",
+    splitDone: "Dividido. \xAB{{name}}\xBB empieza donde estaba el cursor.",
+    splitInFrontmatter: "Coloca el cursor en el texto, debajo de las propiedades, e int\xE9ntalo de nuevo.",
+    splitNotManuscript: "Dividir funciona en una secci\xF3n del manuscrito del proyecto activo. Abre una e int\xE9ntalo de nuevo.",
+    mergeTitle: "Fusionar secciones",
+    mergeMessage: "\xAB{{first}}\xBB y \xAB{{second}}\xBB pasan a ser una sola secci\xF3n llamada \xAB{{first}}\xBB.",
+    mergeHeadingToggle: "A\xF1adir \xAB{{second}}\xBB como encabezado en la uni\xF3n",
+    mergeTrashHint: "El segundo archivo va a la papelera, as\xED que puedes recuperarlo.",
+    mergeBtn: "Fusionar",
+    mergeDone: "Fusionado. \xAB{{second}}\xBB est\xE1 en la papelera."
+  },
+  findReplace: {
+    title: "Buscar y reemplazar en el proyecto",
+    findLabel: "Buscar",
+    replaceLabel: "Reemplazar",
+    matchCase: "Coincidir may\xFAsculas y min\xFAsculas",
+    wholeWord: "Palabra completa",
+    includeResearch: "Incluir notas de investigaci\xF3n",
+    loading: "Leyendo el proyecto\u2026",
+    typeToFind: "Escribe una palabra o frase para buscar.",
+    noMatches: "Sin coincidencias.",
+    summary_one: "{{count}} coincidencia en {{sections}}",
+    summary_other: "{{count}} coincidencias en {{sections}}",
+    sections_one: "{{count}} secci\xF3n",
+    sections_other: "{{count}} secciones",
+    replaceSelected: "Reemplazar seleccionadas ({{count}})",
+    replaceAll: "Reemplazar todo",
+    undo: "Deshacer el \xFAltimo reemplazo",
+    close: "Cerrar",
+    openDoc: "Abrir \xAB{{name}}\xBB",
+    researchTag: "investigaci\xF3n",
+    replaced_one: "Reemplazada {{count}} coincidencia en {{sections}}.",
+    replaced_other: "Reemplazadas {{count}} coincidencias en {{sections}}.",
+    skippedChanged: "Omitido porque el archivo cambi\xF3 desde la b\xFAsqueda: {{names}}. Busca de nuevo para ver el texto actual.",
+    nothingToUndo: "Nada que deshacer.",
+    undone_one: "Deshecho. {{count}} archivo restaurado tal como estaba.",
+    undone_other: "Deshecho. {{count}} archivos restaurados tal como estaban.",
+    undoSkipped: "Sin tocar porque cambiaron despu\xE9s del reemplazo: {{names}}"
   }
 };
 
@@ -6231,7 +6538,9 @@ var ar_default = {
       setStatusPublished: "\u062A\u0639\u064A\u064A\u0646 \u0627\u0644\u062D\u0627\u0644\u0629: \u0645\u0646\u0634\u0648\u0631",
       rename: "\u0625\u0639\u0627\u062F\u0629 \u062A\u0633\u0645\u064A\u0629",
       changeType: "\u062A\u063A\u064A\u064A\u0631 \u0627\u0644\u0646\u0648\u0639: {{type}}",
-      editSynopsis: "\u062A\u062D\u0631\u064A\u0631 \u0627\u0644\u0645\u0644\u062E\u0635\u2026"
+      editSynopsis: "\u062A\u062D\u0631\u064A\u0631 \u0627\u0644\u0645\u0644\u062E\u0635\u2026",
+      mergeNext: "\u062F\u0645\u062C \u0645\u0639 \u0627\u0644\u0642\u0633\u0645 \u0627\u0644\u062A\u0627\u0644\u064A\u2026",
+      renameCitekey: "\u0625\u0639\u0627\u062F\u0629 \u062A\u0633\u0645\u064A\u0629 \u0645\u0641\u062A\u0627\u062D \u0627\u0644\u0627\u0642\u062A\u0628\u0627\u0633\u2026"
     },
     deleteConfirm: {
       title: "\u062D\u0630\u0641 \u0627\u0644\u0645\u0633\u062A\u0646\u062F",
@@ -6299,7 +6608,8 @@ var ar_default = {
       restoreUnavailable: "\u062A\u062A\u0637\u0644\u0628 \u0627\u0633\u062A\u0639\u0627\u062F\u0629 \u0627\u0644\u062A\u062E\u0637\u064A\u0637 \u062A\u0641\u0639\u064A\u0644 \u0645\u0644\u0632\u0645\u0629 \u0646\u0638\u0627\u0645 \u0627\u0644\u0645\u0644\u0641\u0627\u062A \u0627\u0644\u062A\u062C\u0631\u064A\u0628\u064A\u0629 \u0648\u0648\u062C\u0648\u062F \u0645\u0634\u0631\u0648\u0639 \u0646\u0634\u0637."
     },
     toggleSynopses: "\u0625\u0638\u0647\u0627\u0631 \u0645\u0644\u062E\u0635 \u0643\u0644 \u0642\u0633\u0645 \u0623\u0633\u0641\u0644 \u0639\u0646\u0648\u0627\u0646\u0647",
-    openOutline: "\u0641\u062A\u062D \u0627\u0644\u0645\u062E\u0637\u0637"
+    openOutline: "\u0641\u062A\u062D \u0627\u0644\u0645\u062E\u0637\u0637",
+    findReplace: "\u0628\u062D\u062B \u0648\u0627\u0633\u062A\u0628\u062F\u0627\u0644 \u0641\u064A \u0627\u0644\u0645\u0634\u0631\u0648\u0639"
   },
   launcher: {
     displayText: "\u0627\u0633\u062A\u0648\u062F\u064A\u0648 \u0627\u0644\u0643\u062A\u0627\u0628\u0629",
@@ -6740,7 +7050,10 @@ var ar_default = {
       restoreBinderLayout: "\u0627\u0633\u062A\u0639\u0627\u062F\u0629 \u0627\u0644\u062A\u062E\u0637\u064A\u0637 \u0627\u0644\u0633\u0627\u0628\u0642 \u0644\u0644\u0645\u0644\u0632\u0645\u0629",
       openOutline: "\u0641\u062A\u062D \u0627\u0644\u0645\u062E\u0637\u0637",
       insertCitation: "\u0625\u062F\u0631\u0627\u062C \u0627\u0633\u062A\u0634\u0647\u0627\u062F",
-      addSource: "\u0625\u0636\u0627\u0641\u0629 \u0645\u0635\u062F\u0631"
+      addSource: "\u0625\u0636\u0627\u0641\u0629 \u0645\u0635\u062F\u0631",
+      splitSection: "\u062A\u0642\u0633\u064A\u0645 \u0627\u0644\u0642\u0633\u0645 \u0639\u0646\u062F \u0627\u0644\u0645\u0624\u0634\u0631",
+      findReplace: "\u0628\u062D\u062B \u0648\u0627\u0633\u062A\u0628\u062F\u0627\u0644 \u0641\u064A \u0627\u0644\u0645\u0634\u0631\u0648\u0639",
+      renameCitekey: "\u0625\u0639\u0627\u062F\u0629 \u062A\u0633\u0645\u064A\u0629 \u0645\u0641\u062A\u0627\u062D \u0627\u0644\u0627\u0642\u062A\u0628\u0627\u0633"
     },
     menu: {
       studioOptions: "\u062E\u064A\u0627\u0631\u0627\u062A \u0627\u0633\u062A\u0648\u062F\u064A\u0648 \u0627\u0644\u0643\u062A\u0627\u0628\u0629",
@@ -6753,7 +7066,8 @@ var ar_default = {
       draftMode: "\u270D \u0648\u0636\u0639 \u0627\u0644\u0645\u0633\u0648\u062F\u0629",
       editMode: "\u270E \u0648\u0636\u0639 \u0627\u0644\u062A\u062D\u0631\u064A\u0631",
       reviewMode: "\u{1F441} \u0648\u0636\u0639 \u0627\u0644\u0645\u0631\u0627\u062C\u0639\u0629",
-      normalMode: "\u0639\u0627\u062F\u064A (\u0628\u0644\u0627 \u0648\u0636\u0639)"
+      normalMode: "\u0639\u0627\u062F\u064A (\u0628\u0644\u0627 \u0648\u0636\u0639)",
+      splitSection: "\u062A\u0642\u0633\u064A\u0645 \u0627\u0644\u0642\u0633\u0645 \u0647\u0646\u0627\u2026"
     },
     notice: {
       noMarkdownOpen: "\u0644\u0627 \u064A\u0648\u062C\u062F \u0645\u0644\u0641 Markdown \u0645\u0641\u062A\u0648\u062D \u062D\u0627\u0644\u064A\u0627\u064B."
@@ -6923,7 +7237,99 @@ var ar_default = {
       citekeyDesc: "\u064A\u064F\u0633\u062A\u062E\u062F\u0645 \u0644\u0644\u0627\u0633\u062A\u0634\u0647\u0627\u062F \u0628\u0647\u0630\u0627 \u0627\u0644\u0645\u0635\u062F\u0631\u060C \u0645\u062B\u0644 [@smith2020]. \u064A\u064F\u0645\u0644\u0623 \u062A\u0644\u0642\u0627\u0626\u064A\u064B\u0627 \u0648\u064A\u0645\u0643\u0646\u0643 \u062A\u063A\u064A\u064A\u0631\u0647."
     },
     addSourceShort: "\u0625\u0636\u0627\u0641\u0629 \u0645\u0635\u062F\u0631",
-    addSourceTooltip: "\u0623\u0636\u0641 \u0643\u062A\u0627\u0628\u064B\u0627 \u0623\u0648 \u0645\u0642\u0627\u0644\u064B\u0627 \u0623\u0648 \u0635\u0641\u062D\u0629 \u0648\u064A\u0628 \u064A\u0645\u0643\u0646\u0643 \u0627\u0644\u0627\u0633\u062A\u0634\u0647\u0627\u062F \u0628\u0647\u0627"
+    addSourceTooltip: "\u0623\u0636\u0641 \u0643\u062A\u0627\u0628\u064B\u0627 \u0623\u0648 \u0645\u0642\u0627\u0644\u064B\u0627 \u0623\u0648 \u0635\u0641\u062D\u0629 \u0648\u064A\u0628 \u064A\u0645\u0643\u0646\u0643 \u0627\u0644\u0627\u0633\u062A\u0634\u0647\u0627\u062F \u0628\u0647\u0627",
+    renameKeyTitle: "\u0625\u0639\u0627\u062F\u0629 \u062A\u0633\u0645\u064A\u0629 \u0645\u0641\u062A\u0627\u062D \u0627\u0644\u0627\u0642\u062A\u0628\u0627\u0633",
+    renameKeySource: "\u0627\u0644\u0645\u0635\u062F\u0631",
+    renameKeyCurrent: "\u0627\u0644\u062D\u0627\u0644\u064A",
+    renameKeyNew: "\u0627\u0644\u0645\u0641\u062A\u0627\u062D \u0627\u0644\u062C\u062F\u064A\u062F",
+    renameKeyUsage: "\u0645\u0633\u062A\u062E\u062F\u0645 \u0641\u064A {{citations}} \u0639\u0628\u0631 {{where}}. \u0633\u064A\u062A\u0645 \u062A\u062D\u062F\u064A\u062B\u0647\u0627 \u062C\u0645\u064A\u0639\u064B\u0627.",
+    renameKeyUnused: "\u0644\u0645 \u064A\u064F\u0642\u062A\u0628\u0633 \u0628\u0639\u062F \u0641\u064A \u0623\u064A \u0645\u0648\u0636\u0639 \u0645\u0646 \u0647\u0630\u0627 \u0627\u0644\u0645\u0634\u0631\u0648\u0639.",
+    renameKeyBtn: "\u0625\u0639\u0627\u062F\u0629 \u062A\u0633\u0645\u064A\u0629",
+    renameKeySame: "\u0647\u0630\u0627 \u0647\u0648 \u0627\u0644\u0645\u0641\u062A\u0627\u062D \u0627\u0644\u062D\u0627\u0644\u064A. \u0627\u0643\u062A\u0628 \u0645\u0641\u062A\u0627\u062D\u064B\u0627 \u0645\u062E\u062A\u0644\u0641\u064B\u0627.",
+    renameKeyDone_zero: "\u0623\u064F\u0639\u064A\u062F\u062A \u0627\u0644\u062A\u0633\u0645\u064A\u0629 \u0625\u0644\u0649 @{{key}} \u062F\u0648\u0646 \u0623\u064A \u0627\u0642\u062A\u0628\u0627\u0633.",
+    renameKeyDone_one: "\u0623\u064F\u0639\u064A\u062F\u062A \u0627\u0644\u062A\u0633\u0645\u064A\u0629 \u0625\u0644\u0649 @{{key}} \u0641\u064A \u0627\u0642\u062A\u0628\u0627\u0633 \u0648\u0627\u062D\u062F.",
+    renameKeyDone_two: "\u0623\u064F\u0639\u064A\u062F\u062A \u0627\u0644\u062A\u0633\u0645\u064A\u0629 \u0625\u0644\u0649 @{{key}} \u0641\u064A \u0627\u0642\u062A\u0628\u0627\u0633\u064A\u0646.",
+    renameKeyDone_few: "\u0623\u064F\u0639\u064A\u062F\u062A \u0627\u0644\u062A\u0633\u0645\u064A\u0629 \u0625\u0644\u0649 @{{key}} \u0641\u064A {{count}} \u0627\u0642\u062A\u0628\u0627\u0633\u0627\u062A.",
+    renameKeyDone_many: "\u0623\u064F\u0639\u064A\u062F\u062A \u0627\u0644\u062A\u0633\u0645\u064A\u0629 \u0625\u0644\u0649 @{{key}} \u0641\u064A {{count}} \u0627\u0642\u062A\u0628\u0627\u0633\u064B\u0627.",
+    renameKeyDone_other: "\u0623\u064F\u0639\u064A\u062F\u062A \u0627\u0644\u062A\u0633\u0645\u064A\u0629 \u0625\u0644\u0649 @{{key}} \u0641\u064A {{count}} \u0627\u0642\u062A\u0628\u0627\u0633.",
+    notASource: "\u0644\u0627 \u062A\u062D\u0645\u0644 \u0647\u0630\u0647 \u0627\u0644\u0645\u0644\u0627\u062D\u0638\u0629 \u0645\u0641\u062A\u0627\u062D \u0627\u0642\u062A\u0628\u0627\u0633. \u0627\u0641\u062A\u062D \u0645\u0644\u0627\u062D\u0638\u0629 \u0645\u0635\u062F\u0631\u060C \u0623\u0648 \u0623\u0646\u0634\u0626 \u0648\u0627\u062D\u062F\u0629 \u0639\u0628\u0631 \xAB\u0625\u0636\u0627\u0641\u0629 \u0645\u0635\u062F\u0631\xBB.",
+    countCitations_zero: "\u0644\u0627 \u0627\u0642\u062A\u0628\u0627\u0633\u0627\u062A",
+    countCitations_one: "\u0627\u0642\u062A\u0628\u0627\u0633 \u0648\u0627\u062D\u062F",
+    countCitations_two: "\u0627\u0642\u062A\u0628\u0627\u0633\u064A\u0646",
+    countCitations_few: "{{count}} \u0627\u0642\u062A\u0628\u0627\u0633\u0627\u062A",
+    countCitations_many: "{{count}} \u0627\u0642\u062A\u0628\u0627\u0633\u064B\u0627",
+    countCitations_other: "{{count}} \u0627\u0642\u062A\u0628\u0627\u0633",
+    countSections_zero: "\u0644\u0627 \u0623\u0642\u0633\u0627\u0645",
+    countSections_one: "\u0642\u0633\u0645 \u0648\u0627\u062D\u062F",
+    countSections_two: "\u0642\u0633\u0645\u064A\u0646",
+    countSections_few: "{{count}} \u0623\u0642\u0633\u0627\u0645",
+    countSections_many: "{{count}} \u0642\u0633\u0645\u064B\u0627",
+    countSections_other: "{{count}} \u0642\u0633\u0645",
+    countNotes_zero: "\u0644\u0627 \u0645\u0644\u0627\u062D\u0638\u0627\u062A \u0628\u062D\u062B",
+    countNotes_one: "\u0645\u0644\u0627\u062D\u0638\u0629 \u0628\u062D\u062B \u0648\u0627\u062D\u062F\u0629",
+    countNotes_two: "\u0645\u0644\u0627\u062D\u0638\u062A\u064A \u0628\u062D\u062B",
+    countNotes_few: "{{count}} \u0645\u0644\u0627\u062D\u0638\u0627\u062A \u0628\u062D\u062B",
+    countNotes_many: "{{count}} \u0645\u0644\u0627\u062D\u0638\u0629 \u0628\u062D\u062B",
+    countNotes_other: "{{count}} \u0645\u0644\u0627\u062D\u0638\u0629 \u0628\u062D\u062B",
+    countJoin: " \u0648"
+  },
+  sections: {
+    splitTitle: "\u062A\u0642\u0633\u064A\u0645 \u0627\u0644\u0642\u0633\u0645",
+    splitHint: "\u064A\u0646\u062A\u0642\u0644 \u0643\u0644 \u0645\u0627 \u0628\u064A\u0646 \u0627\u0644\u0645\u0624\u0634\u0631 \u0648\u0646\u0647\u0627\u064A\u0629 \xAB{{name}}\xBB \u0625\u0644\u0649 \u0627\u0644\u0642\u0633\u0645 \u0627\u0644\u062C\u062F\u064A\u062F\u060C \u0627\u0644\u0630\u064A \u064A\u0648\u0636\u0639 \u0628\u0639\u062F\u0647 \u0645\u0628\u0627\u0634\u0631\u0629\u064B \u0641\u064A \u0627\u0644\u0645\u0635\u0646\u0651\u0641.",
+    splitBtn: "\u062A\u0642\u0633\u064A\u0645",
+    splitDone: "\u062A\u0645 \u0627\u0644\u062A\u0642\u0633\u064A\u0645. \u064A\u0628\u062F\u0623 \xAB{{name}}\xBB \u0645\u0646 \u062D\u064A\u062B \u0643\u0627\u0646 \u0627\u0644\u0645\u0624\u0634\u0631.",
+    splitInFrontmatter: "\u0636\u0639 \u0627\u0644\u0645\u0624\u0634\u0631 \u062F\u0627\u062E\u0644 \u0627\u0644\u0646\u0635\u060C \u0623\u0633\u0641\u0644 \u0627\u0644\u062E\u0635\u0627\u0626\u0635\u060C \u062B\u0645 \u062D\u0627\u0648\u0644 \u0645\u062C\u062F\u062F\u064B\u0627.",
+    splitNotManuscript: "\u064A\u0639\u0645\u0644 \u0627\u0644\u062A\u0642\u0633\u064A\u0645 \u0639\u0644\u0649 \u0642\u0633\u0645 \u0645\u0646 \u0645\u062E\u0637\u0648\u0637\u0629 \u0627\u0644\u0645\u0634\u0631\u0648\u0639 \u0627\u0644\u0646\u0634\u0637. \u0627\u0641\u062A\u062D \u0642\u0633\u0645\u064B\u0627 \u0648\u062D\u0627\u0648\u0644 \u0645\u062C\u062F\u062F\u064B\u0627.",
+    mergeTitle: "\u062F\u0645\u062C \u0627\u0644\u0623\u0642\u0633\u0627\u0645",
+    mergeMessage: "\u064A\u0635\u0628\u062D \xAB{{first}}\xBB \u0648\xAB{{second}}\xBB \u0642\u0633\u0645\u064B\u0627 \u0648\u0627\u062D\u062F\u064B\u0627 \u0628\u0627\u0633\u0645 \xAB{{first}}\xBB.",
+    mergeHeadingToggle: "\u0625\u0636\u0627\u0641\u0629 \xAB{{second}}\xBB \u0639\u0646\u0648\u0627\u0646\u064B\u0627 \u0639\u0646\u062F \u0646\u0642\u0637\u0629 \u0627\u0644\u0648\u0635\u0644",
+    mergeTrashHint: "\u064A\u0646\u062A\u0642\u0644 \u0627\u0644\u0645\u0644\u0641 \u0627\u0644\u062B\u0627\u0646\u064A \u0625\u0644\u0649 \u0633\u0644\u0629 \u0627\u0644\u0645\u0647\u0645\u0644\u0627\u062A\u060C \u0641\u064A\u0645\u0643\u0646\u0643 \u0627\u0633\u062A\u0639\u0627\u062F\u062A\u0647.",
+    mergeBtn: "\u062F\u0645\u062C",
+    mergeDone: "\u062A\u0645 \u0627\u0644\u062F\u0645\u062C. \xAB{{second}}\xBB \u0641\u064A \u0633\u0644\u0629 \u0627\u0644\u0645\u0647\u0645\u0644\u0627\u062A."
+  },
+  findReplace: {
+    title: "\u0628\u062D\u062B \u0648\u0627\u0633\u062A\u0628\u062F\u0627\u0644 \u0641\u064A \u0627\u0644\u0645\u0634\u0631\u0648\u0639",
+    findLabel: "\u0628\u062D\u062B \u0639\u0646",
+    replaceLabel: "\u0627\u0633\u062A\u0628\u062F\u0627\u0644 \u0628\u0640",
+    matchCase: "\u0645\u0637\u0627\u0628\u0642\u0629 \u062D\u0627\u0644\u0629 \u0627\u0644\u0623\u062D\u0631\u0641",
+    wholeWord: "\u0643\u0644\u0645\u0629 \u0643\u0627\u0645\u0644\u0629",
+    includeResearch: "\u062A\u0636\u0645\u064A\u0646 \u0645\u0644\u0627\u062D\u0638\u0627\u062A \u0627\u0644\u0628\u062D\u062B",
+    loading: "\u062C\u0627\u0631\u064D \u0642\u0631\u0627\u0621\u0629 \u0627\u0644\u0645\u0634\u0631\u0648\u0639\u2026",
+    typeToFind: "\u0627\u0643\u062A\u0628 \u0643\u0644\u0645\u0629 \u0623\u0648 \u0639\u0628\u0627\u0631\u0629 \u0644\u0644\u0628\u062D\u062B \u0639\u0646\u0647\u0627.",
+    noMatches: "\u0644\u0627 \u062A\u0648\u062C\u062F \u0646\u062A\u0627\u0626\u062C.",
+    summary_zero: "\u0644\u0627 \u0646\u062A\u0627\u0626\u062C \u0641\u064A {{sections}}",
+    summary_one: "\u0646\u062A\u064A\u062C\u0629 \u0648\u0627\u062D\u062F\u0629 \u0641\u064A {{sections}}",
+    summary_two: "\u0646\u062A\u064A\u062C\u062A\u0627\u0646 \u0641\u064A {{sections}}",
+    summary_few: "{{count}} \u0646\u062A\u0627\u0626\u062C \u0641\u064A {{sections}}",
+    summary_many: "{{count}} \u0646\u062A\u064A\u062C\u0629 \u0641\u064A {{sections}}",
+    summary_other: "{{count}} \u0646\u062A\u064A\u062C\u0629 \u0641\u064A {{sections}}",
+    sections_zero: "\u0644\u0627 \u0623\u0642\u0633\u0627\u0645",
+    sections_one: "\u0642\u0633\u0645 \u0648\u0627\u062D\u062F",
+    sections_two: "\u0642\u0633\u0645\u064A\u0646",
+    sections_few: "{{count}} \u0623\u0642\u0633\u0627\u0645",
+    sections_many: "{{count}} \u0642\u0633\u0645\u064B\u0627",
+    sections_other: "{{count}} \u0642\u0633\u0645",
+    replaceSelected: "\u0627\u0633\u062A\u0628\u062F\u0627\u0644 \u0627\u0644\u0645\u062D\u062F\u062F ({{count}})",
+    replaceAll: "\u0627\u0633\u062A\u0628\u062F\u0627\u0644 \u0627\u0644\u0643\u0644",
+    undo: "\u062A\u0631\u0627\u062C\u0639 \u0639\u0646 \u0622\u062E\u0631 \u0627\u0633\u062A\u0628\u062F\u0627\u0644",
+    close: "\u0625\u063A\u0644\u0627\u0642",
+    openDoc: "\u0641\u062A\u062D \xAB{{name}}\xBB",
+    researchTag: "\u0628\u062D\u062B",
+    replaced_zero: "\u0644\u0645 \u064A\u064F\u0633\u062A\u0628\u062F\u0644 \u0634\u064A\u0621 \u0641\u064A {{sections}}.",
+    replaced_one: "\u0627\u0633\u062A\u064F\u0628\u062F\u0644\u062A \u0646\u062A\u064A\u062C\u0629 \u0648\u0627\u062D\u062F\u0629 \u0641\u064A {{sections}}.",
+    replaced_two: "\u0627\u0633\u062A\u064F\u0628\u062F\u0644\u062A \u0646\u062A\u064A\u062C\u062A\u0627\u0646 \u0641\u064A {{sections}}.",
+    replaced_few: "\u0627\u0633\u062A\u064F\u0628\u062F\u0644\u062A {{count}} \u0646\u062A\u0627\u0626\u062C \u0641\u064A {{sections}}.",
+    replaced_many: "\u0627\u0633\u062A\u064F\u0628\u062F\u0644\u062A {{count}} \u0646\u062A\u064A\u062C\u0629 \u0641\u064A {{sections}}.",
+    replaced_other: "\u0627\u0633\u062A\u064F\u0628\u062F\u0644\u062A {{count}} \u0646\u062A\u064A\u062C\u0629 \u0641\u064A {{sections}}.",
+    skippedChanged: "\u062A\u0645 \u0627\u0644\u062A\u062E\u0637\u064A \u0644\u0623\u0646 \u0627\u0644\u0645\u0644\u0641 \u062A\u063A\u064A\u0651\u0631 \u0645\u0646\u0630 \u0627\u0644\u0628\u062D\u062B: {{names}}. \u0627\u0628\u062D\u062B \u0645\u062C\u062F\u062F\u064B\u0627 \u0644\u0631\u0624\u064A\u0629 \u0627\u0644\u0646\u0635 \u0627\u0644\u062D\u0627\u0644\u064A.",
+    nothingToUndo: "\u0644\u0627 \u0634\u064A\u0621 \u0644\u0644\u062A\u0631\u0627\u062C\u0639 \u0639\u0646\u0647.",
+    undone_zero: "\u0627\u0643\u062A\u0645\u0644 \u0627\u0644\u062A\u0631\u0627\u062C\u0639. \u0644\u0645 \u064A\u064F\u0639\u064E\u062F \u0623\u064A \u0645\u0644\u0641.",
+    undone_one: "\u0627\u0643\u062A\u0645\u0644 \u0627\u0644\u062A\u0631\u0627\u062C\u0639. \u0623\u064F\u0639\u064A\u062F \u0645\u0644\u0641 \u0648\u0627\u062D\u062F \u0625\u0644\u0649 \u062D\u0627\u0644\u062A\u0647 \u0627\u0644\u0633\u0627\u0628\u0642\u0629.",
+    undone_two: "\u0627\u0643\u062A\u0645\u0644 \u0627\u0644\u062A\u0631\u0627\u062C\u0639. \u0623\u064F\u0639\u064A\u062F \u0645\u0644\u0641\u0627\u0646 \u0625\u0644\u0649 \u062D\u0627\u0644\u062A\u0647\u0645\u0627 \u0627\u0644\u0633\u0627\u0628\u0642\u0629.",
+    undone_few: "\u0627\u0643\u062A\u0645\u0644 \u0627\u0644\u062A\u0631\u0627\u062C\u0639. \u0623\u064F\u0639\u064A\u062F\u062A {{count}} \u0645\u0644\u0641\u0627\u062A \u0625\u0644\u0649 \u062D\u0627\u0644\u062A\u0647\u0627 \u0627\u0644\u0633\u0627\u0628\u0642\u0629.",
+    undone_many: "\u0627\u0643\u062A\u0645\u0644 \u0627\u0644\u062A\u0631\u0627\u062C\u0639. \u0623\u064F\u0639\u064A\u062F {{count}} \u0645\u0644\u0641\u064B\u0627 \u0625\u0644\u0649 \u062D\u0627\u0644\u062A\u0647 \u0627\u0644\u0633\u0627\u0628\u0642\u0629.",
+    undone_other: "\u0627\u0643\u062A\u0645\u0644 \u0627\u0644\u062A\u0631\u0627\u062C\u0639. \u0623\u064F\u0639\u064A\u062F {{count}} \u0645\u0644\u0641 \u0625\u0644\u0649 \u062D\u0627\u0644\u062A\u0647 \u0627\u0644\u0633\u0627\u0628\u0642\u0629.",
+    undoSkipped: "\u062A\u064F\u0631\u0643\u062A \u0643\u0645\u0627 \u0647\u064A \u0644\u0623\u0646\u0647\u0627 \u062A\u063A\u064A\u0651\u0631\u062A \u0628\u0639\u062F \u0627\u0644\u0627\u0633\u062A\u0628\u062F\u0627\u0644: {{names}}"
   }
 };
 
@@ -7102,7 +7508,9 @@ var fr_default = {
       setStatusPublished: "D\xE9finir le statut\xA0: publi\xE9",
       rename: "Renommer",
       changeType: "Changer le type : {{type}}",
-      editSynopsis: "Modifier le synopsis\u2026"
+      editSynopsis: "Modifier le synopsis\u2026",
+      mergeNext: "Fusionner avec la section suivante\u2026",
+      renameCitekey: "Renommer la cl\xE9 de citation\u2026"
     },
     deleteConfirm: {
       title: "Supprimer le document",
@@ -7164,7 +7572,8 @@ var fr_default = {
       restoreUnavailable: "La restauration de la disposition n\xE9cessite le classeur exp\xE9rimental bas\xE9 sur le syst\xE8me de fichiers et un projet actif."
     },
     toggleSynopses: "Afficher le synopsis de chaque section sous son titre",
-    openOutline: "Ouvrir le plan"
+    openOutline: "Ouvrir le plan",
+    findReplace: "Rechercher et remplacer dans le projet"
   },
   launcher: {
     displayText: "Studio d'\xE9criture",
@@ -7579,7 +7988,10 @@ var fr_default = {
       restoreBinderLayout: "Restaurer la disposition pr\xE9c\xE9dente du classeur",
       openOutline: "Ouvrir le plan",
       insertCitation: "Ins\xE9rer une citation",
-      addSource: "Ajouter une source"
+      addSource: "Ajouter une source",
+      splitSection: "Scinder la section au curseur",
+      findReplace: "Rechercher et remplacer dans le projet",
+      renameCitekey: "Renommer la cl\xE9 de citation"
     },
     menu: {
       studioOptions: "Options de Writing Studio",
@@ -7592,7 +8004,8 @@ var fr_default = {
       draftMode: "\u270D Mode brouillon",
       editMode: "\u270E Mode \xE9dition",
       reviewMode: "\u{1F441} Mode r\xE9vision",
-      normalMode: "Normal (sans mode)"
+      normalMode: "Normal (sans mode)",
+      splitSection: "Scinder la section ici\u2026"
     },
     notice: {
       noMarkdownOpen: "Aucun fichier Markdown n'est actuellement ouvert."
@@ -7754,7 +8167,67 @@ var fr_default = {
       citekeyDesc: "Sert \xE0 citer cette source, par exemple [@smith2020]. Remplie pour vous ; modifiez-la si vous le souhaitez."
     },
     addSourceShort: "Ajouter une source",
-    addSourceTooltip: "Ajouter un livre, un article ou une page web \xE0 citer"
+    addSourceTooltip: "Ajouter un livre, un article ou une page web \xE0 citer",
+    renameKeyTitle: "Renommer la cl\xE9 de citation",
+    renameKeySource: "Source",
+    renameKeyCurrent: "Actuelle",
+    renameKeyNew: "Nouvelle cl\xE9",
+    renameKeyUsage: "Utilis\xE9e dans {{citations}} r\xE9parties sur {{where}}. Toutes seront mises \xE0 jour.",
+    renameKeyUnused: "Pas encore cit\xE9e dans ce projet.",
+    renameKeyBtn: "Renommer",
+    renameKeySame: "C\u2019est la cl\xE9 actuelle. Saisissez-en une autre.",
+    renameKeyDone_one: "Renomm\xE9e en @{{key}} dans {{count}} citation.",
+    renameKeyDone_other: "Renomm\xE9e en @{{key}} dans {{count}} citations.",
+    notASource: "Cette note n\u2019a pas de cl\xE9 de citation. Ouvrez une note de source, ou cr\xE9ez-en une avec \xAB Ajouter une source \xBB.",
+    countCitations_one: "{{count}} citation",
+    countCitations_other: "{{count}} citations",
+    countSections_one: "{{count}} section",
+    countSections_other: "{{count}} sections",
+    countNotes_one: "{{count}} note de recherche",
+    countNotes_other: "{{count}} notes de recherche",
+    countJoin: " et "
+  },
+  sections: {
+    splitTitle: "Scinder la section",
+    splitHint: "Tout ce qui va du curseur \xE0 la fin de \xAB {{name}} \xBB passe dans la nouvelle section, plac\xE9e juste apr\xE8s dans le classeur.",
+    splitBtn: "Scinder",
+    splitDone: "Section scind\xE9e. \xAB {{name}} \xBB commence l\xE0 o\xF9 \xE9tait le curseur.",
+    splitInFrontmatter: "Placez le curseur dans le texte, sous les propri\xE9t\xE9s, puis r\xE9essayez.",
+    splitNotManuscript: "La scission s\u2019applique \xE0 une section du manuscrit du projet actif. Ouvrez-en une et r\xE9essayez.",
+    mergeTitle: "Fusionner des sections",
+    mergeMessage: "\xAB {{first}} \xBB et \xAB {{second}} \xBB deviennent une seule section nomm\xE9e \xAB {{first}} \xBB.",
+    mergeHeadingToggle: "Ajouter \xAB {{second}} \xBB comme titre \xE0 la jonction",
+    mergeTrashHint: "Le second fichier va \xE0 la corbeille, vous pourrez donc le r\xE9cup\xE9rer.",
+    mergeBtn: "Fusionner",
+    mergeDone: "Fusion effectu\xE9e. \xAB {{second}} \xBB est dans la corbeille."
+  },
+  findReplace: {
+    title: "Rechercher et remplacer dans le projet",
+    findLabel: "Rechercher",
+    replaceLabel: "Remplacer",
+    matchCase: "Respecter la casse",
+    wholeWord: "Mot entier",
+    includeResearch: "Inclure les notes de recherche",
+    loading: "Lecture du projet\u2026",
+    typeToFind: "Saisissez un mot ou une expression \xE0 rechercher.",
+    noMatches: "Aucune occurrence.",
+    summary_one: "{{count}} occurrence dans {{sections}}",
+    summary_other: "{{count}} occurrences dans {{sections}}",
+    sections_one: "{{count}} section",
+    sections_other: "{{count}} sections",
+    replaceSelected: "Remplacer la s\xE9lection ({{count}})",
+    replaceAll: "Tout remplacer",
+    undo: "Annuler le dernier remplacement",
+    close: "Fermer",
+    openDoc: "Ouvrir \xAB {{name}} \xBB",
+    researchTag: "recherche",
+    replaced_one: "{{count}} occurrence remplac\xE9e dans {{sections}}.",
+    replaced_other: "{{count}} occurrences remplac\xE9es dans {{sections}}.",
+    skippedChanged: "Ignor\xE9 car le fichier a chang\xE9 depuis la recherche : {{names}}. Relancez la recherche pour voir le texte actuel.",
+    nothingToUndo: "Rien \xE0 annuler.",
+    undone_one: "Annulation termin\xE9e. {{count}} fichier remis en l\u2019\xE9tat.",
+    undone_other: "Annulation termin\xE9e. {{count}} fichiers remis en l\u2019\xE9tat.",
+    undoSkipped: "Laiss\xE9s tels quels car modifi\xE9s apr\xE8s le remplacement : {{names}}"
   }
 };
 
@@ -7933,7 +8406,9 @@ var bn_default = {
       setStatusPublished: "\u09B8\u09CD\u099F\u09CD\u09AF\u09BE\u099F\u09BE\u09B8 \u09B8\u09C7\u099F \u0995\u09B0\u09C1\u09A8: \u09AA\u09CD\u09B0\u0995\u09BE\u09B6\u09BF\u09A4",
       rename: "\u09A8\u09BE\u09AE \u09AA\u09B0\u09BF\u09AC\u09B0\u09CD\u09A4\u09A8 \u0995\u09B0\u09C1\u09A8",
       changeType: "\u09A7\u09B0\u09A8 \u09AA\u09B0\u09BF\u09AC\u09B0\u09CD\u09A4\u09A8: {{type}}",
-      editSynopsis: "\u09B8\u09BE\u09B0\u09B8\u0982\u0995\u09CD\u09B7\u09C7\u09AA \u09B8\u09AE\u09CD\u09AA\u09BE\u09A6\u09A8\u09BE \u0995\u09B0\u09C1\u09A8\u2026"
+      editSynopsis: "\u09B8\u09BE\u09B0\u09B8\u0982\u0995\u09CD\u09B7\u09C7\u09AA \u09B8\u09AE\u09CD\u09AA\u09BE\u09A6\u09A8\u09BE \u0995\u09B0\u09C1\u09A8\u2026",
+      mergeNext: "\u09AA\u09B0\u09C7\u09B0 \u0985\u09A8\u09C1\u099A\u09CD\u099B\u09C7\u09A6\u09C7\u09B0 \u09B8\u09BE\u09A5\u09C7 \u09AE\u09C7\u09B2\u09BE\u09A8\u2026",
+      renameCitekey: "\u0989\u09A6\u09CD\u09A7\u09C3\u09A4\u09BF \u0995\u09C0-\u098F\u09B0 \u09A8\u09BE\u09AE \u09AC\u09A6\u09B2\u09BE\u09A8\u2026"
     },
     deleteConfirm: {
       title: "\u09A8\u09A5\u09BF \u09AE\u09C1\u099B\u09C1\u09A8",
@@ -7995,7 +8470,8 @@ var bn_default = {
       restoreUnavailable: "\u09AC\u09BF\u09A8\u09CD\u09AF\u09BE\u09B8 \u09AB\u09C7\u09B0\u09BE\u09A4\u09C7 \u09AA\u09B0\u09C0\u0995\u09CD\u09B7\u09BE\u09AE\u09C2\u09B2\u0995 \u09AB\u09BE\u0987\u09B2-\u09B8\u09BF\u09B8\u09CD\u099F\u09C7\u09AE \u09AC\u09BE\u0987\u09A8\u09CD\u09A1\u09BE\u09B0 \u098F\u09AC\u0982 \u098F\u0995\u099F\u09BF \u09B8\u0995\u09CD\u09B0\u09BF\u09AF\u09BC \u09AA\u09CD\u09B0\u0995\u09B2\u09CD\u09AA \u09A6\u09B0\u0995\u09BE\u09B0\u0964"
     },
     toggleSynopses: "\u09AA\u09CD\u09B0\u09A4\u09BF\u099F\u09BF \u0985\u0982\u09B6\u09C7\u09B0 \u09B8\u09BE\u09B0\u09B8\u0982\u0995\u09CD\u09B7\u09C7\u09AA \u09A4\u09BE\u09B0 \u09B6\u09BF\u09B0\u09CB\u09A8\u09BE\u09AE\u09C7\u09B0 \u09A8\u09BF\u099A\u09C7 \u09A6\u09C7\u0996\u09BE\u09A8",
-    openOutline: "\u09B0\u09C2\u09AA\u09B0\u09C7\u0996\u09BE \u0996\u09C1\u09B2\u09C1\u09A8"
+    openOutline: "\u09B0\u09C2\u09AA\u09B0\u09C7\u0996\u09BE \u0996\u09C1\u09B2\u09C1\u09A8",
+    findReplace: "\u09AA\u09CD\u09B0\u0995\u09B2\u09CD\u09AA\u09C7 \u0996\u09C1\u0981\u099C\u09C1\u09A8 \u0993 \u09AA\u09CD\u09B0\u09A4\u09BF\u09B8\u09CD\u09A5\u09BE\u09AA\u09A8 \u0995\u09B0\u09C1\u09A8"
   },
   launcher: {
     displayText: "\u09B2\u09C7\u0996\u09BE\u09B0 \u09B8\u09CD\u099F\u09C1\u09A1\u09BF\u0993",
@@ -8410,7 +8886,10 @@ var bn_default = {
       restoreBinderLayout: "\u09AC\u09BE\u0987\u09A8\u09CD\u09A1\u09BE\u09B0\u09C7\u09B0 \u0986\u0997\u09C7\u09B0 \u09AC\u09BF\u09A8\u09CD\u09AF\u09BE\u09B8 \u09AB\u09BF\u09B0\u09BF\u09AF\u09BC\u09C7 \u0986\u09A8\u09C1\u09A8",
       openOutline: "\u09B0\u09C2\u09AA\u09B0\u09C7\u0996\u09BE \u0996\u09C1\u09B2\u09C1\u09A8",
       insertCitation: "\u0989\u09A6\u09CD\u09A7\u09C3\u09A4\u09BF \u09AF\u09CB\u0997 \u0995\u09B0\u09C1\u09A8",
-      addSource: "\u0989\u09CE\u09B8 \u09AF\u09CB\u0997 \u0995\u09B0\u09C1\u09A8"
+      addSource: "\u0989\u09CE\u09B8 \u09AF\u09CB\u0997 \u0995\u09B0\u09C1\u09A8",
+      splitSection: "\u0995\u09BE\u09B0\u09CD\u09B8\u09BE\u09B0\u09C7 \u0985\u09A8\u09C1\u099A\u09CD\u099B\u09C7\u09A6 \u09AD\u09BE\u0997 \u0995\u09B0\u09C1\u09A8",
+      findReplace: "\u09AA\u09CD\u09B0\u0995\u09B2\u09CD\u09AA\u09C7 \u0996\u09C1\u0981\u099C\u09C1\u09A8 \u0993 \u09AA\u09CD\u09B0\u09A4\u09BF\u09B8\u09CD\u09A5\u09BE\u09AA\u09A8 \u0995\u09B0\u09C1\u09A8",
+      renameCitekey: "\u0989\u09A6\u09CD\u09A7\u09C3\u09A4\u09BF \u0995\u09C0-\u098F\u09B0 \u09A8\u09BE\u09AE \u09AC\u09A6\u09B2\u09BE\u09A8"
     },
     menu: {
       studioOptions: "\u09B0\u09BE\u0987\u099F\u09BF\u0982 \u09B8\u09CD\u099F\u09C1\u09A1\u09BF\u0993 \u09AC\u09BF\u0995\u09B2\u09CD\u09AA",
@@ -8423,7 +8902,8 @@ var bn_default = {
       draftMode: "\u270D \u09A1\u09CD\u09B0\u09BE\u09AB\u099F \u09AE\u09CB\u09A1",
       editMode: "\u270E \u098F\u09A1\u09BF\u099F \u09AE\u09CB\u09A1",
       reviewMode: "\u{1F441} \u09B0\u09BF\u09AD\u09BF\u0989 \u09AE\u09CB\u09A1",
-      normalMode: "\u09B8\u09CD\u09AC\u09BE\u09AD\u09BE\u09AC\u09BF\u0995 (\u0995\u09CB\u09A8\u09CB \u09AE\u09CB\u09A1 \u09A8\u09C7\u0987)"
+      normalMode: "\u09B8\u09CD\u09AC\u09BE\u09AD\u09BE\u09AC\u09BF\u0995 (\u0995\u09CB\u09A8\u09CB \u09AE\u09CB\u09A1 \u09A8\u09C7\u0987)",
+      splitSection: "\u098F\u0996\u09BE\u09A8\u09C7 \u0985\u09A8\u09C1\u099A\u09CD\u099B\u09C7\u09A6 \u09AD\u09BE\u0997 \u0995\u09B0\u09C1\u09A8\u2026"
     },
     notice: {
       noMarkdownOpen: "\u09AC\u09B0\u09CD\u09A4\u09AE\u09BE\u09A8\u09C7 \u0995\u09CB\u09A8\u09CB Markdown \u09AB\u09BE\u0987\u09B2 \u0996\u09CB\u09B2\u09BE \u09A8\u09C7\u0987\u0964"
@@ -8585,7 +9065,67 @@ var bn_default = {
       citekeyDesc: "\u098F\u0987 \u0989\u09CE\u09B8 \u0989\u09A6\u09CD\u09A7\u09C3\u09A4 \u0995\u09B0\u09A4\u09C7 \u09AC\u09CD\u09AF\u09AC\u09B9\u09C3\u09A4 \u09B9\u09AF\u09BC, \u09AF\u09C7\u09AE\u09A8 [@smith2020]\u0964 \u09B8\u09CD\u09AC\u09AF\u09BC\u0982\u0995\u09CD\u09B0\u09BF\u09AF\u09BC\u09AD\u09BE\u09AC\u09C7 \u09AA\u09C2\u09B0\u09A3 \u09B9\u09AF\u09BC\u09C7\u099B\u09C7; \u099A\u09BE\u0987\u09B2\u09C7 \u09AC\u09A6\u09B2\u09BE\u09A8\u0964"
     },
     addSourceShort: "\u0989\u09CE\u09B8 \u09AF\u09CB\u0997 \u0995\u09B0\u09C1\u09A8",
-    addSourceTooltip: "\u0989\u09A6\u09CD\u09A7\u09C3\u09A4 \u0995\u09B0\u09BE\u09B0 \u09AE\u09A4\u09CB \u09AC\u0987, \u09A8\u09BF\u09AC\u09A8\u09CD\u09A7 \u09AC\u09BE \u0993\u09AF\u09BC\u09C7\u09AC \u09AA\u09C3\u09B7\u09CD\u09A0\u09BE \u09AF\u09CB\u0997 \u0995\u09B0\u09C1\u09A8"
+    addSourceTooltip: "\u0989\u09A6\u09CD\u09A7\u09C3\u09A4 \u0995\u09B0\u09BE\u09B0 \u09AE\u09A4\u09CB \u09AC\u0987, \u09A8\u09BF\u09AC\u09A8\u09CD\u09A7 \u09AC\u09BE \u0993\u09AF\u09BC\u09C7\u09AC \u09AA\u09C3\u09B7\u09CD\u09A0\u09BE \u09AF\u09CB\u0997 \u0995\u09B0\u09C1\u09A8",
+    renameKeyTitle: "\u0989\u09A6\u09CD\u09A7\u09C3\u09A4\u09BF \u0995\u09C0-\u098F\u09B0 \u09A8\u09BE\u09AE \u09AC\u09A6\u09B2\u09BE\u09A8",
+    renameKeySource: "\u0989\u09CE\u09B8",
+    renameKeyCurrent: "\u09AC\u09B0\u09CD\u09A4\u09AE\u09BE\u09A8",
+    renameKeyNew: "\u09A8\u09A4\u09C1\u09A8 \u0995\u09C0",
+    renameKeyUsage: "{{where}}-\u098F\u09B0 {{citations}}-\u098F \u09AC\u09CD\u09AF\u09AC\u09B9\u09C3\u09A4\u0964 \u09B8\u09AC\u0997\u09C1\u09B2\u09CB \u09B9\u09BE\u09B2\u09A8\u09BE\u0997\u09BE\u09A6 \u09B9\u09AC\u09C7\u0964",
+    renameKeyUnused: "\u098F\u0987 \u09AA\u09CD\u09B0\u0995\u09B2\u09CD\u09AA\u09C7 \u098F\u0996\u09A8\u09CB \u0995\u09CB\u09A5\u09BE\u0993 \u0989\u09A6\u09CD\u09A7\u09C3\u09A4 \u09B9\u09AF\u09BC\u09A8\u09BF\u0964",
+    renameKeyBtn: "\u09A8\u09BE\u09AE \u09AC\u09A6\u09B2\u09BE\u09A8",
+    renameKeySame: "\u098F\u099F\u09BF\u0987 \u09AC\u09B0\u09CD\u09A4\u09AE\u09BE\u09A8 \u0995\u09C0\u0964 \u0985\u09A8\u09CD\u09AF \u098F\u0995\u099F\u09BF \u09B2\u09BF\u0996\u09C1\u09A8\u0964",
+    renameKeyDone_one: "{{count}}\u099F\u09BF \u0989\u09A6\u09CD\u09A7\u09C3\u09A4\u09BF\u09A4\u09C7 @{{key}} \u0995\u09B0\u09BE \u09B9\u09AF\u09BC\u09C7\u099B\u09C7\u0964",
+    renameKeyDone_other: "{{count}}\u099F\u09BF \u0989\u09A6\u09CD\u09A7\u09C3\u09A4\u09BF\u09A4\u09C7 @{{key}} \u0995\u09B0\u09BE \u09B9\u09AF\u09BC\u09C7\u099B\u09C7\u0964",
+    notASource: '\u098F\u0987 \u09A8\u09CB\u099F\u09C7 \u0989\u09A6\u09CD\u09A7\u09C3\u09A4\u09BF \u0995\u09C0 \u09A8\u09C7\u0987\u0964 \u098F\u0995\u099F\u09BF \u0989\u09CE\u09B8 \u09A8\u09CB\u099F \u0996\u09C1\u09B2\u09C1\u09A8, \u09AC\u09BE "\u0989\u09CE\u09B8 \u09AF\u09CB\u0997 \u0995\u09B0\u09C1\u09A8" \u09A6\u09BF\u09AF\u09BC\u09C7 \u098F\u0995\u099F\u09BF \u09A4\u09C8\u09B0\u09BF \u0995\u09B0\u09C1\u09A8\u0964',
+    countCitations_one: "{{count}}\u099F\u09BF \u0989\u09A6\u09CD\u09A7\u09C3\u09A4\u09BF",
+    countCitations_other: "{{count}}\u099F\u09BF \u0989\u09A6\u09CD\u09A7\u09C3\u09A4\u09BF",
+    countSections_one: "{{count}}\u099F\u09BF \u0985\u09A8\u09C1\u099A\u09CD\u099B\u09C7\u09A6",
+    countSections_other: "{{count}}\u099F\u09BF \u0985\u09A8\u09C1\u099A\u09CD\u099B\u09C7\u09A6",
+    countNotes_one: "{{count}}\u099F\u09BF \u0997\u09AC\u09C7\u09B7\u09A3\u09BE \u09A8\u09CB\u099F",
+    countNotes_other: "{{count}}\u099F\u09BF \u0997\u09AC\u09C7\u09B7\u09A3\u09BE \u09A8\u09CB\u099F",
+    countJoin: " \u0993 "
+  },
+  sections: {
+    splitTitle: "\u0985\u09A8\u09C1\u099A\u09CD\u099B\u09C7\u09A6 \u09AD\u09BE\u0997 \u0995\u09B0\u09C1\u09A8",
+    splitHint: '\u0995\u09BE\u09B0\u09CD\u09B8\u09BE\u09B0 \u09A5\u09C7\u0995\u09C7 "{{name}}"-\u098F\u09B0 \u09B6\u09C7\u09B7 \u09AA\u09B0\u09CD\u09AF\u09A8\u09CD\u09A4 \u09B8\u09AC\u0995\u09BF\u099B\u09C1 \u09A8\u09A4\u09C1\u09A8 \u0985\u09A8\u09C1\u099A\u09CD\u099B\u09C7\u09A6\u09C7 \u099A\u09B2\u09C7 \u09AF\u09BE\u09AC\u09C7, \u09AF\u09BE \u09AC\u09BE\u0987\u09A8\u09CD\u09A1\u09BE\u09B0\u09C7 \u098F\u09B0 \u09A0\u09BF\u0995 \u09AA\u09B0\u09C7 \u09A5\u09BE\u0995\u09AC\u09C7\u0964',
+    splitBtn: "\u09AD\u09BE\u0997 \u0995\u09B0\u09C1\u09A8",
+    splitDone: '\u09AD\u09BE\u0997 \u09B9\u09AF\u09BC\u09C7\u099B\u09C7\u0964 "{{name}}" \u09B8\u09C7\u0996\u09BE\u09A8 \u09A5\u09C7\u0995\u09C7 \u09B6\u09C1\u09B0\u09C1 \u09B9\u09AF\u09BC \u09AF\u09C7\u0996\u09BE\u09A8\u09C7 \u0995\u09BE\u09B0\u09CD\u09B8\u09BE\u09B0 \u099B\u09BF\u09B2\u0964',
+    splitInFrontmatter: "\u0995\u09BE\u09B0\u09CD\u09B8\u09BE\u09B0\u099F\u09BF \u09AC\u09C8\u09B6\u09BF\u09B7\u09CD\u099F\u09CD\u09AF\u09C7\u09B0 \u09A8\u09BF\u099A\u09C7 \u09B2\u09C7\u0996\u09BE\u09B0 \u09AE\u09A7\u09CD\u09AF\u09C7 \u09B0\u09BE\u0996\u09C1\u09A8 \u098F\u09AC\u0982 \u0986\u09AC\u09BE\u09B0 \u099A\u09C7\u09B7\u09CD\u099F\u09BE \u0995\u09B0\u09C1\u09A8\u0964",
+    splitNotManuscript: "\u09AD\u09BE\u0997 \u0995\u09B0\u09BE \u09B8\u0995\u09CD\u09B0\u09BF\u09AF\u09BC \u09AA\u09CD\u09B0\u0995\u09B2\u09CD\u09AA\u09C7\u09B0 \u09AA\u09BE\u09A3\u09CD\u09A1\u09C1\u09B2\u09BF\u09AA\u09BF\u09B0 \u0995\u09CB\u09A8\u09CB \u0985\u09A8\u09C1\u099A\u09CD\u099B\u09C7\u09A6\u09C7 \u0995\u09BE\u099C \u0995\u09B0\u09C7\u0964 \u098F\u0995\u099F\u09BF \u0996\u09C1\u09B2\u09C7 \u0986\u09AC\u09BE\u09B0 \u099A\u09C7\u09B7\u09CD\u099F\u09BE \u0995\u09B0\u09C1\u09A8\u0964",
+    mergeTitle: "\u0985\u09A8\u09C1\u099A\u09CD\u099B\u09C7\u09A6 \u09AE\u09C7\u09B2\u09BE\u09A8",
+    mergeMessage: '"{{first}}" \u0993 "{{second}}" \u09AE\u09BF\u09B2\u09C7 "{{first}}" \u09A8\u09BE\u09AE\u09C7\u09B0 \u098F\u0995\u099F\u09BF \u0985\u09A8\u09C1\u099A\u09CD\u099B\u09C7\u09A6 \u09B9\u09AC\u09C7\u0964',
+    mergeHeadingToggle: '\u09B8\u0982\u09AF\u09CB\u0997\u09B8\u09CD\u09A5\u09B2\u09C7 "{{second}}" \u09B6\u09BF\u09B0\u09CB\u09A8\u09BE\u09AE \u09B9\u09BF\u09B8\u09C7\u09AC\u09C7 \u09AF\u09CB\u0997 \u0995\u09B0\u09C1\u09A8',
+    mergeTrashHint: "\u09A6\u09CD\u09AC\u09BF\u09A4\u09C0\u09AF\u09BC \u09AB\u09BE\u0987\u09B2\u099F\u09BF \u099F\u09CD\u09B0\u09CD\u09AF\u09BE\u09B6\u09C7 \u09AF\u09BE\u09AF\u09BC, \u09A4\u09BE\u0987 \u0986\u09AA\u09A8\u09BF \u09A4\u09BE \u09AB\u09BF\u09B0\u09BF\u09AF\u09BC\u09C7 \u0986\u09A8\u09A4\u09C7 \u09AA\u09BE\u09B0\u09AC\u09C7\u09A8\u0964",
+    mergeBtn: "\u09AE\u09C7\u09B2\u09BE\u09A8",
+    mergeDone: '\u09AE\u09C7\u09B2\u09BE\u09A8\u09CB \u09B9\u09AF\u09BC\u09C7\u099B\u09C7\u0964 "{{second}}" \u099F\u09CD\u09B0\u09CD\u09AF\u09BE\u09B6\u09C7 \u0986\u099B\u09C7\u0964'
+  },
+  findReplace: {
+    title: "\u09AA\u09CD\u09B0\u0995\u09B2\u09CD\u09AA\u09C7 \u0996\u09C1\u0981\u099C\u09C1\u09A8 \u0993 \u09AA\u09CD\u09B0\u09A4\u09BF\u09B8\u09CD\u09A5\u09BE\u09AA\u09A8 \u0995\u09B0\u09C1\u09A8",
+    findLabel: "\u0996\u09C1\u0981\u099C\u09C1\u09A8",
+    replaceLabel: "\u09AA\u09CD\u09B0\u09A4\u09BF\u09B8\u09CD\u09A5\u09BE\u09AA\u09A8",
+    matchCase: "\u09AC\u09A1\u09BC-\u099B\u09CB\u099F \u09B9\u09BE\u09A4\u09C7\u09B0 \u0985\u0995\u09CD\u09B7\u09B0 \u09AE\u09C7\u09B2\u09BE\u09A8",
+    wholeWord: "\u09B8\u09AE\u09CD\u09AA\u09C2\u09B0\u09CD\u09A3 \u09B6\u09AC\u09CD\u09A6",
+    includeResearch: "\u0997\u09AC\u09C7\u09B7\u09A3\u09BE \u09A8\u09CB\u099F \u0985\u09A8\u09CD\u09A4\u09B0\u09CD\u09AD\u09C1\u0995\u09CD\u09A4 \u0995\u09B0\u09C1\u09A8",
+    loading: "\u09AA\u09CD\u09B0\u0995\u09B2\u09CD\u09AA \u09AA\u09A1\u09BC\u09BE \u09B9\u099A\u09CD\u099B\u09C7\u2026",
+    typeToFind: "\u0996\u09CB\u0981\u099C\u09BE\u09B0 \u099C\u09A8\u09CD\u09AF \u098F\u0995\u099F\u09BF \u09B6\u09AC\u09CD\u09A6 \u09AC\u09BE \u09AC\u09BE\u0995\u09CD\u09AF\u09BE\u0982\u09B6 \u09B2\u09BF\u0996\u09C1\u09A8\u0964",
+    noMatches: "\u0995\u09CB\u09A8\u09CB \u09AE\u09BF\u09B2 \u09A8\u09C7\u0987\u0964",
+    summary_one: "{{sections}}-\u098F {{count}}\u099F\u09BF \u09AE\u09BF\u09B2",
+    summary_other: "{{sections}}-\u098F {{count}}\u099F\u09BF \u09AE\u09BF\u09B2",
+    sections_one: "{{count}}\u099F\u09BF \u0985\u09A8\u09C1\u099A\u09CD\u099B\u09C7\u09A6",
+    sections_other: "{{count}}\u099F\u09BF \u0985\u09A8\u09C1\u099A\u09CD\u099B\u09C7\u09A6",
+    replaceSelected: "\u09A8\u09BF\u09B0\u09CD\u09AC\u09BE\u099A\u09BF\u09A4\u0997\u09C1\u09B2\u09CB \u09AA\u09CD\u09B0\u09A4\u09BF\u09B8\u09CD\u09A5\u09BE\u09AA\u09A8 \u0995\u09B0\u09C1\u09A8 ({{count}})",
+    replaceAll: "\u09B8\u09AC \u09AA\u09CD\u09B0\u09A4\u09BF\u09B8\u09CD\u09A5\u09BE\u09AA\u09A8 \u0995\u09B0\u09C1\u09A8",
+    undo: "\u09B6\u09C7\u09B7 \u09AA\u09CD\u09B0\u09A4\u09BF\u09B8\u09CD\u09A5\u09BE\u09AA\u09A8 \u09AC\u09BE\u09A4\u09BF\u09B2 \u0995\u09B0\u09C1\u09A8",
+    close: "\u09AC\u09A8\u09CD\u09A7 \u0995\u09B0\u09C1\u09A8",
+    openDoc: '"{{name}}" \u0996\u09C1\u09B2\u09C1\u09A8',
+    researchTag: "\u0997\u09AC\u09C7\u09B7\u09A3\u09BE",
+    replaced_one: "{{sections}}-\u098F {{count}}\u099F\u09BF \u09AE\u09BF\u09B2 \u09AA\u09CD\u09B0\u09A4\u09BF\u09B8\u09CD\u09A5\u09BE\u09AA\u09BF\u09A4 \u09B9\u09AF\u09BC\u09C7\u099B\u09C7\u0964",
+    replaced_other: "{{sections}}-\u098F {{count}}\u099F\u09BF \u09AE\u09BF\u09B2 \u09AA\u09CD\u09B0\u09A4\u09BF\u09B8\u09CD\u09A5\u09BE\u09AA\u09BF\u09A4 \u09B9\u09AF\u09BC\u09C7\u099B\u09C7\u0964",
+    skippedChanged: "\u09AC\u09BE\u09A6 \u09A6\u09C7\u0993\u09AF\u09BC\u09BE \u09B9\u09AF\u09BC\u09C7\u099B\u09C7 \u0995\u09BE\u09B0\u09A3 \u0996\u09CB\u0981\u099C\u09BE\u09B0 \u09AA\u09B0\u09C7 \u09AB\u09BE\u0987\u09B2\u099F\u09BF \u09AC\u09A6\u09B2\u09C7 \u0997\u09C7\u099B\u09C7: {{names}}\u0964 \u09AC\u09B0\u09CD\u09A4\u09AE\u09BE\u09A8 \u09B2\u09C7\u0996\u09BE \u09A6\u09C7\u0996\u09A4\u09C7 \u0986\u09AC\u09BE\u09B0 \u0996\u09C1\u0981\u099C\u09C1\u09A8\u0964",
+    nothingToUndo: "\u09AC\u09BE\u09A4\u09BF\u09B2 \u0995\u09B0\u09BE\u09B0 \u0995\u09BF\u099B\u09C1 \u09A8\u09C7\u0987\u0964",
+    undone_one: "\u09AC\u09BE\u09A4\u09BF\u09B2 \u09B9\u09AF\u09BC\u09C7\u099B\u09C7\u0964 {{count}}\u099F\u09BF \u09AB\u09BE\u0987\u09B2 \u0986\u0997\u09C7\u09B0 \u09AE\u09A4\u09CB \u09AB\u09BF\u09B0\u09BF\u09AF\u09BC\u09C7 \u0986\u09A8\u09BE \u09B9\u09AF\u09BC\u09C7\u099B\u09C7\u0964",
+    undone_other: "\u09AC\u09BE\u09A4\u09BF\u09B2 \u09B9\u09AF\u09BC\u09C7\u099B\u09C7\u0964 {{count}}\u099F\u09BF \u09AB\u09BE\u0987\u09B2 \u0986\u0997\u09C7\u09B0 \u09AE\u09A4\u09CB \u09AB\u09BF\u09B0\u09BF\u09AF\u09BC\u09C7 \u0986\u09A8\u09BE \u09B9\u09AF\u09BC\u09C7\u099B\u09C7\u0964",
+    undoSkipped: "\u09AA\u09CD\u09B0\u09A4\u09BF\u09B8\u09CD\u09A5\u09BE\u09AA\u09A8\u09C7\u09B0 \u09AA\u09B0\u09C7 \u09AC\u09A6\u09B2\u09C7 \u09AF\u09BE\u0993\u09AF\u09BC\u09BE\u09AF\u09BC \u09AF\u09C7\u09AE\u09A8 \u099B\u09BF\u09B2 \u09A4\u09C7\u09AE\u09A8\u0987 \u09B0\u09BE\u0996\u09BE \u09B9\u09AF\u09BC\u09C7\u099B\u09C7: {{names}}"
   }
 };
 
@@ -8764,7 +9304,9 @@ var pt_BR_default = {
       setStatusPublished: "Definir status: publicado",
       rename: "Renomear",
       changeType: "Alterar tipo: {{type}}",
-      editSynopsis: "Editar sinopse\u2026"
+      editSynopsis: "Editar sinopse\u2026",
+      mergeNext: "Mesclar com a pr\xF3xima se\xE7\xE3o\u2026",
+      renameCitekey: "Renomear a chave de cita\xE7\xE3o\u2026"
     },
     deleteConfirm: {
       title: "Excluir documento",
@@ -8826,7 +9368,8 @@ var pt_BR_default = {
       restoreUnavailable: "Restaurar o layout precisa da pasta de escrita experimental do sistema de arquivos e de um projeto ativo."
     },
     toggleSynopses: "Mostrar a sinopse de cada se\xE7\xE3o abaixo do t\xEDtulo",
-    openOutline: "Abrir o esbo\xE7o"
+    openOutline: "Abrir o esbo\xE7o",
+    findReplace: "Localizar e substituir no projeto"
   },
   launcher: {
     displayText: "Est\xFAdio de escrita",
@@ -9241,7 +9784,10 @@ var pt_BR_default = {
       restoreBinderLayout: "Restaurar o layout anterior da pasta de escrita",
       openOutline: "Abrir esbo\xE7o",
       insertCitation: "Inserir cita\xE7\xE3o",
-      addSource: "Adicionar fonte"
+      addSource: "Adicionar fonte",
+      splitSection: "Dividir a se\xE7\xE3o no cursor",
+      findReplace: "Localizar e substituir no projeto",
+      renameCitekey: "Renomear a chave de cita\xE7\xE3o"
     },
     menu: {
       studioOptions: "Op\xE7\xF5es do Writing Studio",
@@ -9254,7 +9800,8 @@ var pt_BR_default = {
       draftMode: "\u270D Modo rascunho",
       editMode: "\u270E Modo edi\xE7\xE3o",
       reviewMode: "\u{1F441} Modo revis\xE3o",
-      normalMode: "Normal (sem modo)"
+      normalMode: "Normal (sem modo)",
+      splitSection: "Dividir a se\xE7\xE3o aqui\u2026"
     },
     notice: {
       noMarkdownOpen: "Nenhum arquivo Markdown est\xE1 aberto no momento."
@@ -9416,7 +9963,67 @@ var pt_BR_default = {
       citekeyDesc: "Usada para citar esta fonte, por exemplo [@smith2020]. Preenchida automaticamente; altere se quiser."
     },
     addSourceShort: "Adicionar fonte",
-    addSourceTooltip: "Adicionar um livro, artigo ou p\xE1gina da web para citar"
+    addSourceTooltip: "Adicionar um livro, artigo ou p\xE1gina da web para citar",
+    renameKeyTitle: "Renomear a chave de cita\xE7\xE3o",
+    renameKeySource: "Fonte",
+    renameKeyCurrent: "Atual",
+    renameKeyNew: "Nova chave",
+    renameKeyUsage: "Usada em {{citations}} em {{where}}. Todas ser\xE3o atualizadas.",
+    renameKeyUnused: "Ainda n\xE3o citada neste projeto.",
+    renameKeyBtn: "Renomear",
+    renameKeySame: "Essa \xE9 a chave atual. Digite outra.",
+    renameKeyDone_one: "Renomeada para @{{key}} em {{count}} cita\xE7\xE3o.",
+    renameKeyDone_other: "Renomeada para @{{key}} em {{count}} cita\xE7\xF5es.",
+    notASource: "Esta nota n\xE3o tem chave de cita\xE7\xE3o. Abra uma nota de fonte ou crie uma com \u201CAdicionar fonte\u201D.",
+    countCitations_one: "{{count}} cita\xE7\xE3o",
+    countCitations_other: "{{count}} cita\xE7\xF5es",
+    countSections_one: "{{count}} se\xE7\xE3o",
+    countSections_other: "{{count}} se\xE7\xF5es",
+    countNotes_one: "{{count}} nota de pesquisa",
+    countNotes_other: "{{count}} notas de pesquisa",
+    countJoin: " e "
+  },
+  sections: {
+    splitTitle: "Dividir a se\xE7\xE3o",
+    splitHint: "Tudo do cursor at\xE9 o fim de \u201C{{name}}\u201D vai para a nova se\xE7\xE3o, colocada logo depois no fich\xE1rio.",
+    splitBtn: "Dividir",
+    splitDone: "Dividido. \u201C{{name}}\u201D come\xE7a onde o cursor estava.",
+    splitInFrontmatter: "Coloque o cursor no texto, abaixo das propriedades, e tente de novo.",
+    splitNotManuscript: "Dividir funciona em uma se\xE7\xE3o do manuscrito do projeto ativo. Abra uma e tente de novo.",
+    mergeTitle: "Mesclar se\xE7\xF5es",
+    mergeMessage: "\u201C{{first}}\u201D e \u201C{{second}}\u201D viram uma \xFAnica se\xE7\xE3o chamada \u201C{{first}}\u201D.",
+    mergeHeadingToggle: "Adicionar \u201C{{second}}\u201D como t\xEDtulo no ponto de jun\xE7\xE3o",
+    mergeTrashHint: "O segundo arquivo vai para a lixeira, ent\xE3o voc\xEA pode recuper\xE1-lo.",
+    mergeBtn: "Mesclar",
+    mergeDone: "Mesclado. \u201C{{second}}\u201D est\xE1 na lixeira."
+  },
+  findReplace: {
+    title: "Localizar e substituir no projeto",
+    findLabel: "Localizar",
+    replaceLabel: "Substituir",
+    matchCase: "Diferenciar mai\xFAsculas de min\xFAsculas",
+    wholeWord: "Palavra inteira",
+    includeResearch: "Incluir notas de pesquisa",
+    loading: "Lendo o projeto\u2026",
+    typeToFind: "Digite uma palavra ou frase para localizar.",
+    noMatches: "Nenhuma ocorr\xEAncia.",
+    summary_one: "{{count}} ocorr\xEAncia em {{sections}}",
+    summary_other: "{{count}} ocorr\xEAncias em {{sections}}",
+    sections_one: "{{count}} se\xE7\xE3o",
+    sections_other: "{{count}} se\xE7\xF5es",
+    replaceSelected: "Substituir selecionadas ({{count}})",
+    replaceAll: "Substituir tudo",
+    undo: "Desfazer a \xFAltima substitui\xE7\xE3o",
+    close: "Fechar",
+    openDoc: "Abrir \u201C{{name}}\u201D",
+    researchTag: "pesquisa",
+    replaced_one: "{{count}} ocorr\xEAncia substitu\xEDda em {{sections}}.",
+    replaced_other: "{{count}} ocorr\xEAncias substitu\xEDdas em {{sections}}.",
+    skippedChanged: "Ignorado porque o arquivo mudou desde a busca: {{names}}. Busque de novo para ver o texto atual.",
+    nothingToUndo: "Nada a desfazer.",
+    undone_one: "Desfeito. {{count}} arquivo restaurado como estava.",
+    undone_other: "Desfeito. {{count}} arquivos restaurados como estavam.",
+    undoSkipped: "Deixados como est\xE3o porque mudaram depois da substitui\xE7\xE3o: {{names}}"
   }
 };
 
@@ -9595,7 +10202,9 @@ var ru_default = {
       setStatusPublished: "\u0423\u0441\u0442\u0430\u043D\u043E\u0432\u0438\u0442\u044C \u0441\u0442\u0430\u0442\u0443\u0441: \u043E\u043F\u0443\u0431\u043B\u0438\u043A\u043E\u0432\u0430\u043D",
       rename: "\u041F\u0435\u0440\u0435\u0438\u043C\u0435\u043D\u043E\u0432\u0430\u0442\u044C",
       changeType: "\u0418\u0437\u043C\u0435\u043D\u0438\u0442\u044C \u0442\u0438\u043F: {{type}}",
-      editSynopsis: "\u0418\u0437\u043C\u0435\u043D\u0438\u0442\u044C \u0441\u0438\u043D\u043E\u043F\u0441\u0438\u0441\u2026"
+      editSynopsis: "\u0418\u0437\u043C\u0435\u043D\u0438\u0442\u044C \u0441\u0438\u043D\u043E\u043F\u0441\u0438\u0441\u2026",
+      mergeNext: "\u041E\u0431\u044A\u0435\u0434\u0438\u043D\u0438\u0442\u044C \u0441\u043E \u0441\u043B\u0435\u0434\u0443\u044E\u0449\u0438\u043C \u0440\u0430\u0437\u0434\u0435\u043B\u043E\u043C\u2026",
+      renameCitekey: "\u041F\u0435\u0440\u0435\u0438\u043C\u0435\u043D\u043E\u0432\u0430\u0442\u044C \u043A\u043B\u044E\u0447 \u0446\u0438\u0442\u0438\u0440\u043E\u0432\u0430\u043D\u0438\u044F\u2026"
     },
     deleteConfirm: {
       title: "\u0423\u0434\u0430\u043B\u0438\u0442\u044C \u0434\u043E\u043A\u0443\u043C\u0435\u043D\u0442",
@@ -9661,7 +10270,8 @@ var ru_default = {
       restoreUnavailable: "\u0414\u043B\u044F \u0432\u043E\u0441\u0441\u0442\u0430\u043D\u043E\u0432\u043B\u0435\u043D\u0438\u044F \u0440\u0430\u0441\u043F\u043E\u043B\u043E\u0436\u0435\u043D\u0438\u044F \u043D\u0443\u0436\u043D\u044B \u044D\u043A\u0441\u043F\u0435\u0440\u0438\u043C\u0435\u043D\u0442\u0430\u043B\u044C\u043D\u0430\u044F \u0444\u0430\u0439\u043B\u043E\u0432\u0430\u044F \u043F\u0430\u043F\u043A\u0430 \u0437\u0430\u043F\u0438\u0441\u0435\u0439 \u0438 \u0430\u043A\u0442\u0438\u0432\u043D\u044B\u0439 \u043F\u0440\u043E\u0435\u043A\u0442."
     },
     toggleSynopses: "\u041F\u043E\u043A\u0430\u0437\u044B\u0432\u0430\u0442\u044C \u0441\u0438\u043D\u043E\u043F\u0441\u0438\u0441 \u043A\u0430\u0436\u0434\u043E\u0433\u043E \u0440\u0430\u0437\u0434\u0435\u043B\u0430 \u043F\u043E\u0434 \u0435\u0433\u043E \u043D\u0430\u0437\u0432\u0430\u043D\u0438\u0435\u043C",
-    openOutline: "\u041E\u0442\u043A\u0440\u044B\u0442\u044C \u043F\u043B\u0430\u043D"
+    openOutline: "\u041E\u0442\u043A\u0440\u044B\u0442\u044C \u043F\u043B\u0430\u043D",
+    findReplace: "\u041D\u0430\u0439\u0442\u0438 \u0438 \u0437\u0430\u043C\u0435\u043D\u0438\u0442\u044C \u0432 \u043F\u0440\u043E\u0435\u043A\u0442\u0435"
   },
   launcher: {
     displayText: "\u0421\u0442\u0443\u0434\u0438\u044F \u043F\u0438\u0441\u044C\u043C\u0430",
@@ -10090,7 +10700,10 @@ var ru_default = {
       restoreBinderLayout: "\u0412\u043E\u0441\u0441\u0442\u0430\u043D\u043E\u0432\u0438\u0442\u044C \u043F\u0440\u0435\u0436\u043D\u0435\u0435 \u0440\u0430\u0441\u043F\u043E\u043B\u043E\u0436\u0435\u043D\u0438\u0435 \u043F\u0430\u043F\u043A\u0438 \u0437\u0430\u043F\u0438\u0441\u0435\u0439",
       openOutline: "\u041E\u0442\u043A\u0440\u044B\u0442\u044C \u043F\u043B\u0430\u043D",
       insertCitation: "\u0412\u0441\u0442\u0430\u0432\u0438\u0442\u044C \u0441\u0441\u044B\u043B\u043A\u0443",
-      addSource: "\u0414\u043E\u0431\u0430\u0432\u0438\u0442\u044C \u0438\u0441\u0442\u043E\u0447\u043D\u0438\u043A"
+      addSource: "\u0414\u043E\u0431\u0430\u0432\u0438\u0442\u044C \u0438\u0441\u0442\u043E\u0447\u043D\u0438\u043A",
+      splitSection: "\u0420\u0430\u0437\u0434\u0435\u043B\u0438\u0442\u044C \u0440\u0430\u0437\u0434\u0435\u043B \u043F\u043E \u043A\u0443\u0440\u0441\u043E\u0440\u0443",
+      findReplace: "\u041D\u0430\u0439\u0442\u0438 \u0438 \u0437\u0430\u043C\u0435\u043D\u0438\u0442\u044C \u0432 \u043F\u0440\u043E\u0435\u043A\u0442\u0435",
+      renameCitekey: "\u041F\u0435\u0440\u0435\u0438\u043C\u0435\u043D\u043E\u0432\u0430\u0442\u044C \u043A\u043B\u044E\u0447 \u0446\u0438\u0442\u0438\u0440\u043E\u0432\u0430\u043D\u0438\u044F"
     },
     menu: {
       studioOptions: "\u041F\u0430\u0440\u0430\u043C\u0435\u0442\u0440\u044B Writing Studio",
@@ -10103,7 +10716,8 @@ var ru_default = {
       draftMode: "\u270D \u0420\u0435\u0436\u0438\u043C \u0447\u0435\u0440\u043D\u043E\u0432\u0438\u043A\u0430",
       editMode: "\u270E \u0420\u0435\u0436\u0438\u043C \u0440\u0435\u0434\u0430\u043A\u0442\u0438\u0440\u043E\u0432\u0430\u043D\u0438\u044F",
       reviewMode: "\u{1F441} \u0420\u0435\u0436\u0438\u043C \u043F\u0440\u043E\u0432\u0435\u0440\u043A\u0438",
-      normalMode: "\u041E\u0431\u044B\u0447\u043D\u044B\u0439 (\u0431\u0435\u0437 \u0440\u0435\u0436\u0438\u043C\u0430)"
+      normalMode: "\u041E\u0431\u044B\u0447\u043D\u044B\u0439 (\u0431\u0435\u0437 \u0440\u0435\u0436\u0438\u043C\u0430)",
+      splitSection: "\u0420\u0430\u0437\u0434\u0435\u043B\u0438\u0442\u044C \u0440\u0430\u0437\u0434\u0435\u043B \u0437\u0434\u0435\u0441\u044C\u2026"
     },
     notice: {
       noMarkdownOpen: "\u0412 \u0434\u0430\u043D\u043D\u044B\u0439 \u043C\u043E\u043C\u0435\u043D\u0442 \u043D\u0435 \u043E\u0442\u043A\u0440\u044B\u0442 \u043D\u0438 \u043E\u0434\u0438\u043D Markdown-\u0444\u0430\u0439\u043B."
@@ -10269,7 +10883,83 @@ var ru_default = {
       citekeyDesc: "\u0418\u0441\u043F\u043E\u043B\u044C\u0437\u0443\u0435\u0442\u0441\u044F \u0434\u043B\u044F \u0441\u0441\u044B\u043B\u043A\u0438 \u043D\u0430 \u044D\u0442\u043E\u0442 \u0438\u0441\u0442\u043E\u0447\u043D\u0438\u043A, \u043D\u0430\u043F\u0440\u0438\u043C\u0435\u0440 [@smith2020]. \u0417\u0430\u043F\u043E\u043B\u043D\u044F\u0435\u0442\u0441\u044F \u0430\u0432\u0442\u043E\u043C\u0430\u0442\u0438\u0447\u0435\u0441\u043A\u0438; \u043F\u0440\u0438 \u0436\u0435\u043B\u0430\u043D\u0438\u0438 \u0438\u0437\u043C\u0435\u043D\u0438\u0442\u0435."
     },
     addSourceShort: "\u0414\u043E\u0431\u0430\u0432\u0438\u0442\u044C \u0438\u0441\u0442\u043E\u0447\u043D\u0438\u043A",
-    addSourceTooltip: "\u0414\u043E\u0431\u0430\u0432\u0438\u0442\u044C \u043A\u043D\u0438\u0433\u0443, \u0441\u0442\u0430\u0442\u044C\u044E \u0438\u043B\u0438 \u0432\u0435\u0431-\u0441\u0442\u0440\u0430\u043D\u0438\u0446\u0443 \u0434\u043B\u044F \u0446\u0438\u0442\u0438\u0440\u043E\u0432\u0430\u043D\u0438\u044F"
+    addSourceTooltip: "\u0414\u043E\u0431\u0430\u0432\u0438\u0442\u044C \u043A\u043D\u0438\u0433\u0443, \u0441\u0442\u0430\u0442\u044C\u044E \u0438\u043B\u0438 \u0432\u0435\u0431-\u0441\u0442\u0440\u0430\u043D\u0438\u0446\u0443 \u0434\u043B\u044F \u0446\u0438\u0442\u0438\u0440\u043E\u0432\u0430\u043D\u0438\u044F",
+    renameKeyTitle: "\u041F\u0435\u0440\u0435\u0438\u043C\u0435\u043D\u043E\u0432\u0430\u0442\u044C \u043A\u043B\u044E\u0447 \u0446\u0438\u0442\u0438\u0440\u043E\u0432\u0430\u043D\u0438\u044F",
+    renameKeySource: "\u0418\u0441\u0442\u043E\u0447\u043D\u0438\u043A",
+    renameKeyCurrent: "\u0422\u0435\u043A\u0443\u0449\u0438\u0439",
+    renameKeyNew: "\u041D\u043E\u0432\u044B\u0439 \u043A\u043B\u044E\u0447",
+    renameKeyUsage: "\u0418\u0441\u043F\u043E\u043B\u044C\u0437\u0443\u0435\u0442\u0441\u044F \u0432 {{citations}} \u0432 {{where}}. \u0412\u0441\u0435 \u043E\u043D\u0438 \u0431\u0443\u0434\u0443\u0442 \u043E\u0431\u043D\u043E\u0432\u043B\u0435\u043D\u044B.",
+    renameKeyUnused: "\u0412 \u044D\u0442\u043E\u043C \u043F\u0440\u043E\u0435\u043A\u0442\u0435 \u043F\u043E\u043A\u0430 \u043D\u0438\u0433\u0434\u0435 \u043D\u0435 \u0446\u0438\u0442\u0438\u0440\u0443\u0435\u0442\u0441\u044F.",
+    renameKeyBtn: "\u041F\u0435\u0440\u0435\u0438\u043C\u0435\u043D\u043E\u0432\u0430\u0442\u044C",
+    renameKeySame: "\u042D\u0442\u043E \u0442\u0435\u043A\u0443\u0449\u0438\u0439 \u043A\u043B\u044E\u0447. \u0412\u0432\u0435\u0434\u0438\u0442\u0435 \u0434\u0440\u0443\u0433\u043E\u0439.",
+    renameKeyDone_one: "\u041F\u0435\u0440\u0435\u0438\u043C\u0435\u043D\u043E\u0432\u0430\u043D\u043E \u0432 @{{key}} \u0432 {{count}} \u0446\u0438\u0442\u0430\u0442\u0435.",
+    renameKeyDone_few: "\u041F\u0435\u0440\u0435\u0438\u043C\u0435\u043D\u043E\u0432\u0430\u043D\u043E \u0432 @{{key}} \u0432 {{count}} \u0446\u0438\u0442\u0430\u0442\u0430\u0445.",
+    renameKeyDone_many: "\u041F\u0435\u0440\u0435\u0438\u043C\u0435\u043D\u043E\u0432\u0430\u043D\u043E \u0432 @{{key}} \u0432 {{count}} \u0446\u0438\u0442\u0430\u0442\u0430\u0445.",
+    renameKeyDone_other: "\u041F\u0435\u0440\u0435\u0438\u043C\u0435\u043D\u043E\u0432\u0430\u043D\u043E \u0432 @{{key}} \u0432 {{count}} \u0446\u0438\u0442\u0430\u0442\u0430\u0445.",
+    notASource: "\u0423 \u044D\u0442\u043E\u0439 \u0437\u0430\u043C\u0435\u0442\u043A\u0438 \u043D\u0435\u0442 \u043A\u043B\u044E\u0447\u0430 \u0446\u0438\u0442\u0438\u0440\u043E\u0432\u0430\u043D\u0438\u044F. \u041E\u0442\u043A\u0440\u043E\u0439\u0442\u0435 \u0437\u0430\u043C\u0435\u0442\u043A\u0443-\u0438\u0441\u0442\u043E\u0447\u043D\u0438\u043A \u0438\u043B\u0438 \u0441\u043E\u0437\u0434\u0430\u0439\u0442\u0435 \u0435\u0451 \u0447\u0435\u0440\u0435\u0437 \xAB\u0414\u043E\u0431\u0430\u0432\u0438\u0442\u044C \u0438\u0441\u0442\u043E\u0447\u043D\u0438\u043A\xBB.",
+    countCitations_one: "{{count}} \u0446\u0438\u0442\u0430\u0442\u0435",
+    countCitations_few: "{{count}} \u0446\u0438\u0442\u0430\u0442\u0430\u0445",
+    countCitations_many: "{{count}} \u0446\u0438\u0442\u0430\u0442\u0430\u0445",
+    countCitations_other: "{{count}} \u0446\u0438\u0442\u0430\u0442\u0430\u0445",
+    countSections_one: "{{count}} \u0440\u0430\u0437\u0434\u0435\u043B\u0435",
+    countSections_few: "{{count}} \u0440\u0430\u0437\u0434\u0435\u043B\u0430\u0445",
+    countSections_many: "{{count}} \u0440\u0430\u0437\u0434\u0435\u043B\u0430\u0445",
+    countSections_other: "{{count}} \u0440\u0430\u0437\u0434\u0435\u043B\u0430\u0445",
+    countNotes_one: "{{count}} \u0437\u0430\u043C\u0435\u0442\u043A\u0435 \u0438\u0441\u0441\u043B\u0435\u0434\u043E\u0432\u0430\u043D\u0438\u044F",
+    countNotes_few: "{{count}} \u0437\u0430\u043C\u0435\u0442\u043A\u0430\u0445 \u0438\u0441\u0441\u043B\u0435\u0434\u043E\u0432\u0430\u043D\u0438\u044F",
+    countNotes_many: "{{count}} \u0437\u0430\u043C\u0435\u0442\u043A\u0430\u0445 \u0438\u0441\u0441\u043B\u0435\u0434\u043E\u0432\u0430\u043D\u0438\u044F",
+    countNotes_other: "{{count}} \u0437\u0430\u043C\u0435\u0442\u043A\u0430\u0445 \u0438\u0441\u0441\u043B\u0435\u0434\u043E\u0432\u0430\u043D\u0438\u044F",
+    countJoin: " \u0438 "
+  },
+  sections: {
+    splitTitle: "\u0420\u0430\u0437\u0434\u0435\u043B\u0438\u0442\u044C \u0440\u0430\u0437\u0434\u0435\u043B",
+    splitHint: "\u0412\u0441\u0451 \u043E\u0442 \u043A\u0443\u0440\u0441\u043E\u0440\u0430 \u0434\u043E \u043A\u043E\u043D\u0446\u0430 \xAB{{name}}\xBB \u043F\u0435\u0440\u0435\u0445\u043E\u0434\u0438\u0442 \u0432 \u043D\u043E\u0432\u044B\u0439 \u0440\u0430\u0437\u0434\u0435\u043B, \u043A\u043E\u0442\u043E\u0440\u044B\u0439 \u0432\u0441\u0442\u0430\u043D\u0435\u0442 \u0432 \u043F\u0430\u043F\u043A\u0435 \u0441\u0440\u0430\u0437\u0443 \u043F\u043E\u0441\u043B\u0435 \u0442\u0435\u043A\u0443\u0449\u0435\u0433\u043E.",
+    splitBtn: "\u0420\u0430\u0437\u0434\u0435\u043B\u0438\u0442\u044C",
+    splitDone: "\u0420\u0430\u0437\u0434\u0435\u043B\u0435\u043D\u043E. \xAB{{name}}\xBB \u043D\u0430\u0447\u0438\u043D\u0430\u0435\u0442\u0441\u044F \u0442\u0430\u043C, \u0433\u0434\u0435 \u0441\u0442\u043E\u044F\u043B \u043A\u0443\u0440\u0441\u043E\u0440.",
+    splitInFrontmatter: "\u041F\u043E\u0441\u0442\u0430\u0432\u044C\u0442\u0435 \u043A\u0443\u0440\u0441\u043E\u0440 \u0432 \u0442\u0435\u043A\u0441\u0442 \u043D\u0438\u0436\u0435 \u0441\u0432\u043E\u0439\u0441\u0442\u0432 \u0438 \u043F\u043E\u043F\u0440\u043E\u0431\u0443\u0439\u0442\u0435 \u0441\u043D\u043E\u0432\u0430.",
+    splitNotManuscript: "\u0420\u0430\u0437\u0434\u0435\u043B\u0435\u043D\u0438\u0435 \u0440\u0430\u0431\u043E\u0442\u0430\u0435\u0442 \u0432 \u0440\u0430\u0437\u0434\u0435\u043B\u0435 \u0440\u0443\u043A\u043E\u043F\u0438\u0441\u0438 \u0430\u043A\u0442\u0438\u0432\u043D\u043E\u0433\u043E \u043F\u0440\u043E\u0435\u043A\u0442\u0430. \u041E\u0442\u043A\u0440\u043E\u0439\u0442\u0435 \u0442\u0430\u043A\u043E\u0439 \u0440\u0430\u0437\u0434\u0435\u043B \u0438 \u043F\u043E\u043F\u0440\u043E\u0431\u0443\u0439\u0442\u0435 \u0441\u043D\u043E\u0432\u0430.",
+    mergeTitle: "\u041E\u0431\u044A\u0435\u0434\u0438\u043D\u0438\u0442\u044C \u0440\u0430\u0437\u0434\u0435\u043B\u044B",
+    mergeMessage: "\xAB{{first}}\xBB \u0438 \xAB{{second}}\xBB \u0441\u0442\u0430\u043D\u0443\u0442 \u043E\u0434\u043D\u0438\u043C \u0440\u0430\u0437\u0434\u0435\u043B\u043E\u043C \u0441 \u043D\u0430\u0437\u0432\u0430\u043D\u0438\u0435\u043C \xAB{{first}}\xBB.",
+    mergeHeadingToggle: "\u0414\u043E\u0431\u0430\u0432\u0438\u0442\u044C \xAB{{second}}\xBB \u043A\u0430\u043A \u0437\u0430\u0433\u043E\u043B\u043E\u0432\u043E\u043A \u043D\u0430 \u0441\u0442\u044B\u043A\u0435",
+    mergeTrashHint: "\u0412\u0442\u043E\u0440\u043E\u0439 \u0444\u0430\u0439\u043B \u043F\u043E\u043F\u0430\u0434\u0451\u0442 \u0432 \u043A\u043E\u0440\u0437\u0438\u043D\u0443, \u0442\u0430\u043A \u0447\u0442\u043E \u0435\u0433\u043E \u043C\u043E\u0436\u043D\u043E \u0432\u0435\u0440\u043D\u0443\u0442\u044C.",
+    mergeBtn: "\u041E\u0431\u044A\u0435\u0434\u0438\u043D\u0438\u0442\u044C",
+    mergeDone: "\u041E\u0431\u044A\u0435\u0434\u0438\u043D\u0435\u043D\u043E. \xAB{{second}}\xBB \u043B\u0435\u0436\u0438\u0442 \u0432 \u043A\u043E\u0440\u0437\u0438\u043D\u0435."
+  },
+  findReplace: {
+    title: "\u041D\u0430\u0439\u0442\u0438 \u0438 \u0437\u0430\u043C\u0435\u043D\u0438\u0442\u044C \u0432 \u043F\u0440\u043E\u0435\u043A\u0442\u0435",
+    findLabel: "\u041D\u0430\u0439\u0442\u0438",
+    replaceLabel: "\u0417\u0430\u043C\u0435\u043D\u0438\u0442\u044C",
+    matchCase: "\u0423\u0447\u0438\u0442\u044B\u0432\u0430\u0442\u044C \u0440\u0435\u0433\u0438\u0441\u0442\u0440",
+    wholeWord: "\u0421\u043B\u043E\u0432\u043E \u0446\u0435\u043B\u0438\u043A\u043E\u043C",
+    includeResearch: "\u0412\u043A\u043B\u044E\u0447\u0430\u044F \u0437\u0430\u043C\u0435\u0442\u043A\u0438 \u0438\u0441\u0441\u043B\u0435\u0434\u043E\u0432\u0430\u043D\u0438\u044F",
+    loading: "\u0427\u0442\u0435\u043D\u0438\u0435 \u043F\u0440\u043E\u0435\u043A\u0442\u0430\u2026",
+    typeToFind: "\u0412\u0432\u0435\u0434\u0438\u0442\u0435 \u0441\u043B\u043E\u0432\u043E \u0438\u043B\u0438 \u0444\u0440\u0430\u0437\u0443 \u0434\u043B\u044F \u043F\u043E\u0438\u0441\u043A\u0430.",
+    noMatches: "\u0421\u043E\u0432\u043F\u0430\u0434\u0435\u043D\u0438\u0439 \u043D\u0435\u0442.",
+    summary_one: "{{count}} \u0441\u043E\u0432\u043F\u0430\u0434\u0435\u043D\u0438\u0435 \u0432 {{sections}}",
+    summary_few: "{{count}} \u0441\u043E\u0432\u043F\u0430\u0434\u0435\u043D\u0438\u044F \u0432 {{sections}}",
+    summary_many: "{{count}} \u0441\u043E\u0432\u043F\u0430\u0434\u0435\u043D\u0438\u0439 \u0432 {{sections}}",
+    summary_other: "{{count}} \u0441\u043E\u0432\u043F\u0430\u0434\u0435\u043D\u0438\u044F \u0432 {{sections}}",
+    sections_one: "{{count}} \u0440\u0430\u0437\u0434\u0435\u043B\u0435",
+    sections_few: "{{count}} \u0440\u0430\u0437\u0434\u0435\u043B\u0430\u0445",
+    sections_many: "{{count}} \u0440\u0430\u0437\u0434\u0435\u043B\u0430\u0445",
+    sections_other: "{{count}} \u0440\u0430\u0437\u0434\u0435\u043B\u0430\u0445",
+    replaceSelected: "\u0417\u0430\u043C\u0435\u043D\u0438\u0442\u044C \u0432\u044B\u0431\u0440\u0430\u043D\u043D\u044B\u0435 ({{count}})",
+    replaceAll: "\u0417\u0430\u043C\u0435\u043D\u0438\u0442\u044C \u0432\u0441\u0435",
+    undo: "\u041E\u0442\u043C\u0435\u043D\u0438\u0442\u044C \u043F\u043E\u0441\u043B\u0435\u0434\u043D\u044E\u044E \u0437\u0430\u043C\u0435\u043D\u0443",
+    close: "\u0417\u0430\u043A\u0440\u044B\u0442\u044C",
+    openDoc: "\u041E\u0442\u043A\u0440\u044B\u0442\u044C \xAB{{name}}\xBB",
+    researchTag: "\u0438\u0441\u0441\u043B\u0435\u0434\u043E\u0432\u0430\u043D\u0438\u0435",
+    replaced_one: "\u0417\u0430\u043C\u0435\u043D\u0435\u043D\u043E {{count}} \u0441\u043E\u0432\u043F\u0430\u0434\u0435\u043D\u0438\u0435 \u0432 {{sections}}.",
+    replaced_few: "\u0417\u0430\u043C\u0435\u043D\u0435\u043D\u043E {{count}} \u0441\u043E\u0432\u043F\u0430\u0434\u0435\u043D\u0438\u044F \u0432 {{sections}}.",
+    replaced_many: "\u0417\u0430\u043C\u0435\u043D\u0435\u043D\u043E {{count}} \u0441\u043E\u0432\u043F\u0430\u0434\u0435\u043D\u0438\u0439 \u0432 {{sections}}.",
+    replaced_other: "\u0417\u0430\u043C\u0435\u043D\u0435\u043D\u043E {{count}} \u0441\u043E\u0432\u043F\u0430\u0434\u0435\u043D\u0438\u044F \u0432 {{sections}}.",
+    skippedChanged: "\u041F\u0440\u043E\u043F\u0443\u0449\u0435\u043D\u043E, \u043F\u043E\u0442\u043E\u043C\u0443 \u0447\u0442\u043E \u0444\u0430\u0439\u043B \u0438\u0437\u043C\u0435\u043D\u0438\u043B\u0441\u044F \u043F\u043E\u0441\u043B\u0435 \u043F\u043E\u0438\u0441\u043A\u0430: {{names}}. \u0412\u044B\u043F\u043E\u043B\u043D\u0438\u0442\u0435 \u043F\u043E\u0438\u0441\u043A \u0441\u043D\u043E\u0432\u0430, \u0447\u0442\u043E\u0431\u044B \u0443\u0432\u0438\u0434\u0435\u0442\u044C \u0442\u0435\u043A\u0443\u0449\u0438\u0439 \u0442\u0435\u043A\u0441\u0442.",
+    nothingToUndo: "\u041E\u0442\u043C\u0435\u043D\u044F\u0442\u044C \u043D\u0435\u0447\u0435\u0433\u043E.",
+    undone_one: "\u041E\u0442\u043C\u0435\u043D\u0435\u043D\u043E. {{count}} \u0444\u0430\u0439\u043B \u0432\u043E\u0437\u0432\u0440\u0430\u0449\u0451\u043D \u0432 \u043F\u0440\u0435\u0436\u043D\u0435\u0435 \u0441\u043E\u0441\u0442\u043E\u044F\u043D\u0438\u0435.",
+    undone_few: "\u041E\u0442\u043C\u0435\u043D\u0435\u043D\u043E. {{count}} \u0444\u0430\u0439\u043B\u0430 \u0432\u043E\u0437\u0432\u0440\u0430\u0449\u0435\u043D\u044B \u0432 \u043F\u0440\u0435\u0436\u043D\u0435\u0435 \u0441\u043E\u0441\u0442\u043E\u044F\u043D\u0438\u0435.",
+    undone_many: "\u041E\u0442\u043C\u0435\u043D\u0435\u043D\u043E. {{count}} \u0444\u0430\u0439\u043B\u043E\u0432 \u0432\u043E\u0437\u0432\u0440\u0430\u0449\u0435\u043D\u044B \u0432 \u043F\u0440\u0435\u0436\u043D\u0435\u0435 \u0441\u043E\u0441\u0442\u043E\u044F\u043D\u0438\u0435.",
+    undone_other: "\u041E\u0442\u043C\u0435\u043D\u0435\u043D\u043E. {{count}} \u0444\u0430\u0439\u043B\u0430 \u0432\u043E\u0437\u0432\u0440\u0430\u0449\u0435\u043D\u044B \u0432 \u043F\u0440\u0435\u0436\u043D\u0435\u0435 \u0441\u043E\u0441\u0442\u043E\u044F\u043D\u0438\u0435.",
+    undoSkipped: "\u041E\u0441\u0442\u0430\u0432\u043B\u0435\u043D\u044B \u0431\u0435\u0437 \u0438\u0437\u043C\u0435\u043D\u0435\u043D\u0438\u0439, \u043F\u043E\u0442\u043E\u043C\u0443 \u0447\u0442\u043E \u043C\u0435\u043D\u044F\u043B\u0438\u0441\u044C \u043F\u043E\u0441\u043B\u0435 \u0437\u0430\u043C\u0435\u043D\u044B: {{names}}"
   }
 };
 
@@ -10448,7 +11138,9 @@ var ja_default = {
       setStatusPublished: "\u30B9\u30C6\u30FC\u30BF\u30B9\u3092\u8A2D\u5B9A\uFF1A\u516C\u958B\u6E08\u307F",
       rename: "\u540D\u524D\u3092\u5909\u66F4",
       changeType: "\u30BF\u30A4\u30D7\u3092\u5909\u66F4\uFF1A{{type}}",
-      editSynopsis: "\u6982\u8981\u3092\u7DE8\u96C6\u2026"
+      editSynopsis: "\u6982\u8981\u3092\u7DE8\u96C6\u2026",
+      mergeNext: "\u6B21\u306E\u30BB\u30AF\u30B7\u30E7\u30F3\u3068\u7D50\u5408\u2026",
+      renameCitekey: "\u5F15\u7528\u30AD\u30FC\u3092\u5909\u66F4\u2026"
     },
     deleteConfirm: {
       title: "\u30C9\u30AD\u30E5\u30E1\u30F3\u30C8\u3092\u524A\u9664",
@@ -10510,7 +11202,8 @@ var ja_default = {
       restoreUnavailable: "\u914D\u7F6E\u306E\u5FA9\u5143\u306B\u306F\u3001\u5B9F\u9A13\u7684\u306A\u30D5\u30A1\u30A4\u30EB\u30B7\u30B9\u30C6\u30E0\u30D0\u30A4\u30F3\u30C0\u30FC\u3068\u30A2\u30AF\u30C6\u30A3\u30D6\u306A\u30D7\u30ED\u30B8\u30A7\u30AF\u30C8\u304C\u5FC5\u8981\u3067\u3059\u3002"
     },
     toggleSynopses: "\u5404\u30BB\u30AF\u30B7\u30E7\u30F3\u306E\u6982\u8981\u3092\u30BF\u30A4\u30C8\u30EB\u306E\u4E0B\u306B\u8868\u793A",
-    openOutline: "\u30A2\u30A6\u30C8\u30E9\u30A4\u30F3\u3092\u958B\u304F"
+    openOutline: "\u30A2\u30A6\u30C8\u30E9\u30A4\u30F3\u3092\u958B\u304F",
+    findReplace: "\u30D7\u30ED\u30B8\u30A7\u30AF\u30C8\u5185\u3067\u691C\u7D22\u3068\u7F6E\u63DB"
   },
   launcher: {
     displayText: "\u30E9\u30A4\u30C6\u30A3\u30F3\u30B0\u30B9\u30BF\u30B8\u30AA",
@@ -10925,7 +11618,10 @@ var ja_default = {
       restoreBinderLayout: "\u4EE5\u524D\u306E\u30D0\u30A4\u30F3\u30C0\u30FC\u914D\u7F6E\u3092\u5FA9\u5143",
       openOutline: "\u30A2\u30A6\u30C8\u30E9\u30A4\u30F3\u3092\u958B\u304F",
       insertCitation: "\u5F15\u7528\u3092\u633F\u5165",
-      addSource: "\u51FA\u5178\u3092\u8FFD\u52A0"
+      addSource: "\u51FA\u5178\u3092\u8FFD\u52A0",
+      splitSection: "\u30AB\u30FC\u30BD\u30EB\u4F4D\u7F6E\u3067\u30BB\u30AF\u30B7\u30E7\u30F3\u3092\u5206\u5272",
+      findReplace: "\u30D7\u30ED\u30B8\u30A7\u30AF\u30C8\u5185\u3067\u691C\u7D22\u3068\u7F6E\u63DB",
+      renameCitekey: "\u5F15\u7528\u30AD\u30FC\u3092\u5909\u66F4"
     },
     menu: {
       studioOptions: "\u30E9\u30A4\u30C6\u30A3\u30F3\u30B0\u30B9\u30BF\u30B8\u30AA\u306E\u30AA\u30D7\u30B7\u30E7\u30F3",
@@ -10938,7 +11634,8 @@ var ja_default = {
       draftMode: "\u270D \u4E0B\u66F8\u304D\u30E2\u30FC\u30C9",
       editMode: "\u270E \u7DE8\u96C6\u30E2\u30FC\u30C9",
       reviewMode: "\u{1F441} \u30EC\u30D3\u30E5\u30FC\u30E2\u30FC\u30C9",
-      normalMode: "\u30CE\u30FC\u30DE\u30EB\uFF08\u30E2\u30FC\u30C9\u306A\u3057\uFF09"
+      normalMode: "\u30CE\u30FC\u30DE\u30EB\uFF08\u30E2\u30FC\u30C9\u306A\u3057\uFF09",
+      splitSection: "\u3053\u3053\u3067\u30BB\u30AF\u30B7\u30E7\u30F3\u3092\u5206\u5272\u2026"
     },
     notice: {
       noMarkdownOpen: "\u73FE\u5728\u958B\u3044\u3066\u3044\u308BMarkdown\u30D5\u30A1\u30A4\u30EB\u304C\u3042\u308A\u307E\u305B\u3093\u3002"
@@ -11100,7 +11797,67 @@ var ja_default = {
       citekeyDesc: "\u3053\u306E\u51FA\u5178\u3092\u5F15\u7528\u3059\u308B\u3068\u304D\u306B\u4F7F\u3044\u307E\u3059\uFF08\u4F8B: [@smith2020]\uFF09\u3002\u81EA\u52D5\u5165\u529B\u3055\u308C\u307E\u3059\u304C\u5909\u66F4\u3067\u304D\u307E\u3059\u3002"
     },
     addSourceShort: "\u51FA\u5178\u3092\u8FFD\u52A0",
-    addSourceTooltip: "\u5F15\u7528\u3067\u304D\u308B\u66F8\u7C4D\u30FB\u8A18\u4E8B\u30FB\u30A6\u30A7\u30D6\u30DA\u30FC\u30B8\u3092\u8FFD\u52A0"
+    addSourceTooltip: "\u5F15\u7528\u3067\u304D\u308B\u66F8\u7C4D\u30FB\u8A18\u4E8B\u30FB\u30A6\u30A7\u30D6\u30DA\u30FC\u30B8\u3092\u8FFD\u52A0",
+    renameKeyTitle: "\u5F15\u7528\u30AD\u30FC\u3092\u5909\u66F4",
+    renameKeySource: "\u51FA\u5178",
+    renameKeyCurrent: "\u73FE\u5728",
+    renameKeyNew: "\u65B0\u3057\u3044\u30AD\u30FC",
+    renameKeyUsage: "{{where}}\u306E{{citations}}\u3067\u4F7F\u308F\u308C\u3066\u3044\u307E\u3059\u3002\u3059\u3079\u3066\u66F4\u65B0\u3055\u308C\u307E\u3059\u3002",
+    renameKeyUnused: "\u3053\u306E\u30D7\u30ED\u30B8\u30A7\u30AF\u30C8\u3067\u306F\u307E\u3060\u5F15\u7528\u3055\u308C\u3066\u3044\u307E\u305B\u3093\u3002",
+    renameKeyBtn: "\u5909\u66F4",
+    renameKeySame: "\u305D\u308C\u306F\u73FE\u5728\u306E\u30AD\u30FC\u3067\u3059\u3002\u5225\u306E\u30AD\u30FC\u3092\u5165\u529B\u3057\u3066\u304F\u3060\u3055\u3044\u3002",
+    renameKeyDone_one: "{{count}} \u4EF6\u306E\u5F15\u7528\u3067 @{{key}} \u306B\u5909\u66F4\u3057\u307E\u3057\u305F\u3002",
+    renameKeyDone_other: "{{count}} \u4EF6\u306E\u5F15\u7528\u3067 @{{key}} \u306B\u5909\u66F4\u3057\u307E\u3057\u305F\u3002",
+    notASource: "\u3053\u306E\u30CE\u30FC\u30C8\u306B\u306F\u5F15\u7528\u30AD\u30FC\u304C\u3042\u308A\u307E\u305B\u3093\u3002\u51FA\u5178\u30CE\u30FC\u30C8\u3092\u958B\u304F\u304B\u3001\u300C\u51FA\u5178\u3092\u8FFD\u52A0\u300D\u3067\u4F5C\u6210\u3057\u3066\u304F\u3060\u3055\u3044\u3002",
+    countCitations_one: "{{count}} \u4EF6\u306E\u5F15\u7528",
+    countCitations_other: "{{count}} \u4EF6\u306E\u5F15\u7528",
+    countSections_one: "{{count}} \u30BB\u30AF\u30B7\u30E7\u30F3",
+    countSections_other: "{{count}} \u30BB\u30AF\u30B7\u30E7\u30F3",
+    countNotes_one: "{{count}} \u4EF6\u306E\u30EA\u30B5\u30FC\u30C1\u30CE\u30FC\u30C8",
+    countNotes_other: "{{count}} \u4EF6\u306E\u30EA\u30B5\u30FC\u30C1\u30CE\u30FC\u30C8",
+    countJoin: "\u3068"
+  },
+  sections: {
+    splitTitle: "\u30BB\u30AF\u30B7\u30E7\u30F3\u3092\u5206\u5272",
+    splitHint: "\u30AB\u30FC\u30BD\u30EB\u304B\u3089\u300C{{name}}\u300D\u306E\u672B\u5C3E\u307E\u3067\u304C\u3059\u3079\u3066\u65B0\u3057\u3044\u30BB\u30AF\u30B7\u30E7\u30F3\u306B\u79FB\u308A\u3001\u30D0\u30A4\u30F3\u30C0\u30FC\u3067\u306F\u305D\u306E\u76F4\u5F8C\u306B\u7F6E\u304B\u308C\u307E\u3059\u3002",
+    splitBtn: "\u5206\u5272",
+    splitDone: "\u5206\u5272\u3057\u307E\u3057\u305F\u3002\u300C{{name}}\u300D\u306F\u30AB\u30FC\u30BD\u30EB\u306E\u3042\u3063\u305F\u4F4D\u7F6E\u304B\u3089\u59CB\u307E\u308A\u307E\u3059\u3002",
+    splitInFrontmatter: "\u30D7\u30ED\u30D1\u30C6\u30A3\u306E\u4E0B\u306E\u672C\u6587\u306B\u30AB\u30FC\u30BD\u30EB\u3092\u7F6E\u3044\u3066\u3001\u3082\u3046\u4E00\u5EA6\u304A\u8A66\u3057\u304F\u3060\u3055\u3044\u3002",
+    splitNotManuscript: "\u5206\u5272\u306F\u3001\u30A2\u30AF\u30C6\u30A3\u30D6\u306A\u30D7\u30ED\u30B8\u30A7\u30AF\u30C8\u306E\u539F\u7A3F\u30BB\u30AF\u30B7\u30E7\u30F3\u3067\u4F7F\u3048\u307E\u3059\u3002\u30BB\u30AF\u30B7\u30E7\u30F3\u3092\u958B\u3044\u3066\u3082\u3046\u4E00\u5EA6\u304A\u8A66\u3057\u304F\u3060\u3055\u3044\u3002",
+    mergeTitle: "\u30BB\u30AF\u30B7\u30E7\u30F3\u3092\u7D50\u5408",
+    mergeMessage: "\u300C{{first}}\u300D\u3068\u300C{{second}}\u300D\u306F\u300C{{first}}\u300D\u3068\u3044\u30461\u3064\u306E\u30BB\u30AF\u30B7\u30E7\u30F3\u306B\u306A\u308A\u307E\u3059\u3002",
+    mergeHeadingToggle: "\u3064\u306A\u304E\u76EE\u306B\u300C{{second}}\u300D\u3092\u898B\u51FA\u3057\u3068\u3057\u3066\u8FFD\u52A0",
+    mergeTrashHint: "2\u3064\u76EE\u306E\u30D5\u30A1\u30A4\u30EB\u306F\u30B4\u30DF\u7BB1\u306B\u79FB\u52D5\u3059\u308B\u306E\u3067\u3001\u3042\u3068\u304B\u3089\u623B\u305B\u307E\u3059\u3002",
+    mergeBtn: "\u7D50\u5408",
+    mergeDone: "\u7D50\u5408\u3057\u307E\u3057\u305F\u3002\u300C{{second}}\u300D\u306F\u30B4\u30DF\u7BB1\u306B\u3042\u308A\u307E\u3059\u3002"
+  },
+  findReplace: {
+    title: "\u30D7\u30ED\u30B8\u30A7\u30AF\u30C8\u5185\u3067\u691C\u7D22\u3068\u7F6E\u63DB",
+    findLabel: "\u691C\u7D22",
+    replaceLabel: "\u7F6E\u63DB",
+    matchCase: "\u5927\u6587\u5B57\u3068\u5C0F\u6587\u5B57\u3092\u533A\u5225",
+    wholeWord: "\u5358\u8A9E\u5358\u4F4D",
+    includeResearch: "\u30EA\u30B5\u30FC\u30C1\u30CE\u30FC\u30C8\u3092\u542B\u3081\u308B",
+    loading: "\u30D7\u30ED\u30B8\u30A7\u30AF\u30C8\u3092\u8AAD\u307F\u8FBC\u3093\u3067\u3044\u307E\u3059\u2026",
+    typeToFind: "\u691C\u7D22\u3059\u308B\u8A9E\u53E5\u3092\u5165\u529B\u3057\u3066\u304F\u3060\u3055\u3044\u3002",
+    noMatches: "\u4E00\u81F4\u306F\u3042\u308A\u307E\u305B\u3093\u3002",
+    summary_one: "{{sections}}\u306B {{count}} \u4EF6\u306E\u4E00\u81F4",
+    summary_other: "{{sections}}\u306B {{count}} \u4EF6\u306E\u4E00\u81F4",
+    sections_one: "{{count}} \u30BB\u30AF\u30B7\u30E7\u30F3",
+    sections_other: "{{count}} \u30BB\u30AF\u30B7\u30E7\u30F3",
+    replaceSelected: "\u9078\u629E\u3057\u305F\u3082\u306E\u3092\u7F6E\u63DB\uFF08{{count}}\uFF09",
+    replaceAll: "\u3059\u3079\u3066\u7F6E\u63DB",
+    undo: "\u76F4\u524D\u306E\u7F6E\u63DB\u3092\u5143\u306B\u623B\u3059",
+    close: "\u9589\u3058\u308B",
+    openDoc: "\u300C{{name}}\u300D\u3092\u958B\u304F",
+    researchTag: "\u30EA\u30B5\u30FC\u30C1",
+    replaced_one: "{{sections}}\u3067 {{count}} \u4EF6\u3092\u7F6E\u63DB\u3057\u307E\u3057\u305F\u3002",
+    replaced_other: "{{sections}}\u3067 {{count}} \u4EF6\u3092\u7F6E\u63DB\u3057\u307E\u3057\u305F\u3002",
+    skippedChanged: "\u691C\u7D22\u5F8C\u306B\u30D5\u30A1\u30A4\u30EB\u304C\u5909\u66F4\u3055\u308C\u305F\u305F\u3081\u30B9\u30AD\u30C3\u30D7\u3057\u307E\u3057\u305F: {{names}}\u3002\u73FE\u5728\u306E\u30C6\u30AD\u30B9\u30C8\u3092\u898B\u308B\u306B\u306F\u3082\u3046\u4E00\u5EA6\u691C\u7D22\u3057\u3066\u304F\u3060\u3055\u3044\u3002",
+    nothingToUndo: "\u5143\u306B\u623B\u3059\u64CD\u4F5C\u306F\u3042\u308A\u307E\u305B\u3093\u3002",
+    undone_one: "\u5143\u306B\u623B\u3057\u307E\u3057\u305F\u3002{{count}} \u500B\u306E\u30D5\u30A1\u30A4\u30EB\u3092\u4EE5\u524D\u306E\u72B6\u614B\u306B\u623B\u3057\u307E\u3057\u305F\u3002",
+    undone_other: "\u5143\u306B\u623B\u3057\u307E\u3057\u305F\u3002{{count}} \u500B\u306E\u30D5\u30A1\u30A4\u30EB\u3092\u4EE5\u524D\u306E\u72B6\u614B\u306B\u623B\u3057\u307E\u3057\u305F\u3002",
+    undoSkipped: "\u7F6E\u63DB\u5F8C\u306B\u5909\u66F4\u3055\u308C\u305F\u305F\u3081\u3001\u305D\u306E\u307E\u307E\u306B\u3057\u307E\u3057\u305F: {{names}}"
   }
 };
 
@@ -11279,7 +12036,9 @@ var de_default = {
       setStatusPublished: "Status setzen: Ver\xF6ffentlicht",
       rename: "Umbenennen",
       changeType: "Typ \xE4ndern: {{type}}",
-      editSynopsis: "Zusammenfassung bearbeiten\u2026"
+      editSynopsis: "Zusammenfassung bearbeiten\u2026",
+      mergeNext: "Mit n\xE4chstem Abschnitt zusammenf\xFChren\u2026",
+      renameCitekey: "Zitierschl\xFCssel umbenennen\u2026"
     },
     deleteConfirm: {
       title: "Dokument l\xF6schen",
@@ -11341,7 +12100,8 @@ var de_default = {
       restoreUnavailable: "Die Wiederherstellung des Layouts ben\xF6tigt die experimentelle Dateisystem-Mappe und ein aktives Projekt."
     },
     toggleSynopses: "Zusammenfassung jedes Abschnitts unter dem Titel anzeigen",
-    openOutline: "Gliederung \xF6ffnen"
+    openOutline: "Gliederung \xF6ffnen",
+    findReplace: "Im Projekt suchen und ersetzen"
   },
   launcher: {
     displayText: "Schreibstudio",
@@ -11756,7 +12516,10 @@ var de_default = {
       restoreBinderLayout: "Vorheriges Mappen-Layout wiederherstellen",
       openOutline: "Gliederung \xF6ffnen",
       insertCitation: "Zitat einf\xFCgen",
-      addSource: "Quelle hinzuf\xFCgen"
+      addSource: "Quelle hinzuf\xFCgen",
+      splitSection: "Abschnitt am Cursor teilen",
+      findReplace: "Im Projekt suchen und ersetzen",
+      renameCitekey: "Zitierschl\xFCssel umbenennen"
     },
     menu: {
       studioOptions: "Schreibstudio-Optionen",
@@ -11769,7 +12532,8 @@ var de_default = {
       draftMode: "\u270D Entwurfsmodus",
       editMode: "\u270E Bearbeitungsmodus",
       reviewMode: "\u{1F441} \xDCberpr\xFCfungsmodus",
-      normalMode: "Normal (kein Modus)"
+      normalMode: "Normal (kein Modus)",
+      splitSection: "Abschnitt hier teilen\u2026"
     },
     notice: {
       noMarkdownOpen: "Keine Markdown-Datei ist aktuell ge\xF6ffnet."
@@ -11931,7 +12695,67 @@ var de_default = {
       citekeyDesc: "Wird zum Zitieren dieser Quelle verwendet, zum Beispiel [@smith2020]. Wird automatisch ausgef\xFCllt; Sie k\xF6nnen ihn \xE4ndern."
     },
     addSourceShort: "Quelle hinzuf\xFCgen",
-    addSourceTooltip: "Ein Buch, einen Artikel oder eine Webseite zum Zitieren hinzuf\xFCgen"
+    addSourceTooltip: "Ein Buch, einen Artikel oder eine Webseite zum Zitieren hinzuf\xFCgen",
+    renameKeyTitle: "Zitierschl\xFCssel umbenennen",
+    renameKeySource: "Quelle",
+    renameKeyCurrent: "Aktuell",
+    renameKeyNew: "Neuer Schl\xFCssel",
+    renameKeyUsage: "Verwendet in {{citations}} in {{where}}. Alle werden aktualisiert.",
+    renameKeyUnused: "In diesem Projekt noch nirgends zitiert.",
+    renameKeyBtn: "Umbenennen",
+    renameKeySame: "Das ist der aktuelle Schl\xFCssel. Geben Sie einen anderen ein.",
+    renameKeyDone_one: "In {{count}} Zitat zu @{{key}} umbenannt.",
+    renameKeyDone_other: "In {{count}} Zitaten zu @{{key}} umbenannt.",
+    notASource: "Diese Notiz hat keinen Zitierschl\xFCssel. \xD6ffnen Sie eine Quellennotiz oder legen Sie eine mit \u201EQuelle hinzuf\xFCgen\u201C an.",
+    countCitations_one: "{{count}} Zitat",
+    countCitations_other: "{{count}} Zitaten",
+    countSections_one: "{{count}} Abschnitt",
+    countSections_other: "{{count}} Abschnitten",
+    countNotes_one: "{{count}} Recherchenotiz",
+    countNotes_other: "{{count}} Recherchenotizen",
+    countJoin: " und "
+  },
+  sections: {
+    splitTitle: "Abschnitt teilen",
+    splitHint: "Alles vom Cursor bis zum Ende von \u201E{{name}}\u201C wandert in den neuen Abschnitt, der im Binder direkt dahinter steht.",
+    splitBtn: "Teilen",
+    splitDone: "Geteilt. \u201E{{name}}\u201C beginnt dort, wo der Cursor stand.",
+    splitInFrontmatter: "Setzen Sie den Cursor in den Text unterhalb der Eigenschaften und versuchen Sie es erneut.",
+    splitNotManuscript: "Teilen funktioniert in einem Abschnitt des Manuskripts des aktiven Projekts. \xD6ffnen Sie einen und versuchen Sie es erneut.",
+    mergeTitle: "Abschnitte zusammenf\xFChren",
+    mergeMessage: "\u201E{{first}}\u201C und \u201E{{second}}\u201C werden ein Abschnitt namens \u201E{{first}}\u201C.",
+    mergeHeadingToggle: "\u201E{{second}}\u201C als \xDCberschrift an der Nahtstelle einf\xFCgen",
+    mergeTrashHint: "Die zweite Datei kommt in den Papierkorb, Sie k\xF6nnen sie also zur\xFCckholen.",
+    mergeBtn: "Zusammenf\xFChren",
+    mergeDone: "Zusammengef\xFChrt. \u201E{{second}}\u201C liegt im Papierkorb."
+  },
+  findReplace: {
+    title: "Im Projekt suchen und ersetzen",
+    findLabel: "Suchen",
+    replaceLabel: "Ersetzen",
+    matchCase: "Gro\xDF-/Kleinschreibung beachten",
+    wholeWord: "Ganzes Wort",
+    includeResearch: "Recherchenotizen einbeziehen",
+    loading: "Projekt wird gelesen\u2026",
+    typeToFind: "Geben Sie ein Wort oder eine Wendung ein.",
+    noMatches: "Keine Treffer.",
+    summary_one: "{{count}} Treffer in {{sections}}",
+    summary_other: "{{count}} Treffer in {{sections}}",
+    sections_one: "{{count}} Abschnitt",
+    sections_other: "{{count}} Abschnitten",
+    replaceSelected: "Ausgew\xE4hlte ersetzen ({{count}})",
+    replaceAll: "Alle ersetzen",
+    undo: "Letztes Ersetzen r\xFCckg\xE4ngig",
+    close: "Schlie\xDFen",
+    openDoc: "\u201E{{name}}\u201C \xF6ffnen",
+    researchTag: "Recherche",
+    replaced_one: "{{count}} Treffer in {{sections}} ersetzt.",
+    replaced_other: "{{count}} Treffer in {{sections}} ersetzt.",
+    skippedChanged: "\xDCbersprungen, weil die Datei seit der Suche ge\xE4ndert wurde: {{names}}. Suchen Sie erneut, um den aktuellen Text zu sehen.",
+    nothingToUndo: "Nichts r\xFCckg\xE4ngig zu machen.",
+    undone_one: "R\xFCckg\xE4ngig gemacht. {{count}} Datei wiederhergestellt.",
+    undone_other: "R\xFCckg\xE4ngig gemacht. {{count}} Dateien wiederhergestellt.",
+    undoSkipped: "Unver\xE4ndert gelassen, weil sie nach dem Ersetzen ge\xE4ndert wurden: {{names}}"
   }
 };
 
@@ -12110,7 +12934,9 @@ var ko_default = {
       setStatusPublished: "\uC0C1\uD0DC \uC124\uC815: \uAC8C\uC2DC\uB428",
       rename: "\uC774\uB984 \uBC14\uAFB8\uAE30",
       changeType: "\uC720\uD615 \uBCC0\uACBD: {{type}}",
-      editSynopsis: "\uAC1C\uC694 \uD3B8\uC9D1\u2026"
+      editSynopsis: "\uAC1C\uC694 \uD3B8\uC9D1\u2026",
+      mergeNext: "\uB2E4\uC74C \uC139\uC158\uACFC \uD569\uCE58\uAE30\u2026",
+      renameCitekey: "\uC778\uC6A9 \uD0A4 \uC774\uB984 \uBC14\uAFB8\uAE30\u2026"
     },
     deleteConfirm: {
       title: "\uBB38\uC11C \uC0AD\uC81C",
@@ -12172,7 +12998,8 @@ var ko_default = {
       restoreUnavailable: "\uBC30\uCE58 \uBCF5\uC6D0\uC5D0\uB294 \uC2E4\uD5D8\uC801 \uD30C\uC77C \uC2DC\uC2A4\uD15C \uBC14\uC778\uB354\uC640 \uD65C\uC131 \uD504\uB85C\uC81D\uD2B8\uAC00 \uD544\uC694\uD569\uB2C8\uB2E4."
     },
     toggleSynopses: "\uAC01 \uC139\uC158\uC758 \uAC1C\uC694\uB97C \uC81C\uBAA9 \uC544\uB798\uC5D0 \uD45C\uC2DC",
-    openOutline: "\uC544\uC6C3\uB77C\uC778 \uC5F4\uAE30"
+    openOutline: "\uC544\uC6C3\uB77C\uC778 \uC5F4\uAE30",
+    findReplace: "\uD504\uB85C\uC81D\uD2B8\uC5D0\uC11C \uCC3E\uAE30 \uBC0F \uBC14\uAFB8\uAE30"
   },
   launcher: {
     displayText: "\uAE00\uC4F0\uAE30 \uC2A4\uD29C\uB514\uC624",
@@ -12587,7 +13414,10 @@ var ko_default = {
       restoreBinderLayout: "\uC774\uC804 \uBC14\uC778\uB354 \uBC30\uCE58 \uBCF5\uC6D0",
       openOutline: "\uC544\uC6C3\uB77C\uC778 \uC5F4\uAE30",
       insertCitation: "\uC778\uC6A9 \uC0BD\uC785",
-      addSource: "\uCD9C\uCC98 \uCD94\uAC00"
+      addSource: "\uCD9C\uCC98 \uCD94\uAC00",
+      splitSection: "\uCEE4\uC11C \uC704\uCE58\uC5D0\uC11C \uC139\uC158 \uB098\uB204\uAE30",
+      findReplace: "\uD504\uB85C\uC81D\uD2B8\uC5D0\uC11C \uCC3E\uAE30 \uBC0F \uBC14\uAFB8\uAE30",
+      renameCitekey: "\uC778\uC6A9 \uD0A4 \uC774\uB984 \uBC14\uAFB8\uAE30"
     },
     menu: {
       studioOptions: "\uAE00\uC4F0\uAE30 \uC2A4\uD29C\uB514\uC624 \uC635\uC158",
@@ -12600,7 +13430,8 @@ var ko_default = {
       draftMode: "\u270D \uCD08\uC548 \uBAA8\uB4DC",
       editMode: "\u270E \uD3B8\uC9D1 \uBAA8\uB4DC",
       reviewMode: "\u{1F441} \uAC80\uD1A0 \uBAA8\uB4DC",
-      normalMode: "\uC77C\uBC18 (\uBAA8\uB4DC \uC5C6\uC74C)"
+      normalMode: "\uC77C\uBC18 (\uBAA8\uB4DC \uC5C6\uC74C)",
+      splitSection: "\uC5EC\uAE30\uC11C \uC139\uC158 \uB098\uB204\uAE30\u2026"
     },
     notice: {
       noMarkdownOpen: "\uD604\uC7AC \uC5F4\uB824 \uC788\uB294 Markdown \uD30C\uC77C\uC774 \uC5C6\uC2B5\uB2C8\uB2E4."
@@ -12762,7 +13593,67 @@ var ko_default = {
       citekeyDesc: "\uC774 \uCD9C\uCC98\uB97C \uC778\uC6A9\uD560 \uB54C \uC0AC\uC6A9\uD569\uB2C8\uB2E4(\uC608: [@smith2020]). \uC790\uB3D9\uC73C\uB85C \uCC44\uC6CC\uC9C0\uBA70 \uC6D0\uD558\uBA74 \uBC14\uAFC0 \uC218 \uC788\uC2B5\uB2C8\uB2E4."
     },
     addSourceShort: "\uCD9C\uCC98 \uCD94\uAC00",
-    addSourceTooltip: "\uC778\uC6A9\uD560 \uC218 \uC788\uB294 \uCC45, \uAE30\uC0AC \uB610\uB294 \uC6F9 \uD398\uC774\uC9C0 \uCD94\uAC00"
+    addSourceTooltip: "\uC778\uC6A9\uD560 \uC218 \uC788\uB294 \uCC45, \uAE30\uC0AC \uB610\uB294 \uC6F9 \uD398\uC774\uC9C0 \uCD94\uAC00",
+    renameKeyTitle: "\uC778\uC6A9 \uD0A4 \uC774\uB984 \uBC14\uAFB8\uAE30",
+    renameKeySource: "\uCD9C\uCC98",
+    renameKeyCurrent: "\uD604\uC7AC",
+    renameKeyNew: "\uC0C8 \uD0A4",
+    renameKeyUsage: "{{where}}\uC758 {{citations}}\uC5D0\uC11C \uC0AC\uC6A9 \uC911\uC785\uB2C8\uB2E4. \uBAA8\uB450 \uC5C5\uB370\uC774\uD2B8\uB429\uB2C8\uB2E4.",
+    renameKeyUnused: "\uC774 \uD504\uB85C\uC81D\uD2B8\uC5D0\uC11C \uC544\uC9C1 \uC778\uC6A9\uB418\uC9C0 \uC54A\uC558\uC2B5\uB2C8\uB2E4.",
+    renameKeyBtn: "\uC774\uB984 \uBC14\uAFB8\uAE30",
+    renameKeySame: "\uD604\uC7AC \uD0A4\uC640 \uAC19\uC2B5\uB2C8\uB2E4. \uB2E4\uB978 \uD0A4\uB97C \uC785\uB825\uD558\uC138\uC694.",
+    renameKeyDone_one: "\uC778\uC6A9 {{count}}\uACF3\uC5D0\uC11C @{{key}}(\uC73C)\uB85C \uBC14\uAFE8\uC2B5\uB2C8\uB2E4.",
+    renameKeyDone_other: "\uC778\uC6A9 {{count}}\uACF3\uC5D0\uC11C @{{key}}(\uC73C)\uB85C \uBC14\uAFE8\uC2B5\uB2C8\uB2E4.",
+    notASource: '\uC774 \uB178\uD2B8\uC5D0\uB294 \uC778\uC6A9 \uD0A4\uAC00 \uC5C6\uC2B5\uB2C8\uB2E4. \uCD9C\uCC98 \uB178\uD2B8\uB97C \uC5F4\uAC70\uB098 "\uCD9C\uCC98 \uCD94\uAC00"\uB85C \uB9CC\uB4DC\uC138\uC694.',
+    countCitations_one: "\uC778\uC6A9 {{count}}\uACF3",
+    countCitations_other: "\uC778\uC6A9 {{count}}\uACF3",
+    countSections_one: "\uC139\uC158 {{count}}\uAC1C",
+    countSections_other: "\uC139\uC158 {{count}}\uAC1C",
+    countNotes_one: "\uC5F0\uAD6C \uB178\uD2B8 {{count}}\uAC1C",
+    countNotes_other: "\uC5F0\uAD6C \uB178\uD2B8 {{count}}\uAC1C",
+    countJoin: " \uBC0F "
+  },
+  sections: {
+    splitTitle: "\uC139\uC158 \uB098\uB204\uAE30",
+    splitHint: '\uCEE4\uC11C\uBD80\uD130 "{{name}}" \uB05D\uAE4C\uC9C0\uC758 \uBAA8\uB4E0 \uB0B4\uC6A9\uC774 \uC0C8 \uC139\uC158\uC73C\uB85C \uC62E\uACA8\uC9C0\uBA70, \uBC14\uC778\uB354\uC5D0\uC11C \uBC14\uB85C \uB4A4\uC5D0 \uB193\uC785\uB2C8\uB2E4.',
+    splitBtn: "\uB098\uB204\uAE30",
+    splitDone: '\uB098\uB234\uC2B5\uB2C8\uB2E4. "{{name}}"\uC740(\uB294) \uCEE4\uC11C\uAC00 \uC788\uB358 \uACF3\uC5D0\uC11C \uC2DC\uC791\uD569\uB2C8\uB2E4.',
+    splitInFrontmatter: "\uC18D\uC131 \uC544\uB798 \uBCF8\uBB38\uC5D0 \uCEE4\uC11C\uB97C \uB450\uACE0 \uB2E4\uC2DC \uC2DC\uB3C4\uD558\uC138\uC694.",
+    splitNotManuscript: "\uB098\uB204\uAE30\uB294 \uD65C\uC131 \uD504\uB85C\uC81D\uD2B8 \uC6D0\uACE0\uC758 \uC139\uC158\uC5D0\uC11C\uB9CC \uB429\uB2C8\uB2E4. \uC139\uC158\uC744 \uC5F4\uACE0 \uB2E4\uC2DC \uC2DC\uB3C4\uD558\uC138\uC694.",
+    mergeTitle: "\uC139\uC158 \uD569\uCE58\uAE30",
+    mergeMessage: '"{{first}}"\uACFC(\uC640) "{{second}}"\uC774(\uAC00) "{{first}}"\uC774\uB77C\uB294 \uD558\uB098\uC758 \uC139\uC158\uC774 \uB429\uB2C8\uB2E4.',
+    mergeHeadingToggle: '\uC774\uC5B4\uC9C0\uB294 \uC790\uB9AC\uC5D0 "{{second}}"\uC744(\uB97C) \uC81C\uBAA9\uC73C\uB85C \uCD94\uAC00',
+    mergeTrashHint: "\uB450 \uBC88\uC9F8 \uD30C\uC77C\uC740 \uD734\uC9C0\uD1B5\uC73C\uB85C \uC774\uB3D9\uD558\uBBC0\uB85C \uB418\uB3CC\uB9B4 \uC218 \uC788\uC2B5\uB2C8\uB2E4.",
+    mergeBtn: "\uD569\uCE58\uAE30",
+    mergeDone: '\uD569\uCCE4\uC2B5\uB2C8\uB2E4. "{{second}}"\uC740(\uB294) \uD734\uC9C0\uD1B5\uC5D0 \uC788\uC2B5\uB2C8\uB2E4.'
+  },
+  findReplace: {
+    title: "\uD504\uB85C\uC81D\uD2B8\uC5D0\uC11C \uCC3E\uAE30 \uBC0F \uBC14\uAFB8\uAE30",
+    findLabel: "\uCC3E\uAE30",
+    replaceLabel: "\uBC14\uAFB8\uAE30",
+    matchCase: "\uB300\uC18C\uBB38\uC790 \uAD6C\uBD84",
+    wholeWord: "\uB2E8\uC5B4 \uB2E8\uC704",
+    includeResearch: "\uC5F0\uAD6C \uB178\uD2B8 \uD3EC\uD568",
+    loading: "\uD504\uB85C\uC81D\uD2B8\uB97C \uC77D\uB294 \uC911\u2026",
+    typeToFind: "\uCC3E\uC744 \uB2E8\uC5B4\uB098 \uBB38\uAD6C\uB97C \uC785\uB825\uD558\uC138\uC694.",
+    noMatches: "\uC77C\uCE58\uD558\uB294 \uD56D\uBAA9\uC774 \uC5C6\uC2B5\uB2C8\uB2E4.",
+    summary_one: "{{sections}}\uC5D0\uC11C {{count}}\uAC1C \uC77C\uCE58",
+    summary_other: "{{sections}}\uC5D0\uC11C {{count}}\uAC1C \uC77C\uCE58",
+    sections_one: "{{count}}\uAC1C \uC139\uC158",
+    sections_other: "{{count}}\uAC1C \uC139\uC158",
+    replaceSelected: "\uC120\uD0DD \uD56D\uBAA9 \uBC14\uAFB8\uAE30({{count}})",
+    replaceAll: "\uBAA8\uB450 \uBC14\uAFB8\uAE30",
+    undo: "\uB9C8\uC9C0\uB9C9 \uBC14\uAFB8\uAE30 \uC2E4\uD589 \uCDE8\uC18C",
+    close: "\uB2EB\uAE30",
+    openDoc: '"{{name}}" \uC5F4\uAE30',
+    researchTag: "\uC5F0\uAD6C",
+    replaced_one: "{{sections}}\uC5D0\uC11C {{count}}\uAC1C\uB97C \uBC14\uAFE8\uC2B5\uB2C8\uB2E4.",
+    replaced_other: "{{sections}}\uC5D0\uC11C {{count}}\uAC1C\uB97C \uBC14\uAFE8\uC2B5\uB2C8\uB2E4.",
+    skippedChanged: "\uAC80\uC0C9 \uD6C4 \uD30C\uC77C\uC774 \uBC14\uB00C\uC5B4 \uAC74\uB108\uB6F0\uC5C8\uC2B5\uB2C8\uB2E4: {{names}}. \uD604\uC7AC \uD14D\uC2A4\uD2B8\uB97C \uBCF4\uB824\uBA74 \uB2E4\uC2DC \uAC80\uC0C9\uD558\uC138\uC694.",
+    nothingToUndo: "\uC2E4\uD589 \uCDE8\uC18C\uD560 \uAC83\uC774 \uC5C6\uC2B5\uB2C8\uB2E4.",
+    undone_one: "\uC2E4\uD589 \uCDE8\uC18C\uD588\uC2B5\uB2C8\uB2E4. \uD30C\uC77C {{count}}\uAC1C\uB97C \uC6D0\uB798\uB300\uB85C \uB418\uB3CC\uB838\uC2B5\uB2C8\uB2E4.",
+    undone_other: "\uC2E4\uD589 \uCDE8\uC18C\uD588\uC2B5\uB2C8\uB2E4. \uD30C\uC77C {{count}}\uAC1C\uB97C \uC6D0\uB798\uB300\uB85C \uB418\uB3CC\uB838\uC2B5\uB2C8\uB2E4.",
+    undoSkipped: "\uBC14\uAFB8\uAE30 \uC774\uD6C4\uC5D0 \uC218\uC815\uB418\uC5B4 \uADF8\uB300\uB85C \uB450\uC5C8\uC2B5\uB2C8\uB2E4: {{names}}"
   }
 };
 
@@ -13299,7 +14190,7 @@ function safeHandler(fn) {
 
 // modals/TitlePromptModal.ts
 var TitlePromptModal = class extends import_obsidian6.Modal {
-  constructor(app, heading2, initialValue, ctaText, cancelText, onSubmit) {
+  constructor(app, heading2, initialValue, ctaText, cancelText, onSubmit, hint = null) {
     super(app);
     this.submitted = false;
     this.heading = heading2;
@@ -13307,6 +14198,7 @@ var TitlePromptModal = class extends import_obsidian6.Modal {
     this.ctaText = ctaText;
     this.cancelText = cancelText;
     this.onSubmit = onSubmit;
+    this.hint = hint;
   }
   onOpen() {
     this.titleEl.setText(this.heading);
@@ -13316,6 +14208,7 @@ var TitlePromptModal = class extends import_obsidian6.Modal {
       value: this.initialValue
     });
     input.select();
+    if (this.hint) this.contentEl.createDiv({ cls: "ws-title-prompt-hint", text: this.hint });
     const submit = safeHandler(async () => {
       if (this.submitted) return;
       this.submitted = true;
@@ -14980,6 +15873,11 @@ var FilesystemBinderView = class extends import_obsidian15.ItemView {
     outlineBtn.onclick = () => {
       void this.plugin.openOutline();
     };
+    const findBtn = toolbar.createEl("button", { cls: "ws-binder-btn", title: t2("binder.findReplace") });
+    (0, import_obsidian15.setIcon)(findBtn, "replace");
+    findBtn.onclick = () => {
+      this.plugin.openFindReplace();
+    };
     const dashBtn = toolbar.createEl("button", { cls: "ws-binder-btn", title: t2("binder.targetsDashboard") });
     (0, import_obsidian15.setIcon)(dashBtn, "target");
     dashBtn.onclick = () => {
@@ -15494,6 +16392,7 @@ var FilesystemBinderView = class extends import_obsidian15.ItemView {
   // Every mutation is a filesystem or frontmatter write; the binder re-renders
   // through the vault/metadata event path, never by a manual refresh call.
   buildContextMenu(node, zone) {
+    var _a2, _b2;
     const menu = new import_obsidian15.Menu();
     const actions = new Set(menuActionsFor(node, zone));
     const doc = node.file instanceof import_obsidian15.TFile && node.extension === "md" ? node.file : null;
@@ -15548,6 +16447,23 @@ var FilesystemBinderView = class extends import_obsidian15.ItemView {
         }));
       }
     }
+    if (actions.has("merge") && doc) {
+      const next = this.nextDocSibling(node);
+      if (next) {
+        menu.addSeparator();
+        menu.addItem((i2) => i2.setTitle(t2("binder.menu.mergeNext")).setIcon("merge").onClick(() => {
+          this.plugin.mergeWithNext(doc, next);
+        }));
+      }
+    }
+    if (actions.has("renameKey") && doc) {
+      const citekey = (_b2 = (_a2 = this.app.metadataCache.getFileCache(doc)) == null ? void 0 : _a2.frontmatter) == null ? void 0 : _b2.citekey;
+      if (typeof citekey === "string" && citekey) {
+        menu.addItem((i2) => i2.setTitle(t2("binder.menu.renameCitekey")).setIcon("key-round").onClick(() => {
+          this.plugin.renameCitationKey(doc);
+        }));
+      }
+    }
     if (actions.has("compile") && doc) {
       const excluded = node.compileExcluded;
       menu.addSeparator();
@@ -15580,6 +16496,25 @@ var FilesystemBinderView = class extends import_obsidian15.ItemView {
       menu.addItem((i2) => i2.setTitle(t2("binder.fs.delete")).setIcon("trash").onClick(() => this.confirmDelete(node)));
     }
     return menu;
+  }
+  // The markdown document that follows `node` among its manuscript siblings,
+  // or null when a folder or nothing comes next.
+  nextDocSibling(node) {
+    var _a2, _b2, _c;
+    const find = (nodes) => {
+      const idx = nodes.findIndex((n) => n.file.path === node.file.path);
+      if (idx >= 0) {
+        const next = nodes[idx + 1];
+        return next && !next.isFolder && next.extension === "md" && next.file instanceof import_obsidian15.TFile ? next.file : null;
+      }
+      for (const n of nodes) {
+        if (!n.isFolder) continue;
+        const found = find(n.children);
+        if (found !== void 0) return found;
+      }
+      return void 0;
+    };
+    return (_c = find((_b2 = (_a2 = this.model) == null ? void 0 : _a2.manuscript) != null ? _b2 : [])) != null ? _c : null;
   }
   // The synopsis dialog writes `synopsis` frontmatter; an emptied box removes
   // the key rather than leaving an empty string behind.
@@ -21105,8 +22040,639 @@ var AddSourceModal = class extends import_obsidian26.Modal {
   }
 };
 
-// src/WordPressClient.ts
+// modals/MergeSectionsModal.ts
 var import_obsidian27 = require("obsidian");
+var MergeSectionsModal = class extends import_obsidian27.Modal {
+  constructor(app, firstTitle, secondTitle, onConfirm) {
+    super(app);
+    this.addHeading = false;
+    this.submitted = false;
+    this.first = firstTitle;
+    this.second = secondTitle;
+    this.onConfirm = onConfirm;
+  }
+  onOpen() {
+    const { contentEl } = this;
+    contentEl.empty();
+    contentEl.addClass("ws-merge-modal");
+    this.titleEl.setText(t2("sections.mergeTitle"));
+    contentEl.createEl("p", { text: t2("sections.mergeMessage", { first: this.first, second: this.second }) });
+    new import_obsidian27.Setting(contentEl).setName(t2("sections.mergeHeadingToggle", { second: this.second })).addToggle((tg) => {
+      tg.setValue(this.addHeading);
+      tg.onChange((v) => {
+        this.addHeading = v;
+      });
+    });
+    contentEl.createEl("p", { cls: "ws-merge-hint", text: t2("sections.mergeTrashHint") });
+    const submit = safeHandler(async () => {
+      if (this.submitted) return;
+      this.submitted = true;
+      this.close();
+      await this.onConfirm(this.addHeading);
+    });
+    const buttons = contentEl.createDiv({ cls: "modal-button-container" });
+    const mergeBtn = buttons.createEl("button", { cls: "mod-cta", text: t2("sections.mergeBtn") });
+    mergeBtn.onclick = () => {
+      submit();
+    };
+    const cancelBtn = buttons.createEl("button", { text: t2("synopsis.cancel") });
+    cancelBtn.onclick = () => this.close();
+    this.scope.register([], "Enter", (e) => {
+      e.preventDefault();
+      submit();
+      return false;
+    });
+    mergeBtn.focus();
+  }
+  onClose() {
+    this.contentEl.empty();
+  }
+};
+
+// modals/FindReplaceModal.ts
+var import_obsidian28 = require("obsidian");
+
+// src/sectionEdit.ts
+function splitFrontmatter(text) {
+  const m = /^---\r?\n[\s\S]*?\r?\n---[ \t]*(?:\r?\n|$)/.exec(text);
+  if (!m) return { fm: "", body: text };
+  return { fm: m[0], body: text.slice(m[0].length) };
+}
+function footnoteDefinitions(body) {
+  const blocks = [];
+  const lines = body.split("\n");
+  const skip = codeRanges(body);
+  let pos = 0;
+  for (let i2 = 0; i2 < lines.length; i2++) {
+    const line = lines[i2];
+    const start2 = pos;
+    pos += line.length + 1;
+    const def = /^\[\^([^\]\s]+)\]:/.exec(line);
+    if (!def || inRanges(skip, start2)) continue;
+    let end = Math.min(pos, body.length + 1);
+    while (i2 + 1 < lines.length) {
+      const next = lines[i2 + 1];
+      if (/^(?: {2,}|\t)\S/.test(next)) {
+        pos += next.length + 1;
+        i2++;
+        end = pos;
+      } else if (next.trim() === "" && i2 + 2 < lines.length && /^(?: {2,}|\t)\S/.test(lines[i2 + 2])) {
+        pos += next.length + 1;
+        i2++;
+      } else {
+        break;
+      }
+    }
+    end = Math.min(end, body.length);
+    blocks.push({ id: def[1], start: start2, end, text: body.slice(start2, end).replace(/\n$/, "") });
+  }
+  return blocks;
+}
+function footnoteRefs(body) {
+  const ids = /* @__PURE__ */ new Set();
+  const skip = codeRanges(body);
+  const re = /\[\^([^\]\s]+)\](?!:)/g;
+  let m;
+  while ((m = re.exec(body)) !== null) {
+    if (!inRanges(skip, m.index)) ids.add(m[1]);
+  }
+  return ids;
+}
+function withoutRanges(text, ranges) {
+  let out = text;
+  for (const r of [...ranges].sort((a, b) => b.start - a.start)) {
+    out = out.slice(0, r.start) + out.slice(r.end);
+  }
+  return out;
+}
+function splitSection(text, offset) {
+  const { fm, body } = splitFrontmatter(text);
+  if (offset < fm.length) return null;
+  const at = Math.min(offset - fm.length, body.length);
+  let headBody = body.slice(0, at);
+  let tailBody = body.slice(at);
+  const defs = footnoteDefinitions(body);
+  const headDefs = defs.filter((d) => d.end <= at);
+  const tailDefs = defs.filter((d) => d.start >= at).map((d) => ({ ...d, start: d.start - at, end: d.end - at }));
+  const headRefs = footnoteRefs(withoutRanges(headBody, headDefs));
+  const tailRefs = footnoteRefs(withoutRanges(tailBody, tailDefs));
+  const toTail = [];
+  const removeFromHead = [];
+  for (const d of headDefs) {
+    if (!tailRefs.has(d.id)) continue;
+    toTail.push(d.text);
+    if (!headRefs.has(d.id)) removeFromHead.push(d);
+  }
+  const toHead = [];
+  const removeFromTail = [];
+  for (const d of tailDefs) {
+    if (!headRefs.has(d.id)) continue;
+    toHead.push(d.text);
+    if (!tailRefs.has(d.id)) removeFromTail.push(d);
+  }
+  headBody = withoutRanges(headBody, removeFromHead);
+  tailBody = withoutRanges(tailBody, removeFromTail);
+  const assemble = (main, appended) => {
+    const parts = [main.trim(), ...appended].filter((p) => p.length > 0);
+    return parts.length ? parts.join("\n\n") + "\n" : "";
+  };
+  return {
+    head: fm + assemble(headBody, toHead),
+    tail: assemble(tailBody, toTail)
+  };
+}
+var headingText = (line) => {
+  const m = /^\s{0,3}#{1,6}\s+(.*?)\s*#*\s*$/.exec(line);
+  return m && m[1].trim() ? m[1].trim() : null;
+};
+function suggestSplitTitle(text, offset, currentTitle) {
+  const lineStart = text.lastIndexOf("\n", offset - 1) + 1;
+  const lineEnd = text.indexOf("\n", offset);
+  const cursorLine = text.slice(lineStart, lineEnd === -1 ? text.length : lineEnd);
+  let heading2 = headingText(cursorLine);
+  if (!heading2) {
+    const firstTailLine = text.slice(offset).split("\n").find((l) => l.trim() !== "");
+    if (firstTailLine !== void 0) heading2 = headingText(firstTailLine);
+  }
+  const raw = heading2 != null ? heading2 : `${currentTitle} (2)`;
+  return stripTrailingDotsAndSpaces(replaceIllegalNameChars(raw, "-")).trim() || `${currentTitle} (2)`;
+}
+function footnoteLabels(body) {
+  const ids = footnoteRefs(body);
+  for (const d of footnoteDefinitions(body)) ids.add(d.id);
+  return ids;
+}
+function relabelFootnotes(body, map) {
+  if (map.size === 0) return body;
+  const skip = codeRanges(body);
+  return body.replace(/\[\^([^\]\s]+)\]/g, (whole, id, index) => {
+    if (inRanges(skip, index)) return whole;
+    const next = map.get(id);
+    return next ? `[^${next}]` : whole;
+  });
+}
+function mergeSections(first, second, opts = {}) {
+  var _a2;
+  const a = splitFrontmatter(first);
+  const b = splitFrontmatter(second);
+  const used = footnoteLabels(a.body);
+  const bLabels = footnoteLabels(b.body);
+  for (const l of bLabels) used.add(l);
+  let nextNumber = 0;
+  for (const l of used) {
+    if (/^\d+$/.test(l)) nextNumber = Math.max(nextNumber, Number(l));
+  }
+  const map = /* @__PURE__ */ new Map();
+  for (const l of bLabels) {
+    if (!footnoteLabels(a.body).has(l)) continue;
+    let candidate;
+    if (/^\d+$/.test(l)) {
+      candidate = String(++nextNumber);
+    } else {
+      let n = 2;
+      candidate = `${l}-${n}`;
+      while (used.has(candidate)) candidate = `${l}-${++n}`;
+    }
+    used.add(candidate);
+    map.set(l, candidate);
+  }
+  const secondBody = relabelFootnotes(b.body, map);
+  const heading2 = (_a2 = opts.headingTitle) == null ? void 0 : _a2.trim();
+  const parts = [a.body.trim(), heading2 ? `## ${heading2}` : "", secondBody.trim()].filter((p) => p.length > 0);
+  return a.fm + (parts.length ? parts.join("\n\n") + "\n" : "");
+}
+
+// src/projectSearch.ts
+var CONTEXT = 40;
+var escapeRegExp = (s) => s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+function queryRegExp(q) {
+  if (!q.find) return null;
+  const core = escapeRegExp(q.find);
+  const source = q.wholeWord ? `(?<![\\p{L}\\p{N}_])${core}(?![\\p{L}\\p{N}_])` : core;
+  return new RegExp(source, q.matchCase ? "gu" : "giu");
+}
+function findMatches(text, q) {
+  const re = queryRegExp(q);
+  if (!re) return [];
+  const { fm, body } = splitFrontmatter(text);
+  const skip = codeRanges(body);
+  const out = [];
+  let m;
+  while ((m = re.exec(body)) !== null) {
+    if (m[0].length === 0) {
+      re.lastIndex++;
+      continue;
+    }
+    if (inRanges(skip, m.index)) continue;
+    const start2 = m.index;
+    const end = start2 + m[0].length;
+    const lineStart = body.lastIndexOf("\n", start2 - 1) + 1;
+    const lineEndRaw = body.indexOf("\n", end);
+    const lineEnd = lineEndRaw === -1 ? body.length : lineEndRaw;
+    const beforeFull = body.slice(lineStart, start2);
+    const afterFull = body.slice(end, lineEnd);
+    const line = (fm + body.slice(0, start2)).split("\n").length - 1;
+    out.push({
+      start: fm.length + start2,
+      end: fm.length + end,
+      line,
+      before: beforeFull.length > CONTEXT ? "\u2026" + beforeFull.slice(-CONTEXT) : beforeFull,
+      hit: m[0],
+      after: afterFull.length > CONTEXT ? afterFull.slice(0, CONTEXT) + "\u2026" : afterFull
+    });
+  }
+  return out;
+}
+function replaceMatches(text, spans, replacement) {
+  const sorted = [...spans].sort((a, b) => a.start - b.start);
+  let out = "";
+  let pos = 0;
+  for (const s of sorted) {
+    if (s.start < pos) continue;
+    out += text.slice(pos, s.start) + replacement;
+    pos = s.end;
+  }
+  return out + text.slice(pos);
+}
+function planUndo(records, current) {
+  const plan = { restore: [], skipped: [] };
+  for (const r of records) {
+    const now = current(r.path);
+    if (now === r.after) plan.restore.push({ path: r.path, content: r.before });
+    else plan.skipped.push(r.path);
+  }
+  return plan;
+}
+
+// modals/FindReplaceModal.ts
+var FindReplaceModal = class extends import_obsidian28.Modal {
+  constructor(app, plugin, projectFolder) {
+    super(app);
+    this.query = { find: "", matchCase: false, wholeWord: false };
+    this.includeResearch = false;
+    this.replacement = "";
+    this.files = [];
+    this.groups = [];
+    this.summaryEl = null;
+    this.resultsEl = null;
+    this.replaceSelectedBtn = null;
+    this.replaceAllBtn = null;
+    this.undoBtn = null;
+    this.searchTimer = null;
+    this.loading = false;
+    this.plugin = plugin;
+    this.projectFolder = projectFolder;
+  }
+  onOpen() {
+    const { contentEl } = this;
+    contentEl.empty();
+    this.modalEl.addClass("ws-find-dialog");
+    contentEl.addClass("ws-find-modal");
+    this.titleEl.setText(t2("findReplace.title"));
+    const fields = contentEl.createDiv("ws-find-fields");
+    const findRow = fields.createDiv("ws-find-row");
+    findRow.createEl("label", { text: t2("findReplace.findLabel"), attr: { for: "ws-find-input" } });
+    const findInput = findRow.createEl("input", { type: "text", cls: "ws-find-input", attr: { id: "ws-find-input" } });
+    findInput.addEventListener("input", () => {
+      this.query = { ...this.query, find: findInput.value };
+      this.scheduleSearch();
+    });
+    const replaceRow = fields.createDiv("ws-find-row");
+    replaceRow.createEl("label", { text: t2("findReplace.replaceLabel"), attr: { for: "ws-replace-input" } });
+    const replaceInput = replaceRow.createEl("input", { type: "text", cls: "ws-find-input", attr: { id: "ws-replace-input" } });
+    replaceInput.addEventListener("input", () => {
+      this.replacement = replaceInput.value;
+    });
+    const options = contentEl.createDiv("ws-find-options");
+    const option = (label, get2, set) => {
+      const wrap = options.createEl("label", { cls: "ws-find-option" });
+      const box = wrap.createEl("input", { type: "checkbox" });
+      box.checked = get2();
+      box.addEventListener("change", () => {
+        set(box.checked);
+        this.scheduleSearch();
+      });
+      wrap.createSpan({ text: label });
+    };
+    option(t2("findReplace.matchCase"), () => this.query.matchCase, (v) => {
+      this.query = { ...this.query, matchCase: v };
+    });
+    option(t2("findReplace.wholeWord"), () => this.query.wholeWord, (v) => {
+      this.query = { ...this.query, wholeWord: v };
+    });
+    option(t2("findReplace.includeResearch"), () => this.includeResearch, (v) => {
+      this.includeResearch = v;
+    });
+    this.summaryEl = contentEl.createDiv("ws-find-summary");
+    this.resultsEl = contentEl.createDiv("ws-find-results");
+    const buttons = contentEl.createDiv("ws-find-buttons");
+    this.replaceSelectedBtn = buttons.createEl("button", { cls: "mod-cta" });
+    this.replaceSelectedBtn.onclick = safeHandler(() => this.replace(false));
+    this.replaceAllBtn = buttons.createEl("button", { text: t2("findReplace.replaceAll") });
+    this.replaceAllBtn.onclick = safeHandler(() => this.replace(true));
+    this.undoBtn = buttons.createEl("button", { cls: "ws-find-undo", text: t2("findReplace.undo") });
+    this.undoBtn.onclick = safeHandler(() => this.undo());
+    const closeBtn = buttons.createEl("button", { cls: "ws-find-close", text: t2("findReplace.close") });
+    closeBtn.onclick = () => this.close();
+    findInput.addEventListener("keydown", (e) => {
+      if (e.key === "Enter") {
+        e.preventDefault();
+        replaceInput.focus();
+      }
+    });
+    replaceInput.addEventListener("keydown", (e) => {
+      if (e.key === "Enter") {
+        e.preventDefault();
+        void this.replace(false);
+      }
+    });
+    this.renderResults();
+    findInput.focus();
+    void this.loadFiles();
+  }
+  // ─── Data ──────────────────────────────────────────────────────────────────
+  async loadFiles() {
+    this.loading = true;
+    const title = (f) => f.name.slice(0, f.name.length - f.extension.length - 1);
+    const docs = listManuscriptDocs(this.app, this.projectFolder).map((f) => ({ file: f, research: false }));
+    const research = listResearchDocs(this.app, this.projectFolder).map((f) => ({ file: f, research: true }));
+    const loaded = [];
+    for (const { file, research: r } of [...docs, ...research]) {
+      loaded.push({ file, title: title(file), research: r, text: await this.app.vault.cachedRead(file) });
+    }
+    this.files = loaded;
+    this.loading = false;
+    this.search();
+  }
+  scheduleSearch() {
+    if (this.searchTimer !== null) window.clearTimeout(this.searchTimer);
+    this.searchTimer = window.setTimeout(() => {
+      this.searchTimer = null;
+      this.search();
+    }, 150);
+  }
+  search() {
+    var _a2;
+    const prior = new Map(this.groups.map((g) => [g.sf.file.path, g.collapsed]));
+    this.groups = [];
+    if (this.query.find) {
+      for (const sf of this.files) {
+        if (sf.research && !this.includeResearch) continue;
+        const matches = findMatches(sf.text, this.query);
+        if (matches.length === 0) continue;
+        this.groups.push({ sf, matches, selected: matches.map(() => true), collapsed: (_a2 = prior.get(sf.file.path)) != null ? _a2 : false });
+      }
+    }
+    this.renderResults();
+  }
+  counts() {
+    let matches = 0;
+    let selected = 0;
+    for (const g of this.groups) {
+      matches += g.matches.length;
+      selected += g.selected.filter(Boolean).length;
+    }
+    return { matches, sections: this.groups.length, selected };
+  }
+  // ─── Rendering ─────────────────────────────────────────────────────────────
+  renderResults() {
+    const results = this.resultsEl;
+    const summary = this.summaryEl;
+    if (!results || !summary) return;
+    results.empty();
+    const { matches, sections } = this.counts();
+    if (!this.query.find) {
+      summary.setText(this.loading ? t2("findReplace.loading") : t2("findReplace.typeToFind"));
+    } else if (matches === 0) {
+      summary.setText(t2("findReplace.noMatches"));
+    } else {
+      summary.setText(t2("findReplace.summary", { count: matches, sections: t2("findReplace.sections", { count: sections }) }));
+    }
+    for (const g of this.groups) {
+      const groupEl = results.createDiv("ws-find-group");
+      const head = groupEl.createDiv("ws-find-group-head");
+      const chevron = head.createSpan("ws-find-chevron");
+      (0, import_obsidian28.setIcon)(chevron, g.collapsed ? "chevron-right" : "chevron-down");
+      chevron.onclick = () => {
+        g.collapsed = !g.collapsed;
+        this.renderResults();
+      };
+      const all = head.createEl("input", { type: "checkbox", cls: "ws-find-group-check" });
+      const n = g.selected.filter(Boolean).length;
+      all.checked = n === g.selected.length;
+      all.indeterminate = n > 0 && n < g.selected.length;
+      all.addEventListener("change", () => {
+        g.selected = g.selected.map(() => all.checked);
+        this.renderResults();
+      });
+      const titleBtn = head.createEl("button", { cls: "ws-find-group-title", text: g.sf.title });
+      titleBtn.setAttribute("aria-label", t2("findReplace.openDoc", { name: g.sf.title }));
+      titleBtn.onclick = safeHandler(async () => {
+        await this.app.workspace.getLeaf(false).openFile(g.sf.file, { eState: { line: g.matches[0].line } });
+      });
+      if (g.sf.research) head.createSpan({ cls: "ws-find-tag", text: t2("findReplace.researchTag") });
+      head.createSpan({ cls: "ws-find-count", text: String(g.matches.length) });
+      if (g.collapsed) continue;
+      g.matches.forEach((m, i2) => {
+        const row = groupEl.createEl("label", { cls: "ws-find-match" });
+        const box = row.createEl("input", { type: "checkbox" });
+        box.checked = g.selected[i2];
+        box.addEventListener("change", () => {
+          g.selected[i2] = box.checked;
+          this.updateButtons();
+          all.checked = g.selected.every(Boolean);
+          all.indeterminate = g.selected.some(Boolean) && !g.selected.every(Boolean);
+        });
+        const snippet = row.createSpan("ws-find-snippet");
+        snippet.createSpan({ text: m.before });
+        snippet.createSpan({ cls: "ws-find-hit", text: m.hit });
+        snippet.createSpan({ text: m.after });
+      });
+    }
+    this.updateButtons();
+  }
+  updateButtons() {
+    const { matches, selected } = this.counts();
+    if (this.replaceSelectedBtn) {
+      this.replaceSelectedBtn.setText(t2("findReplace.replaceSelected", { count: selected }));
+      this.replaceSelectedBtn.disabled = selected === 0;
+    }
+    if (this.replaceAllBtn) this.replaceAllBtn.disabled = matches === 0;
+    if (this.undoBtn) this.undoBtn.disabled = this.plugin.replaceLedger === null;
+  }
+  // ─── Writes ────────────────────────────────────────────────────────────────
+  async replace(all) {
+    const records = [];
+    const skipped = [];
+    let replaced = 0;
+    for (const g of this.groups) {
+      const spans = g.matches.filter((_, i2) => all || g.selected[i2]);
+      if (spans.length === 0) continue;
+      const before = g.sf.text;
+      const after = replaceMatches(before, spans, this.replacement);
+      let applied = false;
+      await this.app.vault.process(g.sf.file, (data) => {
+        if (data !== before) return data;
+        applied = true;
+        return after;
+      });
+      if (!applied) {
+        skipped.push(g.sf.title);
+        continue;
+      }
+      records.push({ path: g.sf.file.path, before, after });
+      replaced += spans.length;
+    }
+    if (records.length > 0) {
+      this.plugin.replaceLedger = records;
+      new import_obsidian28.Notice(t2("findReplace.replaced", { count: replaced, sections: t2("findReplace.sections", { count: records.length }) }));
+    }
+    if (skipped.length > 0) new import_obsidian28.Notice(t2("findReplace.skippedChanged", { names: skipped.join(", ") }));
+    await this.loadFiles();
+  }
+  async undo() {
+    const ledger = this.plugin.replaceLedger;
+    if (!ledger) {
+      new import_obsidian28.Notice(t2("findReplace.nothingToUndo"));
+      return;
+    }
+    const current = /* @__PURE__ */ new Map();
+    for (const r of ledger) {
+      const f = this.app.vault.getAbstractFileByPath(r.path);
+      current.set(r.path, f instanceof import_obsidian28.TFile ? await this.app.vault.read(f) : null);
+    }
+    const plan = planUndo(ledger, (p) => {
+      var _a2;
+      return (_a2 = current.get(p)) != null ? _a2 : null;
+    });
+    for (const { path, content: content2 } of plan.restore) {
+      const f = this.app.vault.getAbstractFileByPath(path);
+      if (f instanceof import_obsidian28.TFile) await this.app.vault.modify(f, content2);
+    }
+    this.plugin.replaceLedger = null;
+    new import_obsidian28.Notice(t2("findReplace.undone", { count: plan.restore.length }));
+    if (plan.skipped.length > 0) {
+      const names = plan.skipped.map((p) => {
+        var _a2, _b2;
+        return (_b2 = (_a2 = p.split("/").pop()) == null ? void 0 : _a2.replace(/\.md$/, "")) != null ? _b2 : p;
+      });
+      new import_obsidian28.Notice(t2("findReplace.undoSkipped", { names: names.join(", ") }));
+    }
+    await this.loadFiles();
+  }
+  onClose() {
+    if (this.searchTimer !== null) window.clearTimeout(this.searchTimer);
+    this.contentEl.empty();
+  }
+};
+
+// modals/RenameCitekeyModal.ts
+var import_obsidian29 = require("obsidian");
+
+// src/citekeyRename.ts
+var KEY_RE = /^[A-Za-z0-9_][A-Za-z0-9_:.#$%&\-+?<>~/]*$/;
+var TRAILING = /[.:,;?!#$%&\-+<>~/]+$/;
+function isValidCitekey(key) {
+  return KEY_RE.test(key) && !TRAILING.test(key);
+}
+var resolverFor = (key) => ({
+  hasKey: (k) => k === key,
+  keyForLink: () => null
+});
+function countKeyUses(text, key) {
+  let n = 0;
+  for (const c of findCitations(text, resolverFor(key))) {
+    for (const i2 of c.items) if (i2.key === key) n++;
+  }
+  return n;
+}
+function rewriteCitekey(text, oldKey, newKey) {
+  const citations = findCitations(text, resolverFor(oldKey)).filter((c) => c.items.some((i2) => i2.key === oldKey) && c.raw.includes("@"));
+  let count = 0;
+  const render = (c) => c.raw.replace(/(^|[^\w@])(-?)@([A-Za-z0-9_][A-Za-z0-9_:.#$%&\-+?<>~/]*)/g, (whole, lead, minus, run) => {
+    const trimmed = run.replace(TRAILING, "");
+    if (trimmed !== oldKey) return whole;
+    count++;
+    return `${lead}${minus}@${newKey}${run.slice(trimmed.length)}`;
+  });
+  return { text: replaceCitations(text, citations, render), count };
+}
+
+// modals/RenameCitekeyModal.ts
+var RenameCitekeyModal = class extends import_obsidian29.Modal {
+  constructor(app, sourceLabel, currentKey, taken, usage, onConfirm) {
+    super(app);
+    this.submitted = false;
+    this.sourceLabel = sourceLabel;
+    this.currentKey = currentKey;
+    this.taken = taken;
+    this.usage = usage;
+    this.onConfirm = onConfirm;
+  }
+  onOpen() {
+    const { contentEl } = this;
+    contentEl.empty();
+    contentEl.addClass("ws-rename-key-modal");
+    this.titleEl.setText(t2("citations.renameKeyTitle"));
+    const grid = contentEl.createDiv("ws-rename-key-grid");
+    grid.createDiv({ cls: "ws-rename-key-label", text: t2("citations.renameKeySource") });
+    grid.createDiv({ cls: "ws-rename-key-value", text: this.sourceLabel });
+    grid.createDiv({ cls: "ws-rename-key-label", text: t2("citations.renameKeyCurrent") });
+    grid.createDiv({ cls: "ws-rename-key-value ws-rename-key-mono", text: this.currentKey });
+    grid.createDiv({ cls: "ws-rename-key-label", text: t2("citations.renameKeyNew") });
+    const input = grid.createEl("input", { type: "text", cls: "ws-rename-key-input", value: this.currentKey });
+    input.setAttribute("aria-label", t2("citations.renameKeyNew"));
+    const u = this.usage;
+    const usageText = u.citations === 0 ? t2("citations.renameKeyUnused") : t2("citations.renameKeyUsage", {
+      citations: t2("citations.countCitations", { count: u.citations }),
+      where: [
+        u.sections > 0 ? t2("citations.countSections", { count: u.sections }) : "",
+        u.notes > 0 ? t2("citations.countNotes", { count: u.notes }) : ""
+      ].filter((s) => s.length > 0).join(t2("citations.countJoin"))
+    });
+    contentEl.createEl("p", { cls: "ws-rename-key-usage", text: usageText });
+    const submit = safeHandler(async () => {
+      if (this.submitted) return;
+      const next = input.value.trim();
+      if (next === this.currentKey) {
+        new import_obsidian29.Notice(t2("citations.renameKeySame"));
+        return;
+      }
+      if (!isValidCitekey(next)) {
+        new import_obsidian29.Notice(t2("citations.citekeyInvalid"));
+        return;
+      }
+      if (this.taken.has(next)) {
+        new import_obsidian29.Notice(t2("citations.citekeyTaken", { key: next }));
+        return;
+      }
+      this.submitted = true;
+      this.close();
+      await this.onConfirm(next);
+    });
+    input.onkeydown = (e) => {
+      if (e.key === "Enter") {
+        e.preventDefault();
+        submit();
+      }
+    };
+    const buttons = contentEl.createDiv({ cls: "modal-button-container" });
+    const renameBtn = buttons.createEl("button", { cls: "mod-cta", text: t2("citations.renameKeyBtn") });
+    renameBtn.onclick = () => {
+      submit();
+    };
+    const cancelBtn = buttons.createEl("button", { text: t2("synopsis.cancel") });
+    cancelBtn.onclick = () => this.close();
+    input.focus();
+    input.select();
+  }
+  onClose() {
+    this.contentEl.empty();
+  }
+};
+
+// src/WordPressClient.ts
+var import_obsidian30 = require("obsidian");
 var WordPressClient = class {
   authHeaders(site) {
     const credentials = `${site.username}:${site.appPassword}`;
@@ -21123,7 +22689,7 @@ var WordPressClient = class {
   async testConnection(site) {
     var _a2;
     try {
-      const resp = await (0, import_obsidian27.requestUrl)({
+      const resp = await (0, import_obsidian30.requestUrl)({
         url: this.apiUrl(site, "users/me"),
         method: "GET",
         headers: this.authHeaders(site),
@@ -21138,7 +22704,7 @@ var WordPressClient = class {
       const data = resp.json;
       let siteName = site.url;
       try {
-        const siteResp = await (0, import_obsidian27.requestUrl)({
+        const siteResp = await (0, import_obsidian30.requestUrl)({
           url: `${site.url.replace(/\/$/, "")}/wp-json/`,
           method: "GET",
           headers: this.authHeaders(site),
@@ -21163,7 +22729,7 @@ var WordPressClient = class {
     try {
       const all = [];
       for (let page = 1; page <= 20; page++) {
-        const resp = await (0, import_obsidian27.requestUrl)({
+        const resp = await (0, import_obsidian30.requestUrl)({
           url: this.apiUrl(site, `categories?per_page=100&page=${page}`),
           method: "GET",
           headers: this.authHeaders(site),
@@ -21184,7 +22750,7 @@ var WordPressClient = class {
       }
       return all;
     } catch (e) {
-      new import_obsidian27.Notice(t2("wpClient.fetchCategoriesFailed", { error: e instanceof Error ? e.message : String(e) }));
+      new import_obsidian30.Notice(t2("wpClient.fetchCategoriesFailed", { error: e instanceof Error ? e.message : String(e) }));
       return [];
     }
   }
@@ -21204,7 +22770,7 @@ var WordPressClient = class {
     if (opts.featuredMediaId) body.featured_media = opts.featuredMediaId;
     if (opts.scheduledDate) body.date = opts.scheduledDate;
     const url = opts.existingPostId ? this.apiUrl(site, `posts/${opts.existingPostId}`) : this.apiUrl(site, "posts");
-    const resp = await (0, import_obsidian27.requestUrl)({
+    const resp = await (0, import_obsidian30.requestUrl)({
       url,
       method: opts.existingPostId ? "PUT" : "POST",
       headers: this.authHeaders(site),
@@ -21228,7 +22794,7 @@ var WordPressClient = class {
     const skipped = [];
     for (const name of tagNames) {
       try {
-        const searchResp = await (0, import_obsidian27.requestUrl)({
+        const searchResp = await (0, import_obsidian30.requestUrl)({
           url: this.apiUrl(site, `tags?search=${encodeURIComponent(name)}`),
           method: "GET",
           headers: this.authHeaders(site),
@@ -21242,7 +22808,7 @@ var WordPressClient = class {
             continue;
           }
         }
-        const createResp = await (0, import_obsidian27.requestUrl)({
+        const createResp = await (0, import_obsidian30.requestUrl)({
           url: this.apiUrl(site, "tags"),
           method: "POST",
           headers: this.authHeaders(site),
@@ -21259,7 +22825,7 @@ var WordPressClient = class {
       }
     }
     if (skipped.length > 0) {
-      new import_obsidian27.Notice(t2("wpClient.tagsSkipped", { tags: skipped.join(", ") }));
+      new import_obsidian30.Notice(t2("wpClient.tagsSkipped", { tags: skipped.join(", ") }));
     }
     return ids;
   }
@@ -21280,10 +22846,10 @@ var WordPressClient = class {
 };
 
 // src/ProjectManager.ts
-var import_obsidian29 = require("obsidian");
+var import_obsidian32 = require("obsidian");
 
 // src/scaffold.ts
-var import_obsidian28 = require("obsidian");
+var import_obsidian31 = require("obsidian");
 function templateDoc(f) {
   var _a2, _b2, _c;
   const extra = Object.entries((_a2 = f.extraFields) != null ? _a2 : {}).map(([k, v]) => `
@@ -21317,9 +22883,9 @@ var TemplateScaffolder = class {
   }
   async apply(project, manifest) {
     var _a2;
-    const container = (0, import_obsidian28.normalizePath)(`${project.folderPath}/${resolveDocumentFolder(project)}`);
+    const container = (0, import_obsidian31.normalizePath)(`${project.folderPath}/${resolveDocumentFolder(project)}`);
     for (const folder of (_a2 = manifest.folders) != null ? _a2 : []) {
-      await this.files.ensureFolder((0, import_obsidian28.normalizePath)(`${container}/${folder}`));
+      await this.files.ensureFolder((0, import_obsidian31.normalizePath)(`${container}/${folder}`));
     }
     await this.buildItems(manifest.items, container);
   }
@@ -21330,12 +22896,12 @@ var TemplateScaffolder = class {
     let order = 10;
     for (const node of nodes) {
       if (node.fileName) {
-        const filePath = (0, import_obsidian28.normalizePath)(`${container}/${node.fileName}.md`);
+        const filePath = (0, import_obsidian31.normalizePath)(`${container}/${node.fileName}.md`);
         if (!this.files.exists(filePath)) {
           await this.files.writeText(filePath, (_a2 = node.content) != null ? _a2 : "");
         }
       } else {
-        const folderPath = (0, import_obsidian28.normalizePath)(`${container}/${folderNameWithPrefix(node.title, order)}`);
+        const folderPath = (0, import_obsidian31.normalizePath)(`${container}/${folderNameWithPrefix(node.title, order)}`);
         await this.files.ensureFolder(folderPath);
         if (node.children) await this.buildItems(node.children, folderPath);
       }
@@ -21717,7 +23283,7 @@ var TEMPLATE_MANIFESTS = {
 };
 
 // src/ProjectManager.ts
-var ProjectManager = class extends import_obsidian29.Events {
+var ProjectManager = class extends import_obsidian32.Events {
   constructor(plugin, files) {
     super();
     this.projects = /* @__PURE__ */ new Map();
@@ -21749,24 +23315,24 @@ var ProjectManager = class extends import_obsidian29.Events {
     this.projects.clear();
     const rootFolder = this.plugin.settings.defaultProjectFolder;
     if (!rootFolder) return;
-    const subfolders = this.files.listSubfolders((0, import_obsidian29.normalizePath)(rootFolder));
+    const subfolders = this.files.listSubfolders((0, import_obsidian32.normalizePath)(rootFolder));
     await Promise.all(subfolders.map((f) => this.loadProject(f)));
   }
   async loadProject(folderPath) {
-    const content2 = await this.files.readText((0, import_obsidian29.normalizePath)(`${folderPath}/_project.json`));
+    const content2 = await this.files.readText((0, import_obsidian32.normalizePath)(`${folderPath}/_project.json`));
     if (content2 === null) return null;
     try {
       const project = JSON.parse(content2);
       if (this.plugin.settings.removedProjectIds.includes(project.id)) return null;
-      const actualPath = (0, import_obsidian29.normalizePath)(folderPath);
+      const actualPath = (0, import_obsidian32.normalizePath)(folderPath);
       if (project.folderPath !== actualPath) {
         project.folderPath = actualPath;
-        await this.writeJson((0, import_obsidian29.normalizePath)(`${actualPath}/_project.json`), project);
+        await this.writeJson((0, import_obsidian32.normalizePath)(`${actualPath}/_project.json`), project);
       }
       this.projects.set(project.id, project);
       return project;
     } catch (e) {
-      new import_obsidian29.Notice(t2("projectManager.corruptProject", { folder: folderPath }));
+      new import_obsidian32.Notice(t2("projectManager.corruptProject", { folder: folderPath }));
       return null;
     }
   }
@@ -21774,15 +23340,15 @@ var ProjectManager = class extends import_obsidian29.Events {
     const rootFolder = this.plugin.settings.defaultProjectFolder || "Writing Projects";
     const id = this.uniqueId("project");
     const folderName = projectFolderNameForTitle(title);
-    const folderPath = (0, import_obsidian29.normalizePath)(`${rootFolder}/${folderName}`);
+    const folderPath = (0, import_obsidian32.normalizePath)(`${rootFolder}/${folderName}`);
     if (this.files.exists(folderPath)) {
       throw new Error(t2("projectManager.errorFolderExists", { folder: folderName }));
     }
     const documentFolder = defaultDocumentFolder(type);
     await this.files.ensureFolder(folderPath);
-    await this.files.ensureFolder((0, import_obsidian29.normalizePath)(`${folderPath}/${documentFolder}`));
-    await this.files.ensureFolder((0, import_obsidian29.normalizePath)(`${folderPath}/Research`));
-    await this.files.ensureFolder((0, import_obsidian29.normalizePath)(`${folderPath}/Exports`));
+    await this.files.ensureFolder((0, import_obsidian32.normalizePath)(`${folderPath}/${documentFolder}`));
+    await this.files.ensureFolder((0, import_obsidian32.normalizePath)(`${folderPath}/Research`));
+    await this.files.ensureFolder((0, import_obsidian32.normalizePath)(`${folderPath}/Exports`));
     const now = localDateString();
     const project = {
       id,
@@ -21807,7 +23373,7 @@ var ProjectManager = class extends import_obsidian29.Events {
   }
   async saveProject(project) {
     project.modified = localDateString();
-    const path = (0, import_obsidian29.normalizePath)(`${project.folderPath}/_project.json`);
+    const path = (0, import_obsidian32.normalizePath)(`${project.folderPath}/_project.json`);
     await this.writeJson(path, project);
     this.projects.set(project.id, project);
     this.trigger("projects-changed");
@@ -21817,14 +23383,14 @@ var ProjectManager = class extends import_obsidian29.Events {
     return `${prefix}-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
   }
   async logSprintSession(project, session) {
-    const logPath = (0, import_obsidian29.normalizePath)(`${project.folderPath}/_writing-log.json`);
+    const logPath = (0, import_obsidian32.normalizePath)(`${project.folderPath}/_writing-log.json`);
     let log = [];
     const content2 = await this.files.readText(logPath);
     if (content2 !== null) {
       try {
         log = JSON.parse(content2);
       } catch (e) {
-        new import_obsidian29.Notice(t2("projectManager.corruptLog", { project: project.title }));
+        new import_obsidian32.Notice(t2("projectManager.corruptLog", { project: project.title }));
       }
     }
     log.push(session);
@@ -21835,7 +23401,7 @@ var ProjectManager = class extends import_obsidian29.Events {
     await this.writeJson(logPath, log);
   }
   async getWritingLog(project) {
-    const logPath = (0, import_obsidian29.normalizePath)(`${project.folderPath}/_writing-log.json`);
+    const logPath = (0, import_obsidian32.normalizePath)(`${project.folderPath}/_writing-log.json`);
     try {
       const content2 = await this.files.readText(logPath);
       return content2 === null ? [] : JSON.parse(content2);
@@ -21844,7 +23410,7 @@ var ProjectManager = class extends import_obsidian29.Events {
     }
   }
   async initWritingLog(project) {
-    const logPath = (0, import_obsidian29.normalizePath)(`${project.folderPath}/_writing-log.json`);
+    const logPath = (0, import_obsidian32.normalizePath)(`${project.folderPath}/_writing-log.json`);
     await this.writeJson(logPath, []);
   }
   async writeJson(path, data) {
@@ -21921,7 +23487,7 @@ var ProjectManager = class extends import_obsidian29.Events {
 };
 
 // src/StatsTracker.ts
-var import_obsidian30 = require("obsidian");
+var import_obsidian33 = require("obsidian");
 var StatsTracker = class {
   constructor(plugin) {
     this.sessionBaselines = /* @__PURE__ */ new Map();
@@ -21978,7 +23544,7 @@ ${t2("statsTracker.dailyNote.heading")}
 - ${t2("statsTracker.dailyNote.sessionTotal")} ${t2("statsTracker.dailyNote.sessionTotalValue", { duration: session.duration })}
 `;
     const dailyFile = this.app.vault.getAbstractFileByPath(dailyNotePath);
-    if (dailyFile instanceof import_obsidian30.TFile) {
+    if (dailyFile instanceof import_obsidian33.TFile) {
       await this.app.vault.append(dailyFile, "\n" + entry);
       return;
     }
@@ -21992,7 +23558,7 @@ ${t2("statsTracker.dailyNote.heading")}
     const options = (_d = (_c = (_b2 = (_a2 = this.app.internalPlugins) == null ? void 0 : _a2.plugins) == null ? void 0 : _b2["daily-notes"]) == null ? void 0 : _c.instance) == null ? void 0 : _d.options;
     const fileName = moment().format((options == null ? void 0 : options.format) || "YYYY-MM-DD");
     const folder = (options == null ? void 0 : options.folder) || "";
-    return (0, import_obsidian30.normalizePath)(folder ? `${folder}/${fileName}.md` : `${fileName}.md`);
+    return (0, import_obsidian33.normalizePath)(folder ? `${folder}/${fileName}.md` : `${fileName}.md`);
   }
   updateFileWordCount(path, wordCount) {
     if (!this.sessionBaselines.has(path)) {
@@ -22110,7 +23676,7 @@ ${t2("statsTracker.dailyNote.heading")}
 };
 
 // src/FrontmatterManager.ts
-var import_obsidian31 = require("obsidian");
+var import_obsidian34 = require("obsidian");
 var FrontmatterManager = class {
   constructor(plugin) {
     this.pendingUpdates = /* @__PURE__ */ new Map();
@@ -22136,7 +23702,7 @@ var FrontmatterManager = class {
     if (file.extension !== "md") return false;
     const projectFolder = this.plugin.settings.defaultProjectFolder;
     if (!projectFolder) return false;
-    return file.path.startsWith((0, import_obsidian31.normalizePath)(projectFolder) + "/");
+    return file.path.startsWith((0, import_obsidian34.normalizePath)(projectFolder) + "/");
   }
   async updateFrontmatter(file) {
     this.writingFiles.add(file.path);
@@ -22167,10 +23733,10 @@ var FrontmatterManager = class {
 };
 
 // src/SettingsTab.ts
-var import_obsidian32 = require("obsidian");
+var import_obsidian35 = require("obsidian");
 
 // README.md
-var README_default = '<p align="center">\r\n  <img src="assets/logo.png" width="120" alt="Writing Studio logo">\r\n</p>\r\n\r\n# Writing Studio\r\n\r\n**Version 3.2.0** \xB7 Desktop only\r\n\r\n![GitHub all releases](https://img.shields.io/github/downloads/writerP-777/obsidian-writing-studio/total)\r\n[![OpenSSF Best Practices](https://www.bestpractices.dev/projects/12832/badge)](https://www.bestpractices.dev/projects/12832)\r\n\r\nWriting Studio turns Obsidian into a dedicated environment for serious nonfiction work \u2014 from your first research notes to a finished, exported manuscript. It bundles a project binder, writing modes, focus and typography tools, sprint timer, progress tracking, manuscript export, and WordPress publishing into a single plugin. A built-in sidebar file explorer lets you browse, preview, and pull content from anywhere in your vault without leaving your draft.\r\n\r\n<p align="center">\r\n  <img src="assets/sidebar-explorer-screenshot.png" alt="Writing Studio with the Launcher panel open on the left, an active draft with its word count goal banner in the center, and the Folder Sidebar Explorer previewing a research file on the right" width="900">\r\n  <br>\r\n  <em>Writing Studio in use \u2014 Launcher (left), active draft with word count goal banner (center), Folder Sidebar Explorer open to a research folder (right).</em>\r\n</p>\r\n\r\n<p align="center">\r\n  <a href="https://buymeacoffee.com/writerp777">\r\n    <img src="https://img.buymeacoffee.com/button-api/?text=Buy%20me%20a%20coffee&slug=writerp777&button_colour=c9a84c&font_colour=000000&font_family=Georgia&outline_colour=000000&coffee_colour=ffffff" alt="Buy me a coffee" height="40">\r\n  </a>\r\n</p>\r\n\r\n## Contents\r\n\r\n- [Features](#features)\r\n- [Language support](#language-support)\r\n- [Writing Studio Launcher](#writing-studio-launcher)\r\n- [Folder Sidebar Explorer](#folder-sidebar-explorer)\r\n- [Your Project](#your-project)\r\n- [Your Writing Environment](#your-writing-environment)\r\n- [Tracking Your Progress](#tracking-your-progress)\r\n- [Getting Your Work Out](#getting-your-work-out)\r\n- [Supporting Tools](#supporting-tools)\r\n- [Context Menus](#context-menus)\r\n- [Commands Reference](#commands-reference)\r\n- [Settings Overview](#settings-overview)\r\n- [Ribbon Icon](#ribbon-icon)\r\n- [Installation](#installation)\r\n- [Requirements](#requirements)\r\n- [Reporting a Bug](#reporting-a-bug)\r\n- [Security](#security)\r\n\r\n---\r\n\r\n## Features\r\n\r\n**Writing Binder** \u2014 Your project\'s folder tree, rendered as a manuscript. The binder reads your folders directly, so files created, renamed, or moved anywhere \u2014 even outside Obsidian \u2014 always appear correctly, with no import or scan step. Drag chapters into order, set per-document status and word count goals, and exclude documents from compile with a right-click.\r\n\r\n**Outline** \u2014 Give each section a one-paragraph synopsis, the claim it makes, and the Outline view lays the whole project out as an editable table: synopsis, status, and words against goal, section by section, with part totals. Copy it out as an annotated table of contents for a book proposal.\r\n\r\n**Project Manager** \u2014 Create projects from six templates (blank, book, article series, blog collection, journal article, magazine article), set a total word count goal, and switch between projects from the Launcher.\r\n\r\n**Compile Preview** \u2014 Concatenate all binder documents in order and render them as a finished manuscript in a split pane, without exporting.\r\n\r\n**Writing Modes** \u2014 Switch between Draft (distraction-free), Edit (full tooling), and Review (read-only) modes from the status bar, command palette, context menu, or Launcher.\r\n\r\n**Focus Mode** \u2014 Dim everything except the paragraph or sentence you are writing. Configurable dim level, font size override, sidebar collapse, and typewriter scroll.\r\n\r\n**Typography Mode** \u2014 Apply a curated font, constrained line length, and controlled line height to the editor. Fourteen font options including iA Writer fonts, Google Fonts, and custom system fonts.\r\n\r\n**Sprint Timer** \u2014 Run timed writing sessions with a draggable floating overlay. Set duration, word goal, and scope (file or project). Quick-start presets (10 m, 15 m, 25 m) available from the Launcher.\r\n\r\n**Progress Tracking** \u2014 Live word counts in the status bar and Launcher, session delta tracking, per-document and per-project word count goals with inline progress banners, and a 30-day writing log with streak tracking.\r\n\r\n**Export Engine** \u2014 Export to Manuscript (HTML), PDF, Word (.docx), RTF, HTML, Markdown, and EPUB. Manuscript format produces industry-standard layout with no external tools; other formats require Pandoc.\r\n\r\n**Sources, Citations & Footnotes** \u2014 Any note with a `citekey` property is a source, including literature notes from Zotero Integration or the Citations plugin. Cite with `[@smith2020, p. 12]` or a wikilink to the source note, and every export carries the citations and a works-cited page in Chicago author-date or notes style. Footnotes now survive every format. An **Add source** form and an **Insert citation** picker mean nobody has to type a citation key by hand.\r\n\r\n**WordPress Publishing** \u2014 Publish directly to WordPress from Obsidian. Set post title, status, categories, tags, excerpt, and scheduled date. Supports multiple sites with per-site credentials and connection testing.\r\n\r\n**Folder Sidebar Explorer** \u2014 Browse any vault folder in a sidebar panel. Search by name or file content, preview Markdown files and images inline, and insert selected text directly into the active editor.\r\n\r\n## Language support\r\n\r\nWriting Studio is available in the following languages in addition to English:\r\n\r\n- Arabic\r\n- Bengali\r\n- Brazilian Portuguese\r\n- Chinese (Simplified)\r\n- French\r\n- German\r\n- Hindi\r\n- Japanese\r\n- Korean\r\n- Russian\r\n- Spanish\r\n\r\n**To change the language:** Open **Settings \u2192 General** in Obsidian, scroll to **Language**, and select your preferred language from the list. Restart Obsidian for the change to take effect. Writing Studio will display in the selected language if it is supported.\r\n\r\n**Found a translation error or missing text?** Please open an issue on GitHub \u2014 [Submit a bug report or enhancement request](https://github.com/writerP-777/obsidian-writing-studio/issues/new) \u2014 and include the language, the location in the plugin where the text appears, and what it currently says. We will address it in the next release.\r\n\r\n### Writing Studio Launcher\r\n\r\nThe Launcher is your home base in Writing Studio \u2014 a sidebar panel that shows your active project, progress toward your goals, and one-click access to every major feature.\r\n\r\n<p align="center">\r\n  <img src="assets/launcher-project-card.png" alt="The Launcher project card with the project dropdown and the new project, edit, and delete buttons above the word count and project goal" width="520">\r\n  <br>\r\n  <em>The Launcher project card \u2014 switch projects from the dropdown; word count against the project goal below.</em>\r\n</p>\r\n\r\nBy default Writing Studio launches automatically when Obsidian loads \u2014 the Launcher opens and your last session\'s writing mode and typography are restored. To disable this, turn off **Open on startup** in **Settings \u2192 General**: Obsidian then opens clean, with no Writing Studio status bar items or restored modes, and the studio stays dormant until you launch it yourself. Launching it manually restores your last session state the same way.\r\n\r\n**To open manually:** Click the feather ribbon icon, or assign a hotkey to **Open launcher** in Settings \u2192 Hotkeys.\r\n\r\n**First run:** In a vault with no projects yet, the Launcher shows an orientation card explaining how projects work, with a **Create your first project** button to get started.\r\n\r\n<p align="center">\r\n  <img src="assets/launcher-first-run.png" alt="The Launcher first-run orientation card with an explanation of projects and a Create your first project button" width="520">\r\n  <br>\r\n  <em>First run \u2014 the orientation card shown before any project exists.</em>\r\n</p>\r\n\r\n**The Launcher includes:**\r\n- Active project name, total word count, and progress toward your project word count goal\r\n- Writing mode selector (Draft / Edit / Review)\r\n- Focus Mode and Typography Mode toggles\r\n- Sprint timer with "Set up sprint" button and Quick Sprint Options presets (10 m, 15 m, 25 m)\r\n- Today card showing words written, sprints completed, session word count, and streak\r\n- Quick-action buttons: Targets Dashboard, Writing Dashboard, Preview manuscript, Export, Writing Log, Publish to WordPress\r\n\r\n---\r\n\r\n### Folder Sidebar Explorer\r\n\r\nThe Folder Sidebar Explorer opens any vault folder in a right-sidebar panel, letting you browse reference material, research notes, or any folder outside your active project without leaving your draft. Unlike the Binder \u2014 which is scoped to your writing project \u2014 the sidebar explorer works with any folder in your vault.\r\n\r\n<p align="center">\r\n  <img src="assets/folder-sidebar-explorer.png" alt="The Folder Sidebar Explorer panel with a Markdown file open in preview, showing the breadcrumb trail, back and root buttons, and the insert selection button" width="340">\r\n  <br>\r\n  <em>The Folder Sidebar Explorer with a research file open in preview \u2014 select text and click insert selection to pull it into your draft.</em>\r\n</p>\r\n\r\n**To open:**\r\n- Use the command **Open folder in sidebar explorer** from the command palette \u2014 a folder picker appears so you can choose which folder to explore.\r\n- Right-click any folder in the file explorer and choose **Open in sidebar explorer** under **Writing studio options**.\r\n- Right-click any folder in [Notebook Navigator](https://github.com/johansan/notebook-navigator) and choose **Open in sidebar explorer** (requires Notebook Navigator to be installed).\r\n- Assign a hotkey in Settings \u2192 Hotkeys.\r\n\r\nThe panel opens in the **right sidebar**. The folder you open becomes the **root folder** for that session \u2014 the breadcrumb trail, the \u2302 root button, and search all operate relative to it.\r\n\r\n**Browsing and navigation:**\r\n\r\n| Feature | How to use |\r\n|---------|-----------|\r\n| Browse into a subfolder | Click the folder |\r\n| Preview a Markdown file | Click the file \u2014 the folder listing is replaced by a rendered preview inside the panel |\r\n| Preview an image | Click the file \u2014 displayed inline |\r\n| Preview audio | Click the file \u2014 player appears inline |\r\n| Other file types | Click the file \u2014 an **Open in editor** button appears |\r\n| Go back | Click **\u2190 back**, or press `Backspace` when the list has keyboard focus |\r\n| Return to root folder | Click **\u2302 root** to jump back to the folder you originally opened |\r\n| Keyboard navigation | Tab to focus the list, then `\u2191` / `\u2193` to move, `Enter` to open, `Backspace` to go back |\r\n| Breadcrumb navigation | Click any segment in the breadcrumb trail to jump directly to that folder |\r\n\r\n**Search:**\r\n\r\nA search bar appears at the top of the folder list. Type your query and press **Enter** to run the search.\r\n\r\n- Searches **both folder/file names and file contents** (`.md` and `.txt` files).\r\n- Frontmatter is excluded from content search to avoid false positives from YAML fields.\r\n- Name matches show the matched term highlighted in the result title.\r\n- Content matches show a text snippet around the match with the term highlighted, plus a **CONTENT** badge to distinguish them from name matches.\r\n- Results always search from the root folder, regardless of which subfolder you are currently browsing.\r\n- Click **\xD7** to clear the search and return to the normal folder view.\r\n\r\n**Sort:**\r\n\r\nA sort dropdown sits next to the search bar. Options:\r\n\r\n| Option | Description |\r\n|--------|-------------|\r\n| Folders \u2191 A-Z | Folders first, then files, both alphabetical (default) |\r\n| Folders \u2191 Z-A | Folders first, then files, both reverse-alphabetical |\r\n| Name A-Z | All items alphabetical, folders and files mixed |\r\n| Name Z-A | All items reverse-alphabetical, mixed |\r\n| Newest first | Sort by last-modified date, newest at top |\r\n| Oldest first | Sort by last-modified date, oldest at top |\r\n\r\n**Copy content to the editor:**\r\n\r\nWhen a Markdown file is open in preview mode (after clicking it in the file list), its text is selectable. To insert a passage into the active editor:\r\n\r\n1. Click a file in the list \u2014 the panel switches to preview mode showing the rendered file.\r\n2. Select the text you want in the preview pane.\r\n3. Click the **\u21A9 insert selection** button in the nav bar.\r\n4. The selected text is inserted at the cursor position in the active editor.\r\n\r\nThe preview is read-only \u2014 you cannot edit the file from the sidebar.\r\n\r\n**Hover tooltips:**\r\n\r\nHover over any file or folder in the list to see an information card:\r\n\r\n| Item type | Information shown |\r\n|-----------|------------------|\r\n| Markdown / text file | Last modified date and time \xB7 File size \xB7 Word count (frontmatter excluded) |\r\n| Image / audio / other file | Last modified date and time \xB7 File size |\r\n| Folder | Total file count \xB7 Subfolder count |\r\n\r\nThe word count updates asynchronously from Obsidian\'s file cache and appears within a moment of hover.\r\n\r\n---\r\n\r\n### Your Project\r\n\r\n#### Project Manager\r\n\r\nProjects group a set of documents (binder items) and act as the scope for export, statistics, and the word count goal banner.\r\n\r\n**To create a project:** Use the command **Create new writing project** from the command palette, or click the **+** button next to the project dropdown in the Launcher or Binder panel.\r\n\r\n**To switch projects:** Use the Launcher panel or the project selector at the top of the Binder panel.\r\n\r\n**To edit a project:** Click the pencil icon in the Launcher project card or next to the project selector in the Binder. You can change the title, author, description, total word count goal, and the document folder \u2014 the folder inside the project that holds its documents (for example, renaming a book project\'s `Chapters/` to `Scenes/` renames the folder and moves its files with it; the binder follows automatically, as it also does when you rename the folder directly in the file explorer).\r\n\r\n**To rename a project:** Change the title in the edit-project dialog and save. The project folder is renamed to match, and every file inside moves with it \u2014 links heal, nothing is copied. A hint under the title field shows the folder name you will get before you save. Characters that cannot appear in a folder name (`\\ / : * ? " < > |`) become `-`, so a title like *My Book: A Novel* keeps its colon while its folder is named `My Book- A Novel`; the hint says so whenever a substitution happens. If a folder with the new name already exists, the save is refused with a message and nothing changes \u2014 choose a different title. Editing the author, description, or goal never moves the folder. To change the title and leave the folder as it is, turn off **Also rename the project folder** in the dialog before saving.\r\n\r\nIt works the other way too: rename the project folder in Obsidian\'s file explorer and the project\'s title follows, provided the title and the folder name were the same before the rename. A title you set apart from its folder (like the colon example above) is yours and is never overwritten. Rename inside Obsidian, not in Windows Explorer or Finder \u2014 Obsidian reports an outside rename as a delete and a create, so neither Writing Studio nor Obsidian\'s own links can follow it.\r\n\r\n**To delete a project:** Click the trash icon in the Launcher project card or next to the project selector in the Binder, then confirm. This removes the project from Writing Studio\'s list only \u2014 the project folder and all its documents stay untouched in your vault.\r\n\r\n<p align="center">\r\n  <img src="assets/edit-project-modal.png" alt="The Edit project modal with fields for project title, author name, document folder, total word count goal, and description, and a Save button" width="560">\r\n  <br>\r\n  <em>The Edit project modal \u2014 change the title, author, document folder, description, and total word count goal.</em>\r\n</p>\r\n\r\nEach project stores:\r\n- Title, type, author, and description\r\n- Ordered binder with chapters, sections, articles, and notes\r\n- Per-item word count goals, statuses, and export flags\r\n- Optional total word count goal (shown in the Launcher and status bar)\r\n\r\n**Project templates available at creation:**\r\n\r\n| Template | Structure created |\r\n|----------|------------------|\r\n| Blank | Empty \u2014 build your own structure |\r\n| Book | Front Matter, Part 1 / Chapter 1, Back Matter |\r\n| Article series | Series Overview note (with article schedule), Article 1 placeholder |\r\n| Blog collection | Date-organized folder, first post placeholder |\r\n| Journal article | Title Page, Abstract, Keywords, Introduction, Literature Review, Methodology, Findings / Analysis, Discussion, Conclusion, References, Appendices |\r\n| Magazine article | Pitch / Query Notes, Headline & Deck, Lede, Nut Graf, Body, Quotes & Sources, Kicker, Fact-Check Notes, Author Bio |\r\n\r\n---\r\n\r\n#### Writing Binder\r\n\r\nKeeping a book-length manuscript organized means knowing at a glance which chapters are drafted, which are in progress, and what will compile into the finished manuscript. The Binder is a sidebar panel that shows all of that for your active project.\r\n\r\nThe binder reads your folders directly \u2014 the project folder tree *is* the manuscript structure. Organize your work in the binder or in your computer\'s file explorer, and both always match: files created, renamed, moved, or deleted outside Obsidian appear correctly with no scan or import step. A document\'s filename is its title. Status (Draft, In Progress, Complete, Published) shows as a colored stripe on the row\'s left edge, folders carry document-count badges, documents excluded from compile render dimmed, and hovering any row shows its on-disk name and the settings the binder reads from it.\r\n\r\n**Synopsis:** Right-click a document and choose **Edit synopsis\u2026** to give it one or two sentences on what the section argues or covers. The synopsis is stored as a `synopsis` property on the document, so you can also read and edit it in Obsidian\'s Properties panel at the top of the note. It shows in the row\'s hover tooltip, and the **Show synopses** button in the binder toolbar puts each synopsis under its title so you can read the argument straight down the tree. The Outline view, described below, shows and edits the same synopses as a table.\r\n\r\nBelow the manuscript, **Research** and **Exports** are pinned as drawer tabs with live file counts. Research holds markdown notes that never compile (drag documents in and out of it freely); Exports is output-only, written by the export engine. Non-markdown files are visible and openable everywhere but stay outside the manuscript. The **Add source** button beside the Research tab opens a form, which writes a research note the citation engine can cite (see Sources and Citations, below).\r\n\r\n<p align="center">\r\n  <img src="assets/binder-tree.png" alt="The binder showing a manuscript tree with folder count badges, colored status stripes, a dimmed compile-excluded document, and Research and Exports drawer tabs with file counts at the bottom" width="520">\r\n  <br>\r\n  <em>The binder \u2014 status stripes on the left edge, count badges on folders, a dimmed compile-excluded document, and the Research and Exports drawer below.</em>\r\n</p>\r\n\r\n**To open:** Use the command **Open binder** from the command palette, or assign a hotkey in Settings \u2192 Hotkeys.\r\n\r\n**Ordering:**\r\n\r\nDrag to reorder documents and folders. A document\'s position is stored in its own frontmatter (`binder-order`), so it travels with the file; a folder\'s position lives in a name marker (`020~ Part One`) that the binder hides in display. Anything without a saved position sorts naturally \u2014 A to Z, numbers in numeric order \u2014 after ordered items. Reordering never renames your documents.\r\n\r\n**Moving things:**\r\n\r\nDragging physically moves files and folders: drop between rows to reorder, onto a folder to nest inside it, on the empty space below the tree to move to the project root, or onto the Research drawer tab to move a document out of the manuscript. A folder drag carries all its children, and links heal automatically on every move.\r\n\r\n**Control strip:**\r\n\r\nA two-row control strip at the top of the binder keeps the high-frequency writing controls next to your documents, so the daily loop doesn\'t require switching to the launcher tab. The top row is a Draft / Edit / Review segmented control (clicking the active mode switches back to normal). The bottom row holds Focus and Typography toggles, a sprint chip (its menu offers the set-up modal and 10/15/25-minute quick starts; an armed sprint shows a ready chip with the duration), and a **...** menu with the occasional actions: export, publish, preview manuscript, targets dashboard, writing dashboard, and writing log. The launcher keeps its own copies of all controls, and every surface stays in sync no matter where a change is made.\r\n\r\n<p align="center">\r\n  <img src="assets/binder-control-strip.png" alt="The binder control strip with Draft, Edit, and Review on the top row and Focus, Typography, Sprint, and an overflow menu on the bottom row, above the project selector, toolbar, and document tree" width="520">\r\n  <br>\r\n  <em>The binder control strip \u2014 writing modes on top; focus, typography, sprint, and overflow controls below.</em>\r\n</p>\r\n\r\n<p align="center">\r\n  <img src="assets/binder-strip-overflow.png" alt="The binder overflow menu open, showing export, publish to WordPress, preview manuscript, targets dashboard, writing dashboard, and writing log" width="520">\r\n  <br>\r\n  <em>The overflow menu holds the less frequent actions: export, publish, preview, and the dashboards and log.</em>\r\n</p>\r\n\r\n**Keyboard navigation:**\r\n\r\nThe binder tree is fully keyboard-operable. Tab to focus the list, then:\r\n\r\n| Key | Action |\r\n|-----|--------|\r\n| `\u2191` / `\u2193` | Move through visible documents and folders |\r\n| `\u2192` | Expand a collapsed folder, or step into an open one |\r\n| `\u2190` | Collapse an open folder, or jump to the parent |\r\n| `Enter` | Open the document, or expand/collapse a folder |\r\n| `F2` | Rename the focused item inline (Enter commits, Escape cancels) |\r\n| `Shift+F10` or menu key | Open the item\'s right-click menu |\r\n\r\n**Opening and renaming documents:**\r\n\r\nA single click on a document opens it immediately. Rename an item from its right-click menu, or by pressing **F2** while it is focused (Enter commits, Escape cancels). Renaming in the binder renames the file itself \u2014 links heal automatically \u2014 and invalid names are rejected with a specific message, never silently altered.\r\n\r\n**Creating documents and folders:**\r\n\r\nToolbar buttons create a document or folder at the manuscript root; a folder\'s right-click menu creates inside it, and a document\'s menu creates beside it. New documents prompt for a title up front rather than being named "Untitled."\r\n\r\n**Right-click menu:**\r\n\r\nRight-click any item for its full set of actions \u2014 rename, set status, set a word count goal, set an optional document type, exclude a document from compile (or re-include it), create a document or folder, or delete to the trash (a folder\'s confirmation states how many files it contains).\r\n\r\n<p align="center">\r\n  <img src="assets/binder-context-menu.png" alt="The binder right-click menu on a document, showing rename, status options, set word count goal, change type options, exclude from compile, new document, new folder, and delete" width="520">\r\n  <br>\r\n  <em>A document\'s right-click menu \u2014 status, goal, type, and compile controls in one place.</em>\r\n</p>\r\n\r\n**Organizing with folders:**\r\n\r\nFolders are the structure. The book template creates a part folder for you, and any structure you build \u2014 in the binder or in your file explorer \u2014 is the manuscript\'s structure. Adding a file to a project is simply moving it into the project folder; it appears in the binder immediately, and files copied in outside of Obsidian show up the same way with no import step.\r\n\r\n**Upgrading from an earlier version:**\r\n\r\nThe first time you open an existing project, Writing Studio arranges its folders to match what your old binder showed \u2014 creating folders and moving documents, deleting nothing, and never changing your writing. A one-time notice explains this, and the command **Restore previous binder layout** puts your folders back the way they were if you preferred your earlier arrangement. Everything in your project folder is now part of the compiled manuscript. Check the compile preview before your first export, and use Exclude from compile on anything you want left out.\r\n\r\n---\r\n\r\n#### Outline\r\n\r\nA nonfiction manuscript is an argument, and the Outline is where you check that the argument holds together before you polish the prose. It opens in the main pane as a table of every section in the manuscript, in binder order:\r\n\r\n| Column | What it shows |\r\n|--------|---------------|\r\n| Section | The document title, indented under its part. Click it to open the document in a new tab; the outline stays open. Click a part\'s name to collapse or expand it. |\r\n| Synopsis | What the section argues or covers. Click to edit in place; Ctrl+Enter (Cmd+Enter on Mac) saves, Escape cancels. An empty cell says *Add a synopsis\u2026*. |\r\n| Status | Draft, In progress, Complete, or Published, as a dropdown. Changing it here is the same as changing it in the binder. |\r\n| Words | The section\'s current word count. Part rows show the total for everything inside them. |\r\n| Goal | The section\'s word count goal, editable. Part rows show the sum of the goals inside them. |\r\n| Progress | Words against goal, as a bar and a percentage. |\r\n\r\nThe footer totals the whole manuscript and, until every section has one, says how many sections still have no synopsis. A status filter at the top narrows the table to one status while keeping the parts those sections sit in. Documents excluded from compile render dimmed, and the status colour stripe from the binder appears on the left edge of each row.\r\n\r\n**Copy outline** puts the whole outline on the clipboard as an indented list of titles and synopses, ready to paste into a book proposal, an email to an editor, or a planning note.\r\n\r\nEverything the outline shows comes from the documents themselves (`synopsis`, `binder-status`, and `word-count-goal` properties), so the binder, the outline, and the targets dashboard can never disagree, and the table updates on its own as you write.\r\n\r\n**To open:** Click **Open outline** on the project card in the Launcher, the outline button in the binder toolbar, or use the command **Open outline**.\r\n\r\n---\r\n\r\n#### Sources and Citations\r\n\r\nNonfiction rests on sources, and the sources already live in your vault. Writing Studio turns the notes you have into citations and a works-cited page without a reference manager in the loop.\r\n\r\n**What counts as a source.** Any markdown note, anywhere in the vault, whose properties include a `citekey`. Literature notes produced by Zotero Integration or the Citations plugin already carry one, so they work as they are. The engine reads the fields it finds, under the names those tools and ordinary writers use: `title`; `author`, `authors`, or `creators` (a plain name, a list, "Last, First", or Zotero-style name objects); `year`, `date`, or `issued`; `type` or `itemType` (book, chapter, journal article, magazine or newspaper article, web page, thesis, report; anything else is treated as a book); `publisher`, `place`, `journal` or `container-title`, `volume`, `issue`, `pages`, `edition`, `editor`, `doi`, `url`, and `accessed`. If two notes share a citekey, the one in the project\'s Research folder wins and a notice names the other.\r\n\r\n**Adding a source without typing YAML.** Click **Add source** beside the Research tab at the bottom of the binder, right-click any research note and choose **Add source\u2026**, or run the command **Add source**. The form asks for the type, title, authors (one per line, first name first), year, and the fields that type needs. The citation key is filled in for you from the first author\'s surname and the year (`smith2020`, then `smith2020a` if that is taken) and can be changed. Saving creates a note such as `Research/Smith 2020 - The Long Argument.md` with the properties set and an empty body for your own notes, and opens it.\r\n\r\n```yaml\r\n---\r\ncitekey: smith2020\r\ntype: book\r\ntitle: "The Long Argument: Why Reform Fails"\r\nauthor:\r\n  - Jane Smith\r\nyear: 2020\r\npublisher: Riverhead\r\nplace: New York\r\n---\r\n```\r\n\r\n**Citing in a draft.** Two spellings work, and you can mix them:\r\n\r\n| You type | Meaning |\r\n|----------|---------|\r\n| `[@smith2020]` | Cite the work |\r\n| `[@smith2020, p. 12]` | Cite page 12 (`pp. 12-14` for a range, `chap. 3` for anything else) |\r\n| `[@lee2018; @okafor2021]` | Two works in one citation |\r\n| `[see @smith2020, p. 12]` | A prefix prints before the citation |\r\n| `@smith2020` | The author is part of the sentence: "As Smith (2020) shows\u2026" |\r\n| `[-@smith2020]` | Year only, when the author was just named |\r\n| `[[Smith 2020]]` | A wikilink to a source note is a citation |\r\n| `[[Smith 2020\\|p. 12]]` | The wikilink\'s alias is the page |\r\n\r\nWikilinks to notes without a citekey behave exactly as before. To cite without remembering a key, right-click in the editor and choose **Insert citation\u2026** (or run the command **Insert citation**): the picker searches author, year, and title, takes an optional page, and inserts the citation at the cursor.\r\n\r\n**Citation style.** Set once under Settings \u2192 Export \u2192 Citations:\r\n\r\n- **Author-date (Chicago)**, the default: `(Smith 2020, 12)` in the text and a **Works cited** page at the end.\r\n- **Notes (Chicago)**: each citation becomes a footnote, in full form the first time a source appears in a chapter and short form after, with a **Bibliography** page at the end. Your own footnotes and citation notes share one numbering sequence, in order of appearance.\r\n- **Custom style file (.csl)**: any Citation Style Language file, for APA, MLA, or a house style. Applies to PDF, Word, and RTF, where Pandoc\'s citeproc does the formatting; the other formats use the built-in author-date style.\r\n\r\n**Every format gets the works-cited page.** PDF, Word, and RTF hand the cited sources to Pandoc as a bibliography and run with `--citeproc` (the Notes setting ships its own compact Chicago notes style, so no download is needed). HTML, Manuscript, EPUB, Markdown, and the compile preview are formatted by the plugin itself in the two Chicago styles. Only sources you actually cite appear. A citation whose key matches no source is left visible as `[@key?]` and a notice names it, so the export never silently drops a reference.\r\n\r\n**Footnotes everywhere.** The built-in converter now handles reference footnotes (`[^1]` with its `[^1]: text` definition) and inline footnotes (`^[text]`). Numbering restarts with each chapter. HTML and Manuscript collect every note under a **Notes** heading at the end, grouped by chapter; EPUB keeps each chapter\'s notes at the end of that chapter with the markup reading systems use to show them as popups; Markdown export keeps footnote syntax as it is; PDF, Word, and RTF had footnotes already.\r\n\r\n**Before you export,** the export dialog reports what it found: "12 citations to 8 sources \xB7 Style: Author-date (Chicago)", and in warning color any key that matches nothing.\r\n\r\n---\r\n\r\n#### Compile Preview\r\n\r\nThe Compile Preview opens a split pane showing all binder documents for the active project concatenated in order, rendered as a finished manuscript.\r\n\r\n**To open:** Use the command **Preview compiled manuscript** from the command palette, or click the **Preview manuscript** button in the Launcher panel.\r\n\r\n---\r\n\r\n### Your Writing Environment\r\n\r\n#### Writing Modes\r\n\r\nThree modes shape how the editor behaves. The current mode is always shown in the status bar. Click the mode pill in the status bar to switch modes.\r\n\r\n| Mode | Purpose |\r\n|------|---------|\r\n| **Draft** | Distraction-free drafting; spell-check and formatting hints suppressed |\r\n| **Edit** | Revision pass; full editor tooling active |\r\n| **Review** | Read-only style; ideal for a final proofread |\r\n| **None** | Normal Obsidian behavior |\r\n\r\n**To switch modes:**\r\n- Click the mode indicator in the status bar.\r\n- Right-click inside the editor, then choose **Switch writing mode \u2192** under **Writing studio options**.\r\n- Assign hotkeys to **Switch to draft mode / Edit mode / Review mode** in Settings \u2192 Hotkeys.\r\n- Use the Writing Studio Launcher panel.\r\n\r\nThe active mode is saved and restored the next time Writing Studio launches \u2014 automatically at startup when **Open on startup** is enabled, or when you next open the Launcher or switch a mode.\r\n\r\n---\r\n\r\n#### Focus Mode\r\n\r\nFocus Mode dims everything in the editor except the paragraph or sentence you are currently writing, reducing visual noise and keeping attention on the active thought.\r\n\r\n**To toggle:** Assign a hotkey to **Toggle focus mode** in Settings \u2192 Hotkeys, or use the toggle in the Launcher panel. Press `Escape` to exit.\r\n\r\n**Settings (Settings \u2192 Focus mode):**\r\n\r\n| Setting | Description |\r\n|---------|-------------|\r\n| Focus unit | Highlight at the **paragraph** or **sentence (line)** level |\r\n| Dim opacity | How opaque the dimmed text appears (10\u201350%) |\r\n| Font size override | Override the editor font size while focused; 0 = use theme default. Takes precedence over Typography Mode\'s font size while Focus Mode is active |\r\n| Auto-hide sidebars | Collapse left and right sidebars when Focus Mode activates |\r\n| Typewriter scroll | Keep the active line vertically centered as you type |\r\n\r\n---\r\n\r\n#### Typography Mode\r\n\r\nTypography Mode applies a consistent, reader-friendly text treatment to the editor: a curated font, constrained line length, controlled line height, and optional letter spacing.\r\n\r\n**To toggle:** Assign a hotkey to **Toggle typography mode** in Settings \u2192 Hotkeys, or use the toggle in the Launcher panel.\r\n\r\n**To change the font while Typography Mode is active:** Right-click inside the editor and choose **Typography font \u2192** under **Writing studio options**. A font picker menu appears with all available fonts; the active font is shown with a checkmark. Selecting a font applies it immediately and saves the setting.\r\n\r\n> **Note on fonts:** Typography fonts are loaded from Google Fonts and require an internet connection the first time each font is used. After the initial load they are cached and work offline.\r\n\r\n**Settings (Settings \u2192 Typography):**\r\n\r\n| Setting | Description |\r\n|---------|-------------|\r\n| Font family | Choose from the curated font list or enter a custom font name |\r\n| Custom font name | Used when **Custom font name\u2026** is selected above |\r\n| Max line length | Characters per line (55\u201380); constrains the editor column width |\r\n| Font size | Editor font size in pixels |\r\n| Line height | Multiplier; default 1.7 |\r\n| Letter spacing | CSS `letter-spacing` value (e.g. `normal`, `0.02em`) |\r\n| Persist across sessions | Restore Typography Mode when Writing Studio next launches |\r\n\r\n**Available fonts:**\r\n\r\n| Option | Font |\r\n|--------|------|\r\n| Monospaced | iA Writer Mono (falls back to Roboto Mono / Courier New) |\r\n| Serif | iA Writer Duo Serif (falls back to Georgia) |\r\n| Sans-serif | iA Writer Quattro (falls back to system sans-serif) |\r\n| Cormorant Garamond | Elegant display serif |\r\n| Crimson Text | Classic book serif |\r\n| EB Garamond | Traditional Garamond revival |\r\n| Libre Baskerville | Readable web serif |\r\n| Libre Caslon Text | Clean slab serif |\r\n| Literata | Designed for long-form reading |\r\n| Lora | Contemporary calligraphic serif |\r\n| Inter | Modern humanist sans-serif |\r\n| Lato | Friendly rounded sans-serif |\r\n| Source Sans 3 | Clean UI sans-serif |\r\n| Custom font name\u2026 | Use any font installed on your system |\r\n\r\n---\r\n\r\n### Tracking Your Progress\r\n\r\n#### Writing Sprint Timer\r\n\r\nThe Sprint Timer runs a timed writing session. When a sprint is active, a floating overlay displays the countdown and gives you full control \u2014 without requiring you to stay on the dashboard.\r\n\r\n**To set up a sprint:**\r\n\r\n- Click **Set up sprint** in the Launcher panel to open the sprint configuration modal.\r\n- Or click one of the **Quick Sprint Options** preset buttons (10 m, 15 m, 25 m) in the Launcher panel to load a duration directly.\r\n\r\nEither path opens the floating overlay in a ready state \u2014 the timer does not start until you press \u25B6 on the overlay itself. This gives you time to navigate to your draft or open the Binder before the clock begins.\r\n\r\n**Sprint configuration modal:**\r\n\r\nThe modal lets you set:\r\n\r\n- Duration (preset or custom, in minutes)\r\n- Word count goal for the session\r\n- Scope (current file or entire project)\r\n\r\nClick **Launch sprint timer** to open the overlay in ready state.\r\n\r\n**Using the floating overlay:**\r\n\r\n| Control | Action |\r\n|---------|--------|\r\n| \u25B6 | Start or resume the sprint |\r\n| \u23F8 | Pause the sprint |\r\n| \u25A0 | Stop and end the sprint |\r\n\r\nThe overlay is draggable \u2014 click and drag the header to reposition it anywhere on screen. It stays on top regardless of writing mode or Focus Mode. The current countdown is also shown in the Obsidian status bar (`\u23F1 MM:SS`) and, when Focus Mode is active, in the focus toolbar.\r\n\r\nWhen the sprint ends, a summary modal shows words written, duration, and words-per-minute. The session is logged to sprint history and optionally appended to your Daily Note.\r\n\r\n**Settings (Settings \u2192 Sprint & goals):**\r\n\r\n| Setting | Description |\r\n|---------|-------------|\r\n| Default sprint duration | Starting value in the sprint modal (minutes) |\r\n| Default daily word goal | Target used in the Writing Dashboard and Launcher |\r\n| Sound notifications | Play a tone when the sprint ends |\r\n| Sprint history retention | Days to keep sprint records before purging |\r\n| Inline goal banner | Show a progress bar below the editor toolbar when a document has a word count goal set |\r\n\r\n---\r\n\r\n#### Word Count Goal\r\n\r\nA per-document word count goal can be set and tracked inline.\r\n\r\n**To set a goal:**\r\n- Use the command **Set word count goal** from the command palette.\r\n- Right-click inside the editor and choose **Set word count goal** under **Writing studio options**.\r\n\r\nWhen a goal is set and **Inline goal banner** is enabled, a progress bar appears below the editor toolbar showing current words, goal, and percentage. It updates in real time as you type.\r\n\r\n---\r\n\r\n#### Session Word Count\r\n\r\nThe status bar shows a `(+N)` delta next to the current file\'s word count, indicating how many words you have added since opening that file this session. The Launcher\'s **Today** card also shows a cumulative session total across all files opened during the current Obsidian session. Both counts reset when Obsidian restarts.\r\n\r\n---\r\n\r\n#### Project Word Count Goal\r\n\r\nWhen an active project has a total word count goal set, a dedicated status bar item shows `{current} / {goal} project words`. This updates automatically as you write. Set a project goal in the Project modal when creating or editing a project.\r\n\r\n---\r\n\r\n#### Writing Dashboard\r\n\r\nThe Writing Dashboard shows session statistics (words written, sprints completed, time), sprint history, daily progress toward your goal, and per-project word counts with reading time.\r\n\r\n**To open:** Use the command **Open writing dashboard** from the command palette, or click the **Writing dashboard** button in the Launcher panel.\r\n\r\n---\r\n\r\n#### Targets Dashboard\r\n\r\nThe Targets Dashboard lets you assign word count goals to individual documents in the active project\'s binder and track progress across the whole project at a glance. Goals can be edited inline in the table. Rows are sortable and filterable by status.\r\n\r\n**To open:** Use the command **Open targets dashboard**, click the **Targets dashboard** button in the Launcher panel, or assign a hotkey in Settings \u2192 Hotkeys.\r\n\r\n---\r\n\r\n#### Daily Writing Log\r\n\r\nThe Writing Log is a sidebar panel that shows your writing history at a glance.\r\n\r\n**To open:** Use the command **Open writing log** from the command palette, or click the **Writing log** button in the Launcher panel.\r\n\r\n**The Writing Log shows:**\r\n- Current streak (days in a row with at least one sprint)\r\n- This session: total session words, sprint words, sprints completed, and minutes written\r\n- Recent activity: a bar chart with one row per day you wrote, each showing word count, sprints completed, and a visual bar proportional to the day\'s output. Days with no writing are collapsed rather than shown as empty rows, so the log stays focused on the days you actually worked.\r\n\r\nWhen **Append to daily note** is enabled (Settings \u2192 Writing log), a summary of each completed sprint is also appended to today\'s Daily Note.\r\n\r\n---\r\n\r\n### Getting Your Work Out\r\n\r\n#### Export Engine\r\n\r\nWhen your draft is ready, the Export Engine converts it to a finished file in your chosen format \u2014 no reformatting required.\r\n\r\n**Supported formats:** Manuscript (HTML) \xB7 PDF \xB7 Word (.docx) \xB7 RTF \xB7 HTML \xB7 Markdown \xB7 EPUB\r\n\r\n**To export:**\r\n- Right-click inside the editor and choose **Export this document** under **Writing studio options**.\r\n- Use the command **Export document** from the command palette.\r\n- Click the **Export** button in the Launcher panel.\r\n- Assign a hotkey to **Export document** in Settings \u2192 Hotkeys.\r\n- Right-click a folder in the binder and choose **Export folder** to export just that part of the manuscript.\r\n\r\n**One title names the export**\r\n\r\nThe export dialog\'s **Title** dropdown sets the export\'s filename, its title page heading, and the file\'s metadata in one place \u2014 the three are always identical. A whole-project or single-document export offers the project name or a title you type yourself; a folder export adds **Folder name** (the default) and **Project \u2014 folder** forms. Choosing **Type your own title** keeps Export disabled until you type one, so an export is never accidentally untitled.\r\n\r\nThe compile preview renders exactly what the dialog\'s current selections will produce \u2014 same documents, same headings, same title page \u2014 and when you proceed to export from the preview, your selections carry back into the dialog.\r\n\r\n<p align="center">\r\n  <img src="assets/export-modal-title.png" alt="The export dialog with the Title dropdown open on a folder export, showing Folder name, Project \u2014 folder, Project name, and Type your own title" width="560">\r\n  <br>\r\n  <em>The Title dropdown \u2014 one choice names the filename, the title page, and the file metadata.</em>\r\n</p>\r\n\r\n**Manuscript format**\r\n\r\nThe Manuscript format produces a self-contained HTML file formatted to industry-standard manuscript conventions:\r\n- Courier New 12 pt, double-spaced, 1-inch margins\r\n- Title page with the export\'s chosen title, author name, approximate word count, and optional contact information\r\n- Chapter headings in uppercase, page-break before each\r\n- Scene breaks rendered as `#` (the standard manuscript convention)\r\n\r\nNo external tools are required for manuscript export.\r\n\r\n**Settings (Settings \u2192 Export):**\r\n\r\n| Setting | Description |\r\n|---------|-------------|\r\n| Default export format | Pre-selected format in the export modal |\r\n| Default paper size | Letter (US) or A4 |\r\n| Export font | Font name used in PDF/DOCX output (e.g. `Georgia`) |\r\n| Export font size | Point size for PDF/DOCX output |\r\n| Pandoc path | Full path to the `pandoc` binary if it is not on your system PATH |\r\n| PDF engine | Engine Pandoc uses for PDF export. **Auto** (default) picks an installed LaTeX engine \u2014 `xelatex` or `lualatex` when a custom font is set, `pdflatex` otherwise. Pin a specific engine to always use it; if a pinned engine is not installed the export fails with a message naming it rather than silently substituting another |\r\n| PDF engine location | Folder containing the PDF engine binaries \u2014 or full path to one engine binary \u2014 when the engine is not on the system PATH. Leave blank to search the PATH plus common install locations |\r\n| Citation style | **Author-date (Chicago)** puts `(Smith 2020)` in the text with a Works cited page; **Notes (Chicago)** turns each citation into a footnote with a Bibliography page; **Custom style file (.csl)** applies any CSL style to PDF, Word, and RTF (other formats fall back to author-date). See Sources and Citations, above |\r\n| Custom style file | Path to a `.csl` file, inside the vault or anywhere on disk, used when the citation style is set to custom |\r\n| EPUB language | BCP 47 language tag (e.g. `en`, `fr`, `de`) |\r\n| EPUB include cover | Generate a text cover page when no cover image is provided |\r\n\r\n> **Requirement:** Pandoc must be installed for PDF, DOCX, RTF, HTML, and EPUB export. Download from [pandoc.org](https://pandoc.org/installing.html). For PDF export, a LaTeX distribution (e.g. TeX Live or MiKTeX) is also required \u2014 unless the PDF engine setting is pinned to [wkhtmltopdf](https://wkhtmltopdf.org/), which renders PDFs without LaTeX. Manuscript (HTML) export does not require Pandoc.\r\n>\r\n> **macOS note:** apps launched from the Dock don\'t see the shell PATH, so a correctly installed TeX Live or Homebrew binary can still be "not found." Common install locations (`/Library/TeX/texbin`, `/opt/homebrew/bin`, `/usr/local/bin`) are searched automatically; for anything else, set the PDF engine location setting.\r\n>\r\n> **Font note:** the export font setting applies only to the LaTeX PDF path (`xelatex`/`lualatex`; `pdflatex` cannot apply custom fonts either). The `wkhtmltopdf` path takes its typography from Pandoc\'s HTML/CSS output, so the export font setting is ignored there \u2014 the plugin tells you when a font was skipped for this reason.\r\n>\r\n> **Formatting note:** the built-in converter used for HTML, Manuscript, and EPUB output supports headings, paragraphs, lists, blockquotes, fenced code blocks, tables, images, links, footnotes, and citations. Nested lists and setext (underline-style) headings are not converted \u2014 use a Pandoc format (PDF, DOCX, RTF) if your manuscript depends on them.\r\n\r\n---\r\n\r\n#### WordPress Publishing\r\n\r\nPublish your finished draft directly to WordPress without leaving Obsidian. The modal lets you choose the target site, set the post title, status, categories, tags, excerpt, and an optional scheduled publication date.\r\n\r\n**To publish:**\r\n- Right-click inside the editor and choose **Publish to WordPress** under **Writing studio options**.\r\n- Use the command **Publish to WordPress** from the command palette.\r\n- Click the **Publish to WordPress** button in the Launcher panel.\r\n- Assign a hotkey to **Publish to WordPress** in Settings \u2192 Hotkeys.\r\n\r\n**Setting up a site (Settings \u2192 WordPress):**\r\n\r\n1. Click **+ add WordPress site**.\r\n2. Enter a nickname, the site URL (e.g. `https://yourblog.com`), and your WordPress username.\r\n3. Generate an application password in WordPress under **Users \u2192 Profile \u2192 Application passwords** and paste it into the **Application password** field.\r\n4. Click **Test connection** to verify.\r\n\r\n**Per-site options:**\r\n\r\n| Setting | Description |\r\n|---------|-------------|\r\n| Default post status | Draft \xB7 Pending Review \xB7 Published |\r\n| Wikilink handling | **Strip** removes `[[...]]` syntax, leaving plain text \xB7 **Convert** turns wikilinks into URLs |\r\n\r\n**Preserving your credentials across updates**\r\n\r\nWriting Studio stores your WordPress site credentials in your vault\'s `.obsidian/plugins/writing-studio/data.json` file. Obsidian\'s in-app update process does not touch this file \u2014 your credentials are preserved automatically. However, if you uninstall and reinstall the plugin manually, or if a vault sync conflict overwrites `data.json`, credentials will be lost and will need to be re-entered. To avoid this, always use Obsidian\'s built-in Update button rather than uninstalling manually.\r\n\r\n---\r\n\r\n### Supporting Tools\r\n\r\n#### Frontmatter Manager\r\n\r\nWriting Studio automatically manages YAML frontmatter in your documents when **Frontmatter auto-update** is enabled. On every save it updates:\r\n\r\n- `word-count` \u2014 current word count\r\n- `modified` \u2014 last-modified date\r\n\r\nThe `word-count-goal` frontmatter field is read by the inline goal banner and the Word Count Goal modal.\r\n\r\n---\r\n\r\n## Context Menus\r\n\r\nWriting Studio adds items to Obsidian\'s right-click context menus. All Writing Studio items are grouped together under the heading **Writing studio options** to distinguish them from other plugins and Obsidian\'s built-in options.\r\n\r\n### Right-click inside an open document (editor menu)\r\n\r\n| Option | Action |\r\n|--------|--------|\r\n| Export this document | Open the export modal for the current file |\r\n| Publish to WordPress | Open the WordPress publish modal for the current file |\r\n| Set word count goal | Set a word count target for the current document |\r\n| Insert citation\u2026 | Pick a source from the vault and insert a citation at the cursor |\r\n| Switch writing mode \u2192 | Open a mode-switcher menu (Draft / Edit / Review / None) |\r\n| Typography font \u2192 | Open a font picker menu to change the typography font (visible only when Typography Mode is active) |\r\n\r\n### Right-click a folder in the file explorer\r\n\r\n| Option | Action |\r\n|--------|--------|\r\n| Open in sidebar explorer | Open the folder in the Folder Sidebar Explorer panel |\r\n\r\n---\r\n\r\n## Commands Reference\r\n\r\nNo default hotkeys are assigned. All commands can be given a hotkey in **Settings \u2192 Hotkeys**.\r\n\r\n| Command | Description |\r\n|---------|-------------|\r\n| Open launcher | Open the launcher sidebar panel |\r\n| Open binder | Open the writing binder sidebar panel |\r\n| Open writing log | Open the daily writing log panel |\r\n| Toggle focus mode | Enable or disable focus mode |\r\n| Toggle typography mode | Enable or disable typography mode |\r\n| Switch to draft mode | Activate draft writing mode |\r\n| Switch to edit mode | Activate edit writing mode |\r\n| Switch to review mode | Activate review writing mode |\r\n| Start writing sprint | Open the sprint timer modal |\r\n| Export document | Export the current document |\r\n| Export project | Export the full project |\r\n| Preview compiled manuscript | Open the compile preview pane |\r\n| Open outline | Open the outline of the active project: every section\'s synopsis, status, and words against goal |\r\n| Insert citation | Pick a source from the vault and insert a citation at the cursor |\r\n| Add source | Open the form that writes a citable source note into the project\'s Research folder |\r\n| Publish to WordPress | Publish the current document to WordPress |\r\n| Create new writing project | Create a new writing project |\r\n| Open writing dashboard | Open the statistics dashboard |\r\n| Open targets dashboard | Open the word count targets panel |\r\n| Set word count goal | Set a per-document word count goal |\r\n| Open folder in sidebar explorer | Search and open a vault folder in the sidebar |\r\n| Restore previous binder layout | Put a project\'s folders back the way they were before the one-time folder arrangement |\r\n\r\n---\r\n\r\n## Settings Overview\r\n\r\nOpen via **Settings \u2192 Writing Studio**. General settings appear at the top; each other section opens as its own page. Every setting can also be found by name from Obsidian\'s settings search (Obsidian 1.13+).\r\n\r\n| Section | What it controls |\r\n|-----|-----------------|\r\n| General | Open on startup, default project folder, author name, document type, frontmatter auto-update |\r\n| Focus mode | Focus unit, dim opacity, font override, sidebar behavior, typewriter scroll |\r\n| Typography | Font family, custom font name, line length, font size, line height, letter spacing, persistence |\r\n| Sprint & goals | Sprint duration, daily goal, sound notifications, history retention, inline banner |\r\n| Export | Format, paper size, font, font size, Pandoc path, PDF engine, PDF engine location, citation style, custom style file, EPUB language, EPUB cover |\r\n| Writing log | Append sprint summaries to Daily Note |\r\n| WordPress | Site credentials, default post status, wikilink handling |\r\n\r\n---\r\n\r\n## Ribbon Icon\r\n\r\nWriting Studio adds a single icon to the Obsidian ribbon.\r\n\r\n| Icon | Action |\r\n|------|--------|\r\n| Feather | Open the Writing Studio Launcher panel |\r\n\r\nAll other features are accessible from the Launcher panel, the command palette, context menus, or assigned hotkeys.\r\n\r\n---\r\n\r\n## Installation\r\n\r\n1. Download `main.js`, `manifest.json`, and `styles.css` from the latest [GitHub release](../../releases/latest).\r\n2. Create the folder `<vault>/.obsidian/plugins/writing-studio/` if it does not exist.\r\n3. Copy the three files into that folder.\r\n4. In Obsidian, go to **Settings \u2192 Community Plugins**, find **Writing Studio**, and enable it.\r\n\r\n> **Building from source:** Clone the repository, run `npm install`, then `npm run build`. Copy the three output files as above.\r\n\r\n---\r\n\r\n## Requirements\r\n\r\nMost features work out of the box. A few require additional software for specific functions, noted below.\r\n\r\n| Requirement | When needed |\r\n|-------------|-------------|\r\n| Obsidian 1.13.0 or later | Always |\r\n| Desktop (Windows, macOS, Linux) | Always \u2014 this plugin does not run on mobile |\r\n| Internet connection | First use of each Typography Mode font (cached after that) |\r\n| [Pandoc](https://pandoc.org/installing.html) | Export to PDF, DOCX, RTF, HTML, EPUB |\r\n| LaTeX (TeX Live / MiKTeX) or [wkhtmltopdf](https://wkhtmltopdf.org/) | Export to PDF only (wkhtmltopdf must be pinned in the PDF engine setting) |\r\n| WordPress 5.6+ with REST API enabled | WordPress publishing |\r\n| WordPress Application Password | WordPress publishing |\r\n\r\n---\r\n\r\n## Reporting a Bug\r\n\r\nIf something isn\'t working, please open an issue on GitHub:\r\n\r\n**[Submit a bug report](https://github.com/writerP-777/obsidian-writing-studio/issues/new)**\r\n\r\nInclude the following when you report:\r\n\r\n- Writing Studio version (visible in **Settings \u2192 Community Plugins**)\r\n- Obsidian version (visible in **Settings \u2192 About**)\r\n- Operating system (Windows / macOS / Linux) and version\r\n- What you expected to happen\r\n- What actually happened, and any steps to reproduce it\r\n\r\nFeature requests are welcome in the same place \u2014 please label them as **[Feature Request]** in the issue title.\r\n\r\n---\r\n\r\n## Security\r\n\r\n[![CodeQL](https://github.com/writerP-777/obsidian-writing-studio/actions/workflows/codeql.yml/badge.svg)](https://github.com/writerP-777/obsidian-writing-studio/actions/workflows/codeql.yml)\r\n[![OpenSSF Scorecard](https://api.securityscorecards.dev/projects/github.com/writerP-777/obsidian-writing-studio/badge)](https://securityscorecards.dev/viewer/?uri=github.com/writerP-777/obsidian-writing-studio)\r\n[![OpenSSF Baseline](https://www.bestpractices.dev/projects/12832/baseline)](https://www.bestpractices.dev/projects/12832)\r\n[![ESLint](https://github.com/writerP-777/obsidian-writing-studio/actions/workflows/eslint.yml/badge.svg)](https://github.com/writerP-777/obsidian-writing-studio/actions/workflows/eslint.yml)\r\n[![ORCID](https://img.shields.io/badge/ORCID-0009--0009--8598--2069-brightgreen?logo=orcid&logoColor=white)](https://orcid.org/0009-0009-8598-2069)\r\n\r\nEvery push and pull request is scanned automatically:\r\n\r\n| Tool | What it checks |\r\n|------|----------------|\r\n| **CodeQL** | Static analysis for security vulnerabilities (XSS, injection, unsafe patterns) in TypeScript/JavaScript source |\r\n| **OpenSSF Scorecard** | Supply-chain security posture: dependency hygiene, branch protection, signed releases, and more |\r\n| **ESLint** (`eslint-plugin-obsidianmd`) | Obsidian plugin guideline compliance \u2014 fails on any warning or error |\r\n\r\nResults are published to the **Security** tab of this repository (GitHub code scanning).\r\n\r\nFor local development, a pre-commit hook runs ESLint (blocking) and a pre-push hook runs a full CodeQL scan (blocks the push if any HIGH or CRITICAL findings are present). Install the [CodeQL CLI](https://github.com/github/codeql-cli-binaries/releases) to enable local scanning (`winget install GitHub.CodeQL` on Windows).\r\n';
+var README_default = '<p align="center">\n  <img src="assets/logo.png" width="120" alt="Writing Studio logo">\n</p>\n\n# Writing Studio\n\n**Version 3.2.0** \xB7 Desktop only\n\n![GitHub all releases](https://img.shields.io/github/downloads/writerP-777/obsidian-writing-studio/total)\n[![OpenSSF Best Practices](https://www.bestpractices.dev/projects/12832/badge)](https://www.bestpractices.dev/projects/12832)\n\nWriting Studio turns Obsidian into a dedicated environment for serious nonfiction work \u2014 from your first research notes to a finished, exported manuscript. It bundles a project binder, writing modes, focus and typography tools, sprint timer, progress tracking, manuscript export, and WordPress publishing into a single plugin. A built-in sidebar file explorer lets you browse, preview, and pull content from anywhere in your vault without leaving your draft.\n\n<p align="center">\n  <img src="assets/sidebar-explorer-screenshot.png" alt="Writing Studio with the Launcher panel open on the left, an active draft with its word count goal banner in the center, and the Folder Sidebar Explorer previewing a research file on the right" width="900">\n  <br>\n  <em>Writing Studio in use \u2014 Launcher (left), active draft with word count goal banner (center), Folder Sidebar Explorer open to a research folder (right).</em>\n</p>\n\n<p align="center">\n  <a href="https://buymeacoffee.com/writerp777">\n    <img src="https://img.buymeacoffee.com/button-api/?text=Buy%20me%20a%20coffee&slug=writerp777&button_colour=c9a84c&font_colour=000000&font_family=Georgia&outline_colour=000000&coffee_colour=ffffff" alt="Buy me a coffee" height="40">\n  </a>\n</p>\n\n## Contents\n\n- [Features](#features)\n- [Language support](#language-support)\n- [Writing Studio Launcher](#writing-studio-launcher)\n- [Folder Sidebar Explorer](#folder-sidebar-explorer)\n- [Your Project](#your-project)\n- [Your Writing Environment](#your-writing-environment)\n- [Tracking Your Progress](#tracking-your-progress)\n- [Getting Your Work Out](#getting-your-work-out)\n- [Supporting Tools](#supporting-tools)\n- [Context Menus](#context-menus)\n- [Commands Reference](#commands-reference)\n- [Settings Overview](#settings-overview)\n- [Ribbon Icon](#ribbon-icon)\n- [Installation](#installation)\n- [Requirements](#requirements)\n- [Reporting a Bug](#reporting-a-bug)\n- [Security](#security)\n\n---\n\n## Features\n\n**Writing Binder** \u2014 Your project\'s folder tree, rendered as a manuscript. The binder reads your folders directly, so files created, renamed, or moved anywhere \u2014 even outside Obsidian \u2014 always appear correctly, with no import or scan step. Drag chapters into order, set per-document status and word count goals, and exclude documents from compile with a right-click.\n\n**Outline** \u2014 Give each section a one-paragraph synopsis, the claim it makes, and the Outline view lays the whole project out as an editable table: synopsis, status, and words against goal, section by section, with part totals. Copy it out as an annotated table of contents for a book proposal.\n\n**Project Manager** \u2014 Create projects from six templates (blank, book, article series, blog collection, journal article, magazine article), set a total word count goal, and switch between projects from the Launcher.\n\n**Compile Preview** \u2014 Concatenate all binder documents in order and render them as a finished manuscript in a split pane, without exporting.\n\n**Writing Modes** \u2014 Switch between Draft (distraction-free), Edit (full tooling), and Review (read-only) modes from the status bar, command palette, context menu, or Launcher.\n\n**Focus Mode** \u2014 Dim everything except the paragraph or sentence you are writing. Configurable dim level, font size override, sidebar collapse, and typewriter scroll.\n\n**Typography Mode** \u2014 Apply a curated font, constrained line length, and controlled line height to the editor. Fourteen font options including iA Writer fonts, Google Fonts, and custom system fonts.\n\n**Sprint Timer** \u2014 Run timed writing sessions with a draggable floating overlay. Set duration, word goal, and scope (file or project). Quick-start presets (10 m, 15 m, 25 m) available from the Launcher.\n\n**Progress Tracking** \u2014 Live word counts in the status bar and Launcher, session delta tracking, per-document and per-project word count goals with inline progress banners, and a 30-day writing log with streak tracking.\n\n**Export Engine** \u2014 Export to Manuscript (HTML), PDF, Word (.docx), RTF, HTML, Markdown, and EPUB. Manuscript format produces industry-standard layout with no external tools; other formats require Pandoc.\n\n**Sources, Citations & Footnotes** \u2014 Any note with a `citekey` property is a source, including literature notes from Zotero Integration or the Citations plugin. Cite with `[@smith2020, p. 12]` or a wikilink to the source note, and every export carries the citations and a works-cited page in Chicago author-date or notes style. Footnotes now survive every format. An **Add source** form and an **Insert citation** picker mean nobody has to type a citation key by hand.\n\n**WordPress Publishing** \u2014 Publish directly to WordPress from Obsidian. Set post title, status, categories, tags, excerpt, and scheduled date. Supports multiple sites with per-site credentials and connection testing.\n\n**Folder Sidebar Explorer** \u2014 Browse any vault folder in a sidebar panel. Search by name or file content, preview Markdown files and images inline, and insert selected text directly into the active editor.\n\n## Language support\n\nWriting Studio is available in the following languages in addition to English:\n\n- Arabic\n- Bengali\n- Brazilian Portuguese\n- Chinese (Simplified)\n- French\n- German\n- Hindi\n- Japanese\n- Korean\n- Russian\n- Spanish\n\n**To change the language:** Open **Settings \u2192 General** in Obsidian, scroll to **Language**, and select your preferred language from the list. Restart Obsidian for the change to take effect. Writing Studio will display in the selected language if it is supported.\n\n**Found a translation error or missing text?** Please open an issue on GitHub \u2014 [Submit a bug report or enhancement request](https://github.com/writerP-777/obsidian-writing-studio/issues/new) \u2014 and include the language, the location in the plugin where the text appears, and what it currently says. We will address it in the next release.\n\n### Writing Studio Launcher\n\nThe Launcher is your home base in Writing Studio \u2014 a sidebar panel that shows your active project, progress toward your goals, and one-click access to every major feature.\n\n<p align="center">\n  <img src="assets/launcher-project-card.png" alt="The Launcher project card with the project dropdown and the new project, edit, and delete buttons above the word count and project goal" width="520">\n  <br>\n  <em>The Launcher project card \u2014 switch projects from the dropdown; word count against the project goal below.</em>\n</p>\n\nBy default Writing Studio launches automatically when Obsidian loads \u2014 the Launcher opens and your last session\'s writing mode and typography are restored. To disable this, turn off **Open on startup** in **Settings \u2192 General**: Obsidian then opens clean, with no Writing Studio status bar items or restored modes, and the studio stays dormant until you launch it yourself. Launching it manually restores your last session state the same way.\n\n**To open manually:** Click the feather ribbon icon, or assign a hotkey to **Open launcher** in Settings \u2192 Hotkeys.\n\n**First run:** In a vault with no projects yet, the Launcher shows an orientation card explaining how projects work, with a **Create your first project** button to get started.\n\n<p align="center">\n  <img src="assets/launcher-first-run.png" alt="The Launcher first-run orientation card with an explanation of projects and a Create your first project button" width="520">\n  <br>\n  <em>First run \u2014 the orientation card shown before any project exists.</em>\n</p>\n\n**The Launcher includes:**\n- Active project name, total word count, and progress toward your project word count goal\n- Writing mode selector (Draft / Edit / Review)\n- Focus Mode and Typography Mode toggles\n- Sprint timer with "Set up sprint" button and Quick Sprint Options presets (10 m, 15 m, 25 m)\n- Today card showing words written, sprints completed, session word count, and streak\n- Quick-action buttons: Targets Dashboard, Writing Dashboard, Preview manuscript, Export, Writing Log, Publish to WordPress\n\n---\n\n### Folder Sidebar Explorer\n\nThe Folder Sidebar Explorer opens any vault folder in a right-sidebar panel, letting you browse reference material, research notes, or any folder outside your active project without leaving your draft. Unlike the Binder \u2014 which is scoped to your writing project \u2014 the sidebar explorer works with any folder in your vault.\n\n<p align="center">\n  <img src="assets/folder-sidebar-explorer.png" alt="The Folder Sidebar Explorer panel with a Markdown file open in preview, showing the breadcrumb trail, back and root buttons, and the insert selection button" width="340">\n  <br>\n  <em>The Folder Sidebar Explorer with a research file open in preview \u2014 select text and click insert selection to pull it into your draft.</em>\n</p>\n\n**To open:**\n- Use the command **Open folder in sidebar explorer** from the command palette \u2014 a folder picker appears so you can choose which folder to explore.\n- Right-click any folder in the file explorer and choose **Open in sidebar explorer** under **Writing studio options**.\n- Right-click any folder in [Notebook Navigator](https://github.com/johansan/notebook-navigator) and choose **Open in sidebar explorer** (requires Notebook Navigator to be installed).\n- Assign a hotkey in Settings \u2192 Hotkeys.\n\nThe panel opens in the **right sidebar**. The folder you open becomes the **root folder** for that session \u2014 the breadcrumb trail, the \u2302 root button, and search all operate relative to it.\n\n**Browsing and navigation:**\n\n| Feature | How to use |\n|---------|-----------|\n| Browse into a subfolder | Click the folder |\n| Preview a Markdown file | Click the file \u2014 the folder listing is replaced by a rendered preview inside the panel |\n| Preview an image | Click the file \u2014 displayed inline |\n| Preview audio | Click the file \u2014 player appears inline |\n| Other file types | Click the file \u2014 an **Open in editor** button appears |\n| Go back | Click **\u2190 back**, or press `Backspace` when the list has keyboard focus |\n| Return to root folder | Click **\u2302 root** to jump back to the folder you originally opened |\n| Keyboard navigation | Tab to focus the list, then `\u2191` / `\u2193` to move, `Enter` to open, `Backspace` to go back |\n| Breadcrumb navigation | Click any segment in the breadcrumb trail to jump directly to that folder |\n\n**Search:**\n\nA search bar appears at the top of the folder list. Type your query and press **Enter** to run the search.\n\n- Searches **both folder/file names and file contents** (`.md` and `.txt` files).\n- Frontmatter is excluded from content search to avoid false positives from YAML fields.\n- Name matches show the matched term highlighted in the result title.\n- Content matches show a text snippet around the match with the term highlighted, plus a **CONTENT** badge to distinguish them from name matches.\n- Results always search from the root folder, regardless of which subfolder you are currently browsing.\n- Click **\xD7** to clear the search and return to the normal folder view.\n\n**Sort:**\n\nA sort dropdown sits next to the search bar. Options:\n\n| Option | Description |\n|--------|-------------|\n| Folders \u2191 A-Z | Folders first, then files, both alphabetical (default) |\n| Folders \u2191 Z-A | Folders first, then files, both reverse-alphabetical |\n| Name A-Z | All items alphabetical, folders and files mixed |\n| Name Z-A | All items reverse-alphabetical, mixed |\n| Newest first | Sort by last-modified date, newest at top |\n| Oldest first | Sort by last-modified date, oldest at top |\n\n**Copy content to the editor:**\n\nWhen a Markdown file is open in preview mode (after clicking it in the file list), its text is selectable. To insert a passage into the active editor:\n\n1. Click a file in the list \u2014 the panel switches to preview mode showing the rendered file.\n2. Select the text you want in the preview pane.\n3. Click the **\u21A9 insert selection** button in the nav bar.\n4. The selected text is inserted at the cursor position in the active editor.\n\nThe preview is read-only \u2014 you cannot edit the file from the sidebar.\n\n**Hover tooltips:**\n\nHover over any file or folder in the list to see an information card:\n\n| Item type | Information shown |\n|-----------|------------------|\n| Markdown / text file | Last modified date and time \xB7 File size \xB7 Word count (frontmatter excluded) |\n| Image / audio / other file | Last modified date and time \xB7 File size |\n| Folder | Total file count \xB7 Subfolder count |\n\nThe word count updates asynchronously from Obsidian\'s file cache and appears within a moment of hover.\n\n---\n\n### Your Project\n\n#### Project Manager\n\nProjects group a set of documents (binder items) and act as the scope for export, statistics, and the word count goal banner.\n\n**To create a project:** Use the command **Create new writing project** from the command palette, or click the **+** button next to the project dropdown in the Launcher or Binder panel.\n\n**To switch projects:** Use the Launcher panel or the project selector at the top of the Binder panel.\n\n**To edit a project:** Click the pencil icon in the Launcher project card or next to the project selector in the Binder. You can change the title, author, description, total word count goal, and the document folder \u2014 the folder inside the project that holds its documents (for example, renaming a book project\'s `Chapters/` to `Scenes/` renames the folder and moves its files with it; the binder follows automatically, as it also does when you rename the folder directly in the file explorer).\n\n**To rename a project:** Change the title in the edit-project dialog and save. The project folder is renamed to match, and every file inside moves with it \u2014 links heal, nothing is copied. A hint under the title field shows the folder name you will get before you save. Characters that cannot appear in a folder name (`\\ / : * ? " < > |`) become `-`, so a title like *My Book: A Novel* keeps its colon while its folder is named `My Book- A Novel`; the hint says so whenever a substitution happens. If a folder with the new name already exists, the save is refused with a message and nothing changes \u2014 choose a different title. Editing the author, description, or goal never moves the folder. To change the title and leave the folder as it is, turn off **Also rename the project folder** in the dialog before saving.\n\nIt works the other way too: rename the project folder in Obsidian\'s file explorer and the project\'s title follows, provided the title and the folder name were the same before the rename. A title you set apart from its folder (like the colon example above) is yours and is never overwritten. Rename inside Obsidian, not in Windows Explorer or Finder \u2014 Obsidian reports an outside rename as a delete and a create, so neither Writing Studio nor Obsidian\'s own links can follow it.\n\n**To delete a project:** Click the trash icon in the Launcher project card or next to the project selector in the Binder, then confirm. This removes the project from Writing Studio\'s list only \u2014 the project folder and all its documents stay untouched in your vault.\n\n<p align="center">\n  <img src="assets/edit-project-modal.png" alt="The Edit project modal with fields for project title, author name, document folder, total word count goal, and description, and a Save button" width="560">\n  <br>\n  <em>The Edit project modal \u2014 change the title, author, document folder, description, and total word count goal.</em>\n</p>\n\nEach project stores:\n- Title, type, author, and description\n- Ordered binder with chapters, sections, articles, and notes\n- Per-item word count goals, statuses, and export flags\n- Optional total word count goal (shown in the Launcher and status bar)\n\n**Project templates available at creation:**\n\n| Template | Structure created |\n|----------|------------------|\n| Blank | Empty \u2014 build your own structure |\n| Book | Front Matter, Part 1 / Chapter 1, Back Matter |\n| Article series | Series Overview note (with article schedule), Article 1 placeholder |\n| Blog collection | Date-organized folder, first post placeholder |\n| Journal article | Title Page, Abstract, Keywords, Introduction, Literature Review, Methodology, Findings / Analysis, Discussion, Conclusion, References, Appendices |\n| Magazine article | Pitch / Query Notes, Headline & Deck, Lede, Nut Graf, Body, Quotes & Sources, Kicker, Fact-Check Notes, Author Bio |\n\n---\n\n#### Writing Binder\n\nKeeping a book-length manuscript organized means knowing at a glance which chapters are drafted, which are in progress, and what will compile into the finished manuscript. The Binder is a sidebar panel that shows all of that for your active project.\n\nThe binder reads your folders directly \u2014 the project folder tree *is* the manuscript structure. Organize your work in the binder or in your computer\'s file explorer, and both always match: files created, renamed, moved, or deleted outside Obsidian appear correctly with no scan or import step. A document\'s filename is its title. Status (Draft, In Progress, Complete, Published) shows as a colored stripe on the row\'s left edge, folders carry document-count badges, documents excluded from compile render dimmed, and hovering any row shows its on-disk name and the settings the binder reads from it.\n\n**Synopsis:** Right-click a document and choose **Edit synopsis\u2026** to give it one or two sentences on what the section argues or covers. The synopsis is stored as a `synopsis` property on the document, so you can also read and edit it in Obsidian\'s Properties panel at the top of the note. It shows in the row\'s hover tooltip, and the **Show synopses** button in the binder toolbar puts each synopsis under its title so you can read the argument straight down the tree. The Outline view, described below, shows and edits the same synopses as a table.\n\nBelow the manuscript, **Research** and **Exports** are pinned as drawer tabs with live file counts. Research holds markdown notes that never compile (drag documents in and out of it freely); Exports is output-only, written by the export engine. Non-markdown files are visible and openable everywhere but stay outside the manuscript. The **Add source** button beside the Research tab opens a form, which writes a research note the citation engine can cite (see Sources and Citations, below).\n\n<p align="center">\n  <img src="assets/binder-tree.png" alt="The binder showing a manuscript tree with folder count badges, colored status stripes, a dimmed compile-excluded document, and Research and Exports drawer tabs with file counts at the bottom" width="520">\n  <br>\n  <em>The binder \u2014 status stripes on the left edge, count badges on folders, a dimmed compile-excluded document, and the Research and Exports drawer below.</em>\n</p>\n\n**To open:** Use the command **Open binder** from the command palette, or assign a hotkey in Settings \u2192 Hotkeys.\n\n**Ordering:**\n\nDrag to reorder documents and folders. A document\'s position is stored in its own frontmatter (`binder-order`), so it travels with the file; a folder\'s position lives in a name marker (`020~ Part One`) that the binder hides in display. Anything without a saved position sorts naturally \u2014 A to Z, numbers in numeric order \u2014 after ordered items. Reordering never renames your documents.\n\n**Moving things:**\n\nDragging physically moves files and folders: drop between rows to reorder, onto a folder to nest inside it, on the empty space below the tree to move to the project root, or onto the Research drawer tab to move a document out of the manuscript. A folder drag carries all its children, and links heal automatically on every move.\n\n**Control strip:**\n\nA two-row control strip at the top of the binder keeps the high-frequency writing controls next to your documents, so the daily loop doesn\'t require switching to the launcher tab. The top row is a Draft / Edit / Review segmented control (clicking the active mode switches back to normal). The bottom row holds Focus and Typography toggles, a sprint chip (its menu offers the set-up modal and 10/15/25-minute quick starts; an armed sprint shows a ready chip with the duration), and a **...** menu with the occasional actions: export, publish, preview manuscript, targets dashboard, writing dashboard, and writing log. The launcher keeps its own copies of all controls, and every surface stays in sync no matter where a change is made.\n\n<p align="center">\n  <img src="assets/binder-control-strip.png" alt="The binder control strip with Draft, Edit, and Review on the top row and Focus, Typography, Sprint, and an overflow menu on the bottom row, above the project selector, toolbar, and document tree" width="520">\n  <br>\n  <em>The binder control strip \u2014 writing modes on top; focus, typography, sprint, and overflow controls below.</em>\n</p>\n\n<p align="center">\n  <img src="assets/binder-strip-overflow.png" alt="The binder overflow menu open, showing export, publish to WordPress, preview manuscript, targets dashboard, writing dashboard, and writing log" width="520">\n  <br>\n  <em>The overflow menu holds the less frequent actions: export, publish, preview, and the dashboards and log.</em>\n</p>\n\n**Keyboard navigation:**\n\nThe binder tree is fully keyboard-operable. Tab to focus the list, then:\n\n| Key | Action |\n|-----|--------|\n| `\u2191` / `\u2193` | Move through visible documents and folders |\n| `\u2192` | Expand a collapsed folder, or step into an open one |\n| `\u2190` | Collapse an open folder, or jump to the parent |\n| `Enter` | Open the document, or expand/collapse a folder |\n| `F2` | Rename the focused item inline (Enter commits, Escape cancels) |\n| `Shift+F10` or menu key | Open the item\'s right-click menu |\n\n**Opening and renaming documents:**\n\nA single click on a document opens it immediately. Rename an item from its right-click menu, or by pressing **F2** while it is focused (Enter commits, Escape cancels). Renaming in the binder renames the file itself \u2014 links heal automatically \u2014 and invalid names are rejected with a specific message, never silently altered.\n\n**Creating documents and folders:**\n\nToolbar buttons create a document or folder at the manuscript root; a folder\'s right-click menu creates inside it, and a document\'s menu creates beside it. New documents prompt for a title up front rather than being named "Untitled."\n\n**Splitting and merging sections:**\n\nA long section that has grown into two is split where you are: right-click inside the document and choose **Split section here\u2026** (or run the command **Split section at cursor**). Everything from the cursor to the end of the document moves into a new section placed right after the current one in the binder, with the same status and type. The dialog suggests a title \u2014 the heading the cursor is on, or the heading the new section starts with, or the current title with "(2)" \u2014 and you can type another. Footnotes travel correctly: a footnote used only in the second half moves with it, one used in both halves is copied, and the rest stay. The new section opens in a new tab.\n\nTo join two sections, right-click the first one in the binder and choose **Merge with next section\u2026**. The next document\'s text is appended after a blank line, the first section\'s properties (synopsis, goal, status) are kept, and the second file goes to the trash according to your Obsidian "Deleted files" setting, so it can be brought back. A toggle in the dialog adds the second section\'s title as a heading where the two join. Footnotes whose labels collide are renumbered, so each note keeps its own text. The action is offered only when a document follows in the same folder \u2014 Research notes are never merged.\n\n**Right-click menu:**\n\nRight-click any item for its full set of actions \u2014 rename, set status, set a word count goal, set an optional document type, exclude a document from compile (or re-include it), create a document or folder, or delete to the trash (a folder\'s confirmation states how many files it contains).\n\n<p align="center">\n  <img src="assets/binder-context-menu.png" alt="The binder right-click menu on a document, showing rename, status options, set word count goal, change type options, exclude from compile, new document, new folder, and delete" width="520">\n  <br>\n  <em>A document\'s right-click menu \u2014 status, goal, type, and compile controls in one place.</em>\n</p>\n\n**Organizing with folders:**\n\nFolders are the structure. The book template creates a part folder for you, and any structure you build \u2014 in the binder or in your file explorer \u2014 is the manuscript\'s structure. Adding a file to a project is simply moving it into the project folder; it appears in the binder immediately, and files copied in outside of Obsidian show up the same way with no import step.\n\n**Upgrading from an earlier version:**\n\nThe first time you open an existing project, Writing Studio arranges its folders to match what your old binder showed \u2014 creating folders and moving documents, deleting nothing, and never changing your writing. A one-time notice explains this, and the command **Restore previous binder layout** puts your folders back the way they were if you preferred your earlier arrangement. Everything in your project folder is now part of the compiled manuscript. Check the compile preview before your first export, and use Exclude from compile on anything you want left out.\n\n---\n\n#### Outline\n\nA nonfiction manuscript is an argument, and the Outline is where you check that the argument holds together before you polish the prose. It opens in the main pane as a table of every section in the manuscript, in binder order:\n\n| Column | What it shows |\n|--------|---------------|\n| Section | The document title, indented under its part. Click it to open the document in a new tab; the outline stays open. Click a part\'s name to collapse or expand it. |\n| Synopsis | What the section argues or covers. Click to edit in place; Ctrl+Enter (Cmd+Enter on Mac) saves, Escape cancels. An empty cell says *Add a synopsis\u2026*. |\n| Status | Draft, In progress, Complete, or Published, as a dropdown. Changing it here is the same as changing it in the binder. |\n| Words | The section\'s current word count. Part rows show the total for everything inside them. |\n| Goal | The section\'s word count goal, editable. Part rows show the sum of the goals inside them. |\n| Progress | Words against goal, as a bar and a percentage. |\n\nThe footer totals the whole manuscript and, until every section has one, says how many sections still have no synopsis. A status filter at the top narrows the table to one status while keeping the parts those sections sit in. Documents excluded from compile render dimmed, and the status colour stripe from the binder appears on the left edge of each row.\n\n**Copy outline** puts the whole outline on the clipboard as an indented list of titles and synopses, ready to paste into a book proposal, an email to an editor, or a planning note.\n\nEverything the outline shows comes from the documents themselves (`synopsis`, `binder-status`, and `word-count-goal` properties), so the binder, the outline, and the targets dashboard can never disagree, and the table updates on its own as you write.\n\n**To open:** Click **Open outline** on the project card in the Launcher, the outline button in the binder toolbar, or use the command **Open outline**.\n\n---\n\n#### Find and Replace in Project\n\nA phrase, a name, a spelling, or a citation key that has to change in every chapter is one job, not thirty. Click the find-and-replace button in the binder toolbar or run the command **Find and replace in project** to open the dialog. Type what to find and the matches appear as you type, listed by section with the line around each one; the summary line reads "14 matches in 6 sections". Options: **Match case**, **Whole word**, and **Include research notes** (off by default \u2014 the manuscript is the usual scope). Properties at the top of a note and anything inside code are never searched. Click a section\'s title to open it behind the dialog at the first match.\n\nEvery match has a checkbox, ticked to start with. Untick the ones to keep, then **Replace selected**; or **Replace all** to change every match. A notice reports what changed. If a file was edited between the search and the replace, it is skipped and named, so nothing is replaced in text you have not seen.\n\n**Undo last replace** puts every touched file back exactly as it was, and stays available until the next replace or until Obsidian restarts. A file you edited after the replace is left alone and named, so your newer work is never overwritten.\n\n---\n\n#### Sources and Citations\n\nNonfiction rests on sources, and the sources already live in your vault. Writing Studio turns the notes you have into citations and a works-cited page without a reference manager in the loop.\n\n**What counts as a source.** Any markdown note, anywhere in the vault, whose properties include a `citekey`. Literature notes produced by Zotero Integration or the Citations plugin already carry one, so they work as they are. The engine reads the fields it finds, under the names those tools and ordinary writers use: `title`; `author`, `authors`, or `creators` (a plain name, a list, "Last, First", or Zotero-style name objects); `year`, `date`, or `issued`; `type` or `itemType` (book, chapter, journal article, magazine or newspaper article, web page, thesis, report; anything else is treated as a book); `publisher`, `place`, `journal` or `container-title`, `volume`, `issue`, `pages`, `edition`, `editor`, `doi`, `url`, and `accessed`. If two notes share a citekey, the one in the project\'s Research folder wins and a notice names the other.\n\n**Adding a source without typing YAML.** Click **Add source** beside the Research tab at the bottom of the binder, right-click any research note and choose **Add source\u2026**, or run the command **Add source**. The form asks for the type, title, authors (one per line, first name first), year, and the fields that type needs. The citation key is filled in for you from the first author\'s surname and the year (`smith2020`, then `smith2020a` if that is taken) and can be changed. Saving creates a note such as `Research/Smith 2020 - The Long Argument.md` with the properties set and an empty body for your own notes, and opens it.\n\n```yaml\n---\ncitekey: smith2020\ntype: book\ntitle: "The Long Argument: Why Reform Fails"\nauthor:\n  - Jane Smith\nyear: 2020\npublisher: Riverhead\nplace: New York\n---\n```\n\n**Citing in a draft.** Two spellings work, and you can mix them:\n\n| You type | Meaning |\n|----------|---------|\n| `[@smith2020]` | Cite the work |\n| `[@smith2020, p. 12]` | Cite page 12 (`pp. 12-14` for a range, `chap. 3` for anything else) |\n| `[@lee2018; @okafor2021]` | Two works in one citation |\n| `[see @smith2020, p. 12]` | A prefix prints before the citation |\n| `@smith2020` | The author is part of the sentence: "As Smith (2020) shows\u2026" |\n| `[-@smith2020]` | Year only, when the author was just named |\n| `[[Smith 2020]]` | A wikilink to a source note is a citation |\n| `[[Smith 2020\\|p. 12]]` | The wikilink\'s alias is the page |\n\nWikilinks to notes without a citekey behave exactly as before. To cite without remembering a key, right-click in the editor and choose **Insert citation\u2026** (or run the command **Insert citation**): the picker searches author, year, and title, takes an optional page, and inserts the citation at the cursor.\n\n**Renaming a citation key.** Right-click a source note in the Research drawer and choose **Rename citation key\u2026** (or run the command **Rename citation key** with the source note open). The dialog shows the source, its current key, and where it is cited \u2014 "Used in 9 citations across 4 sections and 1 research note" \u2014 and checks the new key against the rules and every key in use. On **Rename**, the `citekey` property and every `@oldkey` citation in the project\'s manuscript and research notes are rewritten, pages and prefixes untouched. Wikilink citations name the file rather than the key, so they need no change. Other projects in the vault are not touched.\n\n**Citation style.** Set once under Settings \u2192 Export \u2192 Citations:\n\n- **Author-date (Chicago)**, the default: `(Smith 2020, 12)` in the text and a **Works cited** page at the end.\n- **Notes (Chicago)**: each citation becomes a footnote, in full form the first time a source appears in a chapter and short form after, with a **Bibliography** page at the end. Your own footnotes and citation notes share one numbering sequence, in order of appearance.\n- **Custom style file (.csl)**: any Citation Style Language file, for APA, MLA, or a house style. Applies to PDF, Word, and RTF, where Pandoc\'s citeproc does the formatting; the other formats use the built-in author-date style.\n\n**Every format gets the works-cited page.** PDF, Word, and RTF hand the cited sources to Pandoc as a bibliography and run with `--citeproc` (the Notes setting ships its own compact Chicago notes style, so no download is needed). HTML, Manuscript, EPUB, Markdown, and the compile preview are formatted by the plugin itself in the two Chicago styles. Only sources you actually cite appear. A citation whose key matches no source is left visible as `[@key?]` and a notice names it, so the export never silently drops a reference.\n\n**Footnotes everywhere.** The built-in converter now handles reference footnotes (`[^1]` with its `[^1]: text` definition) and inline footnotes (`^[text]`). Numbering restarts with each chapter. HTML and Manuscript collect every note under a **Notes** heading at the end, grouped by chapter; EPUB keeps each chapter\'s notes at the end of that chapter with the markup reading systems use to show them as popups; Markdown export keeps footnote syntax as it is; PDF, Word, and RTF had footnotes already.\n\n**Before you export,** the export dialog reports what it found: "12 citations to 8 sources \xB7 Style: Author-date (Chicago)", and in warning color any key that matches nothing.\n\n---\n\n#### Compile Preview\n\nThe Compile Preview opens a split pane showing all binder documents for the active project concatenated in order, rendered as a finished manuscript.\n\n**To open:** Use the command **Preview compiled manuscript** from the command palette, or click the **Preview manuscript** button in the Launcher panel.\n\n---\n\n### Your Writing Environment\n\n#### Writing Modes\n\nThree modes shape how the editor behaves. The current mode is always shown in the status bar. Click the mode pill in the status bar to switch modes.\n\n| Mode | Purpose |\n|------|---------|\n| **Draft** | Distraction-free drafting; spell-check and formatting hints suppressed |\n| **Edit** | Revision pass; full editor tooling active |\n| **Review** | Read-only style; ideal for a final proofread |\n| **None** | Normal Obsidian behavior |\n\n**To switch modes:**\n- Click the mode indicator in the status bar.\n- Right-click inside the editor, then choose **Switch writing mode \u2192** under **Writing studio options**.\n- Assign hotkeys to **Switch to draft mode / Edit mode / Review mode** in Settings \u2192 Hotkeys.\n- Use the Writing Studio Launcher panel.\n\nThe active mode is saved and restored the next time Writing Studio launches \u2014 automatically at startup when **Open on startup** is enabled, or when you next open the Launcher or switch a mode.\n\n---\n\n#### Focus Mode\n\nFocus Mode dims everything in the editor except the paragraph or sentence you are currently writing, reducing visual noise and keeping attention on the active thought.\n\n**To toggle:** Assign a hotkey to **Toggle focus mode** in Settings \u2192 Hotkeys, or use the toggle in the Launcher panel. Press `Escape` to exit.\n\n**Settings (Settings \u2192 Focus mode):**\n\n| Setting | Description |\n|---------|-------------|\n| Focus unit | Highlight at the **paragraph** or **sentence (line)** level |\n| Dim opacity | How opaque the dimmed text appears (10\u201350%) |\n| Font size override | Override the editor font size while focused; 0 = use theme default. Takes precedence over Typography Mode\'s font size while Focus Mode is active |\n| Auto-hide sidebars | Collapse left and right sidebars when Focus Mode activates |\n| Typewriter scroll | Keep the active line vertically centered as you type |\n\n---\n\n#### Typography Mode\n\nTypography Mode applies a consistent, reader-friendly text treatment to the editor: a curated font, constrained line length, controlled line height, and optional letter spacing.\n\n**To toggle:** Assign a hotkey to **Toggle typography mode** in Settings \u2192 Hotkeys, or use the toggle in the Launcher panel.\n\n**To change the font while Typography Mode is active:** Right-click inside the editor and choose **Typography font \u2192** under **Writing studio options**. A font picker menu appears with all available fonts; the active font is shown with a checkmark. Selecting a font applies it immediately and saves the setting.\n\n> **Note on fonts:** Typography fonts are loaded from Google Fonts and require an internet connection the first time each font is used. After the initial load they are cached and work offline.\n\n**Settings (Settings \u2192 Typography):**\n\n| Setting | Description |\n|---------|-------------|\n| Font family | Choose from the curated font list or enter a custom font name |\n| Custom font name | Used when **Custom font name\u2026** is selected above |\n| Max line length | Characters per line (55\u201380); constrains the editor column width |\n| Font size | Editor font size in pixels |\n| Line height | Multiplier; default 1.7 |\n| Letter spacing | CSS `letter-spacing` value (e.g. `normal`, `0.02em`) |\n| Persist across sessions | Restore Typography Mode when Writing Studio next launches |\n\n**Available fonts:**\n\n| Option | Font |\n|--------|------|\n| Monospaced | iA Writer Mono (falls back to Roboto Mono / Courier New) |\n| Serif | iA Writer Duo Serif (falls back to Georgia) |\n| Sans-serif | iA Writer Quattro (falls back to system sans-serif) |\n| Cormorant Garamond | Elegant display serif |\n| Crimson Text | Classic book serif |\n| EB Garamond | Traditional Garamond revival |\n| Libre Baskerville | Readable web serif |\n| Libre Caslon Text | Clean slab serif |\n| Literata | Designed for long-form reading |\n| Lora | Contemporary calligraphic serif |\n| Inter | Modern humanist sans-serif |\n| Lato | Friendly rounded sans-serif |\n| Source Sans 3 | Clean UI sans-serif |\n| Custom font name\u2026 | Use any font installed on your system |\n\n---\n\n### Tracking Your Progress\n\n#### Writing Sprint Timer\n\nThe Sprint Timer runs a timed writing session. When a sprint is active, a floating overlay displays the countdown and gives you full control \u2014 without requiring you to stay on the dashboard.\n\n**To set up a sprint:**\n\n- Click **Set up sprint** in the Launcher panel to open the sprint configuration modal.\n- Or click one of the **Quick Sprint Options** preset buttons (10 m, 15 m, 25 m) in the Launcher panel to load a duration directly.\n\nEither path opens the floating overlay in a ready state \u2014 the timer does not start until you press \u25B6 on the overlay itself. This gives you time to navigate to your draft or open the Binder before the clock begins.\n\n**Sprint configuration modal:**\n\nThe modal lets you set:\n\n- Duration (preset or custom, in minutes)\n- Word count goal for the session\n- Scope (current file or entire project)\n\nClick **Launch sprint timer** to open the overlay in ready state.\n\n**Using the floating overlay:**\n\n| Control | Action |\n|---------|--------|\n| \u25B6 | Start or resume the sprint |\n| \u23F8 | Pause the sprint |\n| \u25A0 | Stop and end the sprint |\n\nThe overlay is draggable \u2014 click and drag the header to reposition it anywhere on screen. It stays on top regardless of writing mode or Focus Mode. The current countdown is also shown in the Obsidian status bar (`\u23F1 MM:SS`) and, when Focus Mode is active, in the focus toolbar.\n\nWhen the sprint ends, a summary modal shows words written, duration, and words-per-minute. The session is logged to sprint history and optionally appended to your Daily Note.\n\n**Settings (Settings \u2192 Sprint & goals):**\n\n| Setting | Description |\n|---------|-------------|\n| Default sprint duration | Starting value in the sprint modal (minutes) |\n| Default daily word goal | Target used in the Writing Dashboard and Launcher |\n| Sound notifications | Play a tone when the sprint ends |\n| Sprint history retention | Days to keep sprint records before purging |\n| Inline goal banner | Show a progress bar below the editor toolbar when a document has a word count goal set |\n\n---\n\n#### Word Count Goal\n\nA per-document word count goal can be set and tracked inline.\n\n**To set a goal:**\n- Use the command **Set word count goal** from the command palette.\n- Right-click inside the editor and choose **Set word count goal** under **Writing studio options**.\n\nWhen a goal is set and **Inline goal banner** is enabled, a progress bar appears below the editor toolbar showing current words, goal, and percentage. It updates in real time as you type.\n\n---\n\n#### Session Word Count\n\nThe status bar shows a `(+N)` delta next to the current file\'s word count, indicating how many words you have added since opening that file this session. The Launcher\'s **Today** card also shows a cumulative session total across all files opened during the current Obsidian session. Both counts reset when Obsidian restarts.\n\n---\n\n#### Project Word Count Goal\n\nWhen an active project has a total word count goal set, a dedicated status bar item shows `{current} / {goal} project words`. This updates automatically as you write. Set a project goal in the Project modal when creating or editing a project.\n\n---\n\n#### Writing Dashboard\n\nThe Writing Dashboard shows session statistics (words written, sprints completed, time), sprint history, daily progress toward your goal, and per-project word counts with reading time.\n\n**To open:** Use the command **Open writing dashboard** from the command palette, or click the **Writing dashboard** button in the Launcher panel.\n\n---\n\n#### Targets Dashboard\n\nThe Targets Dashboard lets you assign word count goals to individual documents in the active project\'s binder and track progress across the whole project at a glance. Goals can be edited inline in the table. Rows are sortable and filterable by status.\n\n**To open:** Use the command **Open targets dashboard**, click the **Targets dashboard** button in the Launcher panel, or assign a hotkey in Settings \u2192 Hotkeys.\n\n---\n\n#### Daily Writing Log\n\nThe Writing Log is a sidebar panel that shows your writing history at a glance.\n\n**To open:** Use the command **Open writing log** from the command palette, or click the **Writing log** button in the Launcher panel.\n\n**The Writing Log shows:**\n- Current streak (days in a row with at least one sprint)\n- This session: total session words, sprint words, sprints completed, and minutes written\n- Recent activity: a bar chart with one row per day you wrote, each showing word count, sprints completed, and a visual bar proportional to the day\'s output. Days with no writing are collapsed rather than shown as empty rows, so the log stays focused on the days you actually worked.\n\nWhen **Append to daily note** is enabled (Settings \u2192 Writing log), a summary of each completed sprint is also appended to today\'s Daily Note.\n\n---\n\n### Getting Your Work Out\n\n#### Export Engine\n\nWhen your draft is ready, the Export Engine converts it to a finished file in your chosen format \u2014 no reformatting required.\n\n**Supported formats:** Manuscript (HTML) \xB7 PDF \xB7 Word (.docx) \xB7 RTF \xB7 HTML \xB7 Markdown \xB7 EPUB\n\n**To export:**\n- Right-click inside the editor and choose **Export this document** under **Writing studio options**.\n- Use the command **Export document** from the command palette.\n- Click the **Export** button in the Launcher panel.\n- Assign a hotkey to **Export document** in Settings \u2192 Hotkeys.\n- Right-click a folder in the binder and choose **Export folder** to export just that part of the manuscript.\n\n**One title names the export**\n\nThe export dialog\'s **Title** dropdown sets the export\'s filename, its title page heading, and the file\'s metadata in one place \u2014 the three are always identical. A whole-project or single-document export offers the project name or a title you type yourself; a folder export adds **Folder name** (the default) and **Project \u2014 folder** forms. Choosing **Type your own title** keeps Export disabled until you type one, so an export is never accidentally untitled.\n\nThe compile preview renders exactly what the dialog\'s current selections will produce \u2014 same documents, same headings, same title page \u2014 and when you proceed to export from the preview, your selections carry back into the dialog.\n\n<p align="center">\n  <img src="assets/export-modal-title.png" alt="The export dialog with the Title dropdown open on a folder export, showing Folder name, Project \u2014 folder, Project name, and Type your own title" width="560">\n  <br>\n  <em>The Title dropdown \u2014 one choice names the filename, the title page, and the file metadata.</em>\n</p>\n\n**Manuscript format**\n\nThe Manuscript format produces a self-contained HTML file formatted to industry-standard manuscript conventions:\n- Courier New 12 pt, double-spaced, 1-inch margins\n- Title page with the export\'s chosen title, author name, approximate word count, and optional contact information\n- Chapter headings in uppercase, page-break before each\n- Scene breaks rendered as `#` (the standard manuscript convention)\n\nNo external tools are required for manuscript export.\n\n**Settings (Settings \u2192 Export):**\n\n| Setting | Description |\n|---------|-------------|\n| Default export format | Pre-selected format in the export modal |\n| Default paper size | Letter (US) or A4 |\n| Export font | Font name used in PDF/DOCX output (e.g. `Georgia`) |\n| Export font size | Point size for PDF/DOCX output |\n| Pandoc path | Full path to the `pandoc` binary if it is not on your system PATH |\n| PDF engine | Engine Pandoc uses for PDF export. **Auto** (default) picks an installed LaTeX engine \u2014 `xelatex` or `lualatex` when a custom font is set, `pdflatex` otherwise. Pin a specific engine to always use it; if a pinned engine is not installed the export fails with a message naming it rather than silently substituting another |\n| PDF engine location | Folder containing the PDF engine binaries \u2014 or full path to one engine binary \u2014 when the engine is not on the system PATH. Leave blank to search the PATH plus common install locations |\n| Citation style | **Author-date (Chicago)** puts `(Smith 2020)` in the text with a Works cited page; **Notes (Chicago)** turns each citation into a footnote with a Bibliography page; **Custom style file (.csl)** applies any CSL style to PDF, Word, and RTF (other formats fall back to author-date). See Sources and Citations, above |\n| Custom style file | Path to a `.csl` file, inside the vault or anywhere on disk, used when the citation style is set to custom |\n| EPUB language | BCP 47 language tag (e.g. `en`, `fr`, `de`) |\n| EPUB include cover | Generate a text cover page when no cover image is provided |\n\n> **Requirement:** Pandoc must be installed for PDF, DOCX, RTF, HTML, and EPUB export. Download from [pandoc.org](https://pandoc.org/installing.html). For PDF export, a LaTeX distribution (e.g. TeX Live or MiKTeX) is also required \u2014 unless the PDF engine setting is pinned to [wkhtmltopdf](https://wkhtmltopdf.org/), which renders PDFs without LaTeX. Manuscript (HTML) export does not require Pandoc.\n>\n> **macOS note:** apps launched from the Dock don\'t see the shell PATH, so a correctly installed TeX Live or Homebrew binary can still be "not found." Common install locations (`/Library/TeX/texbin`, `/opt/homebrew/bin`, `/usr/local/bin`) are searched automatically; for anything else, set the PDF engine location setting.\n>\n> **Font note:** the export font setting applies only to the LaTeX PDF path (`xelatex`/`lualatex`; `pdflatex` cannot apply custom fonts either). The `wkhtmltopdf` path takes its typography from Pandoc\'s HTML/CSS output, so the export font setting is ignored there \u2014 the plugin tells you when a font was skipped for this reason.\n>\n> **Formatting note:** the built-in converter used for HTML, Manuscript, and EPUB output supports headings, paragraphs, lists, blockquotes, fenced code blocks, tables, images, links, footnotes, and citations. Nested lists and setext (underline-style) headings are not converted \u2014 use a Pandoc format (PDF, DOCX, RTF) if your manuscript depends on them.\n\n---\n\n#### WordPress Publishing\n\nPublish your finished draft directly to WordPress without leaving Obsidian. The modal lets you choose the target site, set the post title, status, categories, tags, excerpt, and an optional scheduled publication date.\n\n**To publish:**\n- Right-click inside the editor and choose **Publish to WordPress** under **Writing studio options**.\n- Use the command **Publish to WordPress** from the command palette.\n- Click the **Publish to WordPress** button in the Launcher panel.\n- Assign a hotkey to **Publish to WordPress** in Settings \u2192 Hotkeys.\n\n**Setting up a site (Settings \u2192 WordPress):**\n\n1. Click **+ add WordPress site**.\n2. Enter a nickname, the site URL (e.g. `https://yourblog.com`), and your WordPress username.\n3. Generate an application password in WordPress under **Users \u2192 Profile \u2192 Application passwords** and paste it into the **Application password** field.\n4. Click **Test connection** to verify.\n\n**Per-site options:**\n\n| Setting | Description |\n|---------|-------------|\n| Default post status | Draft \xB7 Pending Review \xB7 Published |\n| Wikilink handling | **Strip** removes `[[...]]` syntax, leaving plain text \xB7 **Convert** turns wikilinks into URLs |\n\n**Preserving your credentials across updates**\n\nWriting Studio stores your WordPress site credentials in your vault\'s `.obsidian/plugins/writing-studio/data.json` file. Obsidian\'s in-app update process does not touch this file \u2014 your credentials are preserved automatically. However, if you uninstall and reinstall the plugin manually, or if a vault sync conflict overwrites `data.json`, credentials will be lost and will need to be re-entered. To avoid this, always use Obsidian\'s built-in Update button rather than uninstalling manually.\n\n---\n\n### Supporting Tools\n\n#### Frontmatter Manager\n\nWriting Studio automatically manages YAML frontmatter in your documents when **Frontmatter auto-update** is enabled. On every save it updates:\n\n- `word-count` \u2014 current word count\n- `modified` \u2014 last-modified date\n\nThe `word-count-goal` frontmatter field is read by the inline goal banner and the Word Count Goal modal.\n\n---\n\n## Context Menus\n\nWriting Studio adds items to Obsidian\'s right-click context menus. All Writing Studio items are grouped together under the heading **Writing studio options** to distinguish them from other plugins and Obsidian\'s built-in options.\n\n### Right-click inside an open document (editor menu)\n\n| Option | Action |\n|--------|--------|\n| Export this document | Open the export modal for the current file |\n| Publish to WordPress | Open the WordPress publish modal for the current file |\n| Set word count goal | Set a word count target for the current document |\n| Insert citation\u2026 | Pick a source from the vault and insert a citation at the cursor |\n| Split section here\u2026 | Move everything from the cursor to the end of the document into a new section placed right after this one (manuscript documents of the active project only) |\n| Switch writing mode \u2192 | Open a mode-switcher menu (Draft / Edit / Review / None) |\n| Typography font \u2192 | Open a font picker menu to change the typography font (visible only when Typography Mode is active) |\n\n### Right-click a folder in the file explorer\n\n| Option | Action |\n|--------|--------|\n| Open in sidebar explorer | Open the folder in the Folder Sidebar Explorer panel |\n\n---\n\n## Commands Reference\n\nNo default hotkeys are assigned. All commands can be given a hotkey in **Settings \u2192 Hotkeys**.\n\n| Command | Description |\n|---------|-------------|\n| Open launcher | Open the launcher sidebar panel |\n| Open binder | Open the writing binder sidebar panel |\n| Open writing log | Open the daily writing log panel |\n| Toggle focus mode | Enable or disable focus mode |\n| Toggle typography mode | Enable or disable typography mode |\n| Switch to draft mode | Activate draft writing mode |\n| Switch to edit mode | Activate edit writing mode |\n| Switch to review mode | Activate review writing mode |\n| Start writing sprint | Open the sprint timer modal |\n| Export document | Export the current document |\n| Export project | Export the full project |\n| Preview compiled manuscript | Open the compile preview pane |\n| Open outline | Open the outline of the active project: every section\'s synopsis, status, and words against goal |\n| Insert citation | Pick a source from the vault and insert a citation at the cursor |\n| Add source | Open the form that writes a citable source note into the project\'s Research folder |\n| Split section at cursor | Move everything from the cursor to the end into a new section placed right after the current one |\n| Find and replace in project | Find a word or phrase across the project\'s sections, replace the matches you choose, and undo the last replace |\n| Rename citation key | Change a source\'s citation key and update every citation of it in the project |\n| Publish to WordPress | Publish the current document to WordPress |\n| Create new writing project | Create a new writing project |\n| Open writing dashboard | Open the statistics dashboard |\n| Open targets dashboard | Open the word count targets panel |\n| Set word count goal | Set a per-document word count goal |\n| Open folder in sidebar explorer | Search and open a vault folder in the sidebar |\n| Restore previous binder layout | Put a project\'s folders back the way they were before the one-time folder arrangement |\n\n---\n\n## Settings Overview\n\nOpen via **Settings \u2192 Writing Studio**. General settings appear at the top; each other section opens as its own page. Every setting can also be found by name from Obsidian\'s settings search (Obsidian 1.13+).\n\n| Section | What it controls |\n|-----|-----------------|\n| General | Open on startup, default project folder, author name, document type, frontmatter auto-update |\n| Focus mode | Focus unit, dim opacity, font override, sidebar behavior, typewriter scroll |\n| Typography | Font family, custom font name, line length, font size, line height, letter spacing, persistence |\n| Sprint & goals | Sprint duration, daily goal, sound notifications, history retention, inline banner |\n| Export | Format, paper size, font, font size, Pandoc path, PDF engine, PDF engine location, citation style, custom style file, EPUB language, EPUB cover |\n| Writing log | Append sprint summaries to Daily Note |\n| WordPress | Site credentials, default post status, wikilink handling |\n\n---\n\n## Ribbon Icon\n\nWriting Studio adds a single icon to the Obsidian ribbon.\n\n| Icon | Action |\n|------|--------|\n| Feather | Open the Writing Studio Launcher panel |\n\nAll other features are accessible from the Launcher panel, the command palette, context menus, or assigned hotkeys.\n\n---\n\n## Installation\n\n1. Download `main.js`, `manifest.json`, and `styles.css` from the latest [GitHub release](../../releases/latest).\n2. Create the folder `<vault>/.obsidian/plugins/writing-studio/` if it does not exist.\n3. Copy the three files into that folder.\n4. In Obsidian, go to **Settings \u2192 Community Plugins**, find **Writing Studio**, and enable it.\n\n> **Building from source:** Clone the repository, run `npm install`, then `npm run build`. Copy the three output files as above.\n\n---\n\n## Requirements\n\nMost features work out of the box. A few require additional software for specific functions, noted below.\n\n| Requirement | When needed |\n|-------------|-------------|\n| Obsidian 1.13.0 or later | Always |\n| Desktop (Windows, macOS, Linux) | Always \u2014 this plugin does not run on mobile |\n| Internet connection | First use of each Typography Mode font (cached after that) |\n| [Pandoc](https://pandoc.org/installing.html) | Export to PDF, DOCX, RTF, HTML, EPUB |\n| LaTeX (TeX Live / MiKTeX) or [wkhtmltopdf](https://wkhtmltopdf.org/) | Export to PDF only (wkhtmltopdf must be pinned in the PDF engine setting) |\n| WordPress 5.6+ with REST API enabled | WordPress publishing |\n| WordPress Application Password | WordPress publishing |\n\n---\n\n## Reporting a Bug\n\nIf something isn\'t working, please open an issue on GitHub:\n\n**[Submit a bug report](https://github.com/writerP-777/obsidian-writing-studio/issues/new)**\n\nInclude the following when you report:\n\n- Writing Studio version (visible in **Settings \u2192 Community Plugins**)\n- Obsidian version (visible in **Settings \u2192 About**)\n- Operating system (Windows / macOS / Linux) and version\n- What you expected to happen\n- What actually happened, and any steps to reproduce it\n\nFeature requests are welcome in the same place \u2014 please label them as **[Feature Request]** in the issue title.\n\n---\n\n## Security\n\n[![CodeQL](https://github.com/writerP-777/obsidian-writing-studio/actions/workflows/codeql.yml/badge.svg)](https://github.com/writerP-777/obsidian-writing-studio/actions/workflows/codeql.yml)\n[![OpenSSF Scorecard](https://api.securityscorecards.dev/projects/github.com/writerP-777/obsidian-writing-studio/badge)](https://securityscorecards.dev/viewer/?uri=github.com/writerP-777/obsidian-writing-studio)\n[![OpenSSF Baseline](https://www.bestpractices.dev/projects/12832/baseline)](https://www.bestpractices.dev/projects/12832)\n[![ESLint](https://github.com/writerP-777/obsidian-writing-studio/actions/workflows/eslint.yml/badge.svg)](https://github.com/writerP-777/obsidian-writing-studio/actions/workflows/eslint.yml)\n[![ORCID](https://img.shields.io/badge/ORCID-0009--0009--8598--2069-brightgreen?logo=orcid&logoColor=white)](https://orcid.org/0009-0009-8598-2069)\n\nEvery push and pull request is scanned automatically:\n\n| Tool | What it checks |\n|------|----------------|\n| **CodeQL** | Static analysis for security vulnerabilities (XSS, injection, unsafe patterns) in TypeScript/JavaScript source |\n| **OpenSSF Scorecard** | Supply-chain security posture: dependency hygiene, branch protection, signed releases, and more |\n| **ESLint** (`eslint-plugin-obsidianmd`) | Obsidian plugin guideline compliance \u2014 fails on any warning or error |\n\nResults are published to the **Security** tab of this repository (GitHub code scanning).\n\nFor local development, a pre-commit hook runs ESLint (blocking) and a pre-push hook runs a full CodeQL scan (blocks the push if any HIGH or CRITICAL findings are present). Install the [CodeQL CLI](https://github.com/github/codeql-cli-binaries/releases) to enable local scanning (`winget install GitHub.CodeQL` on Windows).\n';
 
 // src/HelpContent.ts
 var start = README_default.indexOf("\n## Features");
@@ -22182,7 +23748,7 @@ var HELP_CONTENT = content;
 
 // src/SettingsTab.ts
 var WP_SITE_KEY = /^wpSite\.(.+)\.(nickname|url|username|defaultStatus|wikilinkHandling)$/;
-var HelpSettingPage = class extends import_obsidian32.SettingPage {
+var HelpSettingPage = class extends import_obsidian35.SettingPage {
   constructor(appRef) {
     super();
     this.appRef = appRef;
@@ -22197,9 +23763,9 @@ var HelpSettingPage = class extends import_obsidian32.SettingPage {
   async renderContent() {
     var _a2;
     (_a2 = this.component) == null ? void 0 : _a2.unload();
-    this.component = new import_obsidian32.Component();
+    this.component = new import_obsidian35.Component();
     this.component.load();
-    await import_obsidian32.MarkdownRenderer.render(this.appRef, HELP_CONTENT, this.containerEl, "", this.component);
+    await import_obsidian35.MarkdownRenderer.render(this.appRef, HELP_CONTENT, this.containerEl, "", this.component);
     const supportDiv = this.containerEl.createDiv({ cls: "ws-support-footer" });
     supportDiv.createEl("a", {
       href: "https://buymeacoffee.com/writerp777",
@@ -22219,7 +23785,7 @@ var HelpSettingPage = class extends import_obsidian32.SettingPage {
     super.hide();
   }
 };
-var WritingStudioSettingsTab = class extends import_obsidian32.PluginSettingTab {
+var WritingStudioSettingsTab = class extends import_obsidian35.PluginSettingTab {
   constructor(app, plugin) {
     super(app, plugin);
     this.plugin = plugin;
@@ -22769,9 +24335,9 @@ var WritingStudioSettingsTab = class extends import_obsidian32.PluginSettingTab 
 };
 
 // src/WritingLogView.ts
-var import_obsidian33 = require("obsidian");
+var import_obsidian36 = require("obsidian");
 var WRITING_LOG_VIEW_TYPE = "writing-studio-writing-log";
-var WritingLogView = class extends import_obsidian33.ItemView {
+var WritingLogView = class extends import_obsidian36.ItemView {
   constructor(leaf, plugin) {
     super(leaf);
     this.plugin = plugin;
@@ -22798,7 +24364,7 @@ var WritingLogView = class extends import_obsidian33.ItemView {
     const root = this.containerEl.children[1];
     root.empty();
     root.addClass("ws-log-root");
-    const lang = (0, import_obsidian33.getLanguage)();
+    const lang = (0, import_obsidian36.getLanguage)();
     const header = root.createDiv("ws-log-header");
     header.createDiv({ text: t2("log.title"), cls: "ws-log-title" });
     header.createDiv({
@@ -22927,6 +24493,15 @@ var COMMAND_SPECS = [
   { id: "add-source", nameKey: "main.cmd.addSource", run: (p) => {
     p.addSource();
   } },
+  { id: "split-section", nameKey: "main.cmd.splitSection", editorRun: (p, editor, view) => {
+    p.splitSectionAtCursor(editor, view.file);
+  } },
+  { id: "find-replace-project", nameKey: "main.cmd.findReplace", run: (p) => {
+    p.openFindReplace();
+  } },
+  { id: "rename-citation-key", nameKey: "main.cmd.renameCitekey", editorRun: (p, _editor, view) => {
+    p.renameCitationKey(view.file);
+  } },
   { id: "publish-wordpress", nameKey: "main.cmd.publishWordPress", run: (p) => {
     p.publishCurrentFile();
   } },
@@ -23029,7 +24604,7 @@ var StatusBar = class {
 };
 
 // src/GoalBanner.ts
-var import_obsidian34 = require("obsidian");
+var import_obsidian37 = require("obsidian");
 var GoalBanner = class {
   constructor(plugin) {
     this.generation = 0;
@@ -23055,7 +24630,7 @@ var GoalBanner = class {
     const leaf = this.plugin.app.workspace.getMostRecentLeaf();
     if (!leaf) return;
     const view = leaf.view;
-    if (!(view instanceof import_obsidian34.MarkdownView)) return;
+    if (!(view instanceof import_obsidian37.MarkdownView)) return;
     const file = view.file;
     if (!file) return;
     const goal = this.plugin.projectManager.getWordCountGoalForFile(file);
@@ -23084,18 +24659,18 @@ var GoalBanner = class {
 };
 
 // src/VaultFiles.ts
-var import_obsidian35 = require("obsidian");
+var import_obsidian38 = require("obsidian");
 var ObsidianVaultFiles = class {
   constructor(app) {
     this.app = app;
   }
   async readText(path) {
     const file = this.app.vault.getAbstractFileByPath(path);
-    return file instanceof import_obsidian35.TFile ? this.app.vault.read(file) : null;
+    return file instanceof import_obsidian38.TFile ? this.app.vault.read(file) : null;
   }
   async writeText(path, content2) {
     const existing = this.app.vault.getAbstractFileByPath(path);
-    if (existing instanceof import_obsidian35.TFile) {
+    if (existing instanceof import_obsidian38.TFile) {
       await this.app.vault.modify(existing, content2);
     } else {
       await this.app.vault.create(path, content2);
@@ -23103,18 +24678,18 @@ var ObsidianVaultFiles = class {
   }
   async readBinary(path) {
     const file = this.app.vault.getAbstractFileByPath(path);
-    return file instanceof import_obsidian35.TFile ? this.app.vault.readBinary(file) : null;
+    return file instanceof import_obsidian38.TFile ? this.app.vault.readBinary(file) : null;
   }
   async writeBinary(path, data) {
     const existing = this.app.vault.getAbstractFileByPath(path);
-    if (existing instanceof import_obsidian35.TFile) {
+    if (existing instanceof import_obsidian38.TFile) {
       await this.app.vault.modifyBinary(existing, data);
     } else {
       await this.app.vault.createBinary(path, data);
     }
   }
   async remove(path) {
-    if (this.app.vault.getAbstractFileByPath(path) instanceof import_obsidian35.TFile) {
+    if (this.app.vault.getAbstractFileByPath(path) instanceof import_obsidian38.TFile) {
       await this.app.vault.adapter.remove(path);
     }
   }
@@ -23128,18 +24703,18 @@ var ObsidianVaultFiles = class {
   }
   listSubfolders(path) {
     const folder = this.app.vault.getAbstractFileByPath(path);
-    if (!(folder instanceof import_obsidian35.TFolder)) return [];
-    return folder.children.filter((c) => c instanceof import_obsidian35.TFolder).map((c) => c.path);
+    if (!(folder instanceof import_obsidian38.TFolder)) return [];
+    return folder.children.filter((c) => c instanceof import_obsidian38.TFolder).map((c) => c.path);
   }
   absolutePath(path) {
     const adapter = this.app.vault.adapter;
-    return adapter instanceof import_obsidian35.FileSystemAdapter ? adapter.getFullPath(path) : path;
+    return adapter instanceof import_obsidian38.FileSystemAdapter ? adapter.getFullPath(path) : path;
   }
 };
 
 // src/StudioEvents.ts
-var import_obsidian36 = require("obsidian");
-var StudioEvents = class extends import_obsidian36.Events {
+var import_obsidian39 = require("obsidian");
+var StudioEvents = class extends import_obsidian39.Events {
   onModeChanged(cb) {
     return this.on("mode-changed", (...data) => {
       cb(data[0]);
@@ -23175,7 +24750,7 @@ var StudioEvents = class extends import_obsidian36.Events {
 };
 
 // src/carryOverBridge.ts
-var import_obsidian38 = require("obsidian");
+var import_obsidian41 = require("obsidian");
 
 // src/carryOver.ts
 function parseLegacyBinder(content2) {
@@ -23608,8 +25183,8 @@ async function runRestorePass(compute, io) {
 }
 
 // modals/BinderUpdateModal.ts
-var import_obsidian37 = require("obsidian");
-var BinderUpdateModal = class extends import_obsidian37.Modal {
+var import_obsidian40 = require("obsidian");
+var BinderUpdateModal = class extends import_obsidian40.Modal {
   onOpen() {
     const { contentEl } = this;
     contentEl.empty();
@@ -23628,14 +25203,14 @@ var BinderUpdateModal = class extends import_obsidian37.Modal {
 
 // src/carryOverBridge.ts
 function buildDiskState(app) {
-  const at = (path) => app.vault.getAbstractFileByPath((0, import_obsidian38.normalizePath)(path));
+  const at = (path) => app.vault.getAbstractFileByPath((0, import_obsidian41.normalizePath)(path));
   return {
-    fileExists: (path) => at(path) instanceof import_obsidian38.TFile,
-    folderExists: (path) => at(path) instanceof import_obsidian38.TFolder,
+    fileExists: (path) => at(path) instanceof import_obsidian41.TFile,
+    folderExists: (path) => at(path) instanceof import_obsidian41.TFolder,
     subfolderNames: (parentPath2) => {
       const folder = at(parentPath2);
-      if (!(folder instanceof import_obsidian38.TFolder)) return [];
-      return folder.children.filter((c) => c instanceof import_obsidian38.TFolder).map((c) => c.name);
+      if (!(folder instanceof import_obsidian41.TFolder)) return [];
+      return folder.children.filter((c) => c instanceof import_obsidian41.TFolder).map((c) => c.name);
     },
     // The metadata cache can be cold right after vault open; a key it has
     // not indexed yet merely plans as "will write" — the processFrontMatter
@@ -23643,7 +25218,7 @@ function buildDiskState(app) {
     frontmatter: (path) => {
       var _a2, _b2;
       const file = at(path);
-      if (!(file instanceof import_obsidian38.TFile)) return null;
+      if (!(file instanceof import_obsidian41.TFile)) return null;
       return (_b2 = (_a2 = app.metadataCache.getFileCache(file)) == null ? void 0 : _a2.frontmatter) != null ? _b2 : null;
     }
   };
@@ -23651,23 +25226,23 @@ function buildDiskState(app) {
 function obsidianIO(app) {
   return {
     createFolder: async (path) => {
-      await app.vault.createFolder((0, import_obsidian38.normalizePath)(path));
+      await app.vault.createFolder((0, import_obsidian41.normalizePath)(path));
     },
     rename: async (fromPath, toPath) => {
-      const file = app.vault.getAbstractFileByPath((0, import_obsidian38.normalizePath)(fromPath));
+      const file = app.vault.getAbstractFileByPath((0, import_obsidian41.normalizePath)(fromPath));
       if (!file) throw new Error(`not found: ${fromPath}`);
-      await app.fileManager.renameFile(file, (0, import_obsidian38.normalizePath)(toPath));
+      await app.fileManager.renameFile(file, (0, import_obsidian41.normalizePath)(toPath));
     },
     writeFrontmatter: async (path, mutate) => {
-      const file = app.vault.getAbstractFileByPath((0, import_obsidian38.normalizePath)(path));
-      if (!(file instanceof import_obsidian38.TFile)) throw new Error(`not found: ${path}`);
+      const file = app.vault.getAbstractFileByPath((0, import_obsidian41.normalizePath)(path));
+      if (!(file instanceof import_obsidian41.TFile)) throw new Error(`not found: ${path}`);
       await app.fileManager.processFrontMatter(file, mutate);
     }
   };
 }
 async function readLegacyBinder(app, project) {
-  const file = app.vault.getAbstractFileByPath((0, import_obsidian38.normalizePath)(`${project.folderPath}/_binder.json`));
-  if (!(file instanceof import_obsidian38.TFile)) return null;
+  const file = app.vault.getAbstractFileByPath((0, import_obsidian41.normalizePath)(`${project.folderPath}/_binder.json`));
+  if (!(file instanceof import_obsidian41.TFile)) return null;
   return parseLegacyBinder(await app.vault.cachedRead(file));
 }
 function describeReason(reason) {
@@ -23694,7 +25269,7 @@ async function updateFailureLedger(plugin, project, failures) {
     entry.count += 1;
     console.warn(`Writing Studio migration: ${f.kind} failed for ${f.name} \u2014 ${f.reason}`);
     if (entry.count >= 2 && !entry.noticed) {
-      new import_obsidian38.Notice(t2(failureNoticeKey(f.kind), { name: f.name, reason: describeReason(f.reason) }));
+      new import_obsidian41.Notice(t2(failureNoticeKey(f.kind), { name: f.name, reason: describeReason(f.reason) }));
       entry.noticed = true;
     }
     ledger[sig] = entry;
@@ -23735,13 +25310,13 @@ async function runSilentMigration(plugin) {
 async function runRestoreLayout(plugin) {
   const project = plugin.projectManager.getActiveProject();
   if (!project) {
-    new import_obsidian38.Notice(t2("binder.migration.restoreUnavailable"));
+    new import_obsidian41.Notice(t2("binder.migration.restoreUnavailable"));
     return;
   }
   if (inFlight.has(project.id)) return;
   const legacy = await readLegacyBinder(plugin.app, project);
   if (!legacy) {
-    new import_obsidian38.Notice(t2("binder.migration.restoreNothing"));
+    new import_obsidian41.Notice(t2("binder.migration.restoreNothing"));
     return;
   }
   const compute = () => {
@@ -23749,7 +25324,7 @@ async function runRestoreLayout(plugin) {
     return { plan: planRestore(legacy.items, project.folderPath, disk), disk };
   };
   if (!restoreHasWork(compute().plan)) {
-    new import_obsidian38.Notice(t2("binder.migration.restoreNothing"));
+    new import_obsidian41.Notice(t2("binder.migration.restoreNothing"));
     return;
   }
   inFlight.add(project.id);
@@ -23761,15 +25336,15 @@ async function runRestoreLayout(plugin) {
       console.warn(`Writing Studio restore: failed for ${f.name} \u2014 ${f.reason}`);
     }
     const leftBehind = result.skipped + result.failures.length;
-    new import_obsidian38.Notice(leftBehind > 0 ? t2("binder.migration.restorePartial", { count: leftBehind }) : t2("binder.migration.restoreDone"));
+    new import_obsidian41.Notice(leftBehind > 0 ? t2("binder.migration.restorePartial", { count: leftBehind }) : t2("binder.migration.restoreDone"));
   } finally {
     inFlight.delete(project.id);
   }
 }
 
 // modals/PublishModal.ts
-var import_obsidian39 = require("obsidian");
-var PublishModal = class extends import_obsidian39.Modal {
+var import_obsidian42 = require("obsidian");
+var PublishModal = class extends import_obsidian42.Modal {
   constructor(app, plugin, filePath) {
     super(app);
     this.selectedSiteId = "";
@@ -23798,7 +25373,7 @@ var PublishModal = class extends import_obsidian39.Modal {
       return;
     }
     this.loadExistingMeta();
-    new import_obsidian39.Setting(contentEl).setName(t2("publishModal.siteName")).addDropdown((d) => {
+    new import_obsidian42.Setting(contentEl).setName(t2("publishModal.siteName")).addDropdown((d) => {
       sites.forEach((s) => {
         d.addOption(s.id, s.nickname || s.url);
       });
@@ -23812,10 +25387,10 @@ var PublishModal = class extends import_obsidian39.Modal {
         void this.loadCategories().then(() => this.render());
       });
     });
-    new import_obsidian39.Setting(contentEl).setName(t2("publishModal.postTitleName")).addText((tx) => tx.setValue(this.postTitle).onChange((v) => {
+    new import_obsidian42.Setting(contentEl).setName(t2("publishModal.postTitleName")).addText((tx) => tx.setValue(this.postTitle).onChange((v) => {
       this.postTitle = v;
     }));
-    new import_obsidian39.Setting(contentEl).setName(t2("publishModal.postStatusName")).addDropdown((d) => d.addOption("draft", t2("publishModal.postStatus.draft")).addOption("pending", t2("publishModal.postStatus.pending")).addOption("publish", t2("publishModal.postStatus.publish")).setValue(this.postStatus).onChange((v) => {
+    new import_obsidian42.Setting(contentEl).setName(t2("publishModal.postStatusName")).addDropdown((d) => d.addOption("draft", t2("publishModal.postStatus.draft")).addOption("pending", t2("publishModal.postStatus.pending")).addOption("publish", t2("publishModal.postStatus.publish")).setValue(this.postStatus).onChange((v) => {
       this.postStatus = v;
     }));
     const site = this.getSite();
@@ -23823,7 +25398,7 @@ var PublishModal = class extends import_obsidian39.Modal {
       this.categories = await this.plugin.wpClient.getCategories(site);
     }
     if (this.categories.length > 0) {
-      new import_obsidian39.Setting(contentEl).setName(t2("publishModal.categoryName"));
+      new import_obsidian42.Setting(contentEl).setName(t2("publishModal.categoryName"));
       const catList = contentEl.createDiv("ws-publish-categories");
       for (const cat of this.categories) {
         const label = catList.createEl("label", { cls: "ws-publish-cat-label" });
@@ -23839,13 +25414,13 @@ var PublishModal = class extends import_obsidian39.Modal {
         label.createSpan({ text: ` ${cat.name} (${cat.count})` });
       }
     }
-    new import_obsidian39.Setting(contentEl).setName(t2("publishModal.tagsName")).setDesc(t2("publishModal.tagsDesc")).addText((tx) => tx.setValue(this.tags.join(", ")).onChange((v) => {
+    new import_obsidian42.Setting(contentEl).setName(t2("publishModal.tagsName")).setDesc(t2("publishModal.tagsDesc")).addText((tx) => tx.setValue(this.tags.join(", ")).onChange((v) => {
       this.tags = v.split(",").map((s) => s.trim()).filter(Boolean);
     }));
-    new import_obsidian39.Setting(contentEl).setName(t2("publishModal.excerptName")).addTextArea((tx) => tx.setValue(this.excerpt).onChange((v) => {
+    new import_obsidian42.Setting(contentEl).setName(t2("publishModal.excerptName")).addTextArea((tx) => tx.setValue(this.excerpt).onChange((v) => {
       this.excerpt = v;
     }));
-    new import_obsidian39.Setting(contentEl).setName(t2("publishModal.scheduleName")).setDesc(t2("publishModal.scheduleDesc")).addText((tx) => tx.setPlaceholder(t2("publishModal.schedulePlaceholder")).setValue(this.scheduledDate).onChange((v) => {
+    new import_obsidian42.Setting(contentEl).setName(t2("publishModal.scheduleName")).setDesc(t2("publishModal.scheduleDesc")).addText((tx) => tx.setPlaceholder(t2("publishModal.schedulePlaceholder")).setValue(this.scheduledDate).onChange((v) => {
       this.scheduledDate = v;
     }));
     if (this.existingPostId) {
@@ -23880,7 +25455,7 @@ var PublishModal = class extends import_obsidian39.Modal {
   loadExistingMeta() {
     var _a2;
     const file = this.app.vault.getAbstractFileByPath(this.filePath);
-    if (!(file instanceof import_obsidian39.TFile)) return;
+    if (!(file instanceof import_obsidian42.TFile)) return;
     const fm = (_a2 = this.app.metadataCache.getFileCache(file)) == null ? void 0 : _a2.frontmatter;
     if (fm) {
       this.postTitle = fm["title"] || file.basename;
@@ -23906,12 +25481,12 @@ var PublishModal = class extends import_obsidian39.Modal {
   async doPublish(updateExisting) {
     const site = this.getSite();
     if (!site) {
-      new import_obsidian39.Notice(t2("publishModal.noSiteSelected"));
+      new import_obsidian42.Notice(t2("publishModal.noSiteSelected"));
       return;
     }
     const file = this.app.vault.getAbstractFileByPath(this.filePath);
-    if (!(file instanceof import_obsidian39.TFile)) {
-      new import_obsidian39.Notice(t2("publishModal.fileNotFound"));
+    if (!(file instanceof import_obsidian42.TFile)) {
+      new import_obsidian42.Notice(t2("publishModal.fileNotFound"));
       return;
     }
     try {
@@ -23937,10 +25512,10 @@ var PublishModal = class extends import_obsidian39.Modal {
         fm["wp-scheduled"] = (_a2 = result.scheduledDate) != null ? _a2 : null;
       });
       const action = this.scheduledDate ? t2("publishModal.scheduled") : t2("publishModal.published");
-      new import_obsidian39.Notice(t2("publishModal.actionNotice", { action, url: result.url }), 1e4);
+      new import_obsidian42.Notice(t2("publishModal.actionNotice", { action, url: result.url }), 1e4);
       this.close();
     } catch (e) {
-      new import_obsidian39.Notice(t2("publishModal.publishFailed", { error: e instanceof Error ? e.message : String(e) }));
+      new import_obsidian42.Notice(t2("publishModal.publishFailed", { error: e instanceof Error ? e.message : String(e) }));
     }
   }
   onClose() {
@@ -24009,9 +25584,12 @@ var DEFAULT_SETTINGS = {
   currentWritingMode: "none",
   removedProjectIds: []
 };
-var WritingStudioPlugin = class extends import_obsidian40.Plugin {
+var WritingStudioPlugin = class extends import_obsidian43.Plugin {
   constructor() {
     super(...arguments);
+    // The last project-wide replace, held for "Undo last replace" until the
+    // next replace or a restart (snapshots are not yet in the set).
+    this.replaceLedger = null;
     this.wordCountUpdateTimer = null;
     this.launcherRefreshTimer = null;
     this.studioActivated = false;
@@ -24076,6 +25654,9 @@ var WritingStudioPlugin = class extends import_obsidian40.Plugin {
         menu.addItem((i2) => i2.setTitle(t2("main.menu.publish")).setIcon("globe").setSection("writing-studio").onClick(() => this.publishCurrentFile()));
         menu.addItem((i2) => i2.setTitle(t2("main.menu.setGoal")).setIcon("target").setSection("writing-studio").onClick(() => this.setWordCountGoal(view.file)));
         menu.addItem((i2) => i2.setTitle(t2("citations.insertMenu")).setIcon("quote").setSection("writing-studio").onClick(() => this.insertCitation(_editor)));
+        if (this.manuscriptProjectFor(view.file)) {
+          menu.addItem((i2) => i2.setTitle(t2("main.menu.splitSection")).setIcon("scissors").setSection("writing-studio").onClick(() => this.splitSectionAtCursor(_editor, view.file)));
+        }
         menu.addItem((i2) => i2.setTitle(t2("main.menu.switchMode")).setIcon("layout-dashboard").setSection("writing-studio").onClick((e) => this.showModeSwitcher(e)));
         if (this.typographyMode.isActive()) {
           menu.addItem((i2) => i2.setTitle(t2("main.menu.typographyFont")).setIcon("type").setSection("writing-studio").onClick((e) => this.showFontPicker(e)));
@@ -24084,7 +25665,7 @@ var WritingStudioPlugin = class extends import_obsidian40.Plugin {
     );
     this.registerEvent(
       this.app.workspace.on("file-menu", (menu, file) => {
-        if (file instanceof import_obsidian40.TFolder) {
+        if (file instanceof import_obsidian43.TFolder) {
           menu.addItem((i2) => i2.setTitle(t2("main.menu.studioOptions")).setSection("writing-studio").setDisabled(true));
           menu.addItem(
             (i2) => i2.setTitle(t2("main.menu.openSidebar")).setIcon("folder").setSection("writing-studio").onClick(() => {
@@ -24096,7 +25677,7 @@ var WritingStudioPlugin = class extends import_obsidian40.Plugin {
     );
     this.registerEvent(
       this.app.vault.on("modify", (file) => {
-        if (file instanceof import_obsidian40.TFile) {
+        if (file instanceof import_obsidian43.TFile) {
           this.fmManager.scheduleUpdate(file);
           this.statsTracker.invalidateWordCountCache();
           if (this.studioActivated) {
@@ -24109,7 +25690,7 @@ var WritingStudioPlugin = class extends import_obsidian40.Plugin {
     this.registerEvent(
       this.app.vault.on("rename", (file, oldPath) => {
         this.statsTracker.invalidateWordCountCache();
-        if (file instanceof import_obsidian40.TFolder) {
+        if (file instanceof import_obsidian43.TFolder) {
           void this.projectManager.handleFolderRename(oldPath, file.path);
         }
       })
@@ -24257,24 +25838,24 @@ var WritingStudioPlugin = class extends import_obsidian40.Plugin {
   addSource() {
     const project = this.projectManager.getActiveProject();
     if (!project) {
-      new import_obsidian40.Notice(t2("binder.selectProjectFirst"));
+      new import_obsidian43.Notice(t2("binder.selectProjectFirst"));
       return;
     }
     const taken = new Set(buildSourceIndex(this.app, project.folderPath).all().map((s) => s.citekey));
     new AddSourceModal(this.app, taken, async (fields) => {
-      const folder = (0, import_obsidian40.normalizePath)(`${project.folderPath}/Research`);
+      const folder = (0, import_obsidian43.normalizePath)(`${project.folderPath}/Research`);
       await this.vaultFiles.ensureFolder(folder);
       const base = sourceFileBasename(fields);
-      let path = (0, import_obsidian40.normalizePath)(`${folder}/${base}.md`);
+      let path = (0, import_obsidian43.normalizePath)(`${folder}/${base}.md`);
       for (let n = 2; this.vaultFiles.exists(path); n++) {
-        path = (0, import_obsidian40.normalizePath)(`${folder}/${base} ${n}.md`);
+        path = (0, import_obsidian43.normalizePath)(`${folder}/${base} ${n}.md`);
       }
       const content2 = `---
-${(0, import_obsidian40.stringifyYaml)(sourceFrontmatter(fields))}---
+${(0, import_obsidian43.stringifyYaml)(sourceFrontmatter(fields))}---
 
 `;
       const file = await this.app.vault.create(path, content2);
-      new import_obsidian40.Notice(t2("citations.sourceAdded", { key: fields.citekey }));
+      new import_obsidian43.Notice(t2("citations.sourceAdded", { key: fields.citekey }));
       await this.app.workspace.getLeaf("tab").openFile(file);
     }).open();
   }
@@ -24320,9 +25901,9 @@ ${(0, import_obsidian40.stringifyYaml)(sourceFrontmatter(fields))}---
   publishCurrentFile() {
     const leaf = this.app.workspace.getMostRecentLeaf();
     const view = leaf == null ? void 0 : leaf.view;
-    const file = view instanceof import_obsidian40.MarkdownView ? view.file : null;
-    if (!(file instanceof import_obsidian40.TFile)) {
-      new import_obsidian40.Notice(t2("main.notice.noMarkdownOpen"));
+    const file = view instanceof import_obsidian43.MarkdownView ? view.file : null;
+    if (!(file instanceof import_obsidian43.TFile)) {
+      new import_obsidian43.Notice(t2("main.notice.noMarkdownOpen"));
       return;
     }
     new PublishModal(this.app, this, file.path).open();
@@ -24330,6 +25911,183 @@ ${(0, import_obsidian40.stringifyYaml)(sourceFrontmatter(fields))}---
   setWordCountGoal(file) {
     if (!file) return;
     new WordCountGoalModal(this.app, this, file).open();
+  }
+  // ─── Sections: split, merge, find and replace, citation keys ──────────────
+  // The active project when `file` is one of its manuscript documents.
+  manuscriptProjectFor(file) {
+    const project = this.projectManager.getActiveProject();
+    if (!file || !project || !isManuscriptPath(file.path, project.folderPath)) return null;
+    return project;
+  }
+  docTitle(file) {
+    return file.name.slice(0, file.name.length - file.extension.length - 1);
+  }
+  // A folder's manuscript-zone children in binder order, as the drag
+  // planner sees them.
+  manuscriptSiblings(parent, projectFolder) {
+    var _a2, _b2;
+    const isRoot = parent.path === projectFolder;
+    const entries = [];
+    for (const c of parent.children) {
+      if (!inManuscriptZone(c.name, c instanceof import_obsidian43.TFolder, isRoot)) continue;
+      entries.push({
+        name: c.name,
+        isFolder: c instanceof import_obsidian43.TFolder,
+        path: c.path,
+        extension: c instanceof import_obsidian43.TFile ? c.extension : void 0,
+        binderOrder: c instanceof import_obsidian43.TFile && c.extension === "md" ? parseBinderOrder((_b2 = (_a2 = this.app.metadataCache.getFileCache(c)) == null ? void 0 : _a2.frontmatter) == null ? void 0 : _b2["binder-order"]) : null
+      });
+    }
+    return sortSiblings(entries);
+  }
+  // Split at the cursor: the text from the cursor on becomes a new section
+  // placed right after this one, with the same status and type, its own
+  // binder-order (the drag planner decides the value), and the footnote
+  // definitions it uses. The head stays in the editor, so Undo there still
+  // works on the text it kept.
+  splitSectionAtCursor(editor, file) {
+    const project = this.manuscriptProjectFor(file);
+    const parent = file == null ? void 0 : file.parent;
+    if (!file || !project || !parent) {
+      new import_obsidian43.Notice(t2("sections.splitNotManuscript"));
+      return;
+    }
+    const text = editor.getValue();
+    const offset = editor.posToOffset(editor.getCursor());
+    const split = splitSection(text, offset);
+    if (!split) {
+      new import_obsidian43.Notice(t2("sections.splitInFrontmatter"));
+      return;
+    }
+    const title = this.docTitle(file);
+    new TitlePromptModal(
+      this.app,
+      t2("sections.splitTitle"),
+      suggestSplitTitle(text, offset, title),
+      t2("sections.splitBtn"),
+      t2("synopsis.cancel"),
+      async (typed) => {
+        var _a2;
+        const target = renameTargetName({ name: "", isFolder: false, extension: "md", binderOrder: null }, typed);
+        const verdict = validateItemName(typed, target, parent.children.map((c) => c.name));
+        if (!verdict.ok) {
+          new import_obsidian43.Notice(t2(nameRejectionKey(verdict.reason), { name: target }));
+          return;
+        }
+        const newPath = (0, import_obsidian43.normalizePath)(`${parent.path}/${target}`);
+        const siblings = this.manuscriptSiblings(parent, project.folderPath);
+        const idx = siblings.findIndex((s) => s.path === file.path);
+        const source = { name: target, isFolder: false, extension: "md", binderOrder: null, path: newPath };
+        const ops = planMove(source, parent.path, siblings, idx + 1, true);
+        const fm = {};
+        const cache = (_a2 = this.app.metadataCache.getFileCache(file)) == null ? void 0 : _a2.frontmatter;
+        for (const key of ["binder-status", "binder-type"]) {
+          const v = cache == null ? void 0 : cache[key];
+          if (v !== void 0 && v !== null) fm[key] = v;
+        }
+        const own = ops.find((o) => o.kind === "set-order" && o.path === newPath);
+        if ((own == null ? void 0 : own.kind) === "set-order") fm["binder-order"] = own.order;
+        const content2 = (Object.keys(fm).length ? `---
+${(0, import_obsidian43.stringifyYaml)(fm)}---
+
+` : "") + split.tail;
+        editor.setValue(split.head);
+        editor.setCursor({ line: editor.lastLine(), ch: 0 });
+        const created = await this.app.vault.create(newPath, content2);
+        for (const op of ops) {
+          if (op.path === newPath) continue;
+          const f = this.app.vault.getAbstractFileByPath(op.path);
+          if (!f) continue;
+          if (op.kind === "rename") {
+            await this.app.fileManager.renameFile(f, (0, import_obsidian43.normalizePath)(op.newPath));
+          } else if (f instanceof import_obsidian43.TFile) {
+            await this.app.fileManager.processFrontMatter(f, (m) => {
+              m["binder-order"] = op.order;
+            });
+          }
+        }
+        new import_obsidian43.Notice(t2("sections.splitDone", { name: this.docTitle(created) }));
+        await this.app.workspace.getLeaf("tab").openFile(created);
+      },
+      t2("sections.splitHint", { name: title })
+    ).open();
+  }
+  // Merge the next section into this one. The second file goes to the
+  // trash by the user's "Deleted files" setting — never deleted outright.
+  mergeWithNext(first, second) {
+    const secondTitle = this.docTitle(second);
+    new MergeSectionsModal(this.app, this.docTitle(first), secondTitle, async (addHeading) => {
+      const a = await this.app.vault.read(first);
+      const b = await this.app.vault.read(second);
+      await this.app.vault.modify(first, mergeSections(a, b, { headingTitle: addHeading ? secondTitle : null }));
+      await this.app.fileManager.trashFile(second);
+      new import_obsidian43.Notice(t2("sections.mergeDone", { second: secondTitle }));
+    }).open();
+  }
+  openFindReplace() {
+    const project = this.projectManager.getActiveProject();
+    if (!project) {
+      new import_obsidian43.Notice(t2("binder.selectProjectFirst"));
+      return;
+    }
+    new FindReplaceModal(this.app, this, project.folderPath).open();
+  }
+  // Rename a source's citation key everywhere in the project: the key on
+  // the note, and every @key citation in manuscript and research notes.
+  // Wikilink citations name the file, so they need nothing.
+  renameCitationKey(file) {
+    var _a2, _b2;
+    const project = this.projectManager.getActiveProject();
+    if (!project) {
+      new import_obsidian43.Notice(t2("binder.selectProjectFirst"));
+      return;
+    }
+    const key = file ? (_b2 = (_a2 = this.app.metadataCache.getFileCache(file)) == null ? void 0 : _a2.frontmatter) == null ? void 0 : _b2.citekey : void 0;
+    if (!file || typeof key !== "string" || !key) {
+      new import_obsidian43.Notice(t2("citations.notASource"));
+      return;
+    }
+    const index = buildSourceIndex(this.app, project.folderPath);
+    const source = index.byKey(key);
+    const who = source ? source.authors.length ? namesInText(source.authors) : namesInText(source.editors) : "";
+    const label = source ? [who, source.year ? `(${source.year})` : "", source.title].filter((s) => s.length > 0).join(" ") : this.docTitle(file);
+    const taken = new Set(index.all().map((s) => s.citekey));
+    safeHandler(async () => {
+      const uses = /* @__PURE__ */ new Map();
+      let citations = 0;
+      let sections = 0;
+      let notes = 0;
+      for (const f of listManuscriptDocs(this.app, project.folderPath)) {
+        const n = countKeyUses(await this.app.vault.cachedRead(f), key);
+        if (n > 0) {
+          uses.set(f, n);
+          citations += n;
+          sections++;
+        }
+      }
+      for (const f of listResearchDocs(this.app, project.folderPath)) {
+        const n = countKeyUses(await this.app.vault.cachedRead(f), key);
+        if (n > 0) {
+          uses.set(f, n);
+          citations += n;
+          notes++;
+        }
+      }
+      new RenameCitekeyModal(this.app, label, key, taken, { citations, sections, notes }, async (newKey) => {
+        await this.app.fileManager.processFrontMatter(file, (fm) => {
+          fm.citekey = newKey;
+        });
+        let count = 0;
+        for (const f of uses.keys()) {
+          await this.app.vault.process(f, (data) => {
+            const r = rewriteCitekey(data, key, newKey);
+            count += r.count;
+            return r.text;
+          });
+        }
+        new import_obsidian43.Notice(t2("citations.renameKeyDone", { key: newKey, count }));
+      }).open();
+    })();
   }
   startSprint() {
     new SprintModal(this.app, this).open();
@@ -24361,7 +26119,7 @@ ${(0, import_obsidian40.stringifyYaml)(sourceFrontmatter(fields))}---
     }).open();
   }
   showModeSwitcher(e) {
-    const menu = new import_obsidian40.Menu();
+    const menu = new import_obsidian43.Menu();
     menu.addItem((i2) => i2.setTitle(t2("main.menu.draftMode")).setIcon("pencil").onClick(() => this.writingModes.switchMode("draft")));
     menu.addItem((i2) => i2.setTitle(t2("main.menu.editMode")).setIcon("edit-3").onClick(() => this.writingModes.switchMode("edit")));
     menu.addItem((i2) => i2.setTitle(t2("main.menu.reviewMode")).setIcon("eye").onClick(() => this.writingModes.switchMode("review")));
@@ -24370,7 +26128,7 @@ ${(0, import_obsidian40.stringifyYaml)(sourceFrontmatter(fields))}---
     if (e instanceof MouseEvent) menu.showAtMouseEvent(e);
   }
   showFontPicker(e) {
-    const menu = new import_obsidian40.Menu();
+    const menu = new import_obsidian43.Menu();
     TYPOGRAPHY_FONT_OPTIONS.forEach(({ key }) => {
       menu.addItem((i2) => {
         i2.setTitle(t2(`settings.typography.font.${key}`)).onClick(() => {
@@ -24402,7 +26160,7 @@ ${(0, import_obsidian40.stringifyYaml)(sourceFrontmatter(fields))}---
   async updateWordCount() {
     const leaf = this.app.workspace.getMostRecentLeaf();
     const view = leaf == null ? void 0 : leaf.view;
-    if (!(view instanceof import_obsidian40.MarkdownView) || !view.editor) {
+    if (!(view instanceof import_obsidian43.MarkdownView) || !view.editor) {
       this.statusBar.clearWordCount();
       return;
     }
@@ -24422,7 +26180,7 @@ ${(0, import_obsidian40.stringifyYaml)(sourceFrontmatter(fields))}---
     }
   }
 };
-var SprintSummaryModal = class extends import_obsidian40.Modal {
+var SprintSummaryModal = class extends import_obsidian43.Modal {
   constructor(app, session) {
     super(app);
     this.session = session;
@@ -24453,7 +26211,7 @@ var SprintSummaryModal = class extends import_obsidian40.Modal {
     this.contentEl.empty();
   }
 };
-var WordCountGoalModal = class extends import_obsidian40.Modal {
+var WordCountGoalModal = class extends import_obsidian43.Modal {
   constructor(app, plugin, file) {
     super(app);
     this.goal = 0;
@@ -24468,7 +26226,7 @@ var WordCountGoalModal = class extends import_obsidian40.Modal {
     contentEl.createEl("h2", { text: t2("wordCountGoal.title") });
     const cache = this.app.metadataCache.getFileCache(this.file);
     this.goal = Number((_a2 = cache == null ? void 0 : cache.frontmatter) == null ? void 0 : _a2["word-count-goal"]) || 0;
-    new import_obsidian40.Setting(contentEl).setName(t2("wordCountGoal.name")).setDesc(t2("wordCountGoal.desc")).addText((tx) => tx.setValue(String(this.goal || "")).setPlaceholder(t2("wordCountGoal.placeholder")).onChange((v) => {
+    new import_obsidian43.Setting(contentEl).setName(t2("wordCountGoal.name")).setDesc(t2("wordCountGoal.desc")).addText((tx) => tx.setValue(String(this.goal || "")).setPlaceholder(t2("wordCountGoal.placeholder")).onChange((v) => {
       this.goal = parseInt(v) || 0;
     }));
     const btnRow = contentEl.createDiv("ws-modal-btn-row");

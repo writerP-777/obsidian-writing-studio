@@ -172,7 +172,9 @@
       "setStatusPublished": "Set status: published",
       "rename": "Rename",
       "changeType": "Change type: {{type}}",
-      "editSynopsis": "Edit synopsis…"
+      "editSynopsis": "Edit synopsis…",
+      "mergeNext": "Merge with next section…",
+      "renameCitekey": "Rename citation key…"
     },
     "deleteConfirm": {
       "title": "Delete document",
@@ -234,7 +236,8 @@
       "restoreUnavailable": "Restoring the layout needs the experimental filesystem binder and an active project."
     },
     "toggleSynopses": "Show each section's synopsis under its title",
-    "openOutline": "Open the outline"
+    "openOutline": "Open the outline",
+    "findReplace": "Find and replace in project"
   },
   "launcher": {
     "displayText": "Writing studio",
@@ -649,7 +652,10 @@
       "restoreBinderLayout": "Restore previous binder layout",
       "openOutline": "Open outline",
       "insertCitation": "Insert citation",
-      "addSource": "Add source"
+      "addSource": "Add source",
+      "splitSection": "Split section at cursor",
+      "findReplace": "Find and replace in project",
+      "renameCitekey": "Rename citation key"
     },
     "menu": {
       "studioOptions": "Writing studio options",
@@ -662,7 +668,8 @@
       "draftMode": "✍ Draft mode",
       "editMode": "✎ Edit mode",
       "reviewMode": "👁 Review mode",
-      "normalMode": "Normal (no mode)"
+      "normalMode": "Normal (no mode)",
+      "splitSection": "Split section here…"
     },
     "notice": {
       "noMarkdownOpen": "No Markdown file is currently open."
@@ -824,6 +831,66 @@
       "citekeyDesc": "Used to cite this source, for example [@smith2020]. Filled in for you; change it if you like."
     },
     "addSourceShort": "Add source",
-    "addSourceTooltip": "Add a book, article, or web page you can cite"
+    "addSourceTooltip": "Add a book, article, or web page you can cite",
+    "renameKeyTitle": "Rename citation key",
+    "renameKeySource": "Source",
+    "renameKeyCurrent": "Current",
+    "renameKeyNew": "New key",
+    "renameKeyUsage": "Used in {{citations}} across {{where}}. All of them will be updated.",
+    "renameKeyUnused": "Not cited anywhere in this project yet.",
+    "renameKeyBtn": "Rename",
+    "renameKeySame": "That is the current key. Type a different one.",
+    "renameKeyDone_one": "Renamed to @{{key}} in {{count}} citation.",
+    "renameKeyDone_other": "Renamed to @{{key}} in {{count}} citations.",
+    "notASource": "This note has no citation key. Open a source note, or add one with \"Add source\".",
+    "countCitations_one": "{{count}} citation",
+    "countCitations_other": "{{count}} citations",
+    "countSections_one": "{{count}} section",
+    "countSections_other": "{{count}} sections",
+    "countNotes_one": "{{count}} research note",
+    "countNotes_other": "{{count}} research notes",
+    "countJoin": " and "
+  },
+  "sections": {
+    "splitTitle": "Split section",
+    "splitHint": "Everything from the cursor to the end of \"{{name}}\" moves into the new section, placed right after it in the binder.",
+    "splitBtn": "Split",
+    "splitDone": "Split. \"{{name}}\" starts where the cursor was.",
+    "splitInFrontmatter": "Put the cursor in the text, below the properties, and try again.",
+    "splitNotManuscript": "Split works on a section of the active project's manuscript. Open one and try again.",
+    "mergeTitle": "Merge sections",
+    "mergeMessage": "\"{{first}}\" and \"{{second}}\" become one section named \"{{first}}\".",
+    "mergeHeadingToggle": "Add \"{{second}}\" as a heading where the two join",
+    "mergeTrashHint": "The second file goes to the trash, so you can get it back.",
+    "mergeBtn": "Merge",
+    "mergeDone": "Merged. \"{{second}}\" is in the trash."
+  },
+  "findReplace": {
+    "title": "Find and replace in project",
+    "findLabel": "Find",
+    "replaceLabel": "Replace",
+    "matchCase": "Match case",
+    "wholeWord": "Whole word",
+    "includeResearch": "Include research notes",
+    "loading": "Reading the project…",
+    "typeToFind": "Type a word or phrase to find.",
+    "noMatches": "No matches.",
+    "summary_one": "{{count}} match in {{sections}}",
+    "summary_other": "{{count}} matches in {{sections}}",
+    "sections_one": "{{count}} section",
+    "sections_other": "{{count}} sections",
+    "replaceSelected": "Replace selected ({{count}})",
+    "replaceAll": "Replace all",
+    "undo": "Undo last replace",
+    "close": "Close",
+    "openDoc": "Open \"{{name}}\"",
+    "researchTag": "research",
+    "replaced_one": "Replaced {{count}} match in {{sections}}.",
+    "replaced_other": "Replaced {{count}} matches in {{sections}}.",
+    "skippedChanged": "Skipped because the file changed since the search: {{names}}. Search again to see the current text.",
+    "nothingToUndo": "Nothing to undo.",
+    "undone_one": "Undo complete. {{count}} file put back the way it was.",
+    "undone_other": "Undo complete. {{count}} files put back the way they were.",
+    "undoSkipped": "Left alone because they changed after the replace: {{names}}"
   }
 }

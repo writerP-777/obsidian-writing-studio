@@ -38,8 +38,32 @@ src/
   WordPressClient.ts       ← WordPress REST API multi-site publishing
   WritingLogView.ts        ← daily writing-activity log sidebar view
   FolderSidebarView.ts     ← focused folder explorer sidebar view
-  HelpContent.ts           ← in-plugin help text
+  HelpContent.ts           ← in-plugin help text (embeds the README from "Features" on)
   SettingsTab.ts           ← declarative settings (getSettingDefinitions, Obsidian 1.13+)
+  OutlineView.ts           ← the Outline: main-pane table of sections, synopses, status, words vs goal
+  outlineModel.ts          ← pure outline rows + "Copy outline" text from the manuscript tree
+  sources.ts               ← a source = any note with a `citekey`; field aliases, citekey generation
+  sourceIndex.ts           ← vault-wide source index from the metadata cache (Research wins collisions)
+  citations.ts             ← finds `[@key, p. 12]`, `@key`, `[-@key]`, and `[[Source|p. 12]]` citations
+  chicago.ts               ← built-in Chicago author-date + notes formatter
+  citeRender.ts            ← renders citations/references into compiled sections; Pandoc CSL-JSON hand-off
+  chicagoNotesCsl.ts       ← compact Chicago notes CSL shipped for Pandoc's citeproc
+  footnotes.ts             ← lifts `[^n]` / `^[…]` notes out of a section for the HTML/EPUB converters
+  mdMask.ts                ← code ranges (fences, inline) that citation/footnote/search scans skip
+  markdown.ts              ← shared block-level Markdown → HTML converter
+  sectionEdit.ts           ← pure split-at-offset and merge for sections (footnote defs carried/renumbered)
+  projectSearch.ts         ← pure project-wide find (body only), selective replace, and undo planning
+  citekeyRename.ts         ← pure citekey validation and `@old` → `@new` rewrite across citations
+  commands.ts              ← the command palette as data (ids are permanent)
+  ControlStrip.ts          ← two-row writing controls at the top of the binder
+  StatusBar.ts             ← status bar items (append-only order)
+  GoalBanner.ts            ← inline word-count-goal progress banner
+  StudioEvents.ts          ← event bus for mode / focus / typography / sprint changes
+  VaultFiles.ts            ← the narrow seam over vault file I/O (ObsidianVaultFiles + in-memory test adapter)
+  binderFilter.ts, treeNav.ts, sections.ts, words.ts, dates.ts, scaffold.ts, safeHandler.ts, i18n.ts
+                           ← small pure helpers: zone filtering, keyboard tree nav, compiled-section
+                             splitting, the single word-count definition, dates, template scaffolding,
+                             the async-handler Notice wrapper, i18next setup
 models/
   Project.ts               ← WritingProject, ProjectType, ProjectGoals
   BinderItem.ts            ← BinderItem, BinderData, DocumentStatus
@@ -54,6 +78,14 @@ modals/
   PublishModal.ts          ← publish current file to WordPress
   TargetsDashboardModal.ts ← manage per-document word count goals
   WritingDashboardModal.ts ← view session stats and sprint history
+  SynopsisModal.ts         ← edit one document's synopsis
+  AddSourceModal.ts        ← the Add source form (writes a citable research note)
+  InsertCitationModal.ts   ← the citation picker (search author/year/title, optional page)
+  RenameCitekeyModal.ts    ← rename a source's citekey; shows where it is cited
+  MergeSectionsModal.ts    ← confirm a merge with the next section (optional heading at the join)
+  FindReplaceModal.ts      ← project-wide find and replace with per-match checkboxes and one undo
+  TitlePromptModal.ts      ← single-field name prompt (create, rename, split) with optional hint
+  ConfirmModal.ts, confirmDeleteProject.ts ← confirmations
 templates/
   BookTemplate.ts          ← folder/document scaffold for book projects
   ArticleSeriesTemplate.ts ← scaffold for article series
@@ -168,6 +200,35 @@ no path re-applies the arrangement. A one-time notice (`BinderUpdateModal`) show
 vault, immediately after the first migration that actually performs work — informational,
 never a consent gate. UI copy never says *carry-over* or *migration* (failure notices name
 files, not concepts). Avoid: *import*, *conversion*.
+
+### Sections: split, merge, find and replace
+
+**Split** (`splitSection`, `src/sectionEdit.ts`)
+Everything from the cursor to the end of a manuscript document moves into a new document placed
+right after it in binder order (the drag planner, `planMove`, picks the `binder-order`). The new
+document copies `binder-status` and `binder-type`, never synopsis or goal. Reference footnote
+definitions move with the half that uses them and are copied when both do. Offered only on a
+manuscript document of the active project (`isManuscriptPath`).
+Prefer: *split section*. Avoid: *cut*, *break*.
+
+**Merge** (`mergeSections`)
+The next document in the same folder is appended after one blank line; the first document's
+properties win; colliding footnote labels are renumbered in the second; the second file goes to
+the vault trash (`fileManager.trashFile`, honoring the user's "Deleted files" setting). One
+direction only: *merge with next*. Not offered on the last document in a folder, on folders, or
+in Research.
+
+**Find and replace in project** (`src/projectSearch.ts`, `FindReplaceModal`)
+Searches document bodies only — properties and code (`mdMask`) are never matched. Replace is
+refused for a file that changed between the search and the replace (`vault.process` compares the
+text it searched). **Undo last replace** restores every touched file to its exact prior content
+and is held on the plugin (`replaceLedger`) until the next replace or a restart; a file edited
+after the replace is left alone and named.
+
+**Rename citation key** (`src/citekeyRename.ts`, `RenameCitekeyModal`)
+Rewrites the source note's `citekey` and every `@oldkey` citation (bracketed and narrative) in
+the project's manuscript documents and research notes. Wikilink citations name the file and are
+untouched; other projects in the vault are untouched.
 
 ### Writing environment modes
 

@@ -172,7 +172,9 @@
       "setStatusPublished": "Establecer estado: publicado",
       "rename": "Renombrar",
       "changeType": "Cambiar tipo: {{type}}",
-      "editSynopsis": "Editar sinopsis…"
+      "editSynopsis": "Editar sinopsis…",
+      "mergeNext": "Fusionar con la sección siguiente…",
+      "renameCitekey": "Renombrar la clave de cita…"
     },
     "deleteConfirm": {
       "title": "Eliminar documento",
@@ -234,7 +236,8 @@
       "restoreUnavailable": "Restaurar la disposición necesita la carpeta de escritura experimental del sistema de archivos y un proyecto activo."
     },
     "toggleSynopses": "Mostrar la sinopsis de cada sección bajo su título",
-    "openOutline": "Abrir el esquema"
+    "openOutline": "Abrir el esquema",
+    "findReplace": "Buscar y reemplazar en el proyecto"
   },
   "launcher": {
     "displayText": "Estudio de escritura",
@@ -649,7 +652,10 @@
       "restoreBinderLayout": "Restaurar la disposición anterior de la carpeta de escritura",
       "openOutline": "Abrir esquema",
       "insertCitation": "Insertar cita",
-      "addSource": "Añadir fuente"
+      "addSource": "Añadir fuente",
+      "splitSection": "Dividir la sección en el cursor",
+      "findReplace": "Buscar y reemplazar en el proyecto",
+      "renameCitekey": "Renombrar la clave de cita"
     },
     "menu": {
       "studioOptions": "Opciones de Writing Studio",
@@ -662,7 +668,8 @@
       "draftMode": "✍ Modo borrador",
       "editMode": "✎ Modo edición",
       "reviewMode": "👁 Modo revisión",
-      "normalMode": "Normal (sin modo)"
+      "normalMode": "Normal (sin modo)",
+      "splitSection": "Dividir la sección aquí…"
     },
     "notice": {
       "noMarkdownOpen": "No hay ningún archivo Markdown abierto actualmente."
@@ -824,6 +831,66 @@
       "citekeyDesc": "Se usa para citar esta fuente, por ejemplo [@smith2020]. Se rellena automáticamente; puede cambiarla."
     },
     "addSourceShort": "Añadir fuente",
-    "addSourceTooltip": "Añadir un libro, artículo o página web que pueda citar"
+    "addSourceTooltip": "Añadir un libro, artículo o página web que pueda citar",
+    "renameKeyTitle": "Renombrar la clave de cita",
+    "renameKeySource": "Fuente",
+    "renameKeyCurrent": "Actual",
+    "renameKeyNew": "Nueva clave",
+    "renameKeyUsage": "Usada en {{citations}} repartidas en {{where}}. Todas se actualizarán.",
+    "renameKeyUnused": "Aún no se cita en este proyecto.",
+    "renameKeyBtn": "Renombrar",
+    "renameKeySame": "Esa es la clave actual. Escribe otra.",
+    "renameKeyDone_one": "Renombrada a @{{key}} en {{count}} cita.",
+    "renameKeyDone_other": "Renombrada a @{{key}} en {{count}} citas.",
+    "notASource": "Esta nota no tiene clave de cita. Abre una nota de fuente o crea una con «Añadir fuente».",
+    "countCitations_one": "{{count}} cita",
+    "countCitations_other": "{{count}} citas",
+    "countSections_one": "{{count}} sección",
+    "countSections_other": "{{count}} secciones",
+    "countNotes_one": "{{count}} nota de investigación",
+    "countNotes_other": "{{count}} notas de investigación",
+    "countJoin": " y "
+  },
+  "sections": {
+    "splitTitle": "Dividir la sección",
+    "splitHint": "Todo lo que va del cursor al final de «{{name}}» pasa a la nueva sección, colocada justo después en el archivador.",
+    "splitBtn": "Dividir",
+    "splitDone": "Dividido. «{{name}}» empieza donde estaba el cursor.",
+    "splitInFrontmatter": "Coloca el cursor en el texto, debajo de las propiedades, e inténtalo de nuevo.",
+    "splitNotManuscript": "Dividir funciona en una sección del manuscrito del proyecto activo. Abre una e inténtalo de nuevo.",
+    "mergeTitle": "Fusionar secciones",
+    "mergeMessage": "«{{first}}» y «{{second}}» pasan a ser una sola sección llamada «{{first}}».",
+    "mergeHeadingToggle": "Añadir «{{second}}» como encabezado en la unión",
+    "mergeTrashHint": "El segundo archivo va a la papelera, así que puedes recuperarlo.",
+    "mergeBtn": "Fusionar",
+    "mergeDone": "Fusionado. «{{second}}» está en la papelera."
+  },
+  "findReplace": {
+    "title": "Buscar y reemplazar en el proyecto",
+    "findLabel": "Buscar",
+    "replaceLabel": "Reemplazar",
+    "matchCase": "Coincidir mayúsculas y minúsculas",
+    "wholeWord": "Palabra completa",
+    "includeResearch": "Incluir notas de investigación",
+    "loading": "Leyendo el proyecto…",
+    "typeToFind": "Escribe una palabra o frase para buscar.",
+    "noMatches": "Sin coincidencias.",
+    "summary_one": "{{count}} coincidencia en {{sections}}",
+    "summary_other": "{{count}} coincidencias en {{sections}}",
+    "sections_one": "{{count}} sección",
+    "sections_other": "{{count}} secciones",
+    "replaceSelected": "Reemplazar seleccionadas ({{count}})",
+    "replaceAll": "Reemplazar todo",
+    "undo": "Deshacer el último reemplazo",
+    "close": "Cerrar",
+    "openDoc": "Abrir «{{name}}»",
+    "researchTag": "investigación",
+    "replaced_one": "Reemplazada {{count}} coincidencia en {{sections}}.",
+    "replaced_other": "Reemplazadas {{count}} coincidencias en {{sections}}.",
+    "skippedChanged": "Omitido porque el archivo cambió desde la búsqueda: {{names}}. Busca de nuevo para ver el texto actual.",
+    "nothingToUndo": "Nada que deshacer.",
+    "undone_one": "Deshecho. {{count}} archivo restaurado tal como estaba.",
+    "undone_other": "Deshecho. {{count}} archivos restaurados tal como estaban.",
+    "undoSkipped": "Sin tocar porque cambiaron después del reemplazo: {{names}}"
   }
 }

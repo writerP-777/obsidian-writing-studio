@@ -312,6 +312,12 @@ A single click on a document opens it immediately. Rename an item from its right
 
 Toolbar buttons create a document or folder at the manuscript root; a folder's right-click menu creates inside it, and a document's menu creates beside it. New documents prompt for a title up front rather than being named "Untitled."
 
+**Splitting and merging sections:**
+
+A long section that has grown into two is split where you are: right-click inside the document and choose **Split section here…** (or run the command **Split section at cursor**). Everything from the cursor to the end of the document moves into a new section placed right after the current one in the binder, with the same status and type. The dialog suggests a title — the heading the cursor is on, or the heading the new section starts with, or the current title with "(2)" — and you can type another. Footnotes travel correctly: a footnote used only in the second half moves with it, one used in both halves is copied, and the rest stay. The new section opens in a new tab.
+
+To join two sections, right-click the first one in the binder and choose **Merge with next section…**. The next document's text is appended after a blank line, the first section's properties (synopsis, goal, status) are kept, and the second file goes to the trash according to your Obsidian "Deleted files" setting, so it can be brought back. A toggle in the dialog adds the second section's title as a heading where the two join. Footnotes whose labels collide are renumbered, so each note keeps its own text. The action is offered only when a document follows in the same folder — Research notes are never merged.
+
 **Right-click menu:**
 
 Right-click any item for its full set of actions — rename, set status, set a word count goal, set an optional document type, exclude a document from compile (or re-include it), create a document or folder, or delete to the trash (a folder's confirmation states how many files it contains).
@@ -355,6 +361,16 @@ Everything the outline shows comes from the documents themselves (`synopsis`, `b
 
 ---
 
+#### Find and Replace in Project
+
+A phrase, a name, a spelling, or a citation key that has to change in every chapter is one job, not thirty. Click the find-and-replace button in the binder toolbar or run the command **Find and replace in project** to open the dialog. Type what to find and the matches appear as you type, listed by section with the line around each one; the summary line reads "14 matches in 6 sections". Options: **Match case**, **Whole word**, and **Include research notes** (off by default — the manuscript is the usual scope). Properties at the top of a note and anything inside code are never searched. Click a section's title to open it behind the dialog at the first match.
+
+Every match has a checkbox, ticked to start with. Untick the ones to keep, then **Replace selected**; or **Replace all** to change every match. A notice reports what changed. If a file was edited between the search and the replace, it is skipped and named, so nothing is replaced in text you have not seen.
+
+**Undo last replace** puts every touched file back exactly as it was, and stays available until the next replace or until Obsidian restarts. A file you edited after the replace is left alone and named, so your newer work is never overwritten.
+
+---
+
 #### Sources and Citations
 
 Nonfiction rests on sources, and the sources already live in your vault. Writing Studio turns the notes you have into citations and a works-cited page without a reference manager in the loop.
@@ -390,6 +406,8 @@ place: New York
 | `[[Smith 2020\|p. 12]]` | The wikilink's alias is the page |
 
 Wikilinks to notes without a citekey behave exactly as before. To cite without remembering a key, right-click in the editor and choose **Insert citation…** (or run the command **Insert citation**): the picker searches author, year, and title, takes an optional page, and inserts the citation at the cursor.
+
+**Renaming a citation key.** Right-click a source note in the Research drawer and choose **Rename citation key…** (or run the command **Rename citation key** with the source note open). The dialog shows the source, its current key, and where it is cited — "Used in 9 citations across 4 sections and 1 research note" — and checks the new key against the rules and every key in use. On **Rename**, the `citekey` property and every `@oldkey` citation in the project's manuscript and research notes are rewritten, pages and prefixes untouched. Wikilink citations name the file rather than the key, so they need no change. Other projects in the vault are not touched.
 
 **Citation style.** Set once under Settings → Export → Citations:
 
@@ -717,6 +735,7 @@ Writing Studio adds items to Obsidian's right-click context menus. All Writing S
 | Publish to WordPress | Open the WordPress publish modal for the current file |
 | Set word count goal | Set a word count target for the current document |
 | Insert citation… | Pick a source from the vault and insert a citation at the cursor |
+| Split section here… | Move everything from the cursor to the end of the document into a new section placed right after this one (manuscript documents of the active project only) |
 | Switch writing mode → | Open a mode-switcher menu (Draft / Edit / Review / None) |
 | Typography font → | Open a font picker menu to change the typography font (visible only when Typography Mode is active) |
 
@@ -749,6 +768,9 @@ No default hotkeys are assigned. All commands can be given a hotkey in **Setting
 | Open outline | Open the outline of the active project: every section's synopsis, status, and words against goal |
 | Insert citation | Pick a source from the vault and insert a citation at the cursor |
 | Add source | Open the form that writes a citable source note into the project's Research folder |
+| Split section at cursor | Move everything from the cursor to the end into a new section placed right after the current one |
+| Find and replace in project | Find a word or phrase across the project's sections, replace the matches you choose, and undo the last replace |
+| Rename citation key | Change a source's citation key and update every citation of it in the project |
 | Publish to WordPress | Publish the current document to WordPress |
 | Create new writing project | Create a new writing project |
 | Open writing dashboard | Open the statistics dashboard |

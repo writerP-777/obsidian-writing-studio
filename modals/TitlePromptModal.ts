@@ -10,6 +10,7 @@ export class TitlePromptModal extends Modal {
   private ctaText: string;
   private cancelText: string;
   private onSubmit: (value: string) => Promise<void>;
+  private hint: string | null;
   private submitted = false;
 
   constructor(
@@ -18,7 +19,8 @@ export class TitlePromptModal extends Modal {
     initialValue: string,
     ctaText: string,
     cancelText: string,
-    onSubmit: (value: string) => Promise<void>
+    onSubmit: (value: string) => Promise<void>,
+    hint: string | null = null,
   ) {
     super(app);
     this.heading = heading;
@@ -26,6 +28,7 @@ export class TitlePromptModal extends Modal {
     this.ctaText = ctaText;
     this.cancelText = cancelText;
     this.onSubmit = onSubmit;
+    this.hint = hint;
   }
 
   onOpen(): void {
@@ -37,6 +40,9 @@ export class TitlePromptModal extends Modal {
       value: this.initialValue,
     });
     input.select();
+    // An optional plain-words line under the field, for prompts whose
+    // consequence is not obvious from the heading alone (split section)
+    if (this.hint) this.contentEl.createDiv({ cls: 'ws-title-prompt-hint', text: this.hint });
 
     const submit = safeHandler(async () => {
       if (this.submitted) return;

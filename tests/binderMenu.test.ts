@@ -15,7 +15,7 @@ const pdf = (name: string): SiblingEntry => ({ name, isFolder: false, extension:
 describe('menuActionsFor — zone and kind rulings (#229)', () => {
   it('manuscript documents get the full mutation surface', () => {
     expect(menuActionsFor(doc('Ch 1.md'), 'manuscript')).toEqual(
-      ['rename', 'synopsis', 'status', 'goal', 'type', 'compile', 'newDoc', 'newFolder', 'delete']);
+      ['rename', 'synopsis', 'status', 'goal', 'type', 'compile', 'merge', 'newDoc', 'newFolder', 'delete']);
   });
 
   it('manuscript folders get rename, subtree export, creation, and delete — no document metadata', () => {
@@ -29,7 +29,7 @@ describe('menuActionsFor — zone and kind rulings (#229)', () => {
 
   it('research rows never get the manuscript metadata actions', () => {
     expect(menuActionsFor(doc('Notes.md'), 'research')).toEqual(
-      ['rename', 'newDoc', 'newSource', 'newFolder', 'delete']);
+      ['rename', 'renameKey', 'newDoc', 'newSource', 'newFolder', 'delete']);
     expect(menuActionsFor(folder('Interviews'), 'research')).toEqual(
       ['rename', 'newDoc', 'newSource', 'newFolder', 'delete']);
     expect(menuActionsFor(pdf('scan.pdf'), 'research')).toEqual(['rename', 'delete']);
