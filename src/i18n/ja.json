@@ -247,6 +247,15 @@
     "wordCount": "{{n}} 語",
     "wordGoal": "/ {{n}} 目標",
     "pctComplete": "{{pct}}% 完了",
+    "writingDays_one": "執筆日 {{count}} 日",
+    "writingDays_other": "執筆日 {{count}} 日",
+    "dueCountdown": "締め切り {{date}} · 残り {{days}}",
+    "duePace": "期限内に終えるには1日 {{n}} 語",
+    "dueReached": "締め切り {{date}} · 目標達成、{{days}} の余裕",
+    "dueReachedLate": "締め切り {{date}} · 目標達成",
+    "dueOverdue": "締め切りは {{date}} でした · あと {{words}}",
+    "dueOverdueNoGoal": "締め切りは {{date}} でした",
+    "paceTooltip": "残りの語数を残りの執筆日（今日を含む）で割った数です。執筆日は上の鉛筆ボタンから変更できます。",
     "openBinder": "📖 バインダーを開く",
     "writingMode": "執筆モード",
     "mode": {
@@ -442,6 +451,28 @@
     "cancel": "キャンセル",
     "goalLabel": "合計語数目標",
     "goalDesc": "任意。ランチャーとステータスバーに進捗として表示されます。目標なしの場合は空欄のままにしてください。",
+    "deadlineLabel": "締め切り",
+    "deadlineDesc": "任意。目標と合わせると、期限内に終えるために1日に必要な語数がランチャーに表示されます。",
+    "writingDaysLabel": "執筆日",
+    "writingDaysDesc": "執筆する予定の曜日。変更しなければ月曜から金曜です。1日のペース計算にのみ使われます。",
+    "dayShort": {
+      "0": "日",
+      "1": "月",
+      "2": "火",
+      "3": "水",
+      "4": "木",
+      "5": "金",
+      "6": "土"
+    },
+    "dayName": {
+      "0": "日曜日",
+      "1": "月曜日",
+      "2": "火曜日",
+      "3": "水曜日",
+      "4": "木曜日",
+      "5": "金曜日",
+      "6": "土曜日"
+    },
     "editTitle": "プロジェクトを編集",
     "saveBtn": "保存",
     "updated": "プロジェクト「{{title}}」を更新しました！",
@@ -608,7 +639,9 @@
       "totalWords": "総語数",
       "goal": "目標",
       "progress": "進捗",
-      "readingTime": "読了時間"
+      "readingTime": "読了時間",
+      "deadline": "締め切り",
+      "perDay": "執筆日あたり"
     },
     "project": "プロジェクト：{{title}}",
     "recentSprints": "最近のスプリント",
@@ -676,6 +709,7 @@
     },
     "statusBar": {
       "projectWords": "{{total}} / {{goal}} プロジェクト語数",
+      "projectWordsPace": "{{total}} / {{goal}} プロジェクト語数 · 1日 {{perDay}}",
       "wordCount": "{{count}} 語",
       "wordCountGoal": "{{count}} / {{goal}} 語",
       "delta": "(+{{delta}})",

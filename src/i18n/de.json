@@ -247,6 +247,15 @@
     "wordCount": "{{n}} Wörter",
     "wordGoal": "/ {{n}} Ziel",
     "pctComplete": "{{pct}}% abgeschlossen",
+    "writingDays_one": "{{count}} Schreibtag",
+    "writingDays_other": "{{count}} Schreibtage",
+    "dueCountdown": "Fällig am {{date}} · noch {{days}}",
+    "duePace": "{{n}} Wörter pro Tag, um rechtzeitig fertig zu werden",
+    "dueReached": "Fällig am {{date}} · Ziel erreicht, {{days}} Reserve",
+    "dueReachedLate": "Fällig am {{date}} · Ziel erreicht",
+    "dueOverdue": "War fällig am {{date}} · noch {{words}} offen",
+    "dueOverdueNoGoal": "War fällig am {{date}}",
+    "paceTooltip": "Verbleibende Wörter geteilt durch die verbleibenden Schreibtage, heute mitgezählt. Die Schreibtage änderst du über den Stift-Button oben.",
     "openBinder": "📖 Mappe öffnen",
     "writingMode": "Schreibmodus",
     "mode": {
@@ -442,6 +451,28 @@
     "cancel": "Abbrechen",
     "goalLabel": "Gesamtwortziel",
     "goalDesc": "Optional. Wird als Fortschritt im Launcher und in der Statusleiste angezeigt. Leer lassen für kein Ziel.",
+    "deadlineLabel": "Abgabetermin",
+    "deadlineDesc": "Optional. Mit einem Ziel zeigt der Launcher, wie viele Wörter pro Tag nötig sind, um rechtzeitig fertig zu werden.",
+    "writingDaysLabel": "Schreibtage",
+    "writingDaysDesc": "Die Tage, an denen du schreiben willst. Montag bis Freitag, sofern du es nicht änderst. Dient nur zur Berechnung des Tagespensums.",
+    "dayShort": {
+      "0": "S",
+      "1": "M",
+      "2": "D",
+      "3": "M",
+      "4": "D",
+      "5": "F",
+      "6": "S"
+    },
+    "dayName": {
+      "0": "Sonntag",
+      "1": "Montag",
+      "2": "Dienstag",
+      "3": "Mittwoch",
+      "4": "Donnerstag",
+      "5": "Freitag",
+      "6": "Samstag"
+    },
     "editTitle": "Projekt bearbeiten",
     "saveBtn": "Speichern",
     "updated": "Projekt \"{{title}}\" aktualisiert!",
@@ -608,7 +639,9 @@
       "totalWords": "Gesamtwörter",
       "goal": "Ziel",
       "progress": "Fortschritt",
-      "readingTime": "Lesezeit"
+      "readingTime": "Lesezeit",
+      "deadline": "Abgabetermin",
+      "perDay": "Pro Schreibtag"
     },
     "project": "Projekt: {{title}}",
     "recentSprints": "Letzte Sprints",
@@ -676,6 +709,7 @@
     },
     "statusBar": {
       "projectWords": "{{total}} / {{goal}} Projektwörter",
+      "projectWordsPace": "{{total}} / {{goal}} Projektwörter · {{perDay}}/Tag",
       "wordCount": "{{count}} Wörter",
       "wordCountGoal": "{{count}} / {{goal}} Wörter",
       "delta": "(+{{delta}})",

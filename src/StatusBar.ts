@@ -1,5 +1,7 @@
 import type WritingStudioPlugin from '../main';
 import { t } from './i18n';
+import { computePace } from './pacing';
+import { localDateString } from './dates';
 
 // Owns the plugin's status bar real estate. Items are created once, in this
 // fixed append-only order: mode indicator → word count → sprint timer →
@@ -62,7 +64,16 @@ export class StatusBar {
       return;
     }
     const total = await this.plugin.statsTracker.getTotalWordCount();
-    this.projectGoalEl.setText(t('main.statusBar.projectWords', { total: total.toLocaleString(), goal: goal.toLocaleString() }));
+    // With a deadline, the daily pace rides on the same item — the status
+    // bar order stays append-only (see the header comment).
+    const deadline = project.goals?.deadline;
+    const pace = deadline
+      ? computePace({ goal, total, deadline, writingDays: project.goals?.writingDays, today: localDateString() })
+      : null;
+    const vars = { total: total.toLocaleString(), goal: goal.toLocaleString() };
+    this.projectGoalEl.setText(pace?.kind === 'pace'
+      ? t('main.statusBar.projectWordsPace', { ...vars, perDay: pace.perDay.toLocaleString() })
+      : t('main.statusBar.projectWords', vars));
     this.projectGoalEl.removeClass('ws-hidden');
   }
 

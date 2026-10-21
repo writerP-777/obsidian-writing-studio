@@ -247,6 +247,15 @@
     "wordCount": "{{n}} 단어",
     "wordGoal": "/ {{n}} 목표",
     "pctComplete": "{{pct}}% 완료",
+    "writingDays_one": "집필일 {{count}}일",
+    "writingDays_other": "집필일 {{count}}일",
+    "dueCountdown": "마감 {{date}} · {{days}} 남음",
+    "duePace": "제때 끝내려면 하루 {{n}} 단어",
+    "dueReached": "마감 {{date}} · 목표 달성, {{days}} 여유",
+    "dueReachedLate": "마감 {{date}} · 목표 달성",
+    "dueOverdue": "마감일은 {{date}}였습니다 · {{words}} 남음",
+    "dueOverdueNoGoal": "마감일은 {{date}}였습니다",
+    "paceTooltip": "남은 단어 수를 오늘을 포함한 남은 집필일로 나눈 값입니다. 집필 요일은 위의 연필 버튼으로 바꿀 수 있습니다.",
     "openBinder": "📖 바인더 열기",
     "writingMode": "글쓰기 모드",
     "mode": {
@@ -442,6 +451,28 @@
     "cancel": "취소",
     "goalLabel": "총 단어 수 목표",
     "goalDesc": "선택 사항. 런처와 상태 표시줄에 진행률로 표시됩니다. 목표가 없으면 비워 두세요.",
+    "deadlineLabel": "마감일",
+    "deadlineDesc": "선택 사항. 목표와 함께 설정하면 제때 끝내기 위해 하루에 몇 단어를 써야 하는지 런처에 표시됩니다.",
+    "writingDaysLabel": "집필 요일",
+    "writingDaysDesc": "글을 쓸 계획인 요일입니다. 바꾸지 않으면 월요일부터 금요일까지입니다. 하루 분량 계산에만 사용됩니다.",
+    "dayShort": {
+      "0": "일",
+      "1": "월",
+      "2": "화",
+      "3": "수",
+      "4": "목",
+      "5": "금",
+      "6": "토"
+    },
+    "dayName": {
+      "0": "일요일",
+      "1": "월요일",
+      "2": "화요일",
+      "3": "수요일",
+      "4": "목요일",
+      "5": "금요일",
+      "6": "토요일"
+    },
     "editTitle": "프로젝트 편집",
     "saveBtn": "저장",
     "updated": "프로젝트 \"{{title}}\"이(가) 업데이트되었습니다!",
@@ -608,7 +639,9 @@
       "totalWords": "총 단어 수",
       "goal": "목표",
       "progress": "진행 상황",
-      "readingTime": "읽기 시간"
+      "readingTime": "읽기 시간",
+      "deadline": "마감일",
+      "perDay": "집필일당"
     },
     "project": "프로젝트: {{title}}",
     "recentSprints": "최근 스프린트",
@@ -676,6 +709,7 @@
     },
     "statusBar": {
       "projectWords": "{{total}} / {{goal}} 프로젝트 단어",
+      "projectWordsPace": "{{total}} / {{goal}} 프로젝트 단어 · 하루 {{perDay}}",
       "wordCount": "{{count}} 단어",
       "wordCountGoal": "{{count}} / {{goal}} 단어",
       "delta": "(+{{delta}})",

@@ -1,6 +1,7 @@
 import { App, Modal, Setting, Notice, normalizePath } from 'obsidian';
 import type WritingStudioPlugin from '../main';
 import { ProjectType, WritingProject, resolveDocumentFolder } from '../models/Project';
+import { DEFAULT_WRITING_DAYS, isDefaultWritingDays, isIsoDate, normalizeWritingDays } from '../src/pacing';
 import {
   validateDocumentFolderName, FolderNameRejection,
   documentFolderDisplayName, documentFolderRenameTarget,
@@ -32,6 +33,10 @@ export class ProjectModal extends Modal {
   private type: ProjectType = 'blank';
   private author = '';
   private goalRaw = '';
+  // Deadline pacing (item 5): the date input's value (YYYY-MM-DD or empty)
+  // and the days of the week the writer plans to write.
+  private deadline = '';
+  private writingDays: number[] = [...DEFAULT_WRITING_DAYS];
   private description = '';
   private documentFolder = '';
   // Edit mode: whether a title change also renames the project folder (#391).
@@ -57,6 +62,8 @@ export class ProjectModal extends Modal {
       this.author = this.edit.author;
       this.description = this.edit.description;
       this.goalRaw = String(this.edit.goals?.totalWordCount || '');
+      this.deadline = isIsoDate(this.edit.goals?.deadline) ? this.edit.goals.deadline : '';
+      this.writingDays = normalizeWritingDays(this.edit.goals?.writingDays);
       // Display name only — a folder order marker never shows here
       this.documentFolder = documentFolderDisplayName(resolveDocumentFolder(this.edit));
     } else {
@@ -141,6 +148,39 @@ export class ProjectModal extends Modal {
         .setValue(this.goalRaw)
         .onChange(v => { this.goalRaw = v; }));
 
+    // The deadline sits right under the goal: together they give the daily
+    // pace. A native date input — no date format to learn or type.
+    new Setting(contentEl)
+      .setName(t('projectModal.deadlineLabel'))
+      .setDesc(t('projectModal.deadlineDesc'))
+      .addText(tx => {
+        tx.inputEl.type = 'date';
+        tx.inputEl.addClass('ws-project-deadline');
+        tx.setValue(this.deadline).onChange(v => { this.deadline = v; });
+      });
+
+    const daysSetting = new Setting(contentEl)
+      .setName(t('projectModal.writingDaysLabel'))
+      .setDesc(t('projectModal.writingDaysDesc'));
+    const daysRow = daysSetting.controlEl.createDiv('ws-writing-days');
+    // Shown Monday first; stored in getDay() numbering.
+    for (const day of [1, 2, 3, 4, 5, 6, 0]) {
+      const btn = daysRow.createEl('button', {
+        cls: 'ws-writing-day',
+        text: t(`projectModal.dayShort.${day}`),
+        attr: { type: 'button', 'aria-label': t(`projectModal.dayName.${day}`), 'aria-pressed': String(this.writingDays.includes(day)) },
+      });
+      btn.toggleClass('is-active', this.writingDays.includes(day));
+      btn.onclick = () => {
+        const on = !this.writingDays.includes(day);
+        this.writingDays = on
+          ? [...this.writingDays, day].sort((a, b) => a - b)
+          : this.writingDays.filter(d => d !== day);
+        btn.toggleClass('is-active', on);
+        btn.setAttribute('aria-pressed', String(on));
+      };
+    }
+
     new Setting(contentEl)
       .setName(t('projectModal.descriptionLabel'))
       .addTextArea(tx => tx
@@ -185,9 +225,7 @@ export class ProjectModal extends Modal {
         this.author.trim(),
         this.description
       );
-      const goal = parseInt(this.goalRaw) || 0;
-      if (goal > 0) {
-        project.goals = { ...project.goals, totalWordCount: goal };
+      if (this.applyGoals(project)) {
         await this.plugin.projectManager.saveProject(project);
       }
       await this.plugin.projectManager.setActiveProject(project.id);
@@ -232,12 +270,7 @@ export class ProjectModal extends Modal {
       project.title = newTitle;
       project.author = this.author.trim();
       project.description = this.description;
-      const goal = parseInt(this.goalRaw) || 0;
-      if (goal > 0) {
-        project.goals = { ...project.goals, totalWordCount: goal };
-      } else {
-        delete project.goals.totalWordCount;
-      }
+      this.applyGoals(project);
       await this.plugin.projectManager.saveProject(project);
       new Notice(folderRenamed
         ? t('projectModal.updatedFolderRenamed', { title: project.title, name: folderPlan.name })
@@ -248,6 +281,20 @@ export class ProjectModal extends Modal {
       new Notice(t('main.operationFailed', { error: e instanceof Error ? e.message : String(e) }));
       submitBtn.disabled = false;
     }
+  }
+
+  // Writes the goal fields from the form onto the project. Empty means
+  // absent — a cleared goal, deadline, or default writing days leave no key
+  // behind in _project.json. Returns whether anything is set at all.
+  private applyGoals(project: WritingProject): boolean {
+    const goals = { ...project.goals };
+    const goal = parseInt(this.goalRaw) || 0;
+    if (goal > 0) goals.totalWordCount = goal; else delete goals.totalWordCount;
+    if (isIsoDate(this.deadline)) goals.deadline = this.deadline; else delete goals.deadline;
+    const days = normalizeWritingDays(this.writingDays);
+    if (isDefaultWritingDays(days)) delete goals.writingDays; else goals.writingDays = days;
+    project.goals = goals;
+    return Object.keys(goals).length > 0;
   }
 
   private updateFolderHint(el: HTMLElement, project: WritingProject): void {

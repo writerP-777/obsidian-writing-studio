@@ -50,6 +50,12 @@ export function resolveDocumentFolder(project: Pick<WritingProject, 'documentFol
 
 export interface ProjectGoals {
   totalWordCount?: number;
+  // Local calendar date, YYYY-MM-DD. With a total goal, the launcher shows
+  // the words per writing day needed to finish on time (src/pacing.ts).
+  deadline?: string;
+  // Days of the week the writer plans to write, getDay() numbering (0 = Sunday).
+  // Absent means Monday to Friday; only stored when changed from that default.
+  writingDays?: number[];
 }
 
 export interface WritingProject {
