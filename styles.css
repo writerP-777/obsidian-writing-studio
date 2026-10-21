@@ -2670,7 +2670,9 @@ body .ws-launcher select {
   display: flex;
 }
 .ws-cite-search-icon svg { width: 16px; height: 16px; }
-.ws-cite-search-input {
+/* Specificity matters: Obsidian's own modal input rule outranks a lone
+   class, and the magnifier then sits on the placeholder (UX pass, 3.3.0) */
+.ws-cite-modal input.ws-cite-search-input {
   width: 100%;
   padding-left: 32px;
 }

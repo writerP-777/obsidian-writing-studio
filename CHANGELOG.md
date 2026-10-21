@@ -22,8 +22,11 @@ All notable changes to Writing Studio are documented here.
 - Dialog keyboard flow: **Add a source** opens with the cursor in the Title field and **Edit project** / **Create project** with the cursor in the title, and Enter in any single-line field of either dialog saves. Textareas, dropdowns, and the writing-day buttons keep their own Enter behavior.
 - Empty states now say what to try next. Find and replace: "No matches. Check the spelling, or turn off Match case and Whole word." The citation picker: "No sources match. Try part of the author's name, the year, or a word from the title."
 - The WordPress connection-test badge, the "already published" notice, and the sprint Stop button use the theme's own red, green, and orange tokens instead of fixed colors, which read at about 2.5:1 on a light background.
+- README screenshots refreshed for 3.3.0: the edit-project dialog (rename toggle, deadline, writing days), the Launcher project card, the binder toolbar, and the binder right-click menu, plus new pictures of the Outline, Find and replace, Add a source, and Insert citation. (#394)
+- The in-app help, which embeds the README, now drops the centered HTML figures as well as Markdown images, so no broken pictures appear inside Obsidian.
 
 ### Fixed
+- In the Insert citation picker, the magnifier icon no longer sits on top of the placeholder text in the search field.
 - Footnotes are no longer dropped by HTML, Manuscript, and EPUB export. Reference footnotes (`[^1]` with a definition) and inline footnotes (`^[text]`) are numbered per chapter; HTML and Manuscript gather them under a Notes heading at the end, grouped by chapter, and EPUB keeps each chapter's notes with the chapter in the markup reading systems use for popups.
 - Pandoc exports (PDF, Word, RTF) now receive the same Obsidian-markdown cleanup the other formats get: wikilinks reduce to their text, embeds are removed, highlights are unwrapped, and callout markers are dropped. A Word export previously showed literal `[[Note]]` brackets.
 

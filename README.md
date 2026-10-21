@@ -227,9 +227,9 @@ It works the other way too: rename the project folder in Obsidian's file explore
 **To delete a project:** Click the trash icon in the Launcher project card or next to the project selector in the Binder, then confirm. This removes the project from Writing Studio's list only — the project folder and all its documents stay untouched in your vault.
 
 <p align="center">
-  <img src="assets/edit-project-modal.png" alt="The Edit project modal with fields for project title, author name, document folder, total word count goal, and description, and a Save button" width="560">
+  <img src="assets/edit-project-modal.png" alt="The Edit project modal with fields for project title, an Also rename the project folder toggle, author name, document folder, total word count goal, deadline, seven writing-day buttons with Monday to Friday on, description, and a Save button" width="560">
   <br>
-  <em>The Edit project modal — change the title, author, document folder, description, and total word count goal.</em>
+  <em>The Edit project modal — change the title (and the folder with it), author, document folder, word count goal, deadline, writing days, and description.</em>
 </p>
 
 Each project stores:
@@ -283,9 +283,9 @@ Dragging physically moves files and folders: drop between rows to reorder, onto 
 A two-row control strip at the top of the binder keeps the high-frequency writing controls next to your documents, so the daily loop doesn't require switching to the launcher tab. The top row is a Draft / Edit / Review segmented control (clicking the active mode switches back to normal). The bottom row holds Focus and Typography toggles, a sprint chip (its menu offers the set-up modal and 10/15/25-minute quick starts; an armed sprint shows a ready chip with the duration), and a **...** menu with the occasional actions: export, publish, preview manuscript, targets dashboard, writing dashboard, and writing log. The launcher keeps its own copies of all controls, and every surface stays in sync no matter where a change is made.
 
 <p align="center">
-  <img src="assets/binder-control-strip.png" alt="The binder control strip with Draft, Edit, and Review on the top row and Focus, Typography, Sprint, and an overflow menu on the bottom row, above the project selector, toolbar, and document tree" width="520">
+  <img src="assets/binder-control-strip.png" alt="The binder control strip with Draft, Edit, and Review on the top row and Focus, Typography, Sprint, and an overflow menu on the bottom row, above the project selector and a toolbar of seven buttons: new document, new folder, word counts, synopses, outline, find and replace, and targets, then the document tree" width="520">
   <br>
-  <em>The binder control strip — writing modes on top; focus, typography, sprint, and overflow controls below.</em>
+  <em>The binder control strip — writing modes on top; focus, typography, sprint, and overflow controls below; then the toolbar: new document, new folder, word counts, synopses, outline, find and replace, targets.</em>
 </p>
 
 <p align="center">
@@ -326,9 +326,9 @@ To join two sections, right-click the first one in the binder and choose **Merge
 Right-click any item for its full set of actions — rename, set status, set a word count goal, set an optional document type, exclude a document from compile (or re-include it), create a document or folder, or delete to the trash (a folder's confirmation states how many files it contains).
 
 <p align="center">
-  <img src="assets/binder-context-menu.png" alt="The binder right-click menu on a document, showing rename, status options, set word count goal, change type options, exclude from compile, new document, new folder, and delete" width="520">
+  <img src="assets/binder-context-menu.png" alt="The binder right-click menu on a document, showing rename, edit synopsis, status options, set word count goal, change type options, exclude from compile, new document, new folder, and delete" width="520">
   <br>
-  <em>A document's right-click menu — status, goal, type, and compile controls in one place.</em>
+  <em>A document's right-click menu — synopsis, status, goal, type, and compile controls in one place. A document with another below it in the same folder also offers Merge with next section.</em>
 </p>
 
 **Organizing with folders:**
@@ -344,6 +344,12 @@ The first time you open an existing project, Writing Studio arranges its folders
 #### Outline
 
 A nonfiction manuscript is an argument, and the Outline is where you check that the argument holds together before you polish the prose. It opens in the main pane as a table of every section in the manuscript, in binder order:
+
+<p align="center">
+  <img src="assets/outline-view.png" alt="The Outline view in the main pane: a table of sections nested under their parts with synopsis, status dropdown, words, goal, and progress columns, part rows carrying subtree totals, a status filter and a Copy outline button at the top right, and a footer counting sections without a synopsis" width="900">
+  <br>
+  <em>The Outline — every section with its synopsis, status, words, and goal; parts carry subtree totals; the filter and Copy outline sit at the top right.</em>
+</p>
 
 | Column | What it shows |
 |--------|---------------|
@@ -368,6 +374,12 @@ Everything the outline shows comes from the documents themselves (`synopsis`, `b
 
 A phrase, a name, a spelling, or a citation key that has to change in every chapter is one job, not thirty. Click the find-and-replace button in the binder toolbar or run the command **Find and replace in project** to open the dialog. Type what to find and the matches appear as you type, listed by section with the line around each one; the summary line reads "14 matches in 6 sections". Options: **Match case**, **Whole word**, and **Include research notes** (off by default — the manuscript is the usual scope). Properties at the top of a note and anything inside code are never searched. Click a section's title to open it behind the dialog at the first match.
 
+<p align="center">
+  <img src="assets/find-replace-dialog.png" alt="The Find and replace in project dialog with Fable in the Find field, Match case, Whole word, and Include research notes checkboxes, a summary of 16 matches in 6 sections, the matches grouped under each section title with a checkbox and the surrounding line, and Replace selected (16), Replace all, Undo last replace, and Close buttons" width="680">
+  <br>
+  <em>Find and replace in project — matches grouped by section, each with its line and a checkbox; replace the ticked ones or all, and undo the last replace.</em>
+</p>
+
 Every match has a checkbox, ticked to start with. Untick the ones to keep, then **Replace selected**; or **Replace all** to change every match. A notice reports what changed. If a file was edited between the search and the replace, it is skipped and named, so nothing is replaced in text you have not seen.
 
 **Undo last replace** puts every touched file back exactly as it was, and stays available until the next replace or until Obsidian restarts. A file you edited after the replace is left alone and named, so your newer work is never overwritten.
@@ -381,6 +393,12 @@ Nonfiction rests on sources, and the sources already live in your vault. Writing
 **What counts as a source.** Any markdown note, anywhere in the vault, whose properties include a `citekey`. Literature notes produced by Zotero Integration or the Citations plugin already carry one, so they work as they are. The engine reads the fields it finds, under the names those tools and ordinary writers use: `title`; `author`, `authors`, or `creators` (a plain name, a list, "Last, First", or Zotero-style name objects); `year`, `date`, or `issued`; `type` or `itemType` (book, chapter, journal article, magazine or newspaper article, web page, thesis, report; anything else is treated as a book); `publisher`, `place`, `journal` or `container-title`, `volume`, `issue`, `pages`, `edition`, `editor`, `doi`, `url`, and `accessed`. If two notes share a citekey, the one in the project's Research folder wins and a notice names the other.
 
 **Adding a source without typing YAML.** Click **Add source** beside the Research tab at the bottom of the binder, right-click any research note and choose **Add source…**, or run the command **Add source**. The form asks for the type, title, authors (one per line, first name first), year, and the fields that type needs. The citation key is filled in for you from the first author's surname and the year (`smith2020`, then `smith2020a` if that is taken) and can be changed. Saving creates a note such as `Research/Smith 2020 - The Long Argument.md` with the properties set and an empty body for your own notes, and opens it.
+
+<p align="center">
+  <img src="assets/add-source-dialog.png" alt="The Add a source dialog filled in for a book: type, title, authors, year, publisher, place of publication, URL or DOI, and the citation key generated from the author and year, with Add source and Cancel buttons" width="640">
+  <br>
+  <em>Add a source — fill in what you know; the citation key is generated from the first author and the year.</em>
+</p>
 
 ```yaml
 ---
@@ -409,6 +427,12 @@ place: New York
 | `[[Smith 2020\|p. 12]]` | The wikilink's alias is the page |
 
 Wikilinks to notes without a citekey behave exactly as before. To cite without remembering a key, right-click in the editor and choose **Insert citation…** (or run the command **Insert citation**): the picker searches author, year, and title, takes an optional page, and inserts the citation at the cursor.
+
+<p align="center">
+  <img src="assets/insert-citation-picker.png" alt="The Insert citation picker with a search field, two sources listed by author, year, title, and citation key, an optional page field, and Insert and Cancel buttons" width="520">
+  <br>
+  <em>Insert citation — search by author, year, or title, add a page if you want one, and the citation lands at the cursor.</em>
+</p>
 
 **Renaming a citation key.** Right-click a source note in the Research drawer and choose **Rename citation key…** (or run the command **Rename citation key** with the source note open). The dialog shows the source, its current key, and where it is cited — "Used in 9 citations across 4 sections and 1 research note" — and checks the new key against the rules and every key in use. On **Rename**, the `citekey` property and every `@oldkey` citation in the project's manuscript and research notes are rewritten, pages and prefixes untouched. Wikilink citations name the file rather than the key, so they need no change. Other projects in the vault are not touched.
 
