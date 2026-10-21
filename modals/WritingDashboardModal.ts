@@ -2,6 +2,8 @@ import { App, Modal } from 'obsidian';
 import type WritingStudioPlugin from '../main';
 import { listManuscriptDocs } from '../src/manuscriptTree';
 import { t } from '../src/i18n';
+import { computePace } from '../src/pacing';
+import { formatLongDate, localDateString } from '../src/dates';
 
 export class WritingDashboardModal extends Modal {
   private plugin: WritingStudioPlugin;
@@ -47,6 +49,16 @@ export class WritingDashboardModal extends Modal {
         this.addStat(projGrid, t('writingDashboard.stat.progress'), `${pct}%`);
       }
       this.addStat(projGrid, t('writingDashboard.stat.readingTime'), this.plugin.statsTracker.calculateReadingTime(totalWords));
+      const deadline = project.goals?.deadline;
+      const pace = deadline
+        ? computePace({ goal: totalGoal, total: totalWords, deadline, writingDays: project.goals?.writingDays, today: localDateString() })
+        : null;
+      if (deadline && pace) {
+        this.addStat(projGrid, t('writingDashboard.stat.deadline'), formatLongDate(deadline));
+        if (pace.kind === 'pace') {
+          this.addStat(projGrid, t('writingDashboard.stat.perDay'), pace.perDay.toLocaleString());
+        }
+      }
 
       // Progress bar
       if (totalGoal > 0) {

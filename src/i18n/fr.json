@@ -247,6 +247,15 @@
     "wordCount": "{{n}} mots",
     "wordGoal": "/ {{n}} objectif",
     "pctComplete": "{{pct}}% terminé",
+    "writingDays_one": "{{count}} jour d'écriture",
+    "writingDays_other": "{{count}} jours d'écriture",
+    "dueCountdown": "Échéance le {{date}} · {{days}} restants",
+    "duePace": "{{n}} mots par jour pour finir à temps",
+    "dueReached": "Échéance le {{date}} · objectif atteint, {{days}} d'avance",
+    "dueReachedLate": "Échéance le {{date}} · objectif atteint",
+    "dueOverdue": "Échéance dépassée le {{date}} · {{words}} restants",
+    "dueOverdueNoGoal": "Échéance dépassée le {{date}}",
+    "paceTooltip": "Mots restants divisés par les jours d'écriture restants, aujourd'hui compris. Modifiez vos jours d'écriture avec le bouton crayon ci-dessus.",
     "openBinder": "📖 Ouvrir le classeur",
     "writingMode": "Mode d'écriture",
     "mode": {
@@ -442,6 +451,28 @@
     "cancel": "Annuler",
     "goalLabel": "Objectif total de mots",
     "goalDesc": "Facultatif. Affiché comme progression dans le lanceur et la barre d'état. Laisser vide pour aucun objectif.",
+    "deadlineLabel": "Échéance",
+    "deadlineDesc": "Facultatif. Avec un objectif, le lanceur indique combien de mots par jour il faut pour finir à temps.",
+    "writingDaysLabel": "Jours d'écriture",
+    "writingDaysDesc": "Les jours où vous comptez écrire. Du lundi au vendredi sauf si vous le changez. Sert uniquement à calculer le rythme quotidien.",
+    "dayShort": {
+      "0": "D",
+      "1": "L",
+      "2": "M",
+      "3": "M",
+      "4": "J",
+      "5": "V",
+      "6": "S"
+    },
+    "dayName": {
+      "0": "Dimanche",
+      "1": "Lundi",
+      "2": "Mardi",
+      "3": "Mercredi",
+      "4": "Jeudi",
+      "5": "Vendredi",
+      "6": "Samedi"
+    },
     "editTitle": "Modifier le projet",
     "saveBtn": "Enregistrer",
     "updated": "Projet \"{{title}}\" mis à jour !",
@@ -608,7 +639,9 @@
       "totalWords": "Total des mots",
       "goal": "Objectif",
       "progress": "Progression",
-      "readingTime": "Temps de lecture"
+      "readingTime": "Temps de lecture",
+      "deadline": "Échéance",
+      "perDay": "Par jour d'écriture"
     },
     "project": "Projet : {{title}}",
     "recentSprints": "Sprints récents",
@@ -676,6 +709,7 @@
     },
     "statusBar": {
       "projectWords": "{{total}} / {{goal}} mots du projet",
+      "projectWordsPace": "{{total}} / {{goal}} mots du projet · {{perDay}}/jour",
       "wordCount": "{{count}} mots",
       "wordCountGoal": "{{count}} / {{goal}} mots",
       "delta": "(+{{delta}})",

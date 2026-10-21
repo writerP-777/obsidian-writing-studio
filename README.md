@@ -216,11 +216,13 @@ Projects group a set of documents (binder items) and act as the scope for export
 
 **To switch projects:** Use the Launcher panel or the project selector at the top of the Binder panel.
 
-**To edit a project:** Click the pencil icon in the Launcher project card or next to the project selector in the Binder. You can change the title, author, description, total word count goal, and the document folder — the folder inside the project that holds its documents (for example, renaming a book project's `Chapters/` to `Scenes/` renames the folder and moves its files with it; the binder follows automatically, as it also does when you rename the folder directly in the file explorer).
+**To edit a project:** Click the pencil icon in the Launcher project card or next to the project selector in the Binder. You can change the title, author, description, total word count goal, deadline, writing days, and the document folder — the folder inside the project that holds its documents (for example, renaming a book project's `Chapters/` to `Scenes/` renames the folder and moves its files with it; the binder follows automatically, as it also does when you rename the folder directly in the file explorer).
 
 **To rename a project:** Change the title in the edit-project dialog and save. The project folder is renamed to match, and every file inside moves with it — links heal, nothing is copied. A hint under the title field shows the folder name you will get before you save. Characters that cannot appear in a folder name (`\ / : * ? " < > |`) become `-`, so a title like *My Book: A Novel* keeps its colon while its folder is named `My Book- A Novel`; the hint says so whenever a substitution happens. If a folder with the new name already exists, the save is refused with a message and nothing changes — choose a different title. Editing the author, description, or goal never moves the folder. To change the title and leave the folder as it is, turn off **Also rename the project folder** in the dialog before saving.
 
 It works the other way too: rename the project folder in Obsidian's file explorer and the project's title follows, provided the title and the folder name were the same before the rename. A title you set apart from its folder (like the colon example above) is yours and is never overwritten. Rename inside Obsidian, not in Windows Explorer or Finder — Obsidian reports an outside rename as a delete and a create, so neither Writing Studio nor Obsidian's own links can follow it.
+
+**Deadline and pace:** Give a project a **Deadline** in the edit-project dialog, directly under the total word count goal, and the Launcher project card shows how it stands: the days left, and with a goal, the words a day you need to finish on time ("Due Dec 15, 2026 · 39 writing days left — 1,734 words a day to finish on time"). The arithmetic is plain: the words still to write, divided by the writing days left counting today, rounded up. **Writing days** are Monday to Friday unless you change them with the seven day buttons under the deadline; the deadline day itself always counts, since you can still hand in on it. Once the goal is met the card says so with the days to spare, and after the date has passed it shows the words still to go. The same figures appear in the Writing dashboard, and the status bar's project words item gains the daily pace ("12,400 / 80,000 project words · 1,734/day"). A project without a deadline shows none of this.
 
 **To delete a project:** Click the trash icon in the Launcher project card or next to the project selector in the Binder, then confirm. This removes the project from Writing Studio's list only — the project folder and all its documents stay untouched in your vault.
 
@@ -235,6 +237,7 @@ Each project stores:
 - Ordered binder with chapters, sections, articles, and notes
 - Per-item word count goals, statuses, and export flags
 - Optional total word count goal (shown in the Launcher and status bar)
+- Optional deadline and writing days, for the words-a-day pace
 
 **Project templates available at creation:**
 

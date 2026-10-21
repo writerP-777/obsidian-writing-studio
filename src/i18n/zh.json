@@ -247,6 +247,15 @@
     "wordCount": "{{n}} 字",
     "wordGoal": "/ {{n}} 目标",
     "pctComplete": "{{pct}}% 完成",
+    "writingDays_one": "{{count}} 个写作日",
+    "writingDays_other": "{{count}} 个写作日",
+    "dueCountdown": "截止 {{date}} · 还剩 {{days}}",
+    "duePace": "每天 {{n}} 字即可按时完成",
+    "dueReached": "截止 {{date}} · 已达成目标，提前 {{days}}",
+    "dueReachedLate": "截止 {{date}} · 已达成目标",
+    "dueOverdue": "原定 {{date}} 截止 · 还差 {{words}}",
+    "dueOverdueNoGoal": "原定 {{date}} 截止",
+    "paceTooltip": "剩余字数除以剩余写作日（含今天）。用上方的铅笔按钮更改写作日。",
     "openBinder": "📖 打开活页夹",
     "writingMode": "写作模式",
     "mode": {
@@ -442,6 +451,28 @@
     "cancel": "取消",
     "goalLabel": "总字数目标",
     "goalDesc": "可选。在启动器和状态栏中显示为进度。留空表示不设目标。",
+    "deadlineLabel": "截止日期",
+    "deadlineDesc": "可选。设有目标时，启动器会显示每天需要写多少字才能按时完成。",
+    "writingDaysLabel": "写作日",
+    "writingDaysDesc": "你计划写作的日子。默认周一至周五，可以更改。仅用于计算每日进度。",
+    "dayShort": {
+      "0": "日",
+      "1": "一",
+      "2": "二",
+      "3": "三",
+      "4": "四",
+      "5": "五",
+      "6": "六"
+    },
+    "dayName": {
+      "0": "星期日",
+      "1": "星期一",
+      "2": "星期二",
+      "3": "星期三",
+      "4": "星期四",
+      "5": "星期五",
+      "6": "星期六"
+    },
     "editTitle": "编辑项目",
     "saveBtn": "保存",
     "updated": "项目 \"{{title}}\" 已更新！",
@@ -608,7 +639,9 @@
       "totalWords": "总字数",
       "goal": "目标",
       "progress": "进度",
-      "readingTime": "阅读时间"
+      "readingTime": "阅读时间",
+      "deadline": "截止日期",
+      "perDay": "每个写作日"
     },
     "project": "项目：{{title}}",
     "recentSprints": "最近冲刺",
@@ -676,6 +709,7 @@
     },
     "statusBar": {
       "projectWords": "{{total}} / {{goal}} 项目字数",
+      "projectWordsPace": "{{total}} / {{goal}} 项目字数 · 每天 {{perDay}}",
       "wordCount": "{{count}} 字",
       "wordCountGoal": "{{count}} / {{goal}} 字",
       "delta": "(+{{delta}})",

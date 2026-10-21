@@ -132,8 +132,20 @@ Prefer: *legacy binder item*.
 The lifecycle state of a binder item: `draft` → `in-progress` → `complete` → `published`.
 
 **Project goals** (`ProjectGoals`)
-Project-level targets: `totalWordCount`, `dailyWordCount`, `deadline`.
-Distinct from per-document word count goals, which live on individual binder items.
+Project-level targets stored in `_project.json`: `totalWordCount`, `deadline` (a local
+`YYYY-MM-DD` date), and `writingDays` (days of the week in `getDay()` numbering, stored only
+when changed from Monday to Friday). Every key is optional and absent when cleared. There is
+no daily word goal field. Distinct from per-document word count goals, which live in each
+document's frontmatter.
+
+**Deadline pacing** (`src/pacing.ts`)
+With a deadline, the launcher project card, the Writing dashboard, and the status bar show
+how the project stands against it: *writing days left* counts the project's writing days from
+today through the deadline (today counts if it is a writing day; the deadline day always
+counts), and *words a day* is the words still to write divided by that, rounded up. Four
+states: countdown (deadline, no goal), pace, goal reached (with days to spare), and overdue
+(words still to go). No forecast from past speed — the plugin records sprint words only.
+Prefer: *deadline*, *writing days*, *words a day*. Avoid: *velocity*, *burn-down*, *quota*.
 
 ### Views and panels
 

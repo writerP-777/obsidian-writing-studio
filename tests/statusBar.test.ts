@@ -127,3 +127,48 @@ describe('StatusBar word count display', () => {
     expect(items[1].textContent).toBe('');
   });
 });
+
+describe('StatusBar project goal item with a deadline', () => {
+  function barFor(goals: { totalWordCount?: number; deadline?: string; writingDays?: number[] }, total: number) {
+    const items: FakeItem[] = [];
+    const plugin = makePlugin(items) as unknown as {
+      projectManager: { getActiveProject: jest.Mock };
+      statsTracker: { getTotalWordCount: jest.Mock };
+    };
+    plugin.projectManager.getActiveProject.mockReturnValue({ goals });
+    plugin.statsTracker.getTotalWordCount.mockResolvedValue(total);
+    const bar = new StatusBar(plugin as never);
+    bar.init(() => {});
+    return { bar, item: items[3] };
+  }
+
+  it('appends the daily pace when a goal and a future deadline are set', async () => {
+    const { bar, item } = barFor({ totalWordCount: 80_000, deadline: '2099-12-31' }, 12_400);
+    await bar.updateProjectGoalBar();
+
+    expect(item.textContent).toContain('12,400 / 80,000 project words');
+    expect(item.textContent).toMatch(/· \d[\d,]*\/day$/);
+    expect(item.classes).not.toContain('ws-hidden');
+  });
+
+  it('keeps the plain goal text when there is no deadline', async () => {
+    const { bar, item } = barFor({ totalWordCount: 80_000 }, 12_400);
+    await bar.updateProjectGoalBar();
+
+    expect(item.textContent).toBe('12,400 / 80,000 project words');
+  });
+
+  it('keeps the plain goal text once the goal is reached', async () => {
+    const { bar, item } = barFor({ totalWordCount: 1_000, deadline: '2099-12-31' }, 1_000);
+    await bar.updateProjectGoalBar();
+
+    expect(item.textContent).toBe('1,000 / 1,000 project words');
+  });
+
+  it('stays hidden with a deadline but no goal — the launcher carries the countdown', async () => {
+    const { bar, item } = barFor({ deadline: '2099-12-31' }, 500);
+    await bar.updateProjectGoalBar();
+
+    expect(item.classes).toContain('ws-hidden');
+  });
+});

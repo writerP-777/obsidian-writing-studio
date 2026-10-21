@@ -1,5 +1,8 @@
-import { App, ItemView, WorkspaceLeaf, setIcon } from 'obsidian';
+import { App, ItemView, WorkspaceLeaf, setIcon, setTooltip } from 'obsidian';
 import type WritingStudioPlugin from '../main';
+import type { WritingProject } from '../models/Project';
+import { computePace } from './pacing';
+import { formatLongDate, localDateString } from './dates';
 import { WritingModeType } from '../models/WritingMode';
 import { ProjectModal } from '../modals/ProjectModal';
 import { TargetsDashboardModal } from '../modals/TargetsDashboardModal';
@@ -213,6 +216,7 @@ export class LauncherView extends ItemView {
       } else {
         wcRow.createSpan({ text: this.plugin.statsTracker.calculateReadingTime(totalWords), cls: 'ws-launcher-wc-goal' });
       }
+      this.renderDeadline(card, project, totalWords, goal);
     } catch (e) {
       // Card stays minimal when stats can't load, but don't swallow real bugs
       console.error('[Writing Studio] project card stats', e);
@@ -227,6 +231,49 @@ export class LauncherView extends ItemView {
     setIcon(outlineBtn.createSpan('ws-launcher-btn-icon'), 'list-tree');
     outlineBtn.createSpan({ text: t('launcher.openOutline') });
     outlineBtn.onclick = () => { void this.plugin.openOutline(); };
+  }
+
+  // Deadline pacing (item 5): one line under the progress bar whenever the
+  // project has a deadline — days left, the daily pace to finish on time,
+  // the goal reached, or the deadline passed. No deadline, no line.
+  private renderDeadline(card: HTMLElement, project: WritingProject, totalWords: number, goal: number): void {
+    const deadline = project.goals?.deadline;
+    if (!deadline) return;
+    const pace = computePace({ goal, total: totalWords, deadline, writingDays: project.goals?.writingDays, today: localDateString() });
+    if (!pace) return;
+    const date = formatLongDate(deadline);
+    const days = (n: number) => t('launcher.writingDays', { count: n });
+    const words = (n: number) => t('launcher.wordCount', { n: n.toLocaleString() });
+
+    const row = card.createDiv('ws-launcher-deadline');
+    setIcon(row.createSpan('ws-launcher-deadline-icon'), 'calendar');
+    const text = row.createDiv('ws-launcher-deadline-text');
+    switch (pace.kind) {
+      case 'countdown':
+        text.createDiv({ text: t('launcher.dueCountdown', { date, days: days(pace.daysLeft) }), cls: 'ws-launcher-deadline-line' });
+        break;
+      case 'pace':
+        text.createDiv({ text: t('launcher.dueCountdown', { date, days: days(pace.daysLeft) }), cls: 'ws-launcher-deadline-line' });
+        text.createDiv({ text: t('launcher.duePace', { n: pace.perDay.toLocaleString() }), cls: 'ws-launcher-deadline-pace' });
+        setTooltip(row, t('launcher.paceTooltip'));
+        break;
+      case 'reached':
+        text.createDiv({
+          text: pace.daysLeft > 0
+            ? t('launcher.dueReached', { date, days: days(pace.daysLeft) })
+            : t('launcher.dueReachedLate', { date }),
+          cls: 'ws-launcher-deadline-line',
+        });
+        break;
+      case 'overdue':
+        text.createDiv({
+          text: pace.wordsLeft > 0
+            ? t('launcher.dueOverdue', { date, words: words(pace.wordsLeft) })
+            : t('launcher.dueOverdueNoGoal', { date }),
+          cls: 'ws-launcher-deadline-line ws-launcher-deadline-overdue',
+        });
+        break;
+    }
   }
 
   // ── Writing Mode Selector ────────────────────────────────────────

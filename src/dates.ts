@@ -12,3 +12,9 @@ export const moment = momentUntyped as MomentFn;
 export function localDateString(date?: Date | string): string {
   return moment(date).format('YYYY-MM-DD');
 }
+
+// A calendar date for reading, in the user's locale ("Dec 15, 2026" in
+// English). Takes the YYYY-MM-DD form the project record stores.
+export function formatLongDate(iso: string): string {
+  return moment(iso).format('ll');
+}

@@ -1014,6 +1014,76 @@ body.writing-studio-typography .markdown-reading-view .markdown-preview-section 
   color: var(--text-faint);
 }
 
+/* Deadline pacing line under the progress bar (item 5) */
+.ws-launcher-deadline {
+  display: flex;
+  align-items: flex-start;
+  gap: 6px;
+  margin: 8px 0 2px;
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+.ws-launcher-deadline-icon {
+  display: inline-flex;
+  flex-shrink: 0;
+  margin-top: 1px;
+  color: var(--text-faint);
+}
+
+.ws-launcher-deadline-icon svg {
+  width: 14px;
+  height: 14px;
+}
+
+.ws-launcher-deadline-text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.ws-launcher-deadline-pace {
+  color: var(--text-normal);
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+.ws-launcher-deadline-overdue {
+  color: var(--text-error);
+}
+
+/* Project dialog: deadline date input and writing-day toggles */
+.ws-project-modal input.ws-project-deadline {
+  color-scheme: light dark;
+}
+
+.ws-writing-days {
+  display: flex;
+  gap: 4px;
+}
+
+.ws-writing-day {
+  width: 30px;
+  height: 30px;
+  padding: 0;
+  border-radius: var(--radius-s);
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-muted);
+  background: var(--background-modifier-form-field);
+  box-shadow: none;
+}
+
+.ws-writing-day.is-active {
+  color: var(--text-on-accent);
+  background: var(--interactive-accent);
+}
+
+.ws-writing-day:hover {
+  box-shadow: 0 0 0 1px var(--interactive-accent) inset;
+}
+
 /* Mode selector */
 .ws-launcher-mode-btns {
   display: flex;

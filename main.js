@@ -30,7 +30,7 @@ module.exports = __toCommonJS(main_exports);
 var import_obsidian43 = require("obsidian");
 
 // src/FilesystemBinderView.ts
-var import_obsidian15 = require("obsidian");
+var import_obsidian16 = require("obsidian");
 
 // models/BinderItem.ts
 var DOCUMENT_STATUSES = ["draft", "in-progress", "complete", "published"];
@@ -452,6 +452,65 @@ function defaultDocumentFolder(projectType) {
 function resolveDocumentFolder(project) {
   var _a2;
   return (_a2 = project.documentFolder) != null ? _a2 : "Chapters";
+}
+
+// src/pacing.ts
+var DEFAULT_WRITING_DAYS = [1, 2, 3, 4, 5];
+var ISO_DATE = /^(\d{4})-(\d{2})-(\d{2})$/;
+function isIsoDate(value) {
+  if (typeof value !== "string") return false;
+  const m = ISO_DATE.exec(value);
+  if (!m) return false;
+  const [y, mo, d] = [Number(m[1]), Number(m[2]), Number(m[3])];
+  const date = new Date(Date.UTC(y, mo - 1, d));
+  return date.getUTCFullYear() === y && date.getUTCMonth() === mo - 1 && date.getUTCDate() === d;
+}
+function normalizeWritingDays(days) {
+  if (!Array.isArray(days)) return [...DEFAULT_WRITING_DAYS];
+  const set = /* @__PURE__ */ new Set();
+  for (const d of days) {
+    if (typeof d === "number" && Number.isInteger(d) && d >= 0 && d <= 6) set.add(d);
+  }
+  return set.size === 0 ? [...DEFAULT_WRITING_DAYS] : [...set].sort((a, b) => a - b);
+}
+function isDefaultWritingDays(days) {
+  const n = normalizeWritingDays(days);
+  return n.length === DEFAULT_WRITING_DAYS.length && n.every((d, i2) => d === DEFAULT_WRITING_DAYS[i2]);
+}
+function dayNumber(iso) {
+  const m = ISO_DATE.exec(iso);
+  if (!m) return NaN;
+  return Math.floor(Date.UTC(Number(m[1]), Number(m[2]) - 1, Number(m[3])) / 864e5);
+}
+function weekday(dayNum) {
+  return ((dayNum + 4) % 7 + 7) % 7;
+}
+function writingDaysLeft(today, deadline, writingDays = DEFAULT_WRITING_DAYS) {
+  const start2 = dayNumber(today);
+  const end = dayNumber(deadline);
+  if (Number.isNaN(start2) || Number.isNaN(end) || end < start2) return 0;
+  const days = normalizeWritingDays(writingDays);
+  const span = end - start2 + 1;
+  const fullWeeks = Math.floor(span / 7);
+  let count = fullWeeks * days.length;
+  for (let d = start2 + fullWeeks * 7; d <= end; d++) {
+    if (days.includes(weekday(d))) count++;
+  }
+  if (!days.includes(weekday(end))) count++;
+  return count;
+}
+function computePace(input) {
+  if (!isIsoDate(input.deadline) || !isIsoDate(input.today)) return null;
+  const goal = Math.max(0, Math.floor(input.goal));
+  const wordsLeft = Math.max(0, goal - Math.max(0, Math.floor(input.total)));
+  const daysLeft = writingDaysLeft(input.today, input.deadline, input.writingDays);
+  const past = dayNumber(input.deadline) < dayNumber(input.today);
+  if (goal <= 0) {
+    return past ? { kind: "overdue", wordsLeft: 0 } : { kind: "countdown", daysLeft };
+  }
+  if (wordsLeft === 0) return { kind: "reached", daysLeft };
+  if (past) return { kind: "overdue", wordsLeft };
+  return { kind: "pace", wordsLeft, daysLeft, perDay: Math.ceil(wordsLeft / daysLeft) };
 }
 
 // node_modules/i18next/dist/esm/i18next.js
@@ -3021,6 +3080,15 @@ var en_default = {
     wordCount: "{{n}} words",
     wordGoal: "/ {{n}} goal",
     pctComplete: "{{pct}}% complete",
+    writingDays_one: "{{count}} writing day",
+    writingDays_other: "{{count}} writing days",
+    dueCountdown: "Due {{date}} \xB7 {{days}} left",
+    duePace: "{{n}} words a day to finish on time",
+    dueReached: "Due {{date}} \xB7 goal reached, {{days}} to spare",
+    dueReachedLate: "Due {{date}} \xB7 goal reached",
+    dueOverdue: "Was due {{date}} \xB7 {{words}} still to go",
+    dueOverdueNoGoal: "Was due {{date}}",
+    paceTooltip: "Words left divided by the writing days left, counting today. Change your writing days with the pencil button above.",
     openBinder: "\u{1F4D6} Open binder",
     writingMode: "Writing mode",
     mode: {
@@ -3216,6 +3284,12 @@ var en_default = {
     cancel: "Cancel",
     goalLabel: "Total word count goal",
     goalDesc: "Optional. Shown as progress in the launcher and status bar. Leave empty for no goal.",
+    deadlineLabel: "Deadline",
+    deadlineDesc: "Optional. With a goal, the launcher shows how many words a day you need to finish on time.",
+    writingDaysLabel: "Writing days",
+    writingDaysDesc: "The days you plan to write. Monday to Friday unless you change it. Used only to work out the daily pace.",
+    dayShort: { "0": "S", "1": "M", "2": "T", "3": "W", "4": "T", "5": "F", "6": "S" },
+    dayName: { "0": "Sunday", "1": "Monday", "2": "Tuesday", "3": "Wednesday", "4": "Thursday", "5": "Friday", "6": "Saturday" },
     editTitle: "Edit project",
     saveBtn: "Save",
     updated: 'Project "{{title}}" updated!',
@@ -3382,7 +3456,9 @@ var en_default = {
       totalWords: "Total words",
       goal: "Goal",
       progress: "Progress",
-      readingTime: "Reading time"
+      readingTime: "Reading time",
+      deadline: "Deadline",
+      perDay: "Per writing day"
     },
     project: "Project: {{title}}",
     recentSprints: "Recent sprints",
@@ -3450,6 +3526,7 @@ var en_default = {
     },
     statusBar: {
       projectWords: "{{total}} / {{goal}} project words",
+      projectWordsPace: "{{total}} / {{goal}} project words \xB7 {{perDay}}/day",
       wordCount: "{{count}} words",
       wordCountGoal: "{{count}} / {{goal}} words",
       delta: "(+{{delta}})",
@@ -3919,6 +3996,15 @@ var zh_default = {
     wordCount: "{{n}} \u5B57",
     wordGoal: "/ {{n}} \u76EE\u6807",
     pctComplete: "{{pct}}% \u5B8C\u6210",
+    writingDays_one: "{{count}} \u4E2A\u5199\u4F5C\u65E5",
+    writingDays_other: "{{count}} \u4E2A\u5199\u4F5C\u65E5",
+    dueCountdown: "\u622A\u6B62 {{date}} \xB7 \u8FD8\u5269 {{days}}",
+    duePace: "\u6BCF\u5929 {{n}} \u5B57\u5373\u53EF\u6309\u65F6\u5B8C\u6210",
+    dueReached: "\u622A\u6B62 {{date}} \xB7 \u5DF2\u8FBE\u6210\u76EE\u6807\uFF0C\u63D0\u524D {{days}}",
+    dueReachedLate: "\u622A\u6B62 {{date}} \xB7 \u5DF2\u8FBE\u6210\u76EE\u6807",
+    dueOverdue: "\u539F\u5B9A {{date}} \u622A\u6B62 \xB7 \u8FD8\u5DEE {{words}}",
+    dueOverdueNoGoal: "\u539F\u5B9A {{date}} \u622A\u6B62",
+    paceTooltip: "\u5269\u4F59\u5B57\u6570\u9664\u4EE5\u5269\u4F59\u5199\u4F5C\u65E5\uFF08\u542B\u4ECA\u5929\uFF09\u3002\u7528\u4E0A\u65B9\u7684\u94C5\u7B14\u6309\u94AE\u66F4\u6539\u5199\u4F5C\u65E5\u3002",
     openBinder: "\u{1F4D6} \u6253\u5F00\u6D3B\u9875\u5939",
     writingMode: "\u5199\u4F5C\u6A21\u5F0F",
     mode: {
@@ -4114,6 +4200,28 @@ var zh_default = {
     cancel: "\u53D6\u6D88",
     goalLabel: "\u603B\u5B57\u6570\u76EE\u6807",
     goalDesc: "\u53EF\u9009\u3002\u5728\u542F\u52A8\u5668\u548C\u72B6\u6001\u680F\u4E2D\u663E\u793A\u4E3A\u8FDB\u5EA6\u3002\u7559\u7A7A\u8868\u793A\u4E0D\u8BBE\u76EE\u6807\u3002",
+    deadlineLabel: "\u622A\u6B62\u65E5\u671F",
+    deadlineDesc: "\u53EF\u9009\u3002\u8BBE\u6709\u76EE\u6807\u65F6\uFF0C\u542F\u52A8\u5668\u4F1A\u663E\u793A\u6BCF\u5929\u9700\u8981\u5199\u591A\u5C11\u5B57\u624D\u80FD\u6309\u65F6\u5B8C\u6210\u3002",
+    writingDaysLabel: "\u5199\u4F5C\u65E5",
+    writingDaysDesc: "\u4F60\u8BA1\u5212\u5199\u4F5C\u7684\u65E5\u5B50\u3002\u9ED8\u8BA4\u5468\u4E00\u81F3\u5468\u4E94\uFF0C\u53EF\u4EE5\u66F4\u6539\u3002\u4EC5\u7528\u4E8E\u8BA1\u7B97\u6BCF\u65E5\u8FDB\u5EA6\u3002",
+    dayShort: {
+      "0": "\u65E5",
+      "1": "\u4E00",
+      "2": "\u4E8C",
+      "3": "\u4E09",
+      "4": "\u56DB",
+      "5": "\u4E94",
+      "6": "\u516D"
+    },
+    dayName: {
+      "0": "\u661F\u671F\u65E5",
+      "1": "\u661F\u671F\u4E00",
+      "2": "\u661F\u671F\u4E8C",
+      "3": "\u661F\u671F\u4E09",
+      "4": "\u661F\u671F\u56DB",
+      "5": "\u661F\u671F\u4E94",
+      "6": "\u661F\u671F\u516D"
+    },
     editTitle: "\u7F16\u8F91\u9879\u76EE",
     saveBtn: "\u4FDD\u5B58",
     updated: '\u9879\u76EE "{{title}}" \u5DF2\u66F4\u65B0\uFF01',
@@ -4280,7 +4388,9 @@ var zh_default = {
       totalWords: "\u603B\u5B57\u6570",
       goal: "\u76EE\u6807",
       progress: "\u8FDB\u5EA6",
-      readingTime: "\u9605\u8BFB\u65F6\u95F4"
+      readingTime: "\u9605\u8BFB\u65F6\u95F4",
+      deadline: "\u622A\u6B62\u65E5\u671F",
+      perDay: "\u6BCF\u4E2A\u5199\u4F5C\u65E5"
     },
     project: "\u9879\u76EE\uFF1A{{title}}",
     recentSprints: "\u6700\u8FD1\u51B2\u523A",
@@ -4348,6 +4458,7 @@ var zh_default = {
     },
     statusBar: {
       projectWords: "{{total}} / {{goal}} \u9879\u76EE\u5B57\u6570",
+      projectWordsPace: "{{total}} / {{goal}} \u9879\u76EE\u5B57\u6570 \xB7 \u6BCF\u5929 {{perDay}}",
       wordCount: "{{count}} \u5B57",
       wordCountGoal: "{{count}} / {{goal}} \u5B57",
       delta: "(+{{delta}})",
@@ -4817,6 +4928,15 @@ var hi_default = {
     wordCount: "{{n}} \u0936\u092C\u094D\u0926",
     wordGoal: "/ {{n}} \u0932\u0915\u094D\u0937\u094D\u092F",
     pctComplete: "{{pct}}% \u092A\u0942\u0930\u094D\u0923",
+    writingDays_one: "{{count}} \u0932\u0947\u0916\u0928 \u0926\u093F\u0935\u0938",
+    writingDays_other: "{{count}} \u0932\u0947\u0916\u0928 \u0926\u093F\u0935\u0938",
+    dueCountdown: "\u0938\u092E\u092F \u0938\u0940\u092E\u093E {{date}} \xB7 {{days}} \u0936\u0947\u0937",
+    duePace: "\u0938\u092E\u092F \u092A\u0930 \u092A\u0942\u0930\u093E \u0915\u0930\u0928\u0947 \u0915\u0947 \u0932\u093F\u090F \u092A\u094D\u0930\u0924\u093F\u0926\u093F\u0928 {{n}} \u0936\u092C\u094D\u0926",
+    dueReached: "\u0938\u092E\u092F \u0938\u0940\u092E\u093E {{date}} \xB7 \u0932\u0915\u094D\u0937\u094D\u092F \u092A\u0942\u0930\u093E, {{days}} \u0905\u0924\u093F\u0930\u093F\u0915\u094D\u0924",
+    dueReachedLate: "\u0938\u092E\u092F \u0938\u0940\u092E\u093E {{date}} \xB7 \u0932\u0915\u094D\u0937\u094D\u092F \u092A\u0942\u0930\u093E",
+    dueOverdue: "\u0938\u092E\u092F \u0938\u0940\u092E\u093E {{date}} \u0925\u0940 \xB7 {{words}} \u0905\u092D\u0940 \u092C\u093E\u0915\u0940",
+    dueOverdueNoGoal: "\u0938\u092E\u092F \u0938\u0940\u092E\u093E {{date}} \u0925\u0940",
+    paceTooltip: "\u0936\u0947\u0937 \u0936\u092C\u094D\u0926\u094B\u0902 \u0915\u094B \u0936\u0947\u0937 \u0932\u0947\u0916\u0928 \u0926\u093F\u0935\u0938\u094B\u0902 \u0938\u0947 \u092D\u093E\u0917 \u0926\u093F\u092F\u093E \u0917\u092F\u093E, \u0906\u091C \u0915\u094B \u0917\u093F\u0928\u0924\u0947 \u0939\u0941\u090F\u0964 \u090A\u092A\u0930 \u092A\u0947\u0902\u0938\u093F\u0932 \u092C\u091F\u0928 \u0938\u0947 \u0905\u092A\u0928\u0947 \u0932\u0947\u0916\u0928 \u0926\u093F\u0935\u0938 \u092C\u0926\u0932\u0947\u0902\u0964",
     openBinder: "\u{1F4D6} \u092C\u093E\u0907\u0902\u0921\u0930 \u0916\u094B\u0932\u0947\u0902",
     writingMode: "\u0932\u0947\u0916\u0928 \u092E\u094B\u0921",
     mode: {
@@ -5012,6 +5132,28 @@ var hi_default = {
     cancel: "\u0930\u0926\u094D\u0926 \u0915\u0930\u0947\u0902",
     goalLabel: "\u0915\u0941\u0932 \u0936\u092C\u094D\u0926 \u0938\u0902\u0916\u094D\u092F\u093E \u0932\u0915\u094D\u0937\u094D\u092F",
     goalDesc: "\u0935\u0948\u0915\u0932\u094D\u092A\u093F\u0915\u0964 \u0932\u0949\u0928\u094D\u091A\u0930 \u0914\u0930 \u0938\u094D\u091F\u0947\u091F\u0938 \u092C\u093E\u0930 \u092E\u0947\u0902 \u092A\u094D\u0930\u0917\u0924\u093F \u0915\u0947 \u0930\u0942\u092A \u092E\u0947\u0902 \u0926\u093F\u0916\u093E\u092F\u093E \u091C\u093E\u0924\u093E \u0939\u0948\u0964 \u0915\u094B\u0908 \u0932\u0915\u094D\u0937\u094D\u092F \u0928 \u0930\u0916\u0928\u0947 \u0915\u0947 \u0932\u093F\u090F \u0916\u093E\u0932\u0940 \u091B\u094B\u0921\u093C\u0947\u0902\u0964",
+    deadlineLabel: "\u0938\u092E\u092F \u0938\u0940\u092E\u093E",
+    deadlineDesc: "\u0935\u0948\u0915\u0932\u094D\u092A\u093F\u0915\u0964 \u0932\u0915\u094D\u0937\u094D\u092F \u0915\u0947 \u0938\u093E\u0925, \u0932\u0949\u0928\u094D\u091A\u0930 \u0926\u093F\u0916\u093E\u0924\u093E \u0939\u0948 \u0915\u093F \u0938\u092E\u092F \u092A\u0930 \u092A\u0942\u0930\u093E \u0915\u0930\u0928\u0947 \u0915\u0947 \u0932\u093F\u090F \u092A\u094D\u0930\u0924\u093F\u0926\u093F\u0928 \u0915\u093F\u0924\u0928\u0947 \u0936\u092C\u094D\u0926 \u091A\u093E\u0939\u093F\u090F\u0964",
+    writingDaysLabel: "\u0932\u0947\u0916\u0928 \u0926\u093F\u0935\u0938",
+    writingDaysDesc: "\u091C\u093F\u0928 \u0926\u093F\u0928\u094B\u0902 \u0906\u092A \u0932\u093F\u0916\u0928\u0947 \u0915\u0940 \u092F\u094B\u091C\u0928\u093E \u0930\u0916\u0924\u0947 \u0939\u0948\u0902\u0964 \u092C\u0926\u0932\u0928\u0947 \u0924\u0915 \u0938\u094B\u092E\u0935\u093E\u0930 \u0938\u0947 \u0936\u0941\u0915\u094D\u0930\u0935\u093E\u0930\u0964 \u0915\u0947\u0935\u0932 \u0926\u0948\u0928\u093F\u0915 \u0917\u0924\u093F \u0928\u093F\u0915\u093E\u0932\u0928\u0947 \u092E\u0947\u0902 \u0909\u092A\u092F\u094B\u0917 \u0939\u094B\u0924\u093E \u0939\u0948\u0964",
+    dayShort: {
+      "0": "\u0930",
+      "1": "\u0938\u094B",
+      "2": "\u092E\u0902",
+      "3": "\u092C\u0941",
+      "4": "\u0917\u0941",
+      "5": "\u0936\u0941",
+      "6": "\u0936"
+    },
+    dayName: {
+      "0": "\u0930\u0935\u093F\u0935\u093E\u0930",
+      "1": "\u0938\u094B\u092E\u0935\u093E\u0930",
+      "2": "\u092E\u0902\u0917\u0932\u0935\u093E\u0930",
+      "3": "\u092C\u0941\u0927\u0935\u093E\u0930",
+      "4": "\u0917\u0941\u0930\u0941\u0935\u093E\u0930",
+      "5": "\u0936\u0941\u0915\u094D\u0930\u0935\u093E\u0930",
+      "6": "\u0936\u0928\u093F\u0935\u093E\u0930"
+    },
     editTitle: "\u092A\u094D\u0930\u094B\u091C\u0947\u0915\u094D\u091F \u0938\u0902\u092A\u093E\u0926\u093F\u0924 \u0915\u0930\u0947\u0902",
     saveBtn: "\u0938\u0939\u0947\u091C\u0947\u0902",
     updated: '\u092A\u094D\u0930\u094B\u091C\u0947\u0915\u094D\u091F "{{title}}" \u0905\u092A\u0921\u0947\u091F \u0915\u093F\u092F\u093E \u0917\u092F\u093E!',
@@ -5178,7 +5320,9 @@ var hi_default = {
       totalWords: "\u0915\u0941\u0932 \u0936\u092C\u094D\u0926",
       goal: "\u0932\u0915\u094D\u0937\u094D\u092F",
       progress: "\u092A\u094D\u0930\u0917\u0924\u093F",
-      readingTime: "\u092A\u0922\u093C\u0928\u0947 \u0915\u093E \u0938\u092E\u092F"
+      readingTime: "\u092A\u0922\u093C\u0928\u0947 \u0915\u093E \u0938\u092E\u092F",
+      deadline: "\u0938\u092E\u092F \u0938\u0940\u092E\u093E",
+      perDay: "\u092A\u094D\u0930\u0924\u093F \u0932\u0947\u0916\u0928 \u0926\u093F\u0935\u0938"
     },
     project: "\u092A\u0930\u093F\u092F\u094B\u091C\u0928\u093E: {{title}}",
     recentSprints: "\u0939\u093E\u0932\u093F\u092F\u093E \u0938\u094D\u092A\u094D\u0930\u093F\u0902\u091F",
@@ -5246,6 +5390,7 @@ var hi_default = {
     },
     statusBar: {
       projectWords: "{{total}} / {{goal}} \u092A\u094D\u0930\u094B\u091C\u0947\u0915\u094D\u091F \u0936\u092C\u094D\u0926",
+      projectWordsPace: "{{total}} / {{goal}} \u092A\u094D\u0930\u094B\u091C\u0947\u0915\u094D\u091F \u0936\u092C\u094D\u0926 \xB7 {{perDay}}/\u0926\u093F\u0928",
       wordCount: "{{count}} \u0936\u092C\u094D\u0926",
       wordCountGoal: "{{count}} / {{goal}} \u0936\u092C\u094D\u0926",
       delta: "(+{{delta}})",
@@ -5715,6 +5860,15 @@ var es_default = {
     wordCount: "{{n}} palabras",
     wordGoal: "/ {{n}} objetivo",
     pctComplete: "{{pct}}% completado",
+    writingDays_one: "{{count}} d\xEDa de escritura",
+    writingDays_other: "{{count}} d\xEDas de escritura",
+    dueCountdown: "Entrega el {{date}} \xB7 quedan {{days}}",
+    duePace: "{{n}} palabras al d\xEDa para terminar a tiempo",
+    dueReached: "Entrega el {{date}} \xB7 meta alcanzada, {{days}} de margen",
+    dueReachedLate: "Entrega el {{date}} \xB7 meta alcanzada",
+    dueOverdue: "Venc\xEDa el {{date}} \xB7 faltan {{words}}",
+    dueOverdueNoGoal: "Venc\xEDa el {{date}}",
+    paceTooltip: "Palabras que faltan divididas entre los d\xEDas de escritura que quedan, contando hoy. Cambia tus d\xEDas de escritura con el bot\xF3n del l\xE1piz de arriba.",
     openBinder: "\u{1F4D6} Abrir carpeta",
     writingMode: "Modo de escritura",
     mode: {
@@ -5910,6 +6064,28 @@ var es_default = {
     cancel: "Cancelar",
     goalLabel: "Meta total de palabras",
     goalDesc: "Opcional. Se muestra como progreso en el lanzador y la barra de estado. D\xE9jalo vac\xEDo para no fijar una meta.",
+    deadlineLabel: "Fecha l\xEDmite",
+    deadlineDesc: "Opcional. Con una meta, el lanzador muestra cu\xE1ntas palabras al d\xEDa necesitas para terminar a tiempo.",
+    writingDaysLabel: "D\xEDas de escritura",
+    writingDaysDesc: "Los d\xEDas en que piensas escribir. De lunes a viernes salvo que lo cambies. Solo se usa para calcular el ritmo diario.",
+    dayShort: {
+      "0": "D",
+      "1": "L",
+      "2": "M",
+      "3": "X",
+      "4": "J",
+      "5": "V",
+      "6": "S"
+    },
+    dayName: {
+      "0": "Domingo",
+      "1": "Lunes",
+      "2": "Martes",
+      "3": "Mi\xE9rcoles",
+      "4": "Jueves",
+      "5": "Viernes",
+      "6": "S\xE1bado"
+    },
     editTitle: "Editar proyecto",
     saveBtn: "Guardar",
     updated: '\xA1Proyecto "{{title}}" actualizado!',
@@ -6076,7 +6252,9 @@ var es_default = {
       totalWords: "Total de palabras",
       goal: "Objetivo",
       progress: "Progreso",
-      readingTime: "Tiempo de lectura"
+      readingTime: "Tiempo de lectura",
+      deadline: "Fecha l\xEDmite",
+      perDay: "Por d\xEDa de escritura"
     },
     project: "Proyecto: {{title}}",
     recentSprints: "Sprints recientes",
@@ -6144,6 +6322,7 @@ var es_default = {
     },
     statusBar: {
       projectWords: "{{total}} / {{goal}} palabras del proyecto",
+      projectWordsPace: "{{total}} / {{goal}} palabras del proyecto \xB7 {{perDay}}/d\xEDa",
       wordCount: "{{count}} palabras",
       wordCountGoal: "{{count}} / {{goal}} palabras",
       delta: "(+{{delta}})",
@@ -6619,6 +6798,15 @@ var ar_default = {
     wordCount: "{{n}} \u0643\u0644\u0645\u0629",
     wordGoal: "/ {{n}} \u0647\u062F\u0641",
     pctComplete: "{{pct}}% \u0645\u0643\u062A\u0645\u0644",
+    writingDays_one: "\u064A\u0648\u0645 \u0643\u062A\u0627\u0628\u0629 \u0648\u0627\u062D\u062F",
+    writingDays_other: "{{count}} \u0623\u064A\u0627\u0645 \u0643\u062A\u0627\u0628\u0629",
+    dueCountdown: "\u0627\u0644\u0645\u0648\u0639\u062F {{date}} \xB7 \u0627\u0644\u0645\u062A\u0628\u0642\u064A {{days}}",
+    duePace: "{{n}} \u0643\u0644\u0645\u0629 \u064A\u0648\u0645\u064A\u064B\u0627 \u0644\u0644\u0625\u0646\u0647\u0627\u0621 \u0641\u064A \u0627\u0644\u0648\u0642\u062A \u0627\u0644\u0645\u062D\u062F\u062F",
+    dueReached: "\u0627\u0644\u0645\u0648\u0639\u062F {{date}} \xB7 \u062A\u062D\u0642\u0642 \u0627\u0644\u0647\u062F\u0641\u060C \u0645\u062A\u0628\u0642\u064D {{days}} \u0627\u062D\u062A\u064A\u0627\u0637\u064B\u0627",
+    dueReachedLate: "\u0627\u0644\u0645\u0648\u0639\u062F {{date}} \xB7 \u062A\u062D\u0642\u0642 \u0627\u0644\u0647\u062F\u0641",
+    dueOverdue: "\u0643\u0627\u0646 \u0627\u0644\u0645\u0648\u0639\u062F {{date}} \xB7 \u0627\u0644\u0645\u062A\u0628\u0642\u064A {{words}}",
+    dueOverdueNoGoal: "\u0643\u0627\u0646 \u0627\u0644\u0645\u0648\u0639\u062F {{date}}",
+    paceTooltip: "\u0627\u0644\u0643\u0644\u0645\u0627\u062A \u0627\u0644\u0645\u062A\u0628\u0642\u064A\u0629 \u0645\u0642\u0633\u0648\u0645\u0629 \u0639\u0644\u0649 \u0623\u064A\u0627\u0645 \u0627\u0644\u0643\u062A\u0627\u0628\u0629 \u0627\u0644\u0645\u062A\u0628\u0642\u064A\u0629\u060C \u0645\u0639 \u0627\u062D\u062A\u0633\u0627\u0628 \u0627\u0644\u064A\u0648\u0645. \u063A\u064A\u0651\u0631 \u0623\u064A\u0627\u0645 \u0627\u0644\u0643\u062A\u0627\u0628\u0629 \u0628\u0632\u0631 \u0627\u0644\u0642\u0644\u0645 \u0623\u0639\u0644\u0627\u0647.",
     openBinder: "\u{1F4D6} \u0641\u062A\u062D \u0627\u0644\u0645\u0644\u0641",
     writingMode: "\u0648\u0636\u0639 \u0627\u0644\u0643\u062A\u0627\u0628\u0629",
     mode: {
@@ -6824,6 +7012,28 @@ var ar_default = {
     cancel: "\u0625\u0644\u063A\u0627\u0621",
     goalLabel: "\u0647\u062F\u0641 \u0625\u062C\u0645\u0627\u0644\u064A \u0639\u062F\u062F \u0627\u0644\u0643\u0644\u0645\u0627\u062A",
     goalDesc: "\u0627\u062E\u062A\u064A\u0627\u0631\u064A. \u064A\u0638\u0647\u0631 \u0643\u062A\u0642\u062F\u0645 \u0641\u064A \u0627\u0644\u0645\u0634\u063A\u0651\u0644 \u0648\u0634\u0631\u064A\u0637 \u0627\u0644\u062D\u0627\u0644\u0629. \u0627\u062A\u0631\u0643\u0647 \u0641\u0627\u0631\u063A\u064B\u0627 \u0628\u062F\u0648\u0646 \u0647\u062F\u0641.",
+    deadlineLabel: "\u0627\u0644\u0645\u0648\u0639\u062F \u0627\u0644\u0646\u0647\u0627\u0626\u064A",
+    deadlineDesc: "\u0627\u062E\u062A\u064A\u0627\u0631\u064A. \u0645\u0639 \u0648\u062C\u0648\u062F \u0647\u062F\u0641\u060C \u064A\u0639\u0631\u0636 \u0627\u0644\u0645\u0634\u063A\u0651\u0644 \u0639\u062F\u062F \u0627\u0644\u0643\u0644\u0645\u0627\u062A \u0627\u0644\u0645\u0637\u0644\u0648\u0628\u0629 \u064A\u0648\u0645\u064A\u064B\u0627 \u0644\u0625\u0646\u0647\u0627\u0621 \u0627\u0644\u0639\u0645\u0644 \u0641\u064A \u0627\u0644\u0648\u0642\u062A \u0627\u0644\u0645\u062D\u062F\u062F.",
+    writingDaysLabel: "\u0623\u064A\u0627\u0645 \u0627\u0644\u0643\u062A\u0627\u0628\u0629",
+    writingDaysDesc: "\u0627\u0644\u0623\u064A\u0627\u0645 \u0627\u0644\u062A\u064A \u062A\u0646\u0648\u064A \u0627\u0644\u0643\u062A\u0627\u0628\u0629 \u0641\u064A\u0647\u0627. \u0645\u0646 \u0627\u0644\u0627\u062B\u0646\u064A\u0646 \u0625\u0644\u0649 \u0627\u0644\u062C\u0645\u0639\u0629 \u0645\u0627 \u0644\u0645 \u062A\u063A\u064A\u0651\u0631\u0647\u0627. \u062A\u064F\u0633\u062A\u062E\u062F\u0645 \u0641\u0642\u0637 \u0644\u062D\u0633\u0627\u0628 \u0627\u0644\u0648\u062A\u064A\u0631\u0629 \u0627\u0644\u064A\u0648\u0645\u064A\u0629.",
+    dayShort: {
+      "0": "\u062D",
+      "1": "\u0646",
+      "2": "\u062B",
+      "3": "\u0631",
+      "4": "\u062E",
+      "5": "\u062C",
+      "6": "\u0633"
+    },
+    dayName: {
+      "0": "\u0627\u0644\u0623\u062D\u062F",
+      "1": "\u0627\u0644\u0627\u062B\u0646\u064A\u0646",
+      "2": "\u0627\u0644\u062B\u0644\u0627\u062B\u0627\u0621",
+      "3": "\u0627\u0644\u0623\u0631\u0628\u0639\u0627\u0621",
+      "4": "\u0627\u0644\u062E\u0645\u064A\u0633",
+      "5": "\u0627\u0644\u062C\u0645\u0639\u0629",
+      "6": "\u0627\u0644\u0633\u0628\u062A"
+    },
     editTitle: "\u062A\u062D\u0631\u064A\u0631 \u0627\u0644\u0645\u0634\u0631\u0648\u0639",
     saveBtn: "\u062D\u0641\u0638",
     updated: '\u062A\u0645 \u062A\u062D\u062F\u064A\u062B \u0627\u0644\u0645\u0634\u0631\u0648\u0639 "{{title}}"!',
@@ -7006,7 +7216,9 @@ var ar_default = {
       totalWords: "\u0625\u062C\u0645\u0627\u0644\u064A \u0627\u0644\u0643\u0644\u0645\u0627\u062A",
       goal: "\u0627\u0644\u0647\u062F\u0641",
       progress: "\u0627\u0644\u062A\u0642\u062F\u0645",
-      readingTime: "\u0648\u0642\u062A \u0627\u0644\u0642\u0631\u0627\u0621\u0629"
+      readingTime: "\u0648\u0642\u062A \u0627\u0644\u0642\u0631\u0627\u0621\u0629",
+      deadline: "\u0627\u0644\u0645\u0648\u0639\u062F \u0627\u0644\u0646\u0647\u0627\u0626\u064A",
+      perDay: "\u0644\u0643\u0644 \u064A\u0648\u0645 \u0643\u062A\u0627\u0628\u0629"
     },
     project: "\u0627\u0644\u0645\u0634\u0631\u0648\u0639: {{title}}",
     recentSprints: "\u0627\u0644\u0633\u0628\u0627\u0642\u0627\u062A \u0627\u0644\u0623\u062E\u064A\u0631\u0629",
@@ -7074,6 +7286,7 @@ var ar_default = {
     },
     statusBar: {
       projectWords: "{{total}} / {{goal}} \u0643\u0644\u0645\u0629 \u0641\u064A \u0627\u0644\u0645\u0634\u0631\u0648\u0639",
+      projectWordsPace: "{{total}} / {{goal}} \u0643\u0644\u0645\u0629 \u0641\u064A \u0627\u0644\u0645\u0634\u0631\u0648\u0639 \xB7 {{perDay}}/\u064A\u0648\u0645",
       wordCount: "{{count}} \u0643\u0644\u0645\u0629",
       wordCountGoal: "{{count}} / {{goal}} \u0643\u0644\u0645\u0629",
       delta: "(+{{delta}})",
@@ -7583,6 +7796,15 @@ var fr_default = {
     wordCount: "{{n}} mots",
     wordGoal: "/ {{n}} objectif",
     pctComplete: "{{pct}}% termin\xE9",
+    writingDays_one: "{{count}} jour d'\xE9criture",
+    writingDays_other: "{{count}} jours d'\xE9criture",
+    dueCountdown: "\xC9ch\xE9ance le {{date}} \xB7 {{days}} restants",
+    duePace: "{{n}} mots par jour pour finir \xE0 temps",
+    dueReached: "\xC9ch\xE9ance le {{date}} \xB7 objectif atteint, {{days}} d'avance",
+    dueReachedLate: "\xC9ch\xE9ance le {{date}} \xB7 objectif atteint",
+    dueOverdue: "\xC9ch\xE9ance d\xE9pass\xE9e le {{date}} \xB7 {{words}} restants",
+    dueOverdueNoGoal: "\xC9ch\xE9ance d\xE9pass\xE9e le {{date}}",
+    paceTooltip: "Mots restants divis\xE9s par les jours d'\xE9criture restants, aujourd'hui compris. Modifiez vos jours d'\xE9criture avec le bouton crayon ci-dessus.",
     openBinder: "\u{1F4D6} Ouvrir le classeur",
     writingMode: "Mode d'\xE9criture",
     mode: {
@@ -7778,6 +8000,28 @@ var fr_default = {
     cancel: "Annuler",
     goalLabel: "Objectif total de mots",
     goalDesc: "Facultatif. Affich\xE9 comme progression dans le lanceur et la barre d'\xE9tat. Laisser vide pour aucun objectif.",
+    deadlineLabel: "\xC9ch\xE9ance",
+    deadlineDesc: "Facultatif. Avec un objectif, le lanceur indique combien de mots par jour il faut pour finir \xE0 temps.",
+    writingDaysLabel: "Jours d'\xE9criture",
+    writingDaysDesc: "Les jours o\xF9 vous comptez \xE9crire. Du lundi au vendredi sauf si vous le changez. Sert uniquement \xE0 calculer le rythme quotidien.",
+    dayShort: {
+      "0": "D",
+      "1": "L",
+      "2": "M",
+      "3": "M",
+      "4": "J",
+      "5": "V",
+      "6": "S"
+    },
+    dayName: {
+      "0": "Dimanche",
+      "1": "Lundi",
+      "2": "Mardi",
+      "3": "Mercredi",
+      "4": "Jeudi",
+      "5": "Vendredi",
+      "6": "Samedi"
+    },
     editTitle: "Modifier le projet",
     saveBtn: "Enregistrer",
     updated: 'Projet "{{title}}" mis \xE0 jour !',
@@ -7944,7 +8188,9 @@ var fr_default = {
       totalWords: "Total des mots",
       goal: "Objectif",
       progress: "Progression",
-      readingTime: "Temps de lecture"
+      readingTime: "Temps de lecture",
+      deadline: "\xC9ch\xE9ance",
+      perDay: "Par jour d'\xE9criture"
     },
     project: "Projet : {{title}}",
     recentSprints: "Sprints r\xE9cents",
@@ -8012,6 +8258,7 @@ var fr_default = {
     },
     statusBar: {
       projectWords: "{{total}} / {{goal}} mots du projet",
+      projectWordsPace: "{{total}} / {{goal}} mots du projet \xB7 {{perDay}}/jour",
       wordCount: "{{count}} mots",
       wordCountGoal: "{{count}} / {{goal}} mots",
       delta: "(+{{delta}})",
@@ -8481,6 +8728,15 @@ var bn_default = {
     wordCount: "{{n}} \u09B6\u09AC\u09CD\u09A6",
     wordGoal: "/ {{n}} \u09B2\u0995\u09CD\u09B7\u09CD\u09AF",
     pctComplete: "{{pct}}% \u09B8\u09AE\u09CD\u09AA\u09A8\u09CD\u09A8",
+    writingDays_one: "{{count}} \u09B2\u09C7\u0996\u09BE\u09B0 \u09A6\u09BF\u09A8",
+    writingDays_other: "{{count}} \u09B2\u09C7\u0996\u09BE\u09B0 \u09A6\u09BF\u09A8",
+    dueCountdown: "\u09B8\u09AE\u09AF\u09BC\u09B8\u09C0\u09AE\u09BE {{date}} \xB7 {{days}} \u09AC\u09BE\u0995\u09BF",
+    duePace: "\u09B8\u09AE\u09AF\u09BC\u09AE\u09A4\u09CB \u09B6\u09C7\u09B7 \u0995\u09B0\u09A4\u09C7 \u09AA\u09CD\u09B0\u09A4\u09BF\u09A6\u09BF\u09A8 {{n}} \u09B6\u09AC\u09CD\u09A6",
+    dueReached: "\u09B8\u09AE\u09AF\u09BC\u09B8\u09C0\u09AE\u09BE {{date}} \xB7 \u09B2\u0995\u09CD\u09B7\u09CD\u09AF \u09AA\u09C2\u09B0\u09A3, {{days}} \u09B9\u09BE\u09A4\u09C7 \u0986\u099B\u09C7",
+    dueReachedLate: "\u09B8\u09AE\u09AF\u09BC\u09B8\u09C0\u09AE\u09BE {{date}} \xB7 \u09B2\u0995\u09CD\u09B7\u09CD\u09AF \u09AA\u09C2\u09B0\u09A3",
+    dueOverdue: "\u09B8\u09AE\u09AF\u09BC\u09B8\u09C0\u09AE\u09BE \u099B\u09BF\u09B2 {{date}} \xB7 {{words}} \u098F\u0996\u09A8\u0993 \u09AC\u09BE\u0995\u09BF",
+    dueOverdueNoGoal: "\u09B8\u09AE\u09AF\u09BC\u09B8\u09C0\u09AE\u09BE \u099B\u09BF\u09B2 {{date}}",
+    paceTooltip: "\u09AC\u09BE\u0995\u09BF \u09B6\u09AC\u09CD\u09A6\u0995\u09C7 \u09AC\u09BE\u0995\u09BF \u09B2\u09C7\u0996\u09BE\u09B0 \u09A6\u09BF\u09A8 \u09A6\u09BF\u09AF\u09BC\u09C7 \u09AD\u09BE\u0997, \u0986\u099C\u0995\u09C7\u09B0 \u09A6\u09BF\u09A8\u09B8\u09B9\u0964 \u0989\u09AA\u09B0\u09C7\u09B0 \u09AA\u09C7\u09A8\u09CD\u09B8\u09BF\u09B2 \u09AC\u09CB\u09A4\u09BE\u09AE \u09A6\u09BF\u09AF\u09BC\u09C7 \u09B2\u09C7\u0996\u09BE\u09B0 \u09A6\u09BF\u09A8 \u09AC\u09A6\u09B2\u09BE\u09A8\u0964",
     openBinder: "\u{1F4D6} \u09AC\u09BE\u0987\u09A8\u09CD\u09A1\u09BE\u09B0 \u0996\u09C1\u09B2\u09C1\u09A8",
     writingMode: "\u09B2\u09C7\u0996\u09BE\u09B0 \u09AE\u09CB\u09A1",
     mode: {
@@ -8676,6 +8932,28 @@ var bn_default = {
     cancel: "\u09AC\u09BE\u09A4\u09BF\u09B2",
     goalLabel: "\u09AE\u09CB\u099F \u09B6\u09AC\u09CD\u09A6\u09B8\u0982\u0996\u09CD\u09AF\u09BE\u09B0 \u09B2\u0995\u09CD\u09B7\u09CD\u09AF",
     goalDesc: "\u0990\u099A\u09CD\u099B\u09BF\u0995\u0964 \u09B2\u099E\u09CD\u099A\u09BE\u09B0 \u0993 \u09B8\u09CD\u099F\u09CD\u09AF\u09BE\u099F\u09BE\u09B8 \u09AC\u09BE\u09B0\u09C7 \u0985\u0997\u09CD\u09B0\u0997\u09A4\u09BF \u09B9\u09BF\u09B8\u09C7\u09AC\u09C7 \u09A6\u09C7\u0996\u09BE\u09A8\u09CB \u09B9\u09AF\u09BC\u0964 \u09B2\u0995\u09CD\u09B7\u09CD\u09AF \u09A8\u09BE \u099A\u09BE\u0987\u09B2\u09C7 \u0996\u09BE\u09B2\u09BF \u09B0\u09BE\u0996\u09C1\u09A8\u0964",
+    deadlineLabel: "\u09B8\u09AE\u09AF\u09BC\u09B8\u09C0\u09AE\u09BE",
+    deadlineDesc: "\u0990\u099A\u09CD\u099B\u09BF\u0995\u0964 \u09B2\u0995\u09CD\u09B7\u09CD\u09AF \u09A5\u09BE\u0995\u09B2\u09C7 \u09B2\u099E\u09CD\u099A\u09BE\u09B0 \u09A6\u09C7\u0996\u09BE\u09AF\u09BC \u09B8\u09AE\u09AF\u09BC\u09AE\u09A4\u09CB \u09B6\u09C7\u09B7 \u0995\u09B0\u09A4\u09C7 \u09AA\u09CD\u09B0\u09A4\u09BF\u09A6\u09BF\u09A8 \u0995\u09A4 \u09B6\u09AC\u09CD\u09A6 \u09B2\u09BF\u0996\u09A4\u09C7 \u09B9\u09AC\u09C7\u0964",
+    writingDaysLabel: "\u09B2\u09C7\u0996\u09BE\u09B0 \u09A6\u09BF\u09A8",
+    writingDaysDesc: "\u09AF\u09C7 \u09A6\u09BF\u09A8\u0997\u09C1\u09B2\u09CB\u09A4\u09C7 \u0986\u09AA\u09A8\u09BF \u09B2\u09BF\u0996\u09A4\u09C7 \u099A\u09BE\u09A8\u0964 \u09A8\u09BE \u09AC\u09A6\u09B2\u09BE\u09B2\u09C7 \u09B8\u09CB\u09AE\u09AC\u09BE\u09B0 \u09A5\u09C7\u0995\u09C7 \u09B6\u09C1\u0995\u09CD\u09B0\u09AC\u09BE\u09B0\u0964 \u09B6\u09C1\u09A7\u09C1 \u09A6\u09C8\u09A8\u09BF\u0995 \u0997\u09A4\u09BF \u09B9\u09BF\u09B8\u09BE\u09AC\u09C7 \u09AC\u09CD\u09AF\u09AC\u09B9\u09C3\u09A4 \u09B9\u09AF\u09BC\u0964",
+    dayShort: {
+      "0": "\u09B0",
+      "1": "\u09B8\u09CB",
+      "2": "\u09AE",
+      "3": "\u09AC\u09C1",
+      "4": "\u09AC\u09C3",
+      "5": "\u09B6\u09C1",
+      "6": "\u09B6"
+    },
+    dayName: {
+      "0": "\u09B0\u09AC\u09BF\u09AC\u09BE\u09B0",
+      "1": "\u09B8\u09CB\u09AE\u09AC\u09BE\u09B0",
+      "2": "\u09AE\u0999\u09CD\u0997\u09B2\u09AC\u09BE\u09B0",
+      "3": "\u09AC\u09C1\u09A7\u09AC\u09BE\u09B0",
+      "4": "\u09AC\u09C3\u09B9\u09B8\u09CD\u09AA\u09A4\u09BF\u09AC\u09BE\u09B0",
+      "5": "\u09B6\u09C1\u0995\u09CD\u09B0\u09AC\u09BE\u09B0",
+      "6": "\u09B6\u09A8\u09BF\u09AC\u09BE\u09B0"
+    },
     editTitle: "\u09AA\u09CD\u09B0\u0995\u09B2\u09CD\u09AA \u09B8\u09AE\u09CD\u09AA\u09BE\u09A6\u09A8\u09BE \u0995\u09B0\u09C1\u09A8",
     saveBtn: "\u09B8\u0982\u09B0\u0995\u09CD\u09B7\u09A3 \u0995\u09B0\u09C1\u09A8",
     updated: '\u09AA\u09CD\u09B0\u0995\u09B2\u09CD\u09AA "{{title}}" \u0986\u09AA\u09A1\u09C7\u099F \u09B9\u09AF\u09BC\u09C7\u099B\u09C7!',
@@ -8842,7 +9120,9 @@ var bn_default = {
       totalWords: "\u09AE\u09CB\u099F \u09B6\u09AC\u09CD\u09A6",
       goal: "\u09B2\u0995\u09CD\u09B7\u09CD\u09AF",
       progress: "\u0985\u0997\u09CD\u09B0\u0997\u09A4\u09BF",
-      readingTime: "\u09AA\u09A1\u09BC\u09BE\u09B0 \u09B8\u09AE\u09AF\u09BC"
+      readingTime: "\u09AA\u09A1\u09BC\u09BE\u09B0 \u09B8\u09AE\u09AF\u09BC",
+      deadline: "\u09B8\u09AE\u09AF\u09BC\u09B8\u09C0\u09AE\u09BE",
+      perDay: "\u09AA\u09CD\u09B0\u09A4\u09BF \u09B2\u09C7\u0996\u09BE\u09B0 \u09A6\u09BF\u09A8\u09C7"
     },
     project: "\u09AA\u09CD\u09B0\u0995\u09B2\u09CD\u09AA: {{title}}",
     recentSprints: "\u09B8\u09BE\u09AE\u09CD\u09AA\u09CD\u09B0\u09A4\u09BF\u0995 \u09B8\u09CD\u09AA\u09CD\u09B0\u09BF\u09A8\u09CD\u099F",
@@ -8910,6 +9190,7 @@ var bn_default = {
     },
     statusBar: {
       projectWords: "{{total}} / {{goal}} \u09AA\u09CD\u09B0\u099C\u09C7\u0995\u09CD\u099F \u09B6\u09AC\u09CD\u09A6",
+      projectWordsPace: "{{total}} / {{goal}} \u09AA\u09CD\u09B0\u099C\u09C7\u0995\u09CD\u099F \u09B6\u09AC\u09CD\u09A6 \xB7 {{perDay}}/\u09A6\u09BF\u09A8",
       wordCount: "{{count}} \u09B6\u09AC\u09CD\u09A6",
       wordCountGoal: "{{count}} / {{goal}} \u09B6\u09AC\u09CD\u09A6",
       delta: "(+{{delta}})",
@@ -9379,6 +9660,15 @@ var pt_BR_default = {
     wordCount: "{{n}} palavras",
     wordGoal: "/ {{n}} objetivo",
     pctComplete: "{{pct}}% conclu\xEDdo",
+    writingDays_one: "{{count}} dia de escrita",
+    writingDays_other: "{{count}} dias de escrita",
+    dueCountdown: "Prazo {{date}} \xB7 faltam {{days}}",
+    duePace: "{{n}} palavras por dia para terminar no prazo",
+    dueReached: "Prazo {{date}} \xB7 meta atingida, {{days}} de folga",
+    dueReachedLate: "Prazo {{date}} \xB7 meta atingida",
+    dueOverdue: "Prazo era {{date}} \xB7 faltam {{words}}",
+    dueOverdueNoGoal: "Prazo era {{date}}",
+    paceTooltip: "Palavras restantes divididas pelos dias de escrita restantes, contando hoje. Mude seus dias de escrita com o bot\xE3o de l\xE1pis acima.",
     openBinder: "\u{1F4D6} Abrir pasta",
     writingMode: "Modo de escrita",
     mode: {
@@ -9574,6 +9864,28 @@ var pt_BR_default = {
     cancel: "Cancelar",
     goalLabel: "Meta total de palavras",
     goalDesc: "Opcional. Exibida como progresso no iniciador e na barra de status. Deixe em branco para nenhuma meta.",
+    deadlineLabel: "Prazo",
+    deadlineDesc: "Opcional. Com uma meta, o iniciador mostra quantas palavras por dia voc\xEA precisa para terminar no prazo.",
+    writingDaysLabel: "Dias de escrita",
+    writingDaysDesc: "Os dias em que voc\xEA pretende escrever. De segunda a sexta, a menos que voc\xEA mude. Usado apenas para calcular o ritmo di\xE1rio.",
+    dayShort: {
+      "0": "D",
+      "1": "S",
+      "2": "T",
+      "3": "Q",
+      "4": "Q",
+      "5": "S",
+      "6": "S"
+    },
+    dayName: {
+      "0": "Domingo",
+      "1": "Segunda-feira",
+      "2": "Ter\xE7a-feira",
+      "3": "Quarta-feira",
+      "4": "Quinta-feira",
+      "5": "Sexta-feira",
+      "6": "S\xE1bado"
+    },
     editTitle: "Editar projeto",
     saveBtn: "Salvar",
     updated: 'Projeto "{{title}}" atualizado!',
@@ -9740,7 +10052,9 @@ var pt_BR_default = {
       totalWords: "Total de palavras",
       goal: "Meta",
       progress: "Progresso",
-      readingTime: "Tempo de leitura"
+      readingTime: "Tempo de leitura",
+      deadline: "Prazo",
+      perDay: "Por dia de escrita"
     },
     project: "Projeto: {{title}}",
     recentSprints: "Sprints recentes",
@@ -9808,6 +10122,7 @@ var pt_BR_default = {
     },
     statusBar: {
       projectWords: "{{total}} / {{goal}} palavras do projeto",
+      projectWordsPace: "{{total}} / {{goal}} palavras do projeto \xB7 {{perDay}}/dia",
       wordCount: "{{count}} palavras",
       wordCountGoal: "{{count}} / {{goal}} palavras",
       delta: "(+{{delta}})",
@@ -10281,6 +10596,15 @@ var ru_default = {
     wordCount: "{{n}} \u0441\u043B\u043E\u0432",
     wordGoal: "/ {{n}} \u0446\u0435\u043B\u044C",
     pctComplete: "{{pct}}% \u0437\u0430\u0432\u0435\u0440\u0448\u0435\u043D\u043E",
+    writingDays_one: "{{count}} \u0434\u0435\u043D\u044C \u0434\u043B\u044F \u043F\u0438\u0441\u044C\u043C\u0430",
+    writingDays_other: "{{count}} \u0434\u043D. \u0434\u043B\u044F \u043F\u0438\u0441\u044C\u043C\u0430",
+    dueCountdown: "\u0421\u0440\u043E\u043A {{date}} \xB7 \u043E\u0441\u0442\u0430\u043B\u043E\u0441\u044C {{days}}",
+    duePace: "{{n}} \u0441\u043B\u043E\u0432 \u0432 \u0434\u0435\u043D\u044C, \u0447\u0442\u043E\u0431\u044B \u0443\u0441\u043F\u0435\u0442\u044C \u043A \u0441\u0440\u043E\u043A\u0443",
+    dueReached: "\u0421\u0440\u043E\u043A {{date}} \xB7 \u0446\u0435\u043B\u044C \u0434\u043E\u0441\u0442\u0438\u0433\u043D\u0443\u0442\u0430, \u0432 \u0437\u0430\u043F\u0430\u0441\u0435 {{days}}",
+    dueReachedLate: "\u0421\u0440\u043E\u043A {{date}} \xB7 \u0446\u0435\u043B\u044C \u0434\u043E\u0441\u0442\u0438\u0433\u043D\u0443\u0442\u0430",
+    dueOverdue: "\u0421\u0440\u043E\u043A \u0431\u044B\u043B {{date}} \xB7 \u043E\u0441\u0442\u0430\u043B\u043E\u0441\u044C {{words}}",
+    dueOverdueNoGoal: "\u0421\u0440\u043E\u043A \u0431\u044B\u043B {{date}}",
+    paceTooltip: "\u041E\u0441\u0442\u0430\u0432\u0448\u0438\u0435\u0441\u044F \u0441\u043B\u043E\u0432\u0430, \u0434\u0435\u043B\u0451\u043D\u043D\u044B\u0435 \u043D\u0430 \u043E\u0441\u0442\u0430\u0432\u0448\u0438\u0435\u0441\u044F \u0434\u043D\u0438 \u0434\u043B\u044F \u043F\u0438\u0441\u044C\u043C\u0430, \u0432\u043A\u043B\u044E\u0447\u0430\u044F \u0441\u0435\u0433\u043E\u0434\u043D\u044F. \u0414\u043D\u0438 \u0434\u043B\u044F \u043F\u0438\u0441\u044C\u043C\u0430 \u043C\u0435\u043D\u044F\u044E\u0442\u0441\u044F \u043A\u043D\u043E\u043F\u043A\u043E\u0439 \u0441 \u043A\u0430\u0440\u0430\u043D\u0434\u0430\u0448\u043E\u043C \u0432\u044B\u0448\u0435.",
     openBinder: "\u{1F4D6} \u041E\u0442\u043A\u0440\u044B\u0442\u044C \u043F\u0430\u043F\u043A\u0443",
     writingMode: "\u0420\u0435\u0436\u0438\u043C \u043F\u0438\u0441\u044C\u043C\u0430",
     mode: {
@@ -10482,6 +10806,28 @@ var ru_default = {
     cancel: "\u041E\u0442\u043C\u0435\u043D\u0430",
     goalLabel: "\u041E\u0431\u0449\u0430\u044F \u0446\u0435\u043B\u044C \u043F\u043E \u0441\u043B\u043E\u0432\u0430\u043C",
     goalDesc: "\u041D\u0435\u043E\u0431\u044F\u0437\u0430\u0442\u0435\u043B\u044C\u043D\u043E. \u041E\u0442\u043E\u0431\u0440\u0430\u0436\u0430\u0435\u0442\u0441\u044F \u043A\u0430\u043A \u043F\u0440\u043E\u0433\u0440\u0435\u0441\u0441 \u0432 \u043B\u0430\u0443\u043D\u0447\u0435\u0440\u0435 \u0438 \u0441\u0442\u0440\u043E\u043A\u0435 \u0441\u043E\u0441\u0442\u043E\u044F\u043D\u0438\u044F. \u041E\u0441\u0442\u0430\u0432\u044C\u0442\u0435 \u043F\u0443\u0441\u0442\u044B\u043C, \u0435\u0441\u043B\u0438 \u0446\u0435\u043B\u044C \u043D\u0435 \u043D\u0443\u0436\u043D\u0430.",
+    deadlineLabel: "\u0421\u0440\u043E\u043A \u0441\u0434\u0430\u0447\u0438",
+    deadlineDesc: "\u041D\u0435\u043E\u0431\u044F\u0437\u0430\u0442\u0435\u043B\u044C\u043D\u043E. \u0412\u043C\u0435\u0441\u0442\u0435 \u0441 \u0446\u0435\u043B\u044C\u044E \u043B\u0430\u0443\u043D\u0447\u0435\u0440 \u043F\u043E\u043A\u0430\u0437\u044B\u0432\u0430\u0435\u0442, \u0441\u043A\u043E\u043B\u044C\u043A\u043E \u0441\u043B\u043E\u0432 \u0432 \u0434\u0435\u043D\u044C \u043D\u0443\u0436\u043D\u043E \u043F\u0438\u0441\u0430\u0442\u044C, \u0447\u0442\u043E\u0431\u044B \u0443\u0441\u043F\u0435\u0442\u044C.",
+    writingDaysLabel: "\u0414\u043D\u0438 \u0434\u043B\u044F \u043F\u0438\u0441\u044C\u043C\u0430",
+    writingDaysDesc: "\u0414\u043D\u0438, \u0432 \u043A\u043E\u0442\u043E\u0440\u044B\u0435 \u0432\u044B \u043F\u043B\u0430\u043D\u0438\u0440\u0443\u0435\u0442\u0435 \u043F\u0438\u0441\u0430\u0442\u044C. \u0421 \u043F\u043E\u043D\u0435\u0434\u0435\u043B\u044C\u043D\u0438\u043A\u0430 \u043F\u043E \u043F\u044F\u0442\u043D\u0438\u0446\u0443, \u0435\u0441\u043B\u0438 \u043D\u0435 \u0438\u0437\u043C\u0435\u043D\u0438\u0442\u044C. \u0418\u0441\u043F\u043E\u043B\u044C\u0437\u0443\u0435\u0442\u0441\u044F \u0442\u043E\u043B\u044C\u043A\u043E \u0434\u043B\u044F \u0440\u0430\u0441\u0447\u0451\u0442\u0430 \u0434\u043D\u0435\u0432\u043D\u043E\u0433\u043E \u0442\u0435\u043C\u043F\u0430.",
+    dayShort: {
+      "0": "\u0412\u0441",
+      "1": "\u041F\u043D",
+      "2": "\u0412\u0442",
+      "3": "\u0421\u0440",
+      "4": "\u0427\u0442",
+      "5": "\u041F\u0442",
+      "6": "\u0421\u0431"
+    },
+    dayName: {
+      "0": "\u0412\u043E\u0441\u043A\u0440\u0435\u0441\u0435\u043D\u044C\u0435",
+      "1": "\u041F\u043E\u043D\u0435\u0434\u0435\u043B\u044C\u043D\u0438\u043A",
+      "2": "\u0412\u0442\u043E\u0440\u043D\u0438\u043A",
+      "3": "\u0421\u0440\u0435\u0434\u0430",
+      "4": "\u0427\u0435\u0442\u0432\u0435\u0440\u0433",
+      "5": "\u041F\u044F\u0442\u043D\u0438\u0446\u0430",
+      "6": "\u0421\u0443\u0431\u0431\u043E\u0442\u0430"
+    },
     editTitle: "\u0420\u0435\u0434\u0430\u043A\u0442\u0438\u0440\u043E\u0432\u0430\u0442\u044C \u043F\u0440\u043E\u0435\u043A\u0442",
     saveBtn: "\u0421\u043E\u0445\u0440\u0430\u043D\u0438\u0442\u044C",
     updated: '\u041F\u0440\u043E\u0435\u043A\u0442 "{{title}}" \u043E\u0431\u043D\u043E\u0432\u043B\u0451\u043D!',
@@ -10656,7 +11002,9 @@ var ru_default = {
       totalWords: "\u0412\u0441\u0435\u0433\u043E \u0441\u043B\u043E\u0432",
       goal: "\u0426\u0435\u043B\u044C",
       progress: "\u041F\u0440\u043E\u0433\u0440\u0435\u0441\u0441",
-      readingTime: "\u0412\u0440\u0435\u043C\u044F \u0447\u0442\u0435\u043D\u0438\u044F"
+      readingTime: "\u0412\u0440\u0435\u043C\u044F \u0447\u0442\u0435\u043D\u0438\u044F",
+      deadline: "\u0421\u0440\u043E\u043A \u0441\u0434\u0430\u0447\u0438",
+      perDay: "\u0412 \u0434\u0435\u043D\u044C \u0434\u043B\u044F \u043F\u0438\u0441\u044C\u043C\u0430"
     },
     project: "\u041F\u0440\u043E\u0435\u043A\u0442: {{title}}",
     recentSprints: "\u041D\u0435\u0434\u0430\u0432\u043D\u0438\u0435 \u0441\u043F\u0440\u0438\u043D\u0442\u044B",
@@ -10724,6 +11072,7 @@ var ru_default = {
     },
     statusBar: {
       projectWords: "{{total}} / {{goal}} \u0441\u043B\u043E\u0432 \u0432 \u043F\u0440\u043E\u0435\u043A\u0442\u0435",
+      projectWordsPace: "{{total}} / {{goal}} \u0441\u043B\u043E\u0432 \u0432 \u043F\u0440\u043E\u0435\u043A\u0442\u0435 \xB7 {{perDay}}/\u0434\u0435\u043D\u044C",
       wordCount: "{{count}} \u0441\u043B\u043E\u0432",
       wordCountGoal: "{{count}} / {{goal}} \u0441\u043B\u043E\u0432",
       delta: "(+{{delta}})",
@@ -11213,6 +11562,15 @@ var ja_default = {
     wordCount: "{{n}} \u8A9E",
     wordGoal: "/ {{n}} \u76EE\u6A19",
     pctComplete: "{{pct}}% \u5B8C\u4E86",
+    writingDays_one: "\u57F7\u7B46\u65E5 {{count}} \u65E5",
+    writingDays_other: "\u57F7\u7B46\u65E5 {{count}} \u65E5",
+    dueCountdown: "\u7DE0\u3081\u5207\u308A {{date}} \xB7 \u6B8B\u308A {{days}}",
+    duePace: "\u671F\u9650\u5185\u306B\u7D42\u3048\u308B\u306B\u306F1\u65E5 {{n}} \u8A9E",
+    dueReached: "\u7DE0\u3081\u5207\u308A {{date}} \xB7 \u76EE\u6A19\u9054\u6210\u3001{{days}} \u306E\u4F59\u88D5",
+    dueReachedLate: "\u7DE0\u3081\u5207\u308A {{date}} \xB7 \u76EE\u6A19\u9054\u6210",
+    dueOverdue: "\u7DE0\u3081\u5207\u308A\u306F {{date}} \u3067\u3057\u305F \xB7 \u3042\u3068 {{words}}",
+    dueOverdueNoGoal: "\u7DE0\u3081\u5207\u308A\u306F {{date}} \u3067\u3057\u305F",
+    paceTooltip: "\u6B8B\u308A\u306E\u8A9E\u6570\u3092\u6B8B\u308A\u306E\u57F7\u7B46\u65E5\uFF08\u4ECA\u65E5\u3092\u542B\u3080\uFF09\u3067\u5272\u3063\u305F\u6570\u3067\u3059\u3002\u57F7\u7B46\u65E5\u306F\u4E0A\u306E\u925B\u7B46\u30DC\u30BF\u30F3\u304B\u3089\u5909\u66F4\u3067\u304D\u307E\u3059\u3002",
     openBinder: "\u{1F4D6} \u30D0\u30A4\u30F3\u30C0\u30FC\u3092\u958B\u304F",
     writingMode: "\u57F7\u7B46\u30E2\u30FC\u30C9",
     mode: {
@@ -11408,6 +11766,28 @@ var ja_default = {
     cancel: "\u30AD\u30E3\u30F3\u30BB\u30EB",
     goalLabel: "\u5408\u8A08\u8A9E\u6570\u76EE\u6A19",
     goalDesc: "\u4EFB\u610F\u3002\u30E9\u30F3\u30C1\u30E3\u30FC\u3068\u30B9\u30C6\u30FC\u30BF\u30B9\u30D0\u30FC\u306B\u9032\u6357\u3068\u3057\u3066\u8868\u793A\u3055\u308C\u307E\u3059\u3002\u76EE\u6A19\u306A\u3057\u306E\u5834\u5408\u306F\u7A7A\u6B04\u306E\u307E\u307E\u306B\u3057\u3066\u304F\u3060\u3055\u3044\u3002",
+    deadlineLabel: "\u7DE0\u3081\u5207\u308A",
+    deadlineDesc: "\u4EFB\u610F\u3002\u76EE\u6A19\u3068\u5408\u308F\u305B\u308B\u3068\u3001\u671F\u9650\u5185\u306B\u7D42\u3048\u308B\u305F\u3081\u306B1\u65E5\u306B\u5FC5\u8981\u306A\u8A9E\u6570\u304C\u30E9\u30F3\u30C1\u30E3\u30FC\u306B\u8868\u793A\u3055\u308C\u307E\u3059\u3002",
+    writingDaysLabel: "\u57F7\u7B46\u65E5",
+    writingDaysDesc: "\u57F7\u7B46\u3059\u308B\u4E88\u5B9A\u306E\u66DC\u65E5\u3002\u5909\u66F4\u3057\u306A\u3051\u308C\u3070\u6708\u66DC\u304B\u3089\u91D1\u66DC\u3067\u3059\u30021\u65E5\u306E\u30DA\u30FC\u30B9\u8A08\u7B97\u306B\u306E\u307F\u4F7F\u308F\u308C\u307E\u3059\u3002",
+    dayShort: {
+      "0": "\u65E5",
+      "1": "\u6708",
+      "2": "\u706B",
+      "3": "\u6C34",
+      "4": "\u6728",
+      "5": "\u91D1",
+      "6": "\u571F"
+    },
+    dayName: {
+      "0": "\u65E5\u66DC\u65E5",
+      "1": "\u6708\u66DC\u65E5",
+      "2": "\u706B\u66DC\u65E5",
+      "3": "\u6C34\u66DC\u65E5",
+      "4": "\u6728\u66DC\u65E5",
+      "5": "\u91D1\u66DC\u65E5",
+      "6": "\u571F\u66DC\u65E5"
+    },
     editTitle: "\u30D7\u30ED\u30B8\u30A7\u30AF\u30C8\u3092\u7DE8\u96C6",
     saveBtn: "\u4FDD\u5B58",
     updated: "\u30D7\u30ED\u30B8\u30A7\u30AF\u30C8\u300C{{title}}\u300D\u3092\u66F4\u65B0\u3057\u307E\u3057\u305F\uFF01",
@@ -11574,7 +11954,9 @@ var ja_default = {
       totalWords: "\u7DCF\u8A9E\u6570",
       goal: "\u76EE\u6A19",
       progress: "\u9032\u6357",
-      readingTime: "\u8AAD\u4E86\u6642\u9593"
+      readingTime: "\u8AAD\u4E86\u6642\u9593",
+      deadline: "\u7DE0\u3081\u5207\u308A",
+      perDay: "\u57F7\u7B46\u65E5\u3042\u305F\u308A"
     },
     project: "\u30D7\u30ED\u30B8\u30A7\u30AF\u30C8\uFF1A{{title}}",
     recentSprints: "\u6700\u8FD1\u306E\u30B9\u30D7\u30EA\u30F3\u30C8",
@@ -11642,6 +12024,7 @@ var ja_default = {
     },
     statusBar: {
       projectWords: "{{total}} / {{goal}} \u30D7\u30ED\u30B8\u30A7\u30AF\u30C8\u8A9E\u6570",
+      projectWordsPace: "{{total}} / {{goal}} \u30D7\u30ED\u30B8\u30A7\u30AF\u30C8\u8A9E\u6570 \xB7 1\u65E5 {{perDay}}",
       wordCount: "{{count}} \u8A9E",
       wordCountGoal: "{{count}} / {{goal}} \u8A9E",
       delta: "(+{{delta}})",
@@ -12111,6 +12494,15 @@ var de_default = {
     wordCount: "{{n}} W\xF6rter",
     wordGoal: "/ {{n}} Ziel",
     pctComplete: "{{pct}}% abgeschlossen",
+    writingDays_one: "{{count}} Schreibtag",
+    writingDays_other: "{{count}} Schreibtage",
+    dueCountdown: "F\xE4llig am {{date}} \xB7 noch {{days}}",
+    duePace: "{{n}} W\xF6rter pro Tag, um rechtzeitig fertig zu werden",
+    dueReached: "F\xE4llig am {{date}} \xB7 Ziel erreicht, {{days}} Reserve",
+    dueReachedLate: "F\xE4llig am {{date}} \xB7 Ziel erreicht",
+    dueOverdue: "War f\xE4llig am {{date}} \xB7 noch {{words}} offen",
+    dueOverdueNoGoal: "War f\xE4llig am {{date}}",
+    paceTooltip: "Verbleibende W\xF6rter geteilt durch die verbleibenden Schreibtage, heute mitgez\xE4hlt. Die Schreibtage \xE4nderst du \xFCber den Stift-Button oben.",
     openBinder: "\u{1F4D6} Mappe \xF6ffnen",
     writingMode: "Schreibmodus",
     mode: {
@@ -12306,6 +12698,28 @@ var de_default = {
     cancel: "Abbrechen",
     goalLabel: "Gesamtwortziel",
     goalDesc: "Optional. Wird als Fortschritt im Launcher und in der Statusleiste angezeigt. Leer lassen f\xFCr kein Ziel.",
+    deadlineLabel: "Abgabetermin",
+    deadlineDesc: "Optional. Mit einem Ziel zeigt der Launcher, wie viele W\xF6rter pro Tag n\xF6tig sind, um rechtzeitig fertig zu werden.",
+    writingDaysLabel: "Schreibtage",
+    writingDaysDesc: "Die Tage, an denen du schreiben willst. Montag bis Freitag, sofern du es nicht \xE4nderst. Dient nur zur Berechnung des Tagespensums.",
+    dayShort: {
+      "0": "S",
+      "1": "M",
+      "2": "D",
+      "3": "M",
+      "4": "D",
+      "5": "F",
+      "6": "S"
+    },
+    dayName: {
+      "0": "Sonntag",
+      "1": "Montag",
+      "2": "Dienstag",
+      "3": "Mittwoch",
+      "4": "Donnerstag",
+      "5": "Freitag",
+      "6": "Samstag"
+    },
     editTitle: "Projekt bearbeiten",
     saveBtn: "Speichern",
     updated: 'Projekt "{{title}}" aktualisiert!',
@@ -12472,7 +12886,9 @@ var de_default = {
       totalWords: "Gesamtw\xF6rter",
       goal: "Ziel",
       progress: "Fortschritt",
-      readingTime: "Lesezeit"
+      readingTime: "Lesezeit",
+      deadline: "Abgabetermin",
+      perDay: "Pro Schreibtag"
     },
     project: "Projekt: {{title}}",
     recentSprints: "Letzte Sprints",
@@ -12540,6 +12956,7 @@ var de_default = {
     },
     statusBar: {
       projectWords: "{{total}} / {{goal}} Projektw\xF6rter",
+      projectWordsPace: "{{total}} / {{goal}} Projektw\xF6rter \xB7 {{perDay}}/Tag",
       wordCount: "{{count}} W\xF6rter",
       wordCountGoal: "{{count}} / {{goal}} W\xF6rter",
       delta: "(+{{delta}})",
@@ -13009,6 +13426,15 @@ var ko_default = {
     wordCount: "{{n}} \uB2E8\uC5B4",
     wordGoal: "/ {{n}} \uBAA9\uD45C",
     pctComplete: "{{pct}}% \uC644\uB8CC",
+    writingDays_one: "\uC9D1\uD544\uC77C {{count}}\uC77C",
+    writingDays_other: "\uC9D1\uD544\uC77C {{count}}\uC77C",
+    dueCountdown: "\uB9C8\uAC10 {{date}} \xB7 {{days}} \uB0A8\uC74C",
+    duePace: "\uC81C\uB54C \uB05D\uB0B4\uB824\uBA74 \uD558\uB8E8 {{n}} \uB2E8\uC5B4",
+    dueReached: "\uB9C8\uAC10 {{date}} \xB7 \uBAA9\uD45C \uB2EC\uC131, {{days}} \uC5EC\uC720",
+    dueReachedLate: "\uB9C8\uAC10 {{date}} \xB7 \uBAA9\uD45C \uB2EC\uC131",
+    dueOverdue: "\uB9C8\uAC10\uC77C\uC740 {{date}}\uC600\uC2B5\uB2C8\uB2E4 \xB7 {{words}} \uB0A8\uC74C",
+    dueOverdueNoGoal: "\uB9C8\uAC10\uC77C\uC740 {{date}}\uC600\uC2B5\uB2C8\uB2E4",
+    paceTooltip: "\uB0A8\uC740 \uB2E8\uC5B4 \uC218\uB97C \uC624\uB298\uC744 \uD3EC\uD568\uD55C \uB0A8\uC740 \uC9D1\uD544\uC77C\uB85C \uB098\uB208 \uAC12\uC785\uB2C8\uB2E4. \uC9D1\uD544 \uC694\uC77C\uC740 \uC704\uC758 \uC5F0\uD544 \uBC84\uD2BC\uC73C\uB85C \uBC14\uAFC0 \uC218 \uC788\uC2B5\uB2C8\uB2E4.",
     openBinder: "\u{1F4D6} \uBC14\uC778\uB354 \uC5F4\uAE30",
     writingMode: "\uAE00\uC4F0\uAE30 \uBAA8\uB4DC",
     mode: {
@@ -13204,6 +13630,28 @@ var ko_default = {
     cancel: "\uCDE8\uC18C",
     goalLabel: "\uCD1D \uB2E8\uC5B4 \uC218 \uBAA9\uD45C",
     goalDesc: "\uC120\uD0DD \uC0AC\uD56D. \uB7F0\uCC98\uC640 \uC0C1\uD0DC \uD45C\uC2DC\uC904\uC5D0 \uC9C4\uD589\uB960\uB85C \uD45C\uC2DC\uB429\uB2C8\uB2E4. \uBAA9\uD45C\uAC00 \uC5C6\uC73C\uBA74 \uBE44\uC6CC \uB450\uC138\uC694.",
+    deadlineLabel: "\uB9C8\uAC10\uC77C",
+    deadlineDesc: "\uC120\uD0DD \uC0AC\uD56D. \uBAA9\uD45C\uC640 \uD568\uAED8 \uC124\uC815\uD558\uBA74 \uC81C\uB54C \uB05D\uB0B4\uAE30 \uC704\uD574 \uD558\uB8E8\uC5D0 \uBA87 \uB2E8\uC5B4\uB97C \uC368\uC57C \uD558\uB294\uC9C0 \uB7F0\uCC98\uC5D0 \uD45C\uC2DC\uB429\uB2C8\uB2E4.",
+    writingDaysLabel: "\uC9D1\uD544 \uC694\uC77C",
+    writingDaysDesc: "\uAE00\uC744 \uC4F8 \uACC4\uD68D\uC778 \uC694\uC77C\uC785\uB2C8\uB2E4. \uBC14\uAFB8\uC9C0 \uC54A\uC73C\uBA74 \uC6D4\uC694\uC77C\uBD80\uD130 \uAE08\uC694\uC77C\uAE4C\uC9C0\uC785\uB2C8\uB2E4. \uD558\uB8E8 \uBD84\uB7C9 \uACC4\uC0B0\uC5D0\uB9CC \uC0AC\uC6A9\uB429\uB2C8\uB2E4.",
+    dayShort: {
+      "0": "\uC77C",
+      "1": "\uC6D4",
+      "2": "\uD654",
+      "3": "\uC218",
+      "4": "\uBAA9",
+      "5": "\uAE08",
+      "6": "\uD1A0"
+    },
+    dayName: {
+      "0": "\uC77C\uC694\uC77C",
+      "1": "\uC6D4\uC694\uC77C",
+      "2": "\uD654\uC694\uC77C",
+      "3": "\uC218\uC694\uC77C",
+      "4": "\uBAA9\uC694\uC77C",
+      "5": "\uAE08\uC694\uC77C",
+      "6": "\uD1A0\uC694\uC77C"
+    },
     editTitle: "\uD504\uB85C\uC81D\uD2B8 \uD3B8\uC9D1",
     saveBtn: "\uC800\uC7A5",
     updated: '\uD504\uB85C\uC81D\uD2B8 "{{title}}"\uC774(\uAC00) \uC5C5\uB370\uC774\uD2B8\uB418\uC5C8\uC2B5\uB2C8\uB2E4!',
@@ -13370,7 +13818,9 @@ var ko_default = {
       totalWords: "\uCD1D \uB2E8\uC5B4 \uC218",
       goal: "\uBAA9\uD45C",
       progress: "\uC9C4\uD589 \uC0C1\uD669",
-      readingTime: "\uC77D\uAE30 \uC2DC\uAC04"
+      readingTime: "\uC77D\uAE30 \uC2DC\uAC04",
+      deadline: "\uB9C8\uAC10\uC77C",
+      perDay: "\uC9D1\uD544\uC77C\uB2F9"
     },
     project: "\uD504\uB85C\uC81D\uD2B8: {{title}}",
     recentSprints: "\uCD5C\uADFC \uC2A4\uD504\uB9B0\uD2B8",
@@ -13438,6 +13888,7 @@ var ko_default = {
     },
     statusBar: {
       projectWords: "{{total}} / {{goal}} \uD504\uB85C\uC81D\uD2B8 \uB2E8\uC5B4",
+      projectWordsPace: "{{total}} / {{goal}} \uD504\uB85C\uC81D\uD2B8 \uB2E8\uC5B4 \xB7 \uD558\uB8E8 {{perDay}}",
       wordCount: "{{count}} \uB2E8\uC5B4",
       wordCountGoal: "{{count}} / {{goal}} \uB2E8\uC5B4",
       delta: "(+{{delta}})",
@@ -13705,6 +14156,10 @@ var ProjectModal = class extends import_obsidian3.Modal {
     this.type = "blank";
     this.author = "";
     this.goalRaw = "";
+    // Deadline pacing (item 5): the date input's value (YYYY-MM-DD or empty)
+    // and the days of the week the writer plans to write.
+    this.deadline = "";
+    this.writingDays = [...DEFAULT_WRITING_DAYS];
     this.description = "";
     this.documentFolder = "";
     // Edit mode: whether a title change also renames the project folder (#391).
@@ -13714,7 +14169,7 @@ var ProjectModal = class extends import_obsidian3.Modal {
     this.edit = edit;
   }
   onOpen() {
-    var _a2;
+    var _a2, _b2, _c;
     const { contentEl } = this;
     contentEl.empty();
     contentEl.addClass("ws-project-modal");
@@ -13724,6 +14179,8 @@ var ProjectModal = class extends import_obsidian3.Modal {
       this.author = this.edit.author;
       this.description = this.edit.description;
       this.goalRaw = String(((_a2 = this.edit.goals) == null ? void 0 : _a2.totalWordCount) || "");
+      this.deadline = isIsoDate((_b2 = this.edit.goals) == null ? void 0 : _b2.deadline) ? this.edit.goals.deadline : "";
+      this.writingDays = normalizeWritingDays((_c = this.edit.goals) == null ? void 0 : _c.writingDays);
       this.documentFolder = documentFolderDisplayName(resolveDocumentFolder(this.edit));
     } else {
       this.author = this.plugin.settings.authorName;
@@ -13760,6 +14217,29 @@ var ProjectModal = class extends import_obsidian3.Modal {
     new import_obsidian3.Setting(contentEl).setName(t2("projectModal.goalLabel")).setDesc(t2("projectModal.goalDesc")).addText((tx) => tx.setPlaceholder(t2("projectModal.goalPlaceholder")).setValue(this.goalRaw).onChange((v) => {
       this.goalRaw = v;
     }));
+    new import_obsidian3.Setting(contentEl).setName(t2("projectModal.deadlineLabel")).setDesc(t2("projectModal.deadlineDesc")).addText((tx) => {
+      tx.inputEl.type = "date";
+      tx.inputEl.addClass("ws-project-deadline");
+      tx.setValue(this.deadline).onChange((v) => {
+        this.deadline = v;
+      });
+    });
+    const daysSetting = new import_obsidian3.Setting(contentEl).setName(t2("projectModal.writingDaysLabel")).setDesc(t2("projectModal.writingDaysDesc"));
+    const daysRow = daysSetting.controlEl.createDiv("ws-writing-days");
+    for (const day of [1, 2, 3, 4, 5, 6, 0]) {
+      const btn = daysRow.createEl("button", {
+        cls: "ws-writing-day",
+        text: t2(`projectModal.dayShort.${day}`),
+        attr: { type: "button", "aria-label": t2(`projectModal.dayName.${day}`), "aria-pressed": String(this.writingDays.includes(day)) }
+      });
+      btn.toggleClass("is-active", this.writingDays.includes(day));
+      btn.onclick = () => {
+        const on = !this.writingDays.includes(day);
+        this.writingDays = on ? [...this.writingDays, day].sort((a, b) => a - b) : this.writingDays.filter((d) => d !== day);
+        btn.toggleClass("is-active", on);
+        btn.setAttribute("aria-pressed", String(on));
+      };
+    }
     new import_obsidian3.Setting(contentEl).setName(t2("projectModal.descriptionLabel")).addTextArea((tx) => tx.setPlaceholder(t2("projectModal.descriptionPlaceholder")).setValue(this.description).onChange((v) => {
       this.description = v;
     }));
@@ -13797,9 +14277,7 @@ var ProjectModal = class extends import_obsidian3.Modal {
         this.author.trim(),
         this.description
       );
-      const goal = parseInt(this.goalRaw) || 0;
-      if (goal > 0) {
-        project.goals = { ...project.goals, totalWordCount: goal };
+      if (this.applyGoals(project)) {
         await this.plugin.projectManager.saveProject(project);
       }
       await this.plugin.projectManager.setActiveProject(project.id);
@@ -13844,12 +14322,7 @@ var ProjectModal = class extends import_obsidian3.Modal {
       project.title = newTitle;
       project.author = this.author.trim();
       project.description = this.description;
-      const goal = parseInt(this.goalRaw) || 0;
-      if (goal > 0) {
-        project.goals = { ...project.goals, totalWordCount: goal };
-      } else {
-        delete project.goals.totalWordCount;
-      }
+      this.applyGoals(project);
       await this.plugin.projectManager.saveProject(project);
       new import_obsidian3.Notice(folderRenamed ? t2("projectModal.updatedFolderRenamed", { title: project.title, name: folderPlan.name }) : t2("projectModal.updated", { title: project.title }));
       this.close();
@@ -13858,6 +14331,22 @@ var ProjectModal = class extends import_obsidian3.Modal {
       new import_obsidian3.Notice(t2("main.operationFailed", { error: e instanceof Error ? e.message : String(e) }));
       submitBtn.disabled = false;
     }
+  }
+  // Writes the goal fields from the form onto the project. Empty means
+  // absent — a cleared goal, deadline, or default writing days leave no key
+  // behind in _project.json. Returns whether anything is set at all.
+  applyGoals(project) {
+    const goals = { ...project.goals };
+    const goal = parseInt(this.goalRaw) || 0;
+    if (goal > 0) goals.totalWordCount = goal;
+    else delete goals.totalWordCount;
+    if (isIsoDate(this.deadline)) goals.deadline = this.deadline;
+    else delete goals.deadline;
+    const days = normalizeWritingDays(this.writingDays);
+    if (isDefaultWritingDays(days)) delete goals.writingDays;
+    else goals.writingDays = days;
+    project.goals = goals;
+    return Object.keys(goals).length > 0;
   }
   updateFolderHint(el, project) {
     el.empty();
@@ -14614,7 +15103,7 @@ function confirmDeleteProject(app, plugin, project) {
 }
 
 // src/ControlStrip.ts
-var import_obsidian13 = require("obsidian");
+var import_obsidian14 = require("obsidian");
 
 // modals/SprintModal.ts
 var import_obsidian11 = require("obsidian");
@@ -14680,14 +15169,27 @@ var SprintModal = class extends import_obsidian11.Modal {
 };
 
 // modals/WritingDashboardModal.ts
+var import_obsidian13 = require("obsidian");
+
+// src/dates.ts
 var import_obsidian12 = require("obsidian");
-var WritingDashboardModal = class extends import_obsidian12.Modal {
+var momentUntyped = import_obsidian12.moment;
+var moment = momentUntyped;
+function localDateString(date) {
+  return moment(date).format("YYYY-MM-DD");
+}
+function formatLongDate(iso) {
+  return moment(iso).format("ll");
+}
+
+// modals/WritingDashboardModal.ts
+var WritingDashboardModal = class extends import_obsidian13.Modal {
   constructor(app, plugin) {
     super(app);
     this.plugin = plugin;
   }
   async onOpen() {
-    var _a2;
+    var _a2, _b2, _c;
     const { contentEl } = this;
     contentEl.empty();
     contentEl.addClass("ws-writing-dashboard");
@@ -14715,6 +15217,14 @@ var WritingDashboardModal = class extends import_obsidian12.Modal {
         this.addStat(projGrid, t2("writingDashboard.stat.progress"), `${pct}%`);
       }
       this.addStat(projGrid, t2("writingDashboard.stat.readingTime"), this.plugin.statsTracker.calculateReadingTime(totalWords));
+      const deadline = (_b2 = project.goals) == null ? void 0 : _b2.deadline;
+      const pace = deadline ? computePace({ goal: totalGoal, total: totalWords, deadline, writingDays: (_c = project.goals) == null ? void 0 : _c.writingDays, today: localDateString() }) : null;
+      if (deadline && pace) {
+        this.addStat(projGrid, t2("writingDashboard.stat.deadline"), formatLongDate(deadline));
+        if (pace.kind === "pace") {
+          this.addStat(projGrid, t2("writingDashboard.stat.perDay"), pace.perDay.toLocaleString());
+        }
+      }
       if (totalGoal > 0) {
         const pct = Math.min(100, Math.round(totalWords / totalGoal * 100));
         const barWrap = projectSection.createDiv("ws-progress-wrap ws-dash-progress");
@@ -14826,8 +15336,8 @@ var ControlStrip = class {
     ];
     for (const mode of modes) {
       const btn = seg.createEl("button", { cls: "ws-strip-mode-btn" });
-      (0, import_obsidian13.setTooltip)(btn, mode.desc);
-      (0, import_obsidian13.setIcon)(btn.createSpan("ws-strip-mode-icon"), mode.icon);
+      (0, import_obsidian14.setTooltip)(btn, mode.desc);
+      (0, import_obsidian14.setIcon)(btn.createSpan("ws-strip-mode-icon"), mode.icon);
       btn.createSpan({ text: mode.label, cls: "ws-strip-mode-label" });
       btn.onclick = () => {
         const current = this.plugin.writingModes.getCurrentMode();
@@ -14839,26 +15349,26 @@ var ControlStrip = class {
   renderToggleRow(strip) {
     const row = strip.createDiv("ws-strip-row2");
     this.focusPill = row.createEl("button", { cls: "ws-strip-pill", text: t2("binder.strip.focus") });
-    (0, import_obsidian13.setTooltip)(this.focusPill, t2("launcher.focusMode"));
+    (0, import_obsidian14.setTooltip)(this.focusPill, t2("launcher.focusMode"));
     this.focusPill.onclick = () => {
       this.plugin.focusMode.toggle();
     };
     this.typographyPill = row.createEl("button", { cls: "ws-strip-pill", text: t2("binder.strip.typography") });
-    (0, import_obsidian13.setTooltip)(this.typographyPill, t2("launcher.typographyMode"));
+    (0, import_obsidian14.setTooltip)(this.typographyPill, t2("launcher.typographyMode"));
     this.typographyPill.onclick = () => {
       void this.plugin.typographyMode.toggle();
     };
     this.sprintChip = row.createEl("button", { cls: "ws-strip-chip" });
     this.sprintChip.onclick = (e) => this.showSprintMenu(e);
     const overflow = row.createEl("button", { cls: "ws-strip-overflow" });
-    (0, import_obsidian13.setIcon)(overflow, "more-horizontal");
-    (0, import_obsidian13.setTooltip)(overflow, t2("binder.strip.moreActions"));
+    (0, import_obsidian14.setIcon)(overflow, "more-horizontal");
+    (0, import_obsidian14.setTooltip)(overflow, t2("binder.strip.moreActions"));
     overflow.onclick = (e) => this.showOverflowMenu(e);
   }
   syncSprintChip() {
     const timer = this.plugin.sprintTimer;
     this.sprintChip.empty();
-    (0, import_obsidian13.setIcon)(this.sprintChip.createSpan("ws-strip-chip-icon"), "timer");
+    (0, import_obsidian14.setIcon)(this.sprintChip.createSpan("ws-strip-chip-icon"), "timer");
     let label = t2("binder.strip.sprint");
     if (timer.isActive()) {
       const minutes = timer.getDurationMinutes();
@@ -14869,7 +15379,7 @@ var ControlStrip = class {
     this.sprintChip.toggleClass("is-running", timer.isActive() && !timer.isReady());
   }
   showSprintMenu(e) {
-    const menu = new import_obsidian13.Menu();
+    const menu = new import_obsidian14.Menu();
     menu.addItem((i2) => i2.setTitle(t2("sprintModal.setupTitle")).setIcon("settings-2").onClick(() => {
       new SprintModal(this.plugin.app, this.plugin).open();
     }));
@@ -14884,7 +15394,7 @@ var ControlStrip = class {
   // The occasional actions — each opens the same surface as its launcher
   // counterpart (the labels are shared too)
   showOverflowMenu(e) {
-    const menu = new import_obsidian13.Menu();
+    const menu = new import_obsidian14.Menu();
     menu.addItem((i2) => i2.setTitle(t2("launcher.action.export")).setIcon("download").onClick(() => {
       new ExportModal(this.plugin.app, this.plugin, "project").open();
     }));
@@ -14944,7 +15454,7 @@ function parentIndex(rows, from) {
 }
 
 // src/FolderSidebarView.ts
-var import_obsidian14 = require("obsidian");
+var import_obsidian15 = require("obsidian");
 
 // src/words.ts
 function countWords(content2) {
@@ -14960,7 +15470,7 @@ function countWords(content2) {
 
 // src/FolderSidebarView.ts
 var FOLDER_SIDEBAR_VIEW_TYPE = "folder-sidebar-explorer-view";
-var FolderSidebarView = class extends import_obsidian14.ItemView {
+var FolderSidebarView = class extends import_obsidian15.ItemView {
   constructor(leaf) {
     super(leaf);
     this.rootFolder = null;
@@ -15010,7 +15520,7 @@ var FolderSidebarView = class extends import_obsidian14.ItemView {
     const path = state == null ? void 0 : state.rootFolderPath;
     if (typeof path === "string" && path !== ((_a2 = this.rootFolder) == null ? void 0 : _a2.path)) {
       const folder = this.app.vault.getAbstractFileByPath(path);
-      if (folder instanceof import_obsidian14.TFolder) {
+      if (folder instanceof import_obsidian15.TFolder) {
         this.setRootFolder(folder);
         return;
       }
@@ -15034,10 +15544,10 @@ var FolderSidebarView = class extends import_obsidian14.ItemView {
     const active = (_a2 = this.app.workspace.activeEditor) == null ? void 0 : _a2.editor;
     if (active) return active;
     const recent = this.app.workspace.getMostRecentLeaf(this.app.workspace.rootSplit);
-    if ((recent == null ? void 0 : recent.view) instanceof import_obsidian14.MarkdownView) return recent.view.editor;
+    if ((recent == null ? void 0 : recent.view) instanceof import_obsidian15.MarkdownView) return recent.view.editor;
     for (const leaf of this.app.workspace.getLeavesOfType("markdown")) {
       const view = leaf.view;
-      if (view instanceof import_obsidian14.MarkdownView) return view.editor;
+      if (view instanceof import_obsidian15.MarkdownView) return view.editor;
     }
     return null;
   }
@@ -15067,7 +15577,7 @@ var FolderSidebarView = class extends import_obsidian14.ItemView {
     if (this.historyStack.length === 0) return;
     const prevPath = this.historyStack.pop();
     const prev = this.app.vault.getAbstractFileByPath(prevPath);
-    if (prev instanceof import_obsidian14.TFolder) {
+    if (prev instanceof import_obsidian15.TFolder) {
       this.currentFolder = prev;
       this.searchQuery = "";
       this.searchResults = null;
@@ -15104,10 +15614,10 @@ var FolderSidebarView = class extends import_obsidian14.ItemView {
     const results = [];
     const walk = (f) => {
       for (const child of f.children) {
-        if (child instanceof import_obsidian14.TFolder) {
+        if (child instanceof import_obsidian15.TFolder) {
           results.push(child);
           walk(child);
-        } else if (child instanceof import_obsidian14.TFile) {
+        } else if (child instanceof import_obsidian15.TFile) {
           results.push(child);
         }
       }
@@ -15153,7 +15663,7 @@ var FolderSidebarView = class extends import_obsidian14.ItemView {
       }
     }
     const textFiles = allItems.filter(
-      (item) => item instanceof import_obsidian14.TFile && ["md", "txt"].includes(item.extension.toLowerCase()) && !nameMatched.has(item)
+      (item) => item instanceof import_obsidian15.TFile && ["md", "txt"].includes(item.extension.toLowerCase()) && !nameMatched.has(item)
     );
     const contentMatches = await Promise.all(textFiles.map(async (file) => {
       try {
@@ -15192,7 +15702,7 @@ var FolderSidebarView = class extends import_obsidian14.ItemView {
     this.tooltipEl = tip;
     tip.createDiv({ cls: "ws-tooltip-name", text: item.name });
     tip.createDiv({ cls: "ws-tooltip-divider" });
-    if (item instanceof import_obsidian14.TFile) {
+    if (item instanceof import_obsidian15.TFile) {
       const modDate = new Date(item.stat.mtime);
       const modStr = modDate.toLocaleDateString(void 0, {
         year: "numeric",
@@ -15222,8 +15732,8 @@ var FolderSidebarView = class extends import_obsidian14.ItemView {
       let folderCount = 0;
       const walk = (f) => {
         for (const child of f.children) {
-          if (child instanceof import_obsidian14.TFile) fileCount++;
-          else if (child instanceof import_obsidian14.TFolder) {
+          if (child instanceof import_obsidian15.TFile) fileCount++;
+          else if (child instanceof import_obsidian15.TFolder) {
             folderCount++;
             walk(child);
           }
@@ -15319,9 +15829,9 @@ var FolderSidebarView = class extends import_obsidian14.ItemView {
   // One comparator for both the folder listing and search results — the two
   // sort methods previously duplicated this switch block
   compareEntries(a, b) {
-    const aIsFolder = a instanceof import_obsidian14.TFolder;
-    const bIsFolder = b instanceof import_obsidian14.TFolder;
-    const mtime = (x2) => x2 instanceof import_obsidian14.TFile ? x2.stat.mtime : 0;
+    const aIsFolder = a instanceof import_obsidian15.TFolder;
+    const bIsFolder = b instanceof import_obsidian15.TFolder;
+    const mtime = (x2) => x2 instanceof import_obsidian15.TFile ? x2.stat.mtime : 0;
     switch (this.sortMode) {
       case "folders-az":
         if (aIsFolder !== bIsFolder) return aIsFolder ? -1 : 1;
@@ -15434,7 +15944,7 @@ var FolderSidebarView = class extends import_obsidian14.ItemView {
     const toolbar = container.createDiv({ cls: "ws-folder-toolbar" });
     const searchWrap = toolbar.createDiv({ cls: "ws-folder-search-wrap" });
     const searchIcon = searchWrap.createSpan({ cls: "ws-folder-search-icon" });
-    (0, import_obsidian14.setIcon)(searchIcon, "search");
+    (0, import_obsidian15.setIcon)(searchIcon, "search");
     const searchInput = searchWrap.createEl("input", {
       cls: "ws-folder-search-input",
       type: "text",
@@ -15495,7 +16005,7 @@ var FolderSidebarView = class extends import_obsidian14.ItemView {
     if (ext === "md") {
       try {
         const text = await this.app.vault.cachedRead(file);
-        await import_obsidian14.MarkdownRenderer.render(this.app, text, content2, file.path, this);
+        await import_obsidian15.MarkdownRenderer.render(this.app, text, content2, file.path, this);
         if (this.searchQuery) this.highlightTextInElement(content2, this.searchQuery);
       } catch (e) {
         content2.createDiv({ cls: "ws-folder-empty", text: t2("folderSidebar.previewError") });
@@ -15544,14 +16054,14 @@ var FolderSidebarView = class extends import_obsidian14.ItemView {
         itemEl.setAttribute("aria-selected", "false");
         const topRow = itemEl.createDiv({ cls: "ws-folder-item-row" });
         const iconEl = topRow.createSpan({ cls: "ws-folder-item-icon" });
-        if (item instanceof import_obsidian14.TFolder) {
-          (0, import_obsidian14.setIcon)(iconEl, "folder");
+        if (item instanceof import_obsidian15.TFolder) {
+          (0, import_obsidian15.setIcon)(iconEl, "folder");
         } else {
           const ext = item.extension.toLowerCase();
-          if (ext === "md") (0, import_obsidian14.setIcon)(iconEl, "file-text");
-          else if (["png", "jpg", "jpeg", "webp", "gif", "svg"].includes(ext)) (0, import_obsidian14.setIcon)(iconEl, "image");
-          else if (["mp3", "wav", "m4a", "ogg", "flac"].includes(ext)) (0, import_obsidian14.setIcon)(iconEl, "file-audio");
-          else (0, import_obsidian14.setIcon)(iconEl, "file");
+          if (ext === "md") (0, import_obsidian15.setIcon)(iconEl, "file-text");
+          else if (["png", "jpg", "jpeg", "webp", "gif", "svg"].includes(ext)) (0, import_obsidian15.setIcon)(iconEl, "image");
+          else if (["mp3", "wav", "m4a", "ogg", "flac"].includes(ext)) (0, import_obsidian15.setIcon)(iconEl, "file-audio");
+          else (0, import_obsidian15.setIcon)(iconEl, "file");
         }
         const isAtRoot = ((_a2 = item.parent) == null ? void 0 : _a2.path) === ((_c = (_b2 = this.rootFolder) == null ? void 0 : _b2.path) != null ? _c : current.path);
         const label = !isAtRoot && item.path.startsWith(rootPath) ? item.path.slice(rootPath.length) : item.name;
@@ -15569,8 +16079,8 @@ var FolderSidebarView = class extends import_obsidian14.ItemView {
           this.renderHighlightedText(snippetEl, snippet, lowerQuery);
         }
         itemEl.addEventListener("click", () => {
-          if (item instanceof import_obsidian14.TFolder) this.navigateTo(item);
-          else if (item instanceof import_obsidian14.TFile) this.openFile(item);
+          if (item instanceof import_obsidian15.TFolder) this.navigateTo(item);
+          else if (item instanceof import_obsidian15.TFile) this.openFile(item);
         });
         this.addTooltip(itemEl, item);
         items2.push(itemEl);
@@ -15607,7 +16117,7 @@ var FolderSidebarView = class extends import_obsidian14.ItemView {
       return;
     }
     const displayItems = current.children.filter(
-      (c) => c instanceof import_obsidian14.TFolder || c instanceof import_obsidian14.TFile
+      (c) => c instanceof import_obsidian15.TFolder || c instanceof import_obsidian15.TFile
     );
     const sorted = this.sortItems(displayItems);
     if (sorted.length === 0) {
@@ -15621,19 +16131,19 @@ var FolderSidebarView = class extends import_obsidian14.ItemView {
       item.setAttribute("role", "option");
       item.setAttribute("aria-selected", "false");
       const iconEl = item.createSpan({ cls: "ws-folder-item-icon" });
-      if (child instanceof import_obsidian14.TFolder) {
-        (0, import_obsidian14.setIcon)(iconEl, "folder");
-      } else if (child instanceof import_obsidian14.TFile) {
+      if (child instanceof import_obsidian15.TFolder) {
+        (0, import_obsidian15.setIcon)(iconEl, "folder");
+      } else if (child instanceof import_obsidian15.TFile) {
         const ext = child.extension.toLowerCase();
-        if (ext === "md") (0, import_obsidian14.setIcon)(iconEl, "file-text");
-        else if (["png", "jpg", "jpeg", "webp", "gif", "svg"].includes(ext)) (0, import_obsidian14.setIcon)(iconEl, "image");
-        else if (["mp3", "wav", "m4a", "ogg", "flac"].includes(ext)) (0, import_obsidian14.setIcon)(iconEl, "file-audio");
-        else (0, import_obsidian14.setIcon)(iconEl, "file");
+        if (ext === "md") (0, import_obsidian15.setIcon)(iconEl, "file-text");
+        else if (["png", "jpg", "jpeg", "webp", "gif", "svg"].includes(ext)) (0, import_obsidian15.setIcon)(iconEl, "image");
+        else if (["mp3", "wav", "m4a", "ogg", "flac"].includes(ext)) (0, import_obsidian15.setIcon)(iconEl, "file-audio");
+        else (0, import_obsidian15.setIcon)(iconEl, "file");
       }
       item.createSpan({ text: child.name });
       item.addEventListener("click", () => {
-        if (child instanceof import_obsidian14.TFolder) this.navigateTo(child);
-        else if (child instanceof import_obsidian14.TFile) this.openFile(child);
+        if (child instanceof import_obsidian15.TFolder) this.navigateTo(child);
+        else if (child instanceof import_obsidian15.TFile) this.openFile(child);
       });
       this.addTooltip(item, child);
       items.push(item);
@@ -15676,7 +16186,7 @@ function applyFocus(items, index) {
     if (i2 === index) item.scrollIntoView({ block: "nearest" });
   });
 }
-var FolderPickerModal = class extends import_obsidian14.FuzzySuggestModal {
+var FolderPickerModal = class extends import_obsidian15.FuzzySuggestModal {
   constructor(app, onChoose) {
     super(app);
     this.onChoose = onChoose;
@@ -15687,7 +16197,7 @@ var FolderPickerModal = class extends import_obsidian14.FuzzySuggestModal {
     const walk = (folder) => {
       folders.push(folder);
       for (const child of folder.children) {
-        if (child instanceof import_obsidian14.TFolder) walk(child);
+        if (child instanceof import_obsidian15.TFolder) walk(child);
       }
     };
     walk(this.app.vault.getRoot());
@@ -15722,7 +16232,7 @@ var toMoveEntry = (n) => ({
   binderOrder: n.binderOrder,
   path: n.file.path
 });
-var FilesystemBinderView = class extends import_obsidian15.ItemView {
+var FilesystemBinderView = class extends import_obsidian16.ItemView {
   constructor(leaf, plugin) {
     super(leaf);
     this.activeProject = null;
@@ -15822,36 +16332,36 @@ var FilesystemBinderView = class extends import_obsidian15.ItemView {
       await this.plugin.projectManager.setActiveProject(projectSel.value || null);
     };
     const selCaret = selWrap.createSpan("ws-binder-project-caret");
-    (0, import_obsidian15.setIcon)(selCaret, "chevrons-up-down");
+    (0, import_obsidian16.setIcon)(selCaret, "chevrons-up-down");
     const newProjectBtn = projectRow.createEl("button", { cls: "ws-binder-btn", title: t2("binder.newProject") });
-    (0, import_obsidian15.setIcon)(newProjectBtn, "plus");
+    (0, import_obsidian16.setIcon)(newProjectBtn, "plus");
     newProjectBtn.onclick = () => {
       new ProjectModal(this.app, this.plugin).open();
     };
     if (this.activeProject) {
       const project = this.activeProject;
       const editProjectBtn = projectRow.createEl("button", { cls: "ws-binder-btn", title: t2("projectModal.editTitle") });
-      (0, import_obsidian15.setIcon)(editProjectBtn, "pencil");
+      (0, import_obsidian16.setIcon)(editProjectBtn, "pencil");
       editProjectBtn.onclick = () => {
         new ProjectModal(this.app, this.plugin, void 0, project).open();
       };
       const deleteProjectBtn = projectRow.createEl("button", { cls: "ws-binder-btn", title: t2("projectModal.deleteTitle") });
-      (0, import_obsidian15.setIcon)(deleteProjectBtn, "trash");
+      (0, import_obsidian16.setIcon)(deleteProjectBtn, "trash");
       deleteProjectBtn.onclick = () => {
         confirmDeleteProject(this.app, this.plugin, project);
       };
     }
     const toolbar = header.createDiv("ws-binder-toolbar");
     const newDocBtn = toolbar.createEl("button", { cls: "ws-binder-btn", title: t2("binder.titlePrompt.heading") });
-    (0, import_obsidian15.setIcon)(newDocBtn, "file-plus");
+    (0, import_obsidian16.setIcon)(newDocBtn, "file-plus");
     newDocBtn.onclick = () => this.promptCreateAtRoot(false);
     const newFolderBtn = toolbar.createEl("button", { cls: "ws-binder-btn", title: t2("binder.fs.newFolder") });
-    (0, import_obsidian15.setIcon)(newFolderBtn, "folder-plus");
+    (0, import_obsidian16.setIcon)(newFolderBtn, "folder-plus");
     newFolderBtn.onclick = () => this.promptCreateAtRoot(true);
     const countsBtn = toolbar.createEl("button", { cls: "ws-binder-btn ws-fsb-counts-btn" });
     countsBtn.ariaLabel = t2("binder.toggleCounts");
-    (0, import_obsidian15.setIcon)(countsBtn, "hash");
-    (0, import_obsidian15.setTooltip)(countsBtn, t2("binder.toggleCounts"));
+    (0, import_obsidian16.setIcon)(countsBtn, "hash");
+    (0, import_obsidian16.setTooltip)(countsBtn, t2("binder.toggleCounts"));
     countsBtn.toggleClass("is-active", this.showCounts);
     countsBtn.onclick = () => {
       this.showCounts = !this.showCounts;
@@ -15860,8 +16370,8 @@ var FilesystemBinderView = class extends import_obsidian15.ItemView {
     };
     const synopsesBtn = toolbar.createEl("button", { cls: "ws-binder-btn ws-fsb-synopses-btn" });
     synopsesBtn.ariaLabel = t2("binder.toggleSynopses");
-    (0, import_obsidian15.setIcon)(synopsesBtn, "text");
-    (0, import_obsidian15.setTooltip)(synopsesBtn, t2("binder.toggleSynopses"));
+    (0, import_obsidian16.setIcon)(synopsesBtn, "text");
+    (0, import_obsidian16.setTooltip)(synopsesBtn, t2("binder.toggleSynopses"));
     synopsesBtn.toggleClass("is-active", this.showSynopses);
     synopsesBtn.onclick = () => {
       this.showSynopses = !this.showSynopses;
@@ -15869,17 +16379,17 @@ var FilesystemBinderView = class extends import_obsidian15.ItemView {
       this.renderList(this.buildModel());
     };
     const outlineBtn = toolbar.createEl("button", { cls: "ws-binder-btn", title: t2("binder.openOutline") });
-    (0, import_obsidian15.setIcon)(outlineBtn, "list-tree");
+    (0, import_obsidian16.setIcon)(outlineBtn, "list-tree");
     outlineBtn.onclick = () => {
       void this.plugin.openOutline();
     };
     const findBtn = toolbar.createEl("button", { cls: "ws-binder-btn", title: t2("binder.findReplace") });
-    (0, import_obsidian15.setIcon)(findBtn, "replace");
+    (0, import_obsidian16.setIcon)(findBtn, "replace");
     findBtn.onclick = () => {
       this.plugin.openFindReplace();
     };
     const dashBtn = toolbar.createEl("button", { cls: "ws-binder-btn", title: t2("binder.targetsDashboard") });
-    (0, import_obsidian15.setIcon)(dashBtn, "target");
+    (0, import_obsidian16.setIcon)(dashBtn, "target");
     dashBtn.onclick = () => {
       new TargetsDashboardModal(this.app, this.plugin).open();
     };
@@ -15907,10 +16417,10 @@ var FilesystemBinderView = class extends import_obsidian15.ItemView {
     const project = this.activeProject;
     if (!project) return model;
     const root = this.app.vault.getAbstractFileByPath(project.folderPath);
-    if (!(root instanceof import_obsidian15.TFolder)) return model;
+    if (!(root instanceof import_obsidian16.TFolder)) return model;
     model.manuscript = this.buildChildren(root, true);
     for (const { zone, folderName } of DRAWER_ZONES) {
-      const folder = root.children.find((c) => c instanceof import_obsidian15.TFolder && c.name.toLowerCase() === folderName.toLowerCase());
+      const folder = root.children.find((c) => c instanceof import_obsidian16.TFolder && c.name.toLowerCase() === folderName.toLowerCase());
       if (!folder) continue;
       model.zones[zone] = {
         folder,
@@ -15926,7 +16436,7 @@ var FilesystemBinderView = class extends import_obsidian15.ItemView {
     let n = 0;
     for (const child of folder.children) {
       if (isHiddenName(child.name)) continue;
-      if (child instanceof import_obsidian15.TFolder) n += this.countVisibleFiles(child);
+      if (child instanceof import_obsidian16.TFolder) n += this.countVisibleFiles(child);
       else n++;
     }
     return n;
@@ -15934,7 +16444,7 @@ var FilesystemBinderView = class extends import_obsidian15.ItemView {
   buildChildren(folder, isRoot) {
     const nodes = [];
     for (const child of folder.children) {
-      if (!inManuscriptZone(child.name, child instanceof import_obsidian15.TFolder, isRoot)) continue;
+      if (!inManuscriptZone(child.name, child instanceof import_obsidian16.TFolder, isRoot)) continue;
       const node = this.buildNode(child);
       if (node) nodes.push(node);
     }
@@ -15942,7 +16452,7 @@ var FilesystemBinderView = class extends import_obsidian15.ItemView {
   }
   buildNode(file) {
     var _a2;
-    if (file instanceof import_obsidian15.TFolder) {
+    if (file instanceof import_obsidian16.TFolder) {
       const children = this.buildChildren(file, false);
       const entry2 = { name: file.name, isFolder: true, binderOrder: null };
       return {
@@ -15958,7 +16468,7 @@ var FilesystemBinderView = class extends import_obsidian15.ItemView {
         mdCount: children.reduce((n, c) => n + (c.isFolder ? c.mdCount : c.extension === "md" ? 1 : 0), 0)
       };
     }
-    if (!(file instanceof import_obsidian15.TFile)) return null;
+    if (!(file instanceof import_obsidian16.TFile)) return null;
     const fm = file.extension === "md" ? (_a2 = this.app.metadataCache.getFileCache(file)) == null ? void 0 : _a2.frontmatter : void 0;
     const status = parseBinderStatus(fm == null ? void 0 : fm["binder-status"]);
     const fmLines = [];
@@ -16045,11 +16555,11 @@ var FilesystemBinderView = class extends import_obsidian15.ItemView {
       tab.toggleClass("is-active", pref.open && pref.tab === zoneDef.zone);
       tab.createSpan({ cls: "ws-fsb-drawer-tab-label", text: t2(zoneDef.labelKey) });
       tab.createSpan({ cls: "ws-fsb-count", text: String(zone.fileCount) });
-      (0, import_obsidian15.setTooltip)(tab, (_b2 = (_a2 = zone.folder) == null ? void 0 : _a2.name) != null ? _b2 : zoneDef.folderName);
+      (0, import_obsidian16.setTooltip)(tab, (_b2 = (_a2 = zone.folder) == null ? void 0 : _a2.name) != null ? _b2 : zoneDef.folderName);
       tab.onclick = () => {
         void this.selectDrawerTab(zoneDef.zone);
       };
-      const zoneFolderPath = (_d = (_c = zone.folder) == null ? void 0 : _c.path) != null ? _d : (0, import_obsidian15.normalizePath)(`${project.folderPath}/${zoneDef.folderName}`);
+      const zoneFolderPath = (_d = (_c = zone.folder) == null ? void 0 : _c.path) != null ? _d : (0, import_obsidian16.normalizePath)(`${project.folderPath}/${zoneDef.folderName}`);
       tab.addEventListener("dragover", (e) => {
         const src = this.dragSource;
         if (!src) return;
@@ -16078,7 +16588,7 @@ var FilesystemBinderView = class extends import_obsidian15.ItemView {
         tab.removeClass("ws-fsb-drop-into");
         this.cancelHoverExpand();
         if (verdict.kind === "notice") {
-          new import_obsidian15.Notice(t2(verdict.messageKey));
+          new import_obsidian16.Notice(t2(verdict.messageKey));
           return;
         }
         const group = zone.nodes.filter((n) => n.file.path !== src.path).map(toMoveEntry);
@@ -16086,9 +16596,9 @@ var FilesystemBinderView = class extends import_obsidian15.ItemView {
       });
       if (zoneDef.zone === "research") {
         const addSourceBtn = tabs.createEl("button", { cls: "ws-fsb-drawer-add" });
-        (0, import_obsidian15.setIcon)(addSourceBtn.createSpan("ws-fsb-drawer-add-icon"), "book-plus");
+        (0, import_obsidian16.setIcon)(addSourceBtn.createSpan("ws-fsb-drawer-add-icon"), "book-plus");
         addSourceBtn.createSpan({ cls: "ws-fsb-drawer-add-label", text: t2("citations.addSourceShort") });
-        (0, import_obsidian15.setTooltip)(addSourceBtn, t2("citations.addSourceTooltip"));
+        (0, import_obsidian16.setTooltip)(addSourceBtn, t2("citations.addSourceTooltip"));
         addSourceBtn.onclick = () => {
           this.plugin.addSource();
         };
@@ -16166,14 +16676,14 @@ var FilesystemBinderView = class extends import_obsidian15.ItemView {
       if (node.isFolder && this.showCounts) {
         row.createSpan({ cls: "ws-fsb-count", text: String(node.mdCount) });
       }
-      (0, import_obsidian15.setTooltip)(row, [node.name, ...node.fmLines].join("\n"));
+      (0, import_obsidian16.setTooltip)(row, [node.name, ...node.fmLines].join("\n"));
       row.onclick = () => {
         if (nav) this.navFocusPath = node.file.path;
         if (node.isFolder) {
           this.toggleCollapse(node.file.path);
           return;
         }
-        if (node.file instanceof import_obsidian15.TFile) void this.openFile(node.file);
+        if (node.file instanceof import_obsidian16.TFile) void this.openFile(node.file);
       };
       row.oncontextmenu = (e) => {
         e.preventDefault();
@@ -16258,7 +16768,7 @@ var FilesystemBinderView = class extends import_obsidian15.ItemView {
       this.clearDropIndicator();
       this.cancelHoverExpand();
       if (verdict.kind === "notice") {
-        new import_obsidian15.Notice(t2(verdict.messageKey));
+        new import_obsidian16.Notice(t2(verdict.messageKey));
         return;
       }
       const intoFolder = region === "into" && node.isFolder;
@@ -16338,11 +16848,11 @@ var FilesystemBinderView = class extends import_obsidian15.ItemView {
   // writes, so the plan is the bare rename.
   async executeZoneDrop(src, zoneFolderPath, group) {
     try {
-      if (!(this.app.vault.getAbstractFileByPath(zoneFolderPath) instanceof import_obsidian15.TFolder)) {
+      if (!(this.app.vault.getAbstractFileByPath(zoneFolderPath) instanceof import_obsidian16.TFolder)) {
         await this.app.vault.createFolder(zoneFolderPath);
       }
     } catch (e) {
-      new import_obsidian15.Notice(t2("main.operationFailed", { error: e instanceof Error ? e.message : String(e) }));
+      new import_obsidian16.Notice(t2("main.operationFailed", { error: e instanceof Error ? e.message : String(e) }));
       return;
     }
     await this.executeMove(planMove(src, zoneFolderPath, group, "end", false));
@@ -16358,15 +16868,15 @@ var FilesystemBinderView = class extends import_obsidian15.ItemView {
         const file = this.app.vault.getAbstractFileByPath(op.path);
         if (!file) continue;
         if (op.kind === "rename") {
-          await this.app.fileManager.renameFile(file, (0, import_obsidian15.normalizePath)(op.newPath));
-        } else if (file instanceof import_obsidian15.TFile) {
+          await this.app.fileManager.renameFile(file, (0, import_obsidian16.normalizePath)(op.newPath));
+        } else if (file instanceof import_obsidian16.TFile) {
           await this.app.fileManager.processFrontMatter(file, (fm) => {
             fm["binder-order"] = op.order;
           });
         }
       }
     } catch (e) {
-      new import_obsidian15.Notice(t2("main.operationFailed", { error: e instanceof Error ? e.message : String(e) }));
+      new import_obsidian16.Notice(t2("main.operationFailed", { error: e instanceof Error ? e.message : String(e) }));
     }
   }
   toggleCollapse(path) {
@@ -16385,7 +16895,7 @@ var FilesystemBinderView = class extends import_obsidian15.ItemView {
       const leaf = this.app.workspace.getLeaf(false);
       await leaf.openFile(file);
     } catch (e) {
-      new import_obsidian15.Notice(t2("main.operationFailed", { error: e instanceof Error ? e.message : String(e) }));
+      new import_obsidian16.Notice(t2("main.operationFailed", { error: e instanceof Error ? e.message : String(e) }));
     }
   }
   // ─── Mutation surface (slice 5, #229) ──────────────────────────────────────
@@ -16393,16 +16903,16 @@ var FilesystemBinderView = class extends import_obsidian15.ItemView {
   // through the vault/metadata event path, never by a manual refresh call.
   buildContextMenu(node, zone) {
     var _a2, _b2;
-    const menu = new import_obsidian15.Menu();
+    const menu = new import_obsidian16.Menu();
     const actions = new Set(menuActionsFor(node, zone));
-    const doc = node.file instanceof import_obsidian15.TFile && node.extension === "md" ? node.file : null;
+    const doc = node.file instanceof import_obsidian16.TFile && node.extension === "md" ? node.file : null;
     if (actions.has("rename")) {
       menu.addItem((i2) => i2.setTitle(t2("binder.menu.rename")).setIcon("pencil").onClick(() => this.promptRename(node)));
     }
     if (actions.has("synopsis") && doc) {
       menu.addItem((i2) => i2.setTitle(t2("binder.menu.editSynopsis")).setIcon("text").onClick(() => this.promptSynopsis(node, doc)));
     }
-    if (actions.has("export") && node.file instanceof import_obsidian15.TFolder) {
+    if (actions.has("export") && node.file instanceof import_obsidian16.TFolder) {
       const folderPath = node.file.path;
       menu.addItem((i2) => i2.setTitle(t2("binder.fs.exportFolder")).setIcon("download").onClick(() => {
         new ExportModal(this.app, this.plugin, "project", folderPath).open();
@@ -16475,7 +16985,7 @@ var FilesystemBinderView = class extends import_obsidian15.ItemView {
       }));
     }
     if (actions.has("newDoc") || actions.has("newFolder")) {
-      const parent = node.file instanceof import_obsidian15.TFolder ? node.file : node.file.parent;
+      const parent = node.file instanceof import_obsidian16.TFolder ? node.file : node.file.parent;
       if (parent) {
         menu.addSeparator();
         if (actions.has("newDoc")) {
@@ -16505,7 +17015,7 @@ var FilesystemBinderView = class extends import_obsidian15.ItemView {
       const idx = nodes.findIndex((n) => n.file.path === node.file.path);
       if (idx >= 0) {
         const next = nodes[idx + 1];
-        return next && !next.isFolder && next.extension === "md" && next.file instanceof import_obsidian15.TFile ? next.file : null;
+        return next && !next.isFolder && next.extension === "md" && next.file instanceof import_obsidian16.TFile ? next.file : null;
       }
       for (const n of nodes) {
         if (!n.isFolder) continue;
@@ -16549,9 +17059,9 @@ var FilesystemBinderView = class extends import_obsidian15.ItemView {
         const parent = (_d = (_c = node.file.parent) == null ? void 0 : _c.path) != null ? _d : "";
         const newPath = parent === "" || parent === "/" ? target : `${parent}/${target}`;
         try {
-          await this.app.fileManager.renameFile(node.file, (0, import_obsidian15.normalizePath)(newPath));
+          await this.app.fileManager.renameFile(node.file, (0, import_obsidian16.normalizePath)(newPath));
         } catch (e) {
-          new import_obsidian15.Notice(t2("main.operationFailed", { error: e instanceof Error ? e.message : String(e) }));
+          new import_obsidian16.Notice(t2("main.operationFailed", { error: e instanceof Error ? e.message : String(e) }));
         }
       }
     ).open();
@@ -16559,8 +17069,8 @@ var FilesystemBinderView = class extends import_obsidian15.ItemView {
   promptCreateAtRoot(isFolder) {
     const project = this.activeProject;
     const root = project ? this.app.vault.getAbstractFileByPath(project.folderPath) : null;
-    if (!(root instanceof import_obsidian15.TFolder)) {
-      new import_obsidian15.Notice(t2("binder.selectProjectFirst"));
+    if (!(root instanceof import_obsidian16.TFolder)) {
+      new import_obsidian16.Notice(t2("binder.selectProjectFirst"));
       return;
     }
     this.promptCreate(root, isFolder);
@@ -16582,7 +17092,7 @@ var FilesystemBinderView = class extends import_obsidian15.ItemView {
           this.rejectName(verdict.reason, target);
           return;
         }
-        const path = (0, import_obsidian15.normalizePath)(`${parent.path}/${target}`);
+        const path = (0, import_obsidian16.normalizePath)(`${parent.path}/${target}`);
         try {
           if (isFolder) {
             await this.app.vault.createFolder(path);
@@ -16591,13 +17101,13 @@ var FilesystemBinderView = class extends import_obsidian15.ItemView {
             await this.openFile(created);
           }
         } catch (e) {
-          new import_obsidian15.Notice(t2("main.operationFailed", { error: e instanceof Error ? e.message : String(e) }));
+          new import_obsidian16.Notice(t2("main.operationFailed", { error: e instanceof Error ? e.message : String(e) }));
         }
       }
     ).open();
   }
   confirmDelete(node) {
-    const folder = node.file instanceof import_obsidian15.TFolder ? node.file : null;
+    const folder = node.file instanceof import_obsidian16.TFolder ? node.file : null;
     new ConfirmModal(
       this.app,
       folder ? t2("binder.fs.deleteFolderTitle") : t2("binder.deleteConfirm.title"),
@@ -16608,7 +17118,7 @@ var FilesystemBinderView = class extends import_obsidian15.ItemView {
         try {
           await this.app.fileManager.trashFile(node.file);
         } catch (e) {
-          new import_obsidian15.Notice(t2("main.operationFailed", { error: e instanceof Error ? e.message : String(e) }));
+          new import_obsidian16.Notice(t2("main.operationFailed", { error: e instanceof Error ? e.message : String(e) }));
         }
       }
     ).open();
@@ -16618,7 +17128,7 @@ var FilesystemBinderView = class extends import_obsidian15.ItemView {
   countAllFiles(folder) {
     let n = 0;
     for (const child of folder.children) {
-      if (child instanceof import_obsidian15.TFolder) n += this.countAllFiles(child);
+      if (child instanceof import_obsidian16.TFolder) n += this.countAllFiles(child);
       else n++;
     }
     return n;
@@ -16627,7 +17137,7 @@ var FilesystemBinderView = class extends import_obsidian15.ItemView {
     try {
       await this.app.fileManager.processFrontMatter(file, mutate);
     } catch (e) {
-      new import_obsidian15.Notice(t2("main.operationFailed", { error: e instanceof Error ? e.message : String(e) }));
+      new import_obsidian16.Notice(t2("main.operationFailed", { error: e instanceof Error ? e.message : String(e) }));
     }
   }
   rejectName(reason, target) {
@@ -16637,7 +17147,7 @@ var FilesystemBinderView = class extends import_obsidian15.ItemView {
       trailing: "binder.fs.nameTrailing",
       exists: "binder.fs.nameExists"
     };
-    new import_obsidian15.Notice(t2(keys[reason != null ? reason : "empty"], { name: target }));
+    new import_obsidian16.Notice(t2(keys[reason != null ? reason : "empty"], { name: target }));
   }
   // ─── Keyboard ──────────────────────────────────────────────────────────────
   handleTreeKey(e) {
@@ -16672,7 +17182,7 @@ var FilesystemBinderView = class extends import_obsidian15.ItemView {
         if (!row) break;
         if (row.node.isFolder) {
           if (row.hasChildren) this.toggleCollapse(row.node.file.path);
-        } else if (row.node.file instanceof import_obsidian15.TFile) {
+        } else if (row.node.file instanceof import_obsidian16.TFile) {
           void this.openFile(row.node.file);
         }
         break;
@@ -17848,14 +18358,6 @@ sup.ws-fn-ref a { text-decoration: none; }
 `;
   }
 };
-
-// src/dates.ts
-var import_obsidian16 = require("obsidian");
-var momentUntyped = import_obsidian16.moment;
-var moment = momentUntyped;
-function localDateString(date) {
-  return moment(date).format("YYYY-MM-DD");
-}
 
 // src/markdown.ts
 function inlineMarkdown(text) {
@@ -20736,6 +21238,7 @@ var LauncherView = class extends import_obsidian21.ItemView {
       } else {
         wcRow.createSpan({ text: this.plugin.statsTracker.calculateReadingTime(totalWords), cls: "ws-launcher-wc-goal" });
       }
+      this.renderDeadline(card, project, totalWords, goal);
     } catch (e) {
       console.error("[Writing Studio] project card stats", e);
     }
@@ -20750,6 +21253,44 @@ var LauncherView = class extends import_obsidian21.ItemView {
     outlineBtn.onclick = () => {
       void this.plugin.openOutline();
     };
+  }
+  // Deadline pacing (item 5): one line under the progress bar whenever the
+  // project has a deadline — days left, the daily pace to finish on time,
+  // the goal reached, or the deadline passed. No deadline, no line.
+  renderDeadline(card, project, totalWords, goal) {
+    var _a2, _b2;
+    const deadline = (_a2 = project.goals) == null ? void 0 : _a2.deadline;
+    if (!deadline) return;
+    const pace = computePace({ goal, total: totalWords, deadline, writingDays: (_b2 = project.goals) == null ? void 0 : _b2.writingDays, today: localDateString() });
+    if (!pace) return;
+    const date = formatLongDate(deadline);
+    const days = (n) => t2("launcher.writingDays", { count: n });
+    const words = (n) => t2("launcher.wordCount", { n: n.toLocaleString() });
+    const row = card.createDiv("ws-launcher-deadline");
+    (0, import_obsidian21.setIcon)(row.createSpan("ws-launcher-deadline-icon"), "calendar");
+    const text = row.createDiv("ws-launcher-deadline-text");
+    switch (pace.kind) {
+      case "countdown":
+        text.createDiv({ text: t2("launcher.dueCountdown", { date, days: days(pace.daysLeft) }), cls: "ws-launcher-deadline-line" });
+        break;
+      case "pace":
+        text.createDiv({ text: t2("launcher.dueCountdown", { date, days: days(pace.daysLeft) }), cls: "ws-launcher-deadline-line" });
+        text.createDiv({ text: t2("launcher.duePace", { n: pace.perDay.toLocaleString() }), cls: "ws-launcher-deadline-pace" });
+        (0, import_obsidian21.setTooltip)(row, t2("launcher.paceTooltip"));
+        break;
+      case "reached":
+        text.createDiv({
+          text: pace.daysLeft > 0 ? t2("launcher.dueReached", { date, days: days(pace.daysLeft) }) : t2("launcher.dueReachedLate", { date }),
+          cls: "ws-launcher-deadline-line"
+        });
+        break;
+      case "overdue":
+        text.createDiv({
+          text: pace.wordsLeft > 0 ? t2("launcher.dueOverdue", { date, words: words(pace.wordsLeft) }) : t2("launcher.dueOverdueNoGoal", { date }),
+          cls: "ws-launcher-deadline-line ws-launcher-deadline-overdue"
+        });
+        break;
+    }
   }
   // ── Writing Mode Selector ────────────────────────────────────────
   renderModeSelector(root) {
@@ -23756,7 +24297,7 @@ var FrontmatterManager = class {
 var import_obsidian35 = require("obsidian");
 
 // README.md
-var README_default = '<p align="center">\n  <img src="assets/logo.png" width="120" alt="Writing Studio logo">\n</p>\n\n# Writing Studio\n\n**Version 3.2.0** \xB7 Desktop only\n\n![GitHub all releases](https://img.shields.io/github/downloads/writerP-777/obsidian-writing-studio/total)\n[![OpenSSF Best Practices](https://www.bestpractices.dev/projects/12832/badge)](https://www.bestpractices.dev/projects/12832)\n\nWriting Studio turns Obsidian into a dedicated environment for serious nonfiction work \u2014 from your first research notes to a finished, exported manuscript. It bundles a project binder, writing modes, focus and typography tools, sprint timer, progress tracking, manuscript export, and WordPress publishing into a single plugin. A built-in sidebar file explorer lets you browse, preview, and pull content from anywhere in your vault without leaving your draft.\n\n<p align="center">\n  <img src="assets/sidebar-explorer-screenshot.png" alt="Writing Studio with the Launcher panel open on the left, an active draft with its word count goal banner in the center, and the Folder Sidebar Explorer previewing a research file on the right" width="900">\n  <br>\n  <em>Writing Studio in use \u2014 Launcher (left), active draft with word count goal banner (center), Folder Sidebar Explorer open to a research folder (right).</em>\n</p>\n\n<p align="center">\n  <a href="https://buymeacoffee.com/writerp777">\n    <img src="https://img.buymeacoffee.com/button-api/?text=Buy%20me%20a%20coffee&slug=writerp777&button_colour=c9a84c&font_colour=000000&font_family=Georgia&outline_colour=000000&coffee_colour=ffffff" alt="Buy me a coffee" height="40">\n  </a>\n</p>\n\n## Contents\n\n- [Features](#features)\n- [Language support](#language-support)\n- [Writing Studio Launcher](#writing-studio-launcher)\n- [Folder Sidebar Explorer](#folder-sidebar-explorer)\n- [Your Project](#your-project)\n- [Your Writing Environment](#your-writing-environment)\n- [Tracking Your Progress](#tracking-your-progress)\n- [Getting Your Work Out](#getting-your-work-out)\n- [Supporting Tools](#supporting-tools)\n- [Context Menus](#context-menus)\n- [Commands Reference](#commands-reference)\n- [Settings Overview](#settings-overview)\n- [Ribbon Icon](#ribbon-icon)\n- [Installation](#installation)\n- [Requirements](#requirements)\n- [Reporting a Bug](#reporting-a-bug)\n- [Security](#security)\n\n---\n\n## Features\n\n**Writing Binder** \u2014 Your project\'s folder tree, rendered as a manuscript. The binder reads your folders directly, so files created, renamed, or moved anywhere \u2014 even outside Obsidian \u2014 always appear correctly, with no import or scan step. Drag chapters into order, set per-document status and word count goals, and exclude documents from compile with a right-click.\n\n**Outline** \u2014 Give each section a one-paragraph synopsis, the claim it makes, and the Outline view lays the whole project out as an editable table: synopsis, status, and words against goal, section by section, with part totals. Copy it out as an annotated table of contents for a book proposal.\n\n**Project Manager** \u2014 Create projects from six templates (blank, book, article series, blog collection, journal article, magazine article), set a total word count goal, and switch between projects from the Launcher.\n\n**Compile Preview** \u2014 Concatenate all binder documents in order and render them as a finished manuscript in a split pane, without exporting.\n\n**Writing Modes** \u2014 Switch between Draft (distraction-free), Edit (full tooling), and Review (read-only) modes from the status bar, command palette, context menu, or Launcher.\n\n**Focus Mode** \u2014 Dim everything except the paragraph or sentence you are writing. Configurable dim level, font size override, sidebar collapse, and typewriter scroll.\n\n**Typography Mode** \u2014 Apply a curated font, constrained line length, and controlled line height to the editor. Fourteen font options including iA Writer fonts, Google Fonts, and custom system fonts.\n\n**Sprint Timer** \u2014 Run timed writing sessions with a draggable floating overlay. Set duration, word goal, and scope (file or project). Quick-start presets (10 m, 15 m, 25 m) available from the Launcher.\n\n**Progress Tracking** \u2014 Live word counts in the status bar and Launcher, session delta tracking, per-document and per-project word count goals with inline progress banners, and a 30-day writing log with streak tracking.\n\n**Export Engine** \u2014 Export to Manuscript (HTML), PDF, Word (.docx), RTF, HTML, Markdown, and EPUB. Manuscript format produces industry-standard layout with no external tools; other formats require Pandoc.\n\n**Sources, Citations & Footnotes** \u2014 Any note with a `citekey` property is a source, including literature notes from Zotero Integration or the Citations plugin. Cite with `[@smith2020, p. 12]` or a wikilink to the source note, and every export carries the citations and a works-cited page in Chicago author-date or notes style. Footnotes now survive every format. An **Add source** form and an **Insert citation** picker mean nobody has to type a citation key by hand.\n\n**WordPress Publishing** \u2014 Publish directly to WordPress from Obsidian. Set post title, status, categories, tags, excerpt, and scheduled date. Supports multiple sites with per-site credentials and connection testing.\n\n**Folder Sidebar Explorer** \u2014 Browse any vault folder in a sidebar panel. Search by name or file content, preview Markdown files and images inline, and insert selected text directly into the active editor.\n\n## Language support\n\nWriting Studio is available in the following languages in addition to English:\n\n- Arabic\n- Bengali\n- Brazilian Portuguese\n- Chinese (Simplified)\n- French\n- German\n- Hindi\n- Japanese\n- Korean\n- Russian\n- Spanish\n\n**To change the language:** Open **Settings \u2192 General** in Obsidian, scroll to **Language**, and select your preferred language from the list. Restart Obsidian for the change to take effect. Writing Studio will display in the selected language if it is supported.\n\n**Found a translation error or missing text?** Please open an issue on GitHub \u2014 [Submit a bug report or enhancement request](https://github.com/writerP-777/obsidian-writing-studio/issues/new) \u2014 and include the language, the location in the plugin where the text appears, and what it currently says. We will address it in the next release.\n\n### Writing Studio Launcher\n\nThe Launcher is your home base in Writing Studio \u2014 a sidebar panel that shows your active project, progress toward your goals, and one-click access to every major feature.\n\n<p align="center">\n  <img src="assets/launcher-project-card.png" alt="The Launcher project card with the project dropdown and the new project, edit, and delete buttons above the word count and project goal" width="520">\n  <br>\n  <em>The Launcher project card \u2014 switch projects from the dropdown; word count against the project goal below.</em>\n</p>\n\nBy default Writing Studio launches automatically when Obsidian loads \u2014 the Launcher opens and your last session\'s writing mode and typography are restored. To disable this, turn off **Open on startup** in **Settings \u2192 General**: Obsidian then opens clean, with no Writing Studio status bar items or restored modes, and the studio stays dormant until you launch it yourself. Launching it manually restores your last session state the same way.\n\n**To open manually:** Click the feather ribbon icon, or assign a hotkey to **Open launcher** in Settings \u2192 Hotkeys.\n\n**First run:** In a vault with no projects yet, the Launcher shows an orientation card explaining how projects work, with a **Create your first project** button to get started.\n\n<p align="center">\n  <img src="assets/launcher-first-run.png" alt="The Launcher first-run orientation card with an explanation of projects and a Create your first project button" width="520">\n  <br>\n  <em>First run \u2014 the orientation card shown before any project exists.</em>\n</p>\n\n**The Launcher includes:**\n- Active project name, total word count, and progress toward your project word count goal\n- Writing mode selector (Draft / Edit / Review)\n- Focus Mode and Typography Mode toggles\n- Sprint timer with "Set up sprint" button and Quick Sprint Options presets (10 m, 15 m, 25 m)\n- Today card showing words written, sprints completed, session word count, and streak\n- Quick-action buttons: Targets Dashboard, Writing Dashboard, Preview manuscript, Export, Writing Log, Publish to WordPress\n\n---\n\n### Folder Sidebar Explorer\n\nThe Folder Sidebar Explorer opens any vault folder in a right-sidebar panel, letting you browse reference material, research notes, or any folder outside your active project without leaving your draft. Unlike the Binder \u2014 which is scoped to your writing project \u2014 the sidebar explorer works with any folder in your vault.\n\n<p align="center">\n  <img src="assets/folder-sidebar-explorer.png" alt="The Folder Sidebar Explorer panel with a Markdown file open in preview, showing the breadcrumb trail, back and root buttons, and the insert selection button" width="340">\n  <br>\n  <em>The Folder Sidebar Explorer with a research file open in preview \u2014 select text and click insert selection to pull it into your draft.</em>\n</p>\n\n**To open:**\n- Use the command **Open folder in sidebar explorer** from the command palette \u2014 a folder picker appears so you can choose which folder to explore.\n- Right-click any folder in the file explorer and choose **Open in sidebar explorer** under **Writing studio options**.\n- Right-click any folder in [Notebook Navigator](https://github.com/johansan/notebook-navigator) and choose **Open in sidebar explorer** (requires Notebook Navigator to be installed).\n- Assign a hotkey in Settings \u2192 Hotkeys.\n\nThe panel opens in the **right sidebar**. The folder you open becomes the **root folder** for that session \u2014 the breadcrumb trail, the \u2302 root button, and search all operate relative to it.\n\n**Browsing and navigation:**\n\n| Feature | How to use |\n|---------|-----------|\n| Browse into a subfolder | Click the folder |\n| Preview a Markdown file | Click the file \u2014 the folder listing is replaced by a rendered preview inside the panel |\n| Preview an image | Click the file \u2014 displayed inline |\n| Preview audio | Click the file \u2014 player appears inline |\n| Other file types | Click the file \u2014 an **Open in editor** button appears |\n| Go back | Click **\u2190 back**, or press `Backspace` when the list has keyboard focus |\n| Return to root folder | Click **\u2302 root** to jump back to the folder you originally opened |\n| Keyboard navigation | Tab to focus the list, then `\u2191` / `\u2193` to move, `Enter` to open, `Backspace` to go back |\n| Breadcrumb navigation | Click any segment in the breadcrumb trail to jump directly to that folder |\n\n**Search:**\n\nA search bar appears at the top of the folder list. Type your query and press **Enter** to run the search.\n\n- Searches **both folder/file names and file contents** (`.md` and `.txt` files).\n- Frontmatter is excluded from content search to avoid false positives from YAML fields.\n- Name matches show the matched term highlighted in the result title.\n- Content matches show a text snippet around the match with the term highlighted, plus a **CONTENT** badge to distinguish them from name matches.\n- Results always search from the root folder, regardless of which subfolder you are currently browsing.\n- Click **\xD7** to clear the search and return to the normal folder view.\n\n**Sort:**\n\nA sort dropdown sits next to the search bar. Options:\n\n| Option | Description |\n|--------|-------------|\n| Folders \u2191 A-Z | Folders first, then files, both alphabetical (default) |\n| Folders \u2191 Z-A | Folders first, then files, both reverse-alphabetical |\n| Name A-Z | All items alphabetical, folders and files mixed |\n| Name Z-A | All items reverse-alphabetical, mixed |\n| Newest first | Sort by last-modified date, newest at top |\n| Oldest first | Sort by last-modified date, oldest at top |\n\n**Copy content to the editor:**\n\nWhen a Markdown file is open in preview mode (after clicking it in the file list), its text is selectable. To insert a passage into the active editor:\n\n1. Click a file in the list \u2014 the panel switches to preview mode showing the rendered file.\n2. Select the text you want in the preview pane.\n3. Click the **\u21A9 insert selection** button in the nav bar.\n4. The selected text is inserted at the cursor position in the active editor.\n\nThe preview is read-only \u2014 you cannot edit the file from the sidebar.\n\n**Hover tooltips:**\n\nHover over any file or folder in the list to see an information card:\n\n| Item type | Information shown |\n|-----------|------------------|\n| Markdown / text file | Last modified date and time \xB7 File size \xB7 Word count (frontmatter excluded) |\n| Image / audio / other file | Last modified date and time \xB7 File size |\n| Folder | Total file count \xB7 Subfolder count |\n\nThe word count updates asynchronously from Obsidian\'s file cache and appears within a moment of hover.\n\n---\n\n### Your Project\n\n#### Project Manager\n\nProjects group a set of documents (binder items) and act as the scope for export, statistics, and the word count goal banner.\n\n**To create a project:** Use the command **Create new writing project** from the command palette, or click the **+** button next to the project dropdown in the Launcher or Binder panel.\n\n**To switch projects:** Use the Launcher panel or the project selector at the top of the Binder panel.\n\n**To edit a project:** Click the pencil icon in the Launcher project card or next to the project selector in the Binder. You can change the title, author, description, total word count goal, and the document folder \u2014 the folder inside the project that holds its documents (for example, renaming a book project\'s `Chapters/` to `Scenes/` renames the folder and moves its files with it; the binder follows automatically, as it also does when you rename the folder directly in the file explorer).\n\n**To rename a project:** Change the title in the edit-project dialog and save. The project folder is renamed to match, and every file inside moves with it \u2014 links heal, nothing is copied. A hint under the title field shows the folder name you will get before you save. Characters that cannot appear in a folder name (`\\ / : * ? " < > |`) become `-`, so a title like *My Book: A Novel* keeps its colon while its folder is named `My Book- A Novel`; the hint says so whenever a substitution happens. If a folder with the new name already exists, the save is refused with a message and nothing changes \u2014 choose a different title. Editing the author, description, or goal never moves the folder. To change the title and leave the folder as it is, turn off **Also rename the project folder** in the dialog before saving.\n\nIt works the other way too: rename the project folder in Obsidian\'s file explorer and the project\'s title follows, provided the title and the folder name were the same before the rename. A title you set apart from its folder (like the colon example above) is yours and is never overwritten. Rename inside Obsidian, not in Windows Explorer or Finder \u2014 Obsidian reports an outside rename as a delete and a create, so neither Writing Studio nor Obsidian\'s own links can follow it.\n\n**To delete a project:** Click the trash icon in the Launcher project card or next to the project selector in the Binder, then confirm. This removes the project from Writing Studio\'s list only \u2014 the project folder and all its documents stay untouched in your vault.\n\n<p align="center">\n  <img src="assets/edit-project-modal.png" alt="The Edit project modal with fields for project title, author name, document folder, total word count goal, and description, and a Save button" width="560">\n  <br>\n  <em>The Edit project modal \u2014 change the title, author, document folder, description, and total word count goal.</em>\n</p>\n\nEach project stores:\n- Title, type, author, and description\n- Ordered binder with chapters, sections, articles, and notes\n- Per-item word count goals, statuses, and export flags\n- Optional total word count goal (shown in the Launcher and status bar)\n\n**Project templates available at creation:**\n\n| Template | Structure created |\n|----------|------------------|\n| Blank | Empty \u2014 build your own structure |\n| Book | Front Matter, Part 1 / Chapter 1, Back Matter |\n| Article series | Series Overview note (with article schedule), Article 1 placeholder |\n| Blog collection | Date-organized folder, first post placeholder |\n| Journal article | Title Page, Abstract, Keywords, Introduction, Literature Review, Methodology, Findings / Analysis, Discussion, Conclusion, References, Appendices |\n| Magazine article | Pitch / Query Notes, Headline & Deck, Lede, Nut Graf, Body, Quotes & Sources, Kicker, Fact-Check Notes, Author Bio |\n\n---\n\n#### Writing Binder\n\nKeeping a book-length manuscript organized means knowing at a glance which chapters are drafted, which are in progress, and what will compile into the finished manuscript. The Binder is a sidebar panel that shows all of that for your active project.\n\nThe binder reads your folders directly \u2014 the project folder tree *is* the manuscript structure. Organize your work in the binder or in your computer\'s file explorer, and both always match: files created, renamed, moved, or deleted outside Obsidian appear correctly with no scan or import step. A document\'s filename is its title. Status (Draft, In Progress, Complete, Published) shows as a colored stripe on the row\'s left edge, folders carry document-count badges, documents excluded from compile render dimmed, and hovering any row shows its on-disk name and the settings the binder reads from it.\n\n**Synopsis:** Right-click a document and choose **Edit synopsis\u2026** to give it one or two sentences on what the section argues or covers. The synopsis is stored as a `synopsis` property on the document, so you can also read and edit it in Obsidian\'s Properties panel at the top of the note. It shows in the row\'s hover tooltip, and the **Show synopses** button in the binder toolbar puts each synopsis under its title so you can read the argument straight down the tree. The Outline view, described below, shows and edits the same synopses as a table.\n\nBelow the manuscript, **Research** and **Exports** are pinned as drawer tabs with live file counts. Research holds markdown notes that never compile (drag documents in and out of it freely); Exports is output-only, written by the export engine. Non-markdown files are visible and openable everywhere but stay outside the manuscript. The **Add source** button beside the Research tab opens a form, which writes a research note the citation engine can cite (see Sources and Citations, below).\n\n<p align="center">\n  <img src="assets/binder-tree.png" alt="The binder showing a manuscript tree with folder count badges, colored status stripes, a dimmed compile-excluded document, and Research and Exports drawer tabs with file counts at the bottom" width="520">\n  <br>\n  <em>The binder \u2014 status stripes on the left edge, count badges on folders, a dimmed compile-excluded document, and the Research and Exports drawer below.</em>\n</p>\n\n**To open:** Use the command **Open binder** from the command palette, or assign a hotkey in Settings \u2192 Hotkeys.\n\n**Ordering:**\n\nDrag to reorder documents and folders. A document\'s position is stored in its own frontmatter (`binder-order`), so it travels with the file; a folder\'s position lives in a name marker (`020~ Part One`) that the binder hides in display. Anything without a saved position sorts naturally \u2014 A to Z, numbers in numeric order \u2014 after ordered items. Reordering never renames your documents.\n\n**Moving things:**\n\nDragging physically moves files and folders: drop between rows to reorder, onto a folder to nest inside it, on the empty space below the tree to move to the project root, or onto the Research drawer tab to move a document out of the manuscript. A folder drag carries all its children, and links heal automatically on every move.\n\n**Control strip:**\n\nA two-row control strip at the top of the binder keeps the high-frequency writing controls next to your documents, so the daily loop doesn\'t require switching to the launcher tab. The top row is a Draft / Edit / Review segmented control (clicking the active mode switches back to normal). The bottom row holds Focus and Typography toggles, a sprint chip (its menu offers the set-up modal and 10/15/25-minute quick starts; an armed sprint shows a ready chip with the duration), and a **...** menu with the occasional actions: export, publish, preview manuscript, targets dashboard, writing dashboard, and writing log. The launcher keeps its own copies of all controls, and every surface stays in sync no matter where a change is made.\n\n<p align="center">\n  <img src="assets/binder-control-strip.png" alt="The binder control strip with Draft, Edit, and Review on the top row and Focus, Typography, Sprint, and an overflow menu on the bottom row, above the project selector, toolbar, and document tree" width="520">\n  <br>\n  <em>The binder control strip \u2014 writing modes on top; focus, typography, sprint, and overflow controls below.</em>\n</p>\n\n<p align="center">\n  <img src="assets/binder-strip-overflow.png" alt="The binder overflow menu open, showing export, publish to WordPress, preview manuscript, targets dashboard, writing dashboard, and writing log" width="520">\n  <br>\n  <em>The overflow menu holds the less frequent actions: export, publish, preview, and the dashboards and log.</em>\n</p>\n\n**Keyboard navigation:**\n\nThe binder tree is fully keyboard-operable. Tab to focus the list, then:\n\n| Key | Action |\n|-----|--------|\n| `\u2191` / `\u2193` | Move through visible documents and folders |\n| `\u2192` | Expand a collapsed folder, or step into an open one |\n| `\u2190` | Collapse an open folder, or jump to the parent |\n| `Enter` | Open the document, or expand/collapse a folder |\n| `F2` | Rename the focused item inline (Enter commits, Escape cancels) |\n| `Shift+F10` or menu key | Open the item\'s right-click menu |\n\n**Opening and renaming documents:**\n\nA single click on a document opens it immediately. Rename an item from its right-click menu, or by pressing **F2** while it is focused (Enter commits, Escape cancels). Renaming in the binder renames the file itself \u2014 links heal automatically \u2014 and invalid names are rejected with a specific message, never silently altered.\n\n**Creating documents and folders:**\n\nToolbar buttons create a document or folder at the manuscript root; a folder\'s right-click menu creates inside it, and a document\'s menu creates beside it. New documents prompt for a title up front rather than being named "Untitled."\n\n**Splitting and merging sections:**\n\nA long section that has grown into two is split where you are: right-click inside the document and choose **Split section here\u2026** (or run the command **Split section at cursor**). Everything from the cursor to the end of the document moves into a new section placed right after the current one in the binder, with the same status and type. The dialog suggests a title \u2014 the heading the cursor is on, or the heading the new section starts with, or the current title with "(2)" \u2014 and you can type another. Footnotes travel correctly: a footnote used only in the second half moves with it, one used in both halves is copied, and the rest stay. The new section opens in a new tab.\n\nTo join two sections, right-click the first one in the binder and choose **Merge with next section\u2026**. The next document\'s text is appended after a blank line, the first section\'s properties (synopsis, goal, status) are kept, and the second file goes to the trash according to your Obsidian "Deleted files" setting, so it can be brought back. A toggle in the dialog adds the second section\'s title as a heading where the two join; if the second section already starts with that heading, nothing is added twice. A footnote both sections carry with the same text becomes one note again, so splitting and merging round-trips cleanly; labels that clash with different text are renumbered, so each note keeps its own text. The action is offered only when a document follows in the same folder \u2014 Research notes are never merged.\n\n**Right-click menu:**\n\nRight-click any item for its full set of actions \u2014 rename, set status, set a word count goal, set an optional document type, exclude a document from compile (or re-include it), create a document or folder, or delete to the trash (a folder\'s confirmation states how many files it contains).\n\n<p align="center">\n  <img src="assets/binder-context-menu.png" alt="The binder right-click menu on a document, showing rename, status options, set word count goal, change type options, exclude from compile, new document, new folder, and delete" width="520">\n  <br>\n  <em>A document\'s right-click menu \u2014 status, goal, type, and compile controls in one place.</em>\n</p>\n\n**Organizing with folders:**\n\nFolders are the structure. The book template creates a part folder for you, and any structure you build \u2014 in the binder or in your file explorer \u2014 is the manuscript\'s structure. Adding a file to a project is simply moving it into the project folder; it appears in the binder immediately, and files copied in outside of Obsidian show up the same way with no import step.\n\n**Upgrading from an earlier version:**\n\nThe first time you open an existing project, Writing Studio arranges its folders to match what your old binder showed \u2014 creating folders and moving documents, deleting nothing, and never changing your writing. A one-time notice explains this, and the command **Restore previous binder layout** puts your folders back the way they were if you preferred your earlier arrangement. Everything in your project folder is now part of the compiled manuscript. Check the compile preview before your first export, and use Exclude from compile on anything you want left out.\n\n---\n\n#### Outline\n\nA nonfiction manuscript is an argument, and the Outline is where you check that the argument holds together before you polish the prose. It opens in the main pane as a table of every section in the manuscript, in binder order:\n\n| Column | What it shows |\n|--------|---------------|\n| Section | The document title, indented under its part. Click it to open the document in a new tab; the outline stays open. Click a part\'s name to collapse or expand it. |\n| Synopsis | What the section argues or covers. Click to edit in place; Ctrl+Enter (Cmd+Enter on Mac) saves, Escape cancels. An empty cell says *Add a synopsis\u2026*. |\n| Status | Draft, In progress, Complete, or Published, as a dropdown. Changing it here is the same as changing it in the binder. |\n| Words | The section\'s current word count. Part rows show the total for everything inside them. |\n| Goal | The section\'s word count goal, editable. Part rows show the sum of the goals inside them. |\n| Progress | Words against goal, as a bar and a percentage. |\n\nThe footer totals the whole manuscript and, until every section has one, says how many sections still have no synopsis. A status filter at the top narrows the table to one status while keeping the parts those sections sit in. Documents excluded from compile render dimmed, and the status colour stripe from the binder appears on the left edge of each row.\n\n**Copy outline** puts the whole outline on the clipboard as an indented list of titles and synopses, ready to paste into a book proposal, an email to an editor, or a planning note.\n\nEverything the outline shows comes from the documents themselves (`synopsis`, `binder-status`, and `word-count-goal` properties), so the binder, the outline, and the targets dashboard can never disagree, and the table updates on its own as you write.\n\n**To open:** Click **Open outline** on the project card in the Launcher, the outline button in the binder toolbar, or use the command **Open outline**.\n\n---\n\n#### Find and Replace in Project\n\nA phrase, a name, a spelling, or a citation key that has to change in every chapter is one job, not thirty. Click the find-and-replace button in the binder toolbar or run the command **Find and replace in project** to open the dialog. Type what to find and the matches appear as you type, listed by section with the line around each one; the summary line reads "14 matches in 6 sections". Options: **Match case**, **Whole word**, and **Include research notes** (off by default \u2014 the manuscript is the usual scope). Properties at the top of a note and anything inside code are never searched. Click a section\'s title to open it behind the dialog at the first match.\n\nEvery match has a checkbox, ticked to start with. Untick the ones to keep, then **Replace selected**; or **Replace all** to change every match. A notice reports what changed. If a file was edited between the search and the replace, it is skipped and named, so nothing is replaced in text you have not seen.\n\n**Undo last replace** puts every touched file back exactly as it was, and stays available until the next replace or until Obsidian restarts. A file you edited after the replace is left alone and named, so your newer work is never overwritten.\n\n---\n\n#### Sources and Citations\n\nNonfiction rests on sources, and the sources already live in your vault. Writing Studio turns the notes you have into citations and a works-cited page without a reference manager in the loop.\n\n**What counts as a source.** Any markdown note, anywhere in the vault, whose properties include a `citekey`. Literature notes produced by Zotero Integration or the Citations plugin already carry one, so they work as they are. The engine reads the fields it finds, under the names those tools and ordinary writers use: `title`; `author`, `authors`, or `creators` (a plain name, a list, "Last, First", or Zotero-style name objects); `year`, `date`, or `issued`; `type` or `itemType` (book, chapter, journal article, magazine or newspaper article, web page, thesis, report; anything else is treated as a book); `publisher`, `place`, `journal` or `container-title`, `volume`, `issue`, `pages`, `edition`, `editor`, `doi`, `url`, and `accessed`. If two notes share a citekey, the one in the project\'s Research folder wins and a notice names the other.\n\n**Adding a source without typing YAML.** Click **Add source** beside the Research tab at the bottom of the binder, right-click any research note and choose **Add source\u2026**, or run the command **Add source**. The form asks for the type, title, authors (one per line, first name first), year, and the fields that type needs. The citation key is filled in for you from the first author\'s surname and the year (`smith2020`, then `smith2020a` if that is taken) and can be changed. Saving creates a note such as `Research/Smith 2020 - The Long Argument.md` with the properties set and an empty body for your own notes, and opens it.\n\n```yaml\n---\ncitekey: smith2020\ntype: book\ntitle: "The Long Argument: Why Reform Fails"\nauthor:\n  - Jane Smith\nyear: 2020\npublisher: Riverhead\nplace: New York\n---\n```\n\n**Citing in a draft.** Two spellings work, and you can mix them:\n\n| You type | Meaning |\n|----------|---------|\n| `[@smith2020]` | Cite the work |\n| `[@smith2020, p. 12]` | Cite page 12 (`pp. 12-14` for a range, `chap. 3` for anything else) |\n| `[@lee2018; @okafor2021]` | Two works in one citation |\n| `[see @smith2020, p. 12]` | A prefix prints before the citation |\n| `@smith2020` | The author is part of the sentence: "As Smith (2020) shows\u2026" |\n| `[-@smith2020]` | Year only, when the author was just named |\n| `[[Smith 2020]]` | A wikilink to a source note is a citation |\n| `[[Smith 2020\\|p. 12]]` | The wikilink\'s alias is the page |\n\nWikilinks to notes without a citekey behave exactly as before. To cite without remembering a key, right-click in the editor and choose **Insert citation\u2026** (or run the command **Insert citation**): the picker searches author, year, and title, takes an optional page, and inserts the citation at the cursor.\n\n**Renaming a citation key.** Right-click a source note in the Research drawer and choose **Rename citation key\u2026** (or run the command **Rename citation key** with the source note open). The dialog shows the source, its current key, and where it is cited \u2014 "Used in 9 citations across 4 sections and 1 research note" \u2014 and checks the new key against the rules and every key in use. On **Rename**, the `citekey` property and every `@oldkey` citation in the project\'s manuscript and research notes are rewritten, pages and prefixes untouched. Wikilink citations name the file rather than the key, so they need no change. Other projects in the vault are not touched.\n\n**Citation style.** Set once under Settings \u2192 Export \u2192 Citations:\n\n- **Author-date (Chicago)**, the default: `(Smith 2020, 12)` in the text and a **Works cited** page at the end.\n- **Notes (Chicago)**: each citation becomes a footnote, in full form the first time a source appears in a chapter and short form after, with a **Bibliography** page at the end. Your own footnotes and citation notes share one numbering sequence, in order of appearance.\n- **Custom style file (.csl)**: any Citation Style Language file, for APA, MLA, or a house style. Applies to PDF, Word, and RTF, where Pandoc\'s citeproc does the formatting; the other formats use the built-in author-date style.\n\n**Every format gets the works-cited page.** PDF, Word, and RTF hand the cited sources to Pandoc as a bibliography and run with `--citeproc` (the Notes setting ships its own compact Chicago notes style, so no download is needed). HTML, Manuscript, EPUB, Markdown, and the compile preview are formatted by the plugin itself in the two Chicago styles. Only sources you actually cite appear. A citation whose key matches no source is left visible as `[@key?]` and a notice names it, so the export never silently drops a reference.\n\n**Footnotes everywhere.** The built-in converter now handles reference footnotes (`[^1]` with its `[^1]: text` definition) and inline footnotes (`^[text]`). Numbering restarts with each chapter. HTML and Manuscript collect every note under a **Notes** heading at the end, grouped by chapter; EPUB keeps each chapter\'s notes at the end of that chapter with the markup reading systems use to show them as popups; Markdown export keeps footnote syntax as it is; PDF, Word, and RTF had footnotes already.\n\n**Before you export,** the export dialog reports what it found: "12 citations to 8 sources \xB7 Style: Author-date (Chicago)", and in warning color any key that matches nothing.\n\n---\n\n#### Compile Preview\n\nThe Compile Preview opens a split pane showing all binder documents for the active project concatenated in order, rendered as a finished manuscript.\n\n**To open:** Use the command **Preview compiled manuscript** from the command palette, or click the **Preview manuscript** button in the Launcher panel.\n\n---\n\n### Your Writing Environment\n\n#### Writing Modes\n\nThree modes shape how the editor behaves. The current mode is always shown in the status bar. Click the mode pill in the status bar to switch modes.\n\n| Mode | Purpose |\n|------|---------|\n| **Draft** | Distraction-free drafting; spell-check and formatting hints suppressed |\n| **Edit** | Revision pass; full editor tooling active |\n| **Review** | Read-only style; ideal for a final proofread |\n| **None** | Normal Obsidian behavior |\n\n**To switch modes:**\n- Click the mode indicator in the status bar.\n- Right-click inside the editor, then choose **Switch writing mode \u2192** under **Writing studio options**.\n- Assign hotkeys to **Switch to draft mode / Edit mode / Review mode** in Settings \u2192 Hotkeys.\n- Use the Writing Studio Launcher panel.\n\nThe active mode is saved and restored the next time Writing Studio launches \u2014 automatically at startup when **Open on startup** is enabled, or when you next open the Launcher or switch a mode.\n\n---\n\n#### Focus Mode\n\nFocus Mode dims everything in the editor except the paragraph or sentence you are currently writing, reducing visual noise and keeping attention on the active thought.\n\n**To toggle:** Assign a hotkey to **Toggle focus mode** in Settings \u2192 Hotkeys, or use the toggle in the Launcher panel. Press `Escape` to exit.\n\n**Settings (Settings \u2192 Focus mode):**\n\n| Setting | Description |\n|---------|-------------|\n| Focus unit | Highlight at the **paragraph** or **sentence (line)** level |\n| Dim opacity | How opaque the dimmed text appears (10\u201350%) |\n| Font size override | Override the editor font size while focused; 0 = use theme default. Takes precedence over Typography Mode\'s font size while Focus Mode is active |\n| Auto-hide sidebars | Collapse left and right sidebars when Focus Mode activates |\n| Typewriter scroll | Keep the active line vertically centered as you type |\n\n---\n\n#### Typography Mode\n\nTypography Mode applies a consistent, reader-friendly text treatment to the editor: a curated font, constrained line length, controlled line height, and optional letter spacing.\n\n**To toggle:** Assign a hotkey to **Toggle typography mode** in Settings \u2192 Hotkeys, or use the toggle in the Launcher panel.\n\n**To change the font while Typography Mode is active:** Right-click inside the editor and choose **Typography font \u2192** under **Writing studio options**. A font picker menu appears with all available fonts; the active font is shown with a checkmark. Selecting a font applies it immediately and saves the setting.\n\n> **Note on fonts:** Typography fonts are loaded from Google Fonts and require an internet connection the first time each font is used. After the initial load they are cached and work offline.\n\n**Settings (Settings \u2192 Typography):**\n\n| Setting | Description |\n|---------|-------------|\n| Font family | Choose from the curated font list or enter a custom font name |\n| Custom font name | Used when **Custom font name\u2026** is selected above |\n| Max line length | Characters per line (55\u201380); constrains the editor column width |\n| Font size | Editor font size in pixels |\n| Line height | Multiplier; default 1.7 |\n| Letter spacing | CSS `letter-spacing` value (e.g. `normal`, `0.02em`) |\n| Persist across sessions | Restore Typography Mode when Writing Studio next launches |\n\n**Available fonts:**\n\n| Option | Font |\n|--------|------|\n| Monospaced | iA Writer Mono (falls back to Roboto Mono / Courier New) |\n| Serif | iA Writer Duo Serif (falls back to Georgia) |\n| Sans-serif | iA Writer Quattro (falls back to system sans-serif) |\n| Cormorant Garamond | Elegant display serif |\n| Crimson Text | Classic book serif |\n| EB Garamond | Traditional Garamond revival |\n| Libre Baskerville | Readable web serif |\n| Libre Caslon Text | Clean slab serif |\n| Literata | Designed for long-form reading |\n| Lora | Contemporary calligraphic serif |\n| Inter | Modern humanist sans-serif |\n| Lato | Friendly rounded sans-serif |\n| Source Sans 3 | Clean UI sans-serif |\n| Custom font name\u2026 | Use any font installed on your system |\n\n---\n\n### Tracking Your Progress\n\n#### Writing Sprint Timer\n\nThe Sprint Timer runs a timed writing session. When a sprint is active, a floating overlay displays the countdown and gives you full control \u2014 without requiring you to stay on the dashboard.\n\n**To set up a sprint:**\n\n- Click **Set up sprint** in the Launcher panel to open the sprint configuration modal.\n- Or click one of the **Quick Sprint Options** preset buttons (10 m, 15 m, 25 m) in the Launcher panel to load a duration directly.\n\nEither path opens the floating overlay in a ready state \u2014 the timer does not start until you press \u25B6 on the overlay itself. This gives you time to navigate to your draft or open the Binder before the clock begins.\n\n**Sprint configuration modal:**\n\nThe modal lets you set:\n\n- Duration (preset or custom, in minutes)\n- Word count goal for the session\n- Scope (current file or entire project)\n\nClick **Launch sprint timer** to open the overlay in ready state.\n\n**Using the floating overlay:**\n\n| Control | Action |\n|---------|--------|\n| \u25B6 | Start or resume the sprint |\n| \u23F8 | Pause the sprint |\n| \u25A0 | Stop and end the sprint |\n\nThe overlay is draggable \u2014 click and drag the header to reposition it anywhere on screen. It stays on top regardless of writing mode or Focus Mode. The current countdown is also shown in the Obsidian status bar (`\u23F1 MM:SS`) and, when Focus Mode is active, in the focus toolbar.\n\nWhen the sprint ends, a summary modal shows words written, duration, and words-per-minute. The session is logged to sprint history and optionally appended to your Daily Note.\n\n**Settings (Settings \u2192 Sprint & goals):**\n\n| Setting | Description |\n|---------|-------------|\n| Default sprint duration | Starting value in the sprint modal (minutes) |\n| Default daily word goal | Target used in the Writing Dashboard and Launcher |\n| Sound notifications | Play a tone when the sprint ends |\n| Sprint history retention | Days to keep sprint records before purging |\n| Inline goal banner | Show a progress bar below the editor toolbar when a document has a word count goal set |\n\n---\n\n#### Word Count Goal\n\nA per-document word count goal can be set and tracked inline.\n\n**To set a goal:**\n- Use the command **Set word count goal** from the command palette.\n- Right-click inside the editor and choose **Set word count goal** under **Writing studio options**.\n\nWhen a goal is set and **Inline goal banner** is enabled, a progress bar appears below the editor toolbar showing current words, goal, and percentage. It updates in real time as you type.\n\n---\n\n#### Session Word Count\n\nThe status bar shows a `(+N)` delta next to the current file\'s word count, indicating how many words you have added since opening that file this session. The Launcher\'s **Today** card also shows a cumulative session total across all files opened during the current Obsidian session. Both counts reset when Obsidian restarts.\n\n---\n\n#### Project Word Count Goal\n\nWhen an active project has a total word count goal set, a dedicated status bar item shows `{current} / {goal} project words`. This updates automatically as you write. Set a project goal in the Project modal when creating or editing a project.\n\n---\n\n#### Writing Dashboard\n\nThe Writing Dashboard shows session statistics (words written, sprints completed, time), sprint history, daily progress toward your goal, and per-project word counts with reading time.\n\n**To open:** Use the command **Open writing dashboard** from the command palette, or click the **Writing dashboard** button in the Launcher panel.\n\n---\n\n#### Targets Dashboard\n\nThe Targets Dashboard lets you assign word count goals to individual documents in the active project\'s binder and track progress across the whole project at a glance. Goals can be edited inline in the table. Rows are sortable and filterable by status.\n\n**To open:** Use the command **Open targets dashboard**, click the **Targets dashboard** button in the Launcher panel, or assign a hotkey in Settings \u2192 Hotkeys.\n\n---\n\n#### Daily Writing Log\n\nThe Writing Log is a sidebar panel that shows your writing history at a glance.\n\n**To open:** Use the command **Open writing log** from the command palette, or click the **Writing log** button in the Launcher panel.\n\n**The Writing Log shows:**\n- Current streak (days in a row with at least one sprint)\n- This session: total session words, sprint words, sprints completed, and minutes written\n- Recent activity: a bar chart with one row per day you wrote, each showing word count, sprints completed, and a visual bar proportional to the day\'s output. Days with no writing are collapsed rather than shown as empty rows, so the log stays focused on the days you actually worked.\n\nWhen **Append to daily note** is enabled (Settings \u2192 Writing log), a summary of each completed sprint is also appended to today\'s Daily Note.\n\n---\n\n### Getting Your Work Out\n\n#### Export Engine\n\nWhen your draft is ready, the Export Engine converts it to a finished file in your chosen format \u2014 no reformatting required.\n\n**Supported formats:** Manuscript (HTML) \xB7 PDF \xB7 Word (.docx) \xB7 RTF \xB7 HTML \xB7 Markdown \xB7 EPUB\n\n**To export:**\n- Right-click inside the editor and choose **Export this document** under **Writing studio options**.\n- Use the command **Export document** from the command palette.\n- Click the **Export** button in the Launcher panel.\n- Assign a hotkey to **Export document** in Settings \u2192 Hotkeys.\n- Right-click a folder in the binder and choose **Export folder** to export just that part of the manuscript.\n\n**One title names the export**\n\nThe export dialog\'s **Title** dropdown sets the export\'s filename, its title page heading, and the file\'s metadata in one place \u2014 the three are always identical. A whole-project or single-document export offers the project name or a title you type yourself; a folder export adds **Folder name** (the default) and **Project \u2014 folder** forms. Choosing **Type your own title** keeps Export disabled until you type one, so an export is never accidentally untitled.\n\nThe compile preview renders exactly what the dialog\'s current selections will produce \u2014 same documents, same headings, same title page \u2014 and when you proceed to export from the preview, your selections carry back into the dialog.\n\n<p align="center">\n  <img src="assets/export-modal-title.png" alt="The export dialog with the Title dropdown open on a folder export, showing Folder name, Project \u2014 folder, Project name, and Type your own title" width="560">\n  <br>\n  <em>The Title dropdown \u2014 one choice names the filename, the title page, and the file metadata.</em>\n</p>\n\n**Manuscript format**\n\nThe Manuscript format produces a self-contained HTML file formatted to industry-standard manuscript conventions:\n- Courier New 12 pt, double-spaced, 1-inch margins\n- Title page with the export\'s chosen title, author name, approximate word count, and optional contact information\n- Chapter headings in uppercase, page-break before each\n- Scene breaks rendered as `#` (the standard manuscript convention)\n\nNo external tools are required for manuscript export.\n\n**Settings (Settings \u2192 Export):**\n\n| Setting | Description |\n|---------|-------------|\n| Default export format | Pre-selected format in the export modal |\n| Default paper size | Letter (US) or A4 |\n| Export font | Font name used in PDF/DOCX output (e.g. `Georgia`) |\n| Export font size | Point size for PDF/DOCX output |\n| Pandoc path | Full path to the `pandoc` binary if it is not on your system PATH |\n| PDF engine | Engine Pandoc uses for PDF export. **Auto** (default) picks an installed LaTeX engine \u2014 `xelatex` or `lualatex` when a custom font is set, `pdflatex` otherwise. Pin a specific engine to always use it; if a pinned engine is not installed the export fails with a message naming it rather than silently substituting another |\n| PDF engine location | Folder containing the PDF engine binaries \u2014 or full path to one engine binary \u2014 when the engine is not on the system PATH. Leave blank to search the PATH plus common install locations |\n| Citation style | **Author-date (Chicago)** puts `(Smith 2020)` in the text with a Works cited page; **Notes (Chicago)** turns each citation into a footnote with a Bibliography page; **Custom style file (.csl)** applies any CSL style to PDF, Word, and RTF (other formats fall back to author-date). See Sources and Citations, above |\n| Custom style file | Path to a `.csl` file, inside the vault or anywhere on disk, used when the citation style is set to custom |\n| EPUB language | BCP 47 language tag (e.g. `en`, `fr`, `de`) |\n| EPUB include cover | Generate a text cover page when no cover image is provided |\n\n> **Requirement:** Pandoc must be installed for PDF, DOCX, RTF, HTML, and EPUB export. Download from [pandoc.org](https://pandoc.org/installing.html). For PDF export, a LaTeX distribution (e.g. TeX Live or MiKTeX) is also required \u2014 unless the PDF engine setting is pinned to [wkhtmltopdf](https://wkhtmltopdf.org/), which renders PDFs without LaTeX. Manuscript (HTML) export does not require Pandoc.\n>\n> **macOS note:** apps launched from the Dock don\'t see the shell PATH, so a correctly installed TeX Live or Homebrew binary can still be "not found." Common install locations (`/Library/TeX/texbin`, `/opt/homebrew/bin`, `/usr/local/bin`) are searched automatically; for anything else, set the PDF engine location setting.\n>\n> **Font note:** the export font setting applies only to the LaTeX PDF path (`xelatex`/`lualatex`; `pdflatex` cannot apply custom fonts either). The `wkhtmltopdf` path takes its typography from Pandoc\'s HTML/CSS output, so the export font setting is ignored there \u2014 the plugin tells you when a font was skipped for this reason.\n>\n> **Formatting note:** the built-in converter used for HTML, Manuscript, and EPUB output supports headings, paragraphs, lists, blockquotes, fenced code blocks, tables, images, links, footnotes, and citations. Nested lists and setext (underline-style) headings are not converted \u2014 use a Pandoc format (PDF, DOCX, RTF) if your manuscript depends on them.\n\n---\n\n#### WordPress Publishing\n\nPublish your finished draft directly to WordPress without leaving Obsidian. The modal lets you choose the target site, set the post title, status, categories, tags, excerpt, and an optional scheduled publication date.\n\n**To publish:**\n- Right-click inside the editor and choose **Publish to WordPress** under **Writing studio options**.\n- Use the command **Publish to WordPress** from the command palette.\n- Click the **Publish to WordPress** button in the Launcher panel.\n- Assign a hotkey to **Publish to WordPress** in Settings \u2192 Hotkeys.\n\n**Setting up a site (Settings \u2192 WordPress):**\n\n1. Click **+ add WordPress site**.\n2. Enter a nickname, the site URL (e.g. `https://yourblog.com`), and your WordPress username.\n3. Generate an application password in WordPress under **Users \u2192 Profile \u2192 Application passwords** and paste it into the **Application password** field.\n4. Click **Test connection** to verify.\n\n**Per-site options:**\n\n| Setting | Description |\n|---------|-------------|\n| Default post status | Draft \xB7 Pending Review \xB7 Published |\n| Wikilink handling | **Strip** removes `[[...]]` syntax, leaving plain text \xB7 **Convert** turns wikilinks into URLs |\n\n**Preserving your credentials across updates**\n\nWriting Studio stores your WordPress site credentials in your vault\'s `.obsidian/plugins/writing-studio/data.json` file. Obsidian\'s in-app update process does not touch this file \u2014 your credentials are preserved automatically. However, if you uninstall and reinstall the plugin manually, or if a vault sync conflict overwrites `data.json`, credentials will be lost and will need to be re-entered. To avoid this, always use Obsidian\'s built-in Update button rather than uninstalling manually.\n\n---\n\n### Supporting Tools\n\n#### Frontmatter Manager\n\nWriting Studio automatically manages YAML frontmatter in your documents when **Frontmatter auto-update** is enabled. On every save it updates:\n\n- `word-count` \u2014 current word count\n- `modified` \u2014 last-modified date\n\nThe `word-count-goal` frontmatter field is read by the inline goal banner and the Word Count Goal modal.\n\n---\n\n## Context Menus\n\nWriting Studio adds items to Obsidian\'s right-click context menus. All Writing Studio items are grouped together under the heading **Writing studio options** to distinguish them from other plugins and Obsidian\'s built-in options.\n\n### Right-click inside an open document (editor menu)\n\n| Option | Action |\n|--------|--------|\n| Export this document | Open the export modal for the current file |\n| Publish to WordPress | Open the WordPress publish modal for the current file |\n| Set word count goal | Set a word count target for the current document |\n| Insert citation\u2026 | Pick a source from the vault and insert a citation at the cursor |\n| Split section here\u2026 | Move everything from the cursor to the end of the document into a new section placed right after this one (manuscript documents of the active project only) |\n| Switch writing mode \u2192 | Open a mode-switcher menu (Draft / Edit / Review / None) |\n| Typography font \u2192 | Open a font picker menu to change the typography font (visible only when Typography Mode is active) |\n\n### Right-click a folder in the file explorer\n\n| Option | Action |\n|--------|--------|\n| Open in sidebar explorer | Open the folder in the Folder Sidebar Explorer panel |\n\n---\n\n## Commands Reference\n\nNo default hotkeys are assigned. All commands can be given a hotkey in **Settings \u2192 Hotkeys**.\n\n| Command | Description |\n|---------|-------------|\n| Open launcher | Open the launcher sidebar panel |\n| Open binder | Open the writing binder sidebar panel |\n| Open writing log | Open the daily writing log panel |\n| Toggle focus mode | Enable or disable focus mode |\n| Toggle typography mode | Enable or disable typography mode |\n| Switch to draft mode | Activate draft writing mode |\n| Switch to edit mode | Activate edit writing mode |\n| Switch to review mode | Activate review writing mode |\n| Start writing sprint | Open the sprint timer modal |\n| Export document | Export the current document |\n| Export project | Export the full project |\n| Preview compiled manuscript | Open the compile preview pane |\n| Open outline | Open the outline of the active project: every section\'s synopsis, status, and words against goal |\n| Insert citation | Pick a source from the vault and insert a citation at the cursor |\n| Add source | Open the form that writes a citable source note into the project\'s Research folder |\n| Split section at cursor | Move everything from the cursor to the end into a new section placed right after the current one |\n| Find and replace in project | Find a word or phrase across the project\'s sections, replace the matches you choose, and undo the last replace |\n| Rename citation key | Change a source\'s citation key and update every citation of it in the project |\n| Publish to WordPress | Publish the current document to WordPress |\n| Create new writing project | Create a new writing project |\n| Open writing dashboard | Open the statistics dashboard |\n| Open targets dashboard | Open the word count targets panel |\n| Set word count goal | Set a per-document word count goal |\n| Open folder in sidebar explorer | Search and open a vault folder in the sidebar |\n| Restore previous binder layout | Put a project\'s folders back the way they were before the one-time folder arrangement |\n\n---\n\n## Settings Overview\n\nOpen via **Settings \u2192 Writing Studio**. General settings appear at the top; each other section opens as its own page. Every setting can also be found by name from Obsidian\'s settings search (Obsidian 1.13+).\n\n| Section | What it controls |\n|-----|-----------------|\n| General | Open on startup, default project folder, author name, document type, frontmatter auto-update |\n| Focus mode | Focus unit, dim opacity, font override, sidebar behavior, typewriter scroll |\n| Typography | Font family, custom font name, line length, font size, line height, letter spacing, persistence |\n| Sprint & goals | Sprint duration, daily goal, sound notifications, history retention, inline banner |\n| Export | Format, paper size, font, font size, Pandoc path, PDF engine, PDF engine location, citation style, custom style file, EPUB language, EPUB cover |\n| Writing log | Append sprint summaries to Daily Note |\n| WordPress | Site credentials, default post status, wikilink handling |\n\n---\n\n## Ribbon Icon\n\nWriting Studio adds a single icon to the Obsidian ribbon.\n\n| Icon | Action |\n|------|--------|\n| Feather | Open the Writing Studio Launcher panel |\n\nAll other features are accessible from the Launcher panel, the command palette, context menus, or assigned hotkeys.\n\n---\n\n## Installation\n\n1. Download `main.js`, `manifest.json`, and `styles.css` from the latest [GitHub release](../../releases/latest).\n2. Create the folder `<vault>/.obsidian/plugins/writing-studio/` if it does not exist.\n3. Copy the three files into that folder.\n4. In Obsidian, go to **Settings \u2192 Community Plugins**, find **Writing Studio**, and enable it.\n\n> **Building from source:** Clone the repository, run `npm install`, then `npm run build`. Copy the three output files as above.\n\n---\n\n## Requirements\n\nMost features work out of the box. A few require additional software for specific functions, noted below.\n\n| Requirement | When needed |\n|-------------|-------------|\n| Obsidian 1.13.0 or later | Always |\n| Desktop (Windows, macOS, Linux) | Always \u2014 this plugin does not run on mobile |\n| Internet connection | First use of each Typography Mode font (cached after that) |\n| [Pandoc](https://pandoc.org/installing.html) | Export to PDF, DOCX, RTF, HTML, EPUB |\n| LaTeX (TeX Live / MiKTeX) or [wkhtmltopdf](https://wkhtmltopdf.org/) | Export to PDF only (wkhtmltopdf must be pinned in the PDF engine setting) |\n| WordPress 5.6+ with REST API enabled | WordPress publishing |\n| WordPress Application Password | WordPress publishing |\n\n---\n\n## Reporting a Bug\n\nIf something isn\'t working, please open an issue on GitHub:\n\n**[Submit a bug report](https://github.com/writerP-777/obsidian-writing-studio/issues/new)**\n\nInclude the following when you report:\n\n- Writing Studio version (visible in **Settings \u2192 Community Plugins**)\n- Obsidian version (visible in **Settings \u2192 About**)\n- Operating system (Windows / macOS / Linux) and version\n- What you expected to happen\n- What actually happened, and any steps to reproduce it\n\nFeature requests are welcome in the same place \u2014 please label them as **[Feature Request]** in the issue title.\n\n---\n\n## Security\n\n[![CodeQL](https://github.com/writerP-777/obsidian-writing-studio/actions/workflows/codeql.yml/badge.svg)](https://github.com/writerP-777/obsidian-writing-studio/actions/workflows/codeql.yml)\n[![OpenSSF Scorecard](https://api.securityscorecards.dev/projects/github.com/writerP-777/obsidian-writing-studio/badge)](https://securityscorecards.dev/viewer/?uri=github.com/writerP-777/obsidian-writing-studio)\n[![OpenSSF Baseline](https://www.bestpractices.dev/projects/12832/baseline)](https://www.bestpractices.dev/projects/12832)\n[![ESLint](https://github.com/writerP-777/obsidian-writing-studio/actions/workflows/eslint.yml/badge.svg)](https://github.com/writerP-777/obsidian-writing-studio/actions/workflows/eslint.yml)\n[![ORCID](https://img.shields.io/badge/ORCID-0009--0009--8598--2069-brightgreen?logo=orcid&logoColor=white)](https://orcid.org/0009-0009-8598-2069)\n\nEvery push and pull request is scanned automatically:\n\n| Tool | What it checks |\n|------|----------------|\n| **CodeQL** | Static analysis for security vulnerabilities (XSS, injection, unsafe patterns) in TypeScript/JavaScript source |\n| **OpenSSF Scorecard** | Supply-chain security posture: dependency hygiene, branch protection, signed releases, and more |\n| **ESLint** (`eslint-plugin-obsidianmd`) | Obsidian plugin guideline compliance \u2014 fails on any warning or error |\n\nResults are published to the **Security** tab of this repository (GitHub code scanning).\n\nFor local development, a pre-commit hook runs ESLint (blocking) and a pre-push hook runs a full CodeQL scan (blocks the push if any HIGH or CRITICAL findings are present). Install the [CodeQL CLI](https://github.com/github/codeql-cli-binaries/releases) to enable local scanning (`winget install GitHub.CodeQL` on Windows).\n';
+var README_default = '<p align="center">\r\n  <img src="assets/logo.png" width="120" alt="Writing Studio logo">\r\n</p>\r\n\r\n# Writing Studio\r\n\r\n**Version 3.2.0** \xB7 Desktop only\r\n\r\n![GitHub all releases](https://img.shields.io/github/downloads/writerP-777/obsidian-writing-studio/total)\r\n[![OpenSSF Best Practices](https://www.bestpractices.dev/projects/12832/badge)](https://www.bestpractices.dev/projects/12832)\r\n\r\nWriting Studio turns Obsidian into a dedicated environment for serious nonfiction work \u2014 from your first research notes to a finished, exported manuscript. It bundles a project binder, writing modes, focus and typography tools, sprint timer, progress tracking, manuscript export, and WordPress publishing into a single plugin. A built-in sidebar file explorer lets you browse, preview, and pull content from anywhere in your vault without leaving your draft.\r\n\r\n<p align="center">\r\n  <img src="assets/sidebar-explorer-screenshot.png" alt="Writing Studio with the Launcher panel open on the left, an active draft with its word count goal banner in the center, and the Folder Sidebar Explorer previewing a research file on the right" width="900">\r\n  <br>\r\n  <em>Writing Studio in use \u2014 Launcher (left), active draft with word count goal banner (center), Folder Sidebar Explorer open to a research folder (right).</em>\r\n</p>\r\n\r\n<p align="center">\r\n  <a href="https://buymeacoffee.com/writerp777">\r\n    <img src="https://img.buymeacoffee.com/button-api/?text=Buy%20me%20a%20coffee&slug=writerp777&button_colour=c9a84c&font_colour=000000&font_family=Georgia&outline_colour=000000&coffee_colour=ffffff" alt="Buy me a coffee" height="40">\r\n  </a>\r\n</p>\r\n\r\n## Contents\r\n\r\n- [Features](#features)\r\n- [Language support](#language-support)\r\n- [Writing Studio Launcher](#writing-studio-launcher)\r\n- [Folder Sidebar Explorer](#folder-sidebar-explorer)\r\n- [Your Project](#your-project)\r\n- [Your Writing Environment](#your-writing-environment)\r\n- [Tracking Your Progress](#tracking-your-progress)\r\n- [Getting Your Work Out](#getting-your-work-out)\r\n- [Supporting Tools](#supporting-tools)\r\n- [Context Menus](#context-menus)\r\n- [Commands Reference](#commands-reference)\r\n- [Settings Overview](#settings-overview)\r\n- [Ribbon Icon](#ribbon-icon)\r\n- [Installation](#installation)\r\n- [Requirements](#requirements)\r\n- [Reporting a Bug](#reporting-a-bug)\r\n- [Security](#security)\r\n\r\n---\r\n\r\n## Features\r\n\r\n**Writing Binder** \u2014 Your project\'s folder tree, rendered as a manuscript. The binder reads your folders directly, so files created, renamed, or moved anywhere \u2014 even outside Obsidian \u2014 always appear correctly, with no import or scan step. Drag chapters into order, set per-document status and word count goals, and exclude documents from compile with a right-click.\r\n\r\n**Outline** \u2014 Give each section a one-paragraph synopsis, the claim it makes, and the Outline view lays the whole project out as an editable table: synopsis, status, and words against goal, section by section, with part totals. Copy it out as an annotated table of contents for a book proposal.\r\n\r\n**Project Manager** \u2014 Create projects from six templates (blank, book, article series, blog collection, journal article, magazine article), set a total word count goal, and switch between projects from the Launcher.\r\n\r\n**Compile Preview** \u2014 Concatenate all binder documents in order and render them as a finished manuscript in a split pane, without exporting.\r\n\r\n**Writing Modes** \u2014 Switch between Draft (distraction-free), Edit (full tooling), and Review (read-only) modes from the status bar, command palette, context menu, or Launcher.\r\n\r\n**Focus Mode** \u2014 Dim everything except the paragraph or sentence you are writing. Configurable dim level, font size override, sidebar collapse, and typewriter scroll.\r\n\r\n**Typography Mode** \u2014 Apply a curated font, constrained line length, and controlled line height to the editor. Fourteen font options including iA Writer fonts, Google Fonts, and custom system fonts.\r\n\r\n**Sprint Timer** \u2014 Run timed writing sessions with a draggable floating overlay. Set duration, word goal, and scope (file or project). Quick-start presets (10 m, 15 m, 25 m) available from the Launcher.\r\n\r\n**Progress Tracking** \u2014 Live word counts in the status bar and Launcher, session delta tracking, per-document and per-project word count goals with inline progress banners, and a 30-day writing log with streak tracking.\r\n\r\n**Export Engine** \u2014 Export to Manuscript (HTML), PDF, Word (.docx), RTF, HTML, Markdown, and EPUB. Manuscript format produces industry-standard layout with no external tools; other formats require Pandoc.\r\n\r\n**Sources, Citations & Footnotes** \u2014 Any note with a `citekey` property is a source, including literature notes from Zotero Integration or the Citations plugin. Cite with `[@smith2020, p. 12]` or a wikilink to the source note, and every export carries the citations and a works-cited page in Chicago author-date or notes style. Footnotes now survive every format. An **Add source** form and an **Insert citation** picker mean nobody has to type a citation key by hand.\r\n\r\n**WordPress Publishing** \u2014 Publish directly to WordPress from Obsidian. Set post title, status, categories, tags, excerpt, and scheduled date. Supports multiple sites with per-site credentials and connection testing.\r\n\r\n**Folder Sidebar Explorer** \u2014 Browse any vault folder in a sidebar panel. Search by name or file content, preview Markdown files and images inline, and insert selected text directly into the active editor.\r\n\r\n## Language support\r\n\r\nWriting Studio is available in the following languages in addition to English:\r\n\r\n- Arabic\r\n- Bengali\r\n- Brazilian Portuguese\r\n- Chinese (Simplified)\r\n- French\r\n- German\r\n- Hindi\r\n- Japanese\r\n- Korean\r\n- Russian\r\n- Spanish\r\n\r\n**To change the language:** Open **Settings \u2192 General** in Obsidian, scroll to **Language**, and select your preferred language from the list. Restart Obsidian for the change to take effect. Writing Studio will display in the selected language if it is supported.\r\n\r\n**Found a translation error or missing text?** Please open an issue on GitHub \u2014 [Submit a bug report or enhancement request](https://github.com/writerP-777/obsidian-writing-studio/issues/new) \u2014 and include the language, the location in the plugin where the text appears, and what it currently says. We will address it in the next release.\r\n\r\n### Writing Studio Launcher\r\n\r\nThe Launcher is your home base in Writing Studio \u2014 a sidebar panel that shows your active project, progress toward your goals, and one-click access to every major feature.\r\n\r\n<p align="center">\r\n  <img src="assets/launcher-project-card.png" alt="The Launcher project card with the project dropdown and the new project, edit, and delete buttons above the word count and project goal" width="520">\r\n  <br>\r\n  <em>The Launcher project card \u2014 switch projects from the dropdown; word count against the project goal below.</em>\r\n</p>\r\n\r\nBy default Writing Studio launches automatically when Obsidian loads \u2014 the Launcher opens and your last session\'s writing mode and typography are restored. To disable this, turn off **Open on startup** in **Settings \u2192 General**: Obsidian then opens clean, with no Writing Studio status bar items or restored modes, and the studio stays dormant until you launch it yourself. Launching it manually restores your last session state the same way.\r\n\r\n**To open manually:** Click the feather ribbon icon, or assign a hotkey to **Open launcher** in Settings \u2192 Hotkeys.\r\n\r\n**First run:** In a vault with no projects yet, the Launcher shows an orientation card explaining how projects work, with a **Create your first project** button to get started.\r\n\r\n<p align="center">\r\n  <img src="assets/launcher-first-run.png" alt="The Launcher first-run orientation card with an explanation of projects and a Create your first project button" width="520">\r\n  <br>\r\n  <em>First run \u2014 the orientation card shown before any project exists.</em>\r\n</p>\r\n\r\n**The Launcher includes:**\r\n- Active project name, total word count, and progress toward your project word count goal\r\n- Writing mode selector (Draft / Edit / Review)\r\n- Focus Mode and Typography Mode toggles\r\n- Sprint timer with "Set up sprint" button and Quick Sprint Options presets (10 m, 15 m, 25 m)\r\n- Today card showing words written, sprints completed, session word count, and streak\r\n- Quick-action buttons: Targets Dashboard, Writing Dashboard, Preview manuscript, Export, Writing Log, Publish to WordPress\r\n\r\n---\r\n\r\n### Folder Sidebar Explorer\r\n\r\nThe Folder Sidebar Explorer opens any vault folder in a right-sidebar panel, letting you browse reference material, research notes, or any folder outside your active project without leaving your draft. Unlike the Binder \u2014 which is scoped to your writing project \u2014 the sidebar explorer works with any folder in your vault.\r\n\r\n<p align="center">\r\n  <img src="assets/folder-sidebar-explorer.png" alt="The Folder Sidebar Explorer panel with a Markdown file open in preview, showing the breadcrumb trail, back and root buttons, and the insert selection button" width="340">\r\n  <br>\r\n  <em>The Folder Sidebar Explorer with a research file open in preview \u2014 select text and click insert selection to pull it into your draft.</em>\r\n</p>\r\n\r\n**To open:**\r\n- Use the command **Open folder in sidebar explorer** from the command palette \u2014 a folder picker appears so you can choose which folder to explore.\r\n- Right-click any folder in the file explorer and choose **Open in sidebar explorer** under **Writing studio options**.\r\n- Right-click any folder in [Notebook Navigator](https://github.com/johansan/notebook-navigator) and choose **Open in sidebar explorer** (requires Notebook Navigator to be installed).\r\n- Assign a hotkey in Settings \u2192 Hotkeys.\r\n\r\nThe panel opens in the **right sidebar**. The folder you open becomes the **root folder** for that session \u2014 the breadcrumb trail, the \u2302 root button, and search all operate relative to it.\r\n\r\n**Browsing and navigation:**\r\n\r\n| Feature | How to use |\r\n|---------|-----------|\r\n| Browse into a subfolder | Click the folder |\r\n| Preview a Markdown file | Click the file \u2014 the folder listing is replaced by a rendered preview inside the panel |\r\n| Preview an image | Click the file \u2014 displayed inline |\r\n| Preview audio | Click the file \u2014 player appears inline |\r\n| Other file types | Click the file \u2014 an **Open in editor** button appears |\r\n| Go back | Click **\u2190 back**, or press `Backspace` when the list has keyboard focus |\r\n| Return to root folder | Click **\u2302 root** to jump back to the folder you originally opened |\r\n| Keyboard navigation | Tab to focus the list, then `\u2191` / `\u2193` to move, `Enter` to open, `Backspace` to go back |\r\n| Breadcrumb navigation | Click any segment in the breadcrumb trail to jump directly to that folder |\r\n\r\n**Search:**\r\n\r\nA search bar appears at the top of the folder list. Type your query and press **Enter** to run the search.\r\n\r\n- Searches **both folder/file names and file contents** (`.md` and `.txt` files).\r\n- Frontmatter is excluded from content search to avoid false positives from YAML fields.\r\n- Name matches show the matched term highlighted in the result title.\r\n- Content matches show a text snippet around the match with the term highlighted, plus a **CONTENT** badge to distinguish them from name matches.\r\n- Results always search from the root folder, regardless of which subfolder you are currently browsing.\r\n- Click **\xD7** to clear the search and return to the normal folder view.\r\n\r\n**Sort:**\r\n\r\nA sort dropdown sits next to the search bar. Options:\r\n\r\n| Option | Description |\r\n|--------|-------------|\r\n| Folders \u2191 A-Z | Folders first, then files, both alphabetical (default) |\r\n| Folders \u2191 Z-A | Folders first, then files, both reverse-alphabetical |\r\n| Name A-Z | All items alphabetical, folders and files mixed |\r\n| Name Z-A | All items reverse-alphabetical, mixed |\r\n| Newest first | Sort by last-modified date, newest at top |\r\n| Oldest first | Sort by last-modified date, oldest at top |\r\n\r\n**Copy content to the editor:**\r\n\r\nWhen a Markdown file is open in preview mode (after clicking it in the file list), its text is selectable. To insert a passage into the active editor:\r\n\r\n1. Click a file in the list \u2014 the panel switches to preview mode showing the rendered file.\r\n2. Select the text you want in the preview pane.\r\n3. Click the **\u21A9 insert selection** button in the nav bar.\r\n4. The selected text is inserted at the cursor position in the active editor.\r\n\r\nThe preview is read-only \u2014 you cannot edit the file from the sidebar.\r\n\r\n**Hover tooltips:**\r\n\r\nHover over any file or folder in the list to see an information card:\r\n\r\n| Item type | Information shown |\r\n|-----------|------------------|\r\n| Markdown / text file | Last modified date and time \xB7 File size \xB7 Word count (frontmatter excluded) |\r\n| Image / audio / other file | Last modified date and time \xB7 File size |\r\n| Folder | Total file count \xB7 Subfolder count |\r\n\r\nThe word count updates asynchronously from Obsidian\'s file cache and appears within a moment of hover.\r\n\r\n---\r\n\r\n### Your Project\r\n\r\n#### Project Manager\r\n\r\nProjects group a set of documents (binder items) and act as the scope for export, statistics, and the word count goal banner.\r\n\r\n**To create a project:** Use the command **Create new writing project** from the command palette, or click the **+** button next to the project dropdown in the Launcher or Binder panel.\r\n\r\n**To switch projects:** Use the Launcher panel or the project selector at the top of the Binder panel.\r\n\r\n**To edit a project:** Click the pencil icon in the Launcher project card or next to the project selector in the Binder. You can change the title, author, description, total word count goal, deadline, writing days, and the document folder \u2014 the folder inside the project that holds its documents (for example, renaming a book project\'s `Chapters/` to `Scenes/` renames the folder and moves its files with it; the binder follows automatically, as it also does when you rename the folder directly in the file explorer).\r\n\r\n**To rename a project:** Change the title in the edit-project dialog and save. The project folder is renamed to match, and every file inside moves with it \u2014 links heal, nothing is copied. A hint under the title field shows the folder name you will get before you save. Characters that cannot appear in a folder name (`\\ / : * ? " < > |`) become `-`, so a title like *My Book: A Novel* keeps its colon while its folder is named `My Book- A Novel`; the hint says so whenever a substitution happens. If a folder with the new name already exists, the save is refused with a message and nothing changes \u2014 choose a different title. Editing the author, description, or goal never moves the folder. To change the title and leave the folder as it is, turn off **Also rename the project folder** in the dialog before saving.\r\n\r\nIt works the other way too: rename the project folder in Obsidian\'s file explorer and the project\'s title follows, provided the title and the folder name were the same before the rename. A title you set apart from its folder (like the colon example above) is yours and is never overwritten. Rename inside Obsidian, not in Windows Explorer or Finder \u2014 Obsidian reports an outside rename as a delete and a create, so neither Writing Studio nor Obsidian\'s own links can follow it.\r\n\r\n**Deadline and pace:** Give a project a **Deadline** in the edit-project dialog, directly under the total word count goal, and the Launcher project card shows how it stands: the days left, and with a goal, the words a day you need to finish on time ("Due Dec 15, 2026 \xB7 39 writing days left \u2014 1,734 words a day to finish on time"). The arithmetic is plain: the words still to write, divided by the writing days left counting today, rounded up. **Writing days** are Monday to Friday unless you change them with the seven day buttons under the deadline; the deadline day itself always counts, since you can still hand in on it. Once the goal is met the card says so with the days to spare, and after the date has passed it shows the words still to go. The same figures appear in the Writing dashboard, and the status bar\'s project words item gains the daily pace ("12,400 / 80,000 project words \xB7 1,734/day"). A project without a deadline shows none of this.\r\n\r\n**To delete a project:** Click the trash icon in the Launcher project card or next to the project selector in the Binder, then confirm. This removes the project from Writing Studio\'s list only \u2014 the project folder and all its documents stay untouched in your vault.\r\n\r\n<p align="center">\r\n  <img src="assets/edit-project-modal.png" alt="The Edit project modal with fields for project title, author name, document folder, total word count goal, and description, and a Save button" width="560">\r\n  <br>\r\n  <em>The Edit project modal \u2014 change the title, author, document folder, description, and total word count goal.</em>\r\n</p>\r\n\r\nEach project stores:\r\n- Title, type, author, and description\r\n- Ordered binder with chapters, sections, articles, and notes\r\n- Per-item word count goals, statuses, and export flags\r\n- Optional total word count goal (shown in the Launcher and status bar)\r\n- Optional deadline and writing days, for the words-a-day pace\r\n\r\n**Project templates available at creation:**\r\n\r\n| Template | Structure created |\r\n|----------|------------------|\r\n| Blank | Empty \u2014 build your own structure |\r\n| Book | Front Matter, Part 1 / Chapter 1, Back Matter |\r\n| Article series | Series Overview note (with article schedule), Article 1 placeholder |\r\n| Blog collection | Date-organized folder, first post placeholder |\r\n| Journal article | Title Page, Abstract, Keywords, Introduction, Literature Review, Methodology, Findings / Analysis, Discussion, Conclusion, References, Appendices |\r\n| Magazine article | Pitch / Query Notes, Headline & Deck, Lede, Nut Graf, Body, Quotes & Sources, Kicker, Fact-Check Notes, Author Bio |\r\n\r\n---\r\n\r\n#### Writing Binder\r\n\r\nKeeping a book-length manuscript organized means knowing at a glance which chapters are drafted, which are in progress, and what will compile into the finished manuscript. The Binder is a sidebar panel that shows all of that for your active project.\r\n\r\nThe binder reads your folders directly \u2014 the project folder tree *is* the manuscript structure. Organize your work in the binder or in your computer\'s file explorer, and both always match: files created, renamed, moved, or deleted outside Obsidian appear correctly with no scan or import step. A document\'s filename is its title. Status (Draft, In Progress, Complete, Published) shows as a colored stripe on the row\'s left edge, folders carry document-count badges, documents excluded from compile render dimmed, and hovering any row shows its on-disk name and the settings the binder reads from it.\r\n\r\n**Synopsis:** Right-click a document and choose **Edit synopsis\u2026** to give it one or two sentences on what the section argues or covers. The synopsis is stored as a `synopsis` property on the document, so you can also read and edit it in Obsidian\'s Properties panel at the top of the note. It shows in the row\'s hover tooltip, and the **Show synopses** button in the binder toolbar puts each synopsis under its title so you can read the argument straight down the tree. The Outline view, described below, shows and edits the same synopses as a table.\r\n\r\nBelow the manuscript, **Research** and **Exports** are pinned as drawer tabs with live file counts. Research holds markdown notes that never compile (drag documents in and out of it freely); Exports is output-only, written by the export engine. Non-markdown files are visible and openable everywhere but stay outside the manuscript. The **Add source** button beside the Research tab opens a form, which writes a research note the citation engine can cite (see Sources and Citations, below).\r\n\r\n<p align="center">\r\n  <img src="assets/binder-tree.png" alt="The binder showing a manuscript tree with folder count badges, colored status stripes, a dimmed compile-excluded document, and Research and Exports drawer tabs with file counts at the bottom" width="520">\r\n  <br>\r\n  <em>The binder \u2014 status stripes on the left edge, count badges on folders, a dimmed compile-excluded document, and the Research and Exports drawer below.</em>\r\n</p>\r\n\r\n**To open:** Use the command **Open binder** from the command palette, or assign a hotkey in Settings \u2192 Hotkeys.\r\n\r\n**Ordering:**\r\n\r\nDrag to reorder documents and folders. A document\'s position is stored in its own frontmatter (`binder-order`), so it travels with the file; a folder\'s position lives in a name marker (`020~ Part One`) that the binder hides in display. Anything without a saved position sorts naturally \u2014 A to Z, numbers in numeric order \u2014 after ordered items. Reordering never renames your documents.\r\n\r\n**Moving things:**\r\n\r\nDragging physically moves files and folders: drop between rows to reorder, onto a folder to nest inside it, on the empty space below the tree to move to the project root, or onto the Research drawer tab to move a document out of the manuscript. A folder drag carries all its children, and links heal automatically on every move.\r\n\r\n**Control strip:**\r\n\r\nA two-row control strip at the top of the binder keeps the high-frequency writing controls next to your documents, so the daily loop doesn\'t require switching to the launcher tab. The top row is a Draft / Edit / Review segmented control (clicking the active mode switches back to normal). The bottom row holds Focus and Typography toggles, a sprint chip (its menu offers the set-up modal and 10/15/25-minute quick starts; an armed sprint shows a ready chip with the duration), and a **...** menu with the occasional actions: export, publish, preview manuscript, targets dashboard, writing dashboard, and writing log. The launcher keeps its own copies of all controls, and every surface stays in sync no matter where a change is made.\r\n\r\n<p align="center">\r\n  <img src="assets/binder-control-strip.png" alt="The binder control strip with Draft, Edit, and Review on the top row and Focus, Typography, Sprint, and an overflow menu on the bottom row, above the project selector, toolbar, and document tree" width="520">\r\n  <br>\r\n  <em>The binder control strip \u2014 writing modes on top; focus, typography, sprint, and overflow controls below.</em>\r\n</p>\r\n\r\n<p align="center">\r\n  <img src="assets/binder-strip-overflow.png" alt="The binder overflow menu open, showing export, publish to WordPress, preview manuscript, targets dashboard, writing dashboard, and writing log" width="520">\r\n  <br>\r\n  <em>The overflow menu holds the less frequent actions: export, publish, preview, and the dashboards and log.</em>\r\n</p>\r\n\r\n**Keyboard navigation:**\r\n\r\nThe binder tree is fully keyboard-operable. Tab to focus the list, then:\r\n\r\n| Key | Action |\r\n|-----|--------|\r\n| `\u2191` / `\u2193` | Move through visible documents and folders |\r\n| `\u2192` | Expand a collapsed folder, or step into an open one |\r\n| `\u2190` | Collapse an open folder, or jump to the parent |\r\n| `Enter` | Open the document, or expand/collapse a folder |\r\n| `F2` | Rename the focused item inline (Enter commits, Escape cancels) |\r\n| `Shift+F10` or menu key | Open the item\'s right-click menu |\r\n\r\n**Opening and renaming documents:**\r\n\r\nA single click on a document opens it immediately. Rename an item from its right-click menu, or by pressing **F2** while it is focused (Enter commits, Escape cancels). Renaming in the binder renames the file itself \u2014 links heal automatically \u2014 and invalid names are rejected with a specific message, never silently altered.\r\n\r\n**Creating documents and folders:**\r\n\r\nToolbar buttons create a document or folder at the manuscript root; a folder\'s right-click menu creates inside it, and a document\'s menu creates beside it. New documents prompt for a title up front rather than being named "Untitled."\r\n\r\n**Splitting and merging sections:**\r\n\r\nA long section that has grown into two is split where you are: right-click inside the document and choose **Split section here\u2026** (or run the command **Split section at cursor**). Everything from the cursor to the end of the document moves into a new section placed right after the current one in the binder, with the same status and type. The dialog suggests a title \u2014 the heading the cursor is on, or the heading the new section starts with, or the current title with "(2)" \u2014 and you can type another. Footnotes travel correctly: a footnote used only in the second half moves with it, one used in both halves is copied, and the rest stay. The new section opens in a new tab.\r\n\r\nTo join two sections, right-click the first one in the binder and choose **Merge with next section\u2026**. The next document\'s text is appended after a blank line, the first section\'s properties (synopsis, goal, status) are kept, and the second file goes to the trash according to your Obsidian "Deleted files" setting, so it can be brought back. A toggle in the dialog adds the second section\'s title as a heading where the two join; if the second section already starts with that heading, nothing is added twice. A footnote both sections carry with the same text becomes one note again, so splitting and merging round-trips cleanly; labels that clash with different text are renumbered, so each note keeps its own text. The action is offered only when a document follows in the same folder \u2014 Research notes are never merged.\r\n\r\n**Right-click menu:**\r\n\r\nRight-click any item for its full set of actions \u2014 rename, set status, set a word count goal, set an optional document type, exclude a document from compile (or re-include it), create a document or folder, or delete to the trash (a folder\'s confirmation states how many files it contains).\r\n\r\n<p align="center">\r\n  <img src="assets/binder-context-menu.png" alt="The binder right-click menu on a document, showing rename, status options, set word count goal, change type options, exclude from compile, new document, new folder, and delete" width="520">\r\n  <br>\r\n  <em>A document\'s right-click menu \u2014 status, goal, type, and compile controls in one place.</em>\r\n</p>\r\n\r\n**Organizing with folders:**\r\n\r\nFolders are the structure. The book template creates a part folder for you, and any structure you build \u2014 in the binder or in your file explorer \u2014 is the manuscript\'s structure. Adding a file to a project is simply moving it into the project folder; it appears in the binder immediately, and files copied in outside of Obsidian show up the same way with no import step.\r\n\r\n**Upgrading from an earlier version:**\r\n\r\nThe first time you open an existing project, Writing Studio arranges its folders to match what your old binder showed \u2014 creating folders and moving documents, deleting nothing, and never changing your writing. A one-time notice explains this, and the command **Restore previous binder layout** puts your folders back the way they were if you preferred your earlier arrangement. Everything in your project folder is now part of the compiled manuscript. Check the compile preview before your first export, and use Exclude from compile on anything you want left out.\r\n\r\n---\r\n\r\n#### Outline\r\n\r\nA nonfiction manuscript is an argument, and the Outline is where you check that the argument holds together before you polish the prose. It opens in the main pane as a table of every section in the manuscript, in binder order:\r\n\r\n| Column | What it shows |\r\n|--------|---------------|\r\n| Section | The document title, indented under its part. Click it to open the document in a new tab; the outline stays open. Click a part\'s name to collapse or expand it. |\r\n| Synopsis | What the section argues or covers. Click to edit in place; Ctrl+Enter (Cmd+Enter on Mac) saves, Escape cancels. An empty cell says *Add a synopsis\u2026*. |\r\n| Status | Draft, In progress, Complete, or Published, as a dropdown. Changing it here is the same as changing it in the binder. |\r\n| Words | The section\'s current word count. Part rows show the total for everything inside them. |\r\n| Goal | The section\'s word count goal, editable. Part rows show the sum of the goals inside them. |\r\n| Progress | Words against goal, as a bar and a percentage. |\r\n\r\nThe footer totals the whole manuscript and, until every section has one, says how many sections still have no synopsis. A status filter at the top narrows the table to one status while keeping the parts those sections sit in. Documents excluded from compile render dimmed, and the status colour stripe from the binder appears on the left edge of each row.\r\n\r\n**Copy outline** puts the whole outline on the clipboard as an indented list of titles and synopses, ready to paste into a book proposal, an email to an editor, or a planning note.\r\n\r\nEverything the outline shows comes from the documents themselves (`synopsis`, `binder-status`, and `word-count-goal` properties), so the binder, the outline, and the targets dashboard can never disagree, and the table updates on its own as you write.\r\n\r\n**To open:** Click **Open outline** on the project card in the Launcher, the outline button in the binder toolbar, or use the command **Open outline**.\r\n\r\n---\r\n\r\n#### Find and Replace in Project\r\n\r\nA phrase, a name, a spelling, or a citation key that has to change in every chapter is one job, not thirty. Click the find-and-replace button in the binder toolbar or run the command **Find and replace in project** to open the dialog. Type what to find and the matches appear as you type, listed by section with the line around each one; the summary line reads "14 matches in 6 sections". Options: **Match case**, **Whole word**, and **Include research notes** (off by default \u2014 the manuscript is the usual scope). Properties at the top of a note and anything inside code are never searched. Click a section\'s title to open it behind the dialog at the first match.\r\n\r\nEvery match has a checkbox, ticked to start with. Untick the ones to keep, then **Replace selected**; or **Replace all** to change every match. A notice reports what changed. If a file was edited between the search and the replace, it is skipped and named, so nothing is replaced in text you have not seen.\r\n\r\n**Undo last replace** puts every touched file back exactly as it was, and stays available until the next replace or until Obsidian restarts. A file you edited after the replace is left alone and named, so your newer work is never overwritten.\r\n\r\n---\r\n\r\n#### Sources and Citations\r\n\r\nNonfiction rests on sources, and the sources already live in your vault. Writing Studio turns the notes you have into citations and a works-cited page without a reference manager in the loop.\r\n\r\n**What counts as a source.** Any markdown note, anywhere in the vault, whose properties include a `citekey`. Literature notes produced by Zotero Integration or the Citations plugin already carry one, so they work as they are. The engine reads the fields it finds, under the names those tools and ordinary writers use: `title`; `author`, `authors`, or `creators` (a plain name, a list, "Last, First", or Zotero-style name objects); `year`, `date`, or `issued`; `type` or `itemType` (book, chapter, journal article, magazine or newspaper article, web page, thesis, report; anything else is treated as a book); `publisher`, `place`, `journal` or `container-title`, `volume`, `issue`, `pages`, `edition`, `editor`, `doi`, `url`, and `accessed`. If two notes share a citekey, the one in the project\'s Research folder wins and a notice names the other.\r\n\r\n**Adding a source without typing YAML.** Click **Add source** beside the Research tab at the bottom of the binder, right-click any research note and choose **Add source\u2026**, or run the command **Add source**. The form asks for the type, title, authors (one per line, first name first), year, and the fields that type needs. The citation key is filled in for you from the first author\'s surname and the year (`smith2020`, then `smith2020a` if that is taken) and can be changed. Saving creates a note such as `Research/Smith 2020 - The Long Argument.md` with the properties set and an empty body for your own notes, and opens it.\r\n\r\n```yaml\r\n---\r\ncitekey: smith2020\r\ntype: book\r\ntitle: "The Long Argument: Why Reform Fails"\r\nauthor:\r\n  - Jane Smith\r\nyear: 2020\r\npublisher: Riverhead\r\nplace: New York\r\n---\r\n```\r\n\r\n**Citing in a draft.** Two spellings work, and you can mix them:\r\n\r\n| You type | Meaning |\r\n|----------|---------|\r\n| `[@smith2020]` | Cite the work |\r\n| `[@smith2020, p. 12]` | Cite page 12 (`pp. 12-14` for a range, `chap. 3` for anything else) |\r\n| `[@lee2018; @okafor2021]` | Two works in one citation |\r\n| `[see @smith2020, p. 12]` | A prefix prints before the citation |\r\n| `@smith2020` | The author is part of the sentence: "As Smith (2020) shows\u2026" |\r\n| `[-@smith2020]` | Year only, when the author was just named |\r\n| `[[Smith 2020]]` | A wikilink to a source note is a citation |\r\n| `[[Smith 2020\\|p. 12]]` | The wikilink\'s alias is the page |\r\n\r\nWikilinks to notes without a citekey behave exactly as before. To cite without remembering a key, right-click in the editor and choose **Insert citation\u2026** (or run the command **Insert citation**): the picker searches author, year, and title, takes an optional page, and inserts the citation at the cursor.\r\n\r\n**Renaming a citation key.** Right-click a source note in the Research drawer and choose **Rename citation key\u2026** (or run the command **Rename citation key** with the source note open). The dialog shows the source, its current key, and where it is cited \u2014 "Used in 9 citations across 4 sections and 1 research note" \u2014 and checks the new key against the rules and every key in use. On **Rename**, the `citekey` property and every `@oldkey` citation in the project\'s manuscript and research notes are rewritten, pages and prefixes untouched. Wikilink citations name the file rather than the key, so they need no change. Other projects in the vault are not touched.\r\n\r\n**Citation style.** Set once under Settings \u2192 Export \u2192 Citations:\r\n\r\n- **Author-date (Chicago)**, the default: `(Smith 2020, 12)` in the text and a **Works cited** page at the end.\r\n- **Notes (Chicago)**: each citation becomes a footnote, in full form the first time a source appears in a chapter and short form after, with a **Bibliography** page at the end. Your own footnotes and citation notes share one numbering sequence, in order of appearance.\r\n- **Custom style file (.csl)**: any Citation Style Language file, for APA, MLA, or a house style. Applies to PDF, Word, and RTF, where Pandoc\'s citeproc does the formatting; the other formats use the built-in author-date style.\r\n\r\n**Every format gets the works-cited page.** PDF, Word, and RTF hand the cited sources to Pandoc as a bibliography and run with `--citeproc` (the Notes setting ships its own compact Chicago notes style, so no download is needed). HTML, Manuscript, EPUB, Markdown, and the compile preview are formatted by the plugin itself in the two Chicago styles. Only sources you actually cite appear. A citation whose key matches no source is left visible as `[@key?]` and a notice names it, so the export never silently drops a reference.\r\n\r\n**Footnotes everywhere.** The built-in converter now handles reference footnotes (`[^1]` with its `[^1]: text` definition) and inline footnotes (`^[text]`). Numbering restarts with each chapter. HTML and Manuscript collect every note under a **Notes** heading at the end, grouped by chapter; EPUB keeps each chapter\'s notes at the end of that chapter with the markup reading systems use to show them as popups; Markdown export keeps footnote syntax as it is; PDF, Word, and RTF had footnotes already.\r\n\r\n**Before you export,** the export dialog reports what it found: "12 citations to 8 sources \xB7 Style: Author-date (Chicago)", and in warning color any key that matches nothing.\r\n\r\n---\r\n\r\n#### Compile Preview\r\n\r\nThe Compile Preview opens a split pane showing all binder documents for the active project concatenated in order, rendered as a finished manuscript.\r\n\r\n**To open:** Use the command **Preview compiled manuscript** from the command palette, or click the **Preview manuscript** button in the Launcher panel.\r\n\r\n---\r\n\r\n### Your Writing Environment\r\n\r\n#### Writing Modes\r\n\r\nThree modes shape how the editor behaves. The current mode is always shown in the status bar. Click the mode pill in the status bar to switch modes.\r\n\r\n| Mode | Purpose |\r\n|------|---------|\r\n| **Draft** | Distraction-free drafting; spell-check and formatting hints suppressed |\r\n| **Edit** | Revision pass; full editor tooling active |\r\n| **Review** | Read-only style; ideal for a final proofread |\r\n| **None** | Normal Obsidian behavior |\r\n\r\n**To switch modes:**\r\n- Click the mode indicator in the status bar.\r\n- Right-click inside the editor, then choose **Switch writing mode \u2192** under **Writing studio options**.\r\n- Assign hotkeys to **Switch to draft mode / Edit mode / Review mode** in Settings \u2192 Hotkeys.\r\n- Use the Writing Studio Launcher panel.\r\n\r\nThe active mode is saved and restored the next time Writing Studio launches \u2014 automatically at startup when **Open on startup** is enabled, or when you next open the Launcher or switch a mode.\r\n\r\n---\r\n\r\n#### Focus Mode\r\n\r\nFocus Mode dims everything in the editor except the paragraph or sentence you are currently writing, reducing visual noise and keeping attention on the active thought.\r\n\r\n**To toggle:** Assign a hotkey to **Toggle focus mode** in Settings \u2192 Hotkeys, or use the toggle in the Launcher panel. Press `Escape` to exit.\r\n\r\n**Settings (Settings \u2192 Focus mode):**\r\n\r\n| Setting | Description |\r\n|---------|-------------|\r\n| Focus unit | Highlight at the **paragraph** or **sentence (line)** level |\r\n| Dim opacity | How opaque the dimmed text appears (10\u201350%) |\r\n| Font size override | Override the editor font size while focused; 0 = use theme default. Takes precedence over Typography Mode\'s font size while Focus Mode is active |\r\n| Auto-hide sidebars | Collapse left and right sidebars when Focus Mode activates |\r\n| Typewriter scroll | Keep the active line vertically centered as you type |\r\n\r\n---\r\n\r\n#### Typography Mode\r\n\r\nTypography Mode applies a consistent, reader-friendly text treatment to the editor: a curated font, constrained line length, controlled line height, and optional letter spacing.\r\n\r\n**To toggle:** Assign a hotkey to **Toggle typography mode** in Settings \u2192 Hotkeys, or use the toggle in the Launcher panel.\r\n\r\n**To change the font while Typography Mode is active:** Right-click inside the editor and choose **Typography font \u2192** under **Writing studio options**. A font picker menu appears with all available fonts; the active font is shown with a checkmark. Selecting a font applies it immediately and saves the setting.\r\n\r\n> **Note on fonts:** Typography fonts are loaded from Google Fonts and require an internet connection the first time each font is used. After the initial load they are cached and work offline.\r\n\r\n**Settings (Settings \u2192 Typography):**\r\n\r\n| Setting | Description |\r\n|---------|-------------|\r\n| Font family | Choose from the curated font list or enter a custom font name |\r\n| Custom font name | Used when **Custom font name\u2026** is selected above |\r\n| Max line length | Characters per line (55\u201380); constrains the editor column width |\r\n| Font size | Editor font size in pixels |\r\n| Line height | Multiplier; default 1.7 |\r\n| Letter spacing | CSS `letter-spacing` value (e.g. `normal`, `0.02em`) |\r\n| Persist across sessions | Restore Typography Mode when Writing Studio next launches |\r\n\r\n**Available fonts:**\r\n\r\n| Option | Font |\r\n|--------|------|\r\n| Monospaced | iA Writer Mono (falls back to Roboto Mono / Courier New) |\r\n| Serif | iA Writer Duo Serif (falls back to Georgia) |\r\n| Sans-serif | iA Writer Quattro (falls back to system sans-serif) |\r\n| Cormorant Garamond | Elegant display serif |\r\n| Crimson Text | Classic book serif |\r\n| EB Garamond | Traditional Garamond revival |\r\n| Libre Baskerville | Readable web serif |\r\n| Libre Caslon Text | Clean slab serif |\r\n| Literata | Designed for long-form reading |\r\n| Lora | Contemporary calligraphic serif |\r\n| Inter | Modern humanist sans-serif |\r\n| Lato | Friendly rounded sans-serif |\r\n| Source Sans 3 | Clean UI sans-serif |\r\n| Custom font name\u2026 | Use any font installed on your system |\r\n\r\n---\r\n\r\n### Tracking Your Progress\r\n\r\n#### Writing Sprint Timer\r\n\r\nThe Sprint Timer runs a timed writing session. When a sprint is active, a floating overlay displays the countdown and gives you full control \u2014 without requiring you to stay on the dashboard.\r\n\r\n**To set up a sprint:**\r\n\r\n- Click **Set up sprint** in the Launcher panel to open the sprint configuration modal.\r\n- Or click one of the **Quick Sprint Options** preset buttons (10 m, 15 m, 25 m) in the Launcher panel to load a duration directly.\r\n\r\nEither path opens the floating overlay in a ready state \u2014 the timer does not start until you press \u25B6 on the overlay itself. This gives you time to navigate to your draft or open the Binder before the clock begins.\r\n\r\n**Sprint configuration modal:**\r\n\r\nThe modal lets you set:\r\n\r\n- Duration (preset or custom, in minutes)\r\n- Word count goal for the session\r\n- Scope (current file or entire project)\r\n\r\nClick **Launch sprint timer** to open the overlay in ready state.\r\n\r\n**Using the floating overlay:**\r\n\r\n| Control | Action |\r\n|---------|--------|\r\n| \u25B6 | Start or resume the sprint |\r\n| \u23F8 | Pause the sprint |\r\n| \u25A0 | Stop and end the sprint |\r\n\r\nThe overlay is draggable \u2014 click and drag the header to reposition it anywhere on screen. It stays on top regardless of writing mode or Focus Mode. The current countdown is also shown in the Obsidian status bar (`\u23F1 MM:SS`) and, when Focus Mode is active, in the focus toolbar.\r\n\r\nWhen the sprint ends, a summary modal shows words written, duration, and words-per-minute. The session is logged to sprint history and optionally appended to your Daily Note.\r\n\r\n**Settings (Settings \u2192 Sprint & goals):**\r\n\r\n| Setting | Description |\r\n|---------|-------------|\r\n| Default sprint duration | Starting value in the sprint modal (minutes) |\r\n| Default daily word goal | Target used in the Writing Dashboard and Launcher |\r\n| Sound notifications | Play a tone when the sprint ends |\r\n| Sprint history retention | Days to keep sprint records before purging |\r\n| Inline goal banner | Show a progress bar below the editor toolbar when a document has a word count goal set |\r\n\r\n---\r\n\r\n#### Word Count Goal\r\n\r\nA per-document word count goal can be set and tracked inline.\r\n\r\n**To set a goal:**\r\n- Use the command **Set word count goal** from the command palette.\r\n- Right-click inside the editor and choose **Set word count goal** under **Writing studio options**.\r\n\r\nWhen a goal is set and **Inline goal banner** is enabled, a progress bar appears below the editor toolbar showing current words, goal, and percentage. It updates in real time as you type.\r\n\r\n---\r\n\r\n#### Session Word Count\r\n\r\nThe status bar shows a `(+N)` delta next to the current file\'s word count, indicating how many words you have added since opening that file this session. The Launcher\'s **Today** card also shows a cumulative session total across all files opened during the current Obsidian session. Both counts reset when Obsidian restarts.\r\n\r\n---\r\n\r\n#### Project Word Count Goal\r\n\r\nWhen an active project has a total word count goal set, a dedicated status bar item shows `{current} / {goal} project words`. This updates automatically as you write. Set a project goal in the Project modal when creating or editing a project.\r\n\r\n---\r\n\r\n#### Writing Dashboard\r\n\r\nThe Writing Dashboard shows session statistics (words written, sprints completed, time), sprint history, daily progress toward your goal, and per-project word counts with reading time.\r\n\r\n**To open:** Use the command **Open writing dashboard** from the command palette, or click the **Writing dashboard** button in the Launcher panel.\r\n\r\n---\r\n\r\n#### Targets Dashboard\r\n\r\nThe Targets Dashboard lets you assign word count goals to individual documents in the active project\'s binder and track progress across the whole project at a glance. Goals can be edited inline in the table. Rows are sortable and filterable by status.\r\n\r\n**To open:** Use the command **Open targets dashboard**, click the **Targets dashboard** button in the Launcher panel, or assign a hotkey in Settings \u2192 Hotkeys.\r\n\r\n---\r\n\r\n#### Daily Writing Log\r\n\r\nThe Writing Log is a sidebar panel that shows your writing history at a glance.\r\n\r\n**To open:** Use the command **Open writing log** from the command palette, or click the **Writing log** button in the Launcher panel.\r\n\r\n**The Writing Log shows:**\r\n- Current streak (days in a row with at least one sprint)\r\n- This session: total session words, sprint words, sprints completed, and minutes written\r\n- Recent activity: a bar chart with one row per day you wrote, each showing word count, sprints completed, and a visual bar proportional to the day\'s output. Days with no writing are collapsed rather than shown as empty rows, so the log stays focused on the days you actually worked.\r\n\r\nWhen **Append to daily note** is enabled (Settings \u2192 Writing log), a summary of each completed sprint is also appended to today\'s Daily Note.\r\n\r\n---\r\n\r\n### Getting Your Work Out\r\n\r\n#### Export Engine\r\n\r\nWhen your draft is ready, the Export Engine converts it to a finished file in your chosen format \u2014 no reformatting required.\r\n\r\n**Supported formats:** Manuscript (HTML) \xB7 PDF \xB7 Word (.docx) \xB7 RTF \xB7 HTML \xB7 Markdown \xB7 EPUB\r\n\r\n**To export:**\r\n- Right-click inside the editor and choose **Export this document** under **Writing studio options**.\r\n- Use the command **Export document** from the command palette.\r\n- Click the **Export** button in the Launcher panel.\r\n- Assign a hotkey to **Export document** in Settings \u2192 Hotkeys.\r\n- Right-click a folder in the binder and choose **Export folder** to export just that part of the manuscript.\r\n\r\n**One title names the export**\r\n\r\nThe export dialog\'s **Title** dropdown sets the export\'s filename, its title page heading, and the file\'s metadata in one place \u2014 the three are always identical. A whole-project or single-document export offers the project name or a title you type yourself; a folder export adds **Folder name** (the default) and **Project \u2014 folder** forms. Choosing **Type your own title** keeps Export disabled until you type one, so an export is never accidentally untitled.\r\n\r\nThe compile preview renders exactly what the dialog\'s current selections will produce \u2014 same documents, same headings, same title page \u2014 and when you proceed to export from the preview, your selections carry back into the dialog.\r\n\r\n<p align="center">\r\n  <img src="assets/export-modal-title.png" alt="The export dialog with the Title dropdown open on a folder export, showing Folder name, Project \u2014 folder, Project name, and Type your own title" width="560">\r\n  <br>\r\n  <em>The Title dropdown \u2014 one choice names the filename, the title page, and the file metadata.</em>\r\n</p>\r\n\r\n**Manuscript format**\r\n\r\nThe Manuscript format produces a self-contained HTML file formatted to industry-standard manuscript conventions:\r\n- Courier New 12 pt, double-spaced, 1-inch margins\r\n- Title page with the export\'s chosen title, author name, approximate word count, and optional contact information\r\n- Chapter headings in uppercase, page-break before each\r\n- Scene breaks rendered as `#` (the standard manuscript convention)\r\n\r\nNo external tools are required for manuscript export.\r\n\r\n**Settings (Settings \u2192 Export):**\r\n\r\n| Setting | Description |\r\n|---------|-------------|\r\n| Default export format | Pre-selected format in the export modal |\r\n| Default paper size | Letter (US) or A4 |\r\n| Export font | Font name used in PDF/DOCX output (e.g. `Georgia`) |\r\n| Export font size | Point size for PDF/DOCX output |\r\n| Pandoc path | Full path to the `pandoc` binary if it is not on your system PATH |\r\n| PDF engine | Engine Pandoc uses for PDF export. **Auto** (default) picks an installed LaTeX engine \u2014 `xelatex` or `lualatex` when a custom font is set, `pdflatex` otherwise. Pin a specific engine to always use it; if a pinned engine is not installed the export fails with a message naming it rather than silently substituting another |\r\n| PDF engine location | Folder containing the PDF engine binaries \u2014 or full path to one engine binary \u2014 when the engine is not on the system PATH. Leave blank to search the PATH plus common install locations |\r\n| Citation style | **Author-date (Chicago)** puts `(Smith 2020)` in the text with a Works cited page; **Notes (Chicago)** turns each citation into a footnote with a Bibliography page; **Custom style file (.csl)** applies any CSL style to PDF, Word, and RTF (other formats fall back to author-date). See Sources and Citations, above |\r\n| Custom style file | Path to a `.csl` file, inside the vault or anywhere on disk, used when the citation style is set to custom |\r\n| EPUB language | BCP 47 language tag (e.g. `en`, `fr`, `de`) |\r\n| EPUB include cover | Generate a text cover page when no cover image is provided |\r\n\r\n> **Requirement:** Pandoc must be installed for PDF, DOCX, RTF, HTML, and EPUB export. Download from [pandoc.org](https://pandoc.org/installing.html). For PDF export, a LaTeX distribution (e.g. TeX Live or MiKTeX) is also required \u2014 unless the PDF engine setting is pinned to [wkhtmltopdf](https://wkhtmltopdf.org/), which renders PDFs without LaTeX. Manuscript (HTML) export does not require Pandoc.\r\n>\r\n> **macOS note:** apps launched from the Dock don\'t see the shell PATH, so a correctly installed TeX Live or Homebrew binary can still be "not found." Common install locations (`/Library/TeX/texbin`, `/opt/homebrew/bin`, `/usr/local/bin`) are searched automatically; for anything else, set the PDF engine location setting.\r\n>\r\n> **Font note:** the export font setting applies only to the LaTeX PDF path (`xelatex`/`lualatex`; `pdflatex` cannot apply custom fonts either). The `wkhtmltopdf` path takes its typography from Pandoc\'s HTML/CSS output, so the export font setting is ignored there \u2014 the plugin tells you when a font was skipped for this reason.\r\n>\r\n> **Formatting note:** the built-in converter used for HTML, Manuscript, and EPUB output supports headings, paragraphs, lists, blockquotes, fenced code blocks, tables, images, links, footnotes, and citations. Nested lists and setext (underline-style) headings are not converted \u2014 use a Pandoc format (PDF, DOCX, RTF) if your manuscript depends on them.\r\n\r\n---\r\n\r\n#### WordPress Publishing\r\n\r\nPublish your finished draft directly to WordPress without leaving Obsidian. The modal lets you choose the target site, set the post title, status, categories, tags, excerpt, and an optional scheduled publication date.\r\n\r\n**To publish:**\r\n- Right-click inside the editor and choose **Publish to WordPress** under **Writing studio options**.\r\n- Use the command **Publish to WordPress** from the command palette.\r\n- Click the **Publish to WordPress** button in the Launcher panel.\r\n- Assign a hotkey to **Publish to WordPress** in Settings \u2192 Hotkeys.\r\n\r\n**Setting up a site (Settings \u2192 WordPress):**\r\n\r\n1. Click **+ add WordPress site**.\r\n2. Enter a nickname, the site URL (e.g. `https://yourblog.com`), and your WordPress username.\r\n3. Generate an application password in WordPress under **Users \u2192 Profile \u2192 Application passwords** and paste it into the **Application password** field.\r\n4. Click **Test connection** to verify.\r\n\r\n**Per-site options:**\r\n\r\n| Setting | Description |\r\n|---------|-------------|\r\n| Default post status | Draft \xB7 Pending Review \xB7 Published |\r\n| Wikilink handling | **Strip** removes `[[...]]` syntax, leaving plain text \xB7 **Convert** turns wikilinks into URLs |\r\n\r\n**Preserving your credentials across updates**\r\n\r\nWriting Studio stores your WordPress site credentials in your vault\'s `.obsidian/plugins/writing-studio/data.json` file. Obsidian\'s in-app update process does not touch this file \u2014 your credentials are preserved automatically. However, if you uninstall and reinstall the plugin manually, or if a vault sync conflict overwrites `data.json`, credentials will be lost and will need to be re-entered. To avoid this, always use Obsidian\'s built-in Update button rather than uninstalling manually.\r\n\r\n---\r\n\r\n### Supporting Tools\r\n\r\n#### Frontmatter Manager\r\n\r\nWriting Studio automatically manages YAML frontmatter in your documents when **Frontmatter auto-update** is enabled. On every save it updates:\r\n\r\n- `word-count` \u2014 current word count\r\n- `modified` \u2014 last-modified date\r\n\r\nThe `word-count-goal` frontmatter field is read by the inline goal banner and the Word Count Goal modal.\r\n\r\n---\r\n\r\n## Context Menus\r\n\r\nWriting Studio adds items to Obsidian\'s right-click context menus. All Writing Studio items are grouped together under the heading **Writing studio options** to distinguish them from other plugins and Obsidian\'s built-in options.\r\n\r\n### Right-click inside an open document (editor menu)\r\n\r\n| Option | Action |\r\n|--------|--------|\r\n| Export this document | Open the export modal for the current file |\r\n| Publish to WordPress | Open the WordPress publish modal for the current file |\r\n| Set word count goal | Set a word count target for the current document |\r\n| Insert citation\u2026 | Pick a source from the vault and insert a citation at the cursor |\r\n| Split section here\u2026 | Move everything from the cursor to the end of the document into a new section placed right after this one (manuscript documents of the active project only) |\r\n| Switch writing mode \u2192 | Open a mode-switcher menu (Draft / Edit / Review / None) |\r\n| Typography font \u2192 | Open a font picker menu to change the typography font (visible only when Typography Mode is active) |\r\n\r\n### Right-click a folder in the file explorer\r\n\r\n| Option | Action |\r\n|--------|--------|\r\n| Open in sidebar explorer | Open the folder in the Folder Sidebar Explorer panel |\r\n\r\n---\r\n\r\n## Commands Reference\r\n\r\nNo default hotkeys are assigned. All commands can be given a hotkey in **Settings \u2192 Hotkeys**.\r\n\r\n| Command | Description |\r\n|---------|-------------|\r\n| Open launcher | Open the launcher sidebar panel |\r\n| Open binder | Open the writing binder sidebar panel |\r\n| Open writing log | Open the daily writing log panel |\r\n| Toggle focus mode | Enable or disable focus mode |\r\n| Toggle typography mode | Enable or disable typography mode |\r\n| Switch to draft mode | Activate draft writing mode |\r\n| Switch to edit mode | Activate edit writing mode |\r\n| Switch to review mode | Activate review writing mode |\r\n| Start writing sprint | Open the sprint timer modal |\r\n| Export document | Export the current document |\r\n| Export project | Export the full project |\r\n| Preview compiled manuscript | Open the compile preview pane |\r\n| Open outline | Open the outline of the active project: every section\'s synopsis, status, and words against goal |\r\n| Insert citation | Pick a source from the vault and insert a citation at the cursor |\r\n| Add source | Open the form that writes a citable source note into the project\'s Research folder |\r\n| Split section at cursor | Move everything from the cursor to the end into a new section placed right after the current one |\r\n| Find and replace in project | Find a word or phrase across the project\'s sections, replace the matches you choose, and undo the last replace |\r\n| Rename citation key | Change a source\'s citation key and update every citation of it in the project |\r\n| Publish to WordPress | Publish the current document to WordPress |\r\n| Create new writing project | Create a new writing project |\r\n| Open writing dashboard | Open the statistics dashboard |\r\n| Open targets dashboard | Open the word count targets panel |\r\n| Set word count goal | Set a per-document word count goal |\r\n| Open folder in sidebar explorer | Search and open a vault folder in the sidebar |\r\n| Restore previous binder layout | Put a project\'s folders back the way they were before the one-time folder arrangement |\r\n\r\n---\r\n\r\n## Settings Overview\r\n\r\nOpen via **Settings \u2192 Writing Studio**. General settings appear at the top; each other section opens as its own page. Every setting can also be found by name from Obsidian\'s settings search (Obsidian 1.13+).\r\n\r\n| Section | What it controls |\r\n|-----|-----------------|\r\n| General | Open on startup, default project folder, author name, document type, frontmatter auto-update |\r\n| Focus mode | Focus unit, dim opacity, font override, sidebar behavior, typewriter scroll |\r\n| Typography | Font family, custom font name, line length, font size, line height, letter spacing, persistence |\r\n| Sprint & goals | Sprint duration, daily goal, sound notifications, history retention, inline banner |\r\n| Export | Format, paper size, font, font size, Pandoc path, PDF engine, PDF engine location, citation style, custom style file, EPUB language, EPUB cover |\r\n| Writing log | Append sprint summaries to Daily Note |\r\n| WordPress | Site credentials, default post status, wikilink handling |\r\n\r\n---\r\n\r\n## Ribbon Icon\r\n\r\nWriting Studio adds a single icon to the Obsidian ribbon.\r\n\r\n| Icon | Action |\r\n|------|--------|\r\n| Feather | Open the Writing Studio Launcher panel |\r\n\r\nAll other features are accessible from the Launcher panel, the command palette, context menus, or assigned hotkeys.\r\n\r\n---\r\n\r\n## Installation\r\n\r\n1. Download `main.js`, `manifest.json`, and `styles.css` from the latest [GitHub release](../../releases/latest).\r\n2. Create the folder `<vault>/.obsidian/plugins/writing-studio/` if it does not exist.\r\n3. Copy the three files into that folder.\r\n4. In Obsidian, go to **Settings \u2192 Community Plugins**, find **Writing Studio**, and enable it.\r\n\r\n> **Building from source:** Clone the repository, run `npm install`, then `npm run build`. Copy the three output files as above.\r\n\r\n---\r\n\r\n## Requirements\r\n\r\nMost features work out of the box. A few require additional software for specific functions, noted below.\r\n\r\n| Requirement | When needed |\r\n|-------------|-------------|\r\n| Obsidian 1.13.0 or later | Always |\r\n| Desktop (Windows, macOS, Linux) | Always \u2014 this plugin does not run on mobile |\r\n| Internet connection | First use of each Typography Mode font (cached after that) |\r\n| [Pandoc](https://pandoc.org/installing.html) | Export to PDF, DOCX, RTF, HTML, EPUB |\r\n| LaTeX (TeX Live / MiKTeX) or [wkhtmltopdf](https://wkhtmltopdf.org/) | Export to PDF only (wkhtmltopdf must be pinned in the PDF engine setting) |\r\n| WordPress 5.6+ with REST API enabled | WordPress publishing |\r\n| WordPress Application Password | WordPress publishing |\r\n\r\n---\r\n\r\n## Reporting a Bug\r\n\r\nIf something isn\'t working, please open an issue on GitHub:\r\n\r\n**[Submit a bug report](https://github.com/writerP-777/obsidian-writing-studio/issues/new)**\r\n\r\nInclude the following when you report:\r\n\r\n- Writing Studio version (visible in **Settings \u2192 Community Plugins**)\r\n- Obsidian version (visible in **Settings \u2192 About**)\r\n- Operating system (Windows / macOS / Linux) and version\r\n- What you expected to happen\r\n- What actually happened, and any steps to reproduce it\r\n\r\nFeature requests are welcome in the same place \u2014 please label them as **[Feature Request]** in the issue title.\r\n\r\n---\r\n\r\n## Security\r\n\r\n[![CodeQL](https://github.com/writerP-777/obsidian-writing-studio/actions/workflows/codeql.yml/badge.svg)](https://github.com/writerP-777/obsidian-writing-studio/actions/workflows/codeql.yml)\r\n[![OpenSSF Scorecard](https://api.securityscorecards.dev/projects/github.com/writerP-777/obsidian-writing-studio/badge)](https://securityscorecards.dev/viewer/?uri=github.com/writerP-777/obsidian-writing-studio)\r\n[![OpenSSF Baseline](https://www.bestpractices.dev/projects/12832/baseline)](https://www.bestpractices.dev/projects/12832)\r\n[![ESLint](https://github.com/writerP-777/obsidian-writing-studio/actions/workflows/eslint.yml/badge.svg)](https://github.com/writerP-777/obsidian-writing-studio/actions/workflows/eslint.yml)\r\n[![ORCID](https://img.shields.io/badge/ORCID-0009--0009--8598--2069-brightgreen?logo=orcid&logoColor=white)](https://orcid.org/0009-0009-8598-2069)\r\n\r\nEvery push and pull request is scanned automatically:\r\n\r\n| Tool | What it checks |\r\n|------|----------------|\r\n| **CodeQL** | Static analysis for security vulnerabilities (XSS, injection, unsafe patterns) in TypeScript/JavaScript source |\r\n| **OpenSSF Scorecard** | Supply-chain security posture: dependency hygiene, branch protection, signed releases, and more |\r\n| **ESLint** (`eslint-plugin-obsidianmd`) | Obsidian plugin guideline compliance \u2014 fails on any warning or error |\r\n\r\nResults are published to the **Security** tab of this repository (GitHub code scanning).\r\n\r\nFor local development, a pre-commit hook runs ESLint (blocking) and a pre-push hook runs a full CodeQL scan (blocks the push if any HIGH or CRITICAL findings are present). Install the [CodeQL CLI](https://github.com/github/codeql-cli-binaries/releases) to enable local scanning (`winget install GitHub.CodeQL` on Windows).\r\n';
 
 // src/HelpContent.ts
 var start = README_default.indexOf("\n## Features");
@@ -24598,7 +25139,7 @@ var StatusBar = class {
     this.wordCountEl.textContent = goal && goal > 0 ? t2("main.statusBar.wordCountGoal", { count: wc, goal }) + delta : t2("main.statusBar.wordCount", { count: wc }) + delta;
   }
   async updateProjectGoalBar() {
-    var _a2, _b2;
+    var _a2, _b2, _c, _d;
     const project = this.plugin.projectManager.getActiveProject();
     const goal = (_b2 = (_a2 = project == null ? void 0 : project.goals) == null ? void 0 : _a2.totalWordCount) != null ? _b2 : 0;
     if (!project || goal <= 0) {
@@ -24606,7 +25147,10 @@ var StatusBar = class {
       return;
     }
     const total = await this.plugin.statsTracker.getTotalWordCount();
-    this.projectGoalEl.setText(t2("main.statusBar.projectWords", { total: total.toLocaleString(), goal: goal.toLocaleString() }));
+    const deadline = (_c = project.goals) == null ? void 0 : _c.deadline;
+    const pace = deadline ? computePace({ goal, total, deadline, writingDays: (_d = project.goals) == null ? void 0 : _d.writingDays, today: localDateString() }) : null;
+    const vars = { total: total.toLocaleString(), goal: goal.toLocaleString() };
+    this.projectGoalEl.setText((pace == null ? void 0 : pace.kind) === "pace" ? t2("main.statusBar.projectWordsPace", { ...vars, perDay: pace.perDay.toLocaleString() }) : t2("main.statusBar.projectWords", vars));
     this.projectGoalEl.removeClass("ws-hidden");
   }
   scheduleProjectGoalUpdate() {
