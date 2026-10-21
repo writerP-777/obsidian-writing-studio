@@ -3637,7 +3637,7 @@ var en_default = {
     noSources: "No sources yet.",
     noSourcesHint: 'Add one with the "Add source" button below the manuscript in the binder, or give any note a "citekey" property.',
     searchPlaceholder: "Search by author, year, or title",
-    noMatches: "No sources match.",
+    noMatches: "No sources match. Try part of the author's name, the year, or a word from the title.",
     pageLabel: "Page (optional)",
     pagePlaceholder: "12 or 12-14",
     pageHint: "Leave empty to cite the whole work.",
@@ -3725,7 +3725,7 @@ var en_default = {
     includeResearch: "Include research notes",
     loading: "Reading the project\u2026",
     typeToFind: "Type a word or phrase to find.",
-    noMatches: "No matches.",
+    noMatches: "No matches. Check the spelling, or turn off Match case and Whole word.",
     summary_one: "{{count}} match in {{sections}}",
     summary_other: "{{count}} matches in {{sections}}",
     sections_one: "{{count}} section",
@@ -4569,7 +4569,7 @@ var zh_default = {
     noSources: "\u8FD8\u6CA1\u6709\u6765\u6E90\u3002",
     noSourcesHint: "\u901A\u8FC7\u6D3B\u9875\u5939\u4E2D\u7A3F\u4EF6\u4E0B\u65B9\u7684\u201C\u6DFB\u52A0\u6765\u6E90\u201D\u6309\u94AE\u6DFB\u52A0\u4E00\u4E2A\uFF0C\u6216\u7ED9\u4EFB\u610F\u7B14\u8BB0\u52A0\u4E0A\u201Ccitekey\u201D\u5C5E\u6027\u3002",
     searchPlaceholder: "\u6309\u4F5C\u8005\u3001\u5E74\u4EFD\u6216\u6807\u9898\u641C\u7D22",
-    noMatches: "\u6CA1\u6709\u5339\u914D\u7684\u6765\u6E90\u3002",
+    noMatches: "\u6CA1\u6709\u5339\u914D\u7684\u6765\u6E90\u3002\u8BD5\u8BD5\u4F5C\u8005\u59D3\u540D\u7684\u4E00\u90E8\u5206\u3001\u5E74\u4EFD\u6216\u6807\u9898\u4E2D\u7684\u4E00\u4E2A\u8BCD\u3002",
     pageLabel: "\u9875\u7801\uFF08\u53EF\u9009\uFF09",
     pagePlaceholder: "12 \u6216 12-14",
     pageHint: "\u7559\u7A7A\u5219\u5F15\u7528\u6574\u90E8\u4F5C\u54C1\u3002",
@@ -4657,7 +4657,7 @@ var zh_default = {
     includeResearch: "\u5305\u542B\u7814\u7A76\u7B14\u8BB0",
     loading: "\u6B63\u5728\u8BFB\u53D6\u9879\u76EE\u2026",
     typeToFind: "\u8F93\u5165\u8981\u67E5\u627E\u7684\u8BCD\u6216\u77ED\u8BED\u3002",
-    noMatches: "\u6CA1\u6709\u5339\u914D\u9879\u3002",
+    noMatches: "\u6CA1\u6709\u5339\u914D\u9879\u3002\u8BF7\u68C0\u67E5\u62FC\u5199\uFF0C\u6216\u5173\u95ED\u201C\u533A\u5206\u5927\u5C0F\u5199\u201D\u548C\u201C\u5168\u5B57\u5339\u914D\u201D\u3002",
     summary_one: "{{sections}}\u4E2D\u6709 {{count}} \u4E2A\u5339\u914D\u9879",
     summary_other: "{{sections}}\u4E2D\u6709 {{count}} \u4E2A\u5339\u914D\u9879",
     sections_one: "{{count}} \u4E2A\u7AE0\u8282",
@@ -5501,7 +5501,7 @@ var hi_default = {
     noSources: "\u0905\u092D\u0940 \u0915\u094B\u0908 \u0938\u094D\u0930\u094B\u0924 \u0928\u0939\u0940\u0902 \u0939\u0948\u0964",
     noSourcesHint: '\u092C\u093E\u0907\u0902\u0921\u0930 \u092E\u0947\u0902 \u092A\u093E\u0902\u0921\u0941\u0932\u093F\u092A\u093F \u0915\u0947 \u0928\u0940\u091A\u0947 "\u0938\u094D\u0930\u094B\u0924 \u091C\u094B\u0921\u093C\u0947\u0902" \u092C\u091F\u0928 \u0938\u0947 \u090F\u0915 \u091C\u094B\u0921\u093C\u0947\u0902, \u092F\u093E \u0915\u093F\u0938\u0940 \u092D\u0940 \u0928\u094B\u091F \u0915\u094B "citekey" \u0917\u0941\u0923 \u0926\u0947\u0902\u0964',
     searchPlaceholder: "\u0932\u0947\u0916\u0915, \u0935\u0930\u094D\u0937 \u092F\u093E \u0936\u0940\u0930\u094D\u0937\u0915 \u0938\u0947 \u0916\u094B\u091C\u0947\u0902",
-    noMatches: "\u0915\u094B\u0908 \u0938\u094D\u0930\u094B\u0924 \u092E\u0947\u0932 \u0928\u0939\u0940\u0902 \u0916\u093E\u0924\u093E\u0964",
+    noMatches: "\u0915\u094B\u0908 \u0938\u094D\u0930\u094B\u0924 \u092E\u0947\u0932 \u0928\u0939\u0940\u0902 \u0916\u093E\u0924\u093E\u0964 \u0932\u0947\u0916\u0915 \u0915\u0947 \u0928\u093E\u092E \u0915\u093E \u0939\u093F\u0938\u094D\u0938\u093E, \u0935\u0930\u094D\u0937, \u092F\u093E \u0936\u0940\u0930\u094D\u0937\u0915 \u0915\u093E \u0915\u094B\u0908 \u0936\u092C\u094D\u0926 \u0906\u091C\u093C\u092E\u093E\u090F\u0901\u0964",
     pageLabel: "\u092A\u0943\u0937\u094D\u0920 (\u0935\u0948\u0915\u0932\u094D\u092A\u093F\u0915)",
     pagePlaceholder: "12 \u092F\u093E 12-14",
     pageHint: "\u092A\u0942\u0930\u0940 \u0915\u0943\u0924\u093F \u0909\u0926\u094D\u0927\u0943\u0924 \u0915\u0930\u0928\u0947 \u0915\u0947 \u0932\u093F\u090F \u0916\u093E\u0932\u0940 \u091B\u094B\u0921\u093C\u0947\u0902\u0964",
@@ -5589,7 +5589,7 @@ var hi_default = {
     includeResearch: "\u0936\u094B\u0927 \u0928\u094B\u091F\u094D\u0938 \u0936\u093E\u092E\u093F\u0932 \u0915\u0930\u0947\u0902",
     loading: "\u092A\u094D\u0930\u094B\u091C\u0947\u0915\u094D\u091F \u092A\u0922\u093C\u093E \u091C\u093E \u0930\u0939\u093E \u0939\u0948\u2026",
     typeToFind: "\u0916\u094B\u091C\u0928\u0947 \u0915\u0947 \u0932\u093F\u090F \u0915\u094B\u0908 \u0936\u092C\u094D\u0926 \u092F\u093E \u0935\u093E\u0915\u094D\u092F\u093E\u0902\u0936 \u0932\u093F\u0916\u0947\u0902\u0964",
-    noMatches: "\u0915\u094B\u0908 \u092E\u093F\u0932\u093E\u0928 \u0928\u0939\u0940\u0902\u0964",
+    noMatches: '\u0915\u094B\u0908 \u092E\u093F\u0932\u093E\u0928 \u0928\u0939\u0940\u0902\u0964 \u0935\u0930\u094D\u0924\u0928\u0940 \u091C\u093E\u0901\u091A\u0947\u0902, \u092F\u093E "\u0915\u0947\u0938 \u092E\u093F\u0932\u093E\u090F\u0901" \u0914\u0930 "\u092A\u0942\u0930\u093E \u0936\u092C\u094D\u0926" \u092C\u0902\u0926 \u0915\u0930\u0947\u0902\u0964',
     summary_one: "{{sections}} \u092E\u0947\u0902 {{count}} \u092E\u093F\u0932\u093E\u0928",
     summary_other: "{{sections}} \u092E\u0947\u0902 {{count}} \u092E\u093F\u0932\u093E\u0928",
     sections_one: "{{count}} \u0905\u0928\u0941\u092D\u093E\u0917",
@@ -6433,7 +6433,7 @@ var es_default = {
     noSources: "A\xFAn no hay fuentes.",
     noSourcesHint: 'A\xF1ada una con el bot\xF3n "A\xF1adir fuente" bajo el manuscrito en el binder, o d\xE9 a cualquier nota la propiedad "citekey".',
     searchPlaceholder: "Buscar por autor, a\xF1o o t\xEDtulo",
-    noMatches: "Ninguna fuente coincide.",
+    noMatches: "Ninguna fuente coincide. Prueba parte del nombre del autor, el a\xF1o o una palabra del t\xEDtulo.",
     pageLabel: "P\xE1gina (opcional)",
     pagePlaceholder: "12 o 12-14",
     pageHint: "D\xE9jelo vac\xEDo para citar la obra completa.",
@@ -6521,7 +6521,7 @@ var es_default = {
     includeResearch: "Incluir notas de investigaci\xF3n",
     loading: "Leyendo el proyecto\u2026",
     typeToFind: "Escribe una palabra o frase para buscar.",
-    noMatches: "Sin coincidencias.",
+    noMatches: "Sin coincidencias. Revisa la ortograf\xEDa o desactiva \xABCoincidir may\xFAsculas y min\xFAsculas\xBB y \xABPalabra completa\xBB.",
     summary_one: "{{count}} coincidencia en {{sections}}",
     summary_other: "{{count}} coincidencias en {{sections}}",
     sections_one: "{{count}} secci\xF3n",
@@ -7405,7 +7405,7 @@ var ar_default = {
     noSources: "\u0644\u0627 \u062A\u0648\u062C\u062F \u0645\u0635\u0627\u062F\u0631 \u0628\u0639\u062F.",
     noSourcesHint: '\u0623\u0636\u0641 \u0645\u0635\u062F\u0631\u064B\u0627 \u0628\u0632\u0631 "\u0625\u0636\u0627\u0641\u0629 \u0645\u0635\u062F\u0631" \u0623\u0633\u0641\u0644 \u0627\u0644\u0645\u062E\u0637\u0648\u0637\u0629 \u0641\u064A \u0627\u0644\u0645\u062C\u0644\u0651\u062F\u060C \u0623\u0648 \u0623\u0639\u0637\u0650 \u0623\u064A \u0645\u0644\u0627\u062D\u0638\u0629 \u0627\u0644\u062E\u0627\u0635\u064A\u0629 "citekey".',
     searchPlaceholder: "\u0627\u0628\u062D\u062B \u0628\u0627\u0644\u0645\u0624\u0644\u0641 \u0623\u0648 \u0627\u0644\u0633\u0646\u0629 \u0623\u0648 \u0627\u0644\u0639\u0646\u0648\u0627\u0646",
-    noMatches: "\u0644\u0627 \u062A\u0648\u062C\u062F \u0645\u0635\u0627\u062F\u0631 \u0645\u0637\u0627\u0628\u0642\u0629.",
+    noMatches: "\u0644\u0627 \u064A\u0648\u062C\u062F \u0645\u0635\u062F\u0631 \u0645\u0637\u0627\u0628\u0642. \u062C\u0631\u0651\u0628 \u062C\u0632\u0621\u064B\u0627 \u0645\u0646 \u0627\u0633\u0645 \u0627\u0644\u0645\u0624\u0644\u0641 \u0623\u0648 \u0627\u0644\u0633\u0646\u0629 \u0623\u0648 \u0643\u0644\u0645\u0629 \u0645\u0646 \u0627\u0644\u0639\u0646\u0648\u0627\u0646.",
     pageLabel: "\u0627\u0644\u0635\u0641\u062D\u0629 (\u0627\u062E\u062A\u064A\u0627\u0631\u064A)",
     pagePlaceholder: "12 \u0623\u0648 12-14",
     pageHint: "\u0627\u062A\u0631\u0643\u0647 \u0641\u0627\u0631\u063A\u064B\u0627 \u0644\u0644\u0627\u0633\u062A\u0634\u0647\u0627\u062F \u0628\u0627\u0644\u0639\u0645\u0644 \u0643\u0627\u0645\u0644\u064B\u0627.",
@@ -7509,7 +7509,7 @@ var ar_default = {
     includeResearch: "\u062A\u0636\u0645\u064A\u0646 \u0645\u0644\u0627\u062D\u0638\u0627\u062A \u0627\u0644\u0628\u062D\u062B",
     loading: "\u062C\u0627\u0631\u064D \u0642\u0631\u0627\u0621\u0629 \u0627\u0644\u0645\u0634\u0631\u0648\u0639\u2026",
     typeToFind: "\u0627\u0643\u062A\u0628 \u0643\u0644\u0645\u0629 \u0623\u0648 \u0639\u0628\u0627\u0631\u0629 \u0644\u0644\u0628\u062D\u062B \u0639\u0646\u0647\u0627.",
-    noMatches: "\u0644\u0627 \u062A\u0648\u062C\u062F \u0646\u062A\u0627\u0626\u062C.",
+    noMatches: "\u0644\u0627 \u062A\u0648\u062C\u062F \u0646\u062A\u0627\u0626\u062C. \u062A\u062D\u0642\u0642 \u0645\u0646 \u0627\u0644\u0625\u0645\u0644\u0627\u0621\u060C \u0623\u0648 \u0623\u0648\u0642\u0641 \xAB\u0645\u0637\u0627\u0628\u0642\u0629 \u062D\u0627\u0644\u0629 \u0627\u0644\u0623\u062D\u0631\u0641\xBB \u0648\xAB\u0643\u0644\u0645\u0629 \u0643\u0627\u0645\u0644\u0629\xBB.",
     summary_zero: "\u0644\u0627 \u0646\u062A\u0627\u0626\u062C \u0641\u064A {{sections}}",
     summary_one: "\u0646\u062A\u064A\u062C\u0629 \u0648\u0627\u062D\u062F\u0629 \u0641\u064A {{sections}}",
     summary_two: "\u0646\u062A\u064A\u062C\u062A\u0627\u0646 \u0641\u064A {{sections}}",
@@ -8369,7 +8369,7 @@ var fr_default = {
     noSources: "Aucune source pour l\u2019instant.",
     noSourcesHint: "Ajoutez-en une avec le bouton \xAB Ajouter une source \xBB sous le manuscrit dans le classeur, ou donnez \xE0 n\u2019importe quelle note la propri\xE9t\xE9 \xAB citekey \xBB.",
     searchPlaceholder: "Rechercher par auteur, ann\xE9e ou titre",
-    noMatches: "Aucune source ne correspond.",
+    noMatches: "Aucune source ne correspond. Essayez une partie du nom de l\u2019auteur, l\u2019ann\xE9e ou un mot du titre.",
     pageLabel: "Page (facultatif)",
     pagePlaceholder: "12 ou 12-14",
     pageHint: "Laissez vide pour citer l\u2019ouvrage entier.",
@@ -8457,7 +8457,7 @@ var fr_default = {
     includeResearch: "Inclure les notes de recherche",
     loading: "Lecture du projet\u2026",
     typeToFind: "Saisissez un mot ou une expression \xE0 rechercher.",
-    noMatches: "Aucune occurrence.",
+    noMatches: "Aucun r\xE9sultat. V\xE9rifiez l\u2019orthographe ou d\xE9sactivez \xAB Respecter la casse \xBB et \xAB Mot entier \xBB.",
     summary_one: "{{count}} occurrence dans {{sections}}",
     summary_other: "{{count}} occurrences dans {{sections}}",
     sections_one: "{{count}} section",
@@ -9301,7 +9301,7 @@ var bn_default = {
     noSources: "\u098F\u0996\u09A8\u09CB \u0995\u09CB\u09A8\u09CB \u0989\u09CE\u09B8 \u09A8\u09C7\u0987\u0964",
     noSourcesHint: '\u09AC\u09BE\u0987\u09A8\u09CD\u09A1\u09BE\u09B0\u09C7 \u09AA\u09BE\u09A3\u09CD\u09A1\u09C1\u09B2\u09BF\u09AA\u09BF\u09B0 \u09A8\u09BF\u099A\u09C7 "\u0989\u09CE\u09B8 \u09AF\u09CB\u0997 \u0995\u09B0\u09C1\u09A8" \u09AC\u09CB\u09A4\u09BE\u09AE \u09A6\u09BF\u09AF\u09BC\u09C7 \u098F\u0995\u099F\u09BF \u09AF\u09CB\u0997 \u0995\u09B0\u09C1\u09A8, \u0985\u09A5\u09AC\u09BE \u09AF\u09C7\u0995\u09CB\u09A8\u09CB \u09A8\u09CB\u099F\u09C7 "citekey" \u09AA\u09CD\u09B0\u09AA\u09BE\u09B0\u09CD\u099F\u09BF \u09A6\u09BF\u09A8\u0964',
     searchPlaceholder: "\u09B2\u09C7\u0996\u0995, \u09AC\u099B\u09B0 \u09AC\u09BE \u09B6\u09BF\u09B0\u09CB\u09A8\u09BE\u09AE \u09A6\u09BF\u09AF\u09BC\u09C7 \u0996\u09C1\u0981\u099C\u09C1\u09A8",
-    noMatches: "\u0995\u09CB\u09A8\u09CB \u0989\u09CE\u09B8 \u09AE\u09C7\u09B2\u09C7\u09A8\u09BF\u0964",
+    noMatches: "\u0995\u09CB\u09A8\u09CB \u0989\u09CE\u09B8 \u09AE\u09C7\u09B2\u09C7\u09A8\u09BF\u0964 \u09B2\u09C7\u0996\u0995\u09C7\u09B0 \u09A8\u09BE\u09AE\u09C7\u09B0 \u0985\u0982\u09B6, \u09AC\u099B\u09B0, \u09AC\u09BE \u09B6\u09BF\u09B0\u09CB\u09A8\u09BE\u09AE\u09C7\u09B0 \u098F\u0995\u099F\u09BF \u09B6\u09AC\u09CD\u09A6 \u09A6\u09BF\u09AF\u09BC\u09C7 \u099A\u09C7\u09B7\u09CD\u099F\u09BE \u0995\u09B0\u09C1\u09A8\u0964",
     pageLabel: "\u09AA\u09C3\u09B7\u09CD\u09A0\u09BE (\u0990\u099A\u09CD\u099B\u09BF\u0995)",
     pagePlaceholder: "12 \u09AC\u09BE 12-14",
     pageHint: "\u09AA\u09C1\u09B0\u09CB \u09B0\u099A\u09A8\u09BE \u0989\u09A6\u09CD\u09A7\u09C3\u09A4 \u0995\u09B0\u09A4\u09C7 \u0996\u09BE\u09B2\u09BF \u09B0\u09BE\u0996\u09C1\u09A8\u0964",
@@ -9389,7 +9389,7 @@ var bn_default = {
     includeResearch: "\u0997\u09AC\u09C7\u09B7\u09A3\u09BE \u09A8\u09CB\u099F \u0985\u09A8\u09CD\u09A4\u09B0\u09CD\u09AD\u09C1\u0995\u09CD\u09A4 \u0995\u09B0\u09C1\u09A8",
     loading: "\u09AA\u09CD\u09B0\u0995\u09B2\u09CD\u09AA \u09AA\u09A1\u09BC\u09BE \u09B9\u099A\u09CD\u099B\u09C7\u2026",
     typeToFind: "\u0996\u09CB\u0981\u099C\u09BE\u09B0 \u099C\u09A8\u09CD\u09AF \u098F\u0995\u099F\u09BF \u09B6\u09AC\u09CD\u09A6 \u09AC\u09BE \u09AC\u09BE\u0995\u09CD\u09AF\u09BE\u0982\u09B6 \u09B2\u09BF\u0996\u09C1\u09A8\u0964",
-    noMatches: "\u0995\u09CB\u09A8\u09CB \u09AE\u09BF\u09B2 \u09A8\u09C7\u0987\u0964",
+    noMatches: '\u0995\u09CB\u09A8\u09CB \u09AE\u09BF\u09B2 \u09A8\u09C7\u0987\u0964 \u09AC\u09BE\u09A8\u09BE\u09A8 \u09A6\u09C7\u0996\u09C1\u09A8, \u0985\u09A5\u09AC\u09BE "\u09AC\u09A1\u09BC-\u099B\u09CB\u099F \u09B9\u09BE\u09A4\u09C7\u09B0 \u0985\u0995\u09CD\u09B7\u09B0 \u09AE\u09C7\u09B2\u09BE\u09A8" \u0993 "\u09B8\u09AE\u09CD\u09AA\u09C2\u09B0\u09CD\u09A3 \u09B6\u09AC\u09CD\u09A6" \u09AC\u09A8\u09CD\u09A7 \u0995\u09B0\u09C1\u09A8\u0964',
     summary_one: "{{sections}}-\u098F {{count}}\u099F\u09BF \u09AE\u09BF\u09B2",
     summary_other: "{{sections}}-\u098F {{count}}\u099F\u09BF \u09AE\u09BF\u09B2",
     sections_one: "{{count}}\u099F\u09BF \u0985\u09A8\u09C1\u099A\u09CD\u099B\u09C7\u09A6",
@@ -10233,7 +10233,7 @@ var pt_BR_default = {
     noSources: "Nenhuma fonte ainda.",
     noSourcesHint: 'Adicione uma com o bot\xE3o "Adicionar fonte" abaixo do manuscrito no fich\xE1rio, ou d\xEA a qualquer nota a propriedade "citekey".',
     searchPlaceholder: "Buscar por autor, ano ou t\xEDtulo",
-    noMatches: "Nenhuma fonte corresponde.",
+    noMatches: "Nenhuma fonte corresponde. Tente parte do nome do autor, o ano ou uma palavra do t\xEDtulo.",
     pageLabel: "P\xE1gina (opcional)",
     pagePlaceholder: "12 ou 12-14",
     pageHint: "Deixe em branco para citar a obra inteira.",
@@ -10321,7 +10321,7 @@ var pt_BR_default = {
     includeResearch: "Incluir notas de pesquisa",
     loading: "Lendo o projeto\u2026",
     typeToFind: "Digite uma palavra ou frase para localizar.",
-    noMatches: "Nenhuma ocorr\xEAncia.",
+    noMatches: 'Nenhuma ocorr\xEAncia. Confira a grafia ou desative "Diferenciar mai\xFAsculas de min\xFAsculas" e "Palavra inteira".',
     summary_one: "{{count}} ocorr\xEAncia em {{sections}}",
     summary_other: "{{count}} ocorr\xEAncias em {{sections}}",
     sections_one: "{{count}} se\xE7\xE3o",
@@ -11187,7 +11187,7 @@ var ru_default = {
     noSources: "\u0418\u0441\u0442\u043E\u0447\u043D\u0438\u043A\u043E\u0432 \u043F\u043E\u043A\u0430 \u043D\u0435\u0442.",
     noSourcesHint: "\u0414\u043E\u0431\u0430\u0432\u044C\u0442\u0435 \u0438\u0441\u0442\u043E\u0447\u043D\u0438\u043A \u043A\u043D\u043E\u043F\u043A\u043E\u0439 \xAB\u0414\u043E\u0431\u0430\u0432\u0438\u0442\u044C \u0438\u0441\u0442\u043E\u0447\u043D\u0438\u043A\xBB \u043F\u043E\u0434 \u0440\u0443\u043A\u043E\u043F\u0438\u0441\u044C\u044E \u0432 \u0431\u0438\u043D\u0434\u0435\u0440\u0435 \u0438\u043B\u0438 \u0437\u0430\u0434\u0430\u0439\u0442\u0435 \u043B\u044E\u0431\u043E\u0439 \u0437\u0430\u043C\u0435\u0442\u043A\u0435 \u0441\u0432\u043E\u0439\u0441\u0442\u0432\u043E \xABcitekey\xBB.",
     searchPlaceholder: "\u041F\u043E\u0438\u0441\u043A \u043F\u043E \u0430\u0432\u0442\u043E\u0440\u0443, \u0433\u043E\u0434\u0443 \u0438\u043B\u0438 \u043D\u0430\u0437\u0432\u0430\u043D\u0438\u044E",
-    noMatches: "\u041F\u043E\u0434\u0445\u043E\u0434\u044F\u0449\u0438\u0445 \u0438\u0441\u0442\u043E\u0447\u043D\u0438\u043A\u043E\u0432 \u043D\u0435\u0442.",
+    noMatches: "\u0418\u0441\u0442\u043E\u0447\u043D\u0438\u043A\u0438 \u043D\u0435 \u043D\u0430\u0439\u0434\u0435\u043D\u044B. \u041F\u043E\u043F\u0440\u043E\u0431\u0443\u0439\u0442\u0435 \u0447\u0430\u0441\u0442\u044C \u0444\u0430\u043C\u0438\u043B\u0438\u0438 \u0430\u0432\u0442\u043E\u0440\u0430, \u0433\u043E\u0434 \u0438\u043B\u0438 \u0441\u043B\u043E\u0432\u043E \u0438\u0437 \u043D\u0430\u0437\u0432\u0430\u043D\u0438\u044F.",
     pageLabel: "\u0421\u0442\u0440\u0430\u043D\u0438\u0446\u0430 (\u043D\u0435\u043E\u0431\u044F\u0437\u0430\u0442\u0435\u043B\u044C\u043D\u043E)",
     pagePlaceholder: "12 \u0438\u043B\u0438 12-14",
     pageHint: "\u041E\u0441\u0442\u0430\u0432\u044C\u0442\u0435 \u043F\u0443\u0441\u0442\u044B\u043C, \u0447\u0442\u043E\u0431\u044B \u0441\u043E\u0441\u043B\u0430\u0442\u044C\u0441\u044F \u043D\u0430 \u0440\u0430\u0431\u043E\u0442\u0443 \u0446\u0435\u043B\u0438\u043A\u043E\u043C.",
@@ -11283,7 +11283,7 @@ var ru_default = {
     includeResearch: "\u0412\u043A\u043B\u044E\u0447\u0430\u044F \u0437\u0430\u043C\u0435\u0442\u043A\u0438 \u0438\u0441\u0441\u043B\u0435\u0434\u043E\u0432\u0430\u043D\u0438\u044F",
     loading: "\u0427\u0442\u0435\u043D\u0438\u0435 \u043F\u0440\u043E\u0435\u043A\u0442\u0430\u2026",
     typeToFind: "\u0412\u0432\u0435\u0434\u0438\u0442\u0435 \u0441\u043B\u043E\u0432\u043E \u0438\u043B\u0438 \u0444\u0440\u0430\u0437\u0443 \u0434\u043B\u044F \u043F\u043E\u0438\u0441\u043A\u0430.",
-    noMatches: "\u0421\u043E\u0432\u043F\u0430\u0434\u0435\u043D\u0438\u0439 \u043D\u0435\u0442.",
+    noMatches: "\u0421\u043E\u0432\u043F\u0430\u0434\u0435\u043D\u0438\u0439 \u043D\u0435\u0442. \u041F\u0440\u043E\u0432\u0435\u0440\u044C\u0442\u0435 \u043D\u0430\u043F\u0438\u0441\u0430\u043D\u0438\u0435 \u0438\u043B\u0438 \u043E\u0442\u043A\u043B\u044E\u0447\u0438\u0442\u0435 \xAB\u0423\u0447\u0438\u0442\u044B\u0432\u0430\u0442\u044C \u0440\u0435\u0433\u0438\u0441\u0442\u0440\xBB \u0438 \xAB\u0421\u043B\u043E\u0432\u043E \u0446\u0435\u043B\u0438\u043A\u043E\u043C\xBB.",
     summary_one: "{{count}} \u0441\u043E\u0432\u043F\u0430\u0434\u0435\u043D\u0438\u0435 \u0432 {{sections}}",
     summary_few: "{{count}} \u0441\u043E\u0432\u043F\u0430\u0434\u0435\u043D\u0438\u044F \u0432 {{sections}}",
     summary_many: "{{count}} \u0441\u043E\u0432\u043F\u0430\u0434\u0435\u043D\u0438\u0439 \u0432 {{sections}}",
@@ -12135,7 +12135,7 @@ var ja_default = {
     noSources: "\u51FA\u5178\u306F\u307E\u3060\u3042\u308A\u307E\u305B\u3093\u3002",
     noSourcesHint: "\u30D0\u30A4\u30F3\u30C0\u30FC\u306E\u539F\u7A3F\u306E\u4E0B\u306B\u3042\u308B\u300C\u51FA\u5178\u3092\u8FFD\u52A0\u300D\u30DC\u30BF\u30F3\u304B\u3089\u8FFD\u52A0\u3059\u308B\u304B\u3001\u4EFB\u610F\u306E\u30CE\u30FC\u30C8\u306B\u300Ccitekey\u300D\u30D7\u30ED\u30D1\u30C6\u30A3\u3092\u4ED8\u3051\u3066\u304F\u3060\u3055\u3044\u3002",
     searchPlaceholder: "\u8457\u8005\u30FB\u5E74\u30FB\u30BF\u30A4\u30C8\u30EB\u3067\u691C\u7D22",
-    noMatches: "\u4E00\u81F4\u3059\u308B\u51FA\u5178\u304C\u3042\u308A\u307E\u305B\u3093\u3002",
+    noMatches: "\u4E00\u81F4\u3059\u308B\u51FA\u5178\u304C\u3042\u308A\u307E\u305B\u3093\u3002\u8457\u8005\u540D\u306E\u4E00\u90E8\u3001\u5E74\u3001\u307E\u305F\u306F\u30BF\u30A4\u30C8\u30EB\u306E\u5358\u8A9E\u3067\u8A66\u3057\u3066\u304F\u3060\u3055\u3044\u3002",
     pageLabel: "\u30DA\u30FC\u30B8\uFF08\u4EFB\u610F\uFF09",
     pagePlaceholder: "12 \u307E\u305F\u306F 12-14",
     pageHint: "\u7A7A\u6B04\u306B\u3059\u308B\u3068\u4F5C\u54C1\u5168\u4F53\u3092\u5F15\u7528\u3057\u307E\u3059\u3002",
@@ -12223,7 +12223,7 @@ var ja_default = {
     includeResearch: "\u30EA\u30B5\u30FC\u30C1\u30CE\u30FC\u30C8\u3092\u542B\u3081\u308B",
     loading: "\u30D7\u30ED\u30B8\u30A7\u30AF\u30C8\u3092\u8AAD\u307F\u8FBC\u3093\u3067\u3044\u307E\u3059\u2026",
     typeToFind: "\u691C\u7D22\u3059\u308B\u8A9E\u53E5\u3092\u5165\u529B\u3057\u3066\u304F\u3060\u3055\u3044\u3002",
-    noMatches: "\u4E00\u81F4\u306F\u3042\u308A\u307E\u305B\u3093\u3002",
+    noMatches: "\u4E00\u81F4\u306A\u3057\u3002\u3064\u3065\u308A\u3092\u78BA\u8A8D\u3059\u308B\u304B\u3001\u300C\u5927\u6587\u5B57\u3068\u5C0F\u6587\u5B57\u3092\u533A\u5225\u300D\u3068\u300C\u5358\u8A9E\u5358\u4F4D\u300D\u3092\u30AA\u30D5\u306B\u3057\u3066\u304F\u3060\u3055\u3044\u3002",
     summary_one: "{{sections}}\u306B {{count}} \u4EF6\u306E\u4E00\u81F4",
     summary_other: "{{sections}}\u306B {{count}} \u4EF6\u306E\u4E00\u81F4",
     sections_one: "{{count}} \u30BB\u30AF\u30B7\u30E7\u30F3",
@@ -13067,7 +13067,7 @@ var de_default = {
     noSources: "Noch keine Quellen.",
     noSourcesHint: "F\xFCgen Sie eine \xFCber die Schaltfl\xE4che \u201EQuelle hinzuf\xFCgen\u201C unter dem Manuskript im Binder hinzu, oder geben Sie einer beliebigen Notiz die Eigenschaft \u201Ecitekey\u201C.",
     searchPlaceholder: "Nach Autor, Jahr oder Titel suchen",
-    noMatches: "Keine passenden Quellen.",
+    noMatches: "Keine passende Quelle. Versuche einen Teil des Autorennamens, das Jahr oder ein Wort aus dem Titel.",
     pageLabel: "Seite (optional)",
     pagePlaceholder: "12 oder 12-14",
     pageHint: "Leer lassen, um das ganze Werk zu zitieren.",
@@ -13155,7 +13155,7 @@ var de_default = {
     includeResearch: "Recherchenotizen einbeziehen",
     loading: "Projekt wird gelesen\u2026",
     typeToFind: "Geben Sie ein Wort oder eine Wendung ein.",
-    noMatches: "Keine Treffer.",
+    noMatches: "Keine Treffer. Pr\xFCfe die Schreibweise oder schalte \u201EGro\xDF-/Kleinschreibung beachten\u201C und \u201EGanzes Wort\u201C aus.",
     summary_one: "{{count}} Treffer in {{sections}}",
     summary_other: "{{count}} Treffer in {{sections}}",
     sections_one: "{{count}} Abschnitt",
@@ -13999,7 +13999,7 @@ var ko_default = {
     noSources: "\uC544\uC9C1 \uCD9C\uCC98\uAC00 \uC5C6\uC2B5\uB2C8\uB2E4.",
     noSourcesHint: '\uBC14\uC778\uB354\uC5D0\uC11C \uC6D0\uACE0 \uC544\uB798\uC758 "\uCD9C\uCC98 \uCD94\uAC00" \uBC84\uD2BC\uC73C\uB85C \uCD94\uAC00\uD558\uAC70\uB098, \uC544\uBB34 \uB178\uD2B8\uC5D0\uB098 "citekey" \uC18D\uC131\uC744 \uCD94\uAC00\uD558\uC138\uC694.',
     searchPlaceholder: "\uC800\uC790, \uC5F0\uB3C4 \uB610\uB294 \uC81C\uBAA9\uC73C\uB85C \uAC80\uC0C9",
-    noMatches: "\uC77C\uCE58\uD558\uB294 \uCD9C\uCC98\uAC00 \uC5C6\uC2B5\uB2C8\uB2E4.",
+    noMatches: "\uC77C\uCE58\uD558\uB294 \uCD9C\uCC98\uAC00 \uC5C6\uC2B5\uB2C8\uB2E4. \uC800\uC790 \uC774\uB984\uC758 \uC77C\uBD80, \uC5F0\uB3C4 \uB610\uB294 \uC81C\uBAA9\uC758 \uB2E8\uC5B4\uB85C \uC2DC\uB3C4\uD574 \uBCF4\uC138\uC694.",
     pageLabel: "\uD398\uC774\uC9C0(\uC120\uD0DD)",
     pagePlaceholder: "12 \uB610\uB294 12-14",
     pageHint: "\uBE44\uC6CC \uB450\uBA74 \uC800\uC791 \uC804\uCCB4\uB97C \uC778\uC6A9\uD569\uB2C8\uB2E4.",
@@ -14087,7 +14087,7 @@ var ko_default = {
     includeResearch: "\uC5F0\uAD6C \uB178\uD2B8 \uD3EC\uD568",
     loading: "\uD504\uB85C\uC81D\uD2B8\uB97C \uC77D\uB294 \uC911\u2026",
     typeToFind: "\uCC3E\uC744 \uB2E8\uC5B4\uB098 \uBB38\uAD6C\uB97C \uC785\uB825\uD558\uC138\uC694.",
-    noMatches: "\uC77C\uCE58\uD558\uB294 \uD56D\uBAA9\uC774 \uC5C6\uC2B5\uB2C8\uB2E4.",
+    noMatches: '\uC77C\uCE58\uD558\uB294 \uD56D\uBAA9\uC774 \uC5C6\uC2B5\uB2C8\uB2E4. \uCCA0\uC790\uB97C \uD655\uC778\uD558\uAC70\uB098 "\uB300\uC18C\uBB38\uC790 \uAD6C\uBD84"\uACFC "\uB2E8\uC5B4 \uB2E8\uC704"\uB97C \uB044\uC138\uC694.',
     summary_one: "{{sections}}\uC5D0\uC11C {{count}}\uAC1C \uC77C\uCE58",
     summary_other: "{{sections}}\uC5D0\uC11C {{count}}\uAC1C \uC77C\uCE58",
     sections_one: "{{count}}\uAC1C \uC139\uC158",
@@ -14169,7 +14169,7 @@ var ProjectModal = class extends import_obsidian3.Modal {
     this.edit = edit;
   }
   onOpen() {
-    var _a2, _b2, _c;
+    var _a2, _b2, _c, _d;
     const { contentEl } = this;
     contentEl.empty();
     contentEl.addClass("ws-project-modal");
@@ -14266,6 +14266,12 @@ var ProjectModal = class extends import_obsidian3.Modal {
     };
     const cancelBtn = btnRow.createEl("button", { text: t2("projectModal.cancel") });
     cancelBtn.onclick = () => this.close();
+    contentEl.addEventListener("keydown", (e) => {
+      if (e.key !== "Enter" || e.isComposing || !(e.target instanceof HTMLInputElement)) return;
+      e.preventDefault();
+      submitBtn.click();
+    });
+    (_d = contentEl.querySelector("input")) == null ? void 0 : _d.focus();
   }
   async createNew(submitBtn) {
     var _a2;
@@ -22432,6 +22438,7 @@ var AddSourceModal = class extends import_obsidian26.Modal {
     this.onSubmit = onSubmit;
   }
   onOpen() {
+    var _a2;
     const { contentEl } = this;
     contentEl.empty();
     this.modalEl.addClass("ws-source-dialog");
@@ -22457,7 +22464,7 @@ var AddSourceModal = class extends import_obsidian26.Modal {
       });
     });
     new import_obsidian26.Setting(contentEl).setName(t2("citations.field.title")).addText((tx) => {
-      tx.inputEl.addClass("ws-source-wide");
+      tx.inputEl.addClass("ws-source-wide", "ws-source-title");
       tx.onChange((v) => {
         this.fields.title = v;
         this.refreshKey();
@@ -22537,6 +22544,12 @@ var AddSourceModal = class extends import_obsidian26.Modal {
     const cancelBtn = btnRow.createEl("button", { text: t2("synopsis.cancel") });
     cancelBtn.onclick = () => this.close();
     this.showTypedFields();
+    contentEl.addEventListener("keydown", (e) => {
+      if (e.key !== "Enter" || e.isComposing || !(e.target instanceof HTMLInputElement)) return;
+      e.preventDefault();
+      addBtn.click();
+    });
+    (_a2 = contentEl.querySelector("input.ws-source-title")) == null ? void 0 : _a2.focus();
   }
   showTypedFields() {
     var _a2;

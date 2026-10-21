@@ -59,7 +59,7 @@ export class AddSourceModal extends Modal {
     new Setting(contentEl)
       .setName(t('citations.field.title'))
       .addText(tx => {
-        tx.inputEl.addClass('ws-source-wide');
+        tx.inputEl.addClass('ws-source-wide', 'ws-source-title');
         tx.onChange(v => { this.fields.title = v; this.refreshKey(); });
       });
 
@@ -142,6 +142,16 @@ export class AddSourceModal extends Modal {
     cancelBtn.onclick = () => this.close();
 
     this.showTypedFields();
+
+    // Keyboard flow (UX pass): the cursor starts in the title — the one
+    // field every source needs — and Enter in any single-line field adds
+    // the source. The authors textarea keeps Enter for a new line.
+    contentEl.addEventListener('keydown', (e: KeyboardEvent) => {
+      if (e.key !== 'Enter' || e.isComposing || !(e.target instanceof HTMLInputElement)) return;
+      e.preventDefault();
+      addBtn.click();
+    });
+    contentEl.querySelector<HTMLInputElement>('input.ws-source-title')?.focus();
   }
 
   private showTypedFields(): void {

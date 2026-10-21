@@ -214,6 +214,16 @@ export class ProjectModal extends Modal {
 
     const cancelBtn = btnRow.createEl('button', { text: t('projectModal.cancel') });
     cancelBtn.onclick = () => this.close();
+
+    // Keyboard flow (UX pass): the cursor starts in the title, and Enter in
+    // any single-line field saves. Textareas, dropdowns, and the day
+    // toggles keep their own Enter behavior.
+    contentEl.addEventListener('keydown', (e: KeyboardEvent) => {
+      if (e.key !== 'Enter' || e.isComposing || !(e.target instanceof HTMLInputElement)) return;
+      e.preventDefault();
+      submitBtn.click();
+    });
+    contentEl.querySelector('input')?.focus();
   }
 
   private async createNew(submitBtn: HTMLButtonElement): Promise<void> {
