@@ -4,7 +4,9 @@ All notable changes to Writing Studio are documented here.
 
 ---
 
-## [3.3.0] - Unreleased
+## [4.0.0] - 2026-10-21
+
+Writing Studio is now built for nonfiction: sources and citations from the notes already in your vault, a synopsis on every section and an Outline of the argument, split and merge and project-wide find and replace, and a deadline with the words a day to meet it. Nothing existing changes — every project, setting, and file opens exactly as it did in 3.2 — and the Obsidian minimum stays at 1.13.0. The major number marks the new direction, not a break.
 
 ### Added
 - Every manuscript document can now carry a synopsis: one or two sentences on what the section argues or covers. Right-click a document in the binder and choose **Edit synopsis…**, or edit the `synopsis` property in Obsidian's Properties panel. A **Show synopses** button in the binder toolbar puts each synopsis under its title, and the row's hover tooltip lists it with the other properties the binder reads.
@@ -22,7 +24,7 @@ All notable changes to Writing Studio are documented here.
 - Dialog keyboard flow: **Add a source** opens with the cursor in the Title field and **Edit project** / **Create project** with the cursor in the title, and Enter in any single-line field of either dialog saves. Textareas, dropdowns, and the writing-day buttons keep their own Enter behavior.
 - Empty states now say what to try next. Find and replace: "No matches. Check the spelling, or turn off Match case and Whole word." The citation picker: "No sources match. Try part of the author's name, the year, or a word from the title."
 - The WordPress connection-test badge, the "already published" notice, and the sprint Stop button use the theme's own red, green, and orange tokens instead of fixed colors, which read at about 2.5:1 on a light background.
-- README screenshots refreshed for 3.3.0: the edit-project dialog (rename toggle, deadline, writing days), the Launcher project card, the binder toolbar, and the binder right-click menu, plus new pictures of the Outline, Find and replace, Add a source, and Insert citation. (#394)
+- README screenshots refreshed for 4.0.0: the edit-project dialog (rename toggle, deadline, writing days), the Launcher project card, the binder toolbar, and the binder right-click menu, plus new pictures of the Outline, Find and replace, Add a source, and Insert citation. (#394)
 - The in-app help, which embeds the README, now drops the centered HTML figures as well as Markdown images, so no broken pictures appear inside Obsidian.
 
 ### Fixed

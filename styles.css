@@ -787,7 +787,7 @@ body.writing-studio-typography .markdown-reading-view .markdown-preview-section 
 }
 
 /* Theme tokens, not fixed hex: the old #10b981 green read at 2.5:1 on a
-   light background (UX pass, 3.3.0) */
+   light background (UX pass, 4.0.0) */
 .ws-wp-test-ok {
   background: rgba(var(--color-green-rgb), 0.1);
   color: var(--text-success);
@@ -2671,7 +2671,7 @@ body .ws-launcher select {
 }
 .ws-cite-search-icon svg { width: 16px; height: 16px; }
 /* Specificity matters: Obsidian's own modal input rule outranks a lone
-   class, and the magnifier then sits on the placeholder (UX pass, 3.3.0) */
+   class, and the magnifier then sits on the placeholder (UX pass, 4.0.0) */
 .ws-cite-modal input.ws-cite-search-input {
   width: 100%;
   padding-left: 32px;
