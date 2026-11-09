@@ -23,7 +23,7 @@
     "@types/jest": "^30.0.0",
     "@types/node": "^26.6.6",
     "esbuild": "0.28.2",
-    "eslint-plugin-obsidianmd": "^0.4.2",
+    "eslint-plugin-obsidianmd": "^0.5.1",
     "jest": "^30.5.2",
     "obsidian": "^1.14.4",
     "ts-jest": "^29.4.15",
