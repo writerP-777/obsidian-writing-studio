@@ -4,7 +4,7 @@
 
 # Writing Studio
 
-**Version 4.0.0** · Desktop only
+**Version 4.0.1** · Desktop only
 
 ![GitHub all releases](https://img.shields.io/github/downloads/writerP-777/obsidian-writing-studio/total)
 [![OpenSSF Best Practices](https://www.bestpractices.dev/projects/12832/badge)](https://www.bestpractices.dev/projects/12832)
@@ -65,7 +65,7 @@ Writing Studio turns Obsidian into a dedicated environment for serious nonfictio
 
 **Progress Tracking** — Live word counts in the status bar and Launcher, session delta tracking, per-document and per-project word count goals with inline progress banners, and a 30-day writing log with streak tracking.
 
-**Export Engine** — Export to Manuscript (HTML), PDF, Word (.docx), RTF, HTML, Markdown, and EPUB. Manuscript format produces industry-standard layout with no external tools; other formats require Pandoc.
+**Export Engine** — Export to Manuscript (HTML), PDF, Word (.docx), RTF, HTML, Markdown, and EPUB. Manuscript format produces industry-standard layout. Manuscript, HTML, Markdown, and EPUB need no external tools; PDF, Word, and RTF require Pandoc.
 
 **Sources, Citations & Footnotes** — Any note with a `citekey` property is a source, including literature notes from Zotero Integration or the Citations plugin. Cite with `[@smith2020, p. 12]` or a wikilink to the source note, and every export carries the citations and a works-cited page in Chicago author-date or notes style. Footnotes now survive every format. An **Add source** form and an **Insert citation** picker mean nobody has to type a citation key by hand.
 
@@ -116,7 +116,8 @@ By default Writing Studio launches automatically when Obsidian loads — the Lau
 </p>
 
 **The Launcher includes:**
-- Active project name, total word count, and progress toward your project word count goal
+- Active project name, total word count, and progress toward your project word count goal; with a deadline, the days left and the words a day needed to finish on time
+- **Open binder** and **Open outline** buttons
 - Writing mode selector (Draft / Edit / Review)
 - Focus Mode and Typography Mode toggles
 - Sprint timer with "Set up sprint" button and Quick Sprint Options presets (10 m, 15 m, 25 m)
@@ -466,9 +467,9 @@ Three modes shape how the editor behaves. The current mode is always shown in th
 
 | Mode | Purpose |
 |------|---------|
-| **Draft** | Distraction-free drafting; spell-check and formatting hints suppressed |
-| **Edit** | Revision pass; full editor tooling active |
-| **Review** | Read-only style; ideal for a final proofread |
+| **Draft** | Distraction-free drafting: turns on Focus Mode and Typography Mode and hides the binder and both sidebars |
+| **Edit** | Revision pass: Focus and Typography off, binder open, sidebars visible |
+| **Review** | Final read-through: switches the document to reading view and hides the sidebars |
 | **None** | Normal Obsidian behavior |
 
 **To switch modes:**
@@ -582,7 +583,7 @@ When the sprint ends, a summary modal shows words written, duration, and words-p
 | Setting | Description |
 |---------|-------------|
 | Default sprint duration | Starting value in the sprint modal (minutes) |
-| Default daily word goal | Target used in the Writing Dashboard and Launcher |
+| Default daily word goal | Target shown on the Launcher's Today card |
 | Sound notifications | Play a tone when the sprint ends |
 | Sprint history retention | Days to keep sprint records before purging |
 | Inline goal banner | Show a progress bar below the editor toolbar when a document has a word count goal set |
@@ -615,7 +616,7 @@ When an active project has a total word count goal set, a dedicated status bar i
 
 #### Writing Dashboard
 
-The Writing Dashboard shows session statistics (words written, sprints completed, time), sprint history, daily progress toward your goal, and per-project word counts with reading time.
+The Writing Dashboard shows this session's words, sprints, and minutes, your writing streak, the project's total words against its goal with the deadline and words a day, recent sprints, and each document's word count with reading time.
 
 **To open:** Use the command **Open writing dashboard** from the command palette, or click the **Writing dashboard** button in the Launcher panel.
 
@@ -697,7 +698,7 @@ No external tools are required for manuscript export.
 | EPUB language | BCP 47 language tag (e.g. `en`, `fr`, `de`) |
 | EPUB include cover | Generate a text cover page when no cover image is provided |
 
-> **Requirement:** Pandoc must be installed for PDF, DOCX, RTF, HTML, and EPUB export. Download from [pandoc.org](https://pandoc.org/installing.html). For PDF export, a LaTeX distribution (e.g. TeX Live or MiKTeX) is also required — unless the PDF engine setting is pinned to [wkhtmltopdf](https://wkhtmltopdf.org/), which renders PDFs without LaTeX. Manuscript (HTML) export does not require Pandoc.
+> **Requirement:** Pandoc must be installed for PDF, DOCX, and RTF export. Download from [pandoc.org](https://pandoc.org/installing.html). For PDF export, a LaTeX distribution (e.g. TeX Live or MiKTeX) is also required — unless the PDF engine setting is pinned to [wkhtmltopdf](https://wkhtmltopdf.org/), which renders PDFs without LaTeX. Manuscript, HTML, Markdown, and EPUB export do not require Pandoc.
 >
 > **macOS note:** apps launched from the Dock don't see the shell PATH, so a correctly installed TeX Live or Homebrew binary can still be "not found." Common install locations (`/Library/TeX/texbin`, `/opt/homebrew/bin`, `/usr/local/bin`) are searched automatically; for anything else, set the PDF engine location setting.
 >
@@ -741,7 +742,7 @@ Writing Studio stores your WordPress site credentials in your vault's `.obsidian
 
 #### Frontmatter Manager
 
-Writing Studio automatically manages YAML frontmatter in your documents when **Frontmatter auto-update** is enabled. On every save it updates:
+Writing Studio automatically manages YAML frontmatter in your documents when **Frontmatter auto-update** is enabled. About five seconds after you stop typing in a document, it updates:
 
 - `word-count` — current word count
 - `modified` — last-modified date
@@ -821,6 +822,7 @@ Open via **Settings → Writing Studio**. General settings appear at the top; ea
 | Export | Format, paper size, font, font size, Pandoc path, PDF engine, PDF engine location, citation style, custom style file, EPUB language, EPUB cover |
 | Writing log | Append sprint summaries to Daily Note |
 | WordPress | Site credentials, default post status, wikilink handling |
+| How to use | The in-app guide: this document from Features onward, readable inside Obsidian |
 
 ---
 
@@ -837,6 +839,10 @@ All other features are accessible from the Launcher panel, the command palette, 
 ---
 
 ## Installation
+
+**From Obsidian (recommended):** Go to **Settings → Community plugins → Browse**, search for "Writing Studio", click **Install**, then **Enable**.
+
+**Manual install:**
 
 1. Download `main.js`, `manifest.json`, and `styles.css` from the latest [GitHub release](../../releases/latest).
 2. Create the folder `<vault>/.obsidian/plugins/writing-studio/` if it does not exist.
@@ -856,7 +862,7 @@ Most features work out of the box. A few require additional software for specifi
 | Obsidian 1.13.0 or later | Always |
 | Desktop (Windows, macOS, Linux) | Always — this plugin does not run on mobile |
 | Internet connection | First use of each Typography Mode font (cached after that) |
-| [Pandoc](https://pandoc.org/installing.html) | Export to PDF, DOCX, RTF, HTML, EPUB |
+| [Pandoc](https://pandoc.org/installing.html) | Export to PDF, DOCX, RTF |
 | LaTeX (TeX Live / MiKTeX) or [wkhtmltopdf](https://wkhtmltopdf.org/) | Export to PDF only (wkhtmltopdf must be pinned in the PDF engine setting) |
 | WordPress 5.6+ with REST API enabled | WordPress publishing |
 | WordPress Application Password | WordPress publishing |
