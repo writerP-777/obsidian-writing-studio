@@ -38,5 +38,6 @@ export async function initI18n(): Promise<void> {
 }
 
 export function t(key: string, vars?: TOptions): string {
-  return String(i18next.t(key, vars));
+  // i18next 27 no longer accepts an undefined options argument.
+  return String(vars === undefined ? i18next.t(key) : i18next.t(key, vars));
 }
