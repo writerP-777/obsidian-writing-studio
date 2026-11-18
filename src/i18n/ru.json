@@ -252,6 +252,8 @@
     "wordGoal": "/ {{n}} цель",
     "pctComplete": "{{pct}}% завершено",
     "writingDays_one": "{{count}} день для письма",
+    "writingDays_few": "{{count}} дня для письма",
+    "writingDays_many": "{{count}} дней для письма",
     "writingDays_other": "{{count}} дн. для письма",
     "dueCountdown": "Срок {{date}} · осталось {{days}}",
     "duePace": "{{n}} слов в день, чтобы успеть к сроку",
