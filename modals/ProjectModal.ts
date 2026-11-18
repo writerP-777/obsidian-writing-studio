@@ -219,7 +219,7 @@ export class ProjectModal extends Modal {
     // any single-line field saves. Textareas, dropdowns, and the day
     // toggles keep their own Enter behavior.
     contentEl.addEventListener('keydown', (e: KeyboardEvent) => {
-      if (e.key !== 'Enter' || e.isComposing || !(e.target instanceof HTMLInputElement)) return;
+      if (e.key !== 'Enter' || e.isComposing || !e.targetNode?.instanceOf(HTMLInputElement)) return;
       e.preventDefault();
       submitBtn.click();
     });

@@ -147,7 +147,7 @@ export class AddSourceModal extends Modal {
     // field every source needs — and Enter in any single-line field adds
     // the source. The authors textarea keeps Enter for a new line.
     contentEl.addEventListener('keydown', (e: KeyboardEvent) => {
-      if (e.key !== 'Enter' || e.isComposing || !(e.target instanceof HTMLInputElement)) return;
+      if (e.key !== 'Enter' || e.isComposing || !e.targetNode?.instanceOf(HTMLInputElement)) return;
       e.preventDefault();
       addBtn.click();
     });
