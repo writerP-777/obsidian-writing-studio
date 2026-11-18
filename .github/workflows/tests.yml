@@ -30,3 +30,8 @@ jobs:
 
       - name: Run tests
         run: npm test
+
+      # Type-checks and bundles. Lint and tests alone do not catch a dependency
+      # bump that breaks compilation (#445).
+      - name: Build
+        run: npm run build
