@@ -4,6 +4,18 @@ All notable changes to Writing Studio are documented here.
 
 ---
 
+## [4.0.1] - 2026-11-18
+
+### Fixed
+- Plural phrases in Arabic and Russian now use the right form for every count. Several, including the "writing days" count in the Launcher, showed in English at some counts.
+- Pressing Enter in the Add source and project dialogs now submits them when the dialog is open in a pop-out window.
+- The README and the in-app help are corrected: Pandoc is needed only for PDF, Word, and RTF export; the writing modes table describes what each mode does; installing from Community plugins is documented.
+
+### Changed
+- The bundled translation library (i18next) is updated to version 27.
+
+---
+
 ## [4.0.0] - 2026-10-21
 
 Writing Studio is now built for nonfiction: sources and citations from the notes already in your vault, a synopsis on every section and an Outline of the argument, split and merge and project-wide find and replace, and a deadline with the words a day to meet it. Nothing existing changes — every project, setting, and file opens exactly as it did in 3.2 — and the Obsidian minimum stays at 1.13.0. The major number marks the new direction, not a break.

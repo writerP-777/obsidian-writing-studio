@@ -260,7 +260,7 @@
     "writingDays_two": "يوما كتابة",
     "writingDays_few": "{{count}} أيام كتابة",
     "writingDays_many": "{{count}} يوم كتابة",
-    "writingDays_other": "{{count}} أيام كتابة",
+    "writingDays_other": "{{count}} يوم كتابة",
     "dueCountdown": "الموعد {{date}} · المتبقي {{days}}",
     "duePace": "{{n}} كلمة يوميًا للإنهاء في الوقت المحدد",
     "dueReached": "الموعد {{date}} · تحقق الهدف، متبقٍ {{days}} احتياطًا",
