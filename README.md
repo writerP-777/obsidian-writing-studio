@@ -583,7 +583,7 @@ When the sprint ends, a summary modal shows words written, duration, and words-p
 | Setting | Description |
 |---------|-------------|
 | Default sprint duration | Starting value in the sprint modal (minutes) |
-| Default daily word goal | Target used in the Writing Dashboard and Launcher |
+| Default daily word goal | Target shown on the Launcher's Today card |
 | Sound notifications | Play a tone when the sprint ends |
 | Sprint history retention | Days to keep sprint records before purging |
 | Inline goal banner | Show a progress bar below the editor toolbar when a document has a word count goal set |
@@ -616,7 +616,7 @@ When an active project has a total word count goal set, a dedicated status bar i
 
 #### Writing Dashboard
 
-The Writing Dashboard shows session statistics (words written, sprints completed, time), sprint history, daily progress toward your goal, and per-project word counts with reading time.
+The Writing Dashboard shows this session's words, sprints, and minutes, your writing streak, the project's total words against its goal with the deadline and words a day, recent sprints, and each document's word count with reading time.
 
 **To open:** Use the command **Open writing dashboard** from the command palette, or click the **Writing dashboard** button in the Launcher panel.
 
