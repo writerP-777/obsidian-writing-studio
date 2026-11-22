@@ -81,7 +81,7 @@
       "defaultDuration": "Standard-Sprintdauer (Minuten)",
       "defaultDailyGoal": "Standard-Tagesziel für Wörter",
       "soundNotifications": "Tonbenachrichtigungen",
-      "soundNotificationsDesc": "Einen Ton abspielen, wenn der Sprint endet.",
+      "soundNotificationsDesc": "Einen Ton abspielen, wenn die Zeit des Sprints abläuft und wenn das Wortziel erreicht ist.",
       "historyRetention": "Sprint-Verlauf aufbewahren (Tage)",
       "inlineGoalBanner": "Inline-Zielbanner",
       "inlineGoalBannerDesc": "Wortanzahl-Zielfortschritt unterhalb des Titels anzeigen, wenn ein Dokument geöffnet wird."
@@ -192,7 +192,8 @@
       "sprintReady": "Bereit · {{minutes}} Min.",
       "sprintRunning": "Sprint läuft",
       "quickStart": "Schnellstart: {{minutes}} Minuten",
-      "moreActions": "Weitere Aktionen"
+      "moreActions": "Weitere Aktionen",
+      "sprintReadyGoal": "Bereit · {{words}} Wörter"
     },
     "toggleCounts": "Dokumentanzahl anzeigen",
     "fsEmpty": "Dieser Projektordner enthält noch keine Dokumente. Hinzugefügte Dateien erscheinen hier automatisch.",
@@ -333,7 +334,14 @@
     "pauseTitle": "Sprint pausieren",
     "stopTitle": "Sprint beenden",
     "startTitle": "Sprint starten",
-    "resumeTitle": "Sprint fortsetzen"
+    "resumeTitle": "Sprint fortsetzen",
+    "startedGoal": "Sprint gestartet. Ziel: {{words}} Wörter",
+    "goalReached": "Wortziel erreicht: {{words}} Wörter.",
+    "wordsOfGoal": "{{n}} / {{goal}} Wörter",
+    "finished": "Beendet",
+    "finishedStats": "+{{n}} Wörter · {{minutes}} Min.",
+    "viewSummary": "Zusammenfassung anzeigen",
+    "close": "Schließen"
   },
   "writingModes": {
     "switchedTo": "Schreibstudio: {{mode}}-Modus",
@@ -505,15 +513,17 @@
     "durationDesc": "Voreinstellung: 10, 15, 25, 30, 45, 60",
     "durationCustom": "Benutzerdefiniert…",
     "durationCustomPlaceholder": "Benutzerdefinierte Minuten",
-    "wordGoalName": "Wortziel (optional)",
-    "wordGoalDesc": "0 lassen für kein Ziel.",
+    "wordGoalName": "Wortziel",
+    "wordGoalDesc": "Der Sprint meldet, wenn du es erreichst, und läuft weiter. Leer lassen für kein Ziel.",
     "scopeName": "Bereich",
     "scopeFile": "Aktuelle Datei",
     "scopeProject": "Gesamtes Projekt",
-    "startBtn": "Sprint-Timer starten",
+    "startBtn": "Sprint starten",
     "errorDuration": "Bitte eine gültige Dauer festlegen.",
     "cancel": "Abbrechen",
-    "wordGoalPlaceholder": "0 = kein Ziel"
+    "wordGoalPlaceholder": "0 = kein Ziel",
+    "durationNone": "Kein Zeitlimit",
+    "errorNoLimitNoGoal": "Bitte ein Zeitlimit oder ein Wortziel festlegen."
   },
   "exportModal": {
     "title": "Dokument exportieren",

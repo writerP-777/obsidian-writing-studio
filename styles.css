@@ -437,6 +437,42 @@ body.writing-studio-typography .markdown-reading-view .markdown-preview-section 
   background: var(--background-modifier-hover);
 }
 
+/* Words against the sprint's word count goal — marked once the goal is reached */
+.ws-sprint-wc.is-goal-reached {
+  font-weight: 600;
+}
+
+.ws-sprint-wc.is-goal-reached::after {
+  content: ' ✓';
+}
+
+/* Finished state — the time limit ran out; the summary waits for a click */
+.ws-sprint-finished {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--text-normal);
+  line-height: 1.2;
+  margin-bottom: 4px;
+}
+
+.ws-sprint-view,
+.ws-sprint-close {
+  background: var(--background-secondary);
+  border: 1px solid var(--background-modifier-border);
+  border-radius: 5px;
+  padding: 4px 10px;
+  cursor: pointer;
+  font-size: 12px;
+  color: var(--text-normal);
+  white-space: nowrap;
+  transition: background 0.1s;
+}
+
+.ws-sprint-view:hover,
+.ws-sprint-close:hover {
+  background: var(--background-modifier-hover);
+}
+
 /* ── Inline Goal Banner ─────────────────────────────────────────── */
 .ws-inline-goal-banner {
   display: flex;

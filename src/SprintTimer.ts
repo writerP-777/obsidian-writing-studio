@@ -1,6 +1,6 @@
 import { App, MarkdownView, Notice, normalizePath } from 'obsidian';
 import type WritingStudioPlugin from '../main';
-import { SprintSession, SprintState } from '../models/SprintSession';
+import { SprintEndReason, SprintSession, SprintState } from '../models/SprintSession';
 import { t } from './i18n';
 
 // Pure word-accounting over the per-file baselines captured during a sprint.
@@ -28,6 +28,34 @@ export function computeSprintWords(
   return Math.max(0, current - baseline);
 }
 
+// Minutes recorded for a finished sprint: the planned length when the time
+// limit ran out, otherwise the time actually written (never under a minute)
+export function recordedSprintMinutes(
+  durationMinutes: number | null,
+  elapsedMs: number,
+  ranToEnd: boolean
+): number {
+  if (ranToEnd && durationMinutes !== null) return durationMinutes;
+  return Math.max(1, Math.round(elapsedMs / 60000));
+}
+
+// The clock a sprint shows: time remaining under a time limit (rounded up, so
+// the last second reads 00:01), time written so far when there is no limit
+export function formatSprintClock(durationMinutes: number | null, elapsedMs: number): string {
+  const elapsed = Math.max(0, elapsedMs);
+  const totalSec = durationMinutes === null
+    ? Math.floor(elapsed / 1000)
+    : Math.ceil(Math.max(0, durationMinutes * 60000 - elapsed) / 1000);
+  const min = Math.floor(totalSec / 60);
+  const sec = totalSec % 60;
+  return `${String(min).padStart(2, '0')}:${String(sec).padStart(2, '0')}`;
+}
+
+// True the first time the words written reach the sprint's word count goal
+export function goalJustReached(goal: number | undefined, words: number, announced: boolean): boolean {
+  return !!goal && goal > 0 && !announced && words >= goal;
+}
+
 export class SprintTimer {
   private plugin: WritingStudioPlugin;
   private app: App;
@@ -36,7 +64,8 @@ export class SprintTimer {
   private tickCount = 0;
   private floatingEl: HTMLElement | null = null;
   private statusBarEl: HTMLElement | null = null;
-  private onComplete: ((session: SprintSession) => void | Promise<void>) | null = null;
+  private onComplete: ((session: SprintSession, endedBy: SprintEndReason) => void | Promise<void>) | null = null;
+  private onViewSummary: ((session: SprintSession) => void) | null = null;
 
   constructor(plugin: WritingStudioPlugin) {
     this.plugin = plugin;
@@ -48,8 +77,16 @@ export class SprintTimer {
     el.addClass('ws-hidden');
   }
 
-  setOnComplete(cb: (session: SprintSession) => void | Promise<void>): void {
+  // Called once when a sprint ends, with how it ended. The handler records the
+  // session; it must not open a dialog on 'timeout' — the writer may still be
+  // typing (#451)
+  setOnComplete(cb: (session: SprintSession, endedBy: SprintEndReason) => void | Promise<void>): void {
     this.onComplete = cb;
+  }
+
+  // Called when the writer clicks "View summary" on the finished overlay
+  setOnViewSummary(cb: (session: SprintSession) => void): void {
+    this.onViewSummary = cb;
   }
 
   isActive(): boolean {
@@ -61,13 +98,19 @@ export class SprintTimer {
     return this.state !== null && this.state.ready;
   }
 
+  // The time limit in minutes; null when no sprint is set up or it has no limit
   getDurationMinutes(): number | null {
     return this.state?.durationMinutes ?? null;
   }
 
+  getWordCountGoal(): number | null {
+    return this.state?.wordCountGoal ?? null;
+  }
+
   // Opens overlay in paused/ready state — called by SprintModal and preset buttons.
   // The clock does not run until the user presses Start on the overlay itself.
-  setup(durationMinutes: number, wordCountGoal?: number, projectScope: 'file' | 'project' = 'file'): void {
+  // A null duration means no time limit: the sprint runs until it is stopped.
+  setup(durationMinutes: number | null, wordCountGoal?: number, projectScope: 'file' | 'project' = 'file'): void {
     if (this.state?.active && !this.state.ready) {
       // A sprint is running — refuse rather than silently logging it and
       // popping the summary modal in the middle of starting a new one
@@ -84,6 +127,7 @@ export class SprintTimer {
       totalPausedMs: 0,
       durationMinutes,
       wordCountGoal,
+      goalAnnounced: false,
       primaryFile: null,
       baselines: new Map(),
       currents: new Map(),
@@ -98,6 +142,7 @@ export class SprintTimer {
   pause(): void {
     if (!this.state || !this.state.active || this.state.paused) return;
     this.sampleActiveFile();
+    this.checkGoal();
     this.state.paused = true;
     this.state.pausedAt = Date.now();
     this.stopInterval();
@@ -122,7 +167,9 @@ export class SprintTimer {
     this.updateDisplay();
     this.plugin.studioEvents.announceSprintChanged();
     if (wasReady) {
-      new Notice(t('sprint.started', { minutes: this.state.durationMinutes }));
+      new Notice(this.state.durationMinutes !== null
+        ? t('sprint.started', { minutes: this.state.durationMinutes })
+        : t('sprint.startedGoal', { words: this.state.wordCountGoal ?? 0 }));
     }
   }
 
@@ -130,15 +177,21 @@ export class SprintTimer {
     if (!this.state) return;
     const wasReady = this.state.ready;
     this.stopInterval();
-    const session = wasReady ? null : this.buildSession();
+    const session = wasReady ? null : this.buildSession(false);
     this.state = null;
     this.hideFloating();
-    if (this.statusBarEl) this.statusBarEl.addClass('ws-hidden');
+    this.clearIndicators();
     this.plugin.studioEvents.announceSprintChanged();
-    if (!wasReady && session && this.onComplete) void this.onComplete(session);
+    if (session && this.onComplete) void this.onComplete(session, 'stopped');
   }
 
-  private buildSession(): SprintSession {
+  // The status bar item and the focus toolbar label show a running sprint only
+  private clearIndicators(): void {
+    if (this.statusBarEl) this.statusBarEl.addClass('ws-hidden');
+    this.plugin.focusMode.updateToolbarSprintTime(null);
+  }
+
+  private buildSession(ranToEnd: boolean): SprintSession {
     this.sampleActiveFile();
     const s = this.state!;
     const wordsWritten = this.getWordsWritten();
@@ -148,7 +201,7 @@ export class SprintTimer {
     return {
       id: `sprint-${Date.now()}`,
       date: new Date().toISOString(),
-      duration: s.durationMinutes,
+      duration: recordedSprintMinutes(s.durationMinutes, this.getElapsedMs(), ranToEnd),
       wordsWritten,
       startWordCount,
       wordCountGoal: s.wordCountGoal,
@@ -186,18 +239,18 @@ export class SprintTimer {
     return now - this.state.startTime - this.state.totalPausedMs;
   }
 
+  // Time left under the time limit; Infinity when the sprint has none
   getRemainingMs(): number {
     if (!this.state) return 0;
+    if (this.state.durationMinutes === null) return Infinity;
     const totalMs = this.state.durationMinutes * 60 * 1000;
     return Math.max(0, totalMs - this.getElapsedMs());
   }
 
-  getFormattedRemaining(): string {
-    const ms = this.getRemainingMs();
-    const totalSec = Math.ceil(ms / 1000);
-    const min = Math.floor(totalSec / 60);
-    const sec = totalSec % 60;
-    return `${String(min).padStart(2, '0')}:${String(sec).padStart(2, '0')}`;
+  // Countdown under a time limit, time written so far without one
+  getFormattedClock(): string {
+    if (!this.state) return '00:00';
+    return formatSprintClock(this.state.durationMinutes, this.getElapsedMs());
   }
 
   private startInterval(): void {
@@ -220,10 +273,26 @@ export class SprintTimer {
     // every second is wasteful; the clock still updates every second
     if (++this.tickCount % 5 === 0) {
       this.sampleActiveFile();
+      this.checkGoal();
     }
     this.updateDisplay();
   }
 
+  // Reaching the word count goal is announced once and the sprint keeps
+  // running — ending it here would interrupt a writer in mid-sentence (#451)
+  private checkGoal(): void {
+    const s = this.state;
+    if (!s || s.ready) return;
+    if (!goalJustReached(s.wordCountGoal, this.getWordsWritten(), s.goalAnnounced)) return;
+    s.goalAnnounced = true;
+    if (this.plugin.settings.soundNotifications) {
+      this.playBell();
+    }
+    new Notice(t('sprint.goalReached', { words: s.wordCountGoal ?? 0 }), 5000);
+  }
+
+  // The time limit ran out. Nothing here may take keyboard focus: the overlay
+  // changes to its finished state and the summary waits for a click (#451)
   private handleComplete(): void {
     this.stopInterval();
     this.sampleActiveFile();
@@ -231,11 +300,12 @@ export class SprintTimer {
       this.playBell();
     }
     new Notice(t('sprint.complete'), 5000);
-    const session = this.buildSession();
+    const session = this.buildSession(true);
     this.state = null;
-    this.hideFloating();
-    if (this.statusBarEl) this.statusBarEl.addClass('ws-hidden');
-    if (this.onComplete) void this.onComplete(session);
+    this.showFinished(session);
+    this.clearIndicators();
+    this.plugin.studioEvents.announceSprintChanged();
+    if (this.onComplete) void this.onComplete(session, 'timeout');
   }
 
   private playBell(): void {
@@ -256,7 +326,7 @@ export class SprintTimer {
   }
 
   private updateDisplay(): void {
-    const time = this.getFormattedRemaining();
+    const time = this.getFormattedClock();
     const paused = this.state?.paused && !this.state?.ready ? ' ⏸' : '';
     const label = `⏱ ${time}${paused}`;
 
@@ -265,7 +335,14 @@ export class SprintTimer {
       if (timeEl) timeEl.textContent = time;
 
       const wcEl = this.floatingEl.querySelector('.ws-sprint-wc');
-      if (wcEl) wcEl.textContent = t('sprint.words', { n: this.getWordsWritten() });
+      if (wcEl) {
+        const words = this.getWordsWritten();
+        const goal = this.state?.wordCountGoal;
+        wcEl.textContent = goal
+          ? t('sprint.wordsOfGoal', { n: words, goal })
+          : t('sprint.words', { n: words });
+        wcEl.toggleClass('is-goal-reached', !!goal && words >= goal);
+      }
 
       const pauseBtn = this.floatingEl.querySelector('.ws-sprint-pause') as HTMLButtonElement;
       if (pauseBtn) {
@@ -315,10 +392,55 @@ export class SprintTimer {
     };
 
     stopBtn.onclick = () => this.stop();
+    this.keepEditorFocus(controls);
 
     activeDocument.body.appendChild(el);
     this.floatingEl = el;
     this.makeDraggable(el);
+  }
+
+  // The overlay after the time limit ran out: the result and two buttons, in
+  // the place the writer left it. It stays until dismissed or a new sprint
+  // is set up.
+  private showFinished(session: SprintSession): void {
+    const el = this.floatingEl;
+    if (!el) return;
+    el.addClass('ws-sprint-floating--finished');
+    el.querySelector('.ws-sprint-time')?.remove();
+    el.querySelector('.ws-sprint-wc')?.remove();
+    el.querySelector('.ws-sprint-controls')?.remove();
+
+    el.createDiv({ cls: 'ws-sprint-finished', text: t('sprint.finished') });
+    el.createDiv({
+      cls: 'ws-sprint-wc',
+      text: t('sprint.finishedStats', { n: session.wordsWritten, minutes: session.duration }),
+    });
+
+    const controls = el.createDiv({ cls: 'ws-sprint-controls' });
+    const viewBtn = controls.createEl('button', { cls: 'ws-sprint-view', text: t('sprint.viewSummary') });
+    const closeBtn = controls.createEl('button', { cls: 'ws-sprint-close', text: t('sprint.close') });
+    viewBtn.onclick = () => {
+      this.hideFloating();
+      this.onViewSummary?.(session);
+    };
+    closeBtn.onclick = () => this.hideFloating();
+    this.keepEditorFocus(controls);
+    this.keepInWindow(el);
+  }
+
+  // Clicking an overlay button must not pull keyboard focus out of the editor
+  private keepEditorFocus(controls: HTMLElement): void {
+    controls.addEventListener('mousedown', (e: MouseEvent) => e.preventDefault());
+  }
+
+  // The finished state is wider than the running one — a dragged overlay near
+  // the window edge is nudged back inside
+  private keepInWindow(el: HTMLElement): void {
+    if (!el.hasClass('ws-sprint-floating--dragged')) return;
+    const rect = el.getBoundingClientRect();
+    const left = Math.max(0, Math.min(activeWindow.innerWidth - el.offsetWidth, rect.left));
+    const top = Math.max(0, Math.min(activeWindow.innerHeight - el.offsetHeight, rect.top));
+    el.setCssProps({ '--ws-float-x': `${left}px`, '--ws-float-y': `${top}px` });
   }
 
   private makeDraggable(el: HTMLElement): void {

@@ -265,12 +265,20 @@ Prefer: *writing mode*, *draft mode*, *edit mode*, *review mode*. Avoid: *scene*
 ### Sprint and stats
 
 **Sprint** / **Writing sprint** (`SprintTimer`, `SprintModal`)
-A timed writing session with a configurable duration and optional word count goal.
-The timer is floating UI managed by `SprintTimer`.
-Prefer: *sprint* or *writing sprint*. Avoid: *timer*, *session* (ambiguous — see sprint session).
+A writing session run against a time limit, a word count goal, or both (#451). With a time
+limit the clock counts down and the sprint ends when it runs out; with **no time limit** the
+clock counts up and the sprint runs until stopped (a goal is then required). Reaching the goal
+is announced once and never ends the sprint. The floating overlay is managed by `SprintTimer`.
+**A sprint that ends by itself never opens a dialog**: the overlay changes to its *finished
+state* (words, minutes, View summary, Close) and the sprint summary opens only on a click —
+that button, or the stop button. Overlay buttons never take keyboard focus from the editor.
+Prefer: *sprint* or *writing sprint*, *time limit*, *finished state*. Avoid: *timer*, *session*
+(ambiguous — see sprint session).
 
 **Sprint session** (`SprintSession`)
 The recorded result of a completed sprint: `wordsWritten`, `duration`, optional `wordCountGoal`.
+`duration` is the minutes actually written (at least one): the planned length when the time
+limit ran out, the elapsed time when the sprint was stopped. Recorded once, when the sprint ends.
 Stored in `StatsTracker`'s sprint history.
 Prefer: *sprint session*. Avoid: *sprint record*, *session* alone.
 

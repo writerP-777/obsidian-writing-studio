@@ -81,7 +81,7 @@
       "defaultDuration": "Длительность спринта по умолчанию (минуты)",
       "defaultDailyGoal": "Дневная цель по умолчанию (слова)",
       "soundNotifications": "Звуковые уведомления",
-      "soundNotificationsDesc": "Воспроизводить звук по окончании спринта.",
+      "soundNotificationsDesc": "Воспроизводить звук, когда время спринта истекло и когда достигнута цель по словам.",
       "historyRetention": "Хранение истории спринтов (дней)",
       "inlineGoalBanner": "Встроенный баннер цели",
       "inlineGoalBannerDesc": "Показывать прогресс достижения цели по словам под заголовком при открытии документа."
@@ -192,7 +192,8 @@
       "sprintReady": "Готов · {{minutes}} мин",
       "sprintRunning": "Идёт спринт",
       "quickStart": "Быстрый старт: {{minutes}} минут",
-      "moreActions": "Другие действия"
+      "moreActions": "Другие действия",
+      "sprintReadyGoal": "Готов · {{words}} слов"
     },
     "toggleCounts": "Показывать количество документов",
     "fsEmpty": "В этой папке проекта пока нет документов. Добавленные в неё файлы появляются здесь автоматически.",
@@ -343,7 +344,14 @@
     "pauseTitle": "Приостановить спринт",
     "stopTitle": "Остановить спринт",
     "startTitle": "Начать спринт",
-    "resumeTitle": "Возобновить спринт"
+    "resumeTitle": "Возобновить спринт",
+    "startedGoal": "Спринт начат. Цель: {{words}} слов",
+    "goalReached": "Цель по словам достигнута: {{words}} слов.",
+    "wordsOfGoal": "{{n}} / {{goal}} слов",
+    "finished": "Завершён",
+    "finishedStats": "+{{n}} слов · {{minutes}} мин",
+    "viewSummary": "Показать итоги",
+    "close": "Закрыть"
   },
   "writingModes": {
     "switchedTo": "Студия письма: режим {{mode}}",
@@ -517,15 +525,17 @@
     "durationDesc": "Предустановки: 10, 15, 25, 30, 45, 60",
     "durationCustom": "Произвольно…",
     "durationCustomPlaceholder": "Свои минуты",
-    "wordGoalName": "Цель по словам (необязательно)",
-    "wordGoalDesc": "Оставьте 0, если цели нет.",
+    "wordGoalName": "Цель по словам",
+    "wordGoalDesc": "Спринт сообщит, когда цель достигнута, и продолжится. Оставьте пустым, если цели нет.",
     "scopeName": "Область",
     "scopeFile": "Текущий файл",
     "scopeProject": "Весь проект",
-    "startBtn": "Запустить таймер спринта",
+    "startBtn": "Запустить спринт",
     "errorDuration": "Укажите допустимую длительность.",
     "cancel": "Отмена",
-    "wordGoalPlaceholder": "0 = без цели"
+    "wordGoalPlaceholder": "0 = без цели",
+    "durationNone": "Без ограничения времени",
+    "errorNoLimitNoGoal": "Укажите ограничение времени или цель по словам."
   },
   "exportModal": {
     "title": "Экспорт документа",

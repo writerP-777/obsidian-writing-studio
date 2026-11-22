@@ -81,7 +81,7 @@
       "defaultDuration": "Default sprint duration (minutes)",
       "defaultDailyGoal": "Default daily word goal",
       "soundNotifications": "Sound notifications",
-      "soundNotificationsDesc": "Play a tone when sprint ends.",
+      "soundNotificationsDesc": "Play a tone when a sprint's time runs out and when its word count goal is reached.",
       "historyRetention": "Sprint history retention (days)",
       "inlineGoalBanner": "Inline goal banner",
       "inlineGoalBannerDesc": "Show word count goal progress below the title when a document is opened."
@@ -192,7 +192,8 @@
       "sprintReady": "Ready · {{minutes}}m",
       "sprintRunning": "Sprint running",
       "quickStart": "Quick start: {{minutes}} minutes",
-      "moreActions": "More actions"
+      "moreActions": "More actions",
+      "sprintReadyGoal": "Ready · {{words}} words"
     },
     "toggleCounts": "Show document counts",
     "fsEmpty": "This project folder has no documents yet. Files added to it appear here automatically.",
@@ -333,7 +334,14 @@
     "startTitle": "Start sprint",
     "pauseTitle": "Pause sprint",
     "resumeTitle": "Resume sprint",
-    "stopTitle": "Stop sprint"
+    "stopTitle": "Stop sprint",
+    "startedGoal": "Sprint started. Goal: {{words}} words",
+    "goalReached": "Word goal reached: {{words}} words.",
+    "wordsOfGoal": "{{n}} / {{goal}} words",
+    "finished": "Finished",
+    "finishedStats": "+{{n}} words · {{minutes}} min",
+    "viewSummary": "View summary",
+    "close": "Close"
   },
   "writingModes": {
     "switchedTo": "Writing studio: {{mode}} mode",
@@ -489,15 +497,17 @@
     "durationDesc": "Preset: 10, 15, 25, 30, 45, 60",
     "durationCustom": "Custom…",
     "durationCustomPlaceholder": "Custom minutes",
-    "wordGoalName": "Word count goal (optional)",
-    "wordGoalDesc": "Leave 0 for no goal.",
+    "wordGoalName": "Word count goal",
+    "wordGoalDesc": "The sprint tells you when you reach it and keeps running. Leave empty for no goal.",
     "scopeName": "Scope",
     "scopeFile": "Current file",
     "scopeProject": "Entire project",
-    "startBtn": "Launch sprint timer",
+    "startBtn": "Launch sprint",
     "errorDuration": "Please set a valid duration.",
     "cancel": "Cancel",
-    "wordGoalPlaceholder": "0 = no goal"
+    "wordGoalPlaceholder": "0 = no goal",
+    "durationNone": "No time limit",
+    "errorNoLimitNoGoal": "Set a time limit or a word count goal."
   },
   "exportModal": {
     "title": "Export document",

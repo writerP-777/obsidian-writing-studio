@@ -85,10 +85,12 @@ export class ControlStrip {
     setIcon(this.sprintChip.createSpan('ws-strip-chip-icon'), 'timer');
     let label = t('binder.strip.sprint');
     if (timer.isActive()) {
+      // No minutes on an active sprint means it has no time limit
       const minutes = timer.getDurationMinutes();
-      label = timer.isReady()
+      const ready = minutes !== null
         ? t('binder.strip.sprintReady', { minutes })
-        : t('binder.strip.sprintRunning');
+        : t('binder.strip.sprintReadyGoal', { words: timer.getWordCountGoal() ?? 0 });
+      label = timer.isReady() ? ready : t('binder.strip.sprintRunning');
     }
     this.sprintChip.createSpan({ text: label });
     this.sprintChip.toggleClass('is-armed', timer.isActive() && timer.isReady());
