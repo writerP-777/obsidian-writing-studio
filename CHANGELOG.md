@@ -4,7 +4,7 @@ All notable changes to Writing Studio are documented here.
 
 ---
 
-## [4.1.0] - Unreleased
+## [4.1.0] - 2026-11-22
 
 ### Added
 - A sprint can now run on a word count goal with no time limit. Choose **No time limit** in the sprint dialog and set a goal: the clock counts up and the sprint runs until you stop it.
