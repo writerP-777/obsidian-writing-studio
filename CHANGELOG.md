@@ -4,6 +4,24 @@ All notable changes to Writing Studio are documented here.
 
 ---
 
+## [4.1.0] - Unreleased
+
+### Added
+- A sprint can now run on a word count goal with no time limit. Choose **No time limit** in the sprint dialog and set a goal: the clock counts up and the sprint runs until you stop it.
+- With a word count goal, the sprint overlay shows your progress as "312 / 500 words". Reaching the goal is announced once, with a notice and the tone if sound notifications are on, and the sprint keeps running.
+
+### Changed
+- When a sprint's time runs out, the summary no longer opens over your document. The overlay changes to **Finished** with the words written and the minutes, and the summary opens when you click **View summary**. You can keep typing through the end of a sprint. Pressing the stop button still opens the summary at once.
+- Clicking a button on the sprint overlay no longer takes the cursor out of your document.
+- A sprint is recorded with the time actually written. A sprint stopped early used to be logged at its planned length, which also understated its words per minute.
+- The sprint dialog's button now reads **Launch sprint**.
+
+### Fixed
+- The binder's sprint control and the Launcher's sprint card now return to their idle state as soon as a sprint's time runs out.
+- The Focus mode toolbar no longer keeps showing a clock after a sprint has ended.
+
+---
+
 ## [4.0.1] - 2026-11-18
 
 ### Fixed

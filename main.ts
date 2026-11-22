@@ -290,12 +290,17 @@ export default class WritingStudioPlugin extends Plugin {
     this.statusBar.init((e) => this.showModeSwitcher(e));
 
     // Register sprint complete handler
-    this.sprintTimer.setOnComplete(async (session) => {
+    this.sprintTimer.setOnComplete(async (session, endedBy) => {
       this.statsTracker.recordSprint(session);
       const project = this.projectManager.getActiveProject();
       if (project) {
         await this.projectManager.logSprintSession(project, session);
       }
+      // A sprint that ran out of time never opens a dialog — the writer may
+      // still be typing. The overlay's finished state offers the summary (#451).
+      if (endedBy === 'stopped') new SprintSummaryModal(this.app, session).open();
+    });
+    this.sprintTimer.setOnViewSummary((session) => {
       new SprintSummaryModal(this.app, session).open();
     });
 

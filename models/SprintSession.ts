@@ -11,6 +11,9 @@ export interface SprintSession {
   completed: boolean;
 }
 
+// How a sprint ended: the writer pressed stop, or the time limit ran out
+export type SprintEndReason = 'stopped' | 'timeout';
+
 export interface SprintState {
   active: boolean;
   paused: boolean;
@@ -18,8 +21,9 @@ export interface SprintState {
   startTime: number;
   pausedAt: number;
   totalPausedMs: number;
-  durationMinutes: number;
+  durationMinutes: number | null; // null = no time limit (the sprint runs until stopped)
   wordCountGoal?: number;
+  goalAnnounced: boolean; // the "goal reached" notice fires once per sprint
   // Per-file word counts captured while the sprint runs. Baselines are
   // recorded the first time a file is seen so switching documents mid-sprint
   // cannot compare counts from two different files.

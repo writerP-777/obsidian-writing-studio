@@ -81,7 +81,7 @@
       "defaultDuration": "مدة السباق الافتراضية (دقائق)",
       "defaultDailyGoal": "هدف الكلمات اليومي الافتراضي",
       "soundNotifications": "الإشعارات الصوتية",
-      "soundNotificationsDesc": "تشغيل نغمة عند انتهاء السباق.",
+      "soundNotificationsDesc": "تشغيل نغمة عند انتهاء وقت السباق وعند بلوغ هدف عدد الكلمات.",
       "historyRetention": "الاحتفاظ بسجل السباق (أيام)",
       "inlineGoalBanner": "لافتة الهدف المضمّنة",
       "inlineGoalBannerDesc": "عرض تقدم هدف عدد الكلمات أسفل العنوان عند فتح مستند."
@@ -192,7 +192,8 @@
       "sprintReady": "جاهز · {{minutes}} د",
       "sprintRunning": "سباق جارٍ",
       "quickStart": "بدء سريع: {{minutes}} دقيقة",
-      "moreActions": "مزيد من الإجراءات"
+      "moreActions": "مزيد من الإجراءات",
+      "sprintReadyGoal": "جاهز · {{words}} كلمة"
     },
     "toggleCounts": "إظهار عدد المستندات",
     "fsEmpty": "لا يحتوي مجلد المشروع هذا على مستندات بعد. الملفات المضافة إليه تظهر هنا تلقائيًا.",
@@ -353,7 +354,14 @@
     "pauseTitle": "إيقاف السباق مؤقتًا",
     "stopTitle": "إيقاف السباق",
     "startTitle": "بدء السباق",
-    "resumeTitle": "استئناف السباق"
+    "resumeTitle": "استئناف السباق",
+    "startedGoal": "بدأ السباق. الهدف: {{words}} كلمة",
+    "goalReached": "تم بلوغ هدف الكلمات: {{words}} كلمة.",
+    "wordsOfGoal": "{{n}} / {{goal}} كلمة",
+    "finished": "انتهى",
+    "finishedStats": "+{{n}} كلمة · {{minutes}} د",
+    "viewSummary": "عرض الملخص",
+    "close": "إغلاق"
   },
   "writingModes": {
     "switchedTo": "استوديو الكتابة: وضع {{mode}}",
@@ -529,15 +537,17 @@
     "durationDesc": "الإعدادات المسبقة: 10، 15، 25، 30، 45، 60",
     "durationCustom": "مخصص…",
     "durationCustomPlaceholder": "دقائق مخصصة",
-    "wordGoalName": "هدف عدد الكلمات (اختياري)",
-    "wordGoalDesc": "اترك 0 لعدم وضع هدف.",
+    "wordGoalName": "هدف عدد الكلمات",
+    "wordGoalDesc": "يُعلمك السباق عند بلوغ الهدف ويستمر. اتركه فارغًا لعدم وضع هدف.",
     "scopeName": "النطاق",
     "scopeFile": "الملف الحالي",
     "scopeProject": "المشروع بالكامل",
-    "startBtn": "تشغيل مؤقت السباق",
+    "startBtn": "تشغيل السباق",
     "errorDuration": "يُرجى تحديد مدة صالحة.",
     "cancel": "إلغاء",
-    "wordGoalPlaceholder": "0 = بلا هدف"
+    "wordGoalPlaceholder": "0 = بلا هدف",
+    "durationNone": "بلا حد زمني",
+    "errorNoLimitNoGoal": "حدّد حدًا زمنيًا أو هدفًا لعدد الكلمات."
   },
   "exportModal": {
     "title": "تصدير المستند",

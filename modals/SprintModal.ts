@@ -4,7 +4,7 @@ import { t } from '../src/i18n';
 
 export class SprintModal extends Modal {
   private plugin: WritingStudioPlugin;
-  private duration: number;
+  private duration: number | null; // null = no time limit
   private wordGoal: number;
   private sprintScope: 'file' | 'project' = 'file';
 
@@ -25,20 +25,27 @@ export class SprintModal extends Modal {
     // One control for one value — the minutes input shows only when the
     // dropdown is on "Custom…" (both inputs visible meant last-edit-wins)
     const presets = [10, 15, 25, 30, 45, 60];
-    const isPreset = presets.includes(this.duration);
+    const initial = this.duration ?? 0;
+    const isPreset = presets.includes(initial);
     let customSetting: Setting;
-    let customValue = isPreset ? '' : String(this.duration);
+    let customValue = isPreset ? '' : String(initial);
 
     new Setting(contentEl)
       .setName(t('sprintModal.durationName'))
       .setDesc(t('sprintModal.durationDesc'))
       .addDropdown(d => {
         presets.forEach(m => { d.addOption(String(m), `${m} min`); });
+        // A sprint with no time limit runs on its word count goal until stopped
+        d.addOption('none', t('sprintModal.durationNone'));
         d.addOption('custom', t('sprintModal.durationCustom'));
-        d.setValue(isPreset ? String(this.duration) : 'custom');
+        d.setValue(isPreset ? String(initial) : 'custom');
         d.onChange(v => {
           const custom = v === 'custom';
           customSetting.settingEl.toggleClass('ws-hidden', !custom);
+          if (v === 'none') {
+            this.duration = null;
+            return;
+          }
           // On custom, the typed value (possibly still empty) is the duration
           this.duration = custom ? parseInt(customValue) || 0 : parseInt(v);
         });
@@ -61,7 +68,7 @@ export class SprintModal extends Modal {
       .addText(tx => tx
         .setPlaceholder(t('sprintModal.wordGoalPlaceholder'))
         .setValue(this.wordGoal ? String(this.wordGoal) : '')
-        .onChange(v => { this.wordGoal = parseInt(v) || 0; }));
+        .onChange(v => { this.wordGoal = Math.max(0, parseInt(v) || 0); }));
 
     new Setting(contentEl)
       .setName(t('sprintModal.scopeName'))
@@ -78,7 +85,13 @@ export class SprintModal extends Modal {
       text: t('sprintModal.startBtn'),
     });
     startBtn.onclick = () => {
-      if (!this.duration || this.duration <= 0) {
+      if (this.duration === null) {
+        // No time limit — the word count goal is all the sprint has to run on
+        if (!this.wordGoal) {
+          new Notice(t('sprintModal.errorNoLimitNoGoal'));
+          return;
+        }
+      } else if (this.duration <= 0) {
         new Notice(t('sprintModal.errorDuration'));
         return;
       }

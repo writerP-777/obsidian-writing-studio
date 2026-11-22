@@ -81,7 +81,7 @@
       "defaultDuration": "默认冲刺时长（分钟）",
       "defaultDailyGoal": "默认每日字数目标",
       "soundNotifications": "声音通知",
-      "soundNotificationsDesc": "冲刺结束时播放提示音。",
+      "soundNotificationsDesc": "冲刺时间结束时以及达到字数目标时播放提示音。",
       "historyRetention": "冲刺历史保留天数（天）",
       "inlineGoalBanner": "内联目标横幅",
       "inlineGoalBannerDesc": "打开文档时在标题下方显示字数目标进度。"
@@ -192,7 +192,8 @@
       "sprintReady": "就绪 · {{minutes}}分钟",
       "sprintRunning": "冲刺进行中",
       "quickStart": "快速开始：{{minutes}}分钟",
-      "moreActions": "更多操作"
+      "moreActions": "更多操作",
+      "sprintReadyGoal": "就绪 · {{words}}个字"
     },
     "toggleCounts": "显示文档数量",
     "fsEmpty": "此项目文件夹还没有文档。添加到其中的文件会自动显示在这里。",
@@ -333,7 +334,14 @@
     "pauseTitle": "暂停冲刺",
     "stopTitle": "停止冲刺",
     "startTitle": "开始冲刺",
-    "resumeTitle": "继续冲刺"
+    "resumeTitle": "继续冲刺",
+    "startedGoal": "写作冲刺已开始。目标：{{words}} 个字",
+    "goalReached": "已达到字数目标：{{words}} 个字。",
+    "wordsOfGoal": "{{n}} / {{goal}} 个字",
+    "finished": "已结束",
+    "finishedStats": "+{{n}} 个字 · {{minutes}} 分钟",
+    "viewSummary": "查看摘要",
+    "close": "关闭"
   },
   "writingModes": {
     "switchedTo": "写作工作室：{{mode}} 模式",
@@ -505,15 +513,17 @@
     "durationDesc": "预设：10、15、25、30、45、60",
     "durationCustom": "自定义…",
     "durationCustomPlaceholder": "自定义分钟数",
-    "wordGoalName": "字数目标（可选）",
-    "wordGoalDesc": "设为 0 表示无目标。",
+    "wordGoalName": "字数目标",
+    "wordGoalDesc": "达到目标时冲刺会提醒你，并继续进行。留空表示无目标。",
     "scopeName": "范围",
     "scopeFile": "当前文件",
     "scopeProject": "整个项目",
-    "startBtn": "启动冲刺计时器",
+    "startBtn": "启动冲刺",
     "errorDuration": "请设置有效的时长。",
     "cancel": "取消",
-    "wordGoalPlaceholder": "0 = 无目标"
+    "wordGoalPlaceholder": "0 = 无目标",
+    "durationNone": "不限时",
+    "errorNoLimitNoGoal": "请设置时间限制或字数目标。"
   },
   "exportModal": {
     "title": "导出文档",

@@ -81,7 +81,7 @@
       "defaultDuration": "डिफ़ॉल्ट स्प्रिंट अवधि (मिनट)",
       "defaultDailyGoal": "डिफ़ॉल्ट दैनिक शब्द लक्ष्य",
       "soundNotifications": "ध्वनि सूचनाएं",
-      "soundNotificationsDesc": "स्प्रिंट समाप्त होने पर एक ध्वनि बजाएं।",
+      "soundNotificationsDesc": "स्प्रिंट का समय समाप्त होने पर और शब्द गणना लक्ष्य पूरा होने पर एक ध्वनि बजाएं।",
       "historyRetention": "स्प्रिंट इतिहास प्रतिधारण (दिन)",
       "inlineGoalBanner": "इनलाइन लक्ष्य बैनर",
       "inlineGoalBannerDesc": "दस्तावेज़ खोलने पर शीर्षक के नीचे शब्द गणना लक्ष्य प्रगति दिखाएं।"
@@ -192,7 +192,8 @@
       "sprintReady": "तैयार · {{minutes}} मि",
       "sprintRunning": "स्प्रिंट चालू",
       "quickStart": "त्वरित शुरुआत: {{minutes}} मिनट",
-      "moreActions": "अधिक क्रियाएँ"
+      "moreActions": "अधिक क्रियाएँ",
+      "sprintReadyGoal": "तैयार · {{words}} शब्द"
     },
     "toggleCounts": "दस्तावेज़ संख्या दिखाएँ",
     "fsEmpty": "इस प्रोजेक्ट फ़ोल्डर में अभी कोई दस्तावेज़ नहीं है। इसमें जोड़ी गई फ़ाइलें यहाँ अपने आप दिखाई देती हैं।",
@@ -333,7 +334,14 @@
     "pauseTitle": "स्प्रिंट रोकें",
     "stopTitle": "स्प्रिंट बंद करें",
     "startTitle": "स्प्रिंट शुरू करें",
-    "resumeTitle": "स्प्रिंट जारी रखें"
+    "resumeTitle": "स्प्रिंट जारी रखें",
+    "startedGoal": "स्प्रिंट शुरू हुआ। लक्ष्य: {{words}} शब्द",
+    "goalReached": "शब्द लक्ष्य पूरा हुआ: {{words}} शब्द।",
+    "wordsOfGoal": "{{n}} / {{goal}} शब्द",
+    "finished": "समाप्त",
+    "finishedStats": "+{{n}} शब्द · {{minutes}} मिनट",
+    "viewSummary": "सारांश देखें",
+    "close": "बंद करें"
   },
   "writingModes": {
     "switchedTo": "राइटिंग स्टूडियो: {{mode}} मोड",
@@ -505,15 +513,17 @@
     "durationDesc": "प्रीसेट: 10, 15, 25, 30, 45, 60",
     "durationCustom": "कस्टम…",
     "durationCustomPlaceholder": "कस्टम मिनट",
-    "wordGoalName": "शब्द गणना लक्ष्य (वैकल्पिक)",
-    "wordGoalDesc": "कोई लक्ष्य न हो तो 0 छोड़ें।",
+    "wordGoalName": "शब्द गणना लक्ष्य",
+    "wordGoalDesc": "लक्ष्य पूरा होने पर स्प्रिंट आपको बताता है और चलता रहता है। कोई लक्ष्य न हो तो खाली छोड़ें।",
     "scopeName": "दायरा",
     "scopeFile": "वर्तमान फ़ाइल",
     "scopeProject": "पूरी परियोजना",
-    "startBtn": "स्प्रिंट टाइमर शुरू करें",
+    "startBtn": "स्प्रिंट चालू करें",
     "errorDuration": "कृपया एक वैध अवधि सेट करें।",
     "cancel": "रद्द करें",
-    "wordGoalPlaceholder": "0 = कोई लक्ष्य नहीं"
+    "wordGoalPlaceholder": "0 = कोई लक्ष्य नहीं",
+    "durationNone": "कोई समय सीमा नहीं",
+    "errorNoLimitNoGoal": "समय सीमा या शब्द गणना लक्ष्य सेट करें।"
   },
   "exportModal": {
     "title": "दस्तावेज़ निर्यात करें",

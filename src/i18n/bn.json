@@ -81,7 +81,7 @@
       "defaultDuration": "ডিফল্ট স্প্রিন্ট সময়কাল (মিনিট)",
       "defaultDailyGoal": "ডিফল্ট দৈনিক শব্দ লক্ষ্য",
       "soundNotifications": "শব্দ বিজ্ঞপ্তি",
-      "soundNotificationsDesc": "স্প্রিন্ট শেষ হলে শব্দ বাজান।",
+      "soundNotificationsDesc": "স্প্রিন্টের সময় শেষ হলে এবং শব্দ গণনা লক্ষ্য পূরণ হলে শব্দ বাজান।",
       "historyRetention": "স্প্রিন্ট ইতিহাস ধরে রাখা (দিন)",
       "inlineGoalBanner": "ইনলাইন লক্ষ্য ব্যানার",
       "inlineGoalBannerDesc": "নথি খুললে শিরোনামের নিচে শব্দ গণনার লক্ষ্য অগ্রগতি দেখান।"
@@ -192,7 +192,8 @@
       "sprintReady": "প্রস্তুত · {{minutes}} মি",
       "sprintRunning": "স্প্রিন্ট চলছে",
       "quickStart": "দ্রুত শুরু: {{minutes}} মিনিট",
-      "moreActions": "আরও ক্রিয়া"
+      "moreActions": "আরও ক্রিয়া",
+      "sprintReadyGoal": "প্রস্তুত · {{words}} শব্দ"
     },
     "toggleCounts": "নথির সংখ্যা দেখান",
     "fsEmpty": "এই প্রোজেক্ট ফোল্ডারে এখনও কোনো নথি নেই। এতে যোগ করা ফাইল এখানে স্বয়ংক্রিয়ভাবে দেখা যাবে।",
@@ -333,7 +334,14 @@
     "pauseTitle": "স্প্রিন্ট বিরতি দিন",
     "stopTitle": "স্প্রিন্ট থামান",
     "startTitle": "স্প্রিন্ট শুরু করুন",
-    "resumeTitle": "স্প্রিন্ট পুনরায় শুরু করুন"
+    "resumeTitle": "স্প্রিন্ট পুনরায় শুরু করুন",
+    "startedGoal": "স্প্রিন্ট শুরু হয়েছে। লক্ষ্য: {{words}} শব্দ",
+    "goalReached": "শব্দের লক্ষ্য পূরণ হয়েছে: {{words}} শব্দ।",
+    "wordsOfGoal": "{{n}} / {{goal}} শব্দ",
+    "finished": "সম্পন্ন",
+    "finishedStats": "+{{n}} শব্দ · {{minutes}} মিনিট",
+    "viewSummary": "সারাংশ দেখুন",
+    "close": "বন্ধ করুন"
   },
   "writingModes": {
     "switchedTo": "রাইটিং স্টুডিও: {{mode}} মোড",
@@ -505,15 +513,17 @@
     "durationDesc": "প্রিসেট: ১০, ১৫, ২৫, ৩০, ৪৫, ৬০",
     "durationCustom": "কাস্টম…",
     "durationCustomPlaceholder": "কাস্টম মিনিট",
-    "wordGoalName": "শব্দ গণনা লক্ষ্য (ঐচ্ছিক)",
-    "wordGoalDesc": "কোনো লক্ষ্য না থাকলে ০ রাখুন।",
+    "wordGoalName": "শব্দ গণনা লক্ষ্য",
+    "wordGoalDesc": "লক্ষ্যে পৌঁছালে স্প্রিন্ট আপনাকে জানায় এবং চলতে থাকে। লক্ষ্য না চাইলে খালি রাখুন।",
     "scopeName": "পরিধি",
     "scopeFile": "বর্তমান ফাইল",
     "scopeProject": "পুরো প্রকল্প",
-    "startBtn": "স্প্রিন্ট টাইমার চালু করুন",
+    "startBtn": "স্প্রিন্ট চালু করুন",
     "errorDuration": "অনুগ্রহ করে একটি বৈধ সময়কাল সেট করুন।",
     "cancel": "বাতিল",
-    "wordGoalPlaceholder": "0 = কোনো লক্ষ্য নেই"
+    "wordGoalPlaceholder": "0 = কোনো লক্ষ্য নেই",
+    "durationNone": "কোনো সময়সীমা নেই",
+    "errorNoLimitNoGoal": "একটি সময়সীমা বা শব্দ গণনা লক্ষ্য সেট করুন।"
   },
   "exportModal": {
     "title": "নথি রপ্তানি করুন",

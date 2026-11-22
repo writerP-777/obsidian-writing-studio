@@ -81,7 +81,7 @@
       "defaultDuration": "기본 스프린트 시간 (분)",
       "defaultDailyGoal": "기본 일일 단어 목표",
       "soundNotifications": "소리 알림",
-      "soundNotificationsDesc": "스프린트가 끝날 때 소리를 재생합니다.",
+      "soundNotificationsDesc": "스프린트 시간이 끝날 때와 단어 수 목표에 도달할 때 소리를 재생합니다.",
       "historyRetention": "스프린트 기록 보관 (일)",
       "inlineGoalBanner": "인라인 목표 배너",
       "inlineGoalBannerDesc": "문서를 열 때 제목 아래에 단어 수 목표 진행 상황을 표시합니다."
@@ -192,7 +192,8 @@
       "sprintReady": "준비됨 · {{minutes}}분",
       "sprintRunning": "스프린트 진행 중",
       "quickStart": "빠른 시작: {{minutes}}분",
-      "moreActions": "추가 작업"
+      "moreActions": "추가 작업",
+      "sprintReadyGoal": "준비됨 · {{words}} 단어"
     },
     "toggleCounts": "문서 수 표시",
     "fsEmpty": "이 프로젝트 폴더에는 아직 문서가 없습니다. 추가된 파일은 여기에 자동으로 표시됩니다.",
@@ -333,7 +334,14 @@
     "pauseTitle": "스프린트 일시정지",
     "stopTitle": "스프린트 중지",
     "startTitle": "스프린트 시작",
-    "resumeTitle": "스프린트 재개"
+    "resumeTitle": "스프린트 재개",
+    "startedGoal": "스프린트 시작. 목표: {{words}} 단어",
+    "goalReached": "단어 수 목표 달성: {{words}} 단어.",
+    "wordsOfGoal": "{{n}} / {{goal}} 단어",
+    "finished": "종료됨",
+    "finishedStats": "+{{n}} 단어 · {{minutes}}분",
+    "viewSummary": "요약 보기",
+    "close": "닫기"
   },
   "writingModes": {
     "switchedTo": "글쓰기 스튜디오: {{mode}} 모드",
@@ -505,15 +513,17 @@
     "durationDesc": "사전 설정: 10, 15, 25, 30, 45, 60",
     "durationCustom": "사용자 정의…",
     "durationCustomPlaceholder": "사용자 정의 분",
-    "wordGoalName": "단어 수 목표 (선택사항)",
-    "wordGoalDesc": "목표 없이 0으로 두세요.",
+    "wordGoalName": "단어 수 목표",
+    "wordGoalDesc": "목표에 도달하면 알려 주고 스프린트는 계속됩니다. 목표가 없으면 비워 두세요.",
     "scopeName": "범위",
     "scopeFile": "현재 파일",
     "scopeProject": "전체 프로젝트",
-    "startBtn": "스프린트 타이머 시작",
+    "startBtn": "스프린트 실행",
     "errorDuration": "유효한 시간을 설정하세요.",
     "cancel": "취소",
-    "wordGoalPlaceholder": "0 = 목표 없음"
+    "wordGoalPlaceholder": "0 = 목표 없음",
+    "durationNone": "시간 제한 없음",
+    "errorNoLimitNoGoal": "시간 제한 또는 단어 수 목표를 설정하세요."
   },
   "exportModal": {
     "title": "문서 내보내기",

@@ -81,7 +81,7 @@
       "defaultDuration": "Duração padrão do sprint (minutos)",
       "defaultDailyGoal": "Meta diária de palavras padrão",
       "soundNotifications": "Notificações sonoras",
-      "soundNotificationsDesc": "Tocar um som quando o sprint terminar.",
+      "soundNotificationsDesc": "Tocar um som quando o tempo do sprint acabar e quando a meta de palavras for atingida.",
       "historyRetention": "Retenção do histórico de sprints (dias)",
       "inlineGoalBanner": "Banner de meta inline",
       "inlineGoalBannerDesc": "Mostrar o progresso da meta de palavras abaixo do título quando um documento for aberto."
@@ -192,7 +192,8 @@
       "sprintReady": "Pronto · {{minutes}} min",
       "sprintRunning": "Sprint em andamento",
       "quickStart": "Início rápido: {{minutes}} minutos",
-      "moreActions": "Mais ações"
+      "moreActions": "Mais ações",
+      "sprintReadyGoal": "Pronto · {{words}} palavras"
     },
     "toggleCounts": "Mostrar contagem de documentos",
     "fsEmpty": "Esta pasta de projeto ainda não tem documentos. Arquivos adicionados a ela aparecem aqui automaticamente.",
@@ -333,7 +334,14 @@
     "pauseTitle": "Pausar sprint",
     "stopTitle": "Parar sprint",
     "startTitle": "Iniciar sprint",
-    "resumeTitle": "Retomar sprint"
+    "resumeTitle": "Retomar sprint",
+    "startedGoal": "Sprint iniciado. Meta: {{words}} palavras",
+    "goalReached": "Meta de palavras atingida: {{words}} palavras.",
+    "wordsOfGoal": "{{n}} / {{goal}} palavras",
+    "finished": "Concluído",
+    "finishedStats": "+{{n}} palavras · {{minutes}} min",
+    "viewSummary": "Ver resumo",
+    "close": "Fechar"
   },
   "writingModes": {
     "switchedTo": "Estúdio de escrita: modo {{mode}}",
@@ -505,15 +513,17 @@
     "durationDesc": "Predefinido: 10, 15, 25, 30, 45, 60",
     "durationCustom": "Personalizado…",
     "durationCustomPlaceholder": "Minutos personalizados",
-    "wordGoalName": "Meta de palavras (opcional)",
-    "wordGoalDesc": "Deixe 0 para nenhuma meta.",
+    "wordGoalName": "Meta de palavras",
+    "wordGoalDesc": "O sprint avisa quando você a atinge e continua. Deixe vazio para nenhuma meta.",
     "scopeName": "Escopo",
     "scopeFile": "Arquivo atual",
     "scopeProject": "Projeto inteiro",
-    "startBtn": "Iniciar cronômetro de sprint",
+    "startBtn": "Iniciar sprint",
     "errorDuration": "Por favor, defina uma duração válida.",
     "cancel": "Cancelar",
-    "wordGoalPlaceholder": "0 = sem meta"
+    "wordGoalPlaceholder": "0 = sem meta",
+    "durationNone": "Sem limite de tempo",
+    "errorNoLimitNoGoal": "Defina um limite de tempo ou uma meta de palavras."
   },
   "exportModal": {
     "title": "Exportar documento",

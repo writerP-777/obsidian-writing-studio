@@ -61,7 +61,7 @@ Writing Studio turns Obsidian into a dedicated environment for serious nonfictio
 
 **Typography Mode** — Apply a curated font, constrained line length, and controlled line height to the editor. Fourteen font options including iA Writer fonts, Google Fonts, and custom system fonts.
 
-**Sprint Timer** — Run timed writing sessions with a draggable floating overlay. Set duration, word goal, and scope (file or project). Quick-start presets (10 m, 15 m, 25 m) available from the Launcher.
+**Sprint Timer** — Run writing sprints against a time limit, a word goal, or both, with a draggable floating overlay. Choose the scope (file or project). When the time runs out the sprint finishes quietly in the overlay, so you can keep typing. Quick-start presets (10 m, 15 m, 25 m) available from the Launcher.
 
 **Progress Tracking** — Live word counts in the status bar and Launcher, session delta tracking, per-document and per-project word count goals with inline progress banners, and a 30-day writing log with streak tracking.
 
@@ -547,12 +547,13 @@ Typography Mode applies a consistent, reader-friendly text treatment to the edit
 
 #### Writing Sprint Timer
 
-The Sprint Timer runs a timed writing session. When a sprint is active, a floating overlay displays the countdown and gives you full control — without requiring you to stay on the dashboard.
+The Sprint Timer runs a writing sprint against a time limit, a word count goal, or both. When a sprint is active, a floating overlay displays the clock and the words written and gives you full control — without requiring you to stay on the dashboard.
 
 **To set up a sprint:**
 
 - Click **Set up sprint** in the Launcher panel to open the sprint configuration modal.
 - Or click one of the **Quick Sprint Options** preset buttons (10 m, 15 m, 25 m) in the Launcher panel to load a duration directly.
+- Or click **Sprint** in the binder control strip, which offers the same setup dialog and quick starts, or run the **Start writing sprint** command.
 
 Either path opens the floating overlay in a ready state — the timer does not start until you press ▶ on the overlay itself. This gives you time to navigate to your draft or open the Binder before the clock begins.
 
@@ -560,11 +561,15 @@ Either path opens the floating overlay in a ready state — the timer does not s
 
 The modal lets you set:
 
-- Duration (preset or custom, in minutes)
-- Word count goal for the session
+- Duration: a preset, a custom number of minutes, or **No time limit**
+- Word count goal: optional with a time limit, required with **No time limit**
 - Scope (current file or entire project)
 
-Click **Launch sprint timer** to open the overlay in ready state.
+Click **Launch sprint** to open the overlay in ready state.
+
+A sprint with a time limit counts down and ends when the time runs out. A sprint with **No time limit** counts the time up and runs until you press ■, so the word count goal is what you write toward.
+
+With a word count goal, the overlay shows your progress as `312 / 500 words`. When you reach the goal, a brief notice appears, the tone plays if sound notifications are on, and a check mark appears beside the count. The sprint keeps running so you can carry on writing.
 
 **Using the floating overlay:**
 
@@ -574,9 +579,14 @@ Click **Launch sprint timer** to open the overlay in ready state.
 | ⏸ | Pause the sprint |
 | ■ | Stop and end the sprint |
 
-The overlay is draggable — click and drag the header to reposition it anywhere on screen. It stays on top regardless of writing mode or Focus Mode. The current countdown is also shown in the Obsidian status bar (`⏱ MM:SS`) and, when Focus Mode is active, in the focus toolbar.
+The overlay is draggable — click and drag the header to reposition it anywhere on screen. It stays on top regardless of writing mode or Focus Mode. Clicking its buttons leaves the cursor in your document. The clock is also shown in the Obsidian status bar (`⏱ MM:SS`) and, when Focus Mode is active, in the focus toolbar.
 
-When the sprint ends, a summary modal shows words written, duration, and words-per-minute. The session is logged to sprint history and optionally appended to your Daily Note.
+**When a sprint ends:**
+
+- When the time runs out, a brief notice appears and the tone plays if sound notifications are on. Nothing opens over your document, so you can keep typing. The overlay changes to **Finished** and shows the words written and the minutes, with two buttons: **View summary** and **Close**.
+- When you press ■, the summary opens at once.
+
+The summary shows words written, duration, words per minute, and progress toward the word count goal if you set one. The duration is the time you actually wrote, so a sprint stopped early is recorded at its real length. Each sprint is logged to sprint history when it ends and optionally appended to your Daily Note.
 
 **Settings (Settings → Sprint & goals):**
 
@@ -584,7 +594,7 @@ When the sprint ends, a summary modal shows words written, duration, and words-p
 |---------|-------------|
 | Default sprint duration | Starting value in the sprint modal (minutes) |
 | Default daily word goal | Target shown on the Launcher's Today card |
-| Sound notifications | Play a tone when the sprint ends |
+| Sound notifications | Play a tone when a sprint's time runs out and when its word count goal is reached |
 | Sprint history retention | Days to keep sprint records before purging |
 | Inline goal banner | Show a progress bar below the editor toolbar when a document has a word count goal set |
 

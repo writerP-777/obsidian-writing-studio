@@ -81,7 +81,7 @@
       "defaultDuration": "デフォルトのスプリント時間（分）",
       "defaultDailyGoal": "デフォルトの1日の語数目標",
       "soundNotifications": "サウンド通知",
-      "soundNotificationsDesc": "スプリント終了時に音を鳴らします。",
+      "soundNotificationsDesc": "スプリントの時間が終了したとき、および語数目標を達成したときに音を鳴らします。",
       "historyRetention": "スプリント履歴の保持期間（日）",
       "inlineGoalBanner": "インライン目標バナー",
       "inlineGoalBannerDesc": "ドキュメントを開いたときにタイトルの下に語数目標の進捗を表示します。"
@@ -192,7 +192,8 @@
       "sprintReady": "準備完了 · {{minutes}}分",
       "sprintRunning": "スプリント中",
       "quickStart": "クイックスタート：{{minutes}}分",
-      "moreActions": "その他の操作"
+      "moreActions": "その他の操作",
+      "sprintReadyGoal": "準備完了 · {{words}}語"
     },
     "toggleCounts": "文書数を表示",
     "fsEmpty": "このプロジェクトフォルダにはまだ文書がありません。追加されたファイルは自動的にここに表示されます。",
@@ -333,7 +334,14 @@
     "pauseTitle": "スプリントを一時停止",
     "stopTitle": "スプリント停止",
     "startTitle": "スプリントを開始",
-    "resumeTitle": "スプリントを再開"
+    "resumeTitle": "スプリントを再開",
+    "startedGoal": "スプリント開始。目標：{{words}} 語",
+    "goalReached": "語数目標を達成しました：{{words}} 語。",
+    "wordsOfGoal": "{{n}} / {{goal}} 語",
+    "finished": "終了",
+    "finishedStats": "+{{n}} 語 · {{minutes}} 分",
+    "viewSummary": "サマリーを表示",
+    "close": "閉じる"
   },
   "writingModes": {
     "switchedTo": "ライティングスタジオ：{{mode}} モード",
@@ -505,15 +513,17 @@
     "durationDesc": "プリセット：10、15、25、30、45、60",
     "durationCustom": "カスタム…",
     "durationCustomPlaceholder": "カスタム分数",
-    "wordGoalName": "語数目標（任意）",
-    "wordGoalDesc": "目標なしの場合は0のままにしてください。",
+    "wordGoalName": "語数目標",
+    "wordGoalDesc": "目標に達すると通知され、スプリントはそのまま続きます。目標なしの場合は空欄のままにしてください。",
     "scopeName": "スコープ",
     "scopeFile": "現在のファイル",
     "scopeProject": "プロジェクト全体",
-    "startBtn": "スプリントタイマーを起動",
+    "startBtn": "スプリントを起動",
     "errorDuration": "有効な時間を設定してください。",
     "cancel": "キャンセル",
-    "wordGoalPlaceholder": "0 = 目標なし"
+    "wordGoalPlaceholder": "0 = 目標なし",
+    "durationNone": "時間制限なし",
+    "errorNoLimitNoGoal": "時間制限または語数目標を設定してください。"
   },
   "exportModal": {
     "title": "ドキュメントをエクスポート",
